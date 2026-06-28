@@ -174,14 +174,14 @@ function showChart(btn,tk){
 """
 
 
-def card_us(sig, tk, nm, block, has_chart, mdc):
+def card_us(sig, tk, nm, block, has_chart, mdc, score_val="—"):
     cls = SIG_CLASS.get(sig, "watch")
     detail = mdc.convert(re.sub(r"(?s)^##.*?\n", "", block, count=1)); mdc.reset()
     chart = (f'<button class="chartbtn" onclick="showChart(this,\'{tk}\')">📈 走勢圖</button>'
              f'<div class="chartbox"></div>') if has_chart else ""
     return (f'<details class="card {cls}" data-mkt="US"><summary>'
             f'<span class="tk">{sig} {tk}</span><span class="nm">{nm}</span>'
-            f'<span class="badge">評分 {score(block)}</span>'
+            f'<span class="badge">評分 {score_val}</span>'
             f'<span class="oneliner">{oneliner(block)}</span></summary>'
             f'<div class="detail">{chart}{detail}</div></details>')
 
@@ -216,6 +216,8 @@ def main():
 
     raw = convert(open(args.input, encoding="utf-8").read())
     summary, stocks = parse_report(raw)
+    # 美股評分在摘要區（代號): action | 評分 X），抓出來對照
+    us_score = dict(re.findall(r"\(([A-Z\.]+)\)\*\*[:：][^|]*\|\s*評分\s*(\d+)", summary))
     us_by = {c: [] for c in CHAIN_ORDER}
     for sig, tk, nm, block in stocks:
         if CHAIN_MAP.get(tk):
@@ -260,7 +262,7 @@ def main():
                     f'<span class="cnt" data-mkt="US">美 {len(us)}</span>'
                     f'<span class="cnt hidden" data-mkt="TW">台 {len(tw)}</span></div>')
         for sig, tk, nm, block in us:
-            body.append(card_us(sig, tk, nm, block, tk in charts, mdc))
+            body.append(card_us(sig, tk, nm, block, tk in charts, mdc, us_score.get(tk, "—")))
         for r in tw:
             body.append(card_tw(r, r["code"] in charts))
 
