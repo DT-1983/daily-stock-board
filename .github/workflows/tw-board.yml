@@ -1,9 +1,12 @@
-name: 美股晨會看板（繁中 → Telegram）
+name: 美股晨會看板（HTML + 反轉警示 Telegram）
 
 on:
   schedule:
     - cron: '0 22 * * 1-5'   # UTC 22:00 = 台灣 06:00（美股收盤後）週二~週六早上
   workflow_dispatch:          # 可手動觸發
+
+permissions:
+  contents: write             # 允許把訊號狀態 commit 回 repo（反轉偵測）
 
 jobs:
   board:
@@ -19,7 +22,7 @@ jobs:
       - name: 裝套件
         run: |
           pip install -r requirements.txt
-          pip install opencc-python-reimplemented
+          pip install opencc-python-reimplemented markdown
 
       - name: 跑美股分析
         env:
@@ -42,11 +45,20 @@ jobs:
           STOCK_INDEX_REMOTE_UPDATE_ENABLED: 'false'
         run: python main.py --no-notify --force-run
 
-      - name: 轉繁中 + 推 Telegram
+      - name: 產 HTML 看板 + 推反轉警示 + 附完整看板
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           f=$(ls -t reports/report_*.md | head -1)
-          echo "推送報告: $f"
-          python push_telegram.py "$f"
+          echo "報告: $f"
+          python board_html.py "$f" -o board.html
+          python alert_telegram.py "$f" board.html
+
+      - name: 回存訊號狀態（反轉偵測用）
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add state/signals.json
+          git commit -m "chore: update signal state [skip ci]" || echo "無變化"
+          git push || echo "push 略過"
