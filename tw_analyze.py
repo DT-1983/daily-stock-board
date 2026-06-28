@@ -83,6 +83,8 @@ def analyze(code, name, chain):
     pe = per[-1].get("PER") if per else None
     pb = per[-1].get("PBR") if per else None
     yld = per[-1].get("dividend_yield") if per else None
+    # 髒 PER 過濾（EPS 失真會噴出 200+ 或負值，不放進 AI 判斷）
+    pe_ctx = pe if (isinstance(pe, (int, float)) and 0 < pe < 120) else "N/A(EPS失真)"
     eps, gm = _fin_latest(fin)
     # 當日行情
     t = price[-1]
@@ -92,8 +94,13 @@ def analyze(code, name, chain):
            f"今日: 開{t['open']} 高{t['max']} 低{t['min']} 收{last} 漲跌{chg}% 量{t.get('Trading_Volume',0)//1000}張\n"
            f"均線: MA5 {ma(5)} MA10 {ma(10)} MA20 {ma(20)}｜近10日收盤 {closes[-10:]}\n"
            f"籌碼: 外資近12日 {foreign} 張、投信 {trust} 張\n"
-           f"基本面: 月營收YoY {rev_yoy}%、EPS {eps}、毛利率 {gm}%、PER {pe}、PBR {pb}、殖利率 {yld}%")
-    prompt = (f"你是台股短線分析師。依資料用繁體中文台灣用語給操作決策,綜合均線型態、法人籌碼、營收/估值。\n{ctx}\n\n"
+           f"基本面: 月營收YoY {rev_yoy}%、EPS {eps}、毛利率 {gm}%、PER {pe_ctx}、殖利率 {yld}%")
+    prompt = (f"你是台股短線分析師。以下是【題材趨勢股守備清單】(待進場標的,非持股)。\n"
+              f"判斷以**均線趨勢 + 法人籌碼**為主、營收次之;估值(PER)僅參考,題材股高 PER 常態,別單因估值/漲多降評。\n"
+              f"**訊號規則(預設觀望)**:\n"
+              f"- 買進:均線多頭排列 **且** 法人買超(雙多才給)\n"
+              f"- 賣出:均線空頭 **且** 法人持續大賣 **且** 跌破關鍵支撐(三者俱備才給,否則不要輕易賣出)\n"
+              f"- 其餘一律觀望(包含弱勢但未明確破底、或多空訊號混雜)\n用繁體中文台灣用語。\n{ctx}\n\n"
               f"只回 JSON:\n"
               f'{{"signal":"買進或賣出或觀望","score":0到100整數,"oneliner":"一句話決策30字內",'
               f'"reason":"理由80字內提到籌碼與均線","risk":"主要風險40字內",'
@@ -113,7 +120,9 @@ def analyze(code, name, chain):
         "foreign": foreign, "trust": trust, "rev_yoy": rev_yoy,
         "open": t["open"], "high": t["max"], "low": t["min"], "chg": chg,
         "vol": t.get("Trading_Volume", 0) // 1000,
-        "eps": eps, "gross_margin": gm, "pe": pe, "pb": pb, "yield": yld,
+        "eps": eps, "gross_margin": gm,
+        "pe": (pe if isinstance(pe, (int, float)) and 0 < pe < 120 else None),
+        "pb": pb, "yield": yld,
         "emoji": SIG_EMOJI.get(d.get("signal", "觀望"), "⚪"),
         "dates": [x["date"][5:] for x in price[-60:]],
         "closes": closes[-60:],
