@@ -122,7 +122,8 @@ h1{font-size:20px;margin:6px 0}.sub{color:#9aa0a6;font-size:13px}
  font-size:13px;display:flex;flex-wrap:wrap;gap:14px}.legend b{color:#fff}
 .overview{background:#1a1d23;border:1px solid #2a2e35;border-radius:8px;padding:10px 12px;margin:10px 0}
 .ovrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
-.pill{font-size:13px;padding:3px 10px;border-radius:12px;background:#262b33}
+.pill{font-size:13px;padding:3px 10px;border-radius:12px;background:#262b33;cursor:pointer;user-select:none}
+.pill.act{background:#4a9eff;color:#fff}.pill:hover{background:#333a44}
 .chain{margin:20px 0 6px;font-size:17px;border-left:4px solid #4a9eff;padding-left:10px;
  display:flex;align-items:center;gap:8px}
 .cnt{font-size:12px;color:#9aa0a6;background:#1c2128;padding:1px 8px;border-radius:10px}
@@ -152,9 +153,20 @@ summary::-webkit-details-marker{display:none}
 """
 
 JS = """
-function mkt(m){
- document.querySelectorAll('[data-mkt]').forEach(e=>e.classList.toggle('hidden',e.dataset.mkt!==m));
- document.querySelectorAll('.toggle button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));
+let curMkt='US',curSig='all';
+function setMkt(m){curMkt=m;document.querySelectorAll('.toggle button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));curSig='all';apply();}
+function setSig(s){curSig=(curSig===s?'all':s);apply();}
+function mkt(m){setMkt(m);}
+function apply(){
+ document.querySelectorAll('.cnt[data-mkt],.ovrow[data-mkt]').forEach(e=>e.classList.toggle('hidden',e.dataset.mkt!==curMkt));
+ document.querySelectorAll('details.card').forEach(c=>{
+  const ok=c.dataset.mkt===curMkt&&(curSig==='all'||c.classList.contains(curSig));
+  c.classList.toggle('hidden',!ok);});
+ document.querySelectorAll('.ovrow:not(.hidden) .pill[data-sig]').forEach(p=>p.classList.toggle('act',p.dataset.sig===curSig));
+ document.querySelectorAll('.chain').forEach(h=>{
+  let n=h.nextElementSibling,any=false;
+  while(n&&!n.classList.contains('chain')){if(n.classList.contains('card')&&!n.classList.contains('hidden'))any=true;n=n.nextElementSibling;}
+  h.classList.toggle('hidden',!any);});
 }
 function expandAll(x){document.querySelectorAll('details.card:not(.hidden)').forEach(d=>d.open=x);}
 function showChart(btn,tk){
@@ -241,7 +253,7 @@ def main():
                                  "ma20": ma_series(cl, 20), "last": cl[-1]}
 
     date = datetime.now().strftime("%Y-%m-%d")
-    mdc = md.Markdown(extensions=["tables", "sane_lists"])
+    mdc = md.Markdown(extensions=["tables", "sane_lists", "nl2br"])
 
     sig_cnt = {"🟢": 0, "🔴": 0, "🔵": 0, "🟡": 0, "⚪": 0}
     for sig, *_ in stocks:
@@ -282,16 +294,20 @@ def main():
  <button data-m="TW" onclick="mkt('TW')">🇹🇼 台股</button>
 </div>
 <div class="legend"><span><b>燈號</b></span>
- <span>🟢 買進</span><span>🔴 賣出</span><span>🔵 持有</span><span>🟡/⚪ 觀望</span>
+ <span>🟢 買進</span><span>🔴 賣出</span><span>🔵 持有</span><span>⚪/🟡 觀望（同義）</span>
  <span>　外資/投信為近 12 日買賣超(張)</span></div>
-<div class="overview"><b>📊 今日摘要</b>
+<div class="overview"><b>📊 今日摘要（點選可篩選）</b>
  <div class="ovrow" data-mkt="US">
-  <span class="pill">美股 {len(stocks)} 檔</span><span class="pill">🟢買進 {sig_cnt['🟢']}</span>
-  <span class="pill">🔴賣出 {sig_cnt['🔴']}</span><span class="pill">🔵持有 {sig_cnt['🔵']}</span>
-  <span class="pill">🟡⚪觀望 {sig_cnt['🟡']+sig_cnt['⚪']}</span></div>
+  <span class="pill act" data-sig="all" onclick="setSig('all')">美股 {len(stocks)} 檔</span>
+  <span class="pill" data-sig="buy" onclick="setSig('buy')">🟢買進 {sig_cnt['🟢']}</span>
+  <span class="pill" data-sig="sell" onclick="setSig('sell')">🔴賣出 {sig_cnt['🔴']}</span>
+  <span class="pill" data-sig="hold" onclick="setSig('hold')">🔵持有 {sig_cnt['🔵']}</span>
+  <span class="pill" data-sig="watch" onclick="setSig('watch')">⚪🟡觀望 {sig_cnt['🟡']+sig_cnt['⚪']}</span></div>
  <div class="ovrow hidden" data-mkt="TW">
-  <span class="pill">台股 {len(tw_data)} 檔</span><span class="pill">🟢買進 {tw_cnt['🟢']}</span>
-  <span class="pill">🔴賣出 {tw_cnt['🔴']}</span><span class="pill">⚪觀望 {tw_cnt['⚪']}</span></div>
+  <span class="pill act" data-sig="all" onclick="setSig('all')">台股 {len(tw_data)} 檔</span>
+  <span class="pill" data-sig="buy" onclick="setSig('buy')">🟢買進 {tw_cnt['🟢']}</span>
+  <span class="pill" data-sig="sell" onclick="setSig('sell')">🔴賣出 {tw_cnt['🔴']}</span>
+  <span class="pill" data-sig="watch" onclick="setSig('watch')">⚪觀望 {tw_cnt['⚪']}</span></div>
 </div>
 <div class="rail">
  <button onclick="expandAll(true)" title="全展開">⤢</button>
@@ -312,6 +328,14 @@ def main():
  <p class="sub" style="margin:8px 0 0"><b>多久掃一次？會變嗎？</b><br>
   建議<b>每週掃一次</b>（如每週一）。市值與成長變化慢（大型股穩定在榜），但<b>籌碼面天天變</b>，<br>
   所以<b>核心大型股會固定、邊緣名單隨資金流向輪動</b>。掃太頻繁（每天）過度換股；每月一次又錯過法人輪動。</p>
+ <hr style="border-color:#2a2e35;margin:14px 0">
+ <p style="margin:4px 0;font-size:13.5px"><b>🚦 燈號（AI 操作建議）</b><br>
+  🟢 買進　🔴 賣出　🔵 持有　⚪／🟡 觀望<br>
+  <span class="sub">註：⚪ 和 🟡 是<b>同一個意思（觀望）</b>，工具在「摘要統計」用 🟡、「個股卡片」用 ⚪，無差別。</span></p>
+ <p style="margin:8px 0 0;font-size:13.5px"><b>💯 評分高低是什麼？</b><br>
+  AI 綜合技術面（均線/量能）＋ 基本面 ＋ 籌碼/消息，給 <b>0～100 分</b>：<br>
+  <b>分數越高＝越偏多（買進傾向）</b>；<b>越低＝越偏空（賣出傾向）</b>；<b>50 左右＝中性觀望</b>。<br>
+  <span class="sub">參考級距：80+ 強勢看多｜60-79 偏多｜40-59 中性｜20-39 偏空｜20 以下 強勢看空。評分是「相對強弱」參考，非保證。</span></p>
 </div>
 <div class="sub" style="margin-top:20px">產生時間 {datetime.now():%Y-%m-%d %H:%M} · 美股 yfinance+Gemini / 台股 FinMind+Gemini · 守備清單客觀篩選(市值+成長+籌碼)</div>
 </div><script>const CHARTS={charts_json};{JS}
