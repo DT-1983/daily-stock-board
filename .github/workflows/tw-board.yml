@@ -63,12 +63,6 @@ jobs:
           python board_html.py "$f" -o docs/index.html
           python alert_telegram.py "$f" docs/index.html
 
-      - name: SuperTrend 翻面警示（持股 + 守備清單）
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: python st_alert.py || echo "SuperTrend 警示失敗，跳過"
-
       - name: 回存狀態 + 發佈 HTML 到 Pages
         run: |
           git config user.name "github-actions[bot]"

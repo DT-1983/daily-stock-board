@@ -81,13 +81,32 @@ def main():
         if reasons:
             alerts.append((chain, mkt, sig, code, name, ol, " / ".join(reasons)))
 
+    # SuperTrend 翻面（持股 + 守備清單）
+    try:
+        import st_alert
+        flips_hold, flips_watch, _ = st_alert.detect_flips()
+    except Exception as e:
+        print("SuperTrend 偵測失敗:", e)
+        flips_hold, flips_watch = [], []
+
     date = datetime.now().strftime("%Y-%m-%d")
+    lines = [f"📊 <b>投資晨報 {date}</b>",
+             f'📈 <a href="{PAGES_URL}">完整看板</a>（或見附件）', ""]
+    has = False
+
+    # 1) 持股動態（風險）— SuperTrend 翻面
+    if flips_hold:
+        has = True
+        lines.append("💼 <b>持股動態</b>（你的部位 · SuperTrend）")
+        for f in flips_hold:
+            nm = f" {f['name']}" if f['name'] else ""
+            lines.append(f"　{f['word']}　<b>{esc(f['code'])}</b>{esc(nm)}")
+        lines.append("")
+
+    # 2) 守備清單 — AI 訊號（買賣/反轉）
     if alerts:
-        us_n = sum(1 for a in alerts if a[1] == "US")
-        tw_n = len(alerts) - us_n
-        lines = [f"🔔 <b>產業鏈訊號提醒 {date}</b>",
-                 f"<i>美股 {us_n}、台股 {tw_n} 檔反轉/警示</i>",
-                 f'📊 <a href="{PAGES_URL}">完整看板</a>（或見附件）', ""]
+        has = True
+        lines.append("🎯 <b>守備清單 — AI 訊號</b>")
         for c in CHAIN_ORDER + ["其他"]:
             cs = [a for a in alerts if a[0] == c]
             if not cs:
@@ -98,16 +117,28 @@ def main():
                 lines.append(f"{sig} {flag} <b>{esc(code)}</b> {esc(name)}（{esc(reason)}）")
                 if ol:
                     lines.append(f"　{esc(ol)}")
-            lines.append("")
-        send_text("\n".join(lines))
-    else:
-        send_text(f'✅ <b>{date}</b> 今日無反轉/警示。📊 <a href="{PAGES_URL}">完整看板</a>。')
+        lines.append("")
 
+    # 3) 守備清單 — SuperTrend 翻面
+    if flips_watch:
+        has = True
+        lines.append("📈 <b>守備清單 — SuperTrend 翻面</b>")
+        for f in flips_watch:
+            nm = f" {f['name']}" if f['name'] else ""
+            lines.append(f"　{f['word']}　<b>{esc(f['code'])}</b>{esc(nm)}")
+        lines.append("")
+
+    if has:
+        lines.append("<i>💼 持股看風險（翻空/賣訊）｜🎯 守備清單看機會（買進/翻多）</i>")
+    else:
+        lines = [f"✅ <b>投資晨報 {date}</b> 今日無訊號（持股趨勢無變化、守備清單無買賣/翻面）。",
+                 f'📊 <a href="{PAGES_URL}">完整看板</a>。']
+    send_text("\n".join(lines))
     send_doc(html_path, f"{date} 產業鏈看板（美股+台股，7 鏈）")
 
     os.makedirs("state", exist_ok=True)
     json.dump(cur, open(STATE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
-    print(f"✅ 推送完成，alerts={len(alerts)}")
+    print(f"✅ 投資晨報推送完成：AI {len(alerts)}、持股翻面 {len(flips_hold)}、守備翻面 {len(flips_watch)}")
 
 
 if __name__ == "__main__":
