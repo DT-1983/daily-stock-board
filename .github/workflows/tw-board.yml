@@ -50,6 +50,7 @@ jobs:
       - name: 跑台股分析（FinMind 籌碼 + Gemini）
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          FINMIND_TOKEN: ${{ secrets.FINMIND_TOKEN }}
         run: python tw_analyze.py || echo "台股分析失敗，跳過"
 
       - name: 產 HTML 看板 + 推反轉警示 + 附完整看板

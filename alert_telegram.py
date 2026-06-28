@@ -69,17 +69,21 @@ def main():
         except Exception:
             prev = {}
 
+    # 變化才推：只在訊號「改變」時推（不再天天重複同樣的買/賣清單）
     cur, alerts = {}, []
     for chain, mkt, sig, code, name, ol in items:
         key = f"{mkt}:{code}"
         cur[key] = sig
-        reasons = []
-        if sig in ALERT_SIGS:
-            reasons.append("警示")
-        if prev.get(key) and prev[key] != sig:
-            reasons.append(f"反轉 {prev[key]}{SIG_WORD.get(prev[key],'')}→{sig}{SIG_WORD.get(sig,'')}")
-        if reasons:
-            alerts.append((chain, mkt, sig, code, name, ol, " / ".join(reasons)))
+        old = prev.get(key)
+        if not old or old == sig:
+            continue                       # 無前狀態 或 無變化 → 不推
+        if sig in ALERT_SIGS:              # 轉成 買進/賣出（新訊號）
+            reason = f"{SIG_WORD.get(old,'觀望')}→{SIG_WORD.get(sig,'')}"
+        elif old in ALERT_SIGS:            # 買/賣 訊號解除 → 轉觀望
+            reason = f"{SIG_WORD.get(old,'')}解除→觀望"
+        else:
+            continue                       # 觀望↔其它非買賣 → 不推
+        alerts.append((chain, mkt, sig, code, name, ol, reason))
 
     # SuperTrend 翻面（持股 + 守備清單）
     try:
