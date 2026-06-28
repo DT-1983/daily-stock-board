@@ -2,7 +2,7 @@ name: 美股晨會看板（HTML + 反轉警示 Telegram）
 
 on:
   schedule:
-    - cron: '0 22 * * 1-5'   # UTC 22:00 = 台灣 06:00（美股收盤後）週二~週六早上
+    - cron: '0 0 * * 2-6'    # UTC 00:00 = 台灣 08:00（美股收盤後）週二~週六早上
   workflow_dispatch:          # 可手動觸發
 
 permissions:
