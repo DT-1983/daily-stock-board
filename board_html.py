@@ -269,6 +269,7 @@ def main():
 
     html = f"""<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
 <title>{date} 美台股看板</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <style>{CSS}</style></head><body><div class="wrap" id="top">
