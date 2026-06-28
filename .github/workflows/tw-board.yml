@@ -34,7 +34,6 @@ jobs:
           LITELLM_MODEL: gemini/gemini-3.1-pro-preview
           GENERATION_BACKEND: litellm
           TAVILY_API_KEYS: ${{ secrets.TAVILY_API_KEYS }}
-          STOCK_LIST: ${{ vars.STOCK_LIST }}
           YFINANCE_PRIORITY: '0'
           EFINANCE_PRIORITY: '99'
           MARKET_REVIEW_ENABLED: 'true'
@@ -43,7 +42,10 @@ jobs:
           REPORT_TYPE: simple
           SEARXNG_PUBLIC_INSTANCES_ENABLED: 'true'
           STOCK_INDEX_REMOTE_UPDATE_ENABLED: 'false'
-        run: python main.py --no-notify --force-run
+        run: |
+          export STOCK_LIST=$(python -c "import json;d=json.load(open('screen_result.json'));print(','.join(sorted({x['code'] for l in d['us'].values() for x in l})))")
+          echo "美股守備清單（$(echo $STOCK_LIST | tr ',' '\n' | wc -l) 檔）: $STOCK_LIST"
+          python main.py --no-notify --force-run
 
       - name: 跑台股分析（FinMind 籌碼 + Gemini）
         env:
