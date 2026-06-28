@@ -46,16 +46,16 @@ def batch_dirs(yf_syms):
     return out
 
 
-def main():
-    # 監控宇宙
+def detect_flips():
+    """偵測 SuperTrend 翻面，更新狀態。回傳 (flips_hold, flips_watch, holdings_set)。
+    flips 元素：{code, name, word, dir}。給 alert_telegram 合併進投資晨報。"""
     holdings = json.load(open("holdings.json", encoding="utf-8")) if os.path.exists("holdings.json") else []
-    scr = json.load(open("screen_result.json", encoding="utf-8"))
+    scr = json.load(open("screen_result.json", encoding="utf-8")) if os.path.exists("screen_result.json") else {"us": {}, "tw": {}}
     us_watch = sorted({x["code"] for l in scr["us"].values() for x in l})
     tw_watch = sorted({x["code"] for l in scr["tw"].values() for x in l})
 
-    us_syms = sorted(set(holdings) | set(us_watch))     # 持股都美股
+    us_syms = sorted(set(holdings) | set(us_watch))
     tw_syms = sorted(set(tw_watch))
-
     dirs = {}
     dirs.update(batch_dirs(us_syms))
     dirs.update({k.replace(".TW", ""): v for k, v in batch_dirs([c + ".TW" for c in tw_syms]).items()})
@@ -72,36 +72,15 @@ def main():
     for sym, d in dirs.items():
         old = prev.get(sym)
         if old and old != d:
-            word = "🔴→🟢 翻多" if d == 1 else "🟢→🔴 翻空"
-            name = TW_NAME.get(sym, "")
-            label = f"{sym}{(' '+name) if name else ''}"
-            (flips_hold if sym in hold_set else flips_watch).append((label, word))
-
-    if flips_hold or flips_watch:
-        lines = ["📈 <b>SuperTrend 趨勢翻面</b>", ""]
-        if flips_hold:
-            lines.append("💼 <b>你的持股</b>")
-            for lb, w in flips_hold:
-                lines.append(f"　{w}　<b>{lb}</b>")
-            lines.append("")
-        if flips_watch:
-            lines.append("🎯 <b>守備清單</b>")
-            for lb, w in flips_watch:
-                lines.append(f"　{w}　<b>{lb}</b>")
-            lines.append("")
-        lines.append(f'📊 <a href="{PAGES_URL}">看走勢圖</a>')
-        import requests
-        requests.post(f"https://api.telegram.org/bot{TOKEN}/sendMessage",
-                      json={"chat_id": CHAT, "text": "\n".join(lines),
-                            "parse_mode": "HTML", "disable_web_page_preview": True}, timeout=30)
-        print(f"推送翻面：持股 {len(flips_hold)}、守備 {len(flips_watch)}")
-    else:
-        print("無翻面，不推")
+            item = {"code": sym, "name": TW_NAME.get(sym, ""),
+                    "word": "🔴→🟢 翻多" if d == 1 else "🟢→🔴 翻空", "dir": d}
+            (flips_hold if sym in hold_set else flips_watch).append(item)
 
     os.makedirs("state", exist_ok=True)
     json.dump(dirs, open(ST_STATE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
-    print(f"狀態已存 {len(dirs)} 檔")
+    return flips_hold, flips_watch, hold_set
 
 
 if __name__ == "__main__":
-    main()
+    h, w, _ = detect_flips()
+    print(f"翻面：持股 {len(h)}、守備 {len(w)}")
