@@ -25,9 +25,13 @@ def main():
         return
     latest = reports[-1]
 
-    # 3. 轉繁中 + 存 obis Investment
+    # 3. 轉繁中 .md + 存 obis Investment
     print(f"▶ 轉繁中存檔:{os.path.basename(latest)}")
     subprocess.run([PY, "tw_report.py", latest], cwd=HERE, env=ENV, check=False)
+
+    # 4. 產 HTML 看板（7 鏈分區）+ 存 obis Investment
+    print("▶ 產 HTML 看板...")
+    subprocess.run([PY, "board_html.py", latest], cwd=HERE, env=ENV, check=False)
     print("✅ 完成")
 
 
