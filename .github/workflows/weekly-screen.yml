@@ -43,6 +43,12 @@ jobs:
           print("notified", len(us), len(tw))
           PY
 
+      - name: 買進機會週報（巴菲特到價 + 雙確認）
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python buy_digest.py || echo "買進機會週報失敗，跳過"
+
       - name: commit 新清單
         run: |
           git config user.name "github-actions[bot]"
