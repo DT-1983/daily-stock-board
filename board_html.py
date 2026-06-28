@@ -55,6 +55,13 @@ TW_NAME = {
 }
 
 
+import html as _html
+
+
+def esc_tw(s):
+    return _html.escape(str(s if s is not None else ""))
+
+
 def ma_series(closes, n):
     return [round(sum(closes[i + 1 - n:i + 1]) / n, 2) if i + 1 >= n else None
             for i in range(len(closes))]
@@ -253,14 +260,35 @@ def card_tw(r, has_chart):
              f'<span class="chip">MA5 {r.get("ma5","—")} / MA20 {r.get("ma20","—")}</span></div>')
     chart = (f'<button class="chartbtn" onclick="showChart(this,\'{r["code"]}\')">📈 走勢圖</button>'
              f'<div class="chartbox"></div>') if has_chart else ""
-    detail = (f'<p><b>理由</b>：{r.get("reason","")}</p>'
-              f'<p class="sub"><b>風險</b>：{r.get("risk","")}</p>')
+    g = lambda k: r.get(k, "—")
+    chg = r.get("chg")
+    chgs = f'{chg:+.2f}%' if isinstance(chg, (int, float)) else "—"
+    quote = ('<h3>📈 當日行情</h3><table>'
+             '<tr><th>收盤</th><th>開</th><th>高</th><th>低</th><th>漲跌</th><th>量(張)</th></tr>'
+             f'<tr><td>{g("last")}</td><td>{g("open")}</td><td>{g("high")}</td>'
+             f'<td>{g("low")}</td><td>{chgs}</td><td>{g("vol")}</td></tr></table>')
+    plan = ('<h3>🎯 作戰計劃</h3><table>'
+            f'<tr><th>理想買點</th><td>{g("buy_point")}</td></tr>'
+            f'<tr><th>停損</th><td>{g("stop_loss")}</td></tr>'
+            f'<tr><th>目標</th><td>{g("target")}</td></tr></table>') if r.get("buy_point") else ""
+    fin = ('<h3>💼 財務摘要</h3><table>'
+           '<tr><th>EPS</th><th>毛利率</th><th>PER</th><th>PBR</th><th>殖利率</th></tr>'
+           f'<tr><td>{g("eps")}</td><td>{g("gross_margin")}%</td><td>{g("pe")}</td>'
+           f'<td>{g("pb")}</td><td>{g("yield")}%</td></tr></table>')
+    chk = ""
+    if r.get("checklist"):
+        items = "".join(f"<li>{esc_tw(x)}</li>" for x in r["checklist"])
+        chk = f'<h3>✅ 檢查清單</h3><ul>{items}</ul>'
+    detail = (f'{quote}{chart}'
+              f'<p><b>理由</b>：{esc_tw(r.get("reason",""))}</p>'
+              f'<p class="sub"><b>風險</b>：{esc_tw(r.get("risk",""))}</p>'
+              f'{plan}{fin}{chk}')
     nm = TW_NAME.get(r["code"], r.get("name", r["code"]))
     return (f'<details class="card {cls}" data-mkt="TW"><summary>'
             f'<span class="tk">{sig} {r["code"]}</span><span class="nm">{nm}</span>'
             f'<span class="badge">評分 {r.get("score","—")}</span>'
-            f'<span class="oneliner">{r.get("oneliner","")}</span></summary>'
-            f'<div class="detail">{chips}{chart}{detail}</div></details>')
+            f'<span class="oneliner">{esc_tw(r.get("oneliner",""))}</span></summary>'
+            f'<div class="detail">{chips}{detail}</div></details>')
 
 
 def main():
