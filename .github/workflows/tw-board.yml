@@ -43,7 +43,7 @@ jobs:
           SEARXNG_PUBLIC_INSTANCES_ENABLED: 'true'
           STOCK_INDEX_REMOTE_UPDATE_ENABLED: 'false'
         run: |
-          export STOCK_LIST=$(python -c "import json;d=json.load(open('screen_result.json'));print(','.join(sorted({x['code'] for l in d['us'].values() for x in l})))")
+          export STOCK_LIST=$(python -c "import json;d=json.load(open('screen_result.json',encoding='utf-8'));print(','.join(sorted({x['code'] for l in d['us'].values() for x in l})))")
           echo "美股守備清單（$(echo $STOCK_LIST | tr ',' '\n' | wc -l) 檔）: $STOCK_LIST"
           python main.py --no-notify --force-run
 
