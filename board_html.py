@@ -60,6 +60,43 @@ def ma_series(closes, n):
             for i in range(len(closes))]
 
 
+def supertrend(highs, lows, closes, period=10, mult=3.0):
+    """標準 SuperTrend（ATR 基礎，Wilder 平滑）。回傳 {st:[值], dir:[1多/-1空]}。"""
+    n = len(closes)
+    if n < period + 1 or not highs or not lows:
+        return None
+    tr = [highs[0] - lows[0]]
+    for i in range(1, n):
+        tr.append(max(highs[i] - lows[i], abs(highs[i] - closes[i - 1]), abs(lows[i] - closes[i - 1])))
+    atr = [None] * n
+    atr[period - 1] = sum(tr[:period]) / period
+    for i in range(period, n):
+        atr[i] = (atr[i - 1] * (period - 1) + tr[i]) / period
+    hl2 = [(highs[i] + lows[i]) / 2 for i in range(n)]
+    st = [None] * n
+    dr = [None] * n
+    up = [None] * n
+    lo = [None] * n
+    for i in range(period - 1, n):
+        if atr[i] is None:
+            continue
+        bu, bl = hl2[i] + mult * atr[i], hl2[i] - mult * atr[i]
+        if i == period - 1 or up[i - 1] is None:
+            up[i], lo[i] = bu, bl
+            dr[i] = 1 if closes[i] >= hl2[i] else -1
+        else:
+            up[i] = bu if (bu < up[i - 1] or closes[i - 1] > up[i - 1]) else up[i - 1]
+            lo[i] = bl if (bl > lo[i - 1] or closes[i - 1] < lo[i - 1]) else lo[i - 1]
+            if closes[i] > up[i - 1]:
+                dr[i] = 1
+            elif closes[i] < lo[i - 1]:
+                dr[i] = -1
+            else:
+                dr[i] = dr[i - 1]
+        st[i] = lo[i] if dr[i] == 1 else up[i]
+    return {"st": [round(x, 2) if x is not None else None for x in st], "dir": dr}
+
+
 def fetch_us_charts(tickers):
     """yf.download 批次抓美股走勢（比逐檔 Ticker.history 穩、不易限流）"""
     charts = {}
@@ -76,9 +113,12 @@ def fetch_us_charts(tickers):
             closes = h["Close"].round(2).tolist()
             if not closes:
                 continue
+            highs = h["High"].round(2).tolist()
+            lows = h["Low"].round(2).tolist()
             charts[t] = {"dates": [d.strftime("%m/%d") for d in h.index], "close": closes,
                          "ma5": ma_series(closes, 5), "ma10": ma_series(closes, 10),
-                         "ma20": ma_series(closes, 20), "last": closes[-1]}
+                         "ma20": ma_series(closes, 20), "last": closes[-1],
+                         "supertrend": supertrend(highs, lows, closes)}
         except Exception:
             pass
     return charts
@@ -175,11 +215,14 @@ function showChart(btn,tk){
  box.style.display='block'; if(box.dataset.done)return; box.dataset.done=1;
  const d=CHARTS[tk]; if(!d){box.innerHTML='<span class=sub>無走勢資料</span>';return;}
  const c=document.createElement('canvas');box.appendChild(c);
- new Chart(c,{type:'line',data:{labels:d.dates,datasets:[
+ const ds=[
    {label:'收盤',data:d.close,borderColor:'#4a9eff',borderWidth:2,pointRadius:0},
-   {label:'MA5',data:d.ma5,borderColor:'#3ddc84',borderWidth:1,pointRadius:0},
-   {label:'MA10',data:d.ma10,borderColor:'#f0b429',borderWidth:1,pointRadius:0},
-   {label:'MA20',data:d.ma20,borderColor:'#ff5c5c',borderWidth:1,pointRadius:0}]},
+   {label:'MA5',data:d.ma5,borderColor:'#3ddc84',borderWidth:1,pointRadius:0,hidden:true},
+   {label:'MA10',data:d.ma10,borderColor:'#f0b429',borderWidth:1,pointRadius:0,hidden:true},
+   {label:'MA20',data:d.ma20,borderColor:'#ff5c5c',borderWidth:1,pointRadius:0}];
+ if(d.supertrend&&d.supertrend.st){ds.push({label:'SuperTrend',data:d.supertrend.st,borderWidth:2.6,pointRadius:0,spanGaps:false,
+   segment:{borderColor:ctx=>{const dir=d.supertrend.dir[ctx.p1DataIndex];return dir===1?'#3ddc84':(dir===-1?'#ff5c5c':'#8a8f98');}}});}
+ new Chart(c,{type:'line',data:{labels:d.dates,datasets:ds},
   options:{responsive:true,plugins:{legend:{labels:{color:'#cfd3d8',boxWidth:12,font:{size:11}}}},
    scales:{x:{ticks:{color:'#6b7280',maxTicksLimit:6,font:{size:10}}},y:{ticks:{color:'#6b7280',font:{size:10}}}}}});
 }
@@ -248,9 +291,10 @@ def main():
     for r in tw_data:
         cl = r.get("closes")
         if cl:
+            st = supertrend(r.get("highs"), r.get("lows"), cl) if r.get("highs") and r.get("lows") else None
             charts[r["code"]] = {"dates": r.get("dates", []), "close": cl,
                                  "ma5": ma_series(cl, 5), "ma10": ma_series(cl, 10),
-                                 "ma20": ma_series(cl, 20), "last": cl[-1]}
+                                 "ma20": ma_series(cl, 20), "last": cl[-1], "supertrend": st}
 
     date = datetime.now().strftime("%Y-%m-%d")
     mdc = md.Markdown(extensions=["tables", "sane_lists", "nl2br"])
@@ -336,6 +380,14 @@ def main():
   AI 綜合技術面（均線/量能）＋ 基本面 ＋ 籌碼/消息，給 <b>0～100 分</b>：<br>
   <b>分數越高＝越偏多（買進傾向）</b>；<b>越低＝越偏空（賣出傾向）</b>；<b>50 左右＝中性觀望</b>。<br>
   <span class="sub">參考級距：80+ 強勢看多｜60-79 偏多｜40-59 中性｜20-39 偏空｜20 以下 強勢看空。評分是「相對強弱」參考，非保證。</span></p>
+ <hr style="border-color:#2a2e35;margin:14px 0">
+ <p style="margin:4px 0;font-size:13.5px"><b>📈 走勢圖的 SuperTrend 是什麼？</b><br>
+  SuperTrend 是<b>趨勢方向指標</b>（跟 TradingView 內建版同款，參數 ATR 10、倍數 3）。原理：<br>
+  ① 先算 <b>ATR</b>（平均真實波動，衡量近期震盪幅度）。<br>
+  ② 在價格上下各畫一條「軌道」＝ 中價 ± 倍數×ATR。<br>
+  ③ 收盤<b>站上</b>軌道→翻<b style="color:#3ddc84">多頭（線轉綠、走在價格下方當支撐）</b>；<b>跌破</b>→翻<b style="color:#ff5c5c">空頭（線轉紅、走在價格上方當壓力）</b>。<br>
+  <b>怎麼看</b>：線<span style="color:#3ddc84">綠</span>＝順勢偏多、線<span style="color:#ff5c5c">紅</span>＝偏空；<b>顏色一翻就是趨勢反轉訊號</b>。比單看均線更快抓到轉折。<br>
+  <span class="sub">圖例可點：預設顯示 收盤＋MA20＋SuperTrend，想看 MA5/MA10 點圖例打開即可。SuperTrend 為趨勢輔助，非買賣建議。</span></p>
 </div>
 <div class="sub" style="margin-top:20px">產生時間 {datetime.now():%Y-%m-%d %H:%M} · 美股 yfinance+Gemini / 台股 FinMind+Gemini · 守備清單客觀篩選(市值+成長+籌碼)</div>
 </div><script>const CHARTS={charts_json};{JS}

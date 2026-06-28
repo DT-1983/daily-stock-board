@@ -93,6 +93,8 @@ def analyze(code, name, chain):
         "emoji": SIG_EMOJI.get(d.get("signal", "觀望"), "⚪"),
         "dates": [x["date"][5:] for x in price[-60:]],
         "closes": closes[-60:],
+        "highs": [x["max"] for x in price[-60:]],
+        "lows": [x["min"] for x in price[-60:]],
     })
     return d
 
