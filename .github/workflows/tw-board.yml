@@ -1,0 +1,52 @@
+name: 美股晨會看板（繁中 → Telegram）
+
+on:
+  schedule:
+    - cron: '0 22 * * 1-5'   # UTC 22:00 = 台灣 06:00（美股收盤後）週二~週六早上
+  workflow_dispatch:          # 可手動觸發
+
+jobs:
+  board:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 裝套件
+        run: |
+          pip install -r requirements.txt
+          pip install opencc-python-reimplemented
+
+      - name: 跑美股分析
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          LLM_CHANNELS: gemini
+          LLM_GEMINI_PROTOCOL: gemini
+          LLM_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          LLM_GEMINI_MODELS: gemini-3.1-pro-preview,gemini-3-flash-preview
+          LITELLM_MODEL: gemini/gemini-3.1-pro-preview
+          GENERATION_BACKEND: litellm
+          TAVILY_API_KEYS: ${{ secrets.TAVILY_API_KEYS }}
+          STOCK_LIST: ${{ vars.STOCK_LIST }}
+          YFINANCE_PRIORITY: '0'
+          EFINANCE_PRIORITY: '99'
+          MARKET_REVIEW_ENABLED: 'true'
+          MARKET_REVIEW_REGION: us
+          REPORT_LANGUAGE: zh
+          REPORT_TYPE: simple
+          SEARXNG_PUBLIC_INSTANCES_ENABLED: 'true'
+          STOCK_INDEX_REMOTE_UPDATE_ENABLED: 'false'
+        run: python main.py --no-notify --force-run
+
+      - name: 轉繁中 + 推 Telegram
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          f=$(ls -t reports/report_*.md | head -1)
+          echo "推送報告: $f"
+          python push_telegram.py "$f"
