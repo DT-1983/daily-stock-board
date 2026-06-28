@@ -1,0 +1,52 @@
+name: 每週重篩守備清單（市值+成長+籌碼）
+
+on:
+  schedule:
+    - cron: '0 12 * * 0'    # UTC 12:00 週日 = 台灣 20:00 週日
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  screen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 裝套件
+        run: pip install yfinance requests
+
+      - name: 重篩（每鏈 top N）
+        run: python screen.py
+
+      - name: 推播「本週守備清單已更新」
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python - <<'PY'
+          import json, os, requests
+          d = json.load(open("screen_result.json", encoding="utf-8"))
+          us = sorted({x["code"] for l in d["us"].values() for x in l})
+          tw = sorted({x["code"] for l in d["tw"].values() for x in l})
+          lines = [f"📋 <b>本週守備清單已重篩</b>（每週日）",
+                   f"美股 {len(us)} 檔、台股 {len(tw)} 檔",
+                   f"<i>依 市值＋成長＋籌碼 三因子，每鏈取最強。週二起的盤後警示將用新清單。</i>"]
+          requests.post(f"https://api.telegram.org/bot{os.environ['TELEGRAM_BOT_TOKEN']}/sendMessage",
+                        json={"chat_id": os.environ["TELEGRAM_CHAT_ID"], "text": "\n".join(lines),
+                              "parse_mode": "HTML"}, timeout=30)
+          print("notified", len(us), len(tw))
+          PY
+
+      - name: commit 新清單
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add screen_result.json
+          git commit -m "chore: weekly re-screen watchlist [skip ci]" || echo "無變化"
+          git push || echo "push 略過"
