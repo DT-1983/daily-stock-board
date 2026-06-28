@@ -47,13 +47,29 @@ def fetch(sid):
     d120 = (datetime.now() - timedelta(days=120)).strftime("%Y-%m-%d")
     d10 = (datetime.now() - timedelta(days=12)).strftime("%Y-%m-%d")
     d400 = (datetime.now() - timedelta(days=400)).strftime("%Y-%m-%d")
-    return fm("TaiwanStockPrice", sid, d120), \
-        fm("TaiwanStockInstitutionalInvestorsBuySell", sid, d10), \
-        fm("TaiwanStockMonthRevenue", sid, d400)
+    d200 = (datetime.now() - timedelta(days=250)).strftime("%Y-%m-%d")
+    return (fm("TaiwanStockPrice", sid, d120),
+            fm("TaiwanStockInstitutionalInvestorsBuySell", sid, d10),
+            fm("TaiwanStockMonthRevenue", sid, d400),
+            fm("TaiwanStockPER", sid, d10),
+            fm("TaiwanStockFinancialStatements", sid, d200))
+
+
+def _fin_latest(fin):
+    """從財報抽最新季的 EPS / 毛利率。"""
+    if not fin:
+        return None, None
+    dates = sorted(set(d["date"] for d in fin))
+    last = dates[-1]
+    byt = {d["type"]: d["value"] for d in fin if d["date"] == last}
+    eps = byt.get("EPS")
+    rev, gp = byt.get("Revenue"), byt.get("GrossProfit")
+    gm = round(gp / rev * 100, 1) if rev and gp else None
+    return eps, gm
 
 
 def analyze(code, name, chain):
-    price, inst, rev = fetch(code)
+    price, inst, rev, per, fin = fetch(code)
     if not price:
         return None
     closes = [d["close"] for d in price]
@@ -64,32 +80,40 @@ def analyze(code, name, chain):
     rev_yoy = None
     if len(rev) >= 13 and rev[-13]["revenue"]:
         rev_yoy = round((rev[-1]["revenue"] / rev[-13]["revenue"] - 1) * 100, 1)
+    pe = per[-1].get("PER") if per else None
+    pb = per[-1].get("PBR") if per else None
+    yld = per[-1].get("dividend_yield") if per else None
+    eps, gm = _fin_latest(fin)
+    # 當日行情
+    t = price[-1]
+    chg = round((t["close"] / price[-2]["close"] - 1) * 100, 2) if len(price) >= 2 and price[-2]["close"] else None
 
     ctx = (f"股票:{name}({code}) 產業鏈:{chain}\n"
-           f"現價:{last} MA5:{ma(5)} MA10:{ma(10)} MA20:{ma(20)}\n"
-           f"近10日收盤:{closes[-10:]}\n"
-           f"法人近12日買賣超(張):外資 {foreign}、投信 {trust}\n"
-           f"最新月營收 YoY:{rev_yoy}%")
-    prompt = (f"你是台股短線分析師。依以下資料用繁體中文台灣用語給操作決策,"
-              f"要綜合均線型態、法人籌碼、營收動能。\n{ctx}\n\n"
-              f"只回 JSON 不要其他文字:\n"
-              f'{{"signal":"買進或賣出或觀望","score":0到100整數,'
-              f'"oneliner":"一句話決策30字內","reason":"理由80字內需提到籌碼與均線",'
-              f'"risk":"主要風險40字內"}}')
+           f"今日: 開{t['open']} 高{t['max']} 低{t['min']} 收{last} 漲跌{chg}% 量{t.get('Trading_Volume',0)//1000}張\n"
+           f"均線: MA5 {ma(5)} MA10 {ma(10)} MA20 {ma(20)}｜近10日收盤 {closes[-10:]}\n"
+           f"籌碼: 外資近12日 {foreign} 張、投信 {trust} 張\n"
+           f"基本面: 月營收YoY {rev_yoy}%、EPS {eps}、毛利率 {gm}%、PER {pe}、PBR {pb}、殖利率 {yld}%")
+    prompt = (f"你是台股短線分析師。依資料用繁體中文台灣用語給操作決策,綜合均線型態、法人籌碼、營收/估值。\n{ctx}\n\n"
+              f"只回 JSON:\n"
+              f'{{"signal":"買進或賣出或觀望","score":0到100整數,"oneliner":"一句話決策30字內",'
+              f'"reason":"理由80字內提到籌碼與均線","risk":"主要風險40字內",'
+              f'"buy_point":"理想買點(價位或條件)","stop_loss":"停損位(價位)","target":"目標價位",'
+              f'"checklist":["檢查項1正or負","檢查項2","檢查項3"]}}')
     try:
         resp = litellm.completion(model=MODEL, api_key=GEMINI_KEY, temperature=0.3,
                                   messages=[{"role": "user", "content": prompt}])
-        txt = resp.choices[0].message.content
-        m = re.search(r"\{.*\}", txt, re.S)
+        m = re.search(r"\{.*\}", resp.choices[0].message.content, re.S)
         d = json.loads(m.group(0))
     except Exception as e:
         print(f"  [{code}] LLM 失敗:{e}")
-        d = {"signal": "觀望", "score": 50, "oneliner": "資料分析失敗",
-             "reason": "", "risk": ""}
+        d = {"signal": "觀望", "score": 50, "oneliner": "資料分析失敗", "reason": "", "risk": ""}
     d.update({
         "code": code, "name": name, "chain": chain, "last": last,
         "ma5": ma(5), "ma10": ma(10), "ma20": ma(20),
         "foreign": foreign, "trust": trust, "rev_yoy": rev_yoy,
+        "open": t["open"], "high": t["max"], "low": t["min"], "chg": chg,
+        "vol": t.get("Trading_Volume", 0) // 1000,
+        "eps": eps, "gross_margin": gm, "pe": pe, "pb": pb, "yield": yld,
         "emoji": SIG_EMOJI.get(d.get("signal", "觀望"), "⚪"),
         "dates": [x["date"][5:] for x in price[-60:]],
         "closes": closes[-60:],
