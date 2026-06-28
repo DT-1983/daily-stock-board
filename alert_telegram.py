@@ -16,6 +16,7 @@ from tw_report import convert
 
 TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 CHAT = os.environ.get("TELEGRAM_CHAT_ID", "")
+PAGES_URL = "https://dt-1983.github.io/daily-stock-board/"
 STATE = "state/signals.json"
 TW_JSON = "tw_analysis.json"
 ALERT_SIGS = {"🔴", "🟢"}
@@ -85,7 +86,8 @@ def main():
         us_n = sum(1 for a in alerts if a[1] == "US")
         tw_n = len(alerts) - us_n
         lines = [f"🔔 <b>產業鏈訊號提醒 {date}</b>",
-                 f"<i>美股 {us_n}、台股 {tw_n} 檔反轉/警示，完整看板見附件</i>", ""]
+                 f"<i>美股 {us_n}、台股 {tw_n} 檔反轉/警示</i>",
+                 f'📊 <a href="{PAGES_URL}">完整看板</a>（或見附件）', ""]
         for c in CHAIN_ORDER + ["其他"]:
             cs = [a for a in alerts if a[0] == c]
             if not cs:
@@ -99,7 +101,7 @@ def main():
             lines.append("")
         send_text("\n".join(lines))
     else:
-        send_text(f"✅ <b>{date}</b> 今日無反轉/警示。完整看板見附件。")
+        send_text(f'✅ <b>{date}</b> 今日無反轉/警示。📊 <a href="{PAGES_URL}">完整看板</a>。')
 
     send_doc(html_path, f"{date} 產業鏈看板（美股+台股，7 鏈）")
 
