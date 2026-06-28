@@ -54,6 +54,23 @@ def us_pool():
     return pool
 
 
+def obv_strength(closes, vols, n=20):
+    """OBV(能量潮)近 n 日淨流入，相對成交量正規化（size-neutral）。
+    >0 = 資金淨流入(量增買進)，<0 = 淨流出(出貨)。"""
+    if len(closes) < n + 1:
+        return 0.0
+    obv = [0.0]
+    for i in range(1, len(closes)):
+        if closes[i] > closes[i - 1]:
+            obv.append(obv[-1] + vols[i])
+        elif closes[i] < closes[i - 1]:
+            obv.append(obv[-1] - vols[i])
+        else:
+            obv.append(obv[-1])
+    avg = sum(vols[-n:]) / n
+    return (obv[-1] - obv[-1 - n]) / (avg * n) if avg else 0.0
+
+
 def us_metrics(tk):
     try:
         t = yf.Ticker(tk)
@@ -62,8 +79,11 @@ def us_metrics(tk):
         g = info.get("revenueGrowth") or 0
         NAME.setdefault(tk, info.get("shortName", tk))
         h = t.history(period="3mo")
-        mom = (h["Close"].iloc[-1] / h["Close"].iloc[0] - 1) if len(h) > 5 else 0
-        return {"mktcap": mc, "growth": g, "inflow": mom}
+        if len(h) < 21:
+            return {"mktcap": mc, "growth": g, "inflow": 0}
+        # 進場 = OBV 量能流入（取代純漲幅，看資金是否真的在買）
+        inflow = obv_strength(h["Close"].tolist(), h["Volume"].tolist())
+        return {"mktcap": mc, "growth": g, "inflow": inflow}
     except Exception:
         return None
 
@@ -89,8 +109,14 @@ def tw_metrics(code):
         g = rev[-1]["revenue"] / rev[-13]["revenue"] - 1
     inst = fm("TaiwanStockInstitutionalInvestorsBuySell", code,
               (datetime.now() - timedelta(days=30)).strftime("%Y-%m-%d"))
-    foreign = sum(d["buy"] - d["sell"] for d in inst if d["name"] == "Foreign_Investor") // 1000
-    return {"mktcap": mc, "growth": g, "inflow": foreign}
+    # 法人(外資+投信)淨買超股數
+    fnet = sum(d["buy"] - d["sell"] for d in inst
+               if d["name"] in ("Foreign_Investor", "Investment_Trust"))
+    # 進場 = 法人買超 ÷ 近20日均量（相對值，小型股才不被大型股輾壓）
+    price = fm("TaiwanStockPrice", code, (datetime.now() - timedelta(days=40)).strftime("%Y-%m-%d"))
+    avgvol = sum(d["Trading_Volume"] for d in price[-20:]) / 20 if len(price) >= 20 else 0
+    inflow = fnet / (avgvol * 20) if avgvol else 0
+    return {"mktcap": mc, "growth": g, "inflow": inflow}
 
 
 def composite(metrics):
