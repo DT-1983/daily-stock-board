@@ -193,6 +193,9 @@ summary::-webkit-details-marker{display:none}
 .chip.pos{color:#3ddc84}.chip.neg{color:#ff7676}
 .chartbtn{margin:8px 0;font-size:13px;background:#262b33;border:0;color:#bcd2ff;padding:5px 12px;border-radius:8px;cursor:pointer}
 .chartbox{display:none;margin:6px 0}
+.cbar{display:flex;gap:6px;margin-bottom:6px}
+.cbtn{font-size:12.5px;padding:3px 10px;border-radius:8px;border:1px solid #2a2e35;background:#1c2128;color:#8a8f98;cursor:pointer}
+.cbtn.on{background:#4a9eff;color:#fff;border-color:#4a9eff}
 .rail{position:fixed;right:6px;top:80px;display:flex;flex-direction:column;gap:5px;z-index:20}
 .rail a,.rail button{font-size:11px;width:40px;height:40px;border-radius:50%;border:1px solid #2a2e35;
  background:#1c2128cc;color:#cfd3d8;text-decoration:none;display:flex;align-items:center;justify-content:center;cursor:pointer}
@@ -221,17 +224,27 @@ function showChart(btn,tk){
  if(box.style.display==='block'){box.style.display='none';return;}
  box.style.display='block'; if(box.dataset.done)return; box.dataset.done=1;
  const d=CHARTS[tk]; if(!d){box.innerHTML='<span class=sub>無走勢資料</span>';return;}
+ // 切換鈕：均線 / SuperTrend 各自開關
+ const bar=document.createElement('div');bar.className='cbar';
+ const hasST=d.supertrend&&d.supertrend.st;
+ bar.innerHTML='<button class="cbtn" data-g="ma">📊 均線 MA</button>'+
+   (hasST?'<button class="cbtn on" data-g="st">📈 SuperTrend</button>':'');
+ box.appendChild(bar);
  const c=document.createElement('canvas');box.appendChild(c);
  const ds=[
-   {label:'收盤',data:d.close,borderColor:'#4a9eff',borderWidth:2,pointRadius:0},
-   {label:'MA5',data:d.ma5,borderColor:'#3ddc84',borderWidth:1,pointRadius:0,hidden:true},
-   {label:'MA10',data:d.ma10,borderColor:'#f0b429',borderWidth:1,pointRadius:0,hidden:true},
-   {label:'MA20',data:d.ma20,borderColor:'#ff5c5c',borderWidth:1,pointRadius:0}];
- if(d.supertrend&&d.supertrend.st){ds.push({label:'SuperTrend',data:d.supertrend.st,borderWidth:2.6,pointRadius:0,spanGaps:false,
+   {label:'收盤',data:d.close,borderColor:'#4a9eff',borderWidth:2,pointRadius:0,_g:'price'},
+   {label:'MA5',data:d.ma5,borderColor:'#3ddc84',borderWidth:1,pointRadius:0,_g:'ma',hidden:true},
+   {label:'MA10',data:d.ma10,borderColor:'#f0b429',borderWidth:1,pointRadius:0,_g:'ma',hidden:true},
+   {label:'MA20',data:d.ma20,borderColor:'#888',borderWidth:1,pointRadius:0,_g:'ma',hidden:true}];
+ if(hasST){ds.push({label:'SuperTrend',data:d.supertrend.st,borderWidth:2.6,pointRadius:0,spanGaps:false,_g:'st',
    segment:{borderColor:ctx=>{const dir=d.supertrend.dir[ctx.p1DataIndex];return dir===1?'#3ddc84':(dir===-1?'#ff5c5c':'#8a8f98');}}});}
- new Chart(c,{type:'line',data:{labels:d.dates,datasets:ds},
-  options:{responsive:true,plugins:{legend:{labels:{color:'#cfd3d8',boxWidth:12,font:{size:11}}}},
+ const chart=new Chart(c,{type:'line',data:{labels:d.dates,datasets:ds},
+  options:{responsive:true,plugins:{legend:{display:false}},
    scales:{x:{ticks:{color:'#6b7280',maxTicksLimit:6,font:{size:10}}},y:{ticks:{color:'#6b7280',font:{size:10}}}}}});
+ bar.querySelectorAll('.cbtn').forEach(b=>b.onclick=()=>{
+   const on=b.classList.toggle('on');
+   chart.data.datasets.forEach((dd,i)=>{if(dd._g===b.dataset.g)chart.setDatasetVisibility(i,on);});
+   chart.update();});
 }
 """
 
