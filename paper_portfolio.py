@@ -134,15 +134,42 @@ def trend_longs(tickers):
     return sorted(longs)
 
 
+def _hong_score(rank, roe, rr):
+    """洪瑞泰品質分：龍頭 + 高ROE + 低盈再率（好生意=不用一直砸錢就會賺）。"""
+    s = {1: 3, 2: 2, 3: 1}.get(rank, 0)        # 龍頭加權（產業龍頭優先）
+    s += min(roe or 0, 0.6) * 3                  # ROE 越高越好
+    if rr is not None:
+        s += max(0, 0.80 - rr) * 4              # 盈再率越低越好（權重最高）
+    return s
+
+
 def buffett_top30(prices):
+    """洪瑞泰選股：好公司（龍頭 + ROE≥15% + 盈再率<80% + 排照妖鏡）在便宜時買。
+    優先現價≤俗價，不足 30 才放寬到≤合理價。取品質分前 30。"""
     wl = json.load(open(BUFFETT, encoding="utf-8")) if os.path.exists(BUFFETT) else {}
-    scored = []
-    for tk, dd in wl.items():
-        cheap, p = dd.get("cheap"), prices.get(tk)
-        if cheap and p and p <= cheap:
-            scored.append((tk, (cheap - p) / cheap))
-    scored.sort(key=lambda x: -x[1])
-    return sorted(tk for tk, _ in scored[:BUFFETT_TOPN])
+    tier1, tier2 = [], []   # ≤俗價 / ≤合理價
+    for tk, d in wl.items():
+        p, cheap, fair = prices.get(tk), d.get("cheap"), d.get("fair")
+        roe, rr = d.get("roe") or 0, d.get("reinvest")
+        if not (p and cheap and fair):
+            continue
+        if d.get("trap_flags"):           # 照妖鏡：EPS估降/高負債 → 排除
+            continue
+        if roe < 0.15:                     # 洪瑞泰第一關：ROE ≥ 15%
+            continue
+        if rr is not None and rr >= 0.80:  # 第二關：盈再率 < 80%（吃資本的爛生意淘汰）
+            continue
+        s = _hong_score(d.get("rank"), roe, rr)
+        if p <= cheap:
+            tier1.append((tk, s))
+        elif p <= fair:
+            tier2.append((tk, s))
+    tier1.sort(key=lambda x: -x[1])
+    tier2.sort(key=lambda x: -x[1])
+    picked = [tk for tk, _ in tier1[:BUFFETT_TOPN]]
+    if len(picked) < BUFFETT_TOPN:
+        picked += [tk for tk, _ in tier2[:BUFFETT_TOPN - len(picked)]]
+    return sorted(picked)
 
 
 def _batch(tickers):
