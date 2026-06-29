@@ -6,37 +6,43 @@
 body{font-family:"Microsoft JhengHei","PingFang TC",-apple-system,sans-serif;margin:0;
  background:#0f1115;color:#e6e6e6;line-height:1.55;font-size:15px}
 .wrap{max-width:920px;margin:0 auto;padding:16px}
-h1{font-size:20px;margin:6px 0}.sub{color:#9aa0a6;font-size:13px}a{color:#6db3ff}
+h1{font-size:20px;margin:6px 0}h2{font-size:16px;margin:18px 0 6px}.sub{color:#9aa0a6;font-size:13px}a{color:#6db3ff}
 .card{background:#1a1d23;border:1px solid #2a2e35;border-radius:10px;padding:12px;margin:12px 0}
+.vs{display:flex;gap:12px;margin:12px 0}
+.vs .box{flex:1;background:#1a1d23;border:1px solid #2a2e35;border-radius:12px;padding:14px;text-align:center}
+.vs .nm{font-size:15px;font-weight:700}.vs .val{font-size:26px;font-weight:800;margin:6px 0}
+.vs .ret{font-size:15px;font-weight:700}.vs .sub2{font-size:12px;color:#9aa0a6}
+.win{border-color:#3ddc84;box-shadow:0 0 0 1px #3ddc84}
 table{border-collapse:collapse;width:100%;font-size:14px}
 th,td{border-bottom:1px solid #2a2e35;padding:8px 6px;text-align:right}
 th{color:#9aa0a6;font-weight:600}td.l,th.l{text-align:left}
 .pos{color:#3ddc84;font-weight:700}.neg{color:#ff7676;font-weight:700}.flat{color:#9aa0a6}
-.medal{font-size:16px}
+.medal{font-size:15px}
 details{margin:2px 0}summary{cursor:pointer;color:#bcd2ff;font-size:13px}
 .hold{font-size:12px;color:#9aa0a6;padding:4px 0 4px 18px;word-break:break-all}
 .legend{font-size:12px;color:#9aa0a6;margin:8px 0;display:flex;flex-wrap:wrap;gap:12px}
 .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:middle}
 </style></head>
 <body><div class="wrap">
-<h1>🏇 策略賽馬 — 7 產業鏈 vs 巴菲特價值</h1>
-<div class="sub">起始 2026-06-29（第 0 天）· 更新 2026-06-30 00:11 · 等權重報酬指數（起始 100，免換匯）·
- 每週調倉 · <a href="https://dt-1983.github.io/daily-stock-board/">← 看板</a></div>
+<h1>🏇 策略賽馬 — 產業鏈 vs 巴菲特</h1>
+<div class="sub">起始 2026-06-30（第 0 天）· 更新 2026-06-30 00:24 · 每倉本金 $10,000 · 等權重 · 每週調倉 ·
+ <a href="https://dt-1983.github.io/daily-stock-board/">← 看板</a></div>
 
-<div class="card"><canvas id="race" height="150"></canvas>
-<div class="legend"><span><span class="dot" style="background:#4a9eff"></span>🖥️ AI 伺服器</span><span><span class="dot" style="background:#3ddc84"></span>🔆 矽光子/光通訊</span><span><span class="dot" style="background:#ff9b5c"></span>🛰️ 低軌衛星</span><span><span class="dot" style="background:#c98bff"></span>☀️ 太陽能</span><span><span class="dot" style="background:#ffd479"></span>₿ Bitcoin→AI 機房</span><span><span class="dot" style="background:#5ce0d8"></span>⚡ AI 電力/核能</span><span><span class="dot" style="background:#ff7676"></span>🤖 機器人</span><span><span class="dot" style="background:#9aa0a6"></span>🏛️ 巴菲特價值</span></div></div>
+<h2>⚔️ 兩大方法對決</h2><div class="vs"><div class="box win"><div class="nm">🏭 產業鏈全</div><div class="val">$10,000</div><div class="ret flat">+0.00%</div><div class="sub2">68 檔 · 起始 $10,000</div></div><div style="align-self:center;font-weight:800;color:#9aa0a6">VS</div><div class="box "><div class="nm">🏛️ 巴菲特價值</div><div class="val">$10,000</div><div class="ret flat">+0.00%</div><div class="sub2">30 檔 · 起始 $10,000</div></div></div>
 
-<div class="card">
-<table><tr><th class="l">模擬倉</th><th>淨值</th><th>報酬</th><th>持股</th></tr>
-<tr><td class="l"><span class="medal">🥇</span> 🖥️ <b>AI 伺服器</b></td><td>100.00</td><td class="flat">+0.00%</td><td>12</td></tr><tr><td colspan="4" class="l"><details><summary>持股 12 檔</summary><div class="hold">2308.TW、2317.TW、2368.TW、2382.TW、3324.TW、8046.TW、AMAT、DELL、LRCX、MRVL、MU、TSM</div></details></td></tr><tr><td class="l"><span class="medal">🥈</span> 🔆 <b>矽光子/光通訊</b></td><td>100.00</td><td class="flat">+0.00%</td><td>12</td></tr><tr><td colspan="4" class="l"><details><summary>持股 12 檔</summary><div class="hold">2345.TW、3081.TW、3105.TW、3163.TW、3363.TW、3450.TW、ALAB、AMD、ANET、CRDO、MRVL、MU</div></details></td></tr><tr><td class="l"><span class="medal">🥉</span> 🛰️ <b>低軌衛星</b></td><td>100.00</td><td class="flat">+0.00%</td><td>12</td></tr><tr><td colspan="4" class="l"><details><summary>持股 12 檔</summary><div class="hold">2314.TW、2454.TW、3105.TW、3491.TW、6271.TW、6285.TW、AMD、AMZN、ESE、LHX、MOG-A、TER</div></details></td></tr><tr><td class="l"><span class="medal">4</span> ☀️ <b>太陽能</b></td><td>100.00</td><td class="flat">+0.00%</td><td>10</td></tr><tr><td colspan="4" class="l"><details><summary>持股 10 檔</summary><div class="hold">3576.TW、5483.TW、6182.TW、6443.TW、BE、FSLR、HASI、NXT、RUN、SHLS</div></details></td></tr><tr><td class="l"><span class="medal">5</span> ₿ <b>Bitcoin→AI 機房</b></td><td>100.00</td><td class="flat">+0.00%</td><td>6</td></tr><tr><td colspan="4" class="l"><details><summary>持股 6 檔</summary><div class="hold">APLD、BTDR、HUT、IREN、RIOT、WULF</div></details></td></tr><tr><td class="l"><span class="medal">6</span> ⚡ <b>AI 電力/核能</b></td><td>100.00</td><td class="flat">+0.00%</td><td>11</td></tr><tr><td colspan="4" class="l"><details><summary>持股 11 檔</summary><div class="hold">1503.TW、1504.TW、1513.TW、1519.TW、1605.TW、CEG、ETN、HUBB、NVT、PCG、PEG</div></details></td></tr><tr><td class="l"><span class="medal">7</span> 🤖 <b>機器人</b></td><td>100.00</td><td class="flat">+0.00%</td><td>12</td></tr><tr><td colspan="4" class="l"><details><summary>持股 12 檔</summary><div class="hold">1504.TW、1597.TW、2049.TW、2359.TW、3023.TW、4576.TW、CRDO、ISRG、NVDA、NXPI、QCOM、TER</div></details></td></tr><tr><td class="l"><span class="medal">8</span> 🏛️ <b>巴菲特價值</b></td><td>100.00</td><td class="flat">+0.00%</td><td>151</td></tr><tr><td colspan="4" class="l"><details><summary>持股 151 檔</summary><div class="hold">AB、ACAD、ACGL、ACN、ADBE、ADT、AEO、AER、AGCO、ALL、AMP、AN、ANF、APA、APAM、ASO、AUPH、AX、AXS、B、BAH、BBVA、BCE、BFH、BKE、BKV、BLX、BSM、BTG、BVN…</div></details></td></tr>
-</table>
-</div>
-<p class="sub">玩法：每條產業鏈、巴菲特法各開一個紙上倉，等權重買、每週跟清單調倉。
-跑一段時間看誰賺最多 → 驗證哪套篩選邏輯真的有效。報酬用各股本地幣別%算（美股美元、台股台幣），不受匯率干擾。</p>
+<div class="card"><canvas id="race" height="160"></canvas>
+<div class="legend"><span><span class="dot" style="background:#4a9eff"></span>🏭 產業鏈全</span><span><span class="dot" style="background:#3ddc84"></span>🏛️ 巴菲特價值</span><span><span class="dot" style="background:#ff9b5c"></span>🖥️ AI 伺服器</span><span><span class="dot" style="background:#c98bff"></span>🔆 矽光子/光通訊</span><span><span class="dot" style="background:#ffd479"></span>🛰️ 低軌衛星</span><span><span class="dot" style="background:#5ce0d8"></span>☀️ 太陽能</span><span><span class="dot" style="background:#ff7676"></span>₿ Bitcoin→AI 機房</span><span><span class="dot" style="background:#9aa0a6"></span>⚡ AI 電力/核能</span><span><span class="dot" style="background:#8ab4f8"></span>🤖 機器人</span></div></div>
+
+<h2>🏭 7 條產業鏈明細</h2>
+<div class="card"><table><tr><th class="l">產業鏈</th><th>淨值</th><th>報酬</th><th>持股</th></tr>
+<tr><td class="l"><span class="medal">🥇</span> 🖥️ <b>AI 伺服器</b></td><td>$10,000</td><td class="flat">+0.00%</td><td>12</td></tr><tr><td colspan="4" class="l"><details><summary>持股 12 檔</summary><div class="hold">2308.TW、2317.TW、2368.TW、2382.TW、3324.TW、8046.TW、AMAT、DELL、LRCX、MRVL、MU、TSM</div></details></td></tr><tr><td class="l"><span class="medal">🥈</span> 🔆 <b>矽光子/光通訊</b></td><td>$10,000</td><td class="flat">+0.00%</td><td>12</td></tr><tr><td colspan="4" class="l"><details><summary>持股 12 檔</summary><div class="hold">2345.TW、3081.TW、3105.TW、3163.TW、3363.TW、3450.TW、ALAB、AMD、ANET、CRDO、MRVL、MU</div></details></td></tr><tr><td class="l"><span class="medal">🥉</span> 🛰️ <b>低軌衛星</b></td><td>$10,000</td><td class="flat">+0.00%</td><td>12</td></tr><tr><td colspan="4" class="l"><details><summary>持股 12 檔</summary><div class="hold">2314.TW、2454.TW、3105.TW、3491.TW、6271.TW、6285.TW、AMD、AMZN、ESE、LHX、MOG-A、TER</div></details></td></tr><tr><td class="l"><span class="medal">4</span> ☀️ <b>太陽能</b></td><td>$10,000</td><td class="flat">+0.00%</td><td>10</td></tr><tr><td colspan="4" class="l"><details><summary>持股 10 檔</summary><div class="hold">3576.TW、5483.TW、6182.TW、6443.TW、BE、FSLR、HASI、NXT、RUN、SHLS</div></details></td></tr><tr><td class="l"><span class="medal">5</span> ₿ <b>Bitcoin→AI 機房</b></td><td>$10,000</td><td class="flat">+0.00%</td><td>6</td></tr><tr><td colspan="4" class="l"><details><summary>持股 6 檔</summary><div class="hold">APLD、BTDR、HUT、IREN、RIOT、WULF</div></details></td></tr><tr><td class="l"><span class="medal">6</span> ⚡ <b>AI 電力/核能</b></td><td>$10,000</td><td class="flat">+0.00%</td><td>11</td></tr><tr><td colspan="4" class="l"><details><summary>持股 11 檔</summary><div class="hold">1503.TW、1504.TW、1513.TW、1519.TW、1605.TW、CEG、ETN、HUBB、NVT、PCG、PEG</div></details></td></tr><tr><td class="l"><span class="medal">7</span> 🤖 <b>機器人</b></td><td>$10,000</td><td class="flat">+0.00%</td><td>12</td></tr><tr><td colspan="4" class="l"><details><summary>持股 12 檔</summary><div class="hold">1504.TW、1597.TW、2049.TW、2359.TW、3023.TW、4576.TW、CRDO、ISRG、NVDA、NXPI、QCOM、TER</div></details></td></tr></table></div>
+
+<p class="sub">玩法：產業鏈全（七鏈守備清單全買）與巴菲特30（最被低估前30）各投 $10,000，等權重、每週跟清單調倉。
+報酬用各股本地幣別%算（美股美元、台股台幣），免匯率干擾。跑一段時間看「動能 vs 價值」哪邊賺。</p>
 </div>
 <script>
 new Chart(document.getElementById('race'),{type:'line',
- data:{labels:["2026-06-29"],datasets:[{"label": "🖥️ AI 伺服器", "data": [100.0], "borderColor": "#4a9eff", "fill": false, "tension": 0.2, "borderWidth": 2, "pointRadius": 0}, {"label": "🔆 矽光子/光通訊", "data": [100.0], "borderColor": "#3ddc84", "fill": false, "tension": 0.2, "borderWidth": 2, "pointRadius": 0}, {"label": "🛰️ 低軌衛星", "data": [100.0], "borderColor": "#ff9b5c", "fill": false, "tension": 0.2, "borderWidth": 2, "pointRadius": 0}, {"label": "☀️ 太陽能", "data": [100.0], "borderColor": "#c98bff", "fill": false, "tension": 0.2, "borderWidth": 2, "pointRadius": 0}, {"label": "₿ Bitcoin→AI 機房", "data": [100.0], "borderColor": "#ffd479", "fill": false, "tension": 0.2, "borderWidth": 2, "pointRadius": 0}, {"label": "⚡ AI 電力/核能", "data": [100.0], "borderColor": "#5ce0d8", "fill": false, "tension": 0.2, "borderWidth": 2, "pointRadius": 0}, {"label": "🤖 機器人", "data": [100.0], "borderColor": "#ff7676", "fill": false, "tension": 0.2, "borderWidth": 2, "pointRadius": 0}, {"label": "🏛️ 巴菲特價值", "data": [100.0], "borderColor": "#9aa0a6", "fill": false, "tension": 0.2, "borderWidth": 2, "pointRadius": 0}]},
+ data:{labels:["2026-06-30"],datasets:[{"label": "🏭 產業鏈全", "data": [10000.0], "borderColor": "#4a9eff", "fill": false, "tension": 0.2, "borderWidth": 3, "borderDash": [], "pointRadius": 0}, {"label": "🏛️ 巴菲特價值", "data": [10000.0], "borderColor": "#3ddc84", "fill": false, "tension": 0.2, "borderWidth": 3, "borderDash": [], "pointRadius": 0}, {"label": "🖥️ AI 伺服器", "data": [10000.0], "borderColor": "#ff9b5c", "fill": false, "tension": 0.2, "borderWidth": 1.5, "borderDash": [4, 3], "pointRadius": 0}, {"label": "🔆 矽光子/光通訊", "data": [10000.0], "borderColor": "#c98bff", "fill": false, "tension": 0.2, "borderWidth": 1.5, "borderDash": [4, 3], "pointRadius": 0}, {"label": "🛰️ 低軌衛星", "data": [10000.0], "borderColor": "#ffd479", "fill": false, "tension": 0.2, "borderWidth": 1.5, "borderDash": [4, 3], "pointRadius": 0}, {"label": "☀️ 太陽能", "data": [10000.0], "borderColor": "#5ce0d8", "fill": false, "tension": 0.2, "borderWidth": 1.5, "borderDash": [4, 3], "pointRadius": 0}, {"label": "₿ Bitcoin→AI 機房", "data": [10000.0], "borderColor": "#ff7676", "fill": false, "tension": 0.2, "borderWidth": 1.5, "borderDash": [4, 3], "pointRadius": 0}, {"label": "⚡ AI 電力/核能", "data": [10000.0], "borderColor": "#9aa0a6", "fill": false, "tension": 0.2, "borderWidth": 1.5, "borderDash": [4, 3], "pointRadius": 0}, {"label": "🤖 機器人", "data": [10000.0], "borderColor": "#8ab4f8", "fill": false, "tension": 0.2, "borderWidth": 1.5, "borderDash": [4, 3], "pointRadius": 0}]},
  options:{responsive:true,interaction:{mode:'index',intersect:false},
   plugins:{legend:{display:false}},
   scales:{y:{grid:{color:'#2a2e35'},ticks:{color:'#9aa0a6'}},
