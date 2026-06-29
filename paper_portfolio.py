@@ -1,12 +1,14 @@
-"""策略賽馬：7 條產業鏈 + 巴菲特價值，各開一個紙上模擬倉，每週調倉、每日記淨值。
+"""策略賽馬：產業鏈 vs 巴菲特，紙上模擬倉，每週調倉、每日記淨值。
 
-淨值用「等權重報酬指數」（起始 100）：用各股報酬率(%)算，美股算美元、台股算台幣 →
-天生免換匯，純比選股。每週跟著守備清單/巴菲特買進訊號調倉，NAV 接續累計。
+2 主倉對決：
+  ① 產業鏈全：7 條鏈守備清單全買，等權重，$10,000
+  ② 巴菲特價值：現價≤俗價中折價最大前 30，等權重，$10,000
+另含 7 鏈明細倉（各 $10,000）看哪條鏈領先。
 
-用法:
-  python paper_portfolio.py init       # 首次建檔（起始日=今天，做第一次調倉+記NAV）
-  python paper_portfolio.py rebalance  # 每週：賣退榜、買新進，NAV 接續
-  python paper_portfolio.py nav        # 每日：用現價更新 NAV，記一筆歷史
+淨值＝$10,000 ×（等權重報酬因子）：用各股報酬率(%)算，美股美元、台股台幣 →
+天生免換匯，純比選股。每週跟清單調倉，淨值接續累計。
+
+用法:python paper_portfolio.py [init|rebalance|nav]
 """
 import sys
 import json
@@ -17,16 +19,19 @@ import yfinance as yf
 STORE = "portfolios.json"
 SCREEN = "screen_result.json"
 BUFFETT = "buffett_watch.json"
+BASE = 10000.0                  # 每倉起始本金（美金）
 BUFFETT_NAME = "巴菲特價值"
+CHAIN_ALL = "產業鏈全"
+BUFFETT_TOPN = 30
+MAIN = [CHAIN_ALL, BUFFETT_NAME]  # 2 主倉（其餘為 7 鏈明細）
 
 
 def tw_yf(code):
-    """台股代號 → yfinance（純數字加 .TW）。"""
     return f"{code}.TW" if str(code).isdigit() else str(code)
 
 
 def chain_holdings():
-    """從 screen_result.json 取每條鏈的守備清單（美+台），回 {chain: [yf_ticker,...]}。"""
+    """每條鏈守備清單（美+台），回 {chain: [yf_ticker,...]}。"""
     d = json.load(open(SCREEN, encoding="utf-8"))
     out = {}
     for chain in d.get("us", {}):
@@ -36,16 +41,16 @@ def chain_holdings():
     return out
 
 
-def buffett_buy_holdings(prices):
-    """巴菲特倉 = 現價 ≤ 俗價（🟢買進訊號）的股。"""
+def buffett_top30(prices):
+    """巴菲特倉 = 現價≤俗價中，折價(=(俗價-現價)/俗價)最大前 30。"""
     wl = json.load(open(BUFFETT, encoding="utf-8")) if os.path.exists(BUFFETT) else {}
-    buys = []
+    scored = []
     for tk, d in wl.items():
-        cheap = d.get("cheap")
-        p = prices.get(tk)
+        cheap, p = d.get("cheap"), prices.get(tk)
         if cheap and p and p <= cheap:
-            buys.append(tk)
-    return sorted(buys)
+            scored.append((tk, (cheap - p) / cheap))
+    scored.sort(key=lambda x: -x[1])
+    return sorted(tk for tk, _ in scored[:BUFFETT_TOPN])
 
 
 def _batch(tickers):
@@ -63,11 +68,9 @@ def _batch(tickers):
 
 
 def fetch_prices(tickers):
-    """批次抓現價，回 {ticker: price}。台股 .TW 抓不到自動退 .TWO（上櫃），
-    價格仍掛在原 .TW key 上（持股名穩定）。"""
+    """批次抓現價；台股 .TW 抓不到自動退 .TWO（上櫃），價仍掛原 .TW key。"""
     tickers = sorted(set(tickers))
     out = _batch(tickers)
-    # .TW 失敗 → 試 .TWO（上櫃），存回原 .TW key
     miss_two = {tk: tk.replace(".TW", ".TWO") for tk in tickers
                 if tk.endswith(".TW") and tk not in out}
     if miss_two:
@@ -78,26 +81,34 @@ def fetch_prices(tickers):
     return out
 
 
+def build_holdings_map(prices):
+    """2 主倉 + 7 鏈。產業鏈全=7 鏈聯集。"""
+    chains = chain_holdings()
+    union = sorted({t for v in chains.values() for t in v})
+    m = {CHAIN_ALL: union, BUFFETT_NAME: buffett_top30(prices)}
+    m.update(chains)
+    return m
+
+
 def load():
-    if os.path.exists(STORE):
-        return json.load(open(STORE, encoding="utf-8"))
-    return None
+    return json.load(open(STORE, encoding="utf-8")) if os.path.exists(STORE) else None
 
 
 def save(state):
     json.dump(state, open(STORE, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
 
-def _nav_now(pf, prices):
-    """用現價算當前 NAV：nav_base × 等權報酬因子（只算 entry/現價都有的股）。"""
-    factors = []
-    for tk in pf["holdings"]:
-        e, p = pf["entry"].get(tk), prices.get(tk)
-        if e and p:
-            factors.append(p / e)
+def _value_now(pf, prices):
+    """當前淨值 = nav_base × 等權報酬因子（只算 entry/現價都有的股）。"""
+    factors = [prices[t] / pf["entry"][t] for t in pf["holdings"]
+               if pf["entry"].get(t) and prices.get(t)]
     if not factors:
         return pf["nav"]
     return round(pf["nav_base"] * (sum(factors) / len(factors)), 2)
+
+
+def _ret(nav):
+    return round((nav / BASE - 1) * 100, 2)
 
 
 def _all_tickers(state):
@@ -107,12 +118,15 @@ def _all_tickers(state):
     return s
 
 
+def _entry_for(prices, holdings):
+    return {tk: prices[tk] for tk in holdings if tk in prices}
+
+
 def update_nav(state, prices, date):
-    """每日：算各倉 NAV、報酬%，append 歷史。"""
     for pf in state["portfolios"].values():
-        nav = _nav_now(pf, prices)
+        nav = _value_now(pf, prices)
         pf["nav"] = nav
-        pf["ret"] = round(nav - 100, 2)
+        pf["ret"] = _ret(nav)
         if not pf["history"] or pf["history"][-1][0] != date:
             pf["history"].append([date, nav])
         else:
@@ -120,26 +134,18 @@ def update_nav(state, prices, date):
     state["updated"] = date
 
 
-def rebalance(state, holdings_map, prices, date):
-    """每週：先鎖定到今天的績效(nav→nav_base)，再換成新持股、重抓 entry。"""
+def rebalance(state, hmap, prices, date):
     for name, pf in state["portfolios"].items():
-        new = holdings_map.get(name, pf["holdings"])
-        nav = _nav_now(pf, prices)          # 先結算舊持股到今天
+        nav = _value_now(pf, prices)        # 先結算舊持股到今天
         pf["nav"] = nav
         pf["nav_base"] = nav                # 接續基準
-        pf["holdings"] = new
-        pf["entry"] = {tk: prices[tk] for tk in new if tk in prices}
-        pf["ret"] = round(nav - 100, 2)
+        pf["holdings"] = hmap.get(name, pf["holdings"])
+        pf["entry"] = _entry_for(prices, pf["holdings"])
+        pf["ret"] = _ret(nav)
         pf["rebalanced"] = date
         if not pf["history"] or pf["history"][-1][0] != date:
             pf["history"].append([date, nav])
     state["updated"] = date
-
-
-def build_holdings_map(prices):
-    m = chain_holdings()
-    m[BUFFETT_NAME] = buffett_buy_holdings(prices)
-    return m
 
 
 def main():
@@ -150,27 +156,26 @@ def main():
         if load():
             print("portfolios.json 已存在，改用 rebalance/nav")
             return
-        # 先抓守備清單(美+台)+巴菲特候選的價，決定 holdings
         chains = chain_holdings()
         wl = json.load(open(BUFFETT, encoding="utf-8")) if os.path.exists(BUFFETT) else {}
         allt = set(wl.keys())
         for v in chains.values():
             allt.update(v)
         prices = fetch_prices(allt)
-        hmap = dict(chains)
-        hmap[BUFFETT_NAME] = buffett_buy_holdings(prices)
-        state = {"inception": date, "updated": date, "portfolios": {}}
+        hmap = build_holdings_map(prices)
+        state = {"inception": date, "updated": date, "base": BASE,
+                 "main": MAIN, "portfolios": {}}
         for name, hold in hmap.items():
-            entry = {tk: prices[tk] for tk in hold if tk in prices}
             state["portfolios"][name] = {
-                "holdings": hold, "entry": entry, "nav_base": 100.0,
-                "nav": 100.0, "ret": 0.0, "rebalanced": date,
-                "history": [[date, 100.0]],
+                "holdings": hold, "entry": _entry_for(prices, hold),
+                "nav_base": BASE, "nav": BASE, "ret": 0.0, "rebalanced": date,
+                "history": [[date, BASE]],
             }
         save(state)
-        print(f"✅ init 完成：{len(state['portfolios'])} 倉，起始 {date}")
+        print(f"✅ init：{len(state['portfolios'])} 倉（2 主+7 鏈），各 ${BASE:,.0f}，起始 {date}")
         for n, pf in state["portfolios"].items():
-            print(f"  {n}: {len(pf['holdings'])} 檔")
+            tag = "主倉" if n in MAIN else "鏈"
+            print(f"  [{tag}] {n}: {len(pf['holdings'])} 檔")
         return
 
     state = load()
@@ -179,13 +184,13 @@ def main():
         return
 
     if cmd == "rebalance":
-        prices = fetch_prices(_all_tickers(state) | set(json.load(open(BUFFETT, encoding="utf-8")).keys()))
-        hmap = build_holdings_map(prices)
-        rebalance(state, hmap, prices, date)
+        allt = _all_tickers(state) | set(json.load(open(BUFFETT, encoding="utf-8")).keys())
+        prices = fetch_prices(allt)
+        rebalance(state, build_holdings_map(prices), prices, date)
         save(state)
         print(f"✅ rebalance {date}")
         for n, pf in state["portfolios"].items():
-            print(f"  {n}: {len(pf['holdings'])} 檔 NAV {pf['nav']} ({pf['ret']:+.2f}%)")
+            print(f"  {n}: {len(pf['holdings'])} 檔 ${pf['nav']:,.0f} ({pf['ret']:+.2f}%)")
     elif cmd == "nav":
         prices = fetch_prices(_all_tickers(state))
         update_nav(state, prices, date)
@@ -193,7 +198,7 @@ def main():
         rank = sorted(state["portfolios"].items(), key=lambda kv: -kv[1]["ret"])
         print(f"✅ nav {date}　排行:")
         for n, pf in rank:
-            print(f"  {pf['ret']:+6.2f}%  {n}  NAV {pf['nav']}")
+            print(f"  {pf['ret']:+6.2f}%  ${pf['nav']:>9,.0f}  {n}")
 
 
 if __name__ == "__main__":
