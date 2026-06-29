@@ -52,10 +52,15 @@ jobs:
       - name: 產巴菲特價值清單頁（docs/buffett.html）
         run: python buffett_html.py -o docs/buffett.html || echo "巴菲特頁失敗，跳過"
 
-      - name: commit 新清單 + 巴菲特頁
+      - name: 模擬倉每週調倉（跟新清單）+ 出賽馬頁
+        run: |
+          python paper_portfolio.py rebalance || echo "調倉失敗，跳過"
+          python portfolio_html.py -o docs/portfolios.html || echo "賽馬頁失敗，跳過"
+
+      - name: commit 新清單 + 巴菲特頁 + 模擬倉
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add screen_result.json docs/buffett.html
-          git commit -m "chore: weekly re-screen + 巴菲特頁 [skip ci]" || echo "無變化"
+          git add screen_result.json docs/buffett.html portfolios.json docs/portfolios.html
+          git commit -m "chore: weekly re-screen + 巴菲特頁 + 模擬倉調倉 [skip ci]" || echo "無變化"
           git push || echo "push 略過"
