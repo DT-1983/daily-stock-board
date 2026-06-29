@@ -98,7 +98,7 @@ def main():
             lines.append(f"　…還有 {len(traps)-10} 檔")
         lines.append("")
     lines.append("<i>💎=同時在守備清單(趨勢好)，最強｜⚠️=價值陷阱嫌疑(便宜有理由)，別追</i>")
-    lines.append(f'📊 <a href="{PAGES_URL}">產業鏈看板</a>')
+    lines.append(f'🏛️ <a href="{PAGES_URL}buffett.html">完整巴菲特清單</a>（{len(tickers)} 檔含龍頭排名）｜📊 <a href="{PAGES_URL}">產業鏈看板</a>')
     send("\n".join(lines))
     print(f"✅ 到俗價 {len(cand)}：體質過關 {len(clean)}、疑似陷阱 {len(traps)}、雙確認 {len(double)}")
 
