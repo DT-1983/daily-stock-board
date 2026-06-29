@@ -37,8 +37,8 @@ body{font-family:"Microsoft JhengHei","PingFang TC",-apple-system,sans-serif;mar
 h1{font-size:20px;margin:6px 0}h2{font-size:16px;margin:18px 0 6px}.sub{color:#9aa0a6;font-size:13px}a{color:#6db3ff}
 .tot{background:#1a1d23;border:1px solid #2a2e35;border-radius:12px;padding:14px;margin:10px 0;text-align:center}
 .tot .big{font-size:30px;font-weight:800}.tot .sub2{font-size:13px;color:#9aa0a6}
-.vs{display:flex;gap:10px;margin:10px 0}
-.vs .box{flex:1;background:#1a1d23;border:1px solid #2a2e35;border-radius:12px;padding:12px;text-align:center}
+.vs{display:flex;gap:10px;margin:10px 0;flex-wrap:wrap}
+.vs .box{flex:1;min-width:150px;background:#1a1d23;border:1px solid #2a2e35;border-radius:12px;padding:12px;text-align:center}
 .vs .nm{font-size:14px;font-weight:700}.vs .val{font-size:22px;font-weight:800;margin:4px 0}
 .vs .pnl{font-size:14px;font-weight:700}.vs .sub2{font-size:12px;color:#9aa0a6}
 .win{border-color:#3ddc84;box-shadow:0 0 0 1px #3ddc84}
@@ -121,26 +121,24 @@ def build(state):
     cur_total = sum(pfs[n]["value"] for n in main)
     pnl_total = cur_total - invested
     ret_total = (cur_total / invested - 1) * 100 if invested else 0
-    tot = (f'<div class="tot"><div class="sub2">2 大方法總投入 {usd(invested)}（各 {usd(base)}）</div>'
+    tot = (f'<div class="tot"><div class="sub2">{len(main)} 套方法總投入 {usd(invested)}（各 {usd(base)}）</div>'
            f'<div class="big {cls(pnl_total)}">{usd(cur_total)}　<span style="font-size:18px">'
            f'{usd(pnl_total,1)}（{ret_total:+.2f}%）</span></div></div>')
 
-    # 2 主倉對決卡
+    # 主倉對決卡（N 個方法並排，報酬最高者綠框）
     vs = ""
-    if len(main) >= 2:
-        a, b = pfs[main[0]], pfs[main[1]]
-        wa = "win" if a["ret"] >= b["ret"] else ""
-        wb = "win" if b["ret"] > a["ret"] else ""
+    if main:
+        best = max(pfs[n]["ret"] for n in main)
 
-        def box(name, pf, w):
+        def box(name):
+            pf = pfs[name]
+            w = "win" if pf["ret"] == best else ""
             return (f'<div class="box {w}"><div class="nm">{ICON.get(name,"")} {esc(name)}</div>'
                     f'<div class="val">{usd(pf["value"])}</div>'
                     f'<div class="pnl {cls(pf["pnl"])}">{usd(pf["pnl"],1)}（{pf["ret"]:+.2f}%）</div>'
                     f'<div class="sub2">{len(pf["holdings"])} 檔</div>'
                     f'<details><summary>看持股</summary>{holding_rows(pf)}</details></div>')
-        vs = (f'<div class="vs">{box(main[0],a,wa)}'
-              f'<div style="align-self:center;font-weight:800;color:#9aa0a6">VS</div>'
-              f'{box(main[1],b,wb)}</div>')
+        vs = '<div class="vs">' + "".join(box(n) for n in main) + '</div>'
 
     # 7 鏈明細
     chains = sorted([(n, pf) for n, pf in pfs.items() if n not in main],
@@ -174,7 +172,7 @@ def build(state):
 <div class="card"><canvas id="race" height="150"></canvas>
 <div class="legend">{legend}</div></div>
 
-<h2>⚔️ 兩大方法對決（點「看持股」展開）</h2>{vs}
+<h2>⚔️ 三套方法對決（點「看持股」展開）</h2>{vs}
 
 <h2>🏭 7 條產業鏈明細</h2>
 <div class="card"><table><tr><th class="l">產業鏈</th><th>市值</th><th>損益</th><th>報酬</th></tr>
@@ -182,13 +180,17 @@ def build(state):
 
 <h2>📖 兩套買股方法怎麼決定的</h2>
 <div class="card" style="font-size:13.5px;line-height:1.65">
-<p style="margin:4px 0"><b>🏭 產業鏈全 ＋ 7 鏈（動能／成長派）</b><br>
+<p style="margin:4px 0"><b>🏭 產業鏈精選（動能／成長派）</b><br>
 鎖定 7 條 AI 題材產業鏈，每條鏈用<b>三因子客觀篩選</b>選最強標的（非人工挑）：<br>
 　① <b>市值</b>：規模越大越穩、流動性好<br>
 　② <b>成長</b>：美股看營收年增率、台股看月營收 YoY<br>
 　③ <b>進場（資金流）</b>：美股看 <b>OBV 能量潮</b>（量價是否同步、資金真的在買）、台股看 <b>法人20日買超÷均量</b><br>
-三因子各自排名正規化加總，每鏈取最強幾檔 → <b>守備清單</b>。
-「產業鏈全」＝7 鏈守備清單全買；「7 鏈」＝各鏈分開比。<b>每週日重篩</b>，量沒進來的會被換掉。</p>
+三因子各自排名正規化加總 → <b>守備清單</b>。「產業鏈精選」＝<b>每鏈取分數最高前 2</b>（重點壓 ~14 檔）；
+下方「7 鏈明細」＝各鏈完整清單分開比。<b>每週日重篩</b>，量沒進來的會被換掉。</p>
+<hr style="border-color:#2a2e35;margin:10px 0">
+<p style="margin:4px 0"><b>⚡ 產業鏈+趨勢（選股＋擇時）</b><br>
+拿「產業鏈精選」同一批股，再用 <b>SuperTrend</b>（TradingView 同款趨勢線）過濾：
+<b>只抱「多頭（綠燈）」的，翻空（紅燈）就先不持有</b>。測「選股好之後，加上趨勢擇時會不會更賺、回檔少」。</p>
 <hr style="border-color:#2a2e35;margin:10px 0">
 <p style="margin:4px 0"><b>🏛️ 巴菲特價值（價值派 · 洪瑞泰俗貴價法）</b><br>
 專找「<b>被低估的好公司</b>」：<br>
@@ -207,8 +209,8 @@ def build(state):
 <hr style="border-color:#2a2e35;margin:10px 0">
 <p style="margin:4px 0"><b>⚙️ 其它</b>：台股以<b>即時匯率</b>（現 1美元={fx}台幣）換美金，全部美金加總才能比。
 <b>市值 ＝ Σ 股數×現價，損益 ＝ 市值 − 本金</b>。每週跟新清單調倉（賣退榜、買新進，把當下總市值重新均分），淨值接續累計。</p>
-<p class="sub" style="margin:8px 0 0">一句話：<b>產業鏈＝追「現在強、資金在進」的成長股；巴菲特＝撿「便宜的好公司」</b>。
-跑一段時間看哪套在這個市場賺得多。</p>
+<p class="sub" style="margin:8px 0 0">一句話：<b>產業鏈精選＝追「現在強、資金在進」；產業鏈+趨勢＝同股再加趨勢擇時；巴菲特＝撿「便宜的好公司」</b>。
+跑一段時間看哪套在這個市場賺得多、回檔少。</p>
 </div>
 </div>
 <script>
