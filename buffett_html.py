@@ -139,7 +139,7 @@ def build(watch):
 <div class="sub">資料更新 {esc(upd)} · 產生 {date} · 共 {len(watch)} 檔 · <a href="{PAGES_URL}">← 產業鏈看板</a></div>
 <div class="legend">
 <b>訊號（洪瑞泰核心）</b>：🟢買進 現價≤俗價 ｜ 🟡觀望 俗價~合理價 ｜ 🔵持有 合理~貴價 ｜ 🔴賣出 現價&gt;貴價<br>
-<b>俗價</b>=EPS×12 ｜ <b>合理價</b>=EPS×15 ｜ <b>貴價</b>=EPS×20（洪瑞泰原版倍數）<br>
+<b>俗價</b>=EPS×12（報酬15%）｜ <b>合理價</b>=EPS×20（報酬6.7%＝定存）｜ <b>貴價</b>=EPS×30（報酬0%）<br>
 <span class="lead">龍頭#N</span> = 同 sector 市值前 3（補充參考）
 <span class="trap">⚠️照妖鏡</span> = forward EPS 衰退 / 負債&gt;{DE_HIGH}%（俗價用過去 EPS 算，未來恐縮水 → 便宜有理由，別追）<br>
 <i>照妖鏡只是「多一層檢查」，不改洪瑞泰選股；🟢🟡才跑（actionable）。</i>
