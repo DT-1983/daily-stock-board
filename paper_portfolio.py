@@ -82,9 +82,42 @@ def chain_select_union():
     return sorted({t for v in chain_top_picks().values() for t in v})
 
 
+def _supertrend_dir(highs, lows, closes, period=10, mult=3.0):
+    """標準 SuperTrend（ATR/Wilder），回最新方向 1多/-1空；資料不足回 1。
+    （複製自 board_html.supertrend，避免拉進 markdown/opencc 依賴。）"""
+    n = len(closes)
+    if n < period + 1 or not highs or not lows:
+        return 1
+    tr = [highs[0] - lows[0]]
+    for i in range(1, n):
+        tr.append(max(highs[i] - lows[i], abs(highs[i] - closes[i - 1]), abs(lows[i] - closes[i - 1])))
+    atr = [None] * n
+    atr[period - 1] = sum(tr[:period]) / period
+    for i in range(period, n):
+        atr[i] = (atr[i - 1] * (period - 1) + tr[i]) / period
+    hl2 = [(highs[i] + lows[i]) / 2 for i in range(n)]
+    up = lo = None
+    dr = 1
+    for i in range(period - 1, n):
+        if atr[i] is None:
+            continue
+        bu, bl = hl2[i] + mult * atr[i], hl2[i] - mult * atr[i]
+        if up is None:
+            up, lo = bu, bl
+            dr = 1 if closes[i] >= hl2[i] else -1
+        else:
+            nu = bu if (bu < up or closes[i - 1] > up) else up
+            nl = bl if (bl > lo or closes[i - 1] < lo) else lo
+            if closes[i] > up:
+                dr = 1
+            elif closes[i] < lo:
+                dr = -1
+            up, lo = nu, nl
+    return dr
+
+
 def trend_longs(tickers):
     """從候選裡只留 SuperTrend 多頭（綠燈）的；抓不到 OHLC 的保留（不過濾）。"""
-    from board_html import supertrend
     if not tickers:
         return []
     data = yf.download(sorted(tickers), period="3mo", progress=False,
@@ -93,9 +126,9 @@ def trend_longs(tickers):
     for tk in tickers:
         try:
             df = data[tk].dropna()
-            st = supertrend(df["High"].tolist(), df["Low"].tolist(), df["Close"].tolist())
-            if st is None or st["dir"][-1] == 1:
-                longs.append(tk)        # 多頭 or 資料不足 → 保留
+            d = _supertrend_dir(df["High"].tolist(), df["Low"].tolist(), df["Close"].tolist())
+            if d == 1:
+                longs.append(tk)        # 多頭（資料不足時 _supertrend_dir 回 1 → 保留）
         except Exception:
             longs.append(tk)
     return sorted(longs)
