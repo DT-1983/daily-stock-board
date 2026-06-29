@@ -22,9 +22,11 @@ SCREEN = "screen_result.json"
 BUFFETT = "buffett_watch.json"
 BASE = 10000.0
 BUFFETT_NAME = "巴菲特價值"
-CHAIN_ALL = "產業鏈全"
+CHAIN_ALL = "產業鏈精選"
+CHAIN_TREND = "產業鏈+趨勢"
 BUFFETT_TOPN = 30
-MAIN = [CHAIN_ALL, BUFFETT_NAME]
+TOP_PER_CHAIN = 2              # 產業鏈精選：每鏈取分數最高前 N（重點壓 ~14 檔）
+MAIN = [CHAIN_ALL, CHAIN_TREND, BUFFETT_NAME]
 FX_FALLBACK = 32.0              # USD/TWD 備援匯率
 
 
@@ -61,6 +63,42 @@ def chain_holdings():
         tw = [tw_yf(x["code"]) for x in d["tw"].get(chain, [])]
         out[chain] = sorted(set(us + tw))
     return out
+
+
+def chain_top_picks(n=TOP_PER_CHAIN):
+    """每鏈取分數最高前 n（美+台合併按 score 排）。回 {chain: [yf_ticker,...]}。"""
+    d = json.load(open(SCREEN, encoding="utf-8"))
+    out = {}
+    for chain in d.get("us", {}):
+        items = [(x["code"], x.get("score", 0)) for x in d["us"].get(chain, [])]
+        items += [(tw_yf(x["code"]), x.get("score", 0)) for x in d["tw"].get(chain, [])]
+        items.sort(key=lambda z: -z[1])
+        out[chain] = [c for c, _ in items[:n]]
+    return out
+
+
+def chain_select_union():
+    """產業鏈精選 = 各鏈前 N 聯集。"""
+    return sorted({t for v in chain_top_picks().values() for t in v})
+
+
+def trend_longs(tickers):
+    """從候選裡只留 SuperTrend 多頭（綠燈）的；抓不到 OHLC 的保留（不過濾）。"""
+    from board_html import supertrend
+    if not tickers:
+        return []
+    data = yf.download(sorted(tickers), period="3mo", progress=False,
+                       threads=False, auto_adjust=True, group_by="ticker")
+    longs = []
+    for tk in tickers:
+        try:
+            df = data[tk].dropna()
+            st = supertrend(df["High"].tolist(), df["Low"].tolist(), df["Close"].tolist())
+            if st is None or st["dir"][-1] == 1:
+                longs.append(tk)        # 多頭 or 資料不足 → 保留
+        except Exception:
+            longs.append(tk)
+    return sorted(longs)
 
 
 def buffett_top30(prices):
@@ -103,10 +141,13 @@ def fetch_prices(tickers):
 
 
 def build_holdings_map(prices):
-    chains = chain_holdings()
-    union = sorted({t for v in chains.values() for t in v})
-    m = {CHAIN_ALL: union, BUFFETT_NAME: buffett_top30(prices)}
-    m.update(chains)
+    """3 主倉 + 7 鏈明細。
+    產業鏈精選=各鏈前N聯集；產業鏈+趨勢=精選裡只留SuperTrend多頭；巴菲特=折價前30。"""
+    select = chain_select_union()
+    m = {CHAIN_ALL: select,
+         CHAIN_TREND: trend_longs(select),
+         BUFFETT_NAME: buffett_top30(prices)}
+    m.update(chain_holdings())   # 7 鏈明細（各鏈完整守備清單）
     return m
 
 
