@@ -373,7 +373,8 @@ def main():
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <style>{CSS}</style></head><body><div class="wrap" id="top">
 <h1>🎯 {date} 產業鏈看板</h1>
-<div class="sub">7 條產業鏈 · 美股(AI決策)＋台股(籌碼+AI決策) · 點卡片展開、點走勢圖載入</div>
+<div class="sub">7 條產業鏈 · 美股(AI決策)＋台股(籌碼+AI決策) · 點卡片展開、點走勢圖載入<br>
+🏛️ <a href="buffett.html" style="color:#6db3ff">巴菲特價值清單（俗貴價+龍頭排名）→</a></div>
 <div class="toggle">
  <button data-m="US" class="on" onclick="mkt('US')">🇺🇸 美股</button>
  <button data-m="TW" onclick="mkt('TW')">🇹🇼 台股</button>
