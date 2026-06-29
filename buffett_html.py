@@ -20,6 +20,19 @@ PAGES_URL = "https://dt-1983.github.io/daily-stock-board/"
 DECLINE_RATIO = 0.90   # forward/trailing < 0.9 → EPS 衰退
 DE_HIGH = 250          # 負債權益比 > 250% → 高槓桿
 
+SECTOR_TW = {  # yfinance GICS 產業 → 繁中
+    "Technology": "科技", "Financial Services": "金融", "Healthcare": "醫療保健",
+    "Consumer Cyclical": "非必需消費", "Consumer Defensive": "必需消費",
+    "Communication Services": "通訊服務", "Industrials": "工業", "Energy": "能源",
+    "Basic Materials": "原物料", "Real Estate": "房地產", "Utilities": "公用事業",
+    "Unknown": "未分類", "": "未分類",
+}
+
+
+def sector_tw(s):
+    return SECTOR_TW.get(s, s)
+
+
 SIG = {  # 訊號: (emoji, 中文, css)
     "buy":   ("🟢", "買進", "buy"),
     "watch": ("🟡", "觀望", "watch"),
@@ -161,7 +174,7 @@ def build(watch):
             px = f'{r["price"]:.1f}' if r.get("price") else "—"
             out.append(
                 f'<tr class="{sig}"><td class="l">{lead}<span class="tk">{esc(r["tk"])}</span></td>'
-                f'<td class="l">{esc(r["sector"])}</td><td>{px}</td>'
+                f'<td class="l">{esc(sector_tw(r["sector"]))}</td><td>{px}</td>'
                 f'<td>{r["cheap"]:.1f}</td><td>{r["fair"]:.0f}</td><td>{r["exp"]:.0f}</td>'
                 f'<td>{dis}</td><td>{roe}</td><td>{eps}</td><td class="l">{note}</td></tr>'
             )
