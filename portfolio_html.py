@@ -49,8 +49,12 @@ th{color:#9aa0a6;font-weight:600}td.l,th.l{text-align:left}
 .pos{color:#3ddc84;font-weight:700}.neg{color:#ff7676;font-weight:700}.flat{color:#9aa0a6}
 .medal{font-size:15px}
 details{margin:2px 0}summary{cursor:pointer;color:#bcd2ff;font-size:13px;padding:4px 0}
-.inner{font-size:12.5px;margin:4px 0 10px}
-.inner th,.inner td{padding:5px 6px;border-bottom:1px solid #23272e}
+.hlist{margin:6px 0 10px}
+.hrow{padding:7px 2px;border-bottom:1px solid #23272e}
+.htop{display:flex;align-items:baseline;gap:10px;font-size:14.5px}
+.htop .htk{font-weight:700;flex:1}
+.htop span{font-weight:700}
+.hsub{font-size:11.5px;color:#9aa0a6;margin-top:3px}
 .legend{font-size:12px;color:#9aa0a6;margin:8px 0;display:flex;flex-wrap:wrap;gap:12px}
 .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:middle}
 """
@@ -61,8 +65,7 @@ def cls(r):
 
 
 def holding_rows(pf):
-    """每隻股票：股數/進場價/現價/報酬/市值/損益（美金）。"""
-    rows = []
+    """每隻股票一張小卡（手機友善）：第一行 代號／報酬％／損益；第二行 進場→現價·股數·市值。"""
     items = []
     for tk, h in pf["holdings"].items():
         eu, sh = h["eu"], h["sh"]
@@ -71,18 +74,19 @@ def holding_rows(pf):
         val = sh * cu
         pnl = sh * (cu - eu)
         ret = (cu / eu - 1) * 100 if eu else 0
-        items.append((tk, sh, en, cur, ret, val, pnl, is_tw := tk.endswith(".TW")))
+        items.append((tk, sh, en, cur, ret, val, pnl, tk.endswith(".TW")))
     items.sort(key=lambda x: -x[6])   # 損益大→小
+    rows = []
     for tk, sh, en, cur, ret, val, pnl, tw in items:
-        unit = "NT$" if tw else "$"
+        u = "NT$" if tw else "$"
         rows.append(
-            f'<tr><td class="l">{esc(tk)}</td><td>{sh:.2f}</td>'
-            f'<td>{unit}{en:,.1f}</td><td>{unit}{cur:,.1f}</td>'
-            f'<td class="{cls(ret)}">{ret:+.1f}%</td>'
-            f'<td>${val:,.0f}</td><td class="{cls(pnl)}">{usd(pnl,1)}</td></tr>')
-    head = ('<tr><th class="l">代號</th><th>股數</th><th>進場</th><th>現價</th>'
-            '<th>報酬</th><th>市值</th><th>損益</th></tr>')
-    return f'<table class="inner">{head}{"".join(rows)}</table>'
+            f'<div class="hrow"><div class="htop">'
+            f'<span class="htk">{esc(tk)}</span>'
+            f'<span class="{cls(ret)}">{ret:+.1f}%</span>'
+            f'<span class="{cls(pnl)}">{usd(pnl,1)}</span></div>'
+            f'<div class="hsub">{u}{en:,.1f} → {u}{cur:,.1f}　{sh:.2f} 股　市值 ${val:,.0f}</div>'
+            f'</div>')
+    return '<div class="hlist">' + "".join(rows) + '</div>'
 
 
 def build(state):
@@ -192,12 +196,14 @@ def build(state):
 拿「產業鏈精選」同一批股，再用 <b>SuperTrend</b>（TradingView 同款趨勢線）過濾：
 <b>只抱「多頭（綠燈）」的，翻空（紅燈）就先不持有</b>。測「選股好之後，加上趨勢擇時會不會更賺、回檔少」。</p>
 <hr style="border-color:#2a2e35;margin:10px 0">
-<p style="margin:4px 0"><b>🏛️ 巴菲特價值（價值派 · 洪瑞泰俗貴價法）</b><br>
-專找「<b>被低估的好公司</b>」：<br>
-　‧ <b>俗價 ＝ EPS × 12</b>（洪瑞泰原版倍數，現價跌破俗價＝便宜）<br>
-　‧ <b>買進門檻</b>：ROE 達標 ＋ EPS 為正 ＋ 現價 ≤ 俗價（三者俱備才算）<br>
-從全市場掃描出的觀察清單裡，取<b>折價最大（現價離俗價最遠）前 30 檔</b>。
-<b>每季</b>隨財報更新俗貴價。成長股（如 NVDA）因 PE 太高入不了這套。</p>
+<p style="margin:4px 0"><b>🏛️ 巴菲特價值（價值派 · 洪瑞泰選股法）</b><br>
+洪瑞泰精髓：先挑「<b>好公司</b>」，再等「<b>便宜</b>」才買。三道關卡：<br>
+　① <b>產業龍頭</b>：同產業市值前 3（護城河、寡占）<b>優先選</b><br>
+　② <b>ROE ≥ 15%</b>：賺錢能力強且穩定<br>
+　③ <b>盈再率 &lt; 80%</b>（越低越好）：不用一直砸大錢買設備就能賺＝<b>印鈔機生意</b>（洪瑞泰最看重，權重最高）<br>
+通過品質三關後，<b>現價 ≤ 俗價（EPS×12）</b>＝便宜才買，取品質分前 30。<br>
+排除照妖鏡（EPS估降/高負債）。<b>每季</b>隨財報更新。
+<span class="sub">※ 不再用「折價最大」選 —— 那會選到 CHTR/MKC 這種衰退爛股（虛高俗價）；改用洪瑞泰品質優先。</span></p>
 <hr style="border-color:#2a2e35;margin:10px 0">
 <p style="margin:4px 0"><b>⚙️ 各買多少？（等金額，不是等股數）</b><br>
 每個倉都是獨立 <b>{usd(base)}</b>，平均分給該倉持股：<br>
