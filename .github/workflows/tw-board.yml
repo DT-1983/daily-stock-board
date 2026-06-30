@@ -64,15 +64,16 @@ jobs:
           python board_html.py "$f" -o docs/index.html
           python alert_telegram.py "$f" docs/index.html
 
-      - name: 模擬倉每日記淨值 + 出賽馬頁
+      - name: 模擬倉每日記淨值 + 出賽馬頁 + 巴菲特頁
         run: |
           python paper_portfolio.py nav || echo "模擬倉更新失敗，跳過"
           python portfolio_html.py -o docs/portfolios.html || echo "賽馬頁失敗，跳過"
+          python buffett_html.py -o docs/buffett.html || echo "巴菲特頁失敗，跳過"
 
       - name: 回存狀態 + 發佈 HTML 到 Pages
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add state/signals.json state/st_state.json docs/index.html portfolios.json docs/portfolios.html
-          git commit -m "chore: update board + signals + 模擬倉 [skip ci]" || echo "無變化"
+          git add state/signals.json state/st_state.json docs/index.html portfolios.json docs/portfolios.html docs/buffett.html
+          git commit -m "chore: update board + signals + 模擬倉 + 巴菲特頁 [skip ci]" || echo "無變化"
           git push || echo "push 略過"
