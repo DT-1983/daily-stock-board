@@ -96,6 +96,10 @@ tr.buy{background:#10241a}tr.sell{background:#251114}tr.watch{background:#231f10
 .ok{font-size:11px;color:#3ddc84}
 .dis{color:#3ddc84;font-weight:600}
 .scrollbox{overflow-x:auto}
+.filt{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.fb{font-size:13px;padding:5px 12px;border-radius:16px;border:1px solid #2a2e35;
+ background:#1c2128;color:#bcd2ff;cursor:pointer}
+.fb.on{background:#4a9eff;color:#fff;border-color:#4a9eff}
 """
 
 
@@ -145,6 +149,15 @@ def build(watch):
 <i>照妖鏡只是「多一層檢查」，不改洪瑞泰選股；🟢🟡才跑（actionable）。</i>
 </div>"""]
 
+    # 篩選按鈕（點了只看該訊號）
+    btns = ['<div class="filt"><button class="fb on" onclick="flt(this,\'all\')">全部</button>']
+    for sig in ORDER:
+        if rows[sig]:
+            e, nm, _ = SIG[sig]
+            btns.append(f'<button class="fb" onclick="flt(this,\'{sig}\')">{e} {nm} {len(rows[sig])}</button>')
+    btns.append('</div>')
+    out.append("".join(btns))
+
     for sig in ORDER:
         lst = rows[sig]
         if not lst:
@@ -155,6 +168,7 @@ def build(watch):
             lst.sort(key=lambda r: -(r["dis"] or 0))
         else:
             lst.sort(key=lambda r: (r["rank"] or 9, -(r["roe"] or 0)))
+        out.append(f'<div class="sgroup" data-sig="{sig}">')
         out.append(f'<div class="sec">{emoji} <b>{name}</b> <span class="cnt">{len(lst)} 檔</span></div>')
         out.append('<div class="scrollbox"><table>')
         out.append('<tr><th class="l">代號</th><th class="l">產業</th><th>現價</th>'
@@ -178,10 +192,15 @@ def build(watch):
                 f'<td>{r["cheap"]:.1f}</td><td>{r["fair"]:.0f}</td><td>{r["exp"]:.0f}</td>'
                 f'<td>{dis}</td><td>{roe}</td><td>{eps}</td><td class="l">{note}</td></tr>'
             )
-        out.append('</table></div>')
+        out.append('</table></div></div>')
 
     out.append('<p class="sub" style="margin-top:20px">洪瑞泰俗貴價法 · 龍頭=同產業市值前3 · '
                '照妖鏡=forward EPS+負債（補充非洪瑞泰）· 資料源 TradingBot DB</p>')
+    out.append("""<script>
+function flt(b,s){document.querySelectorAll('.fb').forEach(x=>x.classList.remove('on'));
+b.classList.add('on');
+document.querySelectorAll('.sgroup').forEach(g=>{g.style.display=(s=='all'||g.dataset.sig==s)?'':'none';});}
+</script>""")
     out.append("</div></body></html>")
     return "\n".join(out)
 
