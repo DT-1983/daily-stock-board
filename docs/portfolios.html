@@ -35,7 +35,7 @@ details{margin:2px 0}summary{cursor:pointer;color:#bcd2ff;font-size:13px;padding
 </style></head>
 <body><div class="wrap">
 <h1>🏇 策略賽馬 — 產業鏈 vs 巴菲特</h1>
-<div class="sub">起始 2026-06-30（第 2 天）· 更新 2026-07-02 13:32 · 每倉 $10,000 · 匯率 1美元=32.0台幣 ·
+<div class="sub">起始 2026-06-30（第 2 天）· 更新 2026-07-03 00:32 · 每倉 $10,000 · 匯率 1美元=32.0台幣 ·
  <a href="https://dt-1983.github.io/daily-stock-board/">← 看板</a></div>
 
 <div class="tot"><div class="sub2">3 套方法總投入 $30,000（各 $10,000）</div><div class="big neg">$29,960　<span style="font-size:18px">-$40（-0.13%）</span></div></div>
@@ -92,8 +92,8 @@ details{margin:2px 0}summary{cursor:pointer;color:#bcd2ff;font-size:13px;padding
 <script>
 const chart=new Chart(document.getElementById('race'),{type:'line',
  data:{labels:["2026-06-30", "2026-07-01", "2026-07-02"],datasets:[{"label": "🏭 產業鏈精選", "data": [10095.57, 10262.33, 9866.81], "borderColor": "#4a9eff", "fill": false, "tension": 0.2, "borderWidth": 3, "borderDash": [], "pointRadius": 0, "grp": "main", "hidden": false}, {"label": "📈 產業鏈+趨勢", "data": [10169.31, 10433.03, 9948.02], "borderColor": "#3ddc84", "fill": false, "tension": 0.2, "borderWidth": 3, "borderDash": [], "pointRadius": 0, "grp": "main", "hidden": false}, {"label": "🏛️ 巴菲特價值", "data": [10008.75, 9959.57, 10144.84], "borderColor": "#ff9b5c", "fill": false, "tension": 0.2, "borderWidth": 3, "borderDash": [], "pointRadius": 0, "grp": "main", "hidden": false}, {"label": "🖥️ AI 伺服器", "data": [10221.7, 10473.37, 9928.59], "borderColor": "#c98bff", "fill": false, "tension": 0.2, "borderWidth": 1.5, "borderDash": [4, 3], "pointRadius": 0, "grp": "chain", "hidden": true}, {"label": "🔆 矽光子/光通訊", "data": [10273.9, 10527.22, 9992.72], "borderColor": "#ffd479", "fill": false, "tension": 0.2, "borderWidth": 1.5, "borderDash": [4, 3], "pointRadius": 0, "grp": "chain", "hidden": true}, {"label": "🛰️ 低軌衛星", "data": [10348.85, 10430.7, 10051.93], "borderColor": "#5ce0d8", "fill": false, "tension": 0.2, "borderWidth": 1.5, "borderDash": [4, 3], "pointRadius": 0, "grp": "chain", "hidden": true}, {"label": "☀️ 太陽能", "data": [10249.88, 10692.82, 10702.8], "borderColor": "#ff7676", "fill": false, "tension": 0.2, "borderWidth": 1.5, "borderDash": [4, 3], "pointRadius": 0, "grp": "chain", "hidden": true}, {"label": "₿ Bitcoin→AI 機房", "data": [9984.47, 9838.47, 9213.77], "borderColor": "#9aa0a6", "fill": false, "tension": 0.2, "borderWidth": 1.5, "borderDash": [4, 3], "pointRadius": 0, "grp": "chain", "hidden": true}, {"label": "⚡ AI 電力/核能", "data": [10021.66, 10014.87, 9768.27], "borderColor": "#8ab4f8", "fill": false, "tension": 0.2, "borderWidth": 1.5, "borderDash": [4, 3], "pointRadius": 0, "grp": "chain", "hidden": true}, {"label": "🤖 機器人", "data": [10062.96, 10350.66, 10400.74], "borderColor": "#4a9eff", "fill": false, "tension": 0.2, "borderWidth": 1.5, "borderDash": [4, 3], "pointRadius": 0, "grp": "chain", "hidden": true}]},
- options:{responsive:true,interaction:{mode:'index',intersect:false},
-  plugins:{legend:{display:false},tooltip:{callbacks:{}}},
+ options:{responsive:true,interaction:{mode:'nearest',intersect:false},
+  plugins:{legend:{display:false},tooltip:{mode:'nearest',intersect:false}},
   scales:{y:{grid:{color:'#2a2e35'},ticks:{color:'#9aa0a6',
     callback:function(v){return '$'+v.toLocaleString();}}},
            x:{grid:{display:false},ticks:{color:'#9aa0a6',maxTicksLimit:8}}}}});
