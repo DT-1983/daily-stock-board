@@ -1,0 +1,633 @@
+{
+ "date": "2026-06-28",
+ "us": {
+  "AI 伺服器": [
+   {
+    "code": "MU",
+    "name": "Micron Technology Inc",
+    "mktcap": 1278845648896,
+    "growth": 3.457,
+    "inflow": 2.1711707307484227,
+    "score": 2.82
+   },
+   {
+    "code": "AMD",
+    "name": "Advanced Micro Devices Inc",
+    "mktcap": 850488655872,
+    "growth": 0.378,
+    "inflow": 1.582207054336139,
+    "score": 2.5
+   },
+   {
+    "code": "DELL",
+    "name": "Dell Technologies Inc Ordinary Shares - Class C",
+    "mktcap": 258127413248,
+    "growth": 0.875,
+    "inflow": 1.3323792731372666,
+    "score": 2.32
+   },
+   {
+    "code": "TSM",
+    "name": "Taiwan Semiconductor Manufacturing Co Ltd ADR",
+    "mktcap": 2242372173824,
+    "growth": 0.351,
+    "inflow": 0.3263222432667163,
+    "score": 2.21
+   },
+   {
+    "code": "LRCX",
+    "name": "Lam Research Corp",
+    "mktcap": 474078969856,
+    "growth": 0.238,
+    "inflow": 0.7944138526435094,
+    "score": 2.14
+   },
+   {
+    "code": "AVGO",
+    "name": "Broadcom Inc",
+    "mktcap": 1736611856384,
+    "growth": 0.479,
+    "inflow": 0.21590297885162046,
+    "score": 2.11
+   }
+  ],
+  "矽光子/光通訊": [
+   {
+    "code": "MU",
+    "name": "Micron Technology Inc",
+    "mktcap": 1278845648896,
+    "growth": 3.457,
+    "inflow": 2.1711707307484227,
+    "score": 2.89
+   },
+   {
+    "code": "AMD",
+    "name": "Advanced Micro Devices Inc",
+    "mktcap": 850488655872,
+    "growth": 0.378,
+    "inflow": 1.582207054336139,
+    "score": 2.33
+   },
+   {
+    "code": "ALAB",
+    "name": "Astera Labs Inc",
+    "mktcap": 67147341824,
+    "growth": 0.934,
+    "inflow": 2.4830620252742093,
+    "score": 2.22
+   },
+   {
+    "code": "MRVL",
+    "name": "Marvell Technology Inc",
+    "mktcap": 233370386432,
+    "growth": 0.276,
+    "inflow": 1.813064219640256,
+    "score": 2.11
+   },
+   {
+    "code": "INTC",
+    "name": "Intel Corp",
+    "mktcap": 644936368128,
+    "growth": 0.072,
+    "inflow": 1.975191378306782,
+    "score": 2.0
+   },
+   {
+    "code": "CRDO",
+    "name": "Credo Technology Group Holding Ltd",
+    "mktcap": 44381741056,
+    "growth": 1.57,
+    "inflow": 1.4989500770509587,
+    "score": 1.94
+   }
+  ],
+  "低軌衛星": [
+   {
+    "code": "AMD",
+    "name": "Advanced Micro Devices Inc",
+    "mktcap": 850488655872,
+    "growth": 0.378,
+    "inflow": 1.582207054336139,
+    "score": 2.59
+   },
+   {
+    "code": "TER",
+    "name": "Teradyne Inc",
+    "mktcap": 68387004416,
+    "growth": 0.87,
+    "inflow": 0.47838367694111184,
+    "score": 2.55
+   },
+   {
+    "code": "RKLB",
+    "name": "Rocket Lab Corp",
+    "mktcap": 52822179840,
+    "growth": 0.635,
+    "inflow": 0.38749385347280185,
+    "score": 2.27
+   },
+   {
+    "code": "TTMI",
+    "name": "TTM Technologies Inc",
+    "mktcap": 19886247936,
+    "growth": 0.304,
+    "inflow": 1.0057610039250586,
+    "score": 2.18
+   },
+   {
+    "code": "ASTS",
+    "name": "AST SpaceMobile Inc Ordinary Shares - Class A",
+    "mktcap": 27731499008,
+    "growth": 19.522,
+    "inflow": -0.09177578986589063,
+    "score": 1.91
+   },
+   {
+    "code": "AMZN",
+    "name": "Amazon.com Inc",
+    "mktcap": 2503072022528,
+    "growth": 0.166,
+    "inflow": 0.16730213061199128,
+    "score": 1.82
+   }
+  ],
+  "太陽能": [
+   {
+    "code": "BE",
+    "name": "Bloom Energy Corp Class A",
+    "mktcap": 71685545984,
+    "growth": 1.304,
+    "inflow": 0.8914739859072651,
+    "score": 3.0
+   },
+   {
+    "code": "FSLR",
+    "name": "First Solar Inc",
+    "mktcap": 25688875008,
+    "growth": 0.236,
+    "inflow": 0.25634566061882724,
+    "score": 2.0
+   },
+   {
+    "code": "SHLS",
+    "name": "Shoals Technologies Group Inc Ordinary Shares - Class A",
+    "mktcap": 1509946368,
+    "growth": 0.749,
+    "inflow": 0.3595166398163643,
+    "score": 1.75
+   },
+   {
+    "code": "ENPH",
+    "name": "Enphase Energy Inc",
+    "mktcap": 6270959616,
+    "growth": -0.206,
+    "inflow": 0.25739962048601295,
+    "score": 1.5
+   },
+   {
+    "code": "PLUG",
+    "name": "Plug Power Inc",
+    "mktcap": 3543475456,
+    "growth": 0.223,
+    "inflow": 0.16513756150078152,
+    "score": 1.25
+   },
+   {
+    "code": "RUN",
+    "name": "Sunrun Inc",
+    "mktcap": 3218029824,
+    "growth": 0.432,
+    "inflow": 0.07063487005582325,
+    "score": 1.25
+   }
+  ],
+  "Bitcoin→AI 機房": [
+   {
+    "code": "HUT",
+    "name": "Hut 8 Corp",
+    "mktcap": 13851327488,
+    "growth": 2.255,
+    "inflow": 1.5950849026662728,
+    "score": 2.89
+   },
+   {
+    "code": "RIOT",
+    "name": "Riot Platforms Inc",
+    "mktcap": 10803780608,
+    "growth": 0.036,
+    "inflow": 1.2320311928982854,
+    "score": 2.0
+   },
+   {
+    "code": "BTDR",
+    "name": "Bitdeer Technologies Group Ordinary Shares Class A",
+    "mktcap": 4172828928,
+    "growth": 1.694,
+    "inflow": 1.0489844507787258,
+    "score": 1.67
+   },
+   {
+    "code": "APLD",
+    "name": "Applied Digital Corp",
+    "mktcap": 11190734848,
+    "growth": 1.393,
+    "inflow": 0.6481481258493662,
+    "score": 1.56
+   },
+   {
+    "code": "IREN",
+    "name": "IREN Ltd",
+    "mktcap": 16871847936,
+    "growth": 0,
+    "inflow": 0.34539751721804746,
+    "score": 1.44
+   },
+   {
+    "code": "WULF",
+    "name": "TeraWulf Inc",
+    "mktcap": 12799607808,
+    "growth": -0.011,
+    "inflow": 0.7347212443342364,
+    "score": 1.33
+   }
+  ],
+  "AI 電力/核能": [
+   {
+    "code": "PWR",
+    "name": "Quanta Services Inc",
+    "mktcap": 103221870592,
+    "growth": 0.263,
+    "inflow": 0.2509639695499064,
+    "score": 2.64
+   },
+   {
+    "code": "ETN",
+    "name": "Eaton Corp PLC",
+    "mktcap": 156360638464,
+    "growth": 0.168,
+    "inflow": 0.12993285236537577,
+    "score": 2.36
+   },
+   {
+    "code": "NVT",
+    "name": "nVent Electric PLC",
+    "mktcap": 26347495424,
+    "growth": 0.535,
+    "inflow": 0.39476830193943946,
+    "score": 2.27
+   },
+   {
+    "code": "CEG",
+    "name": "Constellation Energy Corp",
+    "mktcap": 94282072064,
+    "growth": 0.638,
+    "inflow": -0.12292218320564718,
+    "score": 1.91
+   },
+   {
+    "code": "PEG",
+    "name": "Public Service Enterprise Group Inc",
+    "mktcap": 41649704960,
+    "growth": 0.194,
+    "inflow": 0.04456194563356819,
+    "score": 1.82
+   },
+   {
+    "code": "JCI",
+    "name": "Johnson Controls International PLC Registered Shares",
+    "mktcap": 84439990272,
+    "growth": 0.082,
+    "inflow": 0.05707175555117616,
+    "score": 1.64
+   }
+  ],
+  "機器人": [
+   {
+    "code": "CRDO",
+    "name": "Credo Technology Group Holding Ltd",
+    "mktcap": 44381741056,
+    "growth": 1.57,
+    "inflow": 1.4989500770509587,
+    "score": 2.17
+   },
+   {
+    "code": "NVDA",
+    "name": "NVIDIA Corp",
+    "mktcap": 4663269130240,
+    "growth": 0.852,
+    "inflow": 0.1506351104022412,
+    "score": 2.0
+   },
+   {
+    "code": "TER",
+    "name": "Teradyne Inc",
+    "mktcap": 68387004416,
+    "growth": 0.87,
+    "inflow": 0.47838367694111184,
+    "score": 1.83
+   },
+   {
+    "code": "QCOM",
+    "name": "Qualcomm Inc",
+    "mktcap": 199617052672,
+    "growth": -0.035,
+    "inflow": 0.4954724769843559,
+    "score": 1.67
+   },
+   {
+    "code": "NXPI",
+    "name": "NXP Semiconductors NV",
+    "mktcap": 69939535872,
+    "growth": 0.122,
+    "inflow": 0.45027478863319215,
+    "score": 1.33
+   },
+   {
+    "code": "ISRG",
+    "name": "Intuitive Surgical Inc",
+    "mktcap": 143329705984,
+    "growth": 0.23,
+    "inflow": -0.10595146703281111,
+    "score": 1.17
+   }
+  ]
+ },
+ "tw": {
+  "AI 伺服器": [
+   {
+    "code": "2368",
+    "name": "GOLD CIRCUIT ELECTRONICS CO",
+    "mktcap": 601399820288,
+    "growth": 0.8729863200632952,
+    "inflow": 5047,
+    "score": 2.15
+   },
+   {
+    "code": "3017",
+    "name": "ASIA VITAL COMPONENTS CO LTD",
+    "mktcap": 885184462848,
+    "growth": 0.6064003400775295,
+    "inflow": -786,
+    "score": 2.0
+   },
+   {
+    "code": "2308",
+    "name": "DELTA ELECTRONIC",
+    "mktcap": 4701553688576,
+    "growth": 0.4365246228958888,
+    "inflow": -19946,
+    "score": 2.0
+   },
+   {
+    "code": "8046",
+    "name": "NAN YA PRINTED CIRCUIT BOARD CO",
+    "mktcap": 726936190976,
+    "growth": 0.35821157121462766,
+    "inflow": 31308,
+    "score": 1.92
+   },
+   {
+    "code": "2317",
+    "name": "HON HAI PRECISION INDUSTRY",
+    "mktcap": 3479477157888,
+    "growth": 0.3957229478330113,
+    "inflow": -50963,
+    "score": 1.69
+   },
+   {
+    "code": "3324",
+    "name": "3324",
+    "mktcap": 0,
+    "growth": 0.9375003472065766,
+    "inflow": 1716,
+    "score": 1.69
+   }
+  ],
+  "矽光子/光通訊": [
+   {
+    "code": "2345",
+    "name": "ACCTON TECHNOLOGY CORP",
+    "mktcap": 1330201100288,
+    "growth": 0.5657862562229947,
+    "inflow": 2377,
+    "score": 2.86
+   },
+   {
+    "code": "3081",
+    "name": "3081",
+    "mktcap": 0,
+    "growth": 1.1883628392642143,
+    "inflow": 2147,
+    "score": 2.29
+   },
+   {
+    "code": "3450",
+    "name": "ELITE ADVANCED LASER CORP",
+    "mktcap": 77210927104,
+    "growth": 0.49912727159183157,
+    "inflow": -7030,
+    "score": 1.71
+   },
+   {
+    "code": "3163",
+    "name": "3163",
+    "mktcap": 0,
+    "growth": 0.2997081323542965,
+    "inflow": -2484,
+    "score": 1.29
+   },
+   {
+    "code": "3363",
+    "name": "3363",
+    "mktcap": 0,
+    "growth": -0.24805346245757887,
+    "inflow": 586,
+    "score": 1.14
+   },
+   {
+    "code": "4908",
+    "name": "4908",
+    "mktcap": 0,
+    "growth": 0.3846851834763618,
+    "inflow": -1743,
+    "score": 1.0
+   }
+  ],
+  "機器人": [
+   {
+    "code": "2359",
+    "name": "SOLOMON TECHNOLOGY CORP",
+    "mktcap": 21678432256,
+    "growth": 0.6680044416243656,
+    "inflow": 375,
+    "score": 2.38
+   },
+   {
+    "code": "3023",
+    "name": "SINBON ELECTRONICS CO LTD",
+    "mktcap": 73581150208,
+    "growth": 0.1752590157304652,
+    "inflow": 1590,
+    "score": 2.12
+   },
+   {
+    "code": "2049",
+    "name": "HIWIN TECHNOLOGIES CORP",
+    "mktcap": 108614221824,
+    "growth": 0.28174282436357245,
+    "inflow": -1296,
+    "score": 2.0
+   },
+   {
+    "code": "4576",
+    "name": "HIWIN MIKROSYSTEM CORP",
+    "mktcap": 24020271104,
+    "growth": 0.4731904015180466,
+    "inflow": -612,
+    "score": 2.0
+   },
+   {
+    "code": "1597",
+    "name": "CHIEFTEK PRECISION CO LTD",
+    "mktcap": 12173048832,
+    "growth": 0.5138068037992098,
+    "inflow": -46,
+    "score": 1.88
+   },
+   {
+    "code": "1504",
+    "name": "TECO ELECTRIC & MACHINERY CO",
+    "mktcap": 159251382272,
+    "growth": 0.10552120113001129,
+    "inflow": -103649,
+    "score": 1.12
+   }
+  ],
+  "低軌衛星": [
+   {
+    "code": "6271",
+    "name": "TONG HSING ELECTRONIC INDUSTRIE",
+    "mktcap": 53309792256,
+    "growth": 0.07625652428563279,
+    "inflow": -955,
+    "score": 1.8
+   },
+   {
+    "code": "3491",
+    "name": "3491",
+    "mktcap": 0,
+    "growth": 0.5723596567115856,
+    "inflow": -3243,
+    "score": 1.6
+   },
+   {
+    "code": "2454",
+    "name": "MEDIATEK INC",
+    "mktcap": 6192907681792,
+    "growth": 0.049881336042878255,
+    "inflow": -3507,
+    "score": 1.6
+   },
+   {
+    "code": "6285",
+    "name": "WNC CORPORATION",
+    "mktcap": 114144632832,
+    "growth": 0.34822402553620835,
+    "inflow": -8777,
+    "score": 1.6
+   },
+   {
+    "code": "2314",
+    "name": "MICROELECTRONICS TECHNOLOGY",
+    "mktcap": 2586495744,
+    "growth": 0.040412856221303084,
+    "inflow": -15,
+    "score": 1.4
+   },
+   {
+    "code": "3105",
+    "name": "3105",
+    "mktcap": 0,
+    "growth": 0.4029750787405666,
+    "inflow": -19339,
+    "score": 1.0
+   }
+  ],
+  "太陽能": [
+   {
+    "code": "3576",
+    "name": "UNITED RENEWABLE ENERGY CO LTD",
+    "mktcap": 26841028608,
+    "growth": 0.2762616528340478,
+    "inflow": -6794,
+    "score": 2.33
+   },
+   {
+    "code": "6443",
+    "name": "TSEC CORPORATION",
+    "mktcap": 17691488256,
+    "growth": -0.40169212763653794,
+    "inflow": -4212,
+    "score": 1.33
+   },
+   {
+    "code": "5483",
+    "name": "5483",
+    "mktcap": 0,
+    "growth": 0.05671927047048131,
+    "inflow": -1715,
+    "score": 1.33
+   },
+   {
+    "code": "6182",
+    "name": "6182",
+    "mktcap": 0,
+    "growth": 0.11936155534966164,
+    "inflow": -12745,
+    "score": 1.0
+   }
+  ],
+  "AI 電力/核能": [
+   {
+    "code": "1605",
+    "name": "WALSIN LIHWA CORP",
+    "mktcap": 156869197824,
+    "growth": 0.1113069399560076,
+    "inflow": 29577,
+    "score": 2.5
+   },
+   {
+    "code": "1519",
+    "name": "FORTUNE ELECTRIC CO LTD",
+    "mktcap": 246387179520,
+    "growth": -0.09328183887046149,
+    "inflow": -3869,
+    "score": 1.75
+   },
+   {
+    "code": "1504",
+    "name": "TECO ELECTRIC & MACHINERY CO",
+    "mktcap": 159251382272,
+    "growth": 0.10552120113001129,
+    "inflow": -103649,
+    "score": 1.5
+   },
+   {
+    "code": "1503",
+    "name": "SHIHLIN ELEC & ENGINEERING",
+    "mktcap": 121646964736,
+    "growth": 0.08354818261667951,
+    "inflow": -4016,
+    "score": 1.25
+   },
+   {
+    "code": "1513",
+    "name": "CHUNG HSIN ELECTRIC & MACHINERY",
+    "mktcap": 86709985280,
+    "growth": 0.03616269857256049,
+    "inflow": -14969,
+    "score": 0.5
+   }
+  ]
+ }
+}
