@@ -12,7 +12,7 @@ from datetime import datetime
 OBIS = r"C:\Users\Mophy\Documents\Google drive\BB-8 工作區\04_AI Report\Investment"
 PAGES_URL = "https://dt-1983.github.io/daily-stock-board/"
 ICON = {
-    "產業鏈全": "🏭", "巴菲特價值": "🏛️",
+    "產業鏈精選": "🏭", "產業鏈+趨勢": "📈", "巴菲特價值": "🏛️",
     "AI 伺服器": "🖥️", "矽光子/光通訊": "🔆", "低軌衛星": "🛰️", "太陽能": "☀️",
     "Bitcoin→AI 機房": "₿", "AI 電力/核能": "⚡", "機器人": "🤖",
 }
@@ -56,6 +56,9 @@ details{margin:2px 0}summary{cursor:pointer;color:#bcd2ff;font-size:13px;padding
 .htop span{font-weight:700}
 .hsub{font-size:11.5px;color:#9aa0a6;margin-top:3px}
 .legend{font-size:12px;color:#9aa0a6;margin:8px 0;display:flex;flex-wrap:wrap;gap:12px}
+.chl{display:flex;gap:6px;margin:2px 0 10px}
+.cb{font-size:12.5px;padding:4px 12px;border-radius:14px;border:1px solid #2a2e35;background:#1c2128;color:#bcd2ff;cursor:pointer}
+.cb.on{background:#4a9eff;color:#fff;border-color:#4a9eff}
 .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:middle}
 """
 
@@ -118,7 +121,9 @@ def build(state):
         datasets.append({"label": f"{ICON.get(n,'')} {n}", "data": filled,
                          "borderColor": color_map[n], "fill": False, "tension": 0.2,
                          "borderWidth": 3 if mn else 1.5,
-                         "borderDash": [] if mn else [4, 3], "pointRadius": 0})
+                         "borderDash": [] if mn else [4, 3], "pointRadius": 0,
+                         "grp": "main" if mn else "chain",
+                         "hidden": not mn})   # 預設只顯示 3 主倉
 
     # 頂部總損益（2 主倉合計）
     invested = base * len(main)
@@ -173,7 +178,11 @@ def build(state):
  <a href="{PAGES_URL}">← 看板</a></div>
 
 {tot}
-<div class="card"><canvas id="race" height="150"></canvas>
+<div class="card">
+<div class="chl"><button class="cb on" onclick="chl(this,'main')">3 主策略</button>
+<button class="cb" onclick="chl(this,'chain')">7 產業鏈</button>
+<button class="cb" onclick="chl(this,'all')">全部</button></div>
+<canvas id="race" height="150"></canvas>
 <div class="legend">{legend}</div></div>
 
 <h2>⚔️ 三套方法對決（點「看持股」展開）</h2>{vs}
@@ -220,13 +229,17 @@ def build(state):
 </div>
 </div>
 <script>
-new Chart(document.getElementById('race'),{{type:'line',
+const chart=new Chart(document.getElementById('race'),{{type:'line',
  data:{{labels:{json.dumps(all_dates)},datasets:{json.dumps(datasets, ensure_ascii=False)}}},
  options:{{responsive:true,interaction:{{mode:'index',intersect:false}},
   plugins:{{legend:{{display:false}},tooltip:{{callbacks:{{}}}}}},
   scales:{{y:{{grid:{{color:'#2a2e35'}},ticks:{{color:'#9aa0a6',
     callback:function(v){{return '$'+v.toLocaleString();}}}}}},
            x:{{grid:{{display:false}},ticks:{{color:'#9aa0a6',maxTicksLimit:8}}}}}}}}}});
+function chl(b,mode){{
+ document.querySelectorAll('.cb').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+ chart.data.datasets.forEach(d=>{{d.hidden=(mode=='all')?false:(d.grp!=mode);}});
+ chart.update();}}
 </script></body></html>"""
 
 
