@@ -231,8 +231,8 @@ def build(state):
 <script>
 const chart=new Chart(document.getElementById('race'),{{type:'line',
  data:{{labels:{json.dumps(all_dates)},datasets:{json.dumps(datasets, ensure_ascii=False)}}},
- options:{{responsive:true,interaction:{{mode:'index',intersect:false}},
-  plugins:{{legend:{{display:false}},tooltip:{{callbacks:{{}}}}}},
+ options:{{responsive:true,interaction:{{mode:'nearest',intersect:false}},
+  plugins:{{legend:{{display:false}},tooltip:{{mode:'nearest',intersect:false}}}},
   scales:{{y:{{grid:{{color:'#2a2e35'}},ticks:{{color:'#9aa0a6',
     callback:function(v){{return '$'+v.toLocaleString();}}}}}},
            x:{{grid:{{display:false}},ticks:{{color:'#9aa0a6',maxTicksLimit:8}}}}}}}}}});
