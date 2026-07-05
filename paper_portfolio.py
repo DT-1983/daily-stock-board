@@ -6,10 +6,13 @@
 另含 7 鏈明細倉（各 $10,000）。
 
 真實模擬：起始把 $10,000 等分買進（可買零股），記下每股「股數/進場價」。
-台股價格用即時匯率換成美金 → 全部用美金加總。每日更新現價算市值與損益，
-每週跟清單調倉（賣舊買新，市值接續）。
+台股價格用即時匯率換成美金 → 全部用美金加總。每日更新現價算市值與損益。
 
-用法:python paper_portfolio.py [init|rebalance|nav]
+調倉頻率：
+  · 產業鏈精選 / 巴菲特價值 / 7 鏈明細 → 每週日隨守備清單重篩調倉
+  · 產業鏈+趨勢 → 每日追 SuperTrend，綠燈名單一有變就換股（翻燈才動，不天天重配）
+
+用法:python paper_portfolio.py [init|rebalance|rebalance-trend|nav]
 """
 import sys
 import json
@@ -272,8 +275,11 @@ def update_nav(state, prices, fx, date):
     state["fx"] = round(fx, 3)
 
 
-def rebalance(state, hmap, prices, fx, date):
+def rebalance(state, hmap, prices, fx, date, only=None):
+    """only=None 全倉調；only={名稱,...} 只調指定倉（其餘不動）。"""
     for name, pf in state["portfolios"].items():
+        if only and name not in only:
+            continue
         v = _value(pf, prices, fx) if pf["holdings"] else BASE
         pf["holdings"] = _alloc_shares(hmap.get(name, list(pf["holdings"])), v, prices, fx)
         _refresh_current(pf, prices, fx)
@@ -331,6 +337,22 @@ def main():
         print(f"✅ rebalance {date}（匯率 {fx:.2f}）")
         for n, pf in state["portfolios"].items():
             print(f"  {n}: {len(pf['holdings'])} 檔 ${pf['value']:,.0f} ({pf['ret']:+.2f}%)")
+    elif cmd == "rebalance-trend":
+        # 趨勢倉每日追 SuperTrend：池子(守備清單)維持週日重篩，只在綠燈名單「有變」時才換股
+        select = chain_select_union()
+        longs = trend_longs(select)
+        pf = state["portfolios"].get(CHAIN_TREND)
+        cur = set(pf["holdings"].keys()) if pf else set()
+        if set(longs) == cur:
+            print(f"趨勢倉綠燈清單無變化（{len(longs)} 檔），不調倉")
+        else:
+            allt = _all_tickers(state) | set(longs)
+            prices = fetch_prices(allt)
+            rebalance(state, {CHAIN_TREND: longs}, prices, fx, date, only={CHAIN_TREND})
+            save(state)
+            add = sorted(set(longs) - cur)
+            rm = sorted(cur - set(longs))
+            print(f"✅ 趨勢倉調倉 {date}（匯率 {fx:.2f}）：+{add or '無'} / -{rm or '無'} → {len(longs)} 檔")
     elif cmd == "nav":
         prices = fetch_prices(_all_tickers(state))
         update_nav(state, prices, fx, date)
