@@ -203,7 +203,8 @@ def build(state):
 <hr style="border-color:#2a2e35;margin:10px 0">
 <p style="margin:4px 0"><b>⚡ 產業鏈+趨勢（選股＋擇時）</b><br>
 拿「產業鏈精選」同一批股，再用 <b>SuperTrend</b>（TradingView 同款趨勢線）過濾：
-<b>只抱「多頭（綠燈）」的，翻空（紅燈）就先不持有</b>。測「選股好之後，加上趨勢擇時會不會更賺、回檔少」。</p>
+<b>只抱「多頭（綠燈）」的，翻空（紅燈）就先不持有</b>。測「選股好之後，加上趨勢擇時會不會更賺、回檔少」。<br>
+<span style="color:#8ab4f8">此倉<b>每日</b>追 SuperTrend：候選池仍週日重篩，但綠燈名單一有變（翻燈）當天盤後就換股，不必等週日。其餘倉維持每週日調倉。</span></p>
 <hr style="border-color:#2a2e35;margin:10px 0">
 <p style="margin:4px 0"><b>🏛️ 巴菲特價值（價值派 · 洪瑞泰選股法）</b><br>
 洪瑞泰精髓：先挑「<b>好公司</b>」，再等「<b>便宜</b>」才買。三道關卡：<br>
