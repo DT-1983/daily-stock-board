@@ -246,13 +246,19 @@ summary::-webkit-details-marker{display:none}
 .rail a,.rail button{font-size:11px;width:40px;height:40px;border-radius:50%;border:1px solid #2a2e35;
  background:#1c2128cc;color:#cfd3d8;text-decoration:none;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .hidden{display:none!important}
-/* 產業深度解讀（可展開，嵌在每鏈下） */
-details.report{background:#14171d;border:1px solid #2a2e35;border-radius:9px;margin:2px 0 10px 14px;overflow:hidden}
-details.report>summary{cursor:pointer;color:#c9a86a;font-size:13.5px;font-weight:700;padding:9px 12px;display:flex;align-items:center;gap:6px;list-style:none}
-details.report>summary::-webkit-details-marker{display:none}
-details.report>summary::after{content:"▾";margin-left:auto;color:#7a6a45}
-details.report[open]>summary::after{content:"▴"}
-.rwrap{padding:2px 13px 12px}
+/* 產業深度解讀（按鈕開全螢幕彈窗） */
+.rptbtn{display:block;width:calc(100% - 14px);text-align:left;margin:2px 0 10px 14px;background:#14171d;
+ border:1px solid #2a2e35;border-radius:9px;color:#c9a86a;font-size:13.5px;font-weight:700;padding:10px 12px;cursor:pointer}
+.rptbtn:hover{background:#1a1f27}
+.rptbtn::after{content:" ⤢";color:#7a6a45}
+.rptmodal{display:none;position:fixed;inset:0;background:#000d;z-index:100}
+.rptmodal.on{display:block}
+.rptbox{position:absolute;inset:0;background:#0f1115;display:flex;flex-direction:column}
+.rpthead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;
+ border-bottom:1px solid #2a2e35;background:#161b22;flex:0 0 auto}
+.rpthead span{font-size:15px;font-weight:700}
+.rptx{background:#262b33;border:0;color:#cfd3d8;font-size:15px;width:34px;height:34px;border-radius:8px;cursor:pointer;flex:0 0 auto}
+.rptbody{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px 16px 40px}
 .rpt{font-size:14px}
 .rpt h2{font-size:15.5px;margin:18px 0 6px;border-left:3px solid #4a9eff;padding-left:9px}
 .rpt p{margin:7px 0}
@@ -300,10 +306,10 @@ details.report[open]>summary::after{content:"▴"}
 @media(max-width:620px){
  .rpt table{border:0}
  .rpt thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
- .rpt tbody tr{display:block;background:#1a1d23;border:1px solid #2a2e35;border-radius:9px;margin:0 0 9px;padding:2px 2px}
- .rpt tbody td{display:block;border:0;border-bottom:1px solid #23272e;padding:7px 12px}
+ .rpt tbody tr{display:block;background:#1a1d23;border:1px solid #2a2e35;border-radius:9px;margin:0 0 9px;padding:3px 2px}
+ .rpt tbody td{display:block;position:relative;border:0;border-bottom:1px solid #23272e;padding:6px 12px 6px 80px;min-height:31px}
  .rpt tbody tr td:last-child{border-bottom:0}
- .rpt tbody td::before{content:attr(data-label);display:block;color:#8a8f98;font-size:11.5px;font-weight:700;margin-bottom:3px}
+ .rpt tbody td::before{content:attr(data-label);position:absolute;left:11px;top:6px;width:60px;color:#8a8f98;font-size:11.5px;font-weight:700;line-height:1.55}
 }
 """
 
@@ -468,8 +474,13 @@ def main():
             body.append(_theme_html(theme))
         report = CHAIN_REPORTS.get(c)
         if report:
-            body.append(f'<details class="report"><summary>📖 產業深度解讀</summary>'
-                        f'<div class="rwrap">{report}</div></details>')
+            body.append(
+                f'<button class="rptbtn" onclick="document.getElementById(\'rm{i}\').classList.add(\'on\')">'
+                f'📖 產業深度解讀</button>'
+                f'<div class="rptmodal" id="rm{i}" onclick="if(event.target===this)this.classList.remove(\'on\')">'
+                f'<div class="rptbox"><div class="rpthead"><span>{CHAIN_ICON[c]} {c} · 產業深度解讀</span>'
+                f'<button class="rptx" onclick="document.getElementById(\'rm{i}\').classList.remove(\'on\')">✕</button>'
+                f'</div><div class="rptbody">{report}</div></div></div>')
         for sig, tk, nm, block in us:
             body.append(card_us(sig, tk, nm, block, tk in charts, mdc, us_score.get(tk, "—")))
         for r in tw:
