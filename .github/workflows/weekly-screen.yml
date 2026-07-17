@@ -19,10 +19,15 @@ jobs:
           python-version: '3.12'
 
       - name: 裝套件
-        run: pip install yfinance requests tradingview_screener pandas numpy
+        run: pip install yfinance requests tradingview_screener pandas numpy litellm
 
       - name: 重篩（每鏈 top N）
         run: python screen.py
+
+      - name: 七鏈題材層（Gemini 綜整每鏈一句催化劑 → chain_themes.json）
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python chain_themes.py || echo "題材層失敗，跳過（保留舊 json）"
 
       - name: 全市場巴菲特掃描 → buffett_watch.json（取代 Zeabur /bsp500，Actions IP 不限流）
         run: python buffett_scan.py --max-candidates 200 || echo "巴菲特掃描失敗，跳過（沿用舊 json）"
@@ -64,6 +69,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add screen_result.json buffett_watch.json docs/buffett.html portfolios.json docs/portfolios.html
+          git add screen_result.json chain_themes.json buffett_watch.json docs/buffett.html portfolios.json docs/portfolios.html
           git commit -m "chore: weekly re-screen + 巴菲特掃描 + 頁 + 模擬倉 [skip ci]" || echo "無變化"
           git push || echo "push 略過"

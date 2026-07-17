@@ -43,6 +43,18 @@ CHAIN_ICON = {"AI 伺服器": "🖥️", "矽光子/光通訊": "🔦", "機器�
               "Bitcoin→AI 機房": "⛏️"}
 SIG_CLASS = {"🔴": "sell", "🟢": "buy", "🔵": "hold", "🟡": "watch", "⚪": "watch"}
 
+
+def _load_chain_themes():
+    """讀 chain_themes.py 產的 {chain: 一句題材}；沒有就回空 dict（題材層可選）。"""
+    try:
+        d = json.load(open("chain_themes.json", encoding="utf-8"))
+        return d.get("themes", {}), d.get("generated", "")
+    except Exception:
+        return {}, ""
+
+
+CHAIN_THEMES, CHAIN_THEMES_TS = _load_chain_themes()
+
 # 台股中文名（yfinance 給英文，這裡覆蓋）
 TW_NAME = {
     "1503": "士電", "1504": "東元", "1513": "中興電", "1519": "華城", "1597": "直得",
@@ -174,6 +186,7 @@ h1{font-size:20px;margin:6px 0}.sub{color:#9aa0a6;font-size:13px}
 .chain{margin:20px 0 6px;font-size:17px;border-left:4px solid #4a9eff;padding-left:10px;
  display:flex;align-items:center;gap:8px}
 .cnt{font-size:12px;color:#9aa0a6;background:#1c2128;padding:1px 8px;border-radius:10px}
+.theme{font-size:13px;color:#c9a86a;margin:2px 0 8px 14px;line-height:1.4}
 .card{background:#1a1d23;border:1px solid #2a2e35;border-radius:10px;margin:8px 0;overflow:hidden}
 .card.sell{border-left:4px solid #ff5c5c}.card.buy{border-left:4px solid #3ddc84}
 .card.hold,.card.watch{border-left:4px solid #8a8f98}
@@ -358,6 +371,9 @@ def main():
         body.append(f'<div class="chain" id="{i}">{CHAIN_ICON[c]} {c}'
                     f'<span class="cnt" data-mkt="US">美 {len(us)}</span>'
                     f'<span class="cnt hidden" data-mkt="TW">台 {len(tw)}</span></div>')
+        theme = CHAIN_THEMES.get(c)
+        if theme:
+            body.append(f'<div class="theme">💡 {theme}</div>')
         for sig, tk, nm, block in us:
             body.append(card_us(sig, tk, nm, block, tk in charts, mdc, us_score.get(tk, "—")))
         for r in tw:
