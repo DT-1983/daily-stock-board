@@ -13,7 +13,7 @@ import requests
 import yfinance as yf
 
 FINMIND = "https://api.finmindtrade.com/api/v4/data"
-TOPN = 6
+TOPN = 8
 
 US_ETFS = {
     "AI 伺服器": ["SMH", "SOXX", "DTCR", "SKYY"],
