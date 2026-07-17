@@ -16,9 +16,9 @@ jobs:
         run: |
           python - <<'PY'
           import os, requests
-          msg = ("📊 <b>每月產業深度報告更新提醒</b>\n"
-                 "看板七鏈的「📖 產業深度解讀」建議每月刷新一次。\n"
-                 "<i>跟 Claude 說一句「重跑產業深度報告」，即會重新上網查證七鏈並部署。</i>")
+          msg = ("📊 <b>產業深度報告 · 月更日</b>\n"
+                 "本機排程今天 09:23 會自動重跑七鏈「📖 產業深度解讀」。\n"
+                 "<i>若電腦沒開機沒跑到，跟 Claude 說一句「重跑產業深度報告」即可手動觸發。</i>")
           requests.post(f"https://api.telegram.org/bot{os.environ['TELEGRAM_BOT_TOKEN']}/sendMessage",
                         json={"chat_id": os.environ["TELEGRAM_CHAT_ID"], "text": msg,
                               "parse_mode": "HTML", "disable_web_page_preview": True}, timeout=30)
