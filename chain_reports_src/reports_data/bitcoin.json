@@ -1,0 +1,68 @@
+{
+ "_chain":"Bitcoin→AI 機房",
+ "positioning":"比特幣礦商用既有的電力合約、土地與資料中心殼，轉租給 AI/雲端做 HPC 代管，把挖礦現金流換成 10–15 年 take-or-pay 的 AI 房東租金。",
+ "tldr":{"conclusion":"這是 2026 年最猛的敘事切換：礦商從<b>賺幣</b>變成<b>賣電賣機房</b>給 AI，CoreWeave、微軟、Google、AMD 的長約把估值從『幣價 beta』重估成『AI 基建 REIT』。","catalyst":"單筆數十億美元、10–15 年的 AI 代管/租賃大單接連落地（HUT $9.8B、IREN 微軟 $9.7B、APLD $11B、CLSK $6.6B）。","risk":"AI 資本支出若降溫、承租方（CoreWeave/Fluidstack 等新創雲）履約與信用出問題，加上巨額轉建需大量發債與增資稀釋。"},
+ "demand":"AI 訓練/推論的瓶頸已從晶片轉向<b>電力與可通電的機房</b>，礦商手握現成的 GW 級電力合約與土地正好補位。CORZ 對 CoreWeave 合計約 590 MW、逾 <b>$10B</b>／12 年；APLD 對 CoreWeave 約 400 MW、約 <b>$11B</b>；IREN 拿下微軟 <b>$9.7B</b> GPU/AI 雲；HUT 契約容量增至 597 MW、潛在逾 $25B。整體從『挖幣』快速轉為『當 AI 房東收租』。",
+ "scale":[
+  {"n":"$9.7B","t":"IREN 與微軟簽的 AI 雲/GPU 服務合約，Childress 750MW 園區部署 NVIDIA GB300"},
+  {"n":">$10B → 590MW","t":"CORZ 對 CoreWeave 12 年合約總額，跨五站點約 590 MW（CoreWeave 更直接全股收購 CORZ）"},
+  {"n":"$11B / 400MW","t":"APLD 北達科他 Ellendale 對 CoreWeave 約 15 年租約總收入"},
+  {"n":"$3B→$7B","t":"CIFR 對 Fluidstack 168MW 10 年約，含展延上看 $7B，Google 背書 $1.4B 並取得約 5.4% 股權"}
+ ],
+ "competition":[
+  {"field":"承租方（AI 雲需求）","now":"CoreWeave 是最大買家（吃下 CORZ、APLD 大量產能），微軟、Google（透過 Fluidstack）、AMD、Fluidstack 分散卡位","trend":"少數超大買家掌握議價權，礦商爭相綁定信用較強的 anchor tenant"},
+  {"field":"轉型速度","now":"CORZ/APLD/IREN/CIFR 已簽長約領跑；HUT、CLSK 2026 年密集追上；RIOT 用 1.7GW 電力組合+AMD 約補位","trend":"從『有沒有 AI 單』轉為比拚<b>通電時程</b>與液冷交付能力"},
+  {"field":"電力與土地","now":"擁 GW 級併網容量、變電站與土地者為王，新進者難複製","trend":"稀缺的『可即時通電』站點成核心資產，估值錨定於此"},
+  {"field":"純挖礦 vs AI 房東","now":"BTDR 走雙軌（自挖 70+ EH/s + AI Cloud ARR ~$69M）、CLSK 原偏純挖礦轉多元化","trend":"純挖礦估值折價，市場給『AI 代管營收占比高』者溢價"}
+ ],
+ "valuechain":[
+  {"seg":"AI 代管/租賃（房東）","do":"把礦場改建/新建成液冷 HPC 機房，長約出租給 AI 雲","stocks":"CORZ, APLD, HUT, CIFR","note":"CORZ→CoreWeave 590MW 且被 CoreWeave 收購；APLD→CoreWeave 400MW/$11B；HUT $9.8B、597MW；CIFR→Fluidstack 168MW（Google 背書）"},
+  {"seg":"自建 AI 雲（GPU 營運）","do":"自購 GPU 直接對外提供 AI 算力/雲服務","stocks":"IREN, BTDR","note":"IREN 微軟 $9.7B、GB300、向 Dell 採購 $5.8B GPU；BTDR AI Cloud ARR ~$69M、Tydal 挪威 180MW 12 月完工"},
+  {"seg":"電力/基建平台（雙軌）","do":"保留自挖同時開發 AI/HPC 電力組合","stocks":"RIOT, CLSK","note":"RIOT Q1'26 DC 營收 $33.2M、1.7GW 組合、簽 AMD 約；CLSK $6.6B 資料中心租約、轉多元化平台"}
+ ],
+ "catalysts":[
+  "<b>新的 AI 代管/GPU 大單</b>連環落地（HUT $9.8B、IREN $9.7B、CLSK $6.6B、CIFR $3B），每筆都拉估值",
+  "承租方行使<b>擴容選擇權</b>（CORZ、APLD 已多次加碼 MW），把契約總額與年限往上堆",
+  "站點<b>如期通電上線</b>（APLD ELN03 150MW 2026 年中、BTDR Tydal 180MW 2026/12）驗證交付能力",
+  "策略性整併：<b>CoreWeave 全股收購 CORZ</b>，示範 AI 雲垂直整合礦商資產的路徑",
+  "投行上修目標價（如 Canaccord 將 HUT 目標價近乎翻倍至 $130）帶動族群重估"
+ ],
+ "bull":[
+  "把波動的幣價現金流換成 10–15 年 take-or-pay 租金，現金流可預測性大增",
+  "手握稀缺的 GW 級電力與可通電土地，是 AI 基建最硬的瓶頸資產",
+  "大型科技/AI 雲（微軟、Google、CoreWeave、AMD）背書，降低需求端不確定性",
+  "估值敘事從『幣價 beta』重估為『AI 資料中心 REIT』，倍數有望擴張"
+ ],
+ "bear":[
+  "轉建 AI 機房資本支出巨大，需大量發債與增資，股東面臨稀釋",
+  "承租方多為 CoreWeave、Fluidstack 等年輕雲新創，信用與履約風險集中",
+  "AI 資本支出若進入下行週期，長約估值與新單動能同步崩",
+  "液冷 HPC 交付、通電時程一再延誤將侵蝕合約現值"
+ ],
+ "risks":[
+  "<b>比特幣價格波動</b>：仍在轉型中的公司（BTDR、CLSK、RIOT）自挖營收受幣價牽動",
+  "<b>股權稀釋</b>：數十億美元 GPU/機房建設靠增資與可轉債，EPS 稀釋壓力大",
+  "<b>電力合約與併網</b>：電價上漲、併網延遲或監管卡關直接打擊獲利與交付",
+  "<b>單一大客戶集中</b>：CoreWeave 同時是 CORZ、APLD 主力租戶，客戶信用連動全鏈",
+  "承租方（新創 AI 雲）自身若融資斷鏈，長約現金流兌現有變數"
+ ],
+ "watch":[
+  "各檔<b>AI 代管/雲營收占比</b>與 ARR 成長（BTDR AI Cloud ARR、RIOT DC 營收季增)",
+  "契約容量（MW）與總金額的<b>選擇權行使</b>進度",
+  "重點站點<b>通電/上線時程</b>是否如期（APLD Ellendale、IREN Childress、BTDR Tydal）",
+  "資產負債表：發債規模、現金、稀釋幅度",
+  "承租方（CoreWeave、Fluidstack）財務健康與履約能力"
+ ],
+ "stocks_us":[
+  {"code":"HUT","name":"Hut 8","role":"AI 房東（後發猛追）","note":"2026 宣布 $9.8B AI 資料中心約，契約容量三倍增至 597MW，潛在展延逾 $25B；Canaccord 目標價上修至約 $130","bull":"單一大單即重估，容量與金額跳升","bear":"合約細節與交付時程尚待兌現，估值已反映高預期"},
+  {"code":"RIOT","name":"Riot Platforms","role":"電力平台雙軌（自挖+AI）","note":"Q1'26 資料中心營收 $33.2M/總營收 $167.2M；已核准電力組合達 1.7GW，簽 AMD 資料中心租約","bull":"1.7GW 電力庫存+AMD 加持，AI 轉型料在後段放量","bear":"AI 營收占比仍低，本體仍高度綁幣價"},
+  {"code":"APLD","name":"Applied Digital","role":"純 AI 資料中心房東","note":"北達科他 Ellendale 對 CoreWeave 約 400MW、約 $11B/15 年；ELN02 100MW Q4'25、ELN03 150MW 2026 年中上線","bull":"純 AI 敘事最乾淨，容量與交付里程碑逐步 de-risk","bear":"高度依賴單一客戶 CoreWeave，建設資本支出與稀釋壓力大"},
+  {"code":"BTDR","name":"Bitdeer","role":"自挖+自建 AI 雲雙軌","note":"AI Cloud ARR 約 $69M（90% GPU 使用率）；自挖 70.2 EH/s、5 月產 921 BTC；Tydal 挪威 180MW colocation 約，最快 2026/12 完工","bull":"自有 ASIC+3.0GW 能源，AI 與自挖雙引擎","bear":"AI 營收規模仍小，自挖占比高、幣價敏感"},
+  {"code":"CIFR","name":"Cipher Mining","role":"AI 房東（Google 背書）","note":"對 Fluidstack 168MW、10 年約 $3B（含展延上看 $7B）；Google 背書 $1.4B 租約義務並取得約 5.4% 股權","bull":"Google 間接背書大幅降低承租信用風險","bear":"承租方 Fluidstack 為新創，履約與擴容仍待驗證"},
+  {"code":"CORZ","name":"Core Scientific","role":"AI 房東（被 CoreWeave 收購）","note":"對 CoreWeave 合計約 590MW、逾 $10B/12 年；CoreWeave 2025/7 宣布全股收購（每股 CORZ 換 0.1235 CW A 股）","bull":"轉型最徹底，直接被 AI 雲垂直整合買下","bear":"股價命運綁 CoreWeave 併購案與其股價，獨立上行受限"},
+  {"code":"IREN","name":"IREN","role":"自建 AI 雲（微軟旗艦客戶）","note":"與微軟 $9.7B AI 雲/GPU 約，Childress 750MW 部署 GB300、向 Dell 採購 $5.8B GPU；自挖營收下滑約 33%，重心轉 AI","bull":"微軟旗艦客戶+自營 GPU 雲，敘事想像空間最大","bear":"$5.8B GPU 採購需大額融資，執行與稀釋風險高"},
+  {"code":"CLSK","name":"CleanSpark","role":"純挖礦轉多元基建","note":"2026/7 簽 $6.6B 資料中心租約，宣示轉型『多元數位基建平台』；轉型起步較晚","bull":"大額租約點火轉型敘事，股價彈性大","bear":"AI 轉型最晚起跑，執行紀錄與 AI 營收占比待建立，仍偏純挖礦"}
+ ],
+ "stocks_tw":[],
+ "sources":"公司 SEC/官方新聞稿（CORZ、APLD、CIFR、RIOT、BTDR 8-K/6-K 與 IR）、CoreWeave 收購公告，及 2026 年財經媒體（Cryptopolitan、24/7 Wall St.、Coindesk、Yahoo Finance、cryptonomist）"
+}

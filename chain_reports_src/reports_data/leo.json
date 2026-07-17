@@ -1,0 +1,81 @@
+{
+ "_chain":"低軌衛星",
+ "positioning":"低軌衛星從『太空競賽』進入『地面放量』階段：Starlink 一家獨大、Amazon Leo 追趕、直連手機(D2C)與國防星系點火三大需求，帶動台美衛星通訊與地面設備供應鏈。",
+ "tldr":{
+  "conclusion":"&lt;b&gt;需求真實、放量在即&lt;/b&gt;：Starlink 在軌逾 1 萬顆、Amazon Leo 2026 中服務上線，加上直連手機與國防星系，台廠地面設備與美系元件同步吃到訂單。選股要分『已放量』與『題材期』兩類。",
+  "catalyst":"Amazon Leo 2026 中商轉 + SpaceX 用戶數目標年底成長 1.5 倍，帶動地面接收站與 CPE 拉貨。",
+  "risk":"發射進度與火箭運力是總開關；Starlink 一家獨大使供應鏈議價力受制單一大客戶，訂單能見度短。"
+ },
+ "demand":"三引擎並進：&lt;b&gt;(1) 寬頻星系&lt;/b&gt;—Starlink 在軌逾 10,600 顆、獲准 42,000 顆，Amazon Leo 已發射 360~390+ 顆、2026 中商轉；&lt;b&gt;(2) 直連手機 D2C&lt;/b&gt;—3GPP NTN 標準化，2026 起旗艦機標配衛星訊號；&lt;b&gt;(3) 國防星系&lt;/b&gt;—美太空發展署(SDA)Tranche 3 一次發包 72 顆追蹤衛星、金額約 35 億美元。LEO 市場規模約 2026 年 320 億美元、2031 年上看 500 億美元。",
+ "scale":[
+  {"n":"$32B→$51B","t":"LEO 衛星市場 2026→2031，CAGR 約 9~13%（各機構口徑不一）"},
+  {"n":"$4.1B→$10.8B","t":"直連衛星(D2C/NTN)市場 2026→2033，CAGR 約 15%"},
+  {"n":"10,600→42,000 顆","t":"Starlink 在軌 vs 獲准總數，發射仍在高速爬坡"},
+  {"n":"+90%","t":"昇達科 2026 全年營收法人估年增幅，LEO 進入高成長元年"}
+ ],
+ "competition":[
+  {"field":"寬頻星系營運","now":"Starlink 一家獨大(在軌逾1萬顆)、Amazon Leo 追趕(已發射約360~390顆、規劃7,700顆)、OneWeb/歐洲IRIS²","trend":"雙雄格局成形，Leo 商轉後供應鏈客戶分散度提升"},
+  {"field":"直連手機 D2C/NTN","now":"聯發科(IoT-NTN MT6825)vs 高通 Snapdragon Satellite；Skylo/Iridium 提供服務","trend":"從硬體升級變基頻標配，2027 大眾化"},
+  {"field":"衛星射頻/化合物半導體","now":"穩懋(全球最大 GaAs 代工)、全新等切入衛星高頻鏈路","trend":"單顆衛星用料量與產值隨多頻譜設計上升"},
+  {"field":"國防/追蹤星系","now":"SDA Tranche 3：L3Harris、洛馬、諾格、Rocket Lab 各造 18 顆；L3Harris 在手 70+ 顆","trend":"『金穹(Golden Dome)』飛彈追蹤帶動 proliferated LEO 長約"}
+ ],
+ "valuechain":[
+  {"seg":"上游 半導體/晶片","do":"GaAs 射頻代工、太空級 FPGA、NTN 基頻晶片、RF/SiC 封測模組","stocks":"3105 穩懋、AMD、2454 聯發科、6271 同欣電","note":"穩懋供衛星高頻鏈；AMD Versal 太空級 FPGA 2026 送樣、2027 飛行認證；聯發科 NTN 標配化；同欣電 RF 模組打進 LEO 製造商，拚 2027 營運倍增"},
+  {"seg":"中游 衛星本體/元件","do":"整星系統、任務關鍵電子元件、飛彈追蹤衛星","stocks":"HEI Heico、LHX L3Harris、RTX RTX","note":"Heico(3D PLUS/Exxelia/VPT)供太空元件、FY26 EPS 估 +18%；L3Harris 拿 SDA 18 顆追蹤衛星約 8.43 億美元；RTX 以 6.2 億美元出售 Blue Canyon 小衛星部門予 MDA、聚焦本業"},
+  {"seg":"下游 地面設備/天線/CPE","do":"用戶端終端、地面接收站、衛星天線與饋源、波導元件","stocks":"6285 啟碁、2314 台揚、3491 昇達科","note":"啟碁為 SpaceX 用戶端/地面站要角、LEO 約占營收 15%、5 月營收 121.68 億年增 34.8%；台揚供 SpaceX/OneWeb 多客戶分散風險；昇達科 LEO 在手訂單逾 18 億、Q1 LEO 占比 80%"},
+  {"seg":"下游 定位/終端應用","do":"衛星通訊器(SOS/雙向簡訊)、高精度 GNSS 定位與測繪","stocks":"GRMN Garmin、TRMB Trimble","note":"Garmin inReach 衛星通訊器穩定現金流；Trimble Q1 營收 9.4 億美元年增 12%、ARR 24.3 億美元轉軟體訂閱"},
+  {"seg":"設備/測試","do":"衛星與 AI 晶片自動化測試設備(ATE)","stocks":"TER Teradyne","note":"Teradyne 半導體測試強勁、約 70% 營收綁 AI，衛星晶片放量為額外題材而非主軸"}
+ ],
+ "catalysts":[
+  "&lt;b&gt;Amazon Leo 2026 中商業服務上線&lt;/b&gt;，地面設備/CPE 進入拉貨期",
+  "SpaceX 目標 2026 底用戶數成長 1.5 倍，發射與地面站需求同步放大",
+  "&lt;b&gt;SDA Tranche 3 國防星系發包(約 35 億美元/72 顆)&lt;/b&gt;，L3Harris 等長約入袋",
+  "3GPP NTN 直連手機 2026 旗艦機標配，聯發科基頻放量",
+  "SpaceX 傳 IPO 題材，點火整體低軌衛星概念股評價"
+ ],
+ "bull":[
+  "需求由『太空』轉『地面放量』，訂單能見度與營收貢獻開始兌現(昇達科、啟碁)",
+  "雙星系(Starlink+Leo)+D2C+國防四引擎，需求來源多元、非單一景氣",
+  "台廠卡位地面設備/射頻/封測利基，美系元件廠(Heico/AMD)吃太空高毛利",
+  "國防 proliferated LEO 為長約、能見度優於商用寬頻"
+ ],
+ "bear":[
+  "商用寬頻供應鏈高度依賴 Starlink 單一大客戶，議價力與訂單波動大",
+  "發射進度/火箭運力延遲即遞延地面設備拉貨(Amazon 已請求 FCC 展延至 2028)",
+  "多數台廠 LEO 僅占營收一成上下，本業(網通/手機)景氣仍主導股價",
+  "題材股評價已反映部分預期，昇達科等本益比偏高"
+ ],
+ "risks":[
+  "&lt;b&gt;發射與運力風險&lt;/b&gt;：火箭運力或事故延遲整條供應鏈拉貨節奏",
+  "&lt;b&gt;客戶集中風險&lt;/b&gt;：Starlink 一家獨大，砍單/改設計衝擊台廠",
+  "地緣政治與出口管制影響美系太空級元件供應",
+  "評價風險：概念股漲多、業績不如預期易回檔",
+  "D2C 商業模式未定，電信商與衛星商分潤與滲透率仍待驗證"
+ ],
+ "watch":[
+  "Amazon Leo 商轉時點與 2026 底在軌衛星數(FCC 展延結果)",
+  "SpaceX IPO 進度與 Starlink 用戶數/發射頻次",
+  "昇達科、啟碁季報 LEO 營收占比與在手訂單續增否",
+  "聯發科 NTN 出貨與旗艦機採用進度",
+  "SDA/金穹後續發包與 L3Harris 交機節奏"
+ ],
+ "stocks_us":[
+  {"code":"AMZN","name":"Amazon","role":"星系營運商(Leo/Kuiper)","note":"已發射約 360~390+ 顆、2026 中商轉，向 FCC 請求發射期限展延至 2028；本業為雲/電商，Leo 屬長線選項","bull":"唯一具規模挑戰 Starlink 者，雲+零售現金流可長期燒錢養星系","bear":"發射落後原訂 1,600 顆目標，短期對整體獲利貢獻極小"},
+  {"code":"AMD","name":"AMD","role":"太空級 FPGA/自適應 SoC","note":"XQR Versal AI Core 2026 送樣、2027 飛行認證；Blue Origin 採用 Versal AI Edge Gen 2","bull":"星上 AI 運算/雷達處理高毛利利基，太空認證門檻高","bear":"太空營收占比極低，股價由資料中心 GPU 主導"},
+  {"code":"HEI","name":"Heico","role":"任務關鍵太空/航太元件","note":"FY26 Q2 淨利年增 49%、全年 EPS 估約 5.78(+18%)；3D PLUS/Exxelia/VPT 供太空元件、參與 Artemis II","bull":"航太後市場+太空元件雙引擎，長年穩定複利成長","bear":"評價長期偏貴，回檔風險大"},
+  {"code":"GRMN","name":"Garmin","role":"衛星通訊終端/GNSS","note":"inReach 衛星通訊器(SOS/雙向簡訊)提供穩定訂閱現金流","bull":"消費級衛星通訊品牌力強、獲利穩健配息","bear":"D2C 手機直連長期可能侵蝕專用通訊器市場"},
+  {"code":"TER","name":"Teradyne","role":"自動化測試設備(ATE)","note":"Q1 2026 營收 12.8 億美元、半導體測試 11.1 億，約 70% 綁 AI；衛星晶片為附加題材","bull":"AI+衛星晶片放量拉動測試需求","bear":"衛星非主要成長軸，股價隨半導體週期波動"},
+  {"code":"LHX","name":"L3Harris","role":"國防追蹤衛星整星","note":"獲 SDA AMDT3 18 顆飛彈追蹤衛星約 8.43 億美元，在手 70+ 顆衛星","bull":"金穹/proliferated LEO 國防長約、能見度高","bear":"國防預算與計畫時程波動，交機執行風險"},
+  {"code":"RTX","name":"RTX","role":"國防航太(退出小衛星)","note":"Q1 2026 調整後 EPS 1.78 美元、上調全年財測；以 6.2 億美元出售 Blue Canyon 小衛星部門予 MDA","bull":"聚焦飛彈/引擎本業、獲利上修","bear":"出售小衛星部門後 LEO 直接曝險降低，非純衛星標的"},
+  {"code":"TRMB","name":"Trimble","role":"高精度定位/GNSS 應用","note":"Q1 2026 營收 9.4 億美元年增 12%、ARR 24.3 億美元、轉軟體訂閱","bull":"精準定位+訂閱轉型提升續航與毛利","bear":"與 LEO 星系連動間接，需求受營建/工業景氣影響"}
+ ],
+ "stocks_tw":[
+  {"code":"6285","name":"啟碁","role":"用戶端終端/地面接收站","note":"SpaceX 用戶端設備與地面站要角，LEO 約占營收 15%；5 月營收 121.68 億元月增 6.7%、年增 34.8%","bull":"低軌+800G 交換器+AI-RAN 多箭齊發，網通股重評價","bear":"獲利受匯率與關稅壓抑，LEO 僅占約一成五"},
+  {"code":"6271","name":"同欣電","role":"RF/SiC 封測模組","note":"RF 模組打進 LEO 衛星製造商，SiC 高壓 DC 轉換 2026 下半年小量出貨，喊 2027 營運倍增","bull":"AI+低軌+第三代半導體三題材轉型","bear":"轉型初期,衛星營收貢獻尚小、車用 CIS 仍為主體"},
+  {"code":"3105","name":"穩懋","role":"GaAs 砷化鎵晶圓代工","note":"全球最大 GaAs 代工、早期參與 SpaceX，供衛星間高頻鏈路晶片","bull":"衛星多頻譜設計拉高單顆用料與產值","bear":"營收主體仍為手機射頻,受智慧機景氣循環影響大"},
+  {"code":"2314","name":"台揚","role":"地面站/天線設備","note":"供 SpaceX、OneWeb 等多家衛星業者地面站設備,不押單一客戶","bull":"客戶分散、風險相對低,直接受惠發射放量","bear":"規模較小、獲利波動,議價力有限"},
+  {"code":"3491","name":"昇達科","role":"衛星天線/波導/饋源元件","note":"LEO 在手訂單逾 18 億元;Q1 2026 營收 10.2 億年增 64.5%、LEO 占比升至 80%;法人估全年營收年增約 90%","bull":"LEO 進入高成長元年,訂單能見度與占比最高的純度標的","bear":"股價與本益比已大漲反映預期,交貨與火箭進度是變數"},
+  {"code":"2454","name":"聯發科","role":"NTN 直連衛星基頻晶片","note":"IoT-NTN 晶片 MT6825(3GPP R17)已商用、與 Skylo 合作、預研 NR-NTN;Pixel/Samsung 採用","bull":"直連手機標配化長線受惠,基頻龍頭卡位 D2C","bear":"衛星占營收極微,股價由手機/AI ASIC 主導"}
+ ],
+ "sources":"綜合 2026 年產業新聞與券商研報、上市公司法說與財報、市場研究機構(MarketsandMarkets/Fortune/Grand View)規模預估、SDA/太空軍與 FCC 官方發包與監管資訊,以及台股財經媒體(鉅亨/今周刊/理財周刊/CMoney)個股訂單追蹤。"
+}
