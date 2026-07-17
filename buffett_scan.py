@@ -11,26 +11,38 @@
 import json
 import argparse
 from datetime import datetime
-from buffett_sp500 import stage1_prefilter, stage2_yfinance
+import os
+from buffett_sp500 import stage1_prefilter, stage1_prefilter_tw, stage2_yfinance
 from buffett_screener import inject_leader_ranks
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--min-cap", type=float, default=2e9)
-    ap.add_argument("--max-candidates", type=int, default=200)  # Actions 不怕限流，可放寬
-    args = ap.parse_args()
+def _tw_name_map():
+    """FinMind TaiwanStockInfo → {代號: 中文名}。抓失敗回空 dict（退回英文名）。"""
+    import requests
+    params = {"dataset": "TaiwanStockInfo"}
+    tok = os.environ.get("FINMIND_TOKEN")
+    if tok:
+        params["token"] = tok
+    try:
+        r = requests.get("https://api.finmindtrade.com/api/v4/data", params=params, timeout=30)
+        data = r.json().get("data", [])
+        return {d["stock_id"]: d["stock_name"] for d in data
+                if d.get("stock_id") and d.get("stock_name")}
+    except Exception as e:
+        print(f"[FinMind 中文名] 失敗：{e}")
+        return {}
 
-    tickers = stage1_prefilter(min_market_cap=args.min_cap, max_candidates=args.max_candidates)
-    results = [r for r in stage2_yfinance(tickers) if r]
-    inject_leader_ranks(results)
 
-    today = datetime.now().strftime("%Y-%m-%d")
-    out = {}
+def _collect(results, market, today, out):
+    """把某市場的 BUY/WATCH 結果併入 out（標 market）。"""
+    inject_leader_ranks(results)          # 龍頭排名在同市場內算
+    n = 0
     for r in results:
-        if r.get("signal") not in ("BUY", "WATCH"):   # 觀察清單=洪瑞泰品質過關的買進候選
+        if r.get("signal") not in ("BUY", "WATCH"):
             continue
         out[r["ticker"]] = {
+            "market": market,
+            "name": r.get("name") or r.get("name_full"),
             "sector": r.get("sector"), "rank": r.get("leader_rank"),
             "eps": r.get("eps_ttm"), "roe": r.get("roe_current"),
             "payout": r.get("payout_ratio"), "reinvest": r.get("reinvest_ratio"),
@@ -38,10 +50,47 @@ def main():
             "expensive": r.get("exp_price"), "trap_flags": r.get("trap_flags"),
             "updated": today,
         }
+        n += 1
+    return n
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--min-cap", type=float, default=2e9)          # 美股 USD
+    ap.add_argument("--max-candidates", type=int, default=200)     # 美股 stage2 上限
+    ap.add_argument("--tw-min-cap", type=float, default=1e10)      # 台股 100 億 TWD
+    ap.add_argument("--tw-max-candidates", type=int, default=120)  # 台股 stage2 上限
+    ap.add_argument("--markets", default="us,tw",
+                    help="要掃的市場，逗號分隔（us / tw）")
+    args = ap.parse_args()
+
+    markets = [m.strip().lower() for m in args.markets.split(",") if m.strip()]
+    today = datetime.now().strftime("%Y-%m-%d")
+    out = {}
+
+    if "us" in markets:
+        tickers = stage1_prefilter(min_market_cap=args.min_cap, max_candidates=args.max_candidates)
+        us = [r for r in stage2_yfinance(tickers) if r]
+        n_us = _collect(us, "US", today, out)
+        print(f"── 美股 BUY/WATCH：{n_us} 檔")
+
+    if "tw" in markets:
+        tw_tk = stage1_prefilter_tw(min_market_cap=args.tw_min_cap, max_candidates=args.tw_max_candidates)
+        tw = [r for r in stage2_yfinance(tw_tk) if r]
+        n_tw = _collect(tw, "TW", today, out)
+        zh = _tw_name_map()                      # 代號→中文名
+        if zh:
+            for tk, v in out.items():
+                if v.get("market") == "TW":
+                    code = tk[:-3] if tk.endswith(".TW") else tk
+                    v["name"] = zh.get(code, v.get("name"))
+        print(f"── 台股 BUY/WATCH：{n_tw} 檔（中文名 {len(zh)} 檔對照）")
+
     json.dump(out, open("buffett_watch.json", "w", encoding="utf-8"),
               ensure_ascii=False, indent=1)
     ranked = sum(1 for v in out.values() if v.get("rank"))
-    print(f"✅ buffett_watch.json：{len(out)} 檔 BUY/WATCH（龍頭 {ranked}）")
+    n_tw_total = sum(1 for v in out.values() if v.get("market") == "TW")
+    print(f"✅ buffett_watch.json：{len(out)} 檔 BUY/WATCH（美 {len(out)-n_tw_total} / 台 {n_tw_total}、龍頭 {ranked}）")
 
 
 if __name__ == "__main__":

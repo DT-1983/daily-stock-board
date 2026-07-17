@@ -29,8 +29,10 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python chain_themes.py || echo "題材層失敗，跳過（保留舊 json）"
 
-      - name: 全市場巴菲特掃描 → buffett_watch.json（取代 Zeabur /bsp500，Actions IP 不限流）
-        run: python buffett_scan.py --max-candidates 200 || echo "巴菲特掃描失敗，跳過（沿用舊 json）"
+      - name: 全市場巴菲特掃描（美+台）→ buffett_watch.json（取代 Zeabur /bsp500，Actions IP 不限流）
+        env:
+          FINMIND_TOKEN: ${{ secrets.FINMIND_TOKEN }}
+        run: python buffett_scan.py --max-candidates 200 --tw-max-candidates 120 || echo "巴菲特掃描失敗，跳過（沿用舊 json）"
 
       - name: 推播「本週守備清單已更新」
         env:

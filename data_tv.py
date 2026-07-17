@@ -117,3 +117,47 @@ def get_buffett_snapshot_full_market(
 
     df['ticker'] = df['name']
     return count, df
+
+
+def get_buffett_snapshot_taiwan(
+    min_market_cap: float = 1e10,            # ≥ 100 億 TWD
+    min_price: float = 5.0,
+    require_positive_eps: bool = True,
+    limit: int = 3000,
+):
+    """台股版全市場 Buffett snapshot（TWSE + TPEX）。
+    ticker 直接帶 .TW 後綴給 yfinance；欄位對齊 buffett_screener.evaluate()。
+    市值單位為 TWD（門檻與美股 USD 不同）。"""
+    fields = [
+        'name', 'description', 'close',
+        'earnings_per_share_basic_ttm', 'return_on_equity', 'debt_to_equity',
+        'dividend_yield_recent', 'market_cap_basic',
+        'sector', 'industry', 'exchange', 'price_earnings_ttm',
+    ]
+    base = _tv_stocks('taiwan') if _tv_stocks is not None else Query().set_markets('taiwan')
+    q = (base.select(*fields)
+         .where(col('market_cap_basic') >= min_market_cap,
+                col('close') >= min_price,
+                col('exchange').isin(['TWSE', 'TPEX'])))
+    if require_positive_eps:
+        q = q.where(col('earnings_per_share_basic_ttm') > 0)
+    count, df = q.limit(limit).get_scanner_data()
+    if df is None or df.empty:
+        return count, df
+    df = df[df['exchange'].isin(['TWSE', 'TPEX'])]
+    df = df[df['market_cap_basic'].notna() & (df['market_cap_basic'] >= min_market_cap)]
+    df = df.rename(columns={
+        'description': 'name_full',
+        'earnings_per_share_basic_ttm': 'eps_ttm',
+        'return_on_equity': 'roe_current_pct',
+        'debt_to_equity': 'debt_to_equity_ratio',
+        'dividend_yield_recent': 'dividend_yield_pct',
+        'market_cap_basic': 'market_cap',
+        'price_earnings_ttm': 'pe_ttm',
+        'close': 'price',
+    })
+    df['roe_current'] = df['roe_current_pct'] / 100.0
+    df['dividend_yield'] = df['dividend_yield_pct'] / 100.0
+    df['debt_to_equity_pct'] = df['debt_to_equity_ratio'] * 100
+    df['ticker'] = df['name'].astype(str) + '.TW'      # yfinance 台股後綴
+    return count, df

@@ -82,6 +82,10 @@ body{font-family:"Microsoft JhengHei","PingFang TC",-apple-system,sans-serif;mar
 .wrap{max-width:1000px;margin:0 auto;padding:16px}
 h1{font-size:20px;margin:6px 0}.sub{color:#9aa0a6;font-size:13px}
 a{color:#6db3ff}
+.toggle{display:inline-flex;background:#1c2128;border-radius:18px;padding:3px;margin:10px 0}
+.toggle button{border:0;background:transparent;color:#9aa0a6;padding:6px 18px;border-radius:15px;font-size:14px;cursor:pointer;font-weight:600}
+.toggle button.on{background:#4a9eff;color:#fff}
+.nm{color:#9aa0a6;font-size:12px;font-weight:400}
 .legend{background:#1a1d23;border:1px solid #2a2e35;border-radius:8px;padding:10px 12px;margin:10px 0;font-size:13px}
 .sec{margin:22px 0 6px;font-size:17px;border-left:4px solid #4a9eff;padding-left:10px;display:flex;align-items:center;gap:8px}
 .cnt{font-size:12px;color:#9aa0a6;background:#1c2128;padding:1px 8px;border-radius:10px}
@@ -103,8 +107,61 @@ tr.buy{background:#10241a}tr.sell{background:#251114}tr.watch{background:#231f10
 """
 
 
+def _market_html(mkt, rows, show):
+    """單一市場（US/TW）的篩選鈕 + 各訊號分組表。show=True 預設顯示。"""
+    o = [f'<div class="market" data-mkt="{mkt}"{"" if show else " style=display:none"}>']
+    total = sum(len(rows[s]) for s in ORDER)
+    if not total:
+        o.append('<p class="sub">此市場暫無 BUY/WATCH 標的（掃描後更新）。</p></div>')
+        return "".join(o)
+    # 篩選鈕
+    o.append(f'<div class="filt"><button class="fb on" onclick="flt(this,\'all\')">全部 {total}</button>')
+    for sig in ORDER:
+        if rows[sig]:
+            e, nm, _ = SIG[sig]
+            o.append(f'<button class="fb" onclick="flt(this,\'{sig}\')">{e} {nm} {len(rows[sig])}</button>')
+    o.append('</div>')
+    for sig in ORDER:
+        lst = rows[sig]
+        if not lst:
+            continue
+        emoji, name, _ = SIG[sig]
+        if sig == "buy":
+            lst.sort(key=lambda r: -(r["dis"] or 0))
+        else:
+            lst.sort(key=lambda r: (r["rank"] or 9, -(r["roe"] or 0)))
+        o.append(f'<div class="sgroup" data-sig="{sig}">')
+        o.append(f'<div class="sec">{emoji} <b>{name}</b> <span class="cnt">{len(lst)} 檔</span></div>')
+        o.append('<div class="scrollbox"><table>')
+        o.append('<tr><th class="l">代號</th><th class="l">產業</th><th>現價</th>'
+                 '<th>俗價</th><th>合理價</th><th>貴價</th><th>折價%</th>'
+                 '<th>ROE</th><th>EPS</th><th class="l">標註</th></tr>')
+        for r in lst:
+            lead = f'<span class="lead">龍頭#{int(r["rank"])}</span> ' if r.get("rank") else ""
+            if r["tags"]:
+                note = " ".join(f'<span class="trap">⚠️{esc(t)}</span>' for t in r["tags"])
+            elif sig in ("buy", "watch"):
+                note = '<span class="ok">✅ 體質過關</span>'
+            else:
+                note = ""
+            roe = f'{r["roe"]*100:.0f}%' if r.get("roe") is not None else "—"
+            eps = f'{r["eps"]:.2f}' if r.get("eps") is not None else "—"
+            dis = f'<span class="dis">{r["dis"]:.0f}%</span>' if r.get("dis") else "—"
+            px = f'{r["price"]:.1f}' if r.get("price") else "—"
+            nm_disp = f'<span class="nm">{esc(r["name"])}</span>' if r.get("name") else ""
+            o.append(
+                f'<tr class="{sig}"><td class="l">{lead}<span class="tk">{esc(r["tk"])}</span> {nm_disp}</td>'
+                f'<td class="l">{esc(sector_tw(r["sector"]))}</td><td>{px}</td>'
+                f'<td>{r["cheap"]:.1f}</td><td>{r["fair"]:.0f}</td><td>{r["exp"]:.0f}</td>'
+                f'<td>{dis}</td><td>{roe}</td><td>{eps}</td><td class="l">{note}</td></tr>'
+            )
+        o.append('</table></div></div>')
+    o.append('</div>')
+    return "".join(o)
+
+
 def build(watch):
-    # 取現價（批次）
+    # 取現價（批次，美台混抓）
     tickers = list(watch.keys())
     prices = {}
     try:
@@ -118,21 +175,25 @@ def build(watch):
     except Exception as e:
         print("price fetch err:", e)
 
-    # 分組
-    rows = {k: [] for k in ORDER}
+    # 依市場分組（US / TW），各自再依訊號分組
+    mkts = {"US": {k: [] for k in ORDER}, "TW": {k: [] for k in ORDER}}
     for tk, d in watch.items():
+        mkt = d.get("market", "US")
+        mkts.setdefault(mkt, {k: [] for k in ORDER})
         price = prices.get(tk)
         cheap, fair, exp = d.get("cheap"), d.get("fair"), d.get("expensive")
         sig = hong_signal(price, cheap, fair, exp)
         dis = ((cheap - price) / cheap * 100) if (price and cheap and price <= cheap) else None
-        # 照妖鏡只對 buy/watch（actionable）跑，省 API
         tags = quality_flags(tk) if sig in ("buy", "watch") else []
-        rows[sig].append({
-            "tk": tk, "sector": d.get("sector", ""), "rank": d.get("rank"),
-            "price": price, "cheap": cheap, "fair": fair, "exp": exp,
-            "roe": d.get("roe"), "eps": d.get("eps"), "dis": dis, "tags": tags,
+        disp_tk = tk[:-3] if (mkt == "TW" and tk.endswith(".TW")) else tk   # 台股去 .TW
+        mkts[mkt][sig].append({
+            "tk": disp_tk, "name": d.get("name"), "sector": d.get("sector", ""),
+            "rank": d.get("rank"), "price": price, "cheap": cheap, "fair": fair,
+            "exp": exp, "roe": d.get("roe"), "eps": d.get("eps"), "dis": dis, "tags": tags,
         })
 
+    n_us = sum(len(mkts["US"][s]) for s in ORDER)
+    n_tw = sum(len(mkts["TW"][s]) for s in ORDER)
     date = datetime.now().strftime("%Y-%m-%d %H:%M")
     upd = next((v.get("updated") for v in watch.values() if v.get("updated")), "?")
     out = [f"""<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
@@ -140,66 +201,30 @@ def build(watch):
 <meta name="robots" content="noindex"><title>巴菲特價值清單</title><style>{CSS}</style></head>
 <body><div class="wrap">
 <h1>🏛️ 巴菲特價值清單（洪瑞泰俗貴價法）</h1>
-<div class="sub">資料更新 {esc(upd)} · 產生 {date} · 共 {len(watch)} 檔 · <a href="{PAGES_URL}">← 產業鏈看板</a></div>
+<div class="sub">資料更新 {esc(upd)} · 產生 {date} · 美股 {n_us} / 台股 {n_tw} 檔 · <a href="{PAGES_URL}">← 產業鏈看板</a></div>
+<div class="toggle">
+ <button data-m="US" class="on" onclick="setMkt('US')">🇺🇸 美股 {n_us}</button>
+ <button data-m="TW" onclick="setMkt('TW')">🇹🇼 台股 {n_tw}</button>
+</div>
 <div class="legend">
 <b>訊號（洪瑞泰核心）</b>：🟢買進 現價≤俗價 ｜ 🟡觀望 俗價~合理價 ｜ 🔵持有 合理~貴價 ｜ 🔴賣出 現價&gt;貴價<br>
 <b>俗價</b>=EPS×12（報酬15%）｜ <b>合理價</b>=EPS×20（報酬6.7%＝定存）｜ <b>貴價</b>=EPS×30（報酬0%）<br>
 <span class="lead">龍頭#N</span> = 同 sector 市值前 3（補充參考）
 <span class="trap">⚠️照妖鏡</span> = forward EPS 衰退 / 負債&gt;{DE_HIGH}%（俗價用過去 EPS 算，未來恐縮水 → 便宜有理由，別追）<br>
-<i>照妖鏡只是「多一層檢查」，不改洪瑞泰選股；🟢🟡才跑（actionable）。</i>
+<i>照妖鏡只是「多一層檢查」，不改洪瑞泰選股；🟢🟡才跑（actionable）。台股價格為 TWD。</i>
 </div>"""]
 
-    # 篩選按鈕（點了只看該訊號）
-    btns = ['<div class="filt"><button class="fb on" onclick="flt(this,\'all\')">全部</button>']
-    for sig in ORDER:
-        if rows[sig]:
-            e, nm, _ = SIG[sig]
-            btns.append(f'<button class="fb" onclick="flt(this,\'{sig}\')">{e} {nm} {len(rows[sig])}</button>')
-    btns.append('</div>')
-    out.append("".join(btns))
+    out.append(_market_html("US", mkts["US"], show=True))
+    out.append(_market_html("TW", mkts["TW"], show=False))
 
-    for sig in ORDER:
-        lst = rows[sig]
-        if not lst:
-            continue
-        emoji, name, _ = SIG[sig]
-        # 排序：buy 按折價大→小，其餘按市值龍頭→ROE
-        if sig == "buy":
-            lst.sort(key=lambda r: -(r["dis"] or 0))
-        else:
-            lst.sort(key=lambda r: (r["rank"] or 9, -(r["roe"] or 0)))
-        out.append(f'<div class="sgroup" data-sig="{sig}">')
-        out.append(f'<div class="sec">{emoji} <b>{name}</b> <span class="cnt">{len(lst)} 檔</span></div>')
-        out.append('<div class="scrollbox"><table>')
-        out.append('<tr><th class="l">代號</th><th class="l">產業</th><th>現價</th>'
-                   '<th>俗價</th><th>合理價</th><th>貴價</th><th>折價%</th>'
-                   '<th>ROE</th><th>EPS</th><th class="l">標註</th></tr>')
-        for r in lst:
-            lead = f'<span class="lead">龍頭#{int(r["rank"])}</span> ' if r.get("rank") else ""
-            if r["tags"]:
-                note = " ".join(f'<span class="trap">⚠️{esc(t)}</span>' for t in r["tags"])
-            elif sig in ("buy", "watch"):
-                note = '<span class="ok">✅ 體質過關</span>'
-            else:
-                note = ""
-            roe = f'{r["roe"]*100:.0f}%' if r.get("roe") is not None else "—"
-            eps = f'{r["eps"]:.2f}' if r.get("eps") is not None else "—"
-            dis = f'<span class="dis">{r["dis"]:.0f}%</span>' if r.get("dis") else "—"
-            px = f'{r["price"]:.1f}' if r.get("price") else "—"
-            out.append(
-                f'<tr class="{sig}"><td class="l">{lead}<span class="tk">{esc(r["tk"])}</span></td>'
-                f'<td class="l">{esc(sector_tw(r["sector"]))}</td><td>{px}</td>'
-                f'<td>{r["cheap"]:.1f}</td><td>{r["fair"]:.0f}</td><td>{r["exp"]:.0f}</td>'
-                f'<td>{dis}</td><td>{roe}</td><td>{eps}</td><td class="l">{note}</td></tr>'
-            )
-        out.append('</table></div></div>')
-
-    out.append('<p class="sub" style="margin-top:20px">洪瑞泰俗貴價法 · 龍頭=同產業市值前3 · '
-               '照妖鏡=forward EPS+負債（補充非洪瑞泰）· 資料源 TradingBot DB</p>')
+    out.append('<p class="sub" style="margin-top:20px">洪瑞泰俗貴價法 · 龍頭=同市場同產業市值前3 · '
+               '照妖鏡=forward EPS+負債（補充非洪瑞泰）· 資料源 TV-Screener + yfinance</p>')
     out.append("""<script>
-function flt(b,s){document.querySelectorAll('.fb').forEach(x=>x.classList.remove('on'));
-b.classList.add('on');
-document.querySelectorAll('.sgroup').forEach(g=>{g.style.display=(s=='all'||g.dataset.sig==s)?'':'none';});}
+function flt(b,s){const m=b.closest('.market');
+m.querySelectorAll('.fb').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+m.querySelectorAll('.sgroup').forEach(g=>{g.style.display=(s=='all'||g.dataset.sig==s)?'':'none';});}
+function setMkt(m){document.querySelectorAll('.toggle button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));
+document.querySelectorAll('.market').forEach(x=>x.style.display=(x.dataset.mkt===m)?'':'none');}
 </script>""")
     out.append("</div></body></html>")
     return "\n".join(out)
