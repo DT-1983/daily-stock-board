@@ -1,16 +1,18 @@
 """
 七鏈題材層（market researcher agent · Q1）
 ------------------------------------------
-每條產業鏈用 Gemini 綜整一句「近期題材/催化劑」→ chain_themes.json，
-看板（board_html）在每條鏈標題下顯示 💡 一行。
+每條產業鏈用 Gemini 綜整「一段」近期研究 → chain_themes.json，
+看板（board_html）在每條鏈標題下顯示可展開的 💡 題材 /⚠️ 風險 /👀 本週觀察。
 
 - 資料源：screen_result.json（各鏈成分股 + 市值/成長/籌碼流入）+ Gemini 產業知識。
-- 只綜整產業驅動力，不編造沒把握的具體新聞日期/數字。
+- 每鏈輸出三欄（catalyst 催化劑 / risk 風險 / watch 本週觀察），只綜整產業驅動力，
+  不編造沒把握的具體新聞日期/數字。
 - 每週一次即可（輸入 screen_result.json 週日才重篩，天天跑會拿同一份輸入）。
 
 需環境變數 GEMINI_API_KEY（Actions 已設）。無金鑰時安全跳過、保留舊 json。
 """
 import os
+import re
 import json
 from datetime import datetime, timezone, timedelta
 
@@ -19,7 +21,7 @@ GEMINI_KEY = os.environ.get("GEMINI_API_KEY", "")
 MODEL = os.environ.get("TW_LLM_MODEL", "gemini/gemini-3-flash-preview")
 SCREEN_JSON = "screen_result.json"
 OUT_JSON = "chain_themes.json"
-TOP_N = 6                       # 每鏈餵給 AI 的成分股數（依市值）
+TOP_N = 8                       # 每鏈餵給 AI 的成分股數（依市值）
 
 
 def _chain_context(chain, us_list, tw_list):
@@ -41,12 +43,19 @@ def _ask(chain, ctx):
     import litellm
     prompt = (
         f"你是產業分析師。以下是台美股【{chain}】產業鏈守備清單的成分股與近況。\n"
-        f"用繁體中文台灣用語，**一句話（30字內）**點出這條鏈近期的主要題材／催化劑（產業驅動力）。\n"
-        f"只根據你對產業的了解與這些個股表現，**不要編造沒把握的具體新聞日期或數字**。\n"
-        f"只回這一句，不要引號、不要前綴。\n\n{ctx}")
+        f"根據你對此產業的了解與這些個股表現，用繁體中文台灣用語輸出 JSON（只回 JSON，不要 markdown 圍欄）：\n"
+        f'{{"catalyst":"近期主要題材／驅動力，1-2 句","risk":"要留意的風險或變數，1 句","watch":"本週值得觀察的重點，1 句"}}\n'
+        f"每欄 45 字內、講重點且具體，但**不要編造沒把握的具體新聞日期或數字**。\n\n{ctx}")
     resp = litellm.completion(model=MODEL, api_key=GEMINI_KEY, temperature=0.4,
                               messages=[{"role": "user", "content": prompt}])
-    return resp.choices[0].message.content.strip().strip('「」"\'').split("\n")[0][:60]
+    txt = resp.choices[0].message.content.strip()
+    txt = re.sub(r"^```(?:json)?\s*|\s*```$", "", txt, flags=re.S).strip()
+    obj = json.loads(txt)
+    out = {k: str(obj.get(k, "")).strip().strip('「」"\'')[:80]
+           for k in ("catalyst", "risk", "watch")}
+    if not out["catalyst"]:
+        raise ValueError("catalyst 空白")
+    return out
 
 
 def main():
@@ -66,7 +75,7 @@ def main():
         ctx = _chain_context(chain, us.get(chain), tw.get(chain))
         try:
             themes[chain] = _ask(chain, ctx)
-            print(f"  [{chain}] {themes[chain]}")
+            print(f"  [{chain}] 💡 {themes[chain].get('catalyst', '')}")
         except Exception as e:
             print(f"  [{chain}] 題材產生失敗：{e}")
 

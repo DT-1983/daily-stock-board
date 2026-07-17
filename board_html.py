@@ -55,6 +55,22 @@ def _load_chain_themes():
 
 CHAIN_THEMES, CHAIN_THEMES_TS = _load_chain_themes()
 
+
+def _theme_html(theme):
+    """題材層 render：新版 dict(catalyst/risk/watch) 做成可展開；舊版字串相容。"""
+    if isinstance(theme, dict):
+        cat = esc_tw(theme.get("catalyst", ""))
+        extra = []
+        if theme.get("risk"):
+            extra.append(f'<span class="trisk">⚠️ 風險：{esc_tw(theme["risk"])}</span>')
+        if theme.get("watch"):
+            extra.append(f'<span class="twatch">👀 本週觀察：{esc_tw(theme["watch"])}</span>')
+        if extra:
+            return (f'<details class="theme"><summary>💡 {cat}</summary>'
+                    f'{"".join(extra)}</details>')
+        return f'<div class="theme">💡 {cat}</div>'
+    return f'<div class="theme">💡 {esc_tw(theme)}</div>'
+
 # 台股中文名（yfinance 給英文，這裡覆蓋）
 TW_NAME = {
     "1503": "士電", "1504": "東元", "1513": "中興電", "1519": "華城", "1597": "直得",
@@ -186,7 +202,13 @@ h1{font-size:20px;margin:6px 0}.sub{color:#9aa0a6;font-size:13px}
 .chain{margin:20px 0 6px;font-size:17px;border-left:4px solid #4a9eff;padding-left:10px;
  display:flex;align-items:center;gap:8px}
 .cnt{font-size:12px;color:#9aa0a6;background:#1c2128;padding:1px 8px;border-radius:10px}
-.theme{font-size:13px;color:#c9a86a;margin:2px 0 8px 14px;line-height:1.4}
+.theme{font-size:13px;color:#c9a86a;margin:2px 0 8px 14px;line-height:1.5}
+details.theme>summary{cursor:pointer;list-style:none;color:#c9a86a}
+details.theme>summary::-webkit-details-marker{display:none}
+details.theme>summary::after{content:" ▾";color:#7a6a45;font-size:11px}
+details.theme[open]>summary::after{content:" ▴"}
+.theme .trisk,.theme .twatch{display:block;margin:4px 0 0 18px;font-size:12.5px;color:#9aa0a6}
+.theme .trisk{color:#d99}
 .card{background:#1a1d23;border:1px solid #2a2e35;border-radius:10px;margin:8px 0;overflow:hidden}
 .card.sell{border-left:4px solid #ff5c5c}.card.buy{border-left:4px solid #3ddc84}
 .card.hold,.card.watch{border-left:4px solid #8a8f98}
@@ -373,7 +395,7 @@ def main():
                     f'<span class="cnt hidden" data-mkt="TW">台 {len(tw)}</span></div>')
         theme = CHAIN_THEMES.get(c)
         if theme:
-            body.append(f'<div class="theme">💡 {theme}</div>')
+            body.append(_theme_html(theme))
         for sig, tk, nm, block in us:
             body.append(card_us(sig, tk, nm, block, tk in charts, mdc, us_score.get(tk, "—")))
         for r in tw:
@@ -420,7 +442,7 @@ def main():
 {''.join(body)}
 <div class="overview" style="margin-top:24px">
  <b>📖 這份清單怎麼來的（客觀篩選說明）</b>
- <p class="sub" style="margin:8px 0 4px">守備清單不是人工挑的，是用三個客觀因子，每條產業鏈各取最強 6 檔自動篩出：</p>
+ <p class="sub" style="margin:8px 0 4px">守備清單不是人工挑的，是用三個客觀因子，每條產業鏈各取最強 8 檔自動篩出：</p>
  <p style="margin:4px 0;font-size:13.5px">① <b>市值</b>：規模越大越穩、越有流動性。<br>
   ② <b>成長</b>：美股看營收年增率、台股看<b>月營收 YoY</b>。<br>
   ③ <b>進場（資金流向）</b>：美股用 <b>OBV 能量潮</b>（量價同步看資金淨流入）；台股用 <b>法人 20 日買超÷均量</b>（相對值）。</p>
@@ -430,7 +452,7 @@ def main():
   　<b>＋＝放量上攻（資金真的在進）、−＝出貨</b>。size-neutral：小股不會因量小被大股輾壓。<br>
   ‧ <b>台股法人籌碼</b>：外資＋投信（聰明錢）近 20 日<b>淨買超股數 ÷ 近 20 日均量</b>。除以均量是關鍵——<br>
   　看「<b>買超佔成交比重</b>」而非絕對張數，<b>10 萬張流通的股票買 1 萬張，比 100 萬張買 2 萬張更猛</b>。<br>
-  例：台積電市值最大、營收也成長，但外資近期<b>大賣</b>、量價背離，進場因子扣分，這次就沒進前 6——<b>看真實資金，不看名氣</b>。</p>
+  例：台積電市值最大、營收也成長，但外資近期<b>大賣</b>、量價背離，進場因子扣分，這次就沒進前 8——<b>看真實資金，不看名氣</b>。</p>
  <p class="sub" style="margin:8px 0 0"><b>多久掃一次？會變嗎？</b><br>
   建議<b>每週掃一次</b>（如每週一）。市值與成長變化慢（大型股穩定在榜），但<b>籌碼面天天變</b>，<br>
   所以<b>核心大型股會固定、邊緣名單隨資金流向輪動</b>。掃太頻繁（每天）過度換股；每月一次又錯過法人輪動。</p>
