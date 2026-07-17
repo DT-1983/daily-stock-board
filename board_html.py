@@ -292,7 +292,10 @@ details.report[open]>summary::after{content:"▴"}
 .rpt details[open]>summary::after{content:" ▴"}
 .rpt .inr{padding:0 11px 11px}
 .rpt .disc{color:#6b7280;font-size:11.5px;margin-top:16px;line-height:1.6}
-.rpt .mm{font-size:11.5px}.rpt .mm .up{color:#4ade80}.rpt .mm .dn{color:#ff8a8a}
+.rpt .ln{margin:3px 0;font-size:12.5px;line-height:1.5}
+.rpt .b{display:inline-block;font-size:10px;font-weight:700;padding:1px 8px;border-radius:7px;margin-right:6px}
+.rpt .b.up{background:#12351f;color:#4ade80}
+.rpt .b.dn{background:#3a1a1d;color:#ff8a8a}
 .rpt .k{color:#c9a86a}
 @media(max-width:620px){
  .rpt table{border:0}
