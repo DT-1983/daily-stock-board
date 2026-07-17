@@ -1,0 +1,82 @@
+{
+ "_chain": "矽光子/光通訊",
+ "positioning": "AI 資料中心從『銅互連』走向『光互連』的咽喉基礎建設——把 GPU 之間、機櫃之間的資料傳輸從電訊號換成光訊號，是 AI 算力規模化的關鍵瓶頸。",
+ "tldr": {"conclusion":"&lt;b&gt;AI 光互連進入超級循環&lt;/b&gt;：800G 放量、1.6T 量產爬坡，2026 被輝達定調為矽光子商轉元年；但台廠族群估值已高、CPO 量產時程是最大變數。","catalyst":"輝達 Vera Rubin 採台積電 COUPE、1.6T 量產爬坡、800G+ 出貨佔比 2026 突破 60%。","risk":"CPO 大規模量產恐延至 2028-2029（SemiAnalysis 示警），台股矽光子概念股 2026/6 曾九檔全面跌停。"},
+ "demand": "北美雲端巨頭資料中心流量年增逾 &lt;b&gt;30%&lt;/b&gt;，Google/微軟/Meta 擴建 GPU 與 AI 伺服器，帶動光收發模組需求。TrendForce 估 &lt;b&gt;AI 光收發模組市場 2025 年 $16.5B → 2026 年 $26B（+57% YoY）&lt;/b&gt;，800G 以上佔比從 2024 年 19.5% 跳升至 2026 年逾 60%；元件短缺被點名為擴產最大瓶頸。",
+ "scale": [
+  {"n":"$16.5B→$26B","t":"AI 光收發模組市場 2025→2026，年增逾 57%（TrendForce）"},
+  {"n":"19.5%→&gt;60%","t":"800G 以上光模組出貨佔比 2024→2026，成 AI 資料中心標配"},
+  {"n":"~$2.8B→$9.6B","t":"矽光子市場 2025→2030，CAGR 約 28-29%（多家研調）"},
+  {"n":"&gt;$2B","t":"1.6T 晶片方案 2026 年銷售額，2029 前維持高成長（TrendForce）"}
+ ],
+ "competition": [
+  {"field":"光收發模組","now":"國際 Coherent/Lumentum/AOI 領先，台廠華星光/聯鈞/前鼎切入","trend":"800G 放量、元件短缺下台廠爭搶產能"},
+  {"field":"CPO／矽光子封裝","now":"台積電 COUPE 陣營（上詮/聯鈞卡位）對決博通與輝達自研","trend":"2026 商轉元年，惟量產時程有延宕風險"},
+  {"field":"電-光介面 IC／DSP","now":"Marvell 領先，對手 Broadcom、Credo、Astera Labs、MaxLinear","trend":"併購補光子 IP（Marvell 併 Celestial AI＋XConn）"},
+  {"field":"AI 交換器","now":"Arista 品牌對決白牌 ODM 智邦（皆用博通 Tomahawk 6）","trend":"1.6T／3.2T 世代切換加速換機潮"}
+ ],
+ "valuechain": [
+  {"seg":"磊晶／晶圓材料（上游）","do":"高階雷射磊晶、砷化鎵晶圓代工（VCSEL/雷射二極體）","stocks":"3081 聯亞、3105 穩懋","note":"800G/1.6T 高品質磊晶全球少數能供，進入門檻極高"},
+  {"seg":"雷射／光引擎晶片","do":"雷射晶片、光子 IC（PIC）","stocks":"3081 聯亞、4979 華星光、MRVL、ALAB","note":"Marvell/Astera 併購補光子 IP，台廠供上游雷射源"},
+  {"seg":"主動元件／光收發模組","do":"雷射模組、800G/1.6T 光收發模組封裝測試","stocks":"4908 前鼎、4979 華星光、3450 聯鈞","note":"800G 成主流、1.6T 爬坡；聯鈞子公司源傑供雷射並轉 CPO 封裝"},
+  {"seg":"被動元件／光纖陣列","do":"光纖陣列(FAU)、WDM、MPO 連接器、對準接合","stocks":"3363 上詮、3163 波若威","note":"上詮為台積電 COUPE 核心夥伴（保偏光纖陣列對準），1.6T 產品 2026 量產"},
+  {"seg":"電-光介面 IC／DSP／Retimer","do":"PAM4 DSP、PCIe retimer、scale-up 互連晶片","stocks":"MRVL、MXL、ALAB","note":"AI 互連超級循環，MaxLinear 光資料中心營收上調 $150-170M"},
+  {"seg":"交換器／網通系統","do":"800G/1.6T AI 交換器、ODM 整機","stocks":"2345 智邦、ANET","note":"Arista 推 1.6T 7060XE7；智邦為博通最重要 ODM 夥伴"},
+  {"seg":"運算／加速器／記憶體（下游）","do":"AI GPU/加速器、HBM 記憶體、AI 工廠平台","stocks":"AMD、MU、PENG","note":"AI 基建終端需求源；與光互連間接受惠、非純光通訊供應"},
+  {"seg":"邊緣／雲端應用","do":"邊緣雲、CDN、AI 推論交付","stocks":"FSLY","note":"與光通訊硬體鏈關聯較低，屬邊緣 AI 應用側，非核心守備股"}
+ ],
+ "catalysts": [
+  "&lt;b&gt;輝達定調 2026 為矽光子商轉元年&lt;/b&gt;，Vera Rubin GPU 採台積電 COUPE 光子引擎",
+  "1.6T 光模組進入量產爬坡，800G+ 出貨佔比 2026 突破 60%",
+  "Marvell 併 Celestial AI＋XConn 補光子互連 IP；MaxLinear 光資料中心營收上調至 $150-170M",
+  "Arista 推 &lt;b&gt;1.6T 7060XE7&lt;/b&gt;（Tomahawk 6），Meta/微軟/Oracle 導入 LPO 省約 60% 功耗",
+  "矽光子獨角獸 Lightmatter 落地台灣，帶動台廠供應鏈升級"
+ ],
+ "bull": [
+  "AI 資料中心流量年增逾 30%，光互連需求進入多年『超級循環』",
+  "800G→1.6T→3.2T 世代快速切換，單價與滲透率同步上升",
+  "台積電 COUPE 讓台廠（上詮/聯鈞）在 CPO 封裝取得獨門卡位",
+  "光學元件與磊晶短缺形成供給瓶頸，具產能與材料技術者（聯亞/穩懋）議價力強"
+ ],
+ "bear": [
+  "CPO 大規模量產時程恐延至 2028-2029，題材與實際獲利脫節",
+  "台股矽光子概念股瘋馬行情後估值偏高，2026/6 曾九檔全面跌停",
+  "LPO（線性直驅光學）可能延緩 CPO 導入，壓縮部分零組件商機",
+  "需求集中少數 hyperscaler，客戶砍單或架構轉向風險大"
+ ],
+ "risks": [
+  "&lt;b&gt;CPO 量產延宕&lt;/b&gt;：SemiAnalysis 示警恐延至 2029，概念股修正劇烈",
+  "估值過高、投機性資金主導，飆漲股頻遭處置（如波若威）",
+  "光學元件與磊晶短缺，擴產不及影響出貨（TrendForce 指產能瓶頸）",
+  "美股 AI 資本支出若放緩，光通訊需求首當其衝",
+  "&lt;b&gt;守備股連動性不一&lt;/b&gt;：FSLY/MU/AMD 與純光通訊鏈關聯度較低"
+ ],
+ "watch": [
+  "1.6T 光模組量產進度、800G+ 佔比是否如期破 60%",
+  "台積電 COUPE 良率與 1.6T 光纖陣列量產時點（上詮/聯鈞）",
+  "SemiAnalysis 等對 CPO 時程的最新評估，牽動族群情緒",
+  "Marvell／MaxLinear／Astera 下季 AI 互連營收指引",
+  "台廠光通訊月營收年增動能是否延續（華星光、聯鈞）"
+ ],
+ "stocks_us": [
+  {"code":"MU","name":"Micron","role":"HBM 記憶體供應（AI 基建核心，非直接光通訊）","note":"HBM3E/HBM4 放量、供不應求，受惠 AI 伺服器建置","bull":"HBM 供需吃緊、單價高","bear":"與純光通訊題材連動低、記憶體週期波動"},
+  {"code":"AMD","name":"AMD","role":"AI 加速器／GPU（光互連終端需求源）","note":"MI 系列放量，與 Arista 合作 scale-out 光互連 fabric","bull":"AI GPU 第二供應商放量","bear":"落後輝達、光通訊僅間接受惠"},
+  {"code":"ANET","name":"Arista Networks","role":"AI 交換器龍頭","note":"推 1.6T 7060XE7（Tomahawk 6、100Tbps），Meta/微軟/Oracle 採用，導入 LPO 省約 60% 功耗","bull":"1.6T/3.2T 世代切換帶動換機","bear":"白牌 ODM 競爭、估值偏高"},
+  {"code":"MRVL","name":"Marvell","role":"電-光互連／DSP IC 龍頭","note":"Q1 FY27 營收 $2.42B（+28% YoY），interconnect 成長上調至 +70%、FY28 指引 $16.5B，併 Celestial AI＋XConn 補光子 IP","bull":"AI 互連超級循環主受惠","bear":"客製 ASIC 客戶集中度高"},
+  {"code":"ALAB","name":"Astera Labs","role":"AI scale-up 連接晶片（PCIe/retimer）","note":"Q1'26 營收 $308M（+93% YoY），PCIe Gen6 佔逾 1/3；光學 NPO 2027、CPO 2028 才主流放量","bull":"PCIe Gen6 與 Scorpio 交換晶片爬坡","bear":"光學題材要等 2027 後才實質貢獻"},
+  {"code":"MXL","name":"MaxLinear","role":"光收發 PAM4 DSP","note":"基建營收 +136% YoY，2026 光資料中心營收上調 $150-170M，Q2 指引 $160-170M，Keystone PAM4 已多家 hyperscaler 採用","bull":"AI 光學 step-function 放量","bear":"基期低、寬頻本業偏弱"},
+  {"code":"FSLY","name":"Fastly","role":"邊緣雲／CDN（非直接光通訊守備股）","note":"Q1'26 營收 $173M（+20% YoY），Compute +67%，全年上調 $710-725M","bull":"邊緣 AI 推論帶動 Compute 動能","bear":"與光通訊硬體鏈關聯低、非核心標的"},
+  {"code":"PENG","name":"Penguin Solutions","role":"AI 工廠平台（運算/整合記憶體/LED）","note":"股價一年約 +210%，挖角前 Infinera CEO David Heard 布局大規模光網路，FY27 預估營收/EPS 約 +30%","bull":"AI 基建＋光網路想像空間","bear":"光學仍非現有營收主力、CFO 離職雜音"}
+ ],
+ "stocks_tw": [
+  {"code":"2345","name":"智邦","role":"AI 交換器 ODM 龍頭","note":"博通 Tomahawk 最重要夥伴，出 800G/CPO 交換器整機給 Meta/微軟，法人目標價上調至約 2400 元","bull":"AI 交換器主要出海口","bear":"毛利率與估值壓力"},
+  {"code":"3450","name":"聯鈞","role":"光收發模組封裝測試＋轉 CPO 封裝","note":"透過子公司源傑直接出貨雷射/模組，切入 CPO 封裝","bull":"CPO 封裝與雷射自製雙受惠","bear":"CPO 時程延宕拖累"},
+  {"code":"3081","name":"聯亞","role":"高階雷射磊晶（上游材料）","note":"800G/1.6T 所需高品質磊晶全球少數能供，法人點名最受惠、給『買進』","bull":"進入門檻極高、背靠供應鏈","bear":"瘋馬行情後估值偏高"},
+  {"code":"4908","name":"前鼎","role":"光通訊主動元件／雷射模組","note":"datacom 雷射與主動元件，CPO 延宕消息曾隨族群跌停","bull":"光模組升級帶動主動元件需求","bear":"題材波動大、CPO 延宕風險"},
+  {"code":"3363","name":"上詮","role":"光纖陣列(FAU)、台積電 COUPE 核心夥伴","note":"負責最難的保偏光纖陣列(PMFA)對準接合，1.6T 產品預計 2026 量產","bull":"台積電 COUPE 獨門卡位","bear":"CPO 量產時程延宕最直接受害"},
+  {"code":"4979","name":"華星光通","role":"光通訊主動元件／雷射／光模組","note":"2026/3 月營收約 4.52 億元（+20% YoY），AI/資料中心佔營收逾 6 成，800G 成主流","bull":"800G 放量、月營收年增雙位數","bear":"CPO 延宕、族群修正拖累"},
+  {"code":"3163","name":"波若威","role":"光纖被動元件／WDM／MPO 連接器","note":"『去銅轉光』基本配備，支撐 AI 叢集後段光路，股價飆漲一度遭處置","bull":"被動元件與連接器放量","bear":"漲多、投機性強、易遭處置"},
+  {"code":"3105","name":"穩懋","role":"砷化鎵(GaAs)晶圓代工（VCSEL 磊晶＋RF）","note":"VCSEL 供 datacom 光學，同時受惠手機 RF 本業回溫","bull":"GaAs/VCSEL 光學＋RF 雙引擎","bear":"光學營收佔比仍低、與手機 RF 景氣連動"}
+ ],
+ "sources":"TrendForce、各公司財報與法說（Marvell/Astera/MaxLinear/Fastly/Penguin 8-K）、旺得富/今周刊/鉅亨/財報狗、SemiAnalysis CPO 延宕示警報導，及 Wissen/MarketsandMarkets 等市場研調。"
+}
