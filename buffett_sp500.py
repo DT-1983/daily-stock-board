@@ -55,6 +55,30 @@ def stage1_prefilter(min_market_cap: float, max_candidates: int) -> list:
     return tickers
 
 
+def stage1_prefilter_tw(min_market_cap: float, max_candidates: int) -> list:
+    """Stage 1（台股）：TV taiwan snapshot → PE≤合理 + ROE≥15% 候選（.TW 後綴）"""
+    print("=" * 70)
+    print(f"  台股 Stage 1: TV-Screener 預篩（TWSE+TPEX）")
+    print(f"  市值 ≥ NT${min_market_cap:,.0f}, ROE ≥ {ROE_MIN*100:.0f}%, PE ≤ {PE_FAIR}")
+    print("=" * 70)
+    t0 = time.time()
+    count, df = data_tv.get_buffett_snapshot_taiwan(
+        min_market_cap=min_market_cap, min_price=5.0, require_positive_eps=True)
+    print(f"\n[TV] 拉回 {count} 列台股，耗時 {time.time()-t0:.2f} 秒")
+    if df is None or df.empty:
+        print("⚠️ TV 台股沒回資料")
+        return []
+    before = len(df)
+    df = df[(df['roe_current'] >= ROE_MIN) & (df['eps_ttm'] > 0)].copy()
+    df['pe_implied'] = df['price'] / df['eps_ttm']
+    df = df[df['pe_implied'] <= PE_FAIR]
+    df = df.sort_values('pe_implied')
+    print(f"[篩選] {before} → {len(df)} 檔（ROE ≥ 15% + PE ≤ {PE_FAIR}）")
+    tickers = df['ticker'].head(max_candidates).tolist()
+    print(f"[取樣] PE 最低 {len(tickers)} 檔進入 Stage 2\n")
+    return tickers
+
+
 def stage2_yfinance(tickers: list) -> list:
     """Stage 2: yfinance 4 年回溯 + 評估（含盈再率）"""
     print("=" * 70)
