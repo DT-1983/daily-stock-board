@@ -56,6 +56,17 @@ def _load_chain_themes():
 CHAIN_THEMES, CHAIN_THEMES_TS = _load_chain_themes()
 
 
+def _load_chain_reports():
+    """讀每鏈深度解讀 HTML 片段 {chain: fragment}；手動維護、非必要。"""
+    try:
+        return json.load(open("chain_reports.json", encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+CHAIN_REPORTS = _load_chain_reports()
+
+
 def _theme_html(theme):
     """題材層 render：新版 dict(catalyst/risk/watch) 做成可展開；舊版字串相容。"""
     if isinstance(theme, dict):
@@ -235,6 +246,62 @@ summary::-webkit-details-marker{display:none}
 .rail a,.rail button{font-size:11px;width:40px;height:40px;border-radius:50%;border:1px solid #2a2e35;
  background:#1c2128cc;color:#cfd3d8;text-decoration:none;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .hidden{display:none!important}
+/* 產業深度解讀（可展開，嵌在每鏈下） */
+details.report{background:#14171d;border:1px solid #2a2e35;border-radius:9px;margin:2px 0 10px 14px;overflow:hidden}
+details.report>summary{cursor:pointer;color:#c9a86a;font-size:13.5px;font-weight:700;padding:9px 12px;display:flex;align-items:center;gap:6px;list-style:none}
+details.report>summary::-webkit-details-marker{display:none}
+details.report>summary::after{content:"▾";margin-left:auto;color:#7a6a45}
+details.report[open]>summary::after{content:"▴"}
+.rwrap{padding:2px 13px 12px}
+.rpt{font-size:14px}
+.rpt h2{font-size:15.5px;margin:18px 0 6px;border-left:3px solid #4a9eff;padding-left:9px}
+.rpt p{margin:7px 0}
+.rpt .note{background:#1a1d23;border:1px solid #2a2e35;border-radius:8px;padding:8px 11px;font-size:13px;color:#cfd3d8;margin:9px 0}
+.rpt .tldr{background:#12151b;border:1px solid #2a2e35;border-radius:10px;padding:12px 14px;margin:6px 0 16px}
+.rpt .tldr .lab{font-size:11.5px;font-weight:700;letter-spacing:.5px;color:#8a8f98;margin-bottom:9px}
+.rpt .tldr .row{display:flex;gap:8px;margin:8px 0;font-size:13.5px;align-items:flex-start}
+.rpt .tldr .ic{flex:0 0 auto}
+.rpt .tldr .r1{border-left:3px solid #4a9eff;padding-left:10px}
+.rpt .tldr .r2{border-left:3px solid #3ddc84;padding-left:10px}
+.rpt .tldr .r3{border-left:3px solid #ff5c5c;padding-left:10px}
+.rpt .tldr b,.rpt td b,.rpt p b{color:#fff}
+.rpt .tw{margin:9px 0}
+.rpt table{border-collapse:collapse;width:100%;font-size:13px}
+.rpt th,.rpt td{border-bottom:1px solid #2a2e35;padding:7px 9px;text-align:left;vertical-align:top}
+.rpt th{background:#222831;color:#bcd2ff;font-weight:700}
+.rpt .tag{display:inline-block;font-size:11.5px;padding:1px 7px;border-radius:9px;background:#262b33;color:#cfd3d8;margin-right:4px}
+.rpt ol,.rpt ul{margin:7px 0;padding-left:20px}.rpt li{margin:5px 0}
+.rpt .risk li b{color:#ffb4b4}
+.rpt .watch li{list-style:none;margin-left:-14px}.rpt .watch li::before{content:"🎯 "}
+.rpt .cap{background:#12151b;border:1px solid #2a2e35;border-radius:10px;padding:11px 13px;margin:12px 0 0}
+.rpt .stat{display:flex;flex-wrap:wrap;gap:9px;margin:11px 0}
+.rpt .stat .box{flex:1 1 150px;background:#1a1d23;border:1px solid #2a2e35;border-radius:9px;padding:10px 12px}
+.rpt .stat .n{font-size:17px;font-weight:800;color:#6db3ff}
+.rpt .stat .t{font-size:11.5px;color:#9aa0a6;margin-top:3px;line-height:1.4}
+.rpt .bb{display:flex;flex-wrap:wrap;gap:11px;margin:9px 0}
+.rpt .bb .col{flex:1 1 300px;border-radius:9px;padding:11px 13px}
+.rpt .bull{background:#12251a;border:1px solid #295c3c}
+.rpt .bear{background:#2a1618;border:1px solid #5c2f33}
+.rpt .bb h4{margin:0 0 6px;font-size:13.5px}
+.rpt .bull h4{color:#4ade80}.rpt .bear h4{color:#ff8a8a}
+.rpt .bb ul{padding-left:17px;margin:4px 0}.rpt .bb li{font-size:13px;margin:5px 0}
+.rpt details{margin:10px 0 0;border:1px solid #2a2e35;border-radius:8px;background:#161a20}
+.rpt details>summary{cursor:pointer;color:#bcd2ff;font-size:13.5px;font-weight:700;padding:9px 11px;display:block;list-style:none}
+.rpt details>summary::-webkit-details-marker{display:none}
+.rpt details>summary::after{content:" ▾";color:#6b7280}
+.rpt details[open]>summary::after{content:" ▴"}
+.rpt .inr{padding:0 11px 11px}
+.rpt .disc{color:#6b7280;font-size:11.5px;margin-top:16px;line-height:1.6}
+.rpt .mm{font-size:11.5px}.rpt .mm .up{color:#4ade80}.rpt .mm .dn{color:#ff8a8a}
+.rpt .k{color:#c9a86a}
+@media(max-width:620px){
+ .rpt table{border:0}
+ .rpt thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+ .rpt tbody tr{display:block;background:#1a1d23;border:1px solid #2a2e35;border-radius:9px;margin:0 0 9px;padding:4px 2px}
+ .rpt tbody td{display:flex;gap:9px;border:0;border-bottom:1px solid #23272e;padding:6px 11px}
+ .rpt tbody tr td:last-child{border-bottom:0}
+ .rpt tbody td::before{content:attr(data-label);flex:0 0 66px;color:#8a8f98;font-size:11.5px;font-weight:700;padding-top:1px}
+}
 """
 
 JS = """
@@ -396,6 +463,10 @@ def main():
         theme = CHAIN_THEMES.get(c)
         if theme:
             body.append(_theme_html(theme))
+        report = CHAIN_REPORTS.get(c)
+        if report:
+            body.append(f'<details class="report"><summary>📖 產業深度解讀</summary>'
+                        f'<div class="rwrap">{report}</div></details>')
         for sig, tk, nm, block in us:
             body.append(card_us(sig, tk, nm, block, tk in charts, mdc, us_score.get(tk, "—")))
         for r in tw:
