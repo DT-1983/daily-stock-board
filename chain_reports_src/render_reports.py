@@ -5,8 +5,9 @@
 """
 import json, os, glob, html
 
-DATADIR = "reports_data"                         # 每鏈一個 *.json（含 _chain 鍵）
-REPO = r"C:/Users/Mophy/AI/daily_stock_analysis"
+HERE = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.dirname(HERE)                      # chain_reports_src 的上層 = repo 根
+DATADIR = os.path.join(HERE, "reports_data")     # 每鏈一個 *.json（含 _chain 鍵）
 OUT = os.path.join(REPO, "chain_reports.json")
 
 
