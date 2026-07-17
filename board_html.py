@@ -297,10 +297,10 @@ details.report[open]>summary::after{content:"▴"}
 @media(max-width:620px){
  .rpt table{border:0}
  .rpt thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
- .rpt tbody tr{display:block;background:#1a1d23;border:1px solid #2a2e35;border-radius:9px;margin:0 0 9px;padding:4px 2px}
- .rpt tbody td{display:flex;gap:9px;border:0;border-bottom:1px solid #23272e;padding:6px 11px}
+ .rpt tbody tr{display:block;background:#1a1d23;border:1px solid #2a2e35;border-radius:9px;margin:0 0 9px;padding:2px 2px}
+ .rpt tbody td{display:block;border:0;border-bottom:1px solid #23272e;padding:7px 12px}
  .rpt tbody tr td:last-child{border-bottom:0}
- .rpt tbody td::before{content:attr(data-label);flex:0 0 66px;color:#8a8f98;font-size:11.5px;font-weight:700;padding-top:1px}
+ .rpt tbody td::before{content:attr(data-label);display:block;color:#8a8f98;font-size:11.5px;font-weight:700;margin-bottom:3px}
 }
 """
 
