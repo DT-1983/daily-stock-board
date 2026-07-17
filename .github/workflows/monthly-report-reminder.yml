@@ -1,0 +1,26 @@
+name: 每月產業深度報告更新提醒
+
+on:
+  schedule:
+    - cron: '7 1 1 * *'      # 每月 1 號 UTC 01:07 = 台灣 09:07
+  workflow_dispatch:
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 推播月更提醒
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python - <<'PY'
+          import os, requests
+          msg = ("📊 <b>每月產業深度報告更新提醒</b>\n"
+                 "看板七鏈的「📖 產業深度解讀」建議每月刷新一次。\n"
+                 "<i>跟 Claude 說一句「重跑產業深度報告」，即會重新上網查證七鏈並部署。</i>")
+          requests.post(f"https://api.telegram.org/bot{os.environ['TELEGRAM_BOT_TOKEN']}/sendMessage",
+                        json={"chat_id": os.environ["TELEGRAM_CHAT_ID"], "text": msg,
+                              "parse_mode": "HTML", "disable_web_page_preview": True}, timeout=30)
+          print("reminder sent")
+          PY
