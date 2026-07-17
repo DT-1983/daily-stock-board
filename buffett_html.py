@@ -126,10 +126,13 @@ def _market_html(mkt, rows, show):
         if not lst:
             continue
         emoji, name, _ = SIG[sig]
+        # 洪瑞泰：EPS 估降＝公司變壞、俗價是假便宜 → 一律排後面（體質過關優先浮上）
+        def _decline(r):
+            return 1 if any(str(t).startswith("EPS估降") for t in (r.get("tags") or [])) else 0
         if sig == "buy":
-            lst.sort(key=lambda r: -(r["dis"] or 0))
+            lst.sort(key=lambda r: (_decline(r), -(r["dis"] or 0)))
         else:
-            lst.sort(key=lambda r: (r["rank"] or 9, -(r["roe"] or 0)))
+            lst.sort(key=lambda r: (_decline(r), r["rank"] or 9, -(r["roe"] or 0)))
         o.append(f'<div class="sgroup" data-sig="{sig}">')
         o.append(f'<div class="sec">{emoji} <b>{name}</b> <span class="cnt">{len(lst)} 檔</span></div>')
         o.append('<div class="scrollbox"><table>')
@@ -211,7 +214,7 @@ def build(watch):
 <b>俗價</b>=EPS×12（報酬15%）｜ <b>合理價</b>=EPS×20（報酬6.7%＝定存）｜ <b>貴價</b>=EPS×30（報酬0%）<br>
 <span class="lead">龍頭#N</span> = 同 sector 市值前 3（補充參考）
 <span class="trap">⚠️照妖鏡</span> = forward EPS 衰退 / 負債&gt;{DE_HIGH}%（俗價用過去 EPS 算，未來恐縮水 → 便宜有理由，別追）<br>
-<i>照妖鏡只是「多一層檢查」，不改洪瑞泰選股；🟢🟡才跑（actionable）。台股價格為 TWD。</i>
+<i>排序：<b>✅體質過關優先浮上</b>，⚠️EPS 估降者殿後（EPS 變差＝俗價是假便宜，洪瑞泰不追）。🟢🟡才跑照妖鏡。台股價格為 TWD。</i>
 </div>"""]
 
     out.append(_market_html("US", mkts["US"], show=True))

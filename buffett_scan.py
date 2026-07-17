@@ -58,8 +58,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--min-cap", type=float, default=2e9)          # 美股 USD
     ap.add_argument("--max-candidates", type=int, default=200)     # 美股 stage2 上限
-    ap.add_argument("--tw-min-cap", type=float, default=1e10)      # 台股 100 億 TWD
-    ap.add_argument("--tw-max-candidates", type=int, default=120)  # 台股 stage2 上限
+    ap.add_argument("--tw-min-cap", type=float, default=5e9)       # 台股 50 億 TWD（含中小型高 ROE）
+    ap.add_argument("--tw-max-candidates", type=int, default=200)  # 台股 stage2 上限（涵蓋過關全部）
     ap.add_argument("--markets", default="us,tw",
                     help="要掃的市場，逗號分隔（us / tw）")
     args = ap.parse_args()
