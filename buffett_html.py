@@ -37,7 +37,7 @@ SIG = {  # 訊號: (emoji, 中文, css)
     "buy":   ("🟢", "買進", "buy"),
     "watch": ("🟡", "觀望", "watch"),
     "hold":  ("🔵", "持有", "hold"),
-    "sell":  ("🔴", "賣出", "sell"),
+    "sell":  ("🔴", "太貴", "sell"),
     "na":    ("⚪", "無資料", "hold"),
 }
 ORDER = ["buy", "watch", "hold", "sell", "na"]
@@ -47,16 +47,14 @@ def esc(s):
     return _html.escape(str(s if s is not None else ""))
 
 
-def hong_signal(price, cheap, fair, exp):
-    """洪瑞泰訊號：現價 vs 俗/合理/貴價。"""
+def hong_signal(price, cheap, exp):
+    """洪瑞泰訊號：只有俗價(買)/貴價(賣)兩條線。便宜~貴之間＝觀望，>貴＝太貴。"""
     if not price or not cheap:
         return "na"
     if price <= cheap:
         return "buy"
-    if fair and price <= fair:
-        return "watch"
     if exp and price <= exp:
-        return "hold"
+        return "watch"
     return "sell"
 
 
@@ -137,7 +135,7 @@ def _market_html(mkt, rows, show):
         o.append(f'<div class="sec">{emoji} <b>{name}</b> <span class="cnt">{len(lst)} 檔</span></div>')
         o.append('<div class="scrollbox"><table>')
         o.append('<tr><th class="l">代號</th><th class="l">產業</th><th>現價</th>'
-                 '<th>俗價</th><th>合理價</th><th>貴價</th><th>折價%</th>'
+                 '<th>俗價</th><th>貴價</th><th>折價%</th>'
                  '<th>ROE</th><th>EPS</th><th class="l">標註</th></tr>')
         for r in lst:
             lead = f'<span class="lead">龍頭#{int(r["rank"])}</span> ' if r.get("rank") else ""
@@ -155,7 +153,7 @@ def _market_html(mkt, rows, show):
             o.append(
                 f'<tr class="{sig}"><td class="l">{lead}<span class="tk">{esc(r["tk"])}</span> {nm_disp}</td>'
                 f'<td class="l">{esc(sector_tw(r["sector"]))}</td><td>{px}</td>'
-                f'<td>{r["cheap"]:.1f}</td><td>{r["fair"]:.0f}</td><td>{r["exp"]:.0f}</td>'
+                f'<td>{r["cheap"]:.1f}</td><td>{r["exp"]:.0f}</td>'
                 f'<td>{dis}</td><td>{roe}</td><td>{eps}</td><td class="l">{note}</td></tr>'
             )
         o.append('</table></div></div>')
@@ -185,7 +183,7 @@ def build(watch):
         mkts.setdefault(mkt, {k: [] for k in ORDER})
         price = prices.get(tk)
         cheap, fair, exp = d.get("cheap"), d.get("fair"), d.get("expensive")
-        sig = hong_signal(price, cheap, fair, exp)
+        sig = hong_signal(price, cheap, exp)
         dis = ((cheap - price) / cheap * 100) if (price and cheap and price <= cheap) else None
         tags = quality_flags(tk) if sig in ("buy", "watch") else []
         disp_tk = tk[:-3] if (mkt == "TW" and tk.endswith(".TW")) else tk   # 台股去 .TW
@@ -210,8 +208,8 @@ def build(watch):
  <button data-m="TW" onclick="setMkt('TW')">🇹🇼 台股 {n_tw}</button>
 </div>
 <div class="legend">
-<b>訊號（洪瑞泰核心）</b>：🟢買進 現價≤俗價 ｜ 🟡觀望 俗價~合理價 ｜ 🔵持有 合理~貴價 ｜ 🔴賣出 現價&gt;貴價<br>
-<b>俗價</b>=EPS×12（報酬15%）｜ <b>合理價</b>=EPS×20（報酬6.7%＝定存）｜ <b>貴價</b>=EPS×30（報酬0%）<br>
+<b>訊號（洪瑞泰）</b>：🟢買進 現價≤俗價 ｜ 🟡觀望 俗價~貴價之間 ｜ 🔴太貴 現價&gt;貴價<br>
+<b>俗價</b>=EPS×12（<b>買進線</b>，報酬15%）｜ <b>貴價</b>=EPS×30（<b>賣出線</b>，報酬0%）<span class="sub">　洪瑞泰只設便宜買／貴賣兩條線，不用合理價</span><br>
 <span class="lead">龍頭#N</span> = 同 sector 市值前 3（補充參考）
 <span class="trap">⚠️照妖鏡</span> = forward EPS 衰退 / 負債&gt;{DE_HIGH}%（俗價用過去 EPS 算，未來恐縮水 → 便宜有理由，別追）<br>
 <i>排序：<b>✅體質過關優先浮上</b>，⚠️EPS 估降者殿後（EPS 變差＝俗價是假便宜，洪瑞泰不追）。🟢🟡才跑照妖鏡。台股價格為 TWD。</i>
