@@ -24,3 +24,17 @@
 - `monthly-report-reminder.yml`：每月 1 號 09:07 Telegram 提醒（+ 電腦沒開的手動備援）。
 
 **踩坑**：tw-board 結尾 `git push || echo 略過` 吞掉 push 失敗 → 部署途中若我 push，發佈 index.html 被拒卻顯示 success、線上靜默不更新。**部署期間絕不 push**。
+
+## 2026-07-18 · 巴菲特價值清單加台股分頁 + 俗貴價核對
+
+**台股分頁（美/台 toggle）**
+- `data_tv.get_buffett_snapshot_taiwan`（TV taiwan、TWSE+TPEX、市值 TWD、ticker 帶 .TW）；stage2 的 yfinance `fetch_fundamentals` 逐檔重抓 → 台股完全重用評估邏輯、下游零改。
+- `buffett_scan --markets us,tw`：併掃標 market；FinMind TaiwanStockInfo 補中文名。台股門檻 50億（180 檔過關取 76 檔 BUY/WATCH）。
+- `buffett_html`：美/台 toggle 分頁（同主看板 UX）、台股去 .TW 顯示代號+中文名+TWD。
+- weekly-screen 巴菲特步驟加 FINMIND_TOKEN + `--tw-max-candidates 200`。
+
+**排序：EPS估降殿後** — 洪瑞泰「EPS 變差＝俗價假便宜」，✅體質過關浮上、⚠️EPS估降沉底。
+
+**俗貴價核對（對第一手講稿）** — 詳見記憶 hongruitai_method：
+- 爬 mikeon88 官方 blog 確認：俗價 EPS×12（買）、貴價 EPS×30（賣）＝洪瑞泰官方，跟我們一致。
+- 合理價 ×20 是我們自補中點、洪瑞泰無官方定義 → **拿掉合理價**，只留買/賣兩線（🟢買進/🟡觀望/🔴太貴）。
