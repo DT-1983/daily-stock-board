@@ -29,6 +29,11 @@ CHAIN_ALL = "產業鏈精選"
 CHAIN_TREND = "產業鏈+趨勢"
 BUFFETT_TOPN = 30
 TOP_PER_CHAIN = 2              # 產業鏈精選：每鏈取分數最高前 N（重點壓 ~14 檔）
+# ── 趨勢倉抗 whipsaw 參數（2026-07-27 依實證加）──────────────────────────
+# 實證：2026-06-30~07-26 換股 12 次，比「買進持有同一批」多虧 7.8pp；
+# 2345.TW 賣掉隔天又買回、唯一賺錢的 2359.TW 被砍兩次。
+TREND_CONFIRM_DAYS = 2         # 翻燈需連續 N 天成立才動作（過濾臨界值抖動）
+TREND_MIN_SLOTS    = 8         # 最少切成 N 份；綠燈不足時剩餘留現金（避免集中在 3-4 檔）
 MAIN = [CHAIN_ALL, CHAIN_TREND, BUFFETT_NAME]
 FX_FALLBACK = 32.0              # USD/TWD 備援匯率
 
@@ -222,12 +227,46 @@ def save(state):
     json.dump(state, open(STORE, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
 
-def _alloc_shares(tickers, capital, prices, fx):
-    """把 capital 等分買進 tickers，回 {tk: {sh,eu,en}}（eu=進場美金價,en=進場原幣價）。"""
+def _confirmed_longs(state, longs_today, date):
+    """遲滯（hysteresis）過濾：翻燈要連續 TREND_CONFIRM_DAYS 天成立才生效。
+    已持有的不因單日轉紅就賣、未持有的不因單日轉綠就買 → 直接消滅一日抖動。
+    狀態存 state['trend_streak'] = {ticker: [dir, days]}，dir: 1=綠 -1=紅。"""
+    pf = state["portfolios"].get(CHAIN_TREND) or {}
+    held = set(pf.get("holdings", {}))
+    green = set(longs_today)
+    streak = state.setdefault("trend_streak", {})
+    universe = green | held
+    out = []
+    for tk in sorted(universe):
+        d = 1 if tk in green else -1
+        prev = streak.get(tk)
+        if prev and prev[0] == d:
+            prev[1] += 1
+        else:
+            streak[tk] = [d, 1]
+        days = streak[tk][1]
+        if tk in held:
+            # 持有中：轉紅要連續 N 天才賣，否則續抱
+            if d == -1 and days >= TREND_CONFIRM_DAYS:
+                continue
+            out.append(tk)
+        else:
+            # 未持有：轉綠連續 N 天才買
+            if d == 1 and days >= TREND_CONFIRM_DAYS:
+                out.append(tk)
+    # 清掉已不在池子的殘留狀態
+    for tk in [t for t in streak if t not in universe]:
+        streak.pop(tk, None)
+    return sorted(out)
+
+
+def _alloc_shares(tickers, capital, prices, fx, min_slots=0):
+    """把 capital 等分買進 tickers，回 {tk: {sh,eu,en}}（eu=進場美金價,en=進場原幣價）。
+    min_slots>0 時最少切成 min_slots 份，標的不足則剩餘留現金（由呼叫端記到 pf['cash']）。"""
     valid = [t for t in tickers if prices.get(t)]
     if not valid:
         return {}
-    each = capital / len(valid)
+    each = capital / max(len(valid), min_slots)
     h = {}
     for t in valid:
         pu = to_usd(t, prices[t], fx)
@@ -237,8 +276,8 @@ def _alloc_shares(tickers, capital, prices, fx):
 
 
 def _value(pf, prices, fx):
-    """市值（美金）= Σ 股數 × 現價(美金)；無現價的用進場價（視為持平）。"""
-    v = 0.0
+    """市值（美金）= Σ 股數 × 現價(美金) + 現金；無現價的用進場價（視為持平）。"""
+    v = float(pf.get("cash") or 0.0)          # 綠燈不足時保留的現金部位
     for tk, h in pf["holdings"].items():
         pu = to_usd(tk, prices.get(tk), fx) or h["eu"]
         v += h["sh"] * pu
@@ -280,8 +319,11 @@ def rebalance(state, hmap, prices, fx, date, only=None):
     for name, pf in state["portfolios"].items():
         if only and name not in only:
             continue
-        v = _value(pf, prices, fx) if pf["holdings"] else BASE
-        pf["holdings"] = _alloc_shares(hmap.get(name, list(pf["holdings"])), v, prices, fx)
+        v = _value(pf, prices, fx) if (pf["holdings"] or pf.get("cash")) else BASE
+        slots = TREND_MIN_SLOTS if name == CHAIN_TREND else 0   # 趨勢倉：綠燈不足留現金
+        pf["holdings"] = _alloc_shares(hmap.get(name, list(pf["holdings"])), v, prices, fx, slots)
+        invested = sum(h["sh"] * h["eu"] for h in pf["holdings"].values())
+        pf["cash"] = round(max(0.0, v - invested), 2)
         _refresh_current(pf, prices, fx)
         pf["value"] = round(v, 2)
         pf["pnl"] = round(v - BASE, 2)
@@ -338,9 +380,14 @@ def main():
         for n, pf in state["portfolios"].items():
             print(f"  {n}: {len(pf['holdings'])} 檔 ${pf['value']:,.0f} ({pf['ret']:+.2f}%)")
     elif cmd == "rebalance-trend":
-        # 趨勢倉每日追 SuperTrend：池子(守備清單)維持週日重篩，只在綠燈名單「有變」時才換股
+        # 趨勢倉：池子(守備清單)週日重篩，綠燈名單「有變」才換股。
+        # 2026-07-27 加兩道抗 whipsaw 護欄（實證：4 週換 12 次，比買進持有多虧 7.8pp，
+        # 且把唯一賺錢的 2359.TW 砍掉；2345.TW 賣掉隔天又買回）：
+        #   ① 翻燈需連續 CONFIRM_DAYS 天成立才動作 → 過濾臨界值抖動
+        #   ② 綠燈不足 MIN_HOLDINGS 檔時，剩餘資金留現金，不硬集中在少數幾檔
         select = chain_select_union()
-        longs = trend_longs(select)
+        longs_today = trend_longs(select)
+        longs = _confirmed_longs(state, longs_today, date)
         pf = state["portfolios"].get(CHAIN_TREND)
         cur = set(pf["holdings"].keys()) if pf else set()
         if set(longs) == cur:
