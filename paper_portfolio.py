@@ -9,7 +9,7 @@
 台股價格用即時匯率換成美金 → 全部用美金加總。每日更新現價算市值與損益。
 
 調倉頻率：
-  · 產業鏈精選 / 巴菲特價值 / 7 鏈明細 → 每週日隨守備清單重篩調倉
+  · 產業鏈全 / 巴菲特價值 / 7 鏈明細 → 每週日隨守備清單重篩調倉
   · 產業鏈+趨勢 → 每日追 SuperTrend，綠燈名單一有變就換股（翻燈才動，不天天重配）
 
 用法:python paper_portfolio.py [init|rebalance|rebalance-trend|nav]
@@ -25,11 +25,10 @@ SCREEN = "screen_result.json"
 BUFFETT = "buffett_watch.json"
 BASE = 10000.0
 BUFFETT_NAME = "巴菲特價值"
-CHAIN_ALL = "產業鏈精選"
+CHAIN_ALL = "產業鏈全"          # 七鏈完整守備清單聯集（2026-07-28 由「精選前2」改回全買）
 CHAIN_TREND = "產業鏈+趨勢"
 BUFFETT_TOPN = 30
-TIMING_NAME = "指數擇時"        # 新倉：QQQ 週線 SuperTrend 當總開關（綠=持有精選、紅=現金）
-TOP_PER_CHAIN = 2              # 產業鏈精選：每鏈取分數最高前 N（重點壓 ~14 檔）
+TOP_PER_CHAIN = 2              # （保留供他用；產業鏈倉已改用完整守備清單，不再取前 N）
 # ── 趨勢倉：改用「週線」SuperTrend（2026-07-28 依回測改）─────────────────
 # 公式與參數(ATR10×3)完全不變，只把判斷 K 棒由日改週。實證依據：
 #  · 訊號診斷：日線 32 次賣出有 24 次(75%)賣完股價續漲(+8.2%/10日)，買進訊號則正常
@@ -43,8 +42,8 @@ TREND_MIN_SLOTS    = 8         # 最少切成 N 份；綠燈不足時剩餘留�
 # 5.5 年回測最大回撤 -94%（2022 年 -87.7%，接近歸零）。這是風險管理事實，
 # 不是回測過擬合：等權重讓它一檔就能砸掉整個精選倉。
 BTC_CHAIN = "Bitcoin→AI 機房"
-BTC_MAX_WEIGHT = 0.10          # 該鏈標的在「產業鏈精選」的合計權重上限
-MAIN = [CHAIN_ALL, CHAIN_TREND, TIMING_NAME, BUFFETT_NAME]
+BTC_MAX_WEIGHT = 0.10          # 該鏈標的在跨鏈主倉的合計權重上限
+MAIN = [CHAIN_ALL, CHAIN_TREND, BUFFETT_NAME]
 FX_FALLBACK = 32.0              # USD/TWD 備援匯率
 
 
@@ -96,8 +95,11 @@ def chain_top_picks(n=TOP_PER_CHAIN):
 
 
 def chain_select_union():
-    """產業鏈精選 = 各鏈前 N 聯集。"""
-    return sorted({t for v in chain_top_picks().values() for t in v})
+    """產業鏈全 = 七鏈「完整守備清單」聯集（2026-07-28 改回原設計）。
+    原本取各鏈前 2（精選 11-13 檔），但 5.5 年回測顯示過度集中：
+    精選倉 MDD -55.9%，比單一鏈（AI 伺服器 -39.4%、機器人 -36.0%）還差。
+    改回全買後檔數約 50+，分散度回到七鏈原本的水準。"""
+    return sorted({t for v in chain_holdings().values() for t in v})
 
 
 def _supertrend_dir(highs, lows, closes, period=10, mult=3.0):
@@ -248,13 +250,12 @@ def fetch_prices(tickers):
 
 
 def build_holdings_map(prices):
-    """4 主倉 + 7 鏈明細。
-    產業鏈精選=各鏈前N聯集；產業鏈+趨勢=精選裡只留 SuperTrend(週線)多頭；
-    指數擇時=QQQ 週線綠燈就持有精選、紅燈全現金；巴菲特=折價前30。"""
+    """3 主倉 + 7 鏈明細。
+    產業鏈全=七鏈完整守備清單聯集；產業鏈+趨勢=同一批股再用 SuperTrend(週線)過濾；
+    巴菲特=折價前30。"""
     select = chain_select_union()
     m = {CHAIN_ALL: select,
          CHAIN_TREND: trend_longs(select),
-         TIMING_NAME: (select if market_is_green() else []),
          BUFFETT_NAME: buffett_top30(prices)}
     m.update(chain_holdings())   # 7 鏈明細（各鏈完整守備清單）
     return m
@@ -340,15 +341,15 @@ def _alloc_shares(tickers, capital, prices, fx, min_slots=0, caps=None):
 
 
 def _btc_caps():
-    """Bitcoin→AI 機房標的的個別權重上限（該鏈合計不超過 BTC_MAX_WEIGHT）。"""
+    """Bitcoin→AI 機房「整條鏈」標的的個別權重上限（該鏈合計不超過 BTC_MAX_WEIGHT）。"""
     try:
-        picks = chain_top_picks().get(BTC_CHAIN, [])
+        members = chain_holdings().get(BTC_CHAIN, [])
     except Exception:
         return {}
-    if not picks:
+    if not members:
         return {}
-    per = BTC_MAX_WEIGHT / len(picks)
-    return {t: per for t in picks}
+    per = BTC_MAX_WEIGHT / len(members)
+    return {t: per for t in members}
 
 
 def _value(pf, prices, fx):
@@ -398,7 +399,7 @@ def rebalance(state, hmap, prices, fx, date, only=None):
         v = _value(pf, prices, fx) if (pf["holdings"] or pf.get("cash")) else BASE
         slots = TREND_MIN_SLOTS if name == CHAIN_TREND else 0   # 趨勢倉：綠燈不足留現金
         # Bitcoin 鏈限重：套用在所有「跨鏈」主倉（單一鏈明細倉不套，那本來就是純曝險）
-        caps = _btc_caps() if name in (CHAIN_ALL, CHAIN_TREND, TIMING_NAME) else None
+        caps = _btc_caps() if name in (CHAIN_ALL, CHAIN_TREND) else None
         pf["holdings"] = _alloc_shares(hmap.get(name, list(pf["holdings"])), v, prices, fx,
                                        slots, caps)
         invested = sum(h["sh"] * h["eu"] for h in pf["holdings"].values())
@@ -479,29 +480,6 @@ def main():
             add = sorted(set(longs) - cur)
             rm = sorted(cur - set(longs))
             print(f"✅ 趨勢倉調倉 {date}（匯率 {fx:.2f}）：+{add or '無'} / -{rm or '無'} → {len(longs)} 檔")
-    elif cmd == "rebalance-timing":
-        # 指數擇時倉：QQQ 週線 SuperTrend 當「總開關」——綠燈持有產業鏈精選、紅燈全現金。
-        # 依據 5.5 年回測：2022 空頭 QQQ 買進持有 -32.6%，週線擇時只 -11.7%；
-        # 且規則用在「指數」有效（回撤砍半），用在高波動個股無效（回撤反而更大）。
-        pf = state["portfolios"].get(TIMING_NAME)
-        if pf is None:                       # 首次建立（沿用其他倉的當前淨值基準 BASE）
-            pf = {"holdings": {}, "cash": 0.0, "value": BASE, "pnl": 0.0, "ret": 0.0,
-                  "rebalanced": date, "history": []}
-            state["portfolios"][TIMING_NAME] = pf
-            if TIMING_NAME not in state.get("main", []):
-                state.setdefault("main", []).append(TIMING_NAME)
-        green = market_is_green()
-        target = chain_select_union() if green else []
-        cur = set(pf["holdings"].keys())
-        if set(target) == cur:
-            print(f"指數擇時：QQQ {'🟢綠燈' if green else '🔴紅燈'}，持股無變化（{len(cur)} 檔），不調倉")
-        else:
-            allt = _all_tickers(state) | set(target)
-            prices = fetch_prices(allt)
-            rebalance(state, {TIMING_NAME: target}, prices, fx, date, only={TIMING_NAME})
-            save(state)
-            act = "進場持有精選" if green else "全數轉現金"
-            print(f"✅ 指數擇時 {date}：QQQ {'🟢綠燈' if green else '🔴紅燈'} → {act}（{len(target)} 檔）")
     elif cmd == "nav":
         prices = fetch_prices(_all_tickers(state))
         update_nav(state, prices, fx, date)
