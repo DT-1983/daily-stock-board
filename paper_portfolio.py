@@ -28,13 +28,23 @@ BUFFETT_NAME = "巴菲特價值"
 CHAIN_ALL = "產業鏈精選"
 CHAIN_TREND = "產業鏈+趨勢"
 BUFFETT_TOPN = 30
+TIMING_NAME = "指數擇時"        # 新倉：QQQ 週線 SuperTrend 當總開關（綠=持有精選、紅=現金）
 TOP_PER_CHAIN = 2              # 產業鏈精選：每鏈取分數最高前 N（重點壓 ~14 檔）
-# ── 趨勢倉抗 whipsaw 參數（2026-07-27 依實證加）──────────────────────────
-# 實證：2026-06-30~07-26 換股 12 次，比「買進持有同一批」多虧 7.8pp；
-# 2345.TW 賣掉隔天又買回、唯一賺錢的 2359.TW 被砍兩次。
-TREND_CONFIRM_DAYS = 2         # 翻燈需連續 N 天成立才動作（過濾臨界值抖動）
+# ── 趨勢倉：改用「週線」SuperTrend（2026-07-28 依回測改）─────────────────
+# 公式與參數(ATR10×3)完全不變，只把判斷 K 棒由日改週。實證依據：
+#  · 訊號診斷：日線 32 次賣出有 24 次(75%)賣完股價續漲(+8.2%/10日)，買進訊號則正常
+#  · 同池同期：日線 65 次訊號 vs 週線 10 次，多出來的全是雜訊
+#  · 2026 YTD 回測：週線 +71.1%/回撤-16.1%/換股8次 vs 日線 +17.9%/-28.9%/47次
+#  · 5.5 年 QQQ：週線 +73.5%(9次) ≈ 日線 +70.8%(44次)，報酬相當但交易只要 1/5
+TREND_WEEKLY = True            # True=週線判斷（False 可切回日線做對照）
+TREND_CONFIRM_DAYS = 1         # 週線本身已濾掉日內雜訊，確認天數降回 1（避免雙重延遲）
 TREND_MIN_SLOTS    = 8         # 最少切成 N 份；綠燈不足時剩餘留現金（避免集中在 3-4 檔）
-MAIN = [CHAIN_ALL, CHAIN_TREND, BUFFETT_NAME]
+# ── Bitcoin→AI 機房限重（2026-07-28）─────────────────────────────────
+# 5.5 年回測最大回撤 -94%（2022 年 -87.7%，接近歸零）。這是風險管理事實，
+# 不是回測過擬合：等權重讓它一檔就能砸掉整個精選倉。
+BTC_CHAIN = "Bitcoin→AI 機房"
+BTC_MAX_WEIGHT = 0.10          # 該鏈標的在「產業鏈精選」的合計權重上限
+MAIN = [CHAIN_ALL, CHAIN_TREND, TIMING_NAME, BUFFETT_NAME]
 FX_FALLBACK = 32.0              # USD/TWD 備援匯率
 
 
@@ -124,22 +134,51 @@ def _supertrend_dir(highs, lows, closes, period=10, mult=3.0):
     return dr
 
 
-def trend_longs(tickers):
-    """從候選裡只留 SuperTrend 多頭（綠燈）的；抓不到 OHLC 的保留（不過濾）。"""
+def _to_weekly(df):
+    """日 K → 週 K（週五收盤）。SuperTrend 公式與參數不變，只換 K 棒週期。"""
+    return df.resample("W-FRI").agg({"High": "max", "Low": "min", "Close": "last"}).dropna()
+
+
+def _dir_of(df, weekly=True):
+    """回單一標的最新 SuperTrend 方向（1 多 / -1 空）。weekly=True 用週線判斷。"""
+    d = _to_weekly(df) if weekly else df
+    if len(d) < 12:                     # 週線需要足夠棒數，不足時視為多頭（不過濾）
+        return 1
+    return _supertrend_dir(d["High"].tolist(), d["Low"].tolist(), d["Close"].tolist())
+
+
+def trend_longs(tickers, weekly=None):
+    """從候選裡只留 SuperTrend 多頭（綠燈）的；抓不到 OHLC 的保留（不過濾）。
+    weekly=None 時採用 TREND_WEEKLY 設定（預設週線）。"""
     if not tickers:
         return []
-    data = yf.download(sorted(tickers), period="3mo", progress=False,
+    weekly = TREND_WEEKLY if weekly is None else weekly
+    period = "1y" if weekly else "3mo"   # 週線需要更長歷史才有足夠 K 棒
+    data = yf.download(sorted(tickers), period=period, progress=False,
                        threads=False, auto_adjust=True, group_by="ticker")
     longs = []
     for tk in tickers:
         try:
             df = data[tk].dropna()
-            d = _supertrend_dir(df["High"].tolist(), df["Low"].tolist(), df["Close"].tolist())
-            if d == 1:
-                longs.append(tk)        # 多頭（資料不足時 _supertrend_dir 回 1 → 保留）
+            if _dir_of(df, weekly) == 1:
+                longs.append(tk)
         except Exception:
             longs.append(tk)
     return sorted(longs)
+
+
+def market_is_green(symbol="QQQ"):
+    """大盤總開關：QQQ 週線 SuperTrend 是否為多頭。抓不到資料時回 True（不空手）。
+    依據 5.5 年回測：2022 空頭 QQQ 買進持有 -32.6%，週線擇時僅 -11.7%。"""
+    try:
+        df = yf.download(symbol, period="2y", progress=False, threads=False,
+                         auto_adjust=True)
+        if isinstance(df.columns, __import__("pandas").MultiIndex):
+            df.columns = df.columns.droplevel(1)
+        return _dir_of(df.dropna(), weekly=True) == 1
+    except Exception as e:
+        print(f"[market_is_green] {symbol} 抓取失敗，視為綠燈：{e}")
+        return True
 
 
 def _hong_score(rank, roe, rr):
@@ -209,11 +248,13 @@ def fetch_prices(tickers):
 
 
 def build_holdings_map(prices):
-    """3 主倉 + 7 鏈明細。
-    產業鏈精選=各鏈前N聯集；產業鏈+趨勢=精選裡只留SuperTrend多頭；巴菲特=折價前30。"""
+    """4 主倉 + 7 鏈明細。
+    產業鏈精選=各鏈前N聯集；產業鏈+趨勢=精選裡只留 SuperTrend(週線)多頭；
+    指數擇時=QQQ 週線綠燈就持有精選、紅燈全現金；巴菲特=折價前30。"""
     select = chain_select_union()
     m = {CHAIN_ALL: select,
          CHAIN_TREND: trend_longs(select),
+         TIMING_NAME: (select if market_is_green() else []),
          BUFFETT_NAME: buffett_top30(prices)}
     m.update(chain_holdings())   # 7 鏈明細（各鏈完整守備清單）
     return m
@@ -260,19 +301,54 @@ def _confirmed_longs(state, longs_today, date):
     return sorted(out)
 
 
-def _alloc_shares(tickers, capital, prices, fx, min_slots=0):
-    """把 capital 等分買進 tickers，回 {tk: {sh,eu,en}}（eu=進場美金價,en=進場原幣價）。
-    min_slots>0 時最少切成 min_slots 份，標的不足則剩餘留現金（由呼叫端記到 pf['cash']）。"""
+def _capped_weights(valid, min_slots=0, caps=None):
+    """等權重為基礎，對 caps 內的標的設權重上限，超出部分按比例分給其他標的。
+    回 {tk: weight}（總和 ≤ 1；min_slots 造成的差額留現金）。"""
+    n = max(len(valid), min_slots)
+    w = {t: 1.0 / n for t in valid}
+    if not caps:
+        return w
+    capped = {t: c for t, c in caps.items() if t in w and w[t] > c}
+    if not capped:
+        return w
+    freed = sum(w[t] - c for t, c in capped.items())
+    for t, c in capped.items():
+        w[t] = c
+    others = [t for t in valid if t not in capped]
+    if others and freed > 0:
+        base = sum(w[t] for t in others)
+        for t in others:                       # 依原權重比例分配釋出的額度
+            w[t] += freed * (w[t] / base) if base else freed / len(others)
+    return w
+
+
+def _alloc_shares(tickers, capital, prices, fx, min_slots=0, caps=None):
+    """把 capital 依權重買進 tickers，回 {tk: {sh,eu,en}}（eu=進場美金價,en=進場原幣價）。
+    min_slots>0 時最少切成 min_slots 份，標的不足則剩餘留現金（由呼叫端記到 pf['cash']）。
+    caps={tk: 權重上限} 用於單一鏈限重（如 Bitcoin→AI 機房）。"""
     valid = [t for t in tickers if prices.get(t)]
     if not valid:
         return {}
-    each = capital / max(len(valid), min_slots)
+    w = _capped_weights(valid, min_slots, caps)
     h = {}
     for t in valid:
         pu = to_usd(t, prices[t], fx)
         if pu and pu > 0:
-            h[t] = {"sh": round(each / pu, 4), "eu": round(pu, 4), "en": round(prices[t], 2)}
+            h[t] = {"sh": round(capital * w[t] / pu, 4), "eu": round(pu, 4),
+                    "en": round(prices[t], 2)}
     return h
+
+
+def _btc_caps():
+    """Bitcoin→AI 機房標的的個別權重上限（該鏈合計不超過 BTC_MAX_WEIGHT）。"""
+    try:
+        picks = chain_top_picks().get(BTC_CHAIN, [])
+    except Exception:
+        return {}
+    if not picks:
+        return {}
+    per = BTC_MAX_WEIGHT / len(picks)
+    return {t: per for t in picks}
 
 
 def _value(pf, prices, fx):
@@ -321,7 +397,10 @@ def rebalance(state, hmap, prices, fx, date, only=None):
             continue
         v = _value(pf, prices, fx) if (pf["holdings"] or pf.get("cash")) else BASE
         slots = TREND_MIN_SLOTS if name == CHAIN_TREND else 0   # 趨勢倉：綠燈不足留現金
-        pf["holdings"] = _alloc_shares(hmap.get(name, list(pf["holdings"])), v, prices, fx, slots)
+        # Bitcoin 鏈限重：套用在所有「跨鏈」主倉（單一鏈明細倉不套，那本來就是純曝險）
+        caps = _btc_caps() if name in (CHAIN_ALL, CHAIN_TREND, TIMING_NAME) else None
+        pf["holdings"] = _alloc_shares(hmap.get(name, list(pf["holdings"])), v, prices, fx,
+                                       slots, caps)
         invested = sum(h["sh"] * h["eu"] for h in pf["holdings"].values())
         pf["cash"] = round(max(0.0, v - invested), 2)
         _refresh_current(pf, prices, fx)
@@ -400,6 +479,29 @@ def main():
             add = sorted(set(longs) - cur)
             rm = sorted(cur - set(longs))
             print(f"✅ 趨勢倉調倉 {date}（匯率 {fx:.2f}）：+{add or '無'} / -{rm or '無'} → {len(longs)} 檔")
+    elif cmd == "rebalance-timing":
+        # 指數擇時倉：QQQ 週線 SuperTrend 當「總開關」——綠燈持有產業鏈精選、紅燈全現金。
+        # 依據 5.5 年回測：2022 空頭 QQQ 買進持有 -32.6%，週線擇時只 -11.7%；
+        # 且規則用在「指數」有效（回撤砍半），用在高波動個股無效（回撤反而更大）。
+        pf = state["portfolios"].get(TIMING_NAME)
+        if pf is None:                       # 首次建立（沿用其他倉的當前淨值基準 BASE）
+            pf = {"holdings": {}, "cash": 0.0, "value": BASE, "pnl": 0.0, "ret": 0.0,
+                  "rebalanced": date, "history": []}
+            state["portfolios"][TIMING_NAME] = pf
+            if TIMING_NAME not in state.get("main", []):
+                state.setdefault("main", []).append(TIMING_NAME)
+        green = market_is_green()
+        target = chain_select_union() if green else []
+        cur = set(pf["holdings"].keys())
+        if set(target) == cur:
+            print(f"指數擇時：QQQ {'🟢綠燈' if green else '🔴紅燈'}，持股無變化（{len(cur)} 檔），不調倉")
+        else:
+            allt = _all_tickers(state) | set(target)
+            prices = fetch_prices(allt)
+            rebalance(state, {TIMING_NAME: target}, prices, fx, date, only={TIMING_NAME})
+            save(state)
+            act = "進場持有精選" if green else "全數轉現金"
+            print(f"✅ 指數擇時 {date}：QQQ {'🟢綠燈' if green else '🔴紅燈'} → {act}（{len(target)} 檔）")
     elif cmd == "nav":
         prices = fetch_prices(_all_tickers(state))
         update_nav(state, prices, fx, date)

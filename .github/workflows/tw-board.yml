@@ -70,6 +70,7 @@ jobs:
       - name: 模擬倉每日記淨值 + 出賽馬頁 + 巴菲特頁
         run: |
           python paper_portfolio.py rebalance-trend || echo "趨勢倉每日調倉失敗，跳過"
+          python paper_portfolio.py rebalance-timing || echo "指數擇時倉調倉失敗，跳過"
           python paper_portfolio.py nav || echo "模擬倉更新失敗，跳過"
           python portfolio_html.py -o docs/portfolios.html || echo "賽馬頁失敗，跳過"
           python buffett_html.py -o docs/buffett.html || echo "巴菲特頁失敗，跳過"
