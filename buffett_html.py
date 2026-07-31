@@ -190,7 +190,7 @@ def build(watch):
         sig = hong_signal(price, cheap, exp)
         dis = ((cheap - price) / cheap * 100) if (price and cheap and price <= cheap) else None
         tags = quality_flags(tk) if sig in ("buy", "watch") else []
-        disp_tk = tk[:-3] if (mkt == "TW" and tk.endswith(".TW")) else tk   # 台股去 .TW
+        disp_tk = tk.rsplit(".", 1)[0] if mkt == "TW" else tk   # 台股去 .TW / .TWO
         mkts[mkt][sig].append({
             "tk": disp_tk, "name": d.get("name"), "sector": d.get("sector", ""),
             "rank": d.get("rank"), "price": price, "cheap": cheap,
