@@ -136,7 +136,7 @@ def _market_html(mkt, rows, show):
         o.append('<div class="scrollbox"><table>')
         o.append('<tr><th class="l">代號</th><th class="l">產業</th><th>現價</th>'
                  '<th>俗價</th><th>貴價</th><th>折價%</th>'
-                 '<th>ROE</th><th>EPS</th><th class="l">標註</th></tr>')
+                 '<th>ROE</th><th>配息率</th><th>EPS</th><th class="l">標註</th></tr>')
         for r in lst:
             lead = f'<span class="lead">龍頭#{int(r["rank"])}</span> ' if r.get("rank") else ""
             if r["tags"]:
@@ -146,6 +146,10 @@ def _market_html(mkt, rows, show):
             else:
                 note = ""
             roe = f'{r["roe"]*100:.0f}%' if r.get("roe") is not None else "—"
+            if r.get("roe_years") is not None:      # 近 4 年達標年數（品質關要 ≥3）
+                roe += f'<span class="sub"> {int(r["roe_years"])}/4</span>'
+            po = r.get("payout")
+            payout = f'{po*100:.0f}%' if po is not None else "—"
             eps = f'{r["eps"]:.2f}' if r.get("eps") is not None else "—"
             dis = f'<span class="dis">{r["dis"]:.0f}%</span>' if r.get("dis") else "—"
             px = f'{r["price"]:.1f}' if r.get("price") else "—"
@@ -154,7 +158,7 @@ def _market_html(mkt, rows, show):
                 f'<tr class="{sig}"><td class="l">{lead}<span class="tk">{esc(r["tk"])}</span> {nm_disp}</td>'
                 f'<td class="l">{esc(sector_tw(r["sector"]))}</td><td>{px}</td>'
                 f'<td>{r["cheap"]:.1f}</td><td>{r["exp"]:.0f}</td>'
-                f'<td>{dis}</td><td>{roe}</td><td>{eps}</td><td class="l">{note}</td></tr>'
+                f'<td>{dis}</td><td>{roe}</td><td>{payout}</td><td>{eps}</td><td class="l">{note}</td></tr>'
             )
         o.append('</table></div></div>')
     o.append('</div>')
@@ -182,15 +186,16 @@ def build(watch):
         mkt = d.get("market", "US")
         mkts.setdefault(mkt, {k: [] for k in ORDER})
         price = prices.get(tk)
-        cheap, fair, exp = d.get("cheap"), d.get("fair"), d.get("expensive")
+        cheap, exp = d.get("cheap"), d.get("expensive")
         sig = hong_signal(price, cheap, exp)
         dis = ((cheap - price) / cheap * 100) if (price and cheap and price <= cheap) else None
         tags = quality_flags(tk) if sig in ("buy", "watch") else []
         disp_tk = tk[:-3] if (mkt == "TW" and tk.endswith(".TW")) else tk   # 台股去 .TW
         mkts[mkt][sig].append({
             "tk": disp_tk, "name": d.get("name"), "sector": d.get("sector", ""),
-            "rank": d.get("rank"), "price": price, "cheap": cheap, "fair": fair,
+            "rank": d.get("rank"), "price": price, "cheap": cheap,
             "exp": exp, "roe": d.get("roe"), "eps": d.get("eps"), "dis": dis, "tags": tags,
+            "payout": d.get("payout"), "roe_years": d.get("roe_years"),
         })
 
     n_us = sum(len(mkts["US"][s]) for s in ORDER)
@@ -210,6 +215,7 @@ def build(watch):
 <div class="legend">
 <b>訊號（洪瑞泰）</b>：🟢買進 現價≤俗價 ｜ 🟡觀望 俗價~貴價之間 ｜ 🔴太貴 現價&gt;貴價<br>
 <b>俗價</b>=EPS×12（<b>買進線</b>，報酬15%）｜ <b>貴價</b>=EPS×30（<b>賣出線</b>，報酬0%）<span class="sub">　洪瑞泰只設便宜買／貴賣兩條線，不用合理價</span><br>
+<b>品質關（全過才進 🟢🟡）</b>：ROE≥15% 且 <b>近4年至少3年達標</b>（ROE 欄後方 n/4）｜ 盈再率&lt;80% ｜ <b>配息率≥40%</b><span class="sub">　只賺錢不配息＝盈餘可能是帳面的</span><br>
 <span class="lead">龍頭#N</span> = 同 sector 市值前 3（補充參考）
 <span class="trap">⚠️照妖鏡</span> = forward EPS 衰退 / 負債&gt;{DE_HIGH}%（俗價用過去 EPS 算，未來恐縮水 → 便宜有理由，別追）<br>
 <i>排序：<b>✅體質過關優先浮上</b>，⚠️EPS 估降者殿後（EPS 變差＝俗價是假便宜，洪瑞泰不追）。🟢🟡才跑照妖鏡。台股價格為 TWD。</i>

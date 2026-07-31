@@ -28,11 +28,13 @@ ROE_MIN          = 0.15   # ROE 門檻：15%
 ROE_YEARS        = 3      # 連續幾年 ROE 需達標
 DEBT_RATIO_MAX   = 1.0    # 負債/淨值比門檻（D/E，yfinance 單位為 %/100）
 EPS_LOSS_MAX     = 0      # 近幾年可容忍虧損次數
-PE_CHEAP         = 12     # 俗價（EPS×12，預期報酬15%）
-PE_FAIR          = 20     # 合理價（EPS×20，報酬6.7%＝定存）— 講稿原文，非 15
-PE_EXPENSIVE     = 30     # 貴價（EPS×30，報酬0%）— 講稿原文，非 20
+PE_CHEAP         = 12     # 俗價（EPS×12，預期報酬15%）＝ 買進線
+PE_FAIR          = 20     # 合理價（EPS×20）— 2026-07-31 起【不參與訊號判斷】，僅保留給
+                          #   Stage1 預篩的向下相容；洪瑞泰只設俗/貴兩條線
+PE_EXPENSIVE     = 30     # 貴價（EPS×30，報酬0%）＝ 賣出線
 REINVEST_IDEAL   = 0.40   # 盈再率理想門檻（< 40% = 真洪瑞泰）
 REINVEST_MAX     = 0.80   # 盈再率上限（> 80% 拒絕）
+PAYOUT_MIN       = 0.40   # 配息率下限（洪瑞泰：配息 < 40% 代表盈餘可能是假的）
 LEADER_TOP_N     = 3      # 產業龍頭顯示前幾名
 
 OUTPUT_DIR       = "screener_output"
@@ -390,41 +392,48 @@ def evaluate(data: dict) -> dict:
         trap.append(f"高負債{d_e:.0f}%")
     result["trap_flags"] = "、".join(trap) if trap else None
 
-    # ── 5. 配息評估 ──────────────────────────────────────
+    # ── 5. 配息評估（洪瑞泰：配息率 > 40%）──────────────────
+    # 只會賺錢不配息 → 盈餘可能是帳面的，現金沒有真的進來
     div_yield = data.get("dividend_yield") or 0
+    payout    = data.get("payout_ratio")
     result["has_dividend"] = div_yield > 0
     result["dividend_pct"] = f"{div_yield*100:.2f}%" if div_yield else "無配息"
+    result["payout_ratio"] = payout
+    if payout is not None:
+        payout_ok = payout >= PAYOUT_MIN         # 有數字 → 照門檻
+    else:
+        payout_ok = div_yield > 0                # 沒數字但有配息 → 資料缺，放行；完全不配息 → 擋
+    result["payout_pass"] = payout_ok
 
     # ── 6. 綜合訊號 ──────────────────────────────────────
-    # 訊號邏輯（洪瑞泰）：
-    #   BUY  = ROE達標 + EPS正 + 盈再率<80% + 現價<=俗價
-    #   WATCH= ROE達標 + EPS正 + 盈再率<80% + 俗價<現價<=合理價
-    #   HOLD = 現價 在合理價~貴價之間
-    #   SELL = 現價 >= 貴價
-    #   SKIP = 基本面不達標（含盈再率>=80% 的便宜地雷）
-    # 盈再率關：>=80%（非金融）= 吃資本爛生意，不給 BUY/WATCH（洪瑞泰核心）
+    # 訊號邏輯（洪瑞泰，2026-07-31 校正：拿掉合理價、補 ROE 穩定與配息率）：
+    #   品質關 = ROE當年≥15% + ROE近4年至少3年達標 + EPS正 + 盈再率<80% + 配息率≥40%
+    #   BUY  = 品質關過 + 現價 <= 俗價
+    #   WATCH= 品質關過 + 俗價 < 現價 <= 貴價
+    #   SELL = 現價 > 貴價
+    #   SKIP = 品質關沒過（含盈再率地雷、只賺不配、ROE 只有今年好看）
     rr = data.get("reinvest_ratio")
     reinvest_ok = is_financial or rr is None or rr < 0.80
+    roe_stable  = roe_pass_years >= ROE_YEARS          # 近 4 年至少 3 年 ROE ≥ 15%
+    quality_ok  = (roe_pass_current and roe_stable and eps > 0
+                   and reinvest_ok and payout_ok)
+    result["roe_stable"]  = roe_stable
+    result["quality_ok"]  = quality_ok
+
     signal = "SKIP"
-    if roe_pass_current and eps > 0:
-        if price and cheap_price and exp_price and fair_price:
-            if price <= cheap_price:
-                signal = "BUY" if reinvest_ok else "SKIP"
-            elif price <= fair_price:
-                signal = "WATCH" if reinvest_ok else "SKIP"
-            elif price < exp_price:
-                signal = "HOLD"
-            else:
-                signal = "SELL"
-        else:
-            signal = "DATA_MISSING"
+    if price and cheap_price and exp_price:
+        if price > exp_price:
+            signal = "SELL"                            # 太貴一律先講，不管品質
+        elif quality_ok:
+            signal = "BUY" if price <= cheap_price else "WATCH"
+    elif roe_pass_current and eps > 0:
+        signal = "DATA_MISSING"
 
     signal_emoji = {
         "BUY":          "🟢 低於俗價，可買進",
-        "WATCH":        "🟡 俗價~合理價，觀察",
-        "HOLD":         "🔵 合理價~貴價，持有",
+        "WATCH":        "🟡 俗價~貴價，觀察",
         "SELL":         "🔴 高於貴價，考慮賣出",
-        "SKIP":         "⬜ 基本面不達標",
+        "SKIP":         "⬜ 品質關沒過",
         "DATA_MISSING": "❓ 資料不足",
     }.get(signal, signal)
 

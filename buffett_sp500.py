@@ -26,7 +26,7 @@ def stage1_prefilter(min_market_cap: float, max_candidates: int) -> list:
     """Stage 1: TV snapshot 全市場 → PE≤15 + ROE≥15% 候選清單"""
     print("=" * 70)
     print(f"  Plan C - Stage 1: TV-Screener 預篩")
-    print(f"  市值 ≥ ${min_market_cap:,.0f}, ROE ≥ {ROE_MIN*100:.0f}%, PE ≤ {PE_FAIR}")
+    print(f"  市值 ≥ ${min_market_cap:,.0f}, ROE ≥ {ROE_MIN*100:.0f}%, PE ≤ {PE_EXPENSIVE}")
     print("=" * 70)
 
     t0 = time.time()
@@ -45,10 +45,10 @@ def stage1_prefilter(min_market_cap: float, max_candidates: int) -> list:
     before = len(df)
     df = df[(df['roe_current'] >= ROE_MIN) & (df['eps_ttm'] > 0)].copy()
     df['pe_implied'] = df['price'] / df['eps_ttm']
-    df = df[df['pe_implied'] <= PE_FAIR]   # 還在合理價以下
+    df = df[df['pe_implied'] <= PE_EXPENSIVE]   # 2026-07-31：對齊貴價線（原為合理價 20，會讓 PE20~30 永遠進不了 WATCH）
     df = df.sort_values('pe_implied')
 
-    print(f"[篩選] {before} → {len(df)} 檔（ROE ≥ 15% + PE ≤ {PE_FAIR}）")
+    print(f"[篩選] {before} → {len(df)} 檔（ROE ≥ 15% + PE ≤ {PE_EXPENSIVE}）")
 
     tickers = df['ticker'].head(max_candidates).tolist()
     print(f"[取樣] PE 最低 {len(tickers)} 檔進入 Stage 2\n")
@@ -59,7 +59,7 @@ def stage1_prefilter_tw(min_market_cap: float, max_candidates: int) -> list:
     """Stage 1（台股）：TV taiwan snapshot → PE≤合理 + ROE≥15% 候選（.TW 後綴）"""
     print("=" * 70)
     print(f"  台股 Stage 1: TV-Screener 預篩（TWSE+TPEX）")
-    print(f"  市值 ≥ NT${min_market_cap:,.0f}, ROE ≥ {ROE_MIN*100:.0f}%, PE ≤ {PE_FAIR}")
+    print(f"  市值 ≥ NT${min_market_cap:,.0f}, ROE ≥ {ROE_MIN*100:.0f}%, PE ≤ {PE_EXPENSIVE}")
     print("=" * 70)
     t0 = time.time()
     count, df = data_tv.get_buffett_snapshot_taiwan(
@@ -71,9 +71,9 @@ def stage1_prefilter_tw(min_market_cap: float, max_candidates: int) -> list:
     before = len(df)
     df = df[(df['roe_current'] >= ROE_MIN) & (df['eps_ttm'] > 0)].copy()
     df['pe_implied'] = df['price'] / df['eps_ttm']
-    df = df[df['pe_implied'] <= PE_FAIR]
+    df = df[df['pe_implied'] <= PE_EXPENSIVE]   # 2026-07-31：對齊貴價線（原為合理價 20，會讓 PE20~30 永遠進不了 WATCH）
     df = df.sort_values('pe_implied')
-    print(f"[篩選] {before} → {len(df)} 檔（ROE ≥ 15% + PE ≤ {PE_FAIR}）")
+    print(f"[篩選] {before} → {len(df)} 檔（ROE ≥ 15% + PE ≤ {PE_EXPENSIVE}）")
     tickers = df['ticker'].head(max_candidates).tolist()
     print(f"[取樣] PE 最低 {len(tickers)} 檔進入 Stage 2\n")
     return tickers
@@ -133,7 +133,7 @@ def stage3_summary(results: list):
     print("=" * 70)
     print(f"  🟢 BUY (現價 ≤ 俗價): {len(buy)} 檔")
     print(f"     └─ 含 ✅ 鐵桿（盈再 < 40%): {len(hong_buy)} 檔")
-    print(f"  🟡 WATCH (俗價~合理價): {len(watch)} 檔")
+    print(f"  🟡 WATCH (俗價~貴價): {len(watch)} 檔")
     print(f"     └─ 含 ✅ 鐵桿: {len(hong_watch)} 檔")
 
     if hong_buy:
