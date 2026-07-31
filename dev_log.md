@@ -152,3 +152,77 @@ yfinance `payoutRatio` **只算現金股利不算買回**（蘋果 2025 買回 >
 
 **教訓**：外部 API 的 404/例外若只印 SKIP，會偽裝成正常的業務結果。
 台股 TWSE/TPEX 後綴不同是 yfinance 常見坑。
+
+---
+
+## 2026-07-31 — 看板判讀層搬回本機（Max plan），Actions 不再呼叫 LLM
+
+### 起因：先查帳單，不憑印象
+
+用戶問「看板每日產業評論具體是什麼？可以改 Max plan 嗎？」
+我先答「Flash 很便宜，搬家不划算」，用戶要求**查真實花費** —— 結果打臉兩次。
+
+**查法（可重用）**：BigQuery billing export
+`data-collector-489107.billing_export.gcp_billing_export_v1_01A5A5_21B1E4_017086`，
+`bq` 已登入可直接查。按 `project.name` + `sku.description` + 日期分組。
+
+**歸因鐵證**：`gemini 3 flash` 花費在 **7/20、7/26、7/27 歸零**，
+那正好是週日/週一 —— cron 是 `2-6`（週二~週六）。不是統計相關，是完全對應。
+
+| 日 | 星期 | 看板 |
+|---|---|---|
+| 7/23 | 四 | NT$23.40 |
+| 7/26 | **日** | **NT$0.68** |
+| 7/27 | **一** | **NT$0.00** |
+| 7/28 | 二 | NT$25.15 |
+
+→ **每運行日 NT$24 × 21 日 ≈ NT$500/月**
+
+### 🔴 我犯的兩個錯
+
+1. **幣值**：帳單 `currency` 欄位是 **TWD**，我當成 USD 又乘 32.3，
+   把 NT$500/月 講成 **NT$16,000/月**，並基於錯的數字給了「搬家省 19 萬」的建議。
+   舊記憶 `gemini_cost_spike_2026-07` 同一個錯誤（寫「$2,027.86 USD ≈ NT$66,000」）
+   已沿用兩週，一併更正。
+2. **7/18 的省錢預測錯 170 倍**：當時用牌價推算「Flash 便宜 33 倍 → NT$3/月」，
+   實測只省 **3.7 倍**（NT$89/日 → NT$24/日）。實付單價 **NT$95.6/百萬 output token**，
+   遠高於牌價 $0.30。原因是 `main.py` 的 agent pipeline 每檔股票跑好幾輪，
+   10 天燒 170 萬 output token。**換模型省多少要事後查帳單，不能用牌價推算。**
+
+用戶在知道實際只有 NT$500/月 後，仍決定搬。
+
+### 實作
+
+```
+本機 08:30（接在 ClaudeMorningBriefing 之後，週二~週六）
+  briefing.ps1 → 推完早報 → board_analyze_daily.cmd
+      us_analyze.py  49 檔 → 依鏈分批 7 次 claude → reports/report_*.md
+      tw_analyze.py  37 檔 → 依鏈分批 7 次 claude → tw_analysis.json
+      git push board
+Actions 09:00（cron 0 0 → 0 1）
+  只讀報告 → board_html.py → 發佈 Pages（不再呼叫任何 LLM）
+```
+
+- **新增 `llm_board.py`**：判讀層轉接器。prompt **走 stdin** 不走命令列參數
+  （避開長度上限與跳脫字元地雷）。`BOARD_LLM=claude|gemini` 可切，Gemini 留備援。
+- **新增 `us_analyze.py`** 取代 `main.py`：yfinance 算均線/乖離率/趨勢強度/量比（免費），
+  判讀依鏈分批。輸出必須符合 `board_html.parse_report()` 契約 —— 已實測驗證：
+  摘要 49 筆評分抓到、56 個個股區塊、CHAIN_MAP 49/49 對得到。
+- **改 `tw_analyze.py`**：`analyze()` 拆成 `collect()` + `analyze_chain()`，
+  呼叫數 **86 次/日 → 14 次/日**。
+- **改 `tw-board.yml`**：移除美股/台股兩個 LLM step（含 GEMINI_API_KEY / TAVILY_API_KEYS），
+  改為檢查本機產出是否存在；報告逾 3 天未更新發 `::warning::`。
+- **改 `briefing.ps1`**：附加呼叫，放在 Telegram 推送**之後**，兩者失敗互不影響。
+  附加時用 `UTF8Encoding($false)` + `AppendAllText`，避免 PS5.1 的 `Add-Content`
+  在檔案中間再插一個 BOM（檔首既有 BOM 已驗證未破壞）。
+
+### 踩到的坑
+
+- **跨鏈重複**：NVDA/AMD/MU/AMZN/ANET/TER 同時屬於多條鏈，
+  49 個代號會產出 **56 個 `##` 區塊** → 看板同一檔渲染兩張卡。已按評分取高者去重。
+
+### 取捨（用戶知情）
+
+- 放棄 Tavily 新聞層（輿情情緒/風險警報/利好催化/最新動態），
+  改為精簡的「結論 + 理由 + 觀察條件 + 風險 + 空手者/持有者建議」。
+- **電腦沒開機就沒有當日判讀**；Actions 沿用前一日報告並發 warning。

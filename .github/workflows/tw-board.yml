@@ -33,13 +33,21 @@ jobs:
       # reports/report_*.md 與 tw_analysis.json 後 push 上來，本 workflow 只負責讀。
       # 本 job 自此不再呼叫任何 LLM，也不需要 GEMINI_API_KEY / TAVILY_API_KEYS。
       - name: 確認本機判讀產出存在
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           f=$(ls -t reports/report_*.md 2>/dev/null | head -1)
           if [ -z "$f" ]; then echo "::error::找不到任何 reports/report_*.md"; exit 1; fi
           echo "採用報告：$f（$(date -r "$f" '+%Y-%m-%d %H:%M')）"
-          # 報告超過 3 天沒更新 → 本機排程可能沒跑（電腦沒開機），出 HTML 但留下警告
-          if [ $(( ($(date +%s) - $(date -r "$f" +%s)) / 86400 )) -ge 3 ]; then
-            echo "::warning::報告已 3 天以上未更新，本機排程可能沒執行"
+          # 報告超過 2 天沒更新 → 本機排程沒跑（電腦沒開機）。
+          # ::warning:: 只會躺在 Actions log 裡沒人看，所以直接推 Telegram。
+          age=$(( ($(date +%s) - $(date -r "$f" +%s)) / 86400 ))
+          if [ "$age" -ge 2 ]; then
+            msg="⚠️ <b>看板判讀已 ${age} 天未更新</b>%0A本機排程 BoardAnalyzeDaily（08:30）可能沒執行，電腦沒開機？%0A今天的看板用的是 $(basename "$f") 的舊判讀。"
+            echo "::warning::報告已 $age 天未更新，已推 Telegram"
+            curl -sS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+              -d chat_id="${TELEGRAM_CHAT_ID}" -d parse_mode=HTML -d text="$msg" >/dev/null || true
           fi
 
       - name: 產 HTML 看板 + 推反轉警示 + 附完整看板
