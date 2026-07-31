@@ -558,16 +558,27 @@ def main():
   <b>怎麼看</b>：線<span style="color:#3ddc84">綠</span>＝順勢偏多、線<span style="color:#ff5c5c">紅</span>＝偏空；<b>顏色一翻就是趨勢反轉訊號</b>。比單看均線更快抓到轉折。<br>
   <span class="sub">圖例可點：預設顯示 收盤＋MA20＋SuperTrend，想看 MA5/MA10 點圖例打開即可。SuperTrend 為趨勢輔助，非買賣建議。</span></p>
 </div>
-<div class="sub" style="margin-top:20px">產生時間 {datetime.now():%Y-%m-%d %H:%M} · 美股 yfinance+Gemini / 台股 FinMind+Gemini · 守備清單客觀篩選(市值+成長+進場資金流)</div>
+<div class="sub" style="margin-top:20px">產生時間 {datetime.now():%Y-%m-%d %H:%M} · 美股 yfinance / 台股 FinMind · 判讀 Claude(本機) · 守備清單客觀篩選(市值+成長+進場資金流)</div>
 </div><script>const CHARTS={charts_json};{JS}
 mkt('US');  // 初始藏台股卡片
 </script></body></html>"""
 
-    out = args.output or os.path.join(OBIS, f"{date}_美台股看板.html")
-    if os.path.dirname(out):
-        os.makedirs(os.path.dirname(out), exist_ok=True)
-    open(out, "w", encoding="utf-8").write(html)
-    print(f"✅ HTML 看板已存:{out}")
+    # 2026-07-31 修：原本是 `args.output or OBIS路徑`，workflow 一定會帶 -o docs/index.html，
+    # 所以 obis 那份「永遠不會產生」（巴菲特頁/賽馬頁都是寫兩份，只有看板漏掉）。
+    # 改成兩份都寫：docs/ 給 GitHub Pages、obis 給 Google Drive 手機/外出看。
+    # obis 固定檔名（不帶日期），才不會每天長一個新檔、也才有穩定連結。
+    targets = [args.output] if args.output else []
+    targets.append(os.path.join(OBIS, "美台股看板.html"))
+    for out in targets:
+        if not out:
+            continue
+        try:
+            if os.path.dirname(out):
+                os.makedirs(os.path.dirname(out), exist_ok=True)
+            open(out, "w", encoding="utf-8").write(html)
+            print(f"✅ HTML 看板已存:{out}")
+        except Exception as e:
+            print(f"⚠️ 寫入 {out} 失敗（跳過）:{e}")   # Actions 上沒有 obis 路徑，正常
 
 
 if __name__ == "__main__":
