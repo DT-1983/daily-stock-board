@@ -2,7 +2,9 @@ name: 美股晨會看板（HTML + 反轉警示 Telegram）
 
 on:
   schedule:
-    - cron: '0 0 * * 2-6'    # UTC 00:00 = 台灣 08:00（美股收盤後）週二~週六早上
+    # UTC 01:00 = 台灣 09:00。本機排程 08:30 先跑判讀層並 push，這裡 09:00 才讀報告出 HTML。
+    # 2026-07-31：LLM 判讀搬本機（Max plan），本 workflow 已不呼叫任何 LLM。
+    - cron: '0 1 * * 2-6'
   workflow_dispatch:          # 可手動觸發
 
 permissions:
@@ -24,37 +26,21 @@ jobs:
           pip install -r requirements.txt
           pip install opencc-python-reimplemented markdown
 
-      - name: 跑美股分析
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          LLM_CHANNELS: gemini
-          LLM_GEMINI_PROTOCOL: gemini
-          LLM_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          # 2026-07-18 改：從 gemini-3.1-pro-preview 降級為 gemini-3-flash-preview
-          # 原因：7/1-7/17 GCP 帳單「Human design」project 燒 $1,442.80，主犯是 3.1-pro output token
-          # Flash 便宜 30 倍（output $0.30 vs Pro $10 per 1M tokens）；股票分析 Flash 品質已夠用
-          LLM_GEMINI_MODELS: gemini-3-flash-preview
-          LITELLM_MODEL: gemini/gemini-3-flash-preview
-          GENERATION_BACKEND: litellm
-          TAVILY_API_KEYS: ${{ secrets.TAVILY_API_KEYS }}
-          YFINANCE_PRIORITY: '0'
-          EFINANCE_PRIORITY: '99'
-          MARKET_REVIEW_ENABLED: 'true'
-          MARKET_REVIEW_REGION: us
-          REPORT_LANGUAGE: zh
-          REPORT_TYPE: simple
-          SEARXNG_PUBLIC_INSTANCES_ENABLED: 'true'
-          STOCK_INDEX_REMOTE_UPDATE_ENABLED: 'false'
+      # ── 判讀層已搬本機（2026-07-31）──────────────────────────────
+      # 原本這裡跑 `main.py`（美股 49 檔）+ `tw_analyze.py`（台股 37 檔），
+      # 用 Gemini 3 Flash，每個運行日約 NT$24 → 約 NT$500/月。
+      # 現改由本機排程 BoardAnalyzeDaily（08:30）以 Max plan headless claude 產出
+      # reports/report_*.md 與 tw_analysis.json 後 push 上來，本 workflow 只負責讀。
+      # 本 job 自此不再呼叫任何 LLM，也不需要 GEMINI_API_KEY / TAVILY_API_KEYS。
+      - name: 確認本機判讀產出存在
         run: |
-          export STOCK_LIST=$(python -c "import json;d=json.load(open('screen_result.json',encoding='utf-8'));print(','.join(sorted({x['code'] for l in d['us'].values() for x in l})))")
-          echo "美股守備清單（$(echo $STOCK_LIST | tr ',' '\n' | wc -l) 檔）: $STOCK_LIST"
-          python main.py --no-notify --force-run
-
-      - name: 跑台股分析（FinMind 籌碼 + Gemini）
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          FINMIND_TOKEN: ${{ secrets.FINMIND_TOKEN }}
-        run: python tw_analyze.py || echo "台股分析失敗，跳過"
+          f=$(ls -t reports/report_*.md 2>/dev/null | head -1)
+          if [ -z "$f" ]; then echo "::error::找不到任何 reports/report_*.md"; exit 1; fi
+          echo "採用報告：$f（$(date -r "$f" '+%Y-%m-%d %H:%M')）"
+          # 報告超過 3 天沒更新 → 本機排程可能沒跑（電腦沒開機），出 HTML 但留下警告
+          if [ $(( ($(date +%s) - $(date -r "$f" +%s)) / 86400 )) -ge 3 ]; then
+            echo "::warning::報告已 3 天以上未更新，本機排程可能沒執行"
+          fi
 
       - name: 產 HTML 看板 + 推反轉警示 + 附完整看板
         env:
