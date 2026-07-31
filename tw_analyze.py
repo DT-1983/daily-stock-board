@@ -1,20 +1,21 @@
-"""台股 AI 分析模組:FinMind 抓資料(股價+法人籌碼+月營收) + Gemini 決策 → tw_analysis.json
+"""台股 AI 分析模組:FinMind 抓資料(股價+法人籌碼+月營收) + AI 決策 → tw_analysis.json
 
 台股自建版（daily_stock_analysis 不支援台股）。輸出給 board_html.py 用。
 用法:python tw_analyze.py
-需環境變數 GEMINI_API_KEY
+
+2026-07-31：判讀層改走 llm_board（本機 Claude headless，Max plan 零費用），
+Gemini 退為備援；同時把「一檔一次呼叫」改成「一條鏈一次呼叫」，
+37 檔從 37 次呼叫降到 7 次。
 """
 import os
-import re
 import json
 from datetime import datetime, timedelta
 import requests
-import litellm
+
+from llm_board import ask_json
 
 FINMIND = "https://api.finmindtrade.com/api/v4/data"
 FINMIND_TOKEN = os.environ.get("FINMIND_TOKEN", "")   # 可選，提高額度
-GEMINI_KEY = os.environ.get("GEMINI_API_KEY", "")
-MODEL = os.environ.get("TW_LLM_MODEL", "gemini/gemini-3-flash-preview")
 
 # 台股守備清單：優先讀客觀篩選結果 screen_result.json（每鏈 top N），無則用 fallback
 def _load_tw_watch():
@@ -68,7 +69,8 @@ def _fin_latest(fin):
     return eps, gm
 
 
-def analyze(code, name, chain):
+def collect(code, name, chain):
+    """抓資料 + 組 AI 輸入脈絡。回 (ctx 字串, meta dict)，抓不到回 None。"""
     price, inst, rev, per, fin = fetch(code)
     if not price:
         return None
@@ -95,26 +97,7 @@ def analyze(code, name, chain):
            f"均線: MA5 {ma(5)} MA10 {ma(10)} MA20 {ma(20)}｜近10日收盤 {closes[-10:]}\n"
            f"籌碼: 外資近12日 {foreign} 張、投信 {trust} 張\n"
            f"基本面: 月營收YoY {rev_yoy}%、EPS {eps}、毛利率 {gm}%、PER {pe_ctx}、殖利率 {yld}%")
-    prompt = (f"你是台股短線分析師。以下是【題材趨勢股守備清單】(待進場標的,非持股)。\n"
-              f"判斷以**均線趨勢 + 法人籌碼**為主、營收次之;估值(PER)僅參考,題材股高 PER 常態,別單因估值/漲多降評。\n"
-              f"**訊號規則(預設觀望)**:\n"
-              f"- 買進:均線多頭排列 **且** 法人買超(雙多才給)\n"
-              f"- 賣出:均線空頭 **且** 法人持續大賣 **且** 跌破關鍵支撐(三者俱備才給,否則不要輕易賣出)\n"
-              f"- 其餘一律觀望(包含弱勢但未明確破底、或多空訊號混雜)\n用繁體中文台灣用語。\n{ctx}\n\n"
-              f"只回 JSON:\n"
-              f'{{"signal":"買進或賣出或觀望","score":0到100整數,"oneliner":"一句話決策30字內",'
-              f'"reason":"理由80字內提到籌碼與均線","risk":"主要風險40字內",'
-              f'"buy_point":"理想買點(價位或條件)","stop_loss":"停損位(價位)","target":"目標價位",'
-              f'"checklist":["檢查項1正or負","檢查項2","檢查項3"]}}')
-    try:
-        resp = litellm.completion(model=MODEL, api_key=GEMINI_KEY, temperature=0.3,
-                                  messages=[{"role": "user", "content": prompt}])
-        m = re.search(r"\{.*\}", resp.choices[0].message.content, re.S)
-        d = json.loads(m.group(0))
-    except Exception as e:
-        print(f"  [{code}] LLM 失敗:{e}")
-        d = {"signal": "觀望", "score": 50, "oneliner": "資料分析失敗", "reason": "", "risk": ""}
-    d.update({
+    meta = {
         "code": code, "name": name, "chain": chain, "last": last,
         "ma5": ma(5), "ma10": ma(10), "ma20": ma(20),
         "foreign": foreign, "trust": trust, "rev_yoy": rev_yoy,
@@ -123,23 +106,72 @@ def analyze(code, name, chain):
         "eps": eps, "gross_margin": gm,
         "pe": (pe if isinstance(pe, (int, float)) and 0 < pe < 120 else None),
         "pb": pb, "yield": yld,
-        "emoji": SIG_EMOJI.get(d.get("signal", "觀望"), "⚪"),
         "dates": [x["date"][5:] for x in price[-60:]],
         "closes": closes[-60:],
         "highs": [x["max"] for x in price[-60:]],
         "lows": [x["min"] for x in price[-60:]],
-    })
-    return d
+    }
+    return ctx, meta
+
+
+PROMPT_HEAD = """你是台股短線分析師。以下是【題材趨勢股守備清單】(待進場標的,非持股)。
+
+判斷以**均線趨勢 + 法人籌碼**為主、營收次之;估值(PER)僅參考,題材股高 PER 常態,
+別單因估值/漲多降評。
+
+**訊號規則(預設觀望)**:
+- 買進:均線多頭排列 **且** 法人買超(雙多才給)
+- 賣出:均線空頭 **且** 法人持續大賣 **且** 跌破關鍵支撐(三者俱備才給,否則不要輕易賣出)
+- 其餘一律觀望(包含弱勢但未明確破底、或多空訊號混雜)
+
+用繁體中文台灣用語。**只根據下方數據判斷,不要編造新聞或財報數字。**
+
+請針對每一檔輸出,只回 JSON 陣列,不要任何說明文字:
+[{"code":"代號","signal":"買進或賣出或觀望","score":0到100整數,
+  "oneliner":"一句話決策30字內","reason":"理由80字內提到籌碼與均線","risk":"主要風險40字內",
+  "buy_point":"理想買點(價位或條件)","stop_loss":"停損位(價位)","target":"目標價位",
+  "checklist":["檢查項1","檢查項2","檢查項3"]}]
+
+【本批標的】
+"""
+
+
+def analyze_chain(chain, lst):
+    """一條鏈一次 AI 呼叫（原本是一檔一次，37 檔 → 7 次）。"""
+    ctxs, metas = [], []
+    for code, name in lst:
+        got = collect(code, name, chain)
+        if not got:
+            print(f"  [{code}] FinMind 無資料，跳過")
+            continue
+        ctxs.append(got[0])
+        metas.append(got[1])
+    if not metas:
+        return []
+    print(f"  → AI 判讀 {len(metas)} 檔 …", end=" ", flush=True)
+    try:
+        got = ask_json(PROMPT_HEAD + "\n\n".join(ctxs))
+        by = {str(x.get("code", "")): x for x in got}
+        print("完成")
+    except Exception as e:
+        print(f"失敗：{e}")
+        by = {}
+    for m in metas:
+        d = by.get(m["code"], {})
+        m.update({k: d.get(k) for k in
+                  ("reason", "risk", "buy_point", "stop_loss", "target", "checklist")})
+        m["signal"] = d.get("signal", "觀望")
+        m["score"] = d.get("score", 50)
+        m["oneliner"] = d.get("oneliner", "資料分析失敗")
+        m["emoji"] = SIG_EMOJI.get(m["signal"], "⚪")
+    return metas
 
 
 def main():
     results = []
     for chain, lst in TW_WATCH.items():
-        for code, name in lst:
-            print(f"分析 {code} {name} ({chain})...")
-            r = analyze(code, name, chain)
-            if r:
-                results.append(r)
+        print(f"[{chain}] {len(lst)} 檔")
+        results += analyze_chain(chain, lst)
     out = "tw_analysis.json"
     json.dump(results, open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(f"\n✅ 台股分析完成 {len(results)} 檔 → {out}")
