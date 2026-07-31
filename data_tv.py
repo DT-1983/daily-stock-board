@@ -159,5 +159,8 @@ def get_buffett_snapshot_taiwan(
     df['roe_current'] = df['roe_current_pct'] / 100.0
     df['dividend_yield'] = df['dividend_yield_pct'] / 100.0
     df['debt_to_equity_pct'] = df['debt_to_equity_ratio'] * 100
-    df['ticker'] = df['name'].astype(str) + '.TW'      # yfinance 台股後綴
+    # yfinance 台股後綴：上市(TWSE)=.TW、上櫃(TPEX)=.TWO
+    # 2026-07-31 修：原本全掛 .TW，上櫃股一律 404（元太8069/鈊象3293/寶雅5904…被靜默丟掉）
+    df['ticker'] = (df['name'].astype(str)
+                    + df['exchange'].map({'TWSE': '.TW', 'TPEX': '.TWO'}).fillna('.TW'))
     return count, df

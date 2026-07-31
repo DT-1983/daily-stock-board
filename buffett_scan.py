@@ -82,7 +82,7 @@ def main():
         if zh:
             for tk, v in out.items():
                 if v.get("market") == "TW":
-                    code = tk[:-3] if tk.endswith(".TW") else tk
+                    code = tk.rsplit(".", 1)[0]           # .TW / .TWO 都剝掉
                     v["name"] = zh.get(code, v.get("name"))
         print(f"── 台股 BUY/WATCH：{n_tw} 檔（中文名 {len(zh)} 檔對照）")
 
