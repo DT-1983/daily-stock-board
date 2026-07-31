@@ -46,7 +46,7 @@ def _collect(results, market, today, out):
             "sector": r.get("sector"), "rank": r.get("leader_rank"),
             "eps": r.get("eps_ttm"), "roe": r.get("roe_current"),
             "payout": r.get("payout_ratio"), "reinvest": r.get("reinvest_ratio"),
-            "cheap": r.get("cheap_price"), "fair": r.get("fair_price"),
+            "cheap": r.get("cheap_price"), "roe_years": r.get("roe_pass_years"),
             "expensive": r.get("exp_price"), "trap_flags": r.get("trap_flags"),
             "updated": today,
         }
