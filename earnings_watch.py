@@ -24,8 +24,13 @@ from datetime import datetime, timezone, timedelta
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
+import logging
 import requests
 import yfinance as yf
+
+# ETF 沒有財報，yfinance 每檔都會 log 一行 "No earnings dates found"，
+# 那是預期行為不是錯誤 → 壓成 CRITICAL 以免 log 被雜訊蓋掉。
+logging.getLogger("yfinance").setLevel(logging.CRITICAL)
 
 
 def _load_env(path=".env"):
@@ -55,20 +60,36 @@ AFTER_DAYS = 3      # 公布後幾天內仍算「剛公布」
 
 # ────────────────────────────── universe ──────────────────────────────
 
-def _personal() -> dict:
-    """實際持股（assets-dashboard，只取 owner=Leo）。這是最該提醒的一群。"""
+# 2026-08-03 用戶指定：美股只追這 4 檔（原本 49 檔守備清單全追太雜）
+US_WATCH = {"TSLA": "Tesla", "NVDA": "NVIDIA", "AMD": "AMD", "MRVL": "Marvell"}
+
+
+def _holdings(owners=None, category=None) -> dict:
+    """assets-dashboard 的實際持股。
+    owners=None 代表全部人（Leo + 小孩）；category='台股' 只取台股。
+    回 {ticker: (name, owner)}。"""
     out = {}
     try:
         for h in json.load(open(HOLDINGS, encoding="utf-8")):
-            if h.get("owner") != "Leo":
+            ow = h.get("owner")
+            if owners is not None and ow not in owners:
+                continue
+            if category and h.get("category") != category:
                 continue
             tk = h["ticker"]
             if h.get("category") == "台股" and not tk.endswith((".TW", ".TWO")):
-                tk = f"{tk}.TW"          # TWSE；上櫃股在 assets-dashboard 目前沒區分
-            out[tk] = h.get("name") or tk
+                tk = f"{tk}.TW"
+            # 同一檔多人持有 → 保留第一個 owner，顯示時再標「多人」
+            if tk not in out:
+                out[tk] = (h.get("name") or tk, ow)
     except Exception as e:
-        print(f"  [personal] 讀不到實際持股：{e}")
+        print(f"  [holdings] 讀不到實際持股：{e}")
     return out
+
+
+def _personal() -> dict:
+    """只有 Leo 自己的持股（給 ⭐ 標記用）。"""
+    return {k: v[0] for k, v in _holdings(owners={"Leo"}).items()}
 
 
 def _board() -> dict:
@@ -96,7 +117,17 @@ def _buffett() -> dict:
 
 
 def build_universe(which: str) -> dict:
-    """回 {ticker: name}。優先順序：實際持股 > 守備清單 > 巴菲特清單（名稱不覆蓋）。"""
+    """回 {ticker: name}。
+
+    holdings（預設，2026-08-03 用戶指定）：
+        台股＝全部實際持股（Leo + 小孩，因為小孩的也想被提醒）
+        美股＝只有 US_WATCH 那 4 檔（TSLA/NVDA/AMD/MRVL）
+    board / all 保留備用，範圍較大。
+    """
+    if which == "holdings":
+        uni = {k: v[0] for k, v in _holdings(category="台股").items()}
+        uni.update(US_WATCH)
+        return uni
     uni = {}
     parts = {"personal": [_personal], "board": [_personal, _board],
              "all": [_personal, _board, _buffett]}[which]
@@ -109,7 +140,11 @@ def build_universe(which: str) -> dict:
 # ────────────────────────────── 財報日期 ──────────────────────────────
 
 def earnings_info(ticker: str, tries: int = 2):
-    """回 {next_date, days_to, last_date, last_eps, surprise} 或 None。"""
+    """回 {next_date, days_to, last_date, last_eps, surprise} 或 None。
+
+    ETF（006208/009816 這類）沒有財報，yfinance 會噴 "No earnings dates found,
+    symbol may be delisted" 到 stderr。那是正常的、不是錯誤，靜音掉避免 log 誤導。
+    """
     for a in range(tries):
         try:
             df = yf.Ticker(ticker).get_earnings_dates(limit=12)
@@ -145,6 +180,15 @@ def earnings_info(ticker: str, tries: int = 2):
 
 
 # ────────────────────────────── state ──────────────────────────────
+
+def _mark(tk, personal, kids):
+    """⭐ 自己持股 / 👦 小孩持股 / 全形空白 只是觀察清單。"""
+    return "⭐ " if tk in personal else ("👦 " if tk in kids else "　")
+
+
+def _rank(mark):
+    return {"⭐ ": 0, "👦 ": 1}.get(mark, 2)
+
 
 def load_state() -> dict:
     try:
@@ -199,7 +243,8 @@ def push(msg: str) -> bool:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--universe", default="board", choices=["personal", "board", "all"])
+    ap.add_argument("--universe", default="holdings",
+                    choices=["holdings", "personal", "board", "all"])
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--max-infographics", type=int, default=3,
                     help="單次最多產幾份懶人包（每份要跑 LLM，避免一次爆量）")
@@ -207,7 +252,9 @@ def main():
 
     uni = build_universe(args.universe)
     print(f"追蹤 {len(uni)} 檔（universe={args.universe}）")
-    personal = set(_personal())
+    personal = set(_personal())                       # Leo 自己 → ⭐
+    kids = {k for k, v in _holdings().items() if v[1] != "Leo"} - personal   # 小孩 → 👦
+    held = personal | kids                            # 有實際持有的才自動產懶人包
     st = load_state()
     today = datetime.now(TW).date()
     today_s = today.isoformat()
@@ -226,7 +273,7 @@ def main():
         if dt_ is not None and 0 <= dt_ <= AHEAD_DAYS:
             key = f'{tk}@{info["next_date"]}'
             if st["upcoming"].get(key) != "sent":
-                upcoming.append((tk, nm, info, tk in personal))
+                upcoming.append((tk, nm, info, _mark(tk, personal, kids)))
                 st["upcoming"][key] = "sent"
 
         # B. 剛公布（同一個財報日只處理一次）
@@ -234,34 +281,34 @@ def main():
         if ld and 0 <= (today - ld).days <= AFTER_DAYS:
             key = f"{tk}@{ld}"
             if st["reported"].get(key) != "sent":
-                reported.append((tk, nm, info, tk in personal))
+                reported.append((tk, nm, info, _mark(tk, personal, kids)))
                 st["reported"][key] = "sent"
 
     print(f"  即將公布 {len(upcoming)} 檔　剛公布 {len(reported)} 檔")
 
     lines = []
     if upcoming:
-        upcoming.sort(key=lambda r: (not r[3], r[2]["days_to"]))
+        upcoming.sort(key=lambda r: (_rank(r[3]), r[2]["days_to"]))
         lines.append(f"📅 <b>未來 {AHEAD_DAYS} 天要出財報</b>")
-        for tk, nm, info, own in upcoming:
+        for tk, nm, info, mk in upcoming:
             when = "今天" if info["days_to"] == 0 else f'{info["days_to"]} 天後'
-            star = "⭐ " if own else "　"
+            star = mk
             lines.append(f'{star}<b>{tk}</b> {nm}　{info["next_date"]}（{when}）')
 
     if reported:
-        reported.sort(key=lambda r: not r[3])
+        reported.sort(key=lambda r: _rank(r[3]))
         lines.append(f"\n📊 <b>剛公布財報</b>")
         made = 0
-        for tk, nm, info, own in reported:
+        for tk, nm, info, mk in reported:
             eps = f'　EPS {info["last_eps"]:.2f}' if info["last_eps"] is not None else ""
             sp = ""
             if info["surprise"] is not None:
                 ic = "🟢" if info["surprise"] >= 0 else "🔴"
                 sp = f'　{ic} 意外 {info["surprise"]:+.1f}%'
-            star = "⭐ " if own else "　"
+            star = mk
             link = ""
             # 只幫「實際持股」自動產懶人包，守備清單太多會爆量
-            if own and made < args.max_infographics and not args.dry_run:
+            if tk in held and made < args.max_infographics and not args.dry_run:
                 print(f"  產懶人包 {tk} …")
                 p = make_infographic(tk)
                 if p:
@@ -275,7 +322,7 @@ def main():
             save_state(st)
         return
 
-    lines.append("\n<i>⭐＝你的實際持股</i>")
+    lines.append("\n<i>⭐＝你的持股　👦＝小孩持股　·　持股才會自動產懶人包</i>")
     msg = "\n".join(lines)
     print("\n" + "─" * 50)
     print(msg.replace("<b>", "").replace("</b>", "").replace("<i>", "").replace("</i>", ""))
