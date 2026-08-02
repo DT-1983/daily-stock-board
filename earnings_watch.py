@@ -57,6 +57,18 @@ HOLDINGS = r"C:\Users\Mophy\AI\assets-dashboard\data\holdings.json"
 AHEAD_DAYS = 7      # 提前幾天預告
 AFTER_DAYS = 3      # 公布後幾天內仍算「剛公布」
 
+# ── 執行節奏：每季一次，不是每天 ──────────────────────────────────
+# 2026-08-03 用戶指示「財報不用每天跑、每季做一次就可以」。
+# 洪瑞泰是長期投資法（先挑好公司再等便宜），財報每季才更新一次，
+# 天天輪詢 yfinance 只是浪費，也會讓提醒失去份量。
+#
+# 日期對齊「台股財報申報截止日」之後幾天（多數公司已公布）：
+#   Q4/年報 3/31 → 4/5    Q1 5/15 → 5/20
+#   Q2 8/14 → 8/19        Q3 11/14 → 11/19
+# 美股多在 1/4/7/10 月下旬公布，這 4 個時點也都涵蓋得到。
+QUARTER_DAYS = [(4, 5), (5, 20), (8, 19), (11, 19)]
+GRACE_DAYS = 3      # 排定日當天沒開機 → 之後 3 天內補跑仍算數
+
 
 # ────────────────────────────── universe ──────────────────────────────
 
@@ -181,6 +193,30 @@ def earnings_info(ticker: str, tries: int = 2):
 
 # ────────────────────────────── state ──────────────────────────────
 
+def due_today(st: dict):
+    """今天該不該跑（每季一次）。回 (該跑?, 說明字串)。
+
+    排定日當天沒開機的話，GRACE_DAYS 天內補跑仍算數（跟排程的 StartWhenAvailable 同精神），
+    但同一季只會跑一次（用 state 記錄 last_quarter_run）。
+    """
+    today = datetime.now(TW).date()
+    for m, dd in QUARTER_DAYS:
+        try:
+            sched = today.replace(month=m, day=dd)
+        except ValueError:
+            continue
+        delta = (today - sched).days
+        if 0 <= delta <= GRACE_DAYS:
+            key = f"{today.year}-{m:02d}"
+            if st.get("last_quarter_run") == key:
+                return False, f"本季（{key}）已經跑過了"
+            return True, f"本季排定日 {sched}（今天 +{delta} 天）"
+    nxt = min((today.replace(month=m, day=dd) for m, dd in QUARTER_DAYS
+               if today.replace(month=m, day=dd) > today),
+              default=None)
+    return False, f"今天不是季度排定日，下次 {nxt or f'{today.year+1}-04-05'}"
+
+
 def _mark(tk, personal, kids):
     """⭐ 自己持股 / 👦 小孩持股 / 全形空白 只是觀察清單。"""
     return "⭐ " if tk in personal else ("👦 " if tk in kids else "　")
@@ -194,7 +230,7 @@ def load_state() -> dict:
     try:
         return json.load(open(STATE, encoding="utf-8"))
     except Exception:
-        return {"upcoming": {}, "reported": {}}
+        return {"upcoming": {}, "reported": {}, "last_quarter_run": None}
 
 
 def save_state(s: dict):
@@ -246,12 +282,20 @@ def main():
     ap.add_argument("--universe", default="holdings",
                     choices=["holdings", "personal", "board", "all"])
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--force", action="store_true",
+                    help="忽略「每季一次」的節奏限制，立刻跑一次")
     ap.add_argument("--max-infographics", type=int, default=3,
                     help="單次最多產幾份懶人包（每份要跑 LLM，避免一次爆量）")
     args = ap.parse_args()
 
+    st_pre = load_state()
+    ok, why = due_today(st_pre)
+    if not ok and not args.force:
+        print(f"⏭️ 跳過：{why}　（要立刻跑加 --force）")
+        return
+
     uni = build_universe(args.universe)
-    print(f"追蹤 {len(uni)} 檔（universe={args.universe}）")
+    print(f"追蹤 {len(uni)} 檔（universe={args.universe}）　{why}")
     personal = set(_personal())                       # Leo 自己 → ⭐
     kids = {k for k, v in _holdings().items() if v[1] != "Leo"} - personal   # 小孩 → 👦
     held = personal | kids                            # 有實際持有的才自動產懶人包
@@ -317,8 +361,9 @@ def main():
             lines.append(f'{star}<b>{tk}</b> {nm}　{info["last_date"]}{eps}{sp}{link}')
 
     if not lines:
-        print("✅ 今天沒有要提醒的財報")
+        print("✅ 這一季沒有要提醒的財報")
         if not args.dry_run:
+            st["last_quarter_run"] = f"{datetime.now(TW):%Y-%m}"
             save_state(st)
         return
 
@@ -333,6 +378,7 @@ def main():
         return
     if push(msg):
         print("✅ 已推 Telegram")
+    st["last_quarter_run"] = f"{datetime.now(TW):%Y-%m}"
     save_state(st)
 
 

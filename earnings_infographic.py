@@ -10,10 +10,12 @@
     這種「機構級」版面看起來很有說服力，數字錯了會比純文字更誤導。
   · LLM 只負責「敘事層」（亮點/風險/投資邏輯），且 prompt 明確禁止編造數字，
     只能引用下方餵給它的真實數據。
-  · 星級評分**由數據算**（成長性/財務體質/估值/風險由公式決定），
-    只有「競爭護城河」這種無法量化的才交給 LLM。
-  · 評級標章顯示的是 **分析師共識**（yfinance recommendationKey + 目標價 + 分析師人數），
-    明確標示來源，不是本工具自己的買賣建議。
+  · **判斷框架一律用洪瑞泰（Mike桑）巴菲特選股法，不自創指標。**
+    三大關卡（ROE≥15%連續穩定／盈再率<80%／配息率≥40%）＋ 俗貴價（EPS×12 買、×30 賣）
+    ＋ 變壞判定，全部沿用 buffett_screener 的既有實作。
+    2026-08-03 前這裡曾自創「成長性/淨現金FCF/PEG/Beta」星等 —— 那不是洪瑞泰的東西
+    （他明說不聽成長鬼故事、估值只有兩條線），已移除。動這裡前先讀 memory/hongruitai_method.md。
+  · 結論標章是**洪瑞泰結論**（好公司？便宜嗎？），分析師共識降為底部小字參考。
 """
 import os
 import io
@@ -110,42 +112,97 @@ def fetch(ticker: str) -> dict:
 
 # ────────────────────────── 星級評分（由數據算） ──────────────────────────
 
-def _stars(v, thresholds):
-    """thresholds 由高到低對應 5→1 星。v 為 None 回 None（顯示「資料不足」不硬給分）。"""
-    if v is None:
-        return None
-    for i, th in enumerate(thresholds):
-        if v >= th:
-            return 5 - i
-    return 1
-
-
 def score(d: dict) -> dict:
-    rev_g = d["revenue"]["yoy"]
-    fcf = d["fcf"]["cur"]
-    cash, debt = d["cash"], d["debt"]
-    net_cash = (cash - debt) if (cash is not None and debt is not None) else None
-    peg, fwd_pe, beta = d["peg"], d["fwd_pe"], d["beta"]
+    """洪瑞泰三大關卡 + 俗貴價 + 變壞判定。
 
-    growth = _stars(rev_g, [25, 15, 8, 3])
-    # 財務體質：淨現金為正且 FCF 為正最好；FCF 轉負扣分
-    health = None
-    if net_cash is not None:
-        health = 5 if net_cash > 0 else 2
-        if fcf is not None and fcf < 0:
-            health = max(1, health - 2)      # 燒錢中，體質分數下修
-    # 估值：PEG 越低越好（PEG 缺值改看 forward P/E）
-    if peg is not None and peg > 0:
-        val = _stars(-peg, [-1.0, -1.5, -2.5, -4.0])
-    elif fwd_pe is not None and fwd_pe > 0:
-        val = _stars(-fwd_pe, [-15, -25, -40, -70])
+    ⚠️ 2026-08-03 重寫：先前這裡是我自創的評分（營收成長/淨現金FCF/PEG/Beta），
+    那**不是洪瑞泰的東西** —— 他明說「不聽未來轉機鬼故事」（不看成長性）、
+    估值只有俗價貴價兩條線（不用 PEG）、風險看的是盈再率不是 Beta。
+    現在改為直接沿用 buffett_screener 的既有實作，不另立標準。
+    依據：memory/hongruitai_method.md（該檔開頭即註明「動巴菲特相關前先讀」）。
+    """
+    from buffett_screener import (fetch_fundamentals, ROE_MIN, ROE_YEARS,
+                                  REINVEST_IDEAL, REINVEST_MAX, PAYOUT_MIN,
+                                  PE_CHEAP, PE_EXPENSIVE)
+    f = fetch_fundamentals(d["ticker"]) or {}
+
+    roe = f.get("roe_current")
+    roe_hist = f.get("roe_history") or []
+    roe_pass_years = sum(1 for r in roe_hist if r and r >= ROE_MIN)
+    rr = f.get("reinvest_ratio")
+    payout = f.get("payout_ratio")
+    eps_ttm = f.get("eps_ttm")
+    price = f.get("price") or d.get("price")
+
+    # ── 關卡①高 ROE ≥15%：看「連續穩定」，不是單季好看 ──
+    gate_roe = {"pass": bool(roe and roe >= ROE_MIN and roe_pass_years >= ROE_YEARS),
+                "value": f"{roe*100:.1f}%" if roe else "N/A",
+                "detail": f"近 4 年 {roe_pass_years}/4 年達標（需 ≥{ROE_YEARS}）",
+                "label": f"① 高 ROE ≥ {ROE_MIN*100:.0f}%"}
+
+    # ── 關卡②盈再率 <80%（理想<40%，>200% 是掏空地雷）──
+    if rr is None:
+        gate_rr = {"pass": None, "value": "N/A", "label": "② 盈再率 < 80%",
+                   "detail": "資料不足（財報項目缺漏），不評判"}
     else:
-        val = None
-    # 風險（星越多＝風險越低）：beta 越低越好
-    risk = _stars(-beta, [-0.9, -1.2, -1.6, -2.2]) if beta is not None else None
+        lvl = ("🏆 印鈔機（<40%）" if rr < REINVEST_IDEAL else
+               "✅ 過關" if rr < REINVEST_MAX else
+               "☠️ 地雷（>200%，掏空徵兆）" if rr > 2.0 else "❌ 吃資本的爛生意")
+        gate_rr = {"pass": rr < REINVEST_MAX, "value": f"{rr*100:.1f}%",
+                   "detail": lvl, "label": "② 盈再率 < 80%"}
 
-    return {"growth": growth, "health": health, "valuation": val, "risk": risk,
-            "net_cash": net_cash}
+    # ── 關卡③配息率 ≥40%：配得出現金才是真賺錢（作假帳配不出現金）──
+    if payout is None:
+        gate_po = {"pass": None, "value": "N/A", "label": "③ 配息率 ≥ 40%",
+                   "detail": "無配息資料"}
+    else:
+        gate_po = {"pass": payout >= PAYOUT_MIN, "value": f"{payout*100:.1f}%",
+                   "detail": "配得出現金＝真賺錢" if payout >= PAYOUT_MIN
+                             else "配息偏低，留意盈餘品質",
+                   "label": "③ 配息率 ≥ 40%"}
+
+    # ── 俗價／貴價（只有兩條線，沒有合理價）──
+    cheap = eps_ttm * PE_CHEAP if eps_ttm and eps_ttm > 0 else None
+    expensive = eps_ttm * PE_EXPENSIVE if eps_ttm and eps_ttm > 0 else None
+    if not (price and cheap):
+        pos, pos_txt = None, "EPS 為負或缺值，俗貴價不適用"
+    elif price <= cheap:
+        pos, pos_txt = "buy", "🟢 現價 ≤ 俗價 → 買進區"
+    elif expensive and price <= expensive:
+        pos, pos_txt = "watch", "🟡 俗價~貴價之間 → 觀望"
+    else:
+        pos, pos_txt = "sell", "🔴 現價 > 貴價 → 太貴，考慮賣出"
+
+    # ── 變壞判定（洪瑞泰：公司變壞就該賣）──
+    eps = d["eps"]
+    reasons, bad = [], 0
+    if eps["yoy"] is not None and eps["yoy"] < 0:
+        reasons.append(f'EPS YoY {eps["yoy"]:+.0f}%')
+        bad += 1
+    eps_hist = f.get("eps_history") or []
+    if len(eps_hist) >= 2 and eps_hist[-1] is not None and eps_hist[-2] is not None \
+            and eps_hist[-1] < eps_hist[-2]:
+        reasons.append("年度 EPS 較前一年衰退")
+        bad += 1
+    te, fe = f.get("eps_ttm"), f.get("eps_forward")
+    if te and fe and te > 0 and (fe / te) < 0.90:
+        reasons.append(f"照妖鏡：預估 EPS 降 {(1-fe/te)*100:.0f}%")
+        bad += 1
+    de = f.get("debt_to_equity")
+    if de and de > 250:
+        reasons.append(f"照妖鏡：高負債 {de:.0f}%")
+        bad += 1
+    verdict = "bad" if bad >= 2 else ("watch" if bad == 1 else "ok")
+
+    gates = [gate_roe, gate_rr, gate_po]
+    passed = sum(1 for g in gates if g["pass"] is True)
+    return {"gates": gates, "passed": passed, "n_gates": len(gates),
+            "cheap": cheap, "expensive": expensive, "eps_ttm": eps_ttm, "price": price,
+            "pos": pos, "pos_txt": pos_txt,
+            "verdict": verdict, "reasons": reasons,
+            "roe": roe, "reinvest": rr, "payout": payout,
+            "net_cash": (d["cash"] - d["debt"])
+                        if (d["cash"] is not None and d["debt"] is not None) else None}
 
 
 # ────────────────────────────── 敘事層（LLM） ──────────────────────────────
@@ -173,21 +230,38 @@ def narrative(d: dict, sc: dict) -> dict:
   資本支出   {f(d['capex']['cur'])}   YoY {d['capex']['yoy']:+.1f}%
   自由現金流 {f(d['fcf']['cur'])}   YoY {d['fcf']['yoy']:+.1f}%
 
-估值與體質
+洪瑞泰三大關卡（品質第一，估值第二）
+  ① 高 ROE：{sc['gates'][0]['value']}　{sc['gates'][0]['detail']}　→ {'過' if sc['gates'][0]['pass'] else '不過' if sc['gates'][0]['pass'] is False else '資料不足'}
+  ② 盈再率：{sc['gates'][1]['value']}　{sc['gates'][1]['detail']}
+  ③ 配息率：{sc['gates'][2]['value']}　{sc['gates'][2]['detail']}
+
+俗貴價（洪瑞泰只有這兩條線，沒有合理價）
+  近四季 EPS {sc['eps_ttm']}
+  俗價（買）EPS×12 = {sc['cheap']}　貴價（賣）EPS×30 = {sc['expensive']}
+  現價 {sc['price']} → {sc['pos_txt']}
+
+變壞判定：{sc['verdict']}　理由：{'、'.join(sc['reasons']) or '無'}
   股價 {d['price']}　市值 {f(d['market_cap'])}　52週 {d['wk_low']}~{d['wk_high']}
-  Forward P/E {d['fwd_pe']}　Trailing P/E {d['trail_pe']}　PEG {d['peg']}
-  EV/Rev {d['ev_rev']}　EV/EBITDA {d['ev_ebitda']}　P/B {d['pb']}
   總現金 {f(d['cash'])}　總負債 {f(d['debt'])}　淨現金 {f(sc['net_cash'])}
-  Beta {d['beta']}　分析師共識 {d['reco']}（{d['n_analysts']} 位）　平均目標價 {d['target']}
+  分析師共識 {d['reco']}（{d['n_analysts']} 位）　平均目標價 {d['target']}
 """
 
-    prompt = f"""你是專業財報分析師，要為以下這季財報寫一份「懶人包」的敘事內容。
+    prompt = f"""你是依循**洪瑞泰（Mike桑）巴菲特選股法**的分析師，為這季財報寫一份懶人包。
+
+【洪瑞泰的框架 — 你的判斷一律以此為準，不要套用別的估值學派】
+· **核心順序：先挑「好公司」（不會變的公司），再等「便宜」才買。品質第一、估值第二。**
+· 三大量化關卡：① ROE≥15% 且要連續穩定 ② 盈再率<80%（理想<40%，>200% 是掏空地雷）
+  ③ 配息率≥40%（配得出現金才是真賺錢，作假帳的公司配不出現金）
+· 估值**只有兩條線**：俗價 EPS×12（買）、貴價 EPS×30（賣）。**沒有合理價，不要用 PEG／EV倍數／目標價來論估值。**
+· **「不聽未來轉機、爆發力的鬼故事」** —— 不要用「未來成長想像」當利多，要看已實現的獲利穩定度。
+· **公司變壞就該賣**：EPS 衰退、預估 EPS 下修、高負債都是變壞訊號。
+· 「多種果樹」＝分散持股，單一持股建議 10%、最多 20%。
 
 【鐵則】
 1. **只能引用下方提供的真實數據，絕對不可以編造任何數字、日期、產品名稱、管理層發言或新聞事件。**
    你沒有這家公司的財報電話會議內容，也沒有新聞，只有下面這些數字。
 2. 需要提到具體數字時，直接引用下方數據。不確定的事情就不要寫。
-3. 用繁體中文台灣用語（營收/毛利率/營益率/資本支出/自由現金流/部位）。
+3. 用繁體中文台灣用語（營收/毛利率/營益率/資本支出/自由現金流/部位/盈再率）。
 4. 要點出「數字背後的矛盾」——例如營收成長但獲利衰退、現金流轉負等，這才是懶人包的價值。
 
 {facts}
@@ -202,14 +276,12 @@ def narrative(d: dict, sc: dict) -> dict:
   ],
   "positives": ["利多條列(30字內)"],
   "risks": ["風險條列(30字內)"],
-  "moat_stars": 1到5的整數,
-  "moat_reason": "護城河評分理由(35字內)",
-  "thesis": "長線投資邏輯(60字內)",
+  "thesis": "用洪瑞泰框架看這家公司是不是「好公司」(60字內，扣三大關卡與獲利穩定度，不要講成長想像)",
   "investor": "適合什麼樣的投資人(30字內)",
   "sentiment": "市場情緒評級，只能從這五選一：VERY BEARISH / BEARISH / NEUTRAL / BULLISH / VERY BULLISH",
   "sentiment_reason": "情緒評級理由(30字內)",
-  "entry": "進場策略建議(40字內，可參考52週區間與目標價)",
-  "bottom_line": "一句話總結長期投資價值(50字內)"
+  "entry": "依俗貴價的進出場建議(40字內，只能用俗價/貴價論買賣點，不要用目標價或PEG)",
+  "bottom_line": "一句話總結(50字內，先講是不是好公司、再講現在貴不貴)"
 }}
 highlights 與 capital 各給 3-4 項，positives 與 risks 各給 4-5 項。"""
     return ask_json(prompt)
@@ -341,19 +413,32 @@ def _gauge_svg(label):
               f'<div class="lbl" style="color:{color}">{label}</div>')
 
 
-BADGE_STYLE = {
-    "strong_buy": ("#0E3A22", "#22C55E", "STRONG BUY"),
-    "buy":        ("#0E3A22", "#22C55E", "BUY"),
-    "hold":       ("#3A3212", "#F5B841", "HOLD"),
-    "underperform": ("#3A1A18", "#EF4444", "UNDERPERFORM"),
-    "sell":       ("#3A1418", "#EF4444", "SELL"),
-}
+def _hong_badge(sc):
+    """洪瑞泰結論標章：品質關（三大關卡）＋ 買點（俗貴價），兩段式。
+
+    ⚠️ 這裡刻意**不用分析師共識當標章**。原本放 BUY/HOLD 是分析師共識，
+    但那不是洪瑞泰的框架，而且會出現「三關全不過、股價是貴價 10 倍，
+    頁面最大的字卻寫 BUY」的自相矛盾。分析師共識降級為底下的小字參考。
+    """
+    passed, n_gates = sc["passed"], sc["n_gates"]
+    good = passed == n_gates
+    if not good:
+        return ("#3A1418", "#EF4444", "不是好公司",
+                f"三大關卡過 {passed}/{n_gates}　·　洪瑞泰：品質第一，不過關就不用談價格")
+    if sc["pos"] == "buy":
+        return ("#0E3A22", "#22C55E", "好公司 · 便宜",
+                "三大關卡全過，且現價 ≤ 俗價 → 買進區")
+    if sc["pos"] == "watch":
+        return ("#3A3212", "#F5B841", "好公司 · 但不夠便宜",
+                "三大關卡全過，但現價在俗價~貴價之間 → 等便宜")
+    return ("#3A1418", "#EF4444", "好公司 · 太貴",
+            "三大關卡全過，但現價 > 貴價 → 考慮賣出")
 
 
 def render(d, sc, n):
     cur = d["currency"]
     up = d["target"] and d["price"] and (d["target"] / d["price"] - 1) * 100
-    bg, fg, txt = BADGE_STYLE.get(d["reco"], ("#22374F", "#8FA8C8", (d["reco"] or "N/A").upper()))
+    bg, fg, txt, sub = _hong_badge(sc)
 
     kpis = [
         ("營收 Revenue", _fmt(d["revenue"]["cur"], cur), d["revenue"]["yoy"], False),
@@ -381,26 +466,42 @@ def render(d, sc, n):
         f'{f"{p['yoy']:+.1f}%" if p["yoy"] is not None else "—"}</td></tr>'
         for lb, p in fin_rows)
 
-    val_rows = [("Forward P/E", d["fwd_pe"], "低於 20 偏便宜"),
-                ("Trailing P/E", d["trail_pe"], "看過去 12 個月"),
-                ("PEG Ratio", d["peg"], "小於 1 代表成長性被低估"),
-                ("EV / Revenue", d["ev_rev"], "越低越好"),
-                ("EV / EBITDA", d["ev_ebitda"], "越低越好"),
-                ("P / B", d["pb"], "資產面估值")]
+    # 洪瑞泰估值：只有俗價（買）與貴價（賣）兩條線，沒有合理價、不看 PEG/EV 倍數
+    def _p(v):
+        return f"{v:.2f}" if isinstance(v, (int, float)) else "N/A"
+    val_rows = [("近四季 EPS", _p(sc["eps_ttm"]), "俗貴價的計算基礎"),
+                ("🟢 俗價（買進線）", _p(sc["cheap"]), "EPS × 12　預期報酬 15%"),
+                ("🔴 貴價（賣出線）", _p(sc["expensive"]), "EPS × 30　預期報酬 0%"),
+                ("現價", _p(sc["price"]), sc["pos_txt"])]
     val_html = "".join(
-        f'<tr><td>{lb}</td><td>{f"{v:.2f}" if isinstance(v, (int, float)) else "N/A"}</td>'
+        f'<tr><td>{lb}</td><td>{v}</td>'
         f'<td style="color:#6B84A6;font-size:11px;text-align:right">{h}</td></tr>'
         for lb, v, h in val_rows)
 
-    rates = [("成長性 Growth Outlook", sc["growth"], "依營收 YoY 計算"),
-             ("競爭護城河 Moat", n.get("moat_stars"), n.get("moat_reason", "")),
-             ("財務體質 Financial Health", sc["health"], "依淨現金與自由現金流"),
-             ("估值 Valuation", sc["valuation"], "依 PEG / Forward P/E"),
-             ("風險輪廓 Risk Profile", sc["risk"], "依 Beta，星多＝波動低")]
+    # 洪瑞泰三大關卡（不是星等，是過/不過。他的方法是門檻制不是評分制）
+    def _mark(p):
+        return ('<span style="color:#22C55E;font-weight:800">✅ 過</span>' if p is True
+                else '<span style="color:#EF4444;font-weight:800">❌ 不過</span>' if p is False
+                else '<span class="na">資料不足</span>')
     rate_html = "".join(
-        f'<div class="rate"><div>{lb}<div style="color:#6B84A6;font-size:10.5px;'
-        f'font-weight:400;margin-top:1px">{hint}</div></div>{_stars_html(v)}</div>'
-        for lb, v, hint in rates)
+        f'<div class="rate"><div>{g["label"]}'
+        f'<div style="color:#6B84A6;font-size:10.5px;font-weight:400;margin-top:1px">'
+        f'{g["detail"]}</div></div>'
+        f'<div style="text-align:right"><div style="font-weight:700">{g["value"]}</div>'
+        f'{_mark(g["pass"])}</div></div>' for g in sc["gates"])
+
+    vd = {"ok": ("#22C55E", "✅ 沒有變壞跡象"),
+          "watch": ("#F5B841", "🟠 出現 1 個警訊，觀察"),
+          "bad": ("#EF4444", "🔴 變壞 — 洪瑞泰：公司變壞就該賣")}[sc["verdict"]]
+    rate_html += (
+        f'<div style="margin-top:12px;padding-top:11px;border-top:1px solid #1E3A5F">'
+        f'<div style="color:#F5B841;font-size:11.5px;font-weight:700;margin-bottom:5px">'
+        f'變壞判定（EPS 衰退／照妖鏡）</div>'
+        f'<div style="color:{vd[0]};font-weight:700;font-size:13.5px">{vd[1]}</div>'
+        + ("".join(f'<div style="color:#A9C0DC;font-size:12px;margin-top:3px">· {r}</div>'
+                   for r in sc["reasons"]) or
+           '<div style="color:#6B84A6;font-size:12px;margin-top:3px">· 無</div>')
+        + '</div>')
 
     warn = ('<div class="warn">⚠️ 這檔季報資料不足 5 季，YoY 比較基期不是去年同期，'
             '成長率僅供參考。</div>') if d["partial_yoy"] else ""
@@ -446,18 +547,20 @@ def render(d, sc, n):
       <div style="font-size:12.8px;color:#C7D8EC">{n.get('investor', '')}</div>
     </div>
   </div>
-  <div class="card"><h2>分析師共識與估值 Consensus</h2>
+  <div class="card"><h2>洪瑞泰結論與俗貴價 Verdict</h2>
     <div class="badge" style="background:{bg};border:1px solid {fg}">
-      <div class="bg" style="color:{fg}">{txt}</div>
-      <div class="bs" style="color:{fg}">{d['n_analysts'] or '?'} 位分析師共識　·　平均目標價 {d['target'] or 'N/A'}
-        {f'（潛在空間 {up:+.1f}%）' if up is not None else ''}</div>
+      <div class="bg" style="color:{fg};font-size:24px">{txt}</div>
+      <div class="bs" style="color:{fg}">{sub}</div>
     </div>
     <table>{val_html}</table>
     <div style="margin-top:11px;padding-top:10px;border-top:1px solid #1E3A5F">
       <div style="color:#F5B841;font-size:11.5px;font-weight:700;margin-bottom:4px">進場策略</div>
       <div style="font-size:12.8px;line-height:1.6;color:#C7D8EC">{n.get('entry', '')}</div>
       <div class="note">52 週區間 {d['wk_low']} ~ {d['wk_high']}　·　市值 {_fmt(d['market_cap'], cur)}
-        　·　淨現金 {_fmt(sc['net_cash'], cur)}</div>
+        　·　淨現金 {_fmt(sc['net_cash'], cur)}<br>
+        <span style="opacity:.75">市場參考（非洪瑞泰框架）：分析師共識 {(d['reco'] or 'N/A').upper()}
+        （{d['n_analysts'] or '?'} 位）、平均目標價 {d['target'] or 'N/A'}
+        {f'（潛在空間 {up:+.1f}%）' if up is not None else ''}</span></div>
     </div>
   </div>
 </div>
@@ -469,8 +572,10 @@ def render(d, sc, n):
 <div class="ftr">
   <b>資料來源</b>：所有財務數字與估值指標皆取自 yfinance 之公司申報財報，未經 AI 生成或修改。
   星級評分中的成長性/財務體質/估值/風險由公式計算，「競爭護城河」與文字敘述由 AI 依上述數據撰寫。<br>
-  <b>評級說明</b>：BUY/HOLD 標章顯示的是<b>市場分析師共識</b>（yfinance 彙整），不是本工具的買賣建議。
-  本頁為研究參考，不構成投資建議。<br>
+  <b>判斷框架</b>：一律採<b>洪瑞泰（Mike桑）巴菲特選股法</b> —— 三大關卡（ROE≥15% 且連續穩定／
+  盈再率&lt;80%／配息率≥40%）＋ 俗價 EPS×12（買）、貴價 EPS×30（賣）＋ 變壞判定。
+  <b>沒有合理價，也不使用 PEG／EV 倍數／Beta／目標價</b>來論估值，那些不是這套方法的東西。
+  分析師共識僅列為市場參考，不影響結論。本頁為研究參考，不構成投資建議。<br>
   <b>已知限制</b>：無法取得法說會內容、管理層展望與新聞，因此「下季展望」類資訊不予呈現，避免編造。
 </div>
 </div></body></html>"""
