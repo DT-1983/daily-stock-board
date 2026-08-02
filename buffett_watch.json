@@ -1,37 +1,22 @@
 {
- "WU": {
-  "market": "US",
-  "name": "The Western Union Company",
-  "sector": "Financial Services",
-  "rank": null,
-  "eps": 1.36,
-  "roe": 0.47657,
-  "payout": 0.6912,
-  "reinvest": 0.2146,
-  "cheap": 16.32,
-  "roe_years": 4,
-  "expensive": 40.8,
-  "trap_flags": null,
-  "updated": "2026-07-31"
- },
  "PBR": {
   "market": "US",
   "name": "Petróleo Brasileiro S.A. - Petrobras",
   "sector": "Energy",
   "rank": 1,
-  "eps": 3.26,
+  "eps": 3.17,
   "roe": 0.25601,
   "payout": 0.4158,
   "reinvest": 0.6551,
-  "cheap": 39.12,
+  "cheap": 38.04,
   "roe_years": 3,
-  "expensive": 97.8,
+  "expensive": 95.1,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "CIG": {
   "market": "US",
-  "name": "Companhia Energética de Minas Gerais - CEMIG",
+  "name": "Comp En De Mn Cemig",
   "sector": "Utilities",
   "rank": null,
   "eps": 0.33,
@@ -41,68 +26,98 @@
   "cheap": 3.96,
   "roe_years": 4,
   "expensive": 9.9,
-  "trap_flags": "EPS估降55%",
-  "updated": "2026-07-31"
+  "trap_flags": null,
+  "updated": "2026-08-02"
  },
  "HAFN": {
   "market": "US",
   "name": "Hafnia Limited",
   "sector": "Industrials",
   "rank": null,
-  "eps": 0.91,
+  "eps": 0.9,
   "roe": 0.18931,
   "payout": 0.6063,
   "reinvest": 0.3113,
-  "cheap": 10.92,
+  "cheap": 10.8,
   "roe_years": 3,
-  "expensive": 27.3,
-  "trap_flags": "EPS估降25%",
-  "updated": "2026-07-31"
+  "expensive": 27.0,
+  "trap_flags": "EPS估降24%",
+  "updated": "2026-08-02"
  },
  "TRMD": {
   "market": "US",
   "name": "TORM plc",
   "sector": "Energy",
   "rank": null,
-  "eps": 3.46,
+  "eps": 3.41,
   "roe": 0.1565,
   "payout": 0.6217,
   "reinvest": 0.7227,
-  "cheap": 41.52,
+  "cheap": 40.92,
   "roe_years": 3,
-  "expensive": 103.8,
+  "expensive": 102.3,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "BWLP": {
   "market": "US",
   "name": "BW LPG Limited",
   "sector": "Energy",
   "rank": null,
-  "eps": 2.44,
+  "eps": 2.38,
   "roe": 0.20864001,
   "payout": 0.61759996,
   "reinvest": 0.7323,
-  "cheap": 29.28,
+  "cheap": 28.56,
   "roe_years": 3,
-  "expensive": 73.2,
+  "expensive": 71.4,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
+ },
+ "OMF": {
+  "market": "US",
+  "name": "OneMain Holdings, Inc.",
+  "sector": "Financial Services",
+  "rank": null,
+  "eps": 6.63,
+  "roe": 0.23281999,
+  "payout": 0.632,
+  "reinvest": null,
+  "cheap": 79.56,
+  "roe_years": 4,
+  "expensive": 198.9,
+  "trap_flags": null,
+  "updated": "2026-08-02"
  },
  "APAM": {
   "market": "US",
   "name": "Artisan Partners Asset Management Inc.",
   "sector": "Financial Services",
   "rank": null,
-  "eps": 4.1,
-  "roe": 0.64546996,
+  "eps": 4.17,
+  "roe": 0.64552003,
   "payout": 0.8129,
   "reinvest": 0.0343,
-  "cheap": 49.2,
+  "cheap": 50.04,
   "roe_years": 4,
-  "expensive": 123.0,
+  "expensive": 125.1,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
+ },
+ "LPG": {
+  "market": "US",
+  "name": "Dorian LPG Ltd.",
+  "sector": "Energy",
+  "rank": null,
+  "eps": 4.54,
+  "roe": 0.17726,
+  "payout": 0.5396,
+  "reinvest": 0.2808,
+  "cheap": 54.48,
+  "roe_years": 3,
+  "expensive": 136.2,
+  "trap_flags": "EPS估降17%",
+  "updated": "2026-08-02"
  },
  "CPB": {
   "market": "US",
@@ -117,37 +132,67 @@
   "roe_years": 3,
   "expensive": 61.2,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
+ },
+ "NVO": {
+  "market": "US",
+  "name": "Novo Nordisk A/S",
+  "sector": "Healthcare",
+  "rank": 1,
+  "eps": 4.2,
+  "roe": 0.71402,
+  "payout": 0.4259,
+  "reinvest": 0.5693,
+  "cheap": 50.4,
+  "roe_years": 4,
+  "expensive": 126.0,
+  "trap_flags": "EPS估降22%",
+  "updated": "2026-08-02"
  },
  "ITUB": {
   "market": "US",
   "name": "Itaú Unibanco Holding S.A.",
   "sector": "Financial Services",
   "rank": 3,
-  "eps": 0.83,
+  "eps": 0.8,
   "roe": 0.21816,
   "payout": 0.7489,
   "reinvest": 0.2091,
-  "cheap": 9.96,
+  "cheap": 9.6,
   "roe_years": 4,
-  "expensive": 24.9,
+  "expensive": 24.0,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "DOX": {
   "market": "US",
   "name": "Amdocs Limited",
   "sector": "Technology",
   "rank": null,
-  "eps": 4.87,
+  "eps": 5.01,
   "roe": 0.15858,
   "payout": 0.4291,
   "reinvest": 0.2612,
-  "cheap": 58.44,
+  "cheap": 60.12,
   "roe_years": 3,
-  "expensive": 146.1,
+  "expensive": 150.3,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
+ },
+ "TROW": {
+  "market": "US",
+  "name": "T. Rowe Price Group, Inc.",
+  "sector": "Financial Services",
+  "rank": null,
+  "eps": 9.96,
+  "roe": 0.19399999,
+  "payout": 0.5161,
+  "reinvest": 0.165,
+  "cheap": 119.52,
+  "roe_years": 4,
+  "expensive": 298.8,
+  "trap_flags": null,
+  "updated": "2026-08-02"
  },
  "BSM": {
   "market": "US",
@@ -162,82 +207,82 @@
   "roe_years": 4,
   "expensive": 38.1,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
- "NVO": {
+ "BBVA": {
   "market": "US",
-  "name": "Novo Nordisk A/S",
-  "sector": "Healthcare",
+  "name": "Banco Bilbao Vizcaya Argentaria, S.A.",
+  "sector": "Financial Services",
   "rank": 1,
-  "eps": 4.17,
-  "roe": 0.71402,
-  "payout": 0.4259,
-  "reinvest": 0.5693,
-  "cheap": 50.04,
-  "roe_years": 4,
-  "expensive": 125.1,
-  "trap_flags": "EPS估降21%",
-  "updated": "2026-07-31"
+  "eps": 2.17,
+  "roe": 0.18924,
+  "payout": 0.48970002,
+  "reinvest": 0.2312,
+  "cheap": 26.04,
+  "roe_years": 3,
+  "expensive": 65.1,
+  "trap_flags": null,
+  "updated": "2026-08-02"
  },
  "MPLX": {
   "market": "US",
   "name": "MPLX LP",
   "sector": "Energy",
-  "rank": 3,
-  "eps": 4.6,
+  "rank": null,
+  "eps": 4.62,
   "roe": 0.33407003,
   "payout": 0.8801,
   "reinvest": 0.2694,
-  "cheap": 55.2,
+  "cheap": 55.44,
   "roe_years": 4,
-  "expensive": 138.0,
+  "expensive": 138.6,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "UGP": {
   "market": "US",
-  "name": "Ultrapar Participações S.A.",
+  "name": "Ultrapar Participacoes S.A. (Ne",
   "sector": "Energy",
   "rank": null,
-  "eps": 0.58,
+  "eps": 0.56,
   "roe": 0.19181,
   "payout": 0.45560002,
   "reinvest": 0.7015,
-  "cheap": 6.96,
+  "cheap": 6.72,
   "roe_years": 3,
-  "expensive": 17.4,
+  "expensive": 16.8,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
- "TROW": {
+ "GLPI": {
   "market": "US",
-  "name": "T. Rowe Price Group, Inc.",
-  "sector": "Financial Services",
-  "rank": null,
-  "eps": 9.35,
-  "roe": 0.18688999,
-  "payout": 0.5483,
-  "reinvest": 0.165,
-  "cheap": 112.2,
+  "name": "Gaming and Leisure Properties, Inc.",
+  "sector": "Real Estate",
+  "rank": 2,
+  "eps": 3.42,
+  "roe": 0.19354999,
+  "payout": 0.924,
+  "reinvest": 0.1372,
+  "cheap": 41.04,
   "roe_years": 4,
-  "expensive": 280.5,
+  "expensive": 102.6,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "ACN": {
   "market": "US",
   "name": "Accenture plc",
   "sector": "Technology",
   "rank": 1,
-  "eps": 11.81,
+  "eps": 12.53,
   "roe": 0.24406,
   "payout": 0.5088,
   "reinvest": 0.0823,
-  "cheap": 141.72,
+  "cheap": 150.36,
   "roe_years": 4,
-  "expensive": 354.3,
+  "expensive": 375.9,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "6177.TW": {
   "market": "TW",
@@ -252,7 +297,7 @@
   "roe_years": 4,
   "expensive": 221.4,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "5225.TW": {
   "market": "TW",
@@ -267,7 +312,7 @@
   "roe_years": 4,
   "expensive": 305.1,
   "trap_flags": "EPS估降28%",
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "2731.TW": {
   "market": "TW",
@@ -282,7 +327,7 @@
   "roe_years": 3,
   "expensive": 507.6,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "1580.TWO": {
   "market": "TW",
@@ -297,7 +342,7 @@
   "roe_years": 3,
   "expensive": 375.3,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "1615.TW": {
   "market": "TW",
@@ -312,28 +357,28 @@
   "roe_years": 4,
   "expensive": 140.1,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "3611.TWO": {
   "market": "TW",
   "name": "鼎翰",
   "sector": "Technology",
   "rank": null,
-  "eps": 19.47,
+  "eps": 19.49,
   "roe": 0.17793,
   "payout": 0.51240003,
   "reinvest": 0.28,
-  "cheap": 233.64,
+  "cheap": 233.88,
   "roe_years": 3,
-  "expensive": 584.1,
+  "expensive": 584.7,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "4763.TW": {
   "market": "TW",
   "name": "材料*-KY",
   "sector": "Basic Materials",
-  "rank": 1,
+  "rank": 2,
   "eps": 5.17,
   "roe": 0.25275,
   "payout": 0.48360002,
@@ -342,7 +387,7 @@
   "roe_years": 4,
   "expensive": 155.1,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "5609.TWO": {
   "market": "TW",
@@ -357,22 +402,22 @@
   "roe_years": 4,
   "expensive": 238.8,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "5287.TWO": {
   "market": "TW",
   "name": "數字",
   "sector": "Communication Services",
-  "rank": null,
-  "eps": 13.81,
+  "rank": 3,
+  "eps": 13.8,
   "roe": 0.35981998,
   "payout": 0.7458,
   "reinvest": 0.0337,
-  "cheap": 165.72,
+  "cheap": 165.6,
   "roe_years": 4,
-  "expensive": 414.3,
+  "expensive": 414.0,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "3078.TWO": {
   "market": "TW",
@@ -387,7 +432,7 @@
   "roe_years": 3,
   "expensive": 146.1,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "3217.TWO": {
   "market": "TW",
@@ -402,13 +447,13 @@
   "roe_years": 4,
   "expensive": 376.5,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "4105.TWO": {
   "market": "TW",
   "name": "東洋",
   "sector": "Healthcare",
-  "rank": 3,
+  "rank": null,
   "eps": 6.47,
   "roe": 0.23934999,
   "payout": 0.6955,
@@ -417,7 +462,7 @@
   "roe_years": 4,
   "expensive": 194.1,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "2850.TW": {
   "market": "TW",
@@ -432,7 +477,7 @@
   "roe_years": 3,
   "expensive": 368.4,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "5403.TWO": {
   "market": "TW",
@@ -447,7 +492,7 @@
   "roe_years": 4,
   "expensive": 234.9,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "3218.TWO": {
   "market": "TW",
@@ -462,7 +507,7 @@
   "roe_years": 4,
   "expensive": 338.7,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "4441.TW": {
   "market": "TW",
@@ -477,52 +522,52 @@
   "roe_years": 3,
   "expensive": 439.5,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "2385.TW": {
   "market": "TW",
   "name": "群光",
   "sector": "Technology",
   "rank": null,
-  "eps": 8.74,
+  "eps": 8.75,
   "roe": 0.15461999,
   "payout": 1.1442,
   "reinvest": 0.2996,
-  "cheap": 104.88,
+  "cheap": 105.0,
   "roe_years": 3,
-  "expensive": 262.2,
+  "expensive": 262.5,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "1264.TWO": {
   "market": "TW",
   "name": "德麥",
   "sector": "Consumer Defensive",
   "rank": null,
-  "eps": 20.74,
+  "eps": 20.72,
   "roe": 0.21935,
   "payout": 0.69949996,
   "reinvest": 0.3617,
-  "cheap": 248.88,
+  "cheap": 248.64,
   "roe_years": 4,
-  "expensive": 622.2,
+  "expensive": 621.6,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "6670.TW": {
   "market": "TW",
   "name": "復盛應用",
   "sector": "Consumer Cyclical",
   "rank": null,
-  "eps": 20.16,
+  "eps": 20.17,
   "roe": 0.16327,
   "payout": 0.9742,
   "reinvest": 0.3571,
-  "cheap": 241.92,
+  "cheap": 242.04,
   "roe_years": 4,
-  "expensive": 604.8,
+  "expensive": 605.1,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "2707.TW": {
   "market": "TW",
@@ -537,7 +582,7 @@
   "roe_years": 4,
   "expensive": 417.6,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "9911.TW": {
   "market": "TW",
@@ -552,7 +597,7 @@
   "roe_years": 4,
   "expensive": 191.4,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "6227.TWO": {
   "market": "TW",
@@ -567,7 +612,7 @@
   "roe_years": 3,
   "expensive": 222.6,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "3014.TW": {
   "market": "TW",
@@ -582,22 +627,22 @@
   "roe_years": 4,
   "expensive": 277.8,
   "trap_flags": "EPS估降50%",
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "6996.TWO": {
   "market": "TW",
   "name": "力領科技",
   "sector": "Technology",
   "rank": null,
-  "eps": 12.88,
+  "eps": 12.89,
   "roe": 0.22764999,
   "payout": 0.9822,
   "reinvest": 0.2411,
-  "cheap": 154.56,
+  "cheap": 154.68,
   "roe_years": 4,
-  "expensive": 386.4,
+  "expensive": 386.7,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "3130.TW": {
   "market": "TW",
@@ -612,7 +657,7 @@
   "roe_years": 4,
   "expensive": 448.8,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "3596.TW": {
   "market": "TW",
@@ -627,7 +672,7 @@
   "roe_years": 3,
   "expensive": 374.1,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "3005.TW": {
   "market": "TW",
@@ -642,7 +687,7 @@
   "roe_years": 3,
   "expensive": 242.4,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "8081.TW": {
   "market": "TW",
@@ -657,22 +702,22 @@
   "roe_years": 4,
   "expensive": 526.2,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "9942.TW": {
   "market": "TW",
   "name": "茂順",
   "sector": "Consumer Cyclical",
   "rank": null,
-  "eps": 8.16,
+  "eps": 8.17,
   "roe": 0.15311,
   "payout": 0.8568,
   "reinvest": 0.3508,
-  "cheap": 97.92,
+  "cheap": 98.04,
   "roe_years": 4,
-  "expensive": 244.8,
+  "expensive": 245.1,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "6803.TWO": {
   "market": "TW",
@@ -687,37 +732,52 @@
   "roe_years": 4,
   "expensive": 553.5,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "2382.TW": {
   "market": "TW",
   "name": "廣達",
   "sector": "Technology",
   "rank": 3,
-  "eps": 19.2,
+  "eps": 19.21,
   "roe": 0.36842,
   "payout": 0.6771,
   "reinvest": 0.2718,
-  "cheap": 230.4,
+  "cheap": 230.52,
   "roe_years": 4,
-  "expensive": 576.0,
+  "expensive": 576.3,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "8114.TW": {
   "market": "TW",
   "name": "振樺電",
   "sector": "Industrials",
   "rank": null,
-  "eps": 14.44,
+  "eps": 14.45,
   "roe": 0.22582,
   "payout": 0.5377,
   "reinvest": 0.2727,
-  "cheap": 173.28,
+  "cheap": 173.4,
   "roe_years": 3,
-  "expensive": 433.2,
+  "expensive": 433.5,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
+ },
+ "3088.TWO": {
+  "market": "TW",
+  "name": "艾訊",
+  "sector": "Technology",
+  "rank": null,
+  "eps": 5.48,
+  "roe": 0.17191,
+  "payout": 0.792,
+  "reinvest": 0.3772,
+  "cheap": 65.76,
+  "roe_years": 3,
+  "expensive": 164.4,
+  "trap_flags": null,
+  "updated": "2026-08-02"
  },
  "6581.TW": {
   "market": "TW",
@@ -732,7 +792,7 @@
   "roe_years": 3,
   "expensive": 181.2,
   "trap_flags": "EPS估降17%",
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "9910.TW": {
   "market": "TW",
@@ -747,13 +807,13 @@
   "roe_years": 4,
   "expensive": 138.6,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "4766.TW": {
   "market": "TW",
   "name": "南寶",
   "sector": "Basic Materials",
-  "rank": 3,
+  "rank": null,
   "eps": 20.21,
   "roe": 0.1866,
   "payout": 0.9406,
@@ -762,7 +822,7 @@
   "roe_years": 3,
   "expensive": 606.3,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "2597.TW": {
   "market": "TW",
@@ -777,22 +837,37 @@
   "roe_years": 4,
   "expensive": 340.5,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
+ },
+ "1477.TW": {
+  "market": "TW",
+  "name": "聚陽",
+  "sector": "Consumer Cyclical",
+  "rank": null,
+  "eps": 13.78,
+  "roe": 0.26729,
+  "payout": 1.0877,
+  "reinvest": 0.1587,
+  "cheap": 165.36,
+  "roe_years": 4,
+  "expensive": 413.4,
+  "trap_flags": null,
+  "updated": "2026-08-02"
  },
  "5236.TW": {
   "market": "TW",
   "name": "凌陽創新",
   "sector": "Technology",
   "rank": null,
-  "eps": 9.51,
+  "eps": 9.52,
   "roe": 0.25047,
   "payout": 0.8123,
   "reinvest": 0.0345,
-  "cheap": 114.12,
+  "cheap": 114.24,
   "roe_years": 4,
-  "expensive": 285.3,
+  "expensive": 285.6,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "8083.TWO": {
   "market": "TW",
@@ -807,7 +882,7 @@
   "roe_years": 4,
   "expensive": 318.9,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "3617.TW": {
   "market": "TW",
@@ -822,7 +897,7 @@
   "roe_years": 3,
   "expensive": 423.0,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "2421.TW": {
   "market": "TW",
@@ -837,37 +912,37 @@
   "roe_years": 4,
   "expensive": 255.9,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "2376.TW": {
   "market": "TW",
   "name": "技嘉",
   "sector": "Technology",
   "rank": null,
-  "eps": 20.1,
+  "eps": 20.09,
   "roe": 0.24724,
   "payout": 0.4975,
   "reinvest": 0.1627,
-  "cheap": 241.2,
+  "cheap": 241.08,
   "roe_years": 3,
-  "expensive": 603.0,
+  "expensive": 602.7,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
- "1477.TW": {
+ "3029.TW": {
   "market": "TW",
-  "name": "聚陽",
-  "sector": "Consumer Cyclical",
+  "name": "零壹",
+  "sector": "Technology",
   "rank": null,
-  "eps": 13.79,
-  "roe": 0.26016,
-  "payout": 1.0877,
-  "reinvest": 0.1587,
-  "cheap": 165.48,
+  "eps": 6.76,
+  "roe": 0.21311001,
+  "payout": 0.8136,
+  "reinvest": 0.1076,
+  "cheap": 81.12,
   "roe_years": 4,
-  "expensive": 413.7,
+  "expensive": 202.8,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "6534.TW": {
   "market": "TW",
@@ -882,7 +957,7 @@
   "roe_years": 4,
   "expensive": 143.1,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "2640.TWO": {
   "market": "TW",
@@ -897,7 +972,7 @@
   "roe_years": 4,
   "expensive": 269.4,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "9917.TW": {
   "market": "TW",
@@ -912,22 +987,22 @@
   "roe_years": 4,
   "expensive": 203.1,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "6667.TWO": {
   "market": "TW",
   "name": "信紘科",
   "sector": "Industrials",
   "rank": null,
-  "eps": 13.96,
+  "eps": 13.97,
   "roe": 0.3362,
   "payout": 0.6031,
   "reinvest": 0.1885,
-  "cheap": 167.52,
+  "cheap": 167.64,
   "roe_years": 4,
-  "expensive": 418.8,
+  "expensive": 419.1,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "1342.TW": {
   "market": "TW",
@@ -942,7 +1017,7 @@
   "roe_years": 4,
   "expensive": 176.7,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "2458.TW": {
   "market": "TW",
@@ -957,7 +1032,7 @@
   "roe_years": 4,
   "expensive": 267.6,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "3402.TWO": {
   "market": "TW",
@@ -972,13 +1047,13 @@
   "roe_years": 4,
   "expensive": 223.2,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "1476.TW": {
   "market": "TW",
   "name": "儒鴻",
   "sector": "Consumer Cyclical",
-  "rank": null,
+  "rank": 3,
   "eps": 20.66,
   "roe": 0.21190001,
   "payout": 0.8232,
@@ -987,7 +1062,7 @@
   "roe_years": 4,
   "expensive": 619.8,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "4205.TWO": {
   "market": "TW",
@@ -1002,67 +1077,97 @@
   "roe_years": 4,
   "expensive": 123.0,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "3526.TWO": {
   "market": "TW",
   "name": "凡甲",
   "sector": "Technology",
   "rank": null,
-  "eps": 16.04,
+  "eps": 16.05,
   "roe": 0.33585,
   "payout": 1.0256,
   "reinvest": 0.1355,
-  "cheap": 192.48,
+  "cheap": 192.6,
   "roe_years": 4,
-  "expensive": 481.2,
+  "expensive": 481.5,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
+ },
+ "1232.TW": {
+  "market": "TW",
+  "name": "大統益",
+  "sector": "Consumer Defensive",
+  "rank": null,
+  "eps": 8.64,
+  "roe": 0.27222002,
+  "payout": 0.8111,
+  "reinvest": 0.2142,
+  "cheap": 103.68,
+  "roe_years": 4,
+  "expensive": 259.2,
+  "trap_flags": null,
+  "updated": "2026-08-02"
  },
  "8464.TW": {
   "market": "TW",
   "name": "億豐",
   "sector": "Consumer Cyclical",
-  "rank": null,
-  "eps": 22.03,
+  "rank": 2,
+  "eps": 22.02,
   "roe": 0.25386998,
   "payout": 0.726,
   "reinvest": 0.2589,
-  "cheap": 264.36,
+  "cheap": 264.24,
   "roe_years": 4,
-  "expensive": 660.9,
+  "expensive": 660.6,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
+ },
+ "4721.TWO": {
+  "market": "TW",
+  "name": "美琪瑪",
+  "sector": "Basic Materials",
+  "rank": null,
+  "eps": 3.93,
+  "roe": 0.21866,
+  "payout": 0.6005,
+  "reinvest": 0.2448,
+  "cheap": 47.16,
+  "roe_years": 3,
+  "expensive": 117.9,
+  "trap_flags": null,
+  "updated": "2026-08-02"
  },
  "5292.TW": {
   "market": "TW",
   "name": "華懋",
   "sector": "Industrials",
   "rank": null,
-  "eps": 8.98,
+  "eps": 8.99,
   "roe": 0.24882,
   "payout": 0.4141,
   "reinvest": 0.0676,
-  "cheap": 107.76,
+  "cheap": 107.88,
   "roe_years": 4,
-  "expensive": 269.4,
+  "expensive": 269.7,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "6788.TWO": {
   "market": "TW",
   "name": "華景電",
   "sector": "Industrials",
   "rank": null,
-  "eps": 18.34,
+  "eps": 18.35,
   "roe": 0.30294,
   "payout": 0.5453,
   "reinvest": 0.3392,
-  "cheap": 220.08,
+  "cheap": 220.2,
   "roe_years": 4,
-  "expensive": 550.2,
+  "expensive": 550.5,
   "trap_flags": "EPS估降18%",
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "6263.TWO": {
   "market": "TW",
@@ -1077,37 +1182,37 @@
   "roe_years": 4,
   "expensive": 247.8,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "6206.TW": {
   "market": "TW",
   "name": "飛捷",
   "sector": "Technology",
   "rank": null,
-  "eps": 7.08,
+  "eps": 7.07,
   "roe": 0.18024,
   "payout": 0.8475,
   "reinvest": 0.0923,
-  "cheap": 84.96,
+  "cheap": 84.84,
   "roe_years": 3,
-  "expensive": 212.4,
+  "expensive": 212.1,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "6146.TWO": {
   "market": "TW",
   "name": "耕興",
   "sector": "Industrials",
   "rank": null,
-  "eps": 10.84,
+  "eps": 10.86,
   "roe": 0.17759001,
   "payout": 0.9309,
   "reinvest": 0.2391,
-  "cheap": 130.08,
+  "cheap": 130.32,
   "roe_years": 4,
-  "expensive": 325.2,
+  "expensive": 325.8,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "4506.TWO": {
   "market": "TW",
@@ -1122,7 +1227,7 @@
   "roe_years": 4,
   "expensive": 195.6,
   "trap_flags": "EPS估降14%",
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "6903.TWO": {
   "market": "TW",
@@ -1137,7 +1242,7 @@
   "roe_years": 4,
   "expensive": 489.3,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "1513.TW": {
   "market": "TW",
@@ -1152,7 +1257,7 @@
   "roe_years": 3,
   "expensive": 246.9,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "8109.TWO": {
   "market": "TW",
@@ -1167,7 +1272,7 @@
   "roe_years": 4,
   "expensive": 189.6,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "6138.TWO": {
   "market": "TW",
@@ -1182,67 +1287,22 @@
   "roe_years": 4,
   "expensive": 414.9,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "6725.TWO": {
   "market": "TW",
   "name": "矽科宏晟",
   "sector": "Industrials",
   "rank": null,
-  "eps": 12.88,
+  "eps": 12.89,
   "roe": 0.21862,
   "payout": 0.6206,
   "reinvest": 0.1336,
-  "cheap": 154.56,
+  "cheap": 154.68,
   "roe_years": 4,
-  "expensive": 386.4,
+  "expensive": 386.7,
   "trap_flags": null,
-  "updated": "2026-07-31"
- },
- "3293.TWO": {
-  "market": "TW",
-  "name": "鈊象",
-  "sector": "Communication Services",
-  "rank": 1,
-  "eps": 39.62,
-  "roe": 0.99231005,
-  "payout": 0.73160005,
-  "reinvest": 0.0837,
-  "cheap": 475.44,
-  "roe_years": 4,
-  "expensive": 1188.6,
-  "trap_flags": null,
-  "updated": "2026-07-31"
- },
- "8069.TWO": {
-  "market": "TW",
-  "name": "元太",
-  "sector": "Technology",
-  "rank": null,
-  "eps": 9.57,
-  "roe": 0.18290001,
-  "payout": 0.5209,
-  "reinvest": 0.3448,
-  "cheap": 114.84,
-  "roe_years": 4,
-  "expensive": 287.1,
-  "trap_flags": null,
-  "updated": "2026-07-31"
- },
- "7765.TW": {
-  "market": "TW",
-  "name": "中華資安",
-  "sector": "Technology",
-  "rank": null,
-  "eps": 11.44,
-  "roe": 0.27792,
-  "payout": 0.8064,
-  "reinvest": 0.1238,
-  "cheap": 137.28,
-  "roe_years": 4,
-  "expensive": 343.2,
-  "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "2480.TW": {
   "market": "TW",
@@ -1250,14 +1310,59 @@
   "sector": "Technology",
   "rank": null,
   "eps": 7.97,
-  "roe": 0.30382,
+  "roe": 0.29354998,
   "payout": 0.9312,
   "reinvest": 0.1183,
   "cheap": 95.64,
   "roe_years": 4,
   "expensive": 239.1,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
+ },
+ "3293.TWO": {
+  "market": "TW",
+  "name": "鈊象",
+  "sector": "Communication Services",
+  "rank": 1,
+  "eps": 39.65,
+  "roe": 0.99231005,
+  "payout": 0.73160005,
+  "reinvest": 0.0837,
+  "cheap": 475.8,
+  "roe_years": 4,
+  "expensive": 1189.5,
+  "trap_flags": null,
+  "updated": "2026-08-02"
+ },
+ "7765.TW": {
+  "market": "TW",
+  "name": "中華資安",
+  "sector": "Technology",
+  "rank": null,
+  "eps": 11.43,
+  "roe": 0.33841,
+  "payout": 0.8064,
+  "reinvest": 0.1238,
+  "cheap": 137.16,
+  "roe_years": 4,
+  "expensive": 342.9,
+  "trap_flags": null,
+  "updated": "2026-08-02"
+ },
+ "8069.TWO": {
+  "market": "TW",
+  "name": "元太",
+  "sector": "Technology",
+  "rank": null,
+  "eps": 9.58,
+  "roe": 0.18290001,
+  "payout": 0.5209,
+  "reinvest": 0.3448,
+  "cheap": 114.96,
+  "roe_years": 4,
+  "expensive": 287.4,
+  "trap_flags": null,
+  "updated": "2026-08-02"
  },
  "6104.TWO": {
   "market": "TW",
@@ -1272,22 +1377,22 @@
   "roe_years": 3,
   "expensive": 133.2,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "2404.TW": {
   "market": "TW",
   "name": "漢唐",
   "sector": "Industrials",
   "rank": 2,
-  "eps": 53.43,
+  "eps": 53.46,
   "roe": 0.7793,
   "payout": 0.5241,
   "reinvest": 0.0078,
-  "cheap": 641.16,
+  "cheap": 641.52,
   "roe_years": 4,
-  "expensive": 1602.9,
+  "expensive": 1603.8,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "6469.TWO": {
   "market": "TW",
@@ -1302,7 +1407,7 @@
   "roe_years": 4,
   "expensive": 109.8,
   "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  },
  "5434.TW": {
   "market": "TW",
@@ -1317,66 +1422,6 @@
   "roe_years": 4,
   "expensive": 700.5,
   "trap_flags": null,
-  "updated": "2026-07-31"
- },
- "3034.TW": {
-  "market": "TW",
-  "name": "聯詠",
-  "sector": "Technology",
-  "rank": null,
-  "eps": 26.86,
-  "roe": 0.20476,
-  "payout": 1.0432,
-  "reinvest": 0.0606,
-  "cheap": 322.32,
-  "roe_years": 4,
-  "expensive": 805.8,
-  "trap_flags": null,
-  "updated": "2026-07-31"
- },
- "6957.TW": {
-  "market": "TW",
-  "name": "裕慶-KY",
-  "sector": "Consumer Cyclical",
-  "rank": null,
-  "eps": 10.17,
-  "roe": 0.24322,
-  "payout": 1.2942,
-  "reinvest": 0.1545,
-  "cheap": 122.04,
-  "roe_years": 4,
-  "expensive": 305.1,
-  "trap_flags": null,
-  "updated": "2026-07-31"
- },
- "3416.TW": {
-  "market": "TW",
-  "name": "融程電",
-  "sector": "Technology",
-  "rank": null,
-  "eps": 7.03,
-  "roe": 0.18618,
-  "payout": 0.78239995,
-  "reinvest": 0.3701,
-  "cheap": 84.36,
-  "roe_years": 4,
-  "expensive": 210.9,
-  "trap_flags": null,
-  "updated": "2026-07-31"
- },
- "6183.TW": {
-  "market": "TW",
-  "name": "關貿",
-  "sector": "Industrials",
-  "rank": null,
-  "eps": 4.03,
-  "roe": 0.20746,
-  "payout": 0.794,
-  "reinvest": 0.321,
-  "cheap": 48.36,
-  "roe_years": 4,
-  "expensive": 120.9,
-  "trap_flags": null,
-  "updated": "2026-07-31"
+  "updated": "2026-08-02"
  }
 }
