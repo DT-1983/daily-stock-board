@@ -461,6 +461,20 @@ def main():
     nav = "".join(f'<a href="#{i}">{CHAIN_ICON[c]}</a>' for i, c in enumerate(CHAIN_ORDER)
                   if us_by.get(c) or tw_by.get(c))
 
+    # 財報懶人包導覽：掃 docs/ 有哪些 earnings_*.html（由 earnings_watch 在財報公布後產），
+    # 依檔案修改時間新→舊排，只列最近 8 份。沒有就整段不顯示。
+    earn_nav = ""
+    try:
+        import glob
+        files = sorted(glob.glob("docs/earnings_*.html"), key=os.path.getmtime, reverse=True)[:8]
+        if files:
+            links = " ".join(
+                f'<a href="{os.path.basename(f)}" style="color:#6db3ff">'
+                f'{os.path.basename(f)[9:-5].replace("_", ".")}</a>' for f in files)
+            earn_nav = f'<br>📊 <b>財報懶人包</b>：{links}'
+    except Exception:
+        pass
+
     body = []
     for i, c in enumerate(CHAIN_ORDER):
         us, tw = us_by.get(c, []), tw_by.get(c, [])
@@ -498,7 +512,7 @@ def main():
 <h1>🎯 {date} 產業鏈看板</h1>
 <div class="sub">7 條產業鏈 · 美股(AI決策)＋台股(籌碼+AI決策) · 點卡片展開、點走勢圖載入<br>
 🏛️ <a href="buffett.html" style="color:#6db3ff">巴菲特價值清單（俗貴價+龍頭排名）</a>
-🏇 <a href="portfolios.html" style="color:#6db3ff">策略賽馬模擬倉</a></div>
+🏇 <a href="portfolios.html" style="color:#6db3ff">策略賽馬模擬倉</a>{earn_nav}</div>
 <div class="toggle">
  <button data-m="US" class="on" onclick="mkt('US')">🇺🇸 美股</button>
  <button data-m="TW" onclick="mkt('TW')">🇹🇼 台股</button>
