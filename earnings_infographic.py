@@ -10,12 +10,12 @@
     這種「機構級」版面看起來很有說服力，數字錯了會比純文字更誤導。
   · LLM 只負責「敘事層」（亮點/風險/投資邏輯），且 prompt 明確禁止編造數字，
     只能引用下方餵給它的真實數據。
-  · **判斷框架一律用洪瑞泰（Mike桑）巴菲特選股法，不自創指標。**
-    三大關卡（ROE≥15%連續穩定／盈再率<80%／配息率≥40%）＋ 俗貴價（EPS×12 買、×30 賣）
-    ＋ 變壞判定，全部沿用 buffett_screener 的既有實作。
-    2026-08-03 前這裡曾自創「成長性/淨現金FCF/PEG/Beta」星等 —— 那不是洪瑞泰的東西
-    （他明說不聽成長鬼故事、估值只有兩條線），已移除。動這裡前先讀 memory/hongruitai_method.md。
-  · 結論標章是**洪瑞泰結論**（好公司？便宜嗎？），分析師共識降為底部小字參考。
+  · **本頁並列兩套獨立策略，互不覆蓋**（用戶明確要求，2026-08-03）：
+      ① 洪瑞泰選股法：三大關卡＋俗貴價＋變壞判定，沿用 buffett_screener 既有實作，
+         **不自創指標**（曾自創成長性/PEG/Beta 星等，那不是他的東西，已移除）。
+         動這塊前先讀 memory/hongruitai_method.md。
+      ② 原 prompt 的分析師共識：BUY/SELL 標章＋Forward P/E/PEG/FCF Yield/EV-Sales。
+    兩者可能給相反結論，那是預期行為（不同策略），**不要再自作主張讓其中一套覆蓋另一套**。
 """
 import os
 import io
@@ -280,7 +280,7 @@ def narrative(d: dict, sc: dict) -> dict:
   "investor": "適合什麼樣的投資人(30字內)",
   "sentiment": "市場情緒評級，只能從這五選一：VERY BEARISH / BEARISH / NEUTRAL / BULLISH / VERY BULLISH",
   "sentiment_reason": "情緒評級理由(30字內)",
-  "entry": "依俗貴價的進出場建議(40字內，只能用俗價/貴價論買賣點，不要用目標價或PEG)",
+  "entry": "最佳進場策略 Best Entry Strategy(40字內，可參考 52 週區間與目標價)",
   "bottom_line": "一句話總結(50字內，先講是不是好公司、再講現在貴不貴)"
 }}
 highlights 與 capital 各給 3-4 項，positives 與 risks 各給 4-5 項。"""
@@ -413,32 +413,21 @@ def _gauge_svg(label):
               f'<div class="lbl" style="color:{color}">{label}</div>')
 
 
-def _hong_badge(sc):
-    """洪瑞泰結論標章：品質關（三大關卡）＋ 買點（俗貴價），兩段式。
-
-    ⚠️ 這裡刻意**不用分析師共識當標章**。原本放 BUY/HOLD 是分析師共識，
-    但那不是洪瑞泰的框架，而且會出現「三關全不過、股價是貴價 10 倍，
-    頁面最大的字卻寫 BUY」的自相矛盾。分析師共識降級為底下的小字參考。
-    """
-    passed, n_gates = sc["passed"], sc["n_gates"]
-    good = passed == n_gates
-    if not good:
-        return ("#3A1418", "#EF4444", "不是好公司",
-                f"三大關卡過 {passed}/{n_gates}　·　洪瑞泰：品質第一，不過關就不用談價格")
-    if sc["pos"] == "buy":
-        return ("#0E3A22", "#22C55E", "好公司 · 便宜",
-                "三大關卡全過，且現價 ≤ 俗價 → 買進區")
-    if sc["pos"] == "watch":
-        return ("#3A3212", "#F5B841", "好公司 · 但不夠便宜",
-                "三大關卡全過，但現價在俗價~貴價之間 → 等便宜")
-    return ("#3A1418", "#EF4444", "好公司 · 太貴",
-            "三大關卡全過，但現價 > 貴價 → 考慮賣出")
+# 原 prompt 的「BUY Callout」標章＝分析師共識評級。
+# 這是**獨立於洪瑞泰的另一套策略**（市場派/賣方觀點），兩者並存不互相覆蓋。
+BADGE_STYLE = {
+    "strong_buy":   ("#0E3A22", "#22C55E", "STRONG BUY"),
+    "buy":          ("#0E3A22", "#22C55E", "BUY"),
+    "hold":         ("#3A3212", "#F5B841", "HOLD"),
+    "underperform": ("#3A1A18", "#EF4444", "UNDERPERFORM"),
+    "sell":         ("#3A1418", "#EF4444", "SELL"),
+}
 
 
 def render(d, sc, n):
     cur = d["currency"]
     up = d["target"] and d["price"] and (d["target"] / d["price"] - 1) * 100
-    bg, fg, txt, sub = _hong_badge(sc)
+    bg, fg, txt = BADGE_STYLE.get(d["reco"], ("#22374F", "#8FA8C8", (d["reco"] or "N/A").upper()))
 
     kpis = [
         ("營收 Revenue", _fmt(d["revenue"]["cur"], cur), d["revenue"]["yoy"], False),
@@ -466,13 +455,17 @@ def render(d, sc, n):
         f'{f"{p['yoy']:+.1f}%" if p["yoy"] is not None else "—"}</td></tr>'
         for lb, p in fin_rows)
 
-    # 洪瑞泰估值：只有俗價（買）與貴價（賣）兩條線，沒有合理價、不看 PEG/EV 倍數
-    def _p(v):
-        return f"{v:.2f}" if isinstance(v, (int, float)) else "N/A"
-    val_rows = [("近四季 EPS", _p(sc["eps_ttm"]), "俗貴價的計算基礎"),
-                ("🟢 俗價（買進線）", _p(sc["cheap"]), "EPS × 12　預期報酬 15%"),
-                ("🔴 貴價（賣出線）", _p(sc["expensive"]), "EPS × 30　預期報酬 0%"),
-                ("現價", _p(sc["price"]), sc["pos_txt"])]
+    # 原 prompt 指定的估值簡表：Forward P/E, PEG Ratio, FCF Yield, EV/Sales
+    def _p(v, suf=""):
+        return f"{v:.2f}{suf}" if isinstance(v, (int, float)) else "N/A"
+    fcf_yield = ((d["fcf"]["cur"] / d["market_cap"] * 100)
+                 if (d["fcf"]["cur"] and d["market_cap"]) else None)
+    val_rows = [("Forward P/E", _p(d["fwd_pe"]), "低於 20 偏便宜"),
+                ("PEG Ratio", _p(d["peg"]), "小於 1＝成長性被低估"),
+                ("FCF Yield", _p(fcf_yield, "%"), "自由現金流／市值，越高越好"),
+                ("EV / Sales", _p(d["ev_rev"]), "越低越好"),
+                ("Trailing P/E", _p(d["trail_pe"]), "看過去 12 個月"),
+                ("P / B", _p(d["pb"]), "資產面估值")]
     val_html = "".join(
         f'<tr><td>{lb}</td><td>{v}</td>'
         f'<td style="color:#6B84A6;font-size:11px;text-align:right">{h}</td></tr>'
@@ -493,6 +486,17 @@ def render(d, sc, n):
     vd = {"ok": ("#22C55E", "✅ 沒有變壞跡象"),
           "watch": ("#F5B841", "🟠 出現 1 個警訊，觀察"),
           "bad": ("#EF4444", "🔴 變壞 — 洪瑞泰：公司變壞就該賣")}[sc["verdict"]]
+    # 俗貴價（洪瑞泰的買賣線，跟右側分析師共識是兩套獨立策略）
+    _pf = lambda v: f"{v:.2f}" if isinstance(v, (int, float)) else "N/A"
+    rate_html += (
+        f'<div style="margin-top:12px;padding-top:11px;border-top:1px solid #1E3A5F">'
+        f'<div style="color:#F5B841;font-size:11.5px;font-weight:700;margin-bottom:5px">'
+        f'俗貴價（EPS×12 買／EPS×30 賣）</div>'
+        f'<div style="font-size:12.5px;color:#C7D8EC;line-height:1.7">'
+        f'近四季 EPS {_pf(sc["eps_ttm"])}　'
+        f'<span style="color:#22C55E">俗價 {_pf(sc["cheap"])}</span>　'
+        f'<span style="color:#EF4444">貴價 {_pf(sc["expensive"])}</span><br>'
+        f'現價 {_pf(sc["price"])} → <b>{sc["pos_txt"]}</b></div></div>')
     rate_html += (
         f'<div style="margin-top:12px;padding-top:11px;border-top:1px solid #1E3A5F">'
         f'<div style="color:#F5B841;font-size:11.5px;font-weight:700;margin-bottom:5px">'
@@ -539,7 +543,7 @@ def render(d, sc, n):
 </div>
 
 <div class="dec">
-  <div class="card"><h2>投資決策矩陣 Decision Framework</h2>{rate_html}
+  <div class="card"><h2>洪瑞泰選股法 Decision Framework</h2>{rate_html}
     <div style="margin-top:13px;padding-top:12px;border-top:1px solid #1E3A5F">
       <div style="color:#F5B841;font-size:11.5px;font-weight:700;margin-bottom:4px">長線投資邏輯</div>
       <div style="font-size:12.8px;line-height:1.6;color:#C7D8EC">{n.get('thesis', '')}</div>
@@ -547,20 +551,18 @@ def render(d, sc, n):
       <div style="font-size:12.8px;color:#C7D8EC">{n.get('investor', '')}</div>
     </div>
   </div>
-  <div class="card"><h2>洪瑞泰結論與俗貴價 Verdict</h2>
+  <div class="card"><h2>分析師共識與估值 Consensus</h2>
     <div class="badge" style="background:{bg};border:1px solid {fg}">
-      <div class="bg" style="color:{fg};font-size:24px">{txt}</div>
-      <div class="bs" style="color:{fg}">{sub}</div>
+      <div class="bg" style="color:{fg}">{txt}</div>
+      <div class="bs" style="color:{fg}">{d['n_analysts'] or '?'} 位分析師共識　·　平均目標價 {d['target'] or 'N/A'}
+        {f'（潛在空間 {up:+.1f}%）' if up is not None else ''}</div>
     </div>
     <table>{val_html}</table>
     <div style="margin-top:11px;padding-top:10px;border-top:1px solid #1E3A5F">
       <div style="color:#F5B841;font-size:11.5px;font-weight:700;margin-bottom:4px">進場策略</div>
       <div style="font-size:12.8px;line-height:1.6;color:#C7D8EC">{n.get('entry', '')}</div>
       <div class="note">52 週區間 {d['wk_low']} ~ {d['wk_high']}　·　市值 {_fmt(d['market_cap'], cur)}
-        　·　淨現金 {_fmt(sc['net_cash'], cur)}<br>
-        <span style="opacity:.75">市場參考（非洪瑞泰框架）：分析師共識 {(d['reco'] or 'N/A').upper()}
-        （{d['n_analysts'] or '?'} 位）、平均目標價 {d['target'] or 'N/A'}
-        {f'（潛在空間 {up:+.1f}%）' if up is not None else ''}</span></div>
+        　·　淨現金 {_fmt(sc['net_cash'], cur)}</div>
     </div>
   </div>
 </div>
@@ -572,10 +574,13 @@ def render(d, sc, n):
 <div class="ftr">
   <b>資料來源</b>：所有財務數字與估值指標皆取自 yfinance 之公司申報財報，未經 AI 生成或修改。
   星級評分中的成長性/財務體質/估值/風險由公式計算，「競爭護城河」與文字敘述由 AI 依上述數據撰寫。<br>
-  <b>判斷框架</b>：一律採<b>洪瑞泰（Mike桑）巴菲特選股法</b> —— 三大關卡（ROE≥15% 且連續穩定／
-  盈再率&lt;80%／配息率≥40%）＋ 俗價 EPS×12（買）、貴價 EPS×30（賣）＋ 變壞判定。
-  <b>沒有合理價，也不使用 PEG／EV 倍數／Beta／目標價</b>來論估值，那些不是這套方法的東西。
-  分析師共識僅列為市場參考，不影響結論。本頁為研究參考，不構成投資建議。<br>
+  <b>本頁並列兩套獨立策略，互不覆蓋，可能給出相反結論——那是正常的，不是 bug</b>：<br>
+  　<b>① 洪瑞泰（Mike桑）選股法</b>（左下卡）：三大關卡（ROE≥15% 且連續穩定／盈再率&lt;80%／
+  配息率≥40%）＋ 俗價 EPS×12 買、貴價 EPS×30 賣 ＋ 變壞判定。長線、重品質、不看成長故事。<br>
+  　<b>② 分析師共識與估值</b>（右下卡）：BUY/HOLD/SELL 標章為 yfinance 彙整的<b>賣方分析師共識</b>，
+  搭配 Forward P/E、PEG、FCF Yield、EV/Sales。市場派觀點，含成長性預期。<br>
+  兩者衝突時（例：分析師喊 BUY 但洪瑞泰三關全不過）＝ 該檔是「市場看好但體質不合格」，
+  請自行判斷要跟哪一套。本頁為研究參考，不構成投資建議。<br>
   <b>已知限制</b>：無法取得法說會內容、管理層展望與新聞，因此「下季展望」類資訊不予呈現，避免編造。
 </div>
 </div></body></html>"""
