@@ -23,8 +23,8 @@ from datetime import datetime
 import yfinance as yf
 from tw_report import convert
 from board_html import (parse_report, oneliner, CHAIN_ORDER, CHAIN_MAP,
-                        CHAIN_THEMES, ma_series, supertrend, fetch_us_charts,
-                        esc_tw, TW_JSON, OBIS)
+                        CHAIN_THEMES, CHAIN_REPORTS, ma_series, supertrend,
+                        fetch_us_charts, esc_tw, TW_JSON, OBIS)
 
 PAGES = "https://dt-1983.github.io/daily-stock-board"
 
@@ -81,6 +81,9 @@ h1 svg{flex-shrink:0}
  font-size:12px;padding:6px 12px;min-height:34px;border-radius:17px;cursor:pointer;
  white-space:nowrap;font-family:inherit;font-weight:600;transition:all .18s}
 .sc[aria-pressed=true]{background:#334155;color:var(--ink);border-color:#475569}
+.sc b{font-family:'Fira Code',monospace;font-weight:600;margin-left:1px}
+.d2{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:middle}
+.slb2{color:var(--dim);font-size:11px;align-self:center;margin-right:2px;flex-shrink:0}
 
 /* chain */
 .chain{margin-top:22px;scroll-margin-top:104px}
@@ -165,13 +168,19 @@ h1 svg{flex-shrink:0}
 
 JS = """
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-let MKT='US',SORT='score';
-function applyMkt(m){MKT=m;
- $$('.seg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===m));
- $$('.row,.detail').forEach(e=>{e.style.display=e.dataset.mkt===m?'':'none';
-   if(e.classList.contains('detail')&&!e.classList.contains('on'))e.style.display='none';});
+let MKT='US',SORT='score',FILT='all';
+function visible(e){return e.dataset.mkt===MKT&&(FILT==='all'||e.dataset.sig===FILT);}
+function applyAll(){
+ $$('.seg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===MKT));
+ $$('.row').forEach(r=>{const v=visible(r);r.style.display=v?'':'none';
+   const d=$(`.detail[data-for="${r.dataset.id}"]`);
+   if(d)d.style.display=(v&&d.classList.contains('on'))?'block':'none';});
  $$('.chain').forEach(c=>{const n=[...c.querySelectorAll('.row')].filter(r=>r.style.display!=='none').length;
    c.style.display=n?'':'none';});
+ // 篩選鈕檔數：只算目前市場
+ const cnt={all:0,buy:0,sell:0,hold:0,watch:0};
+ $$('.row').forEach(r=>{if(r.dataset.mkt!==MKT)return;cnt.all++;cnt[r.dataset.sig]++;});
+ for(const k in cnt){const el=document.getElementById('n-'+k);if(el)el.textContent=cnt[k];}
  sortRows();}
 function sortRows(){
  $$('.rows').forEach(box=>{
@@ -183,9 +192,11 @@ function sortRows(){
    return 0;});
   items.forEach(r=>{const d=box.querySelector(`.detail[data-for="${r.dataset.id}"]`);
    box.appendChild(r); if(d)box.appendChild(d);});});}
-$$('.seg button').forEach(b=>b.onclick=()=>applyMkt(b.dataset.m));
-$$('.sc').forEach(b=>b.onclick=()=>{SORT=b.dataset.s;
- $$('.sc').forEach(x=>x.setAttribute('aria-pressed',x===b));sortRows();});
+$$('.seg button').forEach(b=>b.onclick=()=>{MKT=b.dataset.m;applyAll();});
+$$('.sc.f').forEach(b=>b.onclick=()=>{FILT=b.dataset.f;
+ $$('.sc.f').forEach(x=>x.setAttribute('aria-pressed',x===b));applyAll();});
+$$('.sc.s').forEach(b=>b.onclick=()=>{SORT=b.dataset.s;
+ $$('.sc.s').forEach(x=>x.setAttribute('aria-pressed',x===b));sortRows();});
 $$('.row').forEach(r=>r.onclick=()=>{
  const d=$(`.detail[data-for="${r.dataset.id}"]`),open=r.getAttribute('aria-expanded')==='true';
  r.setAttribute('aria-expanded',!open); d.classList.toggle('on',!open);
@@ -205,7 +216,7 @@ function openM(i){$('#m'+i).classList.add('on');document.body.style.overflow='hi
 function closeM(i){$('#m'+i).classList.remove('on');document.body.style.overflow='';}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')
  $$('.modal.on').forEach(m=>{m.classList.remove('on');document.body.style.overflow='';});});
-applyMkt('US');
+applyAll();
 """
 
 
@@ -244,7 +255,7 @@ def _row(rid, mkt, sig, tk, nm, score, one, detail_html):
            if cls in ("buy", "sell") else "")
     return (
         f'<button class="row" data-id="{rid}" data-mkt="{mkt}" data-score="{s}" '
-        f'data-sigrank="{rank}" data-tk="{esc_tw(tk)}" aria-expanded="false">'
+        f'data-sigrank="{rank}" data-sig="{cls}" data-tk="{esc_tw(tk)}" aria-expanded="false">'
         f'<span class="dot" style="background:{col}"></span>'
         f'<span class="info"><span class="t1"><span class="tk">{esc_tw(tk)}</span>'
         f'<span class="nm">{esc_tw(nm)}</span>{tag}</span>'
@@ -254,7 +265,7 @@ def _row(rid, mkt, sig, tk, nm, score, one, detail_html):
         f'<svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none" '
         f'stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>'
         f'</button>'
-        f'<div class="detail" data-for="{rid}" data-mkt="{mkt}">{detail_html}</div>')
+        f'<div class="detail" data-for="{rid}" data-mkt="{mkt}" data-sig="{cls}">{detail_html}</div>')
 
 
 def main():
@@ -317,27 +328,34 @@ def main():
                              r.get("score", "—"), r.get("oneliner", ""),
                              ch + f'<div class="dgrid">{grid}</div><div class="mdbody">{extra}</div>'))
 
+        # 產業深度解讀（全螢幕彈窗）
+        rpt = CHAIN_REPORTS.get(c)
+        rptbtn = ""
+        if rpt:
+            rptbtn = (
+                f'<button class="rptbtn" onclick="openM({i})" aria-haspopup="dialog">'
+                f'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+                f'stroke-width="2" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>'
+                f'<path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>'
+                f'產業深度解讀</button>')
+            modals.append(
+                f'<div class="modal" id="m{i}" role="dialog" aria-modal="true" '
+                f'aria-label="{esc_tw(c)} 產業深度解讀" onclick="if(event.target===this)closeM({i})">'
+                f'<div class="mbox"><div class="mhd"><span>{esc_tw(c)} · 產業深度解讀</span>'
+                f'<button onclick="closeM({i})" aria-label="關閉">&times;</button></div>'
+                f'<div class="mct">{rpt}</div></div></div>')
+
         body.append(
-            f'<section class="chain" id="c{i}">'
+            f'<section class="chain" id="c{i}" data-chain="{i}">'
             f'<div class="chd"><span class="ico">{_icon(c, 17)}</span>'
             f'<h2>{esc_tw(c)}</h2><span class="cnt">美 {len(us)} · 台 {len(tw)}</span></div>'
-            f'{_theme_html(CHAIN_THEMES.get(c))}'
+            f'{_theme_html(CHAIN_THEMES.get(c))}{rptbtn}'
             f'<div class="rows">{"".join(rows)}</div></section>')
 
-    # 財報懶人包（有才顯示，並帶清楚說明）
-    earn = ""
+    # 財報改成獨立頁（用戶 2026-08-03 指示），這裡只放一個入口，不再列一排裸代號
     import glob
-    files = sorted(glob.glob("docs/earnings_*.html"), key=os.path.getmtime, reverse=True)[:6]
-    if files:
-        links = "".join(
-            f'<a class="nl" href="{os.path.basename(f)}">'
-            f'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
-            f'stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>'
-            f'<path d="M14 2v6h6M8 13h8M8 17h5"/></svg>'
-            f'{os.path.basename(f)[9:-5].replace("_", ".")} 財報</a>' for f in files)
-        earn = (f'<div class="sub" style="margin-top:13px">'
-                f'<b style="color:#CBD5E1">財報深度分析</b>（單檔 · 洪瑞泰三大關卡＋分析師共識）</div>'
-                f'<div class="navlinks">{links}</div>')
+    n_earn = len(glob.glob("docs/earnings_*.html"))
+    earn = ""
 
     date = datetime.now().strftime("%Y-%m-%d")
     charts_json = json.dumps(charts, ensure_ascii=False)
@@ -356,17 +374,28 @@ def main():
       stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg>巴菲特價值清單</a>
     <a class="nl" href="portfolios.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
       stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>策略賽馬模擬倉</a>
+    <a class="nl" href="earnings.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>財報深度分析{f' ({n_earn})' if n_earn else ''}</a>
   </div>
-  {earn}
 </header>
 <div class="ctrl">
   <div class="seg" role="group" aria-label="切換市場">
     <button data-m="US" aria-pressed="true">美股</button>
     <button data-m="TW" aria-pressed="false">台股</button></div>
-  <div class="sorts" role="group" aria-label="排序方式">
-    <button class="sc" data-s="score" aria-pressed="true">評分高→低</button>
-    <button class="sc" data-s="sig" aria-pressed="false">依訊號</button>
-    <button class="sc" data-s="tk" aria-pressed="false">依代號</button></div>
+  <div class="sorts" role="group" aria-label="依訊號篩選">
+    <button class="sc f" data-f="all" aria-pressed="true">全部 <b id="n-all">0</b></button>
+    <button class="sc f" data-f="buy" aria-pressed="false"
+      style="border-color:#166534"><span class="d2" style="background:#22C55E"></span>買進 <b id="n-buy">0</b></button>
+    <button class="sc f" data-f="sell" aria-pressed="false"
+      style="border-color:#7F1D1D"><span class="d2" style="background:#EF4444"></span>賣出 <b id="n-sell">0</b></button>
+    <button class="sc f" data-f="hold" aria-pressed="false"><span class="d2" style="background:#3B82F6"></span>持有 <b id="n-hold">0</b></button>
+    <button class="sc f" data-f="watch" aria-pressed="false"><span class="d2" style="background:#64748B"></span>觀望 <b id="n-watch">0</b></button>
+  </div>
+  <div class="sorts" role="group" aria-label="排序方式" style="margin-top:6px">
+    <span class="slb2">排序</span>
+    <button class="sc s" data-s="score" aria-pressed="true">評分高→低</button>
+    <button class="sc s" data-s="sig" aria-pressed="false">訊號優先</button>
+    <button class="sc s" data-s="tk" aria-pressed="false">代號</button></div>
 </div>
 {"".join(body)}
 <p class="sub" style="margin-top:26px">點任一列展開走勢圖與完整判讀 · 產生於 {datetime.now():%Y-%m-%d %H:%M}</p>
