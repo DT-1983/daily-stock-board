@@ -83,7 +83,6 @@ h1 svg{flex-shrink:0}
 .sc[aria-pressed=true]{background:#334155;color:var(--ink);border-color:#475569}
 .sc b{font-family:'Fira Code',monospace;font-weight:600;margin-left:1px}
 .d2{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:middle}
-.slb2{color:var(--dim);font-size:11px;align-self:center;margin-right:2px;flex-shrink:0}
 
 /* chain */
 .chain{margin-top:22px;scroll-margin-top:104px}
@@ -168,7 +167,7 @@ h1 svg{flex-shrink:0}
 
 JS = """
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-let MKT='US',SORT='score',FILT='all';
+let MKT='US',FILT='all';
 function visible(e){return e.dataset.mkt===MKT&&(FILT==='all'||e.dataset.sig===FILT);}
 function applyAll(){
  $$('.seg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===MKT));
@@ -180,23 +179,10 @@ function applyAll(){
  // 篩選鈕檔數：只算目前市場
  const cnt={all:0,buy:0,sell:0,hold:0,watch:0};
  $$('.row').forEach(r=>{if(r.dataset.mkt!==MKT)return;cnt.all++;cnt[r.dataset.sig]++;});
- for(const k in cnt){const el=document.getElementById('n-'+k);if(el)el.textContent=cnt[k];}
- sortRows();}
-function sortRows(){
- $$('.rows').forEach(box=>{
-  const items=[...box.children].filter(e=>e.classList.contains('row'));
-  items.sort((a,b)=>{
-   if(SORT==='score')return (+b.dataset.score||0)-(+a.dataset.score||0);
-   if(SORT==='sig')return (+a.dataset.sigrank)-(+b.dataset.sigrank);
-   if(SORT==='tk')return a.dataset.tk.localeCompare(b.dataset.tk);
-   return 0;});
-  items.forEach(r=>{const d=box.querySelector(`.detail[data-for="${r.dataset.id}"]`);
-   box.appendChild(r); if(d)box.appendChild(d);});});}
+ for(const k in cnt){const el=document.getElementById('n-'+k);if(el)el.textContent=cnt[k];}}
 $$('.seg button').forEach(b=>b.onclick=()=>{MKT=b.dataset.m;applyAll();});
 $$('.sc.f').forEach(b=>b.onclick=()=>{FILT=b.dataset.f;
  $$('.sc.f').forEach(x=>x.setAttribute('aria-pressed',x===b));applyAll();});
-$$('.sc.s').forEach(b=>b.onclick=()=>{SORT=b.dataset.s;
- $$('.sc.s').forEach(x=>x.setAttribute('aria-pressed',x===b));sortRows();});
 $$('.row').forEach(r=>r.onclick=()=>{
  const d=$(`.detail[data-for="${r.dataset.id}"]`),open=r.getAttribute('aria-expanded')==='true';
  r.setAttribute('aria-expanded',!open); d.classList.toggle('on',!open);
@@ -391,11 +377,7 @@ def main():
     <button class="sc f" data-f="hold" aria-pressed="false"><span class="d2" style="background:#3B82F6"></span>持有 <b id="n-hold">0</b></button>
     <button class="sc f" data-f="watch" aria-pressed="false"><span class="d2" style="background:#64748B"></span>觀望 <b id="n-watch">0</b></button>
   </div>
-  <div class="sorts" role="group" aria-label="排序方式" style="margin-top:6px">
-    <span class="slb2">排序</span>
-    <button class="sc s" data-s="score" aria-pressed="true">評分高→低</button>
-    <button class="sc s" data-s="sig" aria-pressed="false">訊號優先</button>
-    <button class="sc s" data-s="tk" aria-pressed="false">代號</button></div>
+
 </div>
 {"".join(body)}
 <p class="sub" style="margin-top:26px">點任一列展開走勢圖與完整判讀 · 產生於 {datetime.now():%Y-%m-%d %H:%M}</p>
