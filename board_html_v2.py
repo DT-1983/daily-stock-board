@@ -162,6 +162,13 @@ h1 svg{flex-shrink:0}
 @media(min-width:900px){.rows{display:grid;grid-template-columns:1fr 1fr}
  .row{border-right:1px solid var(--line2)}
  .detail{grid-column:1/-1}}
+.legend{margin-top:26px;padding:12px 14px;background:var(--surface);
+ border:1px solid var(--line);border-radius:11px;font-size:12.5px;color:var(--muted);line-height:2}
+.legend span{margin-right:13px;white-space:nowrap}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;
+ vertical-align:middle}
+.legend .lgnote{display:block;margin-top:5px;color:var(--dim);font-size:11.5px;
+ line-height:1.7;white-space:normal}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 """
 
@@ -227,9 +234,12 @@ def _theme_html(t):
     return f'<div class="theme">{esc_tw(t)}</div>' if t else ""
 
 
+# 2026-08-03：評分不再上色。原本評分用綠/黃/紅、訊號小圓點也用綠/黃/紅，
+# 同一列會出現「灰點(觀望) + 綠色評分」這種矛盾（實例 MSFT 評分72但判斷是別追）。
+# 現在顏色**專屬訊號**，評分高低改由長條長度與白/灰階表達。
 def _score_color(s):
     s = int(s) if str(s).isdigit() else 0
-    return "#22C55E" if s >= 70 else "#EAB308" if s >= 50 else "#64748B" if s >= 35 else "#EF4444"
+    return "#F8FAFC" if s >= 50 else "#94A3B8"      # 只分「較高/較低」兩階，不搶訊號的顏色
 
 
 def _row(rid, mkt, sig, tk, nm, score, one, detail_html):
@@ -247,7 +257,7 @@ def _row(rid, mkt, sig, tk, nm, score, one, detail_html):
         f'<span class="nm">{esc_tw(nm)}</span>{tag}</span>'
         f'<span class="one">{esc_tw(one) or "—"}</span></span>'
         f'<span class="rt"><span class="sv num" style="color:{sc_col}">{score}</span>'
-        f'<span class="bar" style="width:{max(s*0.46,6):.0f}px;background:{sc_col}"></span></span>'
+        f'<span class="bar" style="width:{max(s*0.46,6):.0f}px;background:#475569"></span></span>'
         f'<svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none" '
         f'stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>'
         f'</button>'
@@ -380,7 +390,16 @@ def main():
 
 </div>
 {"".join(body)}
-<p class="sub" style="margin-top:26px">點任一列展開走勢圖與完整判讀 · 產生於 {datetime.now():%Y-%m-%d %H:%M}</p>
+<div class="legend">
+  <b>顏色只代表訊號</b>：
+  <span><i style="background:#22C55E"></i>買進</span>
+  <span><i style="background:#EF4444"></i>賣出</span>
+  <span><i style="background:#3B82F6"></i>持有</span>
+  <span><i style="background:#64748B"></i>觀望</span><br>
+  <span class="lgnote">右側數字是 AI 評分（0-100），長條表示高低 —— 刻意不上色，
+  避免和訊號的顏色混淆。評分高不等於該買（例：多頭排列但乖離過大 → 評分高但訊號是觀望）。</span>
+</div>
+<p class="sub" style="margin-top:18px">點任一列展開走勢圖與完整判讀 · 產生於 {datetime.now():%Y-%m-%d %H:%M}</p>
 </div>
 <nav class="jump" aria-label="產業鏈快速跳轉">{"".join(nav)}
   <a href="#top" title="回頂端" aria-label="回頂端"><svg width="15" height="15" viewBox="0 0 24 24"
