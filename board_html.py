@@ -1,598 +1,415 @@
-"""美股/台股看板 HTML（v3）：7 鏈分區 + 燈號 + 走勢圖 + 台美切換 + 跳轉導覽
+"""看板 v2 原型（方案 C：手機優先自適應清單）
 
-美股：daily_stock_analysis 報告 + yfinance 走勢
-台股：tw_analysis.json（FinMind 籌碼 + Gemini 決策）+ FinMind 走勢
+跟 board_html.py 吃同樣的輸入（reports/report_*.md + tw_analysis.json），
+只是換版面。確認後再取代 board_html.py。
 
-用法:python board_html.py reports/report_YYYYMMDD.md [-o out.html]
+用法：python board_html_v2.py reports/report_20260802.md -o docs/preview.html
+
+設計依據（ui-ux-pro-max）：
+  · 手機優先 —— 用戶「大部分用手機看」。列式排版（左資訊右數字）不需固定欄寬，
+    375px 不橫捲；桌機自動變兩欄。
+  · 不用 emoji 當結構圖示，改 inline SVG（emoji 跨平台長相不一、無法統一調色）
+  · 數字 tabular-nums 對齊；評分同時用「數字＋長條＋顏色」三重編碼
+    （不能只靠顏色傳達意義 — 色盲可及性）
+  · 觸控目標 ≥44px；hover/focus 都有狀態；prefers-reduced-motion 尊重
 """
-import sys
 import os
 import re
+import sys
 import json
 import argparse
 from datetime import datetime
-import markdown as md
+
 import yfinance as yf
 from tw_report import convert
+from board_html_legacy import (parse_report, oneliner, CHAIN_ORDER, CHAIN_MAP,
+                        CHAIN_THEMES, CHAIN_REPORTS, ma_series, supertrend,
+                        fetch_us_charts, esc_tw, TW_JSON, OBIS)
 
-OBIS = r"C:\Users\Mophy\Documents\Google drive\BB-8 工作區\04_AI Report\Investment"
-TW_JSON = "tw_analysis.json"
+PAGES = "https://dt-1983.github.io/daily-stock-board"
 
-def _load_chain_map():
-    """US ticker→chain：優先讀客觀篩選 screen_result.json，無則 fallback。"""
-    fb = {"NVDA": "AI 伺服器", "AVGO": "AI 伺服器", "ALAB": "矽光子/光通訊",
-          "CRDO": "矽光子/光通訊", "RKLB": "低軌衛星", "ASTS": "低軌衛星",
-          "FSLR": "太陽能", "CORZ": "Bitcoin→AI 機房", "IREN": "Bitcoin→AI 機房",
-          "CEG": "AI 電力/核能", "VST": "AI 電力/核能", "TSLA": "機器人"}
-    try:
-        d = json.load(open("screen_result.json", encoding="utf-8"))
-        m = {}
-        for chain, lst in d["us"].items():
-            for x in lst:
-                m.setdefault(x["code"], chain)   # 同股跨鏈時取第一個鏈
-        return m or fb
-    except Exception:
-        return fb
-
-
-CHAIN_MAP = _load_chain_map()
-CHAIN_ORDER = ["AI 伺服器", "矽光子/光通訊", "機器人", "低軌衛星",
-               "AI 電力/核能", "太陽能", "Bitcoin→AI 機房"]
-CHAIN_ICON = {"AI 伺服器": "🖥️", "矽光子/光通訊": "🔦", "機器人": "🤖",
-              "低軌衛星": "🛰️", "AI 電力/核能": "⚡", "太陽能": "☀️",
-              "Bitcoin→AI 機房": "⛏️"}
-SIG_CLASS = {"🔴": "sell", "🟢": "buy", "🔵": "hold", "🟡": "watch", "⚪": "watch"}
-
-
-def _load_chain_themes():
-    """讀 chain_themes.py 產的 {chain: 一句題材}；沒有就回空 dict（題材層可選）。"""
-    try:
-        d = json.load(open("chain_themes.json", encoding="utf-8"))
-        return d.get("themes", {}), d.get("generated", "")
-    except Exception:
-        return {}, ""
-
-
-CHAIN_THEMES, CHAIN_THEMES_TS = _load_chain_themes()
-
-
-def _load_chain_reports():
-    """讀每鏈深度解讀 HTML 片段 {chain: fragment}；手動維護、非必要。"""
-    try:
-        return json.load(open("chain_reports.json", encoding="utf-8"))
-    except Exception:
-        return {}
-
-
-CHAIN_REPORTS = _load_chain_reports()
-
-
-def _theme_html(theme):
-    """題材層 render：新版 dict(catalyst/risk/watch) 做成可展開；舊版字串相容。"""
-    if isinstance(theme, dict):
-        cat = esc_tw(theme.get("catalyst", ""))
-        extra = []
-        if theme.get("risk"):
-            extra.append(f'<span class="trisk">⚠️ 風險：{esc_tw(theme["risk"])}</span>')
-        if theme.get("watch"):
-            extra.append(f'<span class="twatch">👀 本週觀察：{esc_tw(theme["watch"])}</span>')
-        if extra:
-            return (f'<details class="theme"><summary>💡 {cat}</summary>'
-                    f'{"".join(extra)}</details>')
-        return f'<div class="theme">💡 {cat}</div>'
-    return f'<div class="theme">💡 {esc_tw(theme)}</div>'
-
-# 台股中文名（yfinance 給英文，這裡覆蓋）
-TW_NAME = {
-    "1503": "士電", "1504": "東元", "1513": "中興電", "1519": "華城", "1597": "直得",
-    "1605": "華新", "2049": "上銀", "2308": "台達電", "2314": "台揚", "2317": "鴻海",
-    "2345": "智邦", "2359": "所羅門", "2368": "金像電", "2454": "聯發科", "3017": "奇鋐",
-    "3023": "信邦", "3081": "聯亞", "3105": "穩懋", "3163": "波若威", "3324": "雙鴻",
-    "3363": "上詮", "3450": "聯鈞", "3491": "昇達科", "3576": "聯合再生", "4576": "大銀微",
-    "4908": "前鼎", "5483": "中美晶", "6182": "合晶", "6271": "同欣電", "6285": "啟碁",
-    "6443": "元晶", "8046": "南電",
+# 產業鏈圖示（Lucide 24x24 stroke，統一 2px 線寬）
+ICONS = {
+    "AI 伺服器": '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>',
+    "矽光子/光通訊": '<path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="4"/>',
+    "機器人": '<rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4M8 16h.01M16 16h.01"/>',
+    "低軌衛星": '<path d="M13 7 9 3 5 7l4 4M17 11l4 4-4 4-4-4"/><path d="m8 12 4 4M16 8l-4-4"/>',
+    "AI 電力/核能": '<path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>',
+    "太陽能": '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"/>',
+    "Bitcoin→AI 機房": '<path d="M11 7h4a3 3 0 0 1 0 6h-4zM11 13h5a3 3 0 0 1 0 6h-5zM11 7V4M11 20v-3M15 7V4M15 20v-3M7 7h4M7 13h4M7 19h4"/>',
 }
-
-
-import html as _html
-
-
-def esc_tw(s):
-    return _html.escape(str(s if s is not None else ""))
-
-
-def ma_series(closes, n):
-    return [round(sum(closes[i + 1 - n:i + 1]) / n, 2) if i + 1 >= n else None
-            for i in range(len(closes))]
-
-
-def supertrend(highs, lows, closes, period=10, mult=3.0):
-    """標準 SuperTrend（ATR 基礎，Wilder 平滑）。回傳 {st:[值], dir:[1多/-1空]}。"""
-    n = len(closes)
-    if n < period + 1 or not highs or not lows:
-        return None
-    tr = [highs[0] - lows[0]]
-    for i in range(1, n):
-        tr.append(max(highs[i] - lows[i], abs(highs[i] - closes[i - 1]), abs(lows[i] - closes[i - 1])))
-    atr = [None] * n
-    atr[period - 1] = sum(tr[:period]) / period
-    for i in range(period, n):
-        atr[i] = (atr[i - 1] * (period - 1) + tr[i]) / period
-    hl2 = [(highs[i] + lows[i]) / 2 for i in range(n)]
-    st = [None] * n
-    dr = [None] * n
-    up = [None] * n
-    lo = [None] * n
-    for i in range(period - 1, n):
-        if atr[i] is None:
-            continue
-        bu, bl = hl2[i] + mult * atr[i], hl2[i] - mult * atr[i]
-        if i == period - 1 or up[i - 1] is None:
-            up[i], lo[i] = bu, bl
-            dr[i] = 1 if closes[i] >= hl2[i] else -1
-        else:
-            up[i] = bu if (bu < up[i - 1] or closes[i - 1] > up[i - 1]) else up[i - 1]
-            lo[i] = bl if (bl > lo[i - 1] or closes[i - 1] < lo[i - 1]) else lo[i - 1]
-            if closes[i] > up[i - 1]:
-                dr[i] = 1
-            elif closes[i] < lo[i - 1]:
-                dr[i] = -1
-            else:
-                dr[i] = dr[i - 1]
-        st[i] = lo[i] if dr[i] == 1 else up[i]
-    return {"st": [round(x, 2) if x is not None else None for x in st], "dir": dr}
-
-
-def fetch_us_charts(tickers):
-    """yf.download 批次抓美股走勢（比逐檔 Ticker.history 穩、不易限流）"""
-    charts = {}
-    if not tickers:
-        return charts
-    try:
-        data = yf.download(tickers, period="3mo", group_by="ticker",
-                           progress=False, threads=False, auto_adjust=True)
-    except Exception:
-        return charts
-    for t in tickers:
-        try:
-            h = data[t].dropna() if len(tickers) > 1 else data.dropna()
-            closes = h["Close"].round(2).tolist()
-            if not closes:
-                continue
-            highs = h["High"].round(2).tolist()
-            lows = h["Low"].round(2).tolist()
-            charts[t] = {"dates": [d.strftime("%m/%d") for d in h.index], "close": closes,
-                         "ma5": ma_series(closes, 5), "ma10": ma_series(closes, 10),
-                         "ma20": ma_series(closes, 20), "last": closes[-1],
-                         "supertrend": supertrend(highs, lows, closes)}
-        except Exception:
-            pass
-    return charts
-
-
-def parse_report(text):
-    parts = re.split(r"(?m)^## ", text)
-    summary, stocks = "", []
-    for p in parts:
-        if "分析結果摘要" in p[:20] or "分析结果摘要" in p[:20] or p.startswith("📊"):
-            summary = p
-        else:
-            m = re.match(r"\s*([🔴🟢🔵🟡⚪])?\s*(.+?)\s*\(([A-Z\.]+)\)", p)
-            if m:
-                # (sig, ticker, name, block) — ticker 在前，對齊下游解包
-                stocks.append((m.group(1) or "⚪", m.group(3).split(".")[0],
-                               m.group(2).strip(), "## " + p))
-    return summary, stocks
-
-
-def oneliner(b):
-    m = re.search(r"一句話決策\*\*[:：]\s*(.+)", b)
-    return m.group(1).strip() if m else ""
-
-
-def score(b):
-    m = re.search(r"評分\s*(\d+)", b)
-    return m.group(1) if m else "—"
-
+SIG = {"🟢": ("buy", "買進", "#22C55E"), "🔴": ("sell", "賣出", "#EF4444"),
+       "🔵": ("hold", "持有", "#3B82F6"), "🟡": ("watch", "觀望", "#EAB308"),
+       "⚪": ("watch", "觀望", "#64748B")}
 
 CSS = """
-*{box-sizing:border-box}
-body{font-family:"Microsoft JhengHei","PingFang TC",-apple-system,sans-serif;margin:0;
- background:#0f1115;color:#e6e6e6;line-height:1.6;font-size:15px}
-.wrap{max-width:980px;margin:0 auto;padding:16px 56px 16px 16px}
-h1{font-size:20px;margin:6px 0}.sub{color:#9aa0a6;font-size:13px}
-.toggle{display:inline-flex;background:#1c2128;border-radius:18px;padding:3px;margin:12px 0}
-.toggle button{border:0;background:transparent;color:#9aa0a6;padding:6px 18px;border-radius:15px;
- font-size:14px;cursor:pointer;font-weight:600}.toggle button.on{background:#4a9eff;color:#fff}
-.legend{background:#1a1d23;border:1px solid #2a2e35;border-radius:8px;padding:8px 12px;margin:8px 0;
- font-size:13px;display:flex;flex-wrap:wrap;gap:14px}.legend b{color:#fff}
-.overview{background:#1a1d23;border:1px solid #2a2e35;border-radius:8px;padding:10px 12px;margin:10px 0}
-.ovrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
-.pill{font-size:13px;padding:3px 10px;border-radius:12px;background:#262b33;cursor:pointer;user-select:none}
-.pill.act{background:#4a9eff;color:#fff}.pill:hover{background:#333a44}
-.chain{margin:20px 0 6px;font-size:17px;border-left:4px solid #4a9eff;padding-left:10px;
- display:flex;align-items:center;gap:8px}
-.cnt{font-size:12px;color:#9aa0a6;background:#1c2128;padding:1px 8px;border-radius:10px}
-.theme{font-size:13px;color:#c9a86a;margin:2px 0 8px 14px;line-height:1.5}
-details.theme>summary{cursor:pointer;list-style:none;color:#c9a86a}
-details.theme>summary::-webkit-details-marker{display:none}
-details.theme>summary::after{content:" ▾";color:#7a6a45;font-size:11px}
-details.theme[open]>summary::after{content:" ▴"}
-.theme .trisk,.theme .twatch{display:block;margin:4px 0 0 18px;font-size:12.5px;color:#9aa0a6}
-.theme .trisk{color:#d99}
-.card{background:#1a1d23;border:1px solid #2a2e35;border-radius:10px;margin:8px 0;overflow:hidden}
-.card.sell{border-left:4px solid #ff5c5c}.card.buy{border-left:4px solid #3ddc84}
-.card.hold,.card.watch{border-left:4px solid #8a8f98}
-summary{cursor:pointer;padding:11px 13px;list-style:none;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-summary::-webkit-details-marker{display:none}
-.tk{font-weight:700;font-size:16px}.nm{color:#9aa0a6;font-size:13px}
-.px{margin-left:auto;font-size:13px;color:#cfd3d8}
-.badge{font-size:13px;padding:2px 8px;border-radius:10px;background:#262b33}
-.oneliner{flex-basis:100%;color:#cfd3d8;font-size:13.5px;margin-top:2px}
-.detail{padding:0 13px 13px;border-top:1px solid #2a2e35}
-.detail h3{font-size:14px;margin:12px 0 4px;color:#bcd2ff}
-.detail table{border-collapse:collapse;width:100%;font-size:13px;margin:6px 0}
-.detail th,.detail td{border:1px solid #2a2e35;padding:5px 8px;text-align:left}.detail th{background:#222831}
-.detail blockquote{border-left:3px solid #4a9eff;margin:6px 0;padding:2px 10px;color:#cfd3d8}
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
-.chip{font-size:12.5px;padding:2px 9px;border-radius:10px;background:#222831}
-.chip.pos{color:#3ddc84}.chip.neg{color:#ff7676}
-.chartbtn{margin:8px 0;font-size:13px;background:#262b33;border:0;color:#bcd2ff;padding:5px 12px;border-radius:8px;cursor:pointer}
-.chartbox{display:none;margin:6px 0}
-.cbar{display:flex;gap:6px;margin-bottom:6px}
-.cbtn{font-size:12.5px;padding:3px 10px;border-radius:8px;border:1px solid #2a2e35;background:#1c2128;color:#8a8f98;cursor:pointer}
-.cbtn.on{background:#4a9eff;color:#fff;border-color:#4a9eff}
-.rail{position:fixed;right:6px;top:80px;display:flex;flex-direction:column;gap:5px;z-index:20}
-.rail a,.rail button{font-size:11px;width:40px;height:40px;border-radius:50%;border:1px solid #2a2e35;
- background:#1c2128cc;color:#cfd3d8;text-decoration:none;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.hidden{display:none!important}
-/* 產業深度解讀（按鈕開全螢幕彈窗） */
-.rptbtn{display:block;width:calc(100% - 14px);text-align:left;margin:2px 0 10px 14px;background:#14171d;
- border:1px solid #2a2e35;border-radius:9px;color:#c9a86a;font-size:13.5px;font-weight:700;padding:10px 12px;cursor:pointer}
-.rptbtn:hover{background:#1a1f27}
-.rptbtn::after{content:" ⤢";color:#7a6a45}
-.rptmodal{display:none;position:fixed;inset:0;background:#000d;z-index:100}
-.rptmodal.on{display:block}
-.rptbox{position:absolute;inset:0;background:#0f1115;display:flex;flex-direction:column}
-.rpthead{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 16px;
- border-bottom:1px solid #2a2e35;background:#161b22;flex:0 0 auto}
-.rpthead span{font-size:15px;font-weight:700}
-.rptx{background:#262b33;border:0;color:#cfd3d8;font-size:15px;width:34px;height:34px;border-radius:8px;cursor:pointer;flex:0 0 auto}
-.rptbody{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px 16px 40px}
-.rpt{font-size:14px}
-.rpt h2{font-size:15.5px;margin:18px 0 6px;border-left:3px solid #4a9eff;padding-left:9px}
-.rpt p{margin:7px 0}
-.rpt .note{background:#1a1d23;border:1px solid #2a2e35;border-radius:8px;padding:8px 11px;font-size:13px;color:#cfd3d8;margin:9px 0}
-.rpt .tldr{background:#12151b;border:1px solid #2a2e35;border-radius:10px;padding:12px 14px;margin:6px 0 16px}
-.rpt .tldr .lab{font-size:11.5px;font-weight:700;letter-spacing:.5px;color:#8a8f98;margin-bottom:9px}
-.rpt .tldr .row{display:flex;gap:8px;margin:8px 0;font-size:13.5px;align-items:flex-start}
-.rpt .tldr .ic{flex:0 0 auto}
-.rpt .tldr .r1{border-left:3px solid #4a9eff;padding-left:10px}
-.rpt .tldr .r2{border-left:3px solid #3ddc84;padding-left:10px}
-.rpt .tldr .r3{border-left:3px solid #ff5c5c;padding-left:10px}
-.rpt .tldr b,.rpt td b,.rpt p b{color:#fff}
-.rpt .tw{margin:9px 0}
-.rpt table{border-collapse:collapse;width:100%;font-size:13px}
-.rpt th,.rpt td{border-bottom:1px solid #2a2e35;padding:7px 9px;text-align:left;vertical-align:top}
-.rpt th{background:#222831;color:#bcd2ff;font-weight:700}
-.rpt .tag{display:inline-block;font-size:11.5px;padding:1px 7px;border-radius:9px;background:#262b33;color:#cfd3d8;margin-right:4px}
-.rpt ol,.rpt ul{margin:7px 0;padding-left:20px}.rpt li{margin:5px 0}
-.rpt .risk li b{color:#ffb4b4}
-.rpt .watch li{list-style:none;margin-left:-14px}.rpt .watch li::before{content:"🎯 "}
-.rpt .cap{background:#12151b;border:1px solid #2a2e35;border-radius:10px;padding:11px 13px;margin:12px 0 0}
-.rpt .stat{display:flex;flex-wrap:wrap;gap:9px;margin:11px 0}
-.rpt .stat .box{flex:1 1 150px;background:#1a1d23;border:1px solid #2a2e35;border-radius:9px;padding:10px 12px}
-.rpt .stat .n{font-size:17px;font-weight:800;color:#6db3ff}
-.rpt .stat .t{font-size:11.5px;color:#9aa0a6;margin-top:3px;line-height:1.4}
-.rpt .bb{display:flex;flex-wrap:wrap;gap:11px;margin:9px 0}
-.rpt .bb .col{flex:1 1 300px;border-radius:9px;padding:11px 13px}
-.rpt .bull{background:#12251a;border:1px solid #295c3c}
-.rpt .bear{background:#2a1618;border:1px solid #5c2f33}
-.rpt .bb h4{margin:0 0 6px;font-size:13.5px}
-.rpt .bull h4{color:#4ade80}.rpt .bear h4{color:#ff8a8a}
-.rpt .bb ul{padding-left:17px;margin:4px 0}.rpt .bb li{font-size:13px;margin:5px 0}
-.rpt details{margin:10px 0 0;border:1px solid #2a2e35;border-radius:8px;background:#161a20}
-.rpt details>summary{cursor:pointer;color:#bcd2ff;font-size:13.5px;font-weight:700;padding:9px 11px;display:block;list-style:none}
-.rpt details>summary::-webkit-details-marker{display:none}
-.rpt details>summary::after{content:" ▾";color:#6b7280}
-.rpt details[open]>summary::after{content:" ▴"}
-.rpt .inr{padding:0 11px 11px}
-.rpt .disc{color:#6b7280;font-size:11.5px;margin-top:16px;line-height:1.6}
-.rpt .ln{margin:3px 0;font-size:12.5px;line-height:1.5}
-.rpt .b{display:inline-block;font-size:10px;font-weight:700;padding:1px 8px;border-radius:7px;margin-right:6px}
-.rpt .b.up{background:#12351f;color:#4ade80}
-.rpt .b.dn{background:#3a1a1d;color:#ff8a8a}
-.rpt .k{color:#c9a86a}
-@media(max-width:620px){
- .rpt table{border:0}
- .rpt thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
- .rpt tbody tr{display:block;background:#1a1d23;border:1px solid #2a2e35;border-radius:9px;margin:0 0 9px;padding:3px 2px}
- .rpt tbody td{display:block;position:relative;border:0;border-bottom:1px solid #23272e;padding:6px 12px 6px 80px;min-height:31px}
- .rpt tbody tr td:last-child{border-bottom:0}
- .rpt tbody td::before{content:attr(data-label);position:absolute;left:11px;top:6px;width:60px;color:#8a8f98;font-size:11.5px;font-weight:700;line-height:1.55}
-}
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#020617;--surface:#0F172A;--card:#131F35;--line:#1E293B;--line2:#16223A;
+ --ink:#F8FAFC;--muted:#94A3B8;--dim:#64748B;--accent:#3B82F6;
+ --up:#22C55E;--down:#EF4444;--warn:#EAB308}
+body{background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;
+ font-family:Inter,-apple-system,"Microsoft JhengHei","PingFang TC",sans-serif;font-size:15px}
+.wrap{max-width:1100px;margin:0 auto;padding:14px 14px 60px}
+.num{font-family:'Fira Code',monospace;font-variant-numeric:tabular-nums}
+
+/* header */
+header{padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:6px}
+h1{font-size:19px;font-weight:800;letter-spacing:-.3px;display:flex;align-items:center;gap:9px}
+h1 svg{flex-shrink:0}
+.sub{color:var(--muted);font-size:12.5px;margin-top:5px}
+.navlinks{display:flex;gap:7px;margin-top:11px;flex-wrap:wrap}
+.nl{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;min-height:38px;
+ border:1px solid var(--line);border-radius:9px;background:var(--surface);
+ color:#BFDBFE;text-decoration:none;font-size:12.5px;font-weight:600;
+ transition:border-color .18s,background .18s}
+.nl:hover,.nl:focus-visible{border-color:var(--accent);background:#152238}
+.nl svg{flex-shrink:0;opacity:.85}
+
+/* sticky controls */
+.ctrl{position:sticky;top:0;z-index:20;background:var(--bg);padding:11px 0 9px;
+ border-bottom:1px solid var(--line);margin-bottom:4px}
+.seg{display:inline-flex;background:var(--line);border-radius:9px;padding:3px}
+.seg button{border:0;background:transparent;color:var(--muted);font-size:13px;font-weight:600;
+ padding:7px 16px;min-height:38px;border-radius:7px;cursor:pointer;font-family:inherit;
+ transition:background .18s,color .18s}
+.seg button[aria-pressed=true]{background:#334155;color:var(--ink)}
+.sorts{display:flex;gap:6px;margin-top:9px;overflow-x:auto;padding-bottom:2px;
+ scrollbar-width:none}
+.sorts::-webkit-scrollbar{display:none}
+.sc{border:1px solid var(--line);background:var(--surface);color:var(--muted);
+ font-size:12px;padding:6px 12px;min-height:34px;border-radius:17px;cursor:pointer;
+ white-space:nowrap;font-family:inherit;font-weight:600;transition:all .18s}
+.sc[aria-pressed=true]{background:#334155;color:var(--ink);border-color:#475569}
+.sc b{font-family:'Fira Code',monospace;font-weight:600;margin-left:1px}
+.d2{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:middle}
+
+/* chain */
+.chain{margin-top:22px;scroll-margin-top:104px}
+.chd{display:flex;align-items:center;gap:9px;margin-bottom:3px}
+.chd .ico{width:30px;height:30px;border-radius:8px;background:#1E3A5F;display:grid;
+ place-items:center;flex-shrink:0}
+.chd h2{font-size:16.5px;font-weight:700}
+.cnt{font-size:11.5px;color:var(--dim);background:var(--line);padding:2px 9px;border-radius:16px}
+.theme{color:var(--muted);font-size:12.5px;line-height:1.6;margin:5px 0 10px}
+.theme details{margin-top:4px}
+.theme summary{cursor:pointer;color:#93C5FD;font-size:12px;list-style:none}
+.theme summary::-webkit-details-marker{display:none}
+.theme .ex{display:block;margin:5px 0 0 14px;color:var(--dim);font-size:12px}
+.rptbtn{display:inline-flex;align-items:center;gap:7px;margin:2px 0 10px;padding:9px 13px;
+ min-height:40px;background:var(--surface);border:1px solid var(--line);border-radius:9px;
+ color:#BFDBFE;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;
+ transition:border-color .18s}
+.rptbtn:hover,.rptbtn:focus-visible{border-color:var(--accent)}
+
+/* rows */
+.rows{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+.row{display:flex;align-items:flex-start;gap:10px;padding:12px 13px;min-height:56px;
+ border-bottom:1px solid var(--line2);cursor:pointer;width:100%;text-align:left;
+ background:transparent;border-left:0;border-right:0;border-top:0;color:inherit;
+ font-family:inherit;font-size:inherit;transition:background .15s}
+.row:last-child{border-bottom:0}
+.row:hover,.row:focus-visible{background:#16223A}
+.row:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px}
+.info{flex:1;min-width:0}
+.t1{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
+.tk{font-weight:700;font-size:14.5px}
+.nm{color:var(--dim);font-size:11.5px;overflow:hidden;text-overflow:ellipsis;
+ white-space:nowrap;max-width:190px}
+.sigtag{font-size:10px;font-weight:700;padding:1px 7px;border-radius:5px}
+.one{color:var(--muted);font-size:12px;margin-top:3px;line-height:1.5}
+.rt{text-align:right;flex-shrink:0;min-width:52px}
+.sv{font-size:17px;font-weight:600;line-height:1}
+.bar{height:4px;border-radius:2px;margin-top:5px;margin-left:auto}
+.chev{flex-shrink:0;margin-top:4px;opacity:.4;transition:transform .2s}
+.row[aria-expanded=true] .chev{transform:rotate(90deg)}
+.detail{display:none;padding:0 13px 14px;border-bottom:1px solid var(--line2);
+ background:#101B2E}
+.detail.on{display:block}
+.chartbox{height:180px;margin-top:4px}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:8px;margin-top:10px}
+.dcell{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 9px}
+.dcell .k{color:var(--dim);font-size:10px;letter-spacing:.3px}
+.dcell .v{font-size:13px;font-weight:600;margin-top:2px}
+.mdbody{color:#C7D8EC;font-size:12.5px;line-height:1.7;margin-top:10px}
+.mdbody h3{font-size:13px;color:#F5B841;margin:11px 0 4px;font-weight:700}
+.mdbody table{width:100%;border-collapse:collapse;font-size:12px;margin:7px 0}
+.mdbody th,.mdbody td{border:1px solid var(--line);padding:5px 7px;text-align:right}
+.mdbody th:first-child,.mdbody td:first-child{text-align:left}
+.mdbody blockquote{border-left:3px solid var(--accent);padding:3px 10px;margin:6px 0;color:#CBD5E1}
+.mdbody ul{margin-left:17px}
+
+/* modal */
+.modal{display:none;position:fixed;inset:0;z-index:60;background:rgba(2,6,23,.75);
+ backdrop-filter:blur(3px);padding:14px}
+.modal.on{display:block}
+.mbox{max-width:860px;margin:0 auto;height:100%;background:var(--surface);
+ border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;overflow:hidden}
+.mhd{display:flex;justify-content:space-between;align-items:center;gap:12px;
+ padding:13px 15px;border-bottom:1px solid var(--line);font-weight:700;font-size:14.5px}
+.mhd button{background:var(--line);border:0;color:var(--ink);width:40px;height:40px;
+ border-radius:9px;cursor:pointer;font-size:19px;line-height:1}
+.mct{overflow-y:auto;padding:15px;color:#C7D8EC;font-size:13px;line-height:1.75}
+
+.jump{position:fixed;right:9px;top:50%;transform:translateY(-50%);z-index:30;
+ display:flex;flex-direction:column;gap:3px}
+.jump a{width:34px;height:34px;display:grid;place-items:center;border-radius:9px;
+ background:rgba(19,31,53,.9);border:1px solid var(--line);color:#93C5FD;
+ text-decoration:none;transition:border-color .18s}
+.jump a:hover,.jump a:focus-visible{border-color:var(--accent)}
+@media(max-width:600px){.jump{display:none}.nm{max-width:120px}}
+@media(min-width:900px){.rows{display:grid;grid-template-columns:1fr 1fr}
+ .row{border-right:1px solid var(--line2)}
+ .detail{grid-column:1/-1}}
+.legend{margin-top:26px;padding:12px 14px;background:var(--surface);
+ border:1px solid var(--line);border-radius:11px;font-size:12.5px;color:var(--muted);line-height:2}
+.legend span{margin-right:13px;white-space:nowrap}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;
+ vertical-align:middle}
+.legend .lgnote{display:block;margin-top:5px;color:var(--dim);font-size:11.5px;
+ line-height:1.7;white-space:normal}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 """
 
 JS = """
-let curMkt='US',curSig='all';
-function setMkt(m){curMkt=m;document.querySelectorAll('.toggle button').forEach(b=>b.classList.toggle('on',b.dataset.m===m));curSig='all';apply();}
-function setSig(s){curSig=(curSig===s?'all':s);apply();}
-function mkt(m){setMkt(m);}
-function apply(){
- document.querySelectorAll('.cnt[data-mkt],.ovrow[data-mkt]').forEach(e=>e.classList.toggle('hidden',e.dataset.mkt!==curMkt));
- document.querySelectorAll('details.card').forEach(c=>{
-  const ok=c.dataset.mkt===curMkt&&(curSig==='all'||c.classList.contains(curSig));
-  c.classList.toggle('hidden',!ok);});
- document.querySelectorAll('.ovrow:not(.hidden) .pill[data-sig]').forEach(p=>p.classList.toggle('act',p.dataset.sig===curSig));
- document.querySelectorAll('.chain').forEach(h=>{
-  let n=h.nextElementSibling,any=false;
-  while(n&&!n.classList.contains('chain')){if(n.classList.contains('card')&&!n.classList.contains('hidden'))any=true;n=n.nextElementSibling;}
-  h.classList.toggle('hidden',!any);});
-}
-function expandAll(x){document.querySelectorAll('details.card:not(.hidden)').forEach(d=>d.open=x);}
-function showChart(btn,tk){
- const box=btn.nextElementSibling;
- if(box.style.display==='block'){box.style.display='none';return;}
- box.style.display='block'; if(box.dataset.done)return; box.dataset.done=1;
- const d=CHARTS[tk]; if(!d){box.innerHTML='<span class=sub>無走勢資料</span>';return;}
- // 切換鈕：均線 / SuperTrend 各自開關
- const bar=document.createElement('div');bar.className='cbar';
- const hasST=d.supertrend&&d.supertrend.st;
- bar.innerHTML='<button class="cbtn" data-g="ma">📊 均線 MA</button>'+
-   (hasST?'<button class="cbtn on" data-g="st">📈 SuperTrend</button>':'');
- box.appendChild(bar);
- const c=document.createElement('canvas');box.appendChild(c);
- const ds=[
-   {label:'收盤',data:d.close,borderColor:'#4a9eff',borderWidth:2,pointRadius:0,_g:'price'},
-   {label:'MA5',data:d.ma5,borderColor:'#3ddc84',borderWidth:1,pointRadius:0,_g:'ma',hidden:true},
-   {label:'MA10',data:d.ma10,borderColor:'#f0b429',borderWidth:1,pointRadius:0,_g:'ma',hidden:true},
-   {label:'MA20',data:d.ma20,borderColor:'#888',borderWidth:1,pointRadius:0,_g:'ma',hidden:true}];
- if(hasST){ds.push({label:'SuperTrend',data:d.supertrend.st,borderWidth:2.6,pointRadius:0,spanGaps:false,_g:'st',
-   segment:{borderColor:ctx=>{const dir=d.supertrend.dir[ctx.p1DataIndex];return dir===1?'#3ddc84':(dir===-1?'#ff5c5c':'#8a8f98');}}});}
- const chart=new Chart(c,{type:'line',data:{labels:d.dates,datasets:ds},
-  options:{responsive:true,plugins:{legend:{display:false}},
-   scales:{x:{ticks:{color:'#6b7280',maxTicksLimit:6,font:{size:10}}},y:{ticks:{color:'#6b7280',font:{size:10}}}}}});
- bar.querySelectorAll('.cbtn').forEach(b=>b.onclick=()=>{
-   const on=b.classList.toggle('on');
-   chart.data.datasets.forEach((dd,i)=>{if(dd._g===b.dataset.g)chart.setDatasetVisibility(i,on);});
-   chart.update();});
-}
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+let MKT='US',FILT='all';
+function visible(e){return e.dataset.mkt===MKT&&(FILT==='all'||e.dataset.sig===FILT);}
+function applyAll(){
+ $$('.seg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.m===MKT));
+ $$('.row').forEach(r=>{const v=visible(r);r.style.display=v?'':'none';
+   const d=$(`.detail[data-for="${r.dataset.id}"]`);
+   if(d)d.style.display=(v&&d.classList.contains('on'))?'block':'none';});
+ $$('.chain').forEach(c=>{const n=[...c.querySelectorAll('.row')].filter(r=>r.style.display!=='none').length;
+   c.style.display=n?'':'none';});
+ // 篩選鈕檔數：只算目前市場
+ const cnt={all:0,buy:0,sell:0,hold:0,watch:0};
+ $$('.row').forEach(r=>{if(r.dataset.mkt!==MKT)return;cnt.all++;cnt[r.dataset.sig]++;});
+ for(const k in cnt){const el=document.getElementById('n-'+k);if(el)el.textContent=cnt[k];}}
+$$('.seg button').forEach(b=>b.onclick=()=>{MKT=b.dataset.m;applyAll();});
+$$('.sc.f').forEach(b=>b.onclick=()=>{FILT=b.dataset.f;
+ $$('.sc.f').forEach(x=>x.setAttribute('aria-pressed',x===b));applyAll();});
+$$('.row').forEach(r=>r.onclick=()=>{
+ const d=$(`.detail[data-for="${r.dataset.id}"]`),open=r.getAttribute('aria-expanded')==='true';
+ r.setAttribute('aria-expanded',!open); d.classList.toggle('on',!open);
+ d.style.display=!open?'block':'none';
+ if(!open&&!d.dataset.drawn){d.dataset.drawn=1;drawChart(r.dataset.id);}});
+function drawChart(id){const c=CHARTS[id];if(!c)return;
+ const el=document.getElementById('cv'+id);if(!el)return;
+ const ds=[{label:'收盤',data:c.close,borderColor:'#3B82F6',borderWidth:2,pointRadius:0,tension:.25}];
+ if(c.ma20)ds.push({label:'MA20',data:c.ma20,borderColor:'#94A3B8',borderWidth:1,pointRadius:0,borderDash:[4,3]});
+ if(c.supertrend)ds.push({label:'SuperTrend',data:c.supertrend.st,borderColor:'#EAB308',borderWidth:1.2,pointRadius:0});
+ new Chart(el,{type:'line',data:{labels:c.dates,datasets:ds},
+  options:{responsive:true,maintainAspectRatio:false,interaction:{intersect:false,mode:'index'},
+   plugins:{legend:{labels:{color:'#94A3B8',boxWidth:11,font:{size:10}}}},
+   scales:{x:{ticks:{color:'#64748B',maxTicksLimit:6,font:{size:9}},grid:{color:'#1E293B'}},
+           y:{ticks:{color:'#64748B',font:{size:9}},grid:{color:'#1E293B'}}}}});}
+function openM(i){$('#m'+i).classList.add('on');document.body.style.overflow='hidden';}
+function closeM(i){$('#m'+i).classList.remove('on');document.body.style.overflow='';}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')
+ $$('.modal.on').forEach(m=>{m.classList.remove('on');document.body.style.overflow='';});});
+applyAll();
 """
 
 
-def card_us(sig, tk, nm, block, has_chart, mdc, score_val="—"):
-    cls = SIG_CLASS.get(sig, "watch")
-    detail = mdc.convert(re.sub(r"(?s)^##.*?\n", "", block, count=1)); mdc.reset()
-    chart = (f'<button class="chartbtn" onclick="showChart(this,\'{tk}\')">📈 走勢圖</button>'
-             f'<div class="chartbox"></div>') if has_chart else ""
-    return (f'<details class="card {cls}" data-mkt="US"><summary>'
-            f'<span class="tk">{sig} {tk}</span><span class="nm">{nm}</span>'
-            f'<span class="badge">評分 {score_val}</span>'
-            f'<span class="oneliner">{oneliner(block)}</span></summary>'
-            f'<div class="detail">{chart}{detail}</div></details>')
+def _icon(chain, size=17, color="#60A5FA"):
+    return (f'<svg width="{size}" height="{size}" viewBox="0 0 24 24" fill="none" '
+            f'stroke="{color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" '
+            f'aria-hidden="true">{ICONS.get(chain, "<circle cx=\'12\' cy=\'12\' r=\'9\'/>")}</svg>')
 
 
-def card_tw(r, has_chart):
-    sig = r.get("emoji", "⚪")
-    cls = SIG_CLASS.get(sig, "watch")
-    fc = "pos" if (r.get("foreign") or 0) >= 0 else "neg"
-    tc = "pos" if (r.get("trust") or 0) >= 0 else "neg"
-    chips = (f'<div class="chips">'
-             f'<span class="chip {fc}">外資 {r.get("foreign","—")} 張</span>'
-             f'<span class="chip {tc}">投信 {r.get("trust","—")} 張</span>'
-             f'<span class="chip">月營收YoY {r.get("rev_yoy","—")}%</span>'
-             f'<span class="chip">MA5 {r.get("ma5","—")} / MA20 {r.get("ma20","—")}</span></div>')
-    chart = (f'<button class="chartbtn" onclick="showChart(this,\'{r["code"]}\')">📈 走勢圖</button>'
-             f'<div class="chartbox"></div>') if has_chart else ""
-    g = lambda k: r.get(k, "—")
-    chg = r.get("chg")
-    chgs = f'{chg:+.2f}%' if isinstance(chg, (int, float)) else "—"
-    quote = ('<h3>📈 當日行情</h3><table>'
-             '<tr><th>收盤</th><th>開</th><th>高</th><th>低</th><th>漲跌</th><th>量(張)</th></tr>'
-             f'<tr><td>{g("last")}</td><td>{g("open")}</td><td>{g("high")}</td>'
-             f'<td>{g("low")}</td><td>{chgs}</td><td>{g("vol")}</td></tr></table>')
-    plan = ('<h3>🎯 作戰計劃</h3><table>'
-            f'<tr><th>理想買點</th><td>{g("buy_point")}</td></tr>'
-            f'<tr><th>停損</th><td>{g("stop_loss")}</td></tr>'
-            f'<tr><th>目標</th><td>{g("target")}</td></tr></table>') if r.get("buy_point") else ""
-    fin = ('<h3>💼 財務摘要</h3><table>'
-           '<tr><th>EPS</th><th>毛利率</th><th>PER</th><th>PBR</th><th>殖利率</th></tr>'
-           f'<tr><td>{g("eps")}</td><td>{g("gross_margin")}%</td><td>{g("pe")}</td>'
-           f'<td>{g("pb")}</td><td>{g("yield")}%</td></tr></table>')
-    chk = ""
-    if r.get("checklist"):
-        items = "".join(f"<li>{esc_tw(x)}</li>" for x in r["checklist"])
-        chk = f'<h3>✅ 檢查清單</h3><ul>{items}</ul>'
-    detail = (f'{quote}{chart}'
-              f'<p><b>理由</b>：{esc_tw(r.get("reason",""))}</p>'
-              f'<p class="sub"><b>風險</b>：{esc_tw(r.get("risk",""))}</p>'
-              f'{plan}{fin}{chk}')
-    nm = TW_NAME.get(r["code"], r.get("name", r["code"]))
-    return (f'<details class="card {cls}" data-mkt="TW"><summary>'
-            f'<span class="tk">{sig} {r["code"]}</span><span class="nm">{nm}</span>'
-            f'<span class="badge">評分 {r.get("score","—")}</span>'
-            f'<span class="oneliner">{esc_tw(r.get("oneliner",""))}</span></summary>'
-            f'<div class="detail">{chips}{detail}</div></details>')
+def _theme_html(t):
+    if isinstance(t, dict):
+        cat = esc_tw(t.get("catalyst", ""))
+        ex = []
+        if t.get("risk"):
+            ex.append(f'<span class="ex">⚠ 風險：{esc_tw(t["risk"])}</span>')
+        if t.get("watch"):
+            ex.append(f'<span class="ex">👁 本週觀察：{esc_tw(t["watch"])}</span>')
+        if ex:
+            return (f'<div class="theme">{cat}<details><summary>展開風險與觀察重點</summary>'
+                    f'{"".join(ex)}</details></div>')
+        return f'<div class="theme">{cat}</div>'
+    return f'<div class="theme">{esc_tw(t)}</div>' if t else ""
+
+
+# 2026-08-03：評分不再上色。原本評分用綠/黃/紅、訊號小圓點也用綠/黃/紅，
+# 同一列會出現「灰點(觀望) + 綠色評分」這種矛盾（實例 MSFT 評分72但判斷是別追）。
+# 現在顏色**專屬訊號**，評分高低改由長條長度與白/灰階表達。
+def _score_color(s):
+    s = int(s) if str(s).isdigit() else 0
+    return "#F8FAFC" if s >= 50 else "#94A3B8"      # 只分「較高/較低」兩階，不搶訊號的顏色
+
+
+def _row(rid, mkt, sig, tk, nm, score, one, detail_html):
+    cls, lab, col = SIG.get(sig, SIG["⚪"])
+    rank = {"buy": 0, "sell": 1, "hold": 2, "watch": 3}[cls]
+    s = int(score) if str(score).isdigit() else 0
+    sc_col = _score_color(score)
+    tag = (f'<span class="sigtag" style="background:{col}22;color:{col}">{lab}</span>'
+           if cls in ("buy", "sell") else "")
+    return (
+        f'<button class="row" data-id="{rid}" data-mkt="{mkt}" data-score="{s}" '
+        f'data-sigrank="{rank}" data-sig="{cls}" data-tk="{esc_tw(tk)}" aria-expanded="false">'
+        f'<span class="dot" style="background:{col}"></span>'
+        f'<span class="info"><span class="t1"><span class="tk">{esc_tw(tk)}</span>'
+        f'<span class="nm">{esc_tw(nm)}</span>{tag}</span>'
+        f'<span class="one">{esc_tw(one) or "—"}</span></span>'
+        f'<span class="rt"><span class="sv num" style="color:{sc_col}">{score}</span>'
+        f'<span class="bar" style="width:{max(s*0.46,6):.0f}px;background:#475569"></span></span>'
+        f'<svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none" '
+        f'stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>'
+        f'</button>'
+        f'<div class="detail" data-for="{rid}" data-mkt="{mkt}" data-sig="{cls}">{detail_html}</div>')
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("input")
-    ap.add_argument("-o", "--output", default=None)
+    ap.add_argument("-o", "--output", default="docs/index.html")
     args = ap.parse_args()
 
     raw = convert(open(args.input, encoding="utf-8").read())
     summary, stocks = parse_report(raw)
-    # 美股評分在摘要區（代號): action | 評分 X），抓出來對照
     us_score = dict(re.findall(r"\(([A-Z\.]+)\)\*\*[:：][^|]*\|\s*評分\s*(\d+)", summary))
-    us_by = {c: [] for c in CHAIN_ORDER}
-    for sig, tk, nm, block in stocks:
-        if CHAIN_MAP.get(tk):
-            us_by[CHAIN_MAP[tk]].append((sig, tk, nm, block))
 
-    # 台股:讀 tw_analysis.json
-    tw_data = []
-    if os.path.exists(TW_JSON):
-        tw_data = json.load(open(TW_JSON, encoding="utf-8"))
-    tw_by = {c: [] for c in CHAIN_ORDER}
+    tw_data = json.load(open(TW_JSON, encoding="utf-8")) if os.path.exists(TW_JSON) else []
+    us_by, tw_by = {c: [] for c in CHAIN_ORDER}, {c: [] for c in CHAIN_ORDER}
+    for sig, tk, nm, blk in stocks:
+        if CHAIN_MAP.get(tk):
+            us_by[CHAIN_MAP[tk]].append((sig, tk, nm, blk))
     for r in tw_data:
         tw_by.setdefault(r["chain"], []).append(r)
 
-    # 走勢:美股 yf.download 批次 + 台股用 FinMind closes
     charts = fetch_us_charts([tk for _, tk, _, _ in stocks])
     for r in tw_data:
         cl = r.get("closes")
         if cl:
-            st = supertrend(r.get("highs"), r.get("lows"), cl) if r.get("highs") and r.get("lows") else None
-            charts[r["code"]] = {"dates": r.get("dates", []), "close": cl,
-                                 "ma5": ma_series(cl, 5), "ma10": ma_series(cl, 10),
-                                 "ma20": ma_series(cl, 20), "last": cl[-1], "supertrend": st}
+            charts[r["code"]] = {
+                "dates": r.get("dates", []), "close": cl, "ma20": ma_series(cl, 20),
+                "supertrend": supertrend(r.get("highs"), r.get("lows"), cl)
+                if r.get("highs") else None}
 
-    date = datetime.now().strftime("%Y-%m-%d")
+    import markdown as md
     mdc = md.Markdown(extensions=["tables", "sane_lists", "nl2br"])
 
-    sig_cnt = {"🟢": 0, "🔴": 0, "🔵": 0, "🟡": 0, "⚪": 0}
-    for sig, *_ in stocks:
-        sig_cnt[sig] = sig_cnt.get(sig, 0) + 1
-    tw_cnt = {"🟢": 0, "🔴": 0, "⚪": 0, "🔵": 0}
-    for r in tw_data:
-        tw_cnt[r.get("emoji", "⚪")] = tw_cnt.get(r.get("emoji", "⚪"), 0) + 1
-
-    nav = "".join(f'<a href="#{i}">{CHAIN_ICON[c]}</a>' for i, c in enumerate(CHAIN_ORDER)
-                  if us_by.get(c) or tw_by.get(c))
-
-    # 財報懶人包導覽：掃 docs/ 有哪些 earnings_*.html（由 earnings_watch 在財報公布後產），
-    # 依檔案修改時間新→舊排，只列最近 8 份。沒有就整段不顯示。
-    earn_nav = ""
-    try:
-        import glob
-        files = sorted(glob.glob("docs/earnings_*.html"), key=os.path.getmtime, reverse=True)[:8]
-        if files:
-            links = " ".join(
-                f'<a href="{os.path.basename(f)}" style="color:#6db3ff">'
-                f'{os.path.basename(f)[9:-5].replace("_", ".")}</a>' for f in files)
-            earn_nav = f'<br>📊 <b>財報懶人包</b>：{links}'
-    except Exception:
-        pass
-
-    body = []
+    body, modals, nav = [], [], []
     for i, c in enumerate(CHAIN_ORDER):
         us, tw = us_by.get(c, []), tw_by.get(c, [])
         if not us and not tw:
             continue
-        body.append(f'<div class="chain" id="{i}">{CHAIN_ICON[c]} {c}'
-                    f'<span class="cnt" data-mkt="US">美 {len(us)}</span>'
-                    f'<span class="cnt hidden" data-mkt="TW">台 {len(tw)}</span></div>')
-        theme = CHAIN_THEMES.get(c)
-        if theme:
-            body.append(_theme_html(theme))
-        report = CHAIN_REPORTS.get(c)
-        if report:
-            body.append(
-                f'<button class="rptbtn" onclick="document.getElementById(\'rm{i}\').classList.add(\'on\')">'
-                f'📖 產業深度解讀</button>'
-                f'<div class="rptmodal" id="rm{i}" onclick="if(event.target===this)this.classList.remove(\'on\')">'
-                f'<div class="rptbox"><div class="rpthead"><span>{CHAIN_ICON[c]} {c} · 產業深度解讀</span>'
-                f'<button class="rptx" onclick="document.getElementById(\'rm{i}\').classList.remove(\'on\')">✕</button>'
-                f'</div><div class="rptbody">{report}</div></div></div>')
-        for sig, tk, nm, block in us:
-            body.append(card_us(sig, tk, nm, block, tk in charts, mdc, us_score.get(tk, "—")))
+        nav.append(f'<a href="#c{i}" title="{esc_tw(c)}" aria-label="{esc_tw(c)}">{_icon(c, 15)}</a>')
+        rows = []
+        for sig, tk, nm, blk in us:
+            det = mdc.convert(re.sub(r"(?s)^##.*?\n", "", blk, count=1)); mdc.reset()
+            ch = (f'<div class="chartbox"><canvas id="cv{tk}"></canvas></div>'
+                  if tk in charts else "")
+            rows.append(_row(tk, "US", sig, tk, nm, us_score.get(tk, "—"),
+                             oneliner(blk), ch + f'<div class="mdbody">{det}</div>'))
         for r in tw:
-            body.append(card_tw(r, r["code"] in charts))
+            code = r["code"]
+            cells = [("現價", r.get("last")), ("MA5", r.get("ma5")), ("MA20", r.get("ma20")),
+                     ("外資", f'{r.get("foreign","—")} 張'), ("投信", f'{r.get("trust","—")} 張'),
+                     ("月營收YoY", f'{r.get("rev_yoy")}%' if r.get("rev_yoy") is not None else "—")]
+            grid = "".join(f'<div class="dcell"><div class="k">{k}</div>'
+                           f'<div class="v num">{v}</div></div>' for k, v in cells)
+            extra = "".join(
+                f'<h3>{lab}</h3><p>{esc_tw(r.get(key))}</p>'
+                for lab, key in [("理由", "reason"), ("風險", "risk"),
+                                 ("買點", "buy_point"), ("停損", "stop_loss")]
+                if r.get(key))
+            ch = f'<div class="chartbox"><canvas id="cv{code}"></canvas></div>' if code in charts else ""
+            rows.append(_row(code, "TW", r.get("emoji", "⚪"), code, r.get("name", code),
+                             r.get("score", "—"), r.get("oneliner", ""),
+                             ch + f'<div class="dgrid">{grid}</div><div class="mdbody">{extra}</div>'))
 
-    summary_html = mdc.convert(summary) if summary else ""; mdc.reset()
+        # 產業深度解讀（全螢幕彈窗）
+        rpt = CHAIN_REPORTS.get(c)
+        rptbtn = ""
+        if rpt:
+            rptbtn = (
+                f'<button class="rptbtn" onclick="openM({i})" aria-haspopup="dialog">'
+                f'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+                f'stroke-width="2" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>'
+                f'<path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>'
+                f'產業深度解讀</button>')
+            modals.append(
+                f'<div class="modal" id="m{i}" role="dialog" aria-modal="true" '
+                f'aria-label="{esc_tw(c)} 產業深度解讀" onclick="if(event.target===this)closeM({i})">'
+                f'<div class="mbox"><div class="mhd"><span>{esc_tw(c)} · 產業深度解讀</span>'
+                f'<button onclick="closeM({i})" aria-label="關閉">&times;</button></div>'
+                f'<div class="mct">{rpt}</div></div></div>')
+
+        body.append(
+            f'<section class="chain" id="c{i}" data-chain="{i}">'
+            f'<div class="chd"><span class="ico">{_icon(c, 17)}</span>'
+            f'<h2>{esc_tw(c)}</h2><span class="cnt">美 {len(us)} · 台 {len(tw)}</span></div>'
+            f'{_theme_html(CHAIN_THEMES.get(c))}{rptbtn}'
+            f'<div class="rows">{"".join(rows)}</div></section>')
+
+    # 財報改成獨立頁（用戶 2026-08-03 指示），這裡只放一個入口，不再列一排裸代號
+    import glob
+    n_earn = len(glob.glob("docs/earnings_*.html"))
+    earn = ""
+
+    date = datetime.now().strftime("%Y-%m-%d")
     charts_json = json.dumps(charts, ensure_ascii=False)
-
     html = f"""<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow">
-<title>{date} 美台股看板</title>
+<meta name="robots" content="noindex"><title>{date} 產業鏈看板</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
-<style>{CSS}</style></head><body><div class="wrap" id="top">
-<h1>🎯 {date} 產業鏈看板</h1>
-<div class="sub">7 條產業鏈 · 美股(AI決策)＋台股(籌碼+AI決策) · 點卡片展開、點走勢圖載入<br>
-🏛️ <a href="buffett.html" style="color:#6db3ff">巴菲特價值清單（俗貴價+龍頭排名）</a>
-🏇 <a href="portfolios.html" style="color:#6db3ff">策略賽馬模擬倉</a>{earn_nav}</div>
-<div class="toggle">
- <button data-m="US" class="on" onclick="mkt('US')">🇺🇸 美股</button>
- <button data-m="TW" onclick="mkt('TW')">🇹🇼 台股</button>
-</div>
-<div class="legend"><span><b>燈號</b></span>
- <span>🟢 買進</span><span>🔴 賣出</span><span>🔵 持有</span><span>⚪/🟡 觀望（同義）</span>
- <span>　外資/投信為近 12 日買賣超(張)</span></div>
-<div class="overview"><b>📊 今日摘要（點選可篩選）</b>
- <div class="ovrow" data-mkt="US">
-  <span class="pill act" data-sig="all" onclick="setSig('all')">美股 {len(stocks)} 檔</span>
-  <span class="pill" data-sig="buy" onclick="setSig('buy')">🟢買進 {sig_cnt['🟢']}</span>
-  <span class="pill" data-sig="sell" onclick="setSig('sell')">🔴賣出 {sig_cnt['🔴']}</span>
-  <span class="pill" data-sig="hold" onclick="setSig('hold')">🔵持有 {sig_cnt['🔵']}</span>
-  <span class="pill" data-sig="watch" onclick="setSig('watch')">⚪🟡觀望 {sig_cnt['🟡']+sig_cnt['⚪']}</span></div>
- <div class="ovrow hidden" data-mkt="TW">
-  <span class="pill act" data-sig="all" onclick="setSig('all')">台股 {len(tw_data)} 檔</span>
-  <span class="pill" data-sig="buy" onclick="setSig('buy')">🟢買進 {tw_cnt['🟢']}</span>
-  <span class="pill" data-sig="sell" onclick="setSig('sell')">🔴賣出 {tw_cnt['🔴']}</span>
-  <span class="pill" data-sig="watch" onclick="setSig('watch')">⚪觀望 {tw_cnt['⚪']}</span></div>
-</div>
-<div class="rail">
- <button onclick="expandAll(true)" title="全展開">⤢</button>
- <button onclick="expandAll(false)" title="全收合">⤡</button>
- {nav}<a href="#top" title="回頂">↑</a></div>
-<div data-mkt="US"><details><summary class="sub">📋 美股 AI 決策摘要（點展開）</summary>{summary_html}</details></div>
-{''.join(body)}
-<div class="overview" style="margin-top:24px">
- <b>📖 這份清單怎麼來的（客觀篩選說明）</b>
- <p class="sub" style="margin:8px 0 4px">守備清單不是人工挑的，是用三個客觀因子，每條產業鏈各取最強 8 檔自動篩出：</p>
- <p style="margin:4px 0;font-size:13.5px">① <b>市值</b>：規模越大越穩、越有流動性。<br>
-  ② <b>成長</b>：美股看營收年增率、台股看<b>月營收 YoY</b>。<br>
-  ③ <b>進場（資金流向）</b>：美股用 <b>OBV 能量潮</b>（量價同步看資金淨流入）；台股用 <b>法人 20 日買超÷均量</b>（相對值）。</p>
- <p class="sub" style="margin:8px 0 4px"><b>什麼是「進場因子」？為什麼不用「漲幅」？</b><br>
-  「漲多」≠「資金真的在買」——股價可能量縮虛漲（沒人接、隨時回落）。進場因子改看「<b>量價是否同步</b>」：<br>
-  ‧ <b>美股 OBV（能量潮）</b>：上漲日把成交量加進去、下跌日減掉，累積出「<b>淨買盤量</b>」。再除以自身均量正規化（−1～+1），<br>
-  　<b>＋＝放量上攻（資金真的在進）、−＝出貨</b>。size-neutral：小股不會因量小被大股輾壓。<br>
-  ‧ <b>台股法人籌碼</b>：外資＋投信（聰明錢）近 20 日<b>淨買超股數 ÷ 近 20 日均量</b>。除以均量是關鍵——<br>
-  　看「<b>買超佔成交比重</b>」而非絕對張數，<b>10 萬張流通的股票買 1 萬張，比 100 萬張買 2 萬張更猛</b>。<br>
-  例：台積電市值最大、營收也成長，但外資近期<b>大賣</b>、量價背離，進場因子扣分，這次就沒進前 8——<b>看真實資金，不看名氣</b>。</p>
- <p class="sub" style="margin:8px 0 0"><b>多久掃一次？會變嗎？</b><br>
-  建議<b>每週掃一次</b>（如每週一）。市值與成長變化慢（大型股穩定在榜），但<b>籌碼面天天變</b>，<br>
-  所以<b>核心大型股會固定、邊緣名單隨資金流向輪動</b>。掃太頻繁（每天）過度換股；每月一次又錯過法人輪動。</p>
- <hr style="border-color:#2a2e35;margin:14px 0">
- <p style="margin:4px 0;font-size:13.5px"><b>🚦 燈號（AI 操作建議）</b><br>
-  🟢 買進　🔴 賣出　🔵 持有　⚪／🟡 觀望<br>
-  <span class="sub">註：⚪ 和 🟡 是<b>同一個意思（觀望）</b>，工具在「摘要統計」用 🟡、「個股卡片」用 ⚪，無差別。</span></p>
- <p style="margin:8px 0 0;font-size:13.5px"><b>💯 評分高低是什麼？</b><br>
-  AI 綜合技術面（均線/量能）＋ 基本面 ＋ 籌碼/消息，給 <b>0～100 分</b>：<br>
-  <b>分數越高＝越偏多（買進傾向）</b>；<b>越低＝越偏空（賣出傾向）</b>；<b>50 左右＝中性觀望</b>。<br>
-  <span class="sub">參考級距：80+ 強勢看多｜60-79 偏多｜40-59 中性｜20-39 偏空｜20 以下 強勢看空。評分是「相對強弱」參考，非保證。</span></p>
- <hr style="border-color:#2a2e35;margin:14px 0">
- <p style="margin:4px 0;font-size:13.5px"><b>📈 走勢圖的 SuperTrend 是什麼？</b><br>
-  SuperTrend 是<b>趨勢方向指標</b>（跟 TradingView 內建版同款，參數 ATR 10、倍數 3）。原理：<br>
-  ① 先算 <b>ATR</b>（平均真實波動，衡量近期震盪幅度）。<br>
-  ② 在價格上下各畫一條「軌道」＝ 中價 ± 倍數×ATR。<br>
-  ③ 收盤<b>站上</b>軌道→翻<b style="color:#3ddc84">多頭（線轉綠、走在價格下方當支撐）</b>；<b>跌破</b>→翻<b style="color:#ff5c5c">空頭（線轉紅、走在價格上方當壓力）</b>。<br>
-  <b>怎麼看</b>：線<span style="color:#3ddc84">綠</span>＝順勢偏多、線<span style="color:#ff5c5c">紅</span>＝偏空；<b>顏色一翻就是趨勢反轉訊號</b>。比單看均線更快抓到轉折。<br>
-  <span class="sub">圖例可點：預設顯示 收盤＋MA20＋SuperTrend，想看 MA5/MA10 點圖例打開即可。SuperTrend 為趨勢輔助，非買賣建議。</span></p>
-</div>
-<div class="sub" style="margin-top:20px">產生時間 {datetime.now():%Y-%m-%d %H:%M} · 美股 yfinance / 台股 FinMind · 判讀 Claude(本機) · 守備清單客觀篩選(市值+成長+進場資金流)</div>
-</div><script>const CHARTS={charts_json};{JS}
-mkt('US');  // 初始藏台股卡片
-</script></body></html>"""
+<style>{CSS}</style></head><body><div class="wrap">
+<header>
+  <h1><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#3B82F6"
+    stroke-width="2" stroke-linecap="round" aria-hidden="true">
+    <path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>產業鏈看板</h1>
+  <div class="sub">{date} · 7 條產業鏈 · 美股 yfinance／台股 FinMind · 判讀 Claude（本機）</div>
+  <div class="navlinks">
+    <a class="nl" href="buffett.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg>巴菲特價值清單</a>
+    <a class="nl" href="portfolios.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>策略賽馬模擬倉</a>
+    <a class="nl" href="earnings.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+      stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>財報深度分析{f' ({n_earn})' if n_earn else ''}</a>
+  </div>
+</header>
+<div class="ctrl">
+  <div class="seg" role="group" aria-label="切換市場">
+    <button data-m="US" aria-pressed="true">美股</button>
+    <button data-m="TW" aria-pressed="false">台股</button></div>
+  <div class="sorts" role="group" aria-label="依訊號篩選">
+    <button class="sc f" data-f="all" aria-pressed="true">全部 <b id="n-all">0</b></button>
+    <button class="sc f" data-f="buy" aria-pressed="false"
+      style="border-color:#166534"><span class="d2" style="background:#22C55E"></span>買進 <b id="n-buy">0</b></button>
+    <button class="sc f" data-f="sell" aria-pressed="false"
+      style="border-color:#7F1D1D"><span class="d2" style="background:#EF4444"></span>賣出 <b id="n-sell">0</b></button>
+    <button class="sc f" data-f="hold" aria-pressed="false"><span class="d2" style="background:#3B82F6"></span>持有 <b id="n-hold">0</b></button>
+    <button class="sc f" data-f="watch" aria-pressed="false"><span class="d2" style="background:#64748B"></span>觀望 <b id="n-watch">0</b></button>
+  </div>
 
-    # 2026-07-31 修：原本是 `args.output or OBIS路徑`，workflow 一定會帶 -o docs/index.html，
-    # 所以 obis 那份「永遠不會產生」（巴菲特頁/賽馬頁都是寫兩份，只有看板漏掉）。
-    # 改成兩份都寫：docs/ 給 GitHub Pages、obis 給 Google Drive 手機/外出看。
-    # obis 固定檔名（不帶日期），才不會每天長一個新檔、也才有穩定連結。
-    targets = [args.output] if args.output else []
-    targets.append(os.path.join(OBIS, "美台股看板.html"))
-    for out in targets:
-        if not out:
-            continue
-        try:
-            if os.path.dirname(out):
-                os.makedirs(os.path.dirname(out), exist_ok=True)
-            open(out, "w", encoding="utf-8").write(html)
-            print(f"✅ HTML 看板已存:{out}")
-        except Exception as e:
-            print(f"⚠️ 寫入 {out} 失敗（跳過）:{e}")   # Actions 上沒有 obis 路徑，正常
+</div>
+{"".join(body)}
+<div class="legend">
+  <b>顏色只代表訊號</b>：
+  <span><i style="background:#22C55E"></i>買進</span>
+  <span><i style="background:#EF4444"></i>賣出</span>
+  <span><i style="background:#3B82F6"></i>持有</span>
+  <span><i style="background:#64748B"></i>觀望</span><br>
+  <span class="lgnote">右側數字是 AI 評分（0-100），長條表示高低 —— 刻意不上色，
+  避免和訊號的顏色混淆。評分高不等於該買（例：多頭排列但乖離過大 → 評分高但訊號是觀望）。</span>
+</div>
+<p class="sub" style="margin-top:18px">點任一列展開走勢圖與完整判讀 · 產生於 {datetime.now():%Y-%m-%d %H:%M}</p>
+</div>
+<nav class="jump" aria-label="產業鏈快速跳轉">{"".join(nav)}
+  <a href="#top" title="回頂端" aria-label="回頂端"><svg width="15" height="15" viewBox="0 0 24 24"
+    fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></a></nav>
+{"".join(modals)}
+<script>const CHARTS={charts_json};{JS}</script></body></html>"""
+
+    os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
+    open(args.output, "w", encoding="utf-8").write(html)
+    print(f"✅ {args.output}")
 
 
 if __name__ == "__main__":
