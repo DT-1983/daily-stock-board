@@ -61,12 +61,10 @@ jobs:
           python board_html.py "$f" -o docs/index.html
           python alert_telegram.py "$f" docs/index.html
 
-      - name: 模擬倉每日記淨值 + 出賽馬頁 + 巴菲特頁
-        run: |
-          python paper_portfolio.py rebalance-trend || echo "趨勢倉每日調倉失敗，跳過"
-          python paper_portfolio.py nav || echo "模擬倉更新失敗，跳過"
-          python portfolio_html.py -o docs/portfolios.html || echo "賽馬頁失敗，跳過"
-          python buffett_html.py -o docs/buffett.html || echo "巴菲特頁失敗，跳過"
+      # 2026-08-03：趨勢倉調倉 + nav + 賽馬頁移到獨立的 portfolio-nav.yml
+      # （週一~週六都跑，不綁 tw-board 的週二~週六，修掉週一淨值卡住不動的問題）
+      - name: 巴菲特頁
+        run: python buffett_html.py -o docs/buffett.html || echo "巴菲特頁失敗，跳過"
 
       - name: 回存狀態 + 發佈 HTML 到 Pages
         run: |
