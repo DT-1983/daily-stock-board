@@ -1,0 +1,37 @@
+name: 模擬倉每日淨值更新（不含 LLM）
+
+on:
+  schedule:
+    # UTC 01:00 = 台灣 09:00，週一~週六（比 tw-board 的週二~週六多涵蓋週一）
+    # 2026-08-03 修：nav 原本綁在 tw-board.yml（cron 2-6），週一完全沒有排程
+    # 去重抓現價，導致模擬倉的 cur 停在上週日 rebalance 當下的數字，顯示 0%/$0。
+    # 這裡獨立出來，純 yfinance 抓價 + 算報酬，不呼叫任何 LLM，週一也要跑。
+    - cron: '0 1 * * 1-6'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  nav:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: 裝套件
+        run: pip install -r requirements.txt
+      - name: 趨勢倉調倉 + 記淨值 + 出賽馬頁
+        run: |
+          python paper_portfolio.py rebalance-trend || echo "趨勢倉每日調倉失敗，跳過"
+          python paper_portfolio.py nav || echo "模擬倉更新失敗，跳過"
+          python portfolio_html.py -o docs/portfolios.html || echo "賽馬頁失敗，跳過"
+      - name: 回存狀態 + 發佈
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add portfolios.json docs/portfolios.html
+          git commit -m "chore: 模擬倉每日淨值更新 [skip ci]" || echo "無變化"
+          git push || echo "push 略過"
