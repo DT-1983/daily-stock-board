@@ -73,7 +73,8 @@ GRACE_DAYS = 3      # 排定日當天沒開機 → 之後 3 天內補跑仍算�
 # ────────────────────────────── universe ──────────────────────────────
 
 # 2026-08-03 用戶指定：美股只追這 4 檔（原本 49 檔守備清單全追太雜）
-US_WATCH = {"TSLA": "Tesla", "NVDA": "NVIDIA", "AMD": "AMD", "MRVL": "Marvell"}
+US_WATCH = {"TSLA": "Tesla", "NVDA": "NVIDIA", "AMD": "AMD", "MRVL": "Marvell",
+            "MU": "美光科技", "AVGO": "博通", "PLTR": "Palantir"}  # 2026-08-04 用戶加 3 檔
 
 
 def _holdings(owners=None, category=None) -> dict:

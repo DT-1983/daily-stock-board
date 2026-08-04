@@ -59,6 +59,35 @@ def _trend_strength(c):
     return min(s, 100)
 
 
+def _news(code, n=3, max_age_days=7):
+    """yfinance 內建新聞（免費）。近 7 天內取 n 條標題給 LLM 當輿情輸入。
+    2026-08-04 接回：7/31 砍 Tavily 後判讀理由只剩技術面，用戶要求補新聞層（零成本版）。"""
+    from datetime import timezone
+    try:
+        items = yf.Ticker(code).news or []
+    except Exception:
+        return []
+    out, now = [], datetime.now(timezone.utc)
+    for it in items:
+        c = it.get("content", it)
+        title = (c.get("title") or "").strip()
+        if not title:
+            continue
+        stamp = ""
+        try:
+            dt = datetime.fromisoformat(str(c.get("pubDate", "")).replace("Z", "+00:00"))
+            age = (now - dt).days
+            if age > max_age_days:
+                continue
+            stamp = "今天" if age == 0 else f"{age}天前"
+        except Exception:
+            pass
+        out.append(f"[{stamp}] {title}" if stamp else title)
+        if len(out) >= n:
+            break
+    return out
+
+
 def build_ctx(code, name, chain, df, growth, inflow):
     c = [float(x) for x in df["Close"].dropna().tolist()]
     if len(c) < 25:
@@ -74,11 +103,13 @@ def build_ctx(code, name, chain, df, growth, inflow):
     arrange = ("MA5>MA10>MA20 多頭排列" if m5 > m10 > m20 else
                "MA5<MA10<MA20 空頭排列" if m5 < m10 < m20 else "均線糾結")
     g = f"{growth*100:.0f}%" if isinstance(growth, (int, float)) else "N/A"
+    news = _news(code)
+    news_line = ("\n  近期新聞: " + "；".join(news)) if news else ""
     ctx = (f"{name}({code})｜{chain}\n"
            f"  收盤 {last:.2f}（昨收 {prev:.2f}，漲跌 {chg}%）高 {h[-1]:.2f} 低 {l[-1]:.2f}\n"
            f"  MA5 {m5} MA10 {m10} MA20 {m20}｜{arrange}｜趨勢強度 {_trend_strength(c)}/100\n"
            f"  乖離率(對MA5) {bias5}%｜量比 {vol_ratio}｜近10日收盤 {[round(x,1) for x in c[-10:]]}\n"
-           f"  營收成長 {g}｜資金流入 {inflow}")
+           f"  營收成長 {g}｜資金流入 {inflow}{news_line}")
     meta = {"code": code, "name": name, "chain": chain, "last": round(last, 2),
             "prev": round(prev, 2), "high": round(h[-1], 2), "low": round(l[-1], 2),
             "chg": chg, "ma5": m5, "ma10": m10, "ma20": m20, "arrange": arrange,
@@ -96,6 +127,8 @@ PROMPT_HEAD = """你是美股短線分析師，服務對象是台灣投資人。
   · 賣出：均線空頭排列 **且** 跌破關鍵支撐（兩者俱備才給，否則不要輕易賣出）
   · 其餘一律觀望（含弱勢但未破底、或多空混雜）
 - 用**繁體中文台灣用語**（部位/加碼/減碼/停損/停利/量增/量縮/類股/回檔）。
+- 有附「近期新聞」時，理由/風險要納入判斷並點出關鍵訊息（英文新聞翻成繁中重點）；
+  新聞與技術面矛盾時要指出，不要硬湊成同方向。**沒附新聞就不要提到新聞**。
 - 只根據下方數據判斷，**不要編造新聞、財報數字或日期**。
 
 請針對每一檔輸出，只回 JSON 陣列，不要任何說明文字：
