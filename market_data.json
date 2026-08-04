@@ -1,12 +1,12 @@
 {
- "updated": "2026-08-04 12:31",
+ "updated": "2026-08-04 12:57",
  "indices": [
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "close": 43134.44,
-   "chg_pct": 0.03,
+   "close": 43252.48,
+   "chg_pct": 0.31,
    "date": "08/04"
   },
   {
@@ -53,12 +53,30 @@
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "close": 32.37,
-   "chg_pct": 0.25,
+   "close": 32.38,
+   "chg_pct": 0.27,
    "date": "08/04"
   }
  ],
  "news": [
+  {
+   "title": "股匯動盪避險需求升溫 台新Richart推6個月2.2%優利定存吸資金",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6554131",
+   "ts": "08/04 12:54"
+  },
+  {
+   "title": "俄羅斯警告愛爾蘭：這是海盜行為！後果很嚴重",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6557949",
+   "ts": "08/04 12:41"
+  },
+  {
+   "title": "蘋果20週年大改版！iPhone 20傳採玻璃超薄機身 散熱再升級",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6557874",
+   "ts": "08/04 12:40"
+  },
   {
    "title": "輝達卡關200美元區間 科技巨頭財報也未能助突破",
    "mkt": "US",
@@ -90,18 +108,6 @@
    "ts": "08/04 12:10"
   },
   {
-   "title": "川普罕見列時間表 稱美國將在他任期結束前控制格陵蘭島",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6557945",
-   "ts": "08/04 12:02"
-  },
-  {
-   "title": "不是護日元是議價！專家：天下沒有免費午餐　華府「友誼信號」背後藏三大盤算",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6558408",
-   "ts": "08/04 12:00"
-  },
-  {
    "title": "〈房產〉非六都房貸壓力也不小  這兩縣市晚一年買房貸多扛逾百萬元",
    "mkt": "TW",
    "url": "https://news.cnyes.com/news/id/6558437",
@@ -112,12 +118,6 @@
    "mkt": "TW",
    "url": "https://news.cnyes.com/news/id/6558466",
    "ts": "08/04 11:53"
-  },
-  {
-   "title": "〈焦點股〉緯穎AI伺服器看旺獲外資喊高目標價 股價衝破6300元飆天價",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6558451",
-   "ts": "08/04 11:52"
   }
  ]
 }
