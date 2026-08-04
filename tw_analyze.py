@@ -14,7 +14,27 @@ import requests
 
 from llm_board import ask_json
 
+import sys as _sys
+if _sys.stdout.encoding and _sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
+    _sys.stdout.reconfigure(encoding="utf-8")  # Windows cp950 印 emoji 會炸
+
 FINMIND = "https://api.finmindtrade.com/api/v4/data"
+
+
+def _load_env():
+    """讀 .env 進 os.environ（不覆蓋既有值）。
+    2026-08-05 修：.env 裡一直有 FINMIND_TOKEN 但這支從沒載入過 → 匿名低額度在跑，
+    同日 screen.py + tw_analyze 連跑就撞限流（後段鏈全數跳過）。"""
+    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+    if os.path.exists(p):
+        for line in open(p, encoding="utf-8"):
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                k, v = line.split("=", 1)
+                os.environ.setdefault(k.strip(), v.strip())
+
+
+_load_env()
 FINMIND_TOKEN = os.environ.get("FINMIND_TOKEN", "")   # 可選，提高額度
 
 # 台股守備清單：優先讀客觀篩選結果 screen_result.json（每鏈 top N），無則用 fallback
@@ -207,6 +227,12 @@ def main():
         print(f"[{chain}] {len(lst)} 檔")
         results += analyze_chain(chain, lst)
     out = "tw_analysis.json"
+    # 保險絲（2026-08-05）：FinMind 限流時大半個股被跳過，直接覆寫會把好檔案
+    # 換成殘缺版（當天就發生過只剩 1 檔）。產出低於守備清單一半就拒寫。
+    total = sum(len(lst) for lst in TW_WATCH.values())
+    if results and len(results) < total * 0.5:
+        print(f"\n⚠️ 只完成 {len(results)}/{total} 檔（疑似 FinMind 限流），拒絕覆寫 {out}")
+        raise SystemExit(1)
     json.dump(results, open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     print(f"\n✅ 台股分析完成 {len(results)} 檔 → {out}")
 

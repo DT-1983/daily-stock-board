@@ -72,10 +72,17 @@ def to_usd(tk, native, fx):
     return native / fx if is_tw(tk) else native
 
 
+# 賽馬排除鏈：比賽中途不換賽制。玻璃基板（2026-08-05 新增第 8 鏈）是題材驗證期
+# 觀察鏈，只上看板+深度報告，不進任何模擬倉。
+RACE_EXCLUDE = {"玻璃基板/TGV"}
+
+
 def chain_holdings():
     d = json.load(open(SCREEN, encoding="utf-8"))
     out = {}
     for chain in d.get("us", {}):
+        if chain in RACE_EXCLUDE:
+            continue
         us = [x["code"] for x in d["us"].get(chain, [])]
         tw = [tw_yf(x["code"]) for x in d["tw"].get(chain, [])]
         out[chain] = sorted(set(us + tw))
@@ -87,6 +94,8 @@ def chain_top_picks(n=TOP_PER_CHAIN):
     d = json.load(open(SCREEN, encoding="utf-8"))
     out = {}
     for chain in d.get("us", {}):
+        if chain in RACE_EXCLUDE:
+            continue
         items = [(x["code"], x.get("score", 0)) for x in d["us"].get(chain, [])]
         items += [(tw_yf(x["code"]), x.get("score", 0)) for x in d["tw"].get(chain, [])]
         items.sort(key=lambda z: -z[1])
