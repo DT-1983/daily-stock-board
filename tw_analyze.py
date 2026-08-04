@@ -69,6 +69,36 @@ def _fin_latest(fin):
     return eps, gm
 
 
+def _news(name, n=3, max_age_days=5):
+    """鉅亨 ESS 關鍵字搜尋（免費）。近 5 天取 n 條標題給 LLM 當輿情輸入。
+    2026-08-04 接回新聞層（零成本版），標題要清 <mark> 標籤。"""
+    import re as _re
+    import requests as _rq
+    from datetime import datetime as _dt
+    try:
+        r = _rq.get("https://ess.api.cnyes.com/ess/api/v1/news/keyword",
+                    params={"q": name, "limit": 8},
+                    headers={"User-Agent": "Mozilla/5.0"}, timeout=12)
+        r.raise_for_status()
+        items = (r.json().get("data") or {}).get("items") or []
+    except Exception:
+        return []
+    out, now = [], _dt.now()
+    for it in items:
+        title = _re.sub(r"</?mark>", "", str(it.get("title") or "")).strip()
+        ts = it.get("publishAt")
+        if not title or not isinstance(ts, (int, float)):
+            continue
+        age = (now - _dt.fromtimestamp(ts)).days
+        if age > max_age_days:
+            continue
+        stamp = "今天" if age == 0 else f"{age}天前"
+        out.append(f"[{stamp}] {title}")
+        if len(out) >= n:
+            break
+    return out
+
+
 def collect(code, name, chain):
     """抓資料 + 組 AI 輸入脈絡。回 (ctx 字串, meta dict)，抓不到回 None。"""
     price, inst, rev, per, fin = fetch(code)
@@ -92,11 +122,13 @@ def collect(code, name, chain):
     t = price[-1]
     chg = round((t["close"] / price[-2]["close"] - 1) * 100, 2) if len(price) >= 2 and price[-2]["close"] else None
 
+    news = _news(name)
+    news_line = ("\n新聞: " + "；".join(news)) if news else ""
     ctx = (f"股票:{name}({code}) 產業鏈:{chain}\n"
            f"今日: 開{t['open']} 高{t['max']} 低{t['min']} 收{last} 漲跌{chg}% 量{t.get('Trading_Volume',0)//1000}張\n"
            f"均線: MA5 {ma(5)} MA10 {ma(10)} MA20 {ma(20)}｜近10日收盤 {closes[-10:]}\n"
            f"籌碼: 外資近12日 {foreign} 張、投信 {trust} 張\n"
-           f"基本面: 月營收YoY {rev_yoy}%、EPS {eps}、毛利率 {gm}%、PER {pe_ctx}、殖利率 {yld}%")
+           f"基本面: 月營收YoY {rev_yoy}%、EPS {eps}、毛利率 {gm}%、PER {pe_ctx}、殖利率 {yld}%{news_line}")
     meta = {
         "code": code, "name": name, "chain": chain, "last": last,
         "ma5": ma(5), "ma10": ma(10), "ma20": ma(20),
@@ -125,6 +157,8 @@ PROMPT_HEAD = """你是台股短線分析師。以下是【題材趨勢股守備
 - 其餘一律觀望(包含弱勢但未明確破底、或多空訊號混雜)
 
 用繁體中文台灣用語。**只根據下方數據判斷,不要編造新聞或財報數字。**
+有附「新聞」時,理由/風險要納入判斷並點出關鍵訊息;新聞與技術面/籌碼矛盾時要指出,
+不要硬湊成同方向。**沒附新聞就不要提到新聞。**
 
 請針對每一檔輸出,只回 JSON 陣列,不要任何說明文字:
 [{"code":"代號","signal":"買進或賣出或觀望","score":0到100整數,
