@@ -54,9 +54,10 @@ CSS_EXTRA = """
 
 
 def light(flag, name, pk):
+    # flag 用純文字（🇺🇸/🇹🇼 emoji 在 Windows 會退化成小寫字母 us/tw）
     col, why = STATUS_STYLE.get(pk["status"], STATUS_STYLE["無資料"])
     peak = f'高點：{esc(pk.get("peak_period") or "—")}' if pk.get("peak_period") else ""
-    return (f'<div class="glight"><div class="flag">{flag} {esc(name)}</div>'
+    return (f'<div class="glight"><div class="flag"><b>{esc(flag)}</b> {esc(name)}</div>'
             f'<div class="st"><i style="background:{col}"></i>'
             f'<span style="color:{col}">{esc(pk["status"])}</span></div>'
             f'<div class="why">{esc(why)}</div>'
@@ -64,25 +65,28 @@ def light(flag, name, pk):
 
 
 def chart_block(key, title, unit_note, d, extra_meta=""):
+    # 「還沒有正式實際值」的（概估、預測）一律走黃色虛線組（用戶 2026-08-04 指示）
     act, fc = d["actual"], d["forecast"]
-    last = act[-1]["period"] if act else ""
-    fut = [f for f in fc if f["period"] > last]
-    labels = [a["period"] for a in act] + [f["period"] for f in fut]
-    a_vals = [a["value"] for a in act] + [None] * len(fut)
-    # 預測線從最後一個實際點接出去，視覺上連續
-    f_vals = [None] * (len(act) - 1) + ([act[-1]["value"]] if act else []) + [f["value"] for f in fut]
+    conf = [a for a in act if not a.get("est")]          # 正式實際值（藍實線）
+    last_any = act[-1]["period"] if act else ""
+    pending = ([{**a, "tag": "概估"} for a in act if a.get("est")] +
+               [{**f, "tag": "預測"} for f in fc if f["period"] > last_any])
+    labels = [a["period"] for a in conf] + [p["period"] for p in pending]
+    a_vals = [a["value"] for a in conf] + [None] * len(pending)
+    # 黃虛線從最後一個正式實際點接出去，視覺上連續
+    f_vals = [None] * (len(conf) - 1) + ([conf[-1]["value"]] if conf else []) + \
+             [p["value"] for p in pending]
+
     def _short(p):  # 2026-Q1 → 26Q1，橫排時省寬度
         return p[2:4] + p[5:]
 
     cells = "".join(
         f'<div class="gcell"><div class="gq">{esc(_short(a["period"]))}</div>'
-        f'<div class="gvv num">{a["value"]:+.2f}</div>'
-        + ('<div class="gt" style="color:#94A3B8">概估</div>' if a.get("est") else "")
-        + '</div>'
-        for a in act[-6:]) + "".join(
-        f'<div class="gcell fc"><div class="gq">{esc(_short(f["period"]))}</div>'
-        f'<div class="gvv num">{f["value"]:+.2f}</div><div class="gt">預測</div></div>'
-        for f in fut)
+        f'<div class="gvv num">{a["value"]:+.2f}</div></div>'
+        for a in conf[-6:]) + "".join(
+        f'<div class="gcell fc"><div class="gq">{esc(_short(p["period"]))}</div>'
+        f'<div class="gvv num">{p["value"]:+.2f}</div><div class="gt">{p["tag"]}</div></div>'
+        for p in pending)
     cfg = {"labels": labels, "actual": a_vals, "forecast": f_vals}
     return (f'<div class="gchart"><h2>{title}</h2>'
             f'<div class="meta">{unit_note}{extra_meta}</div>'
@@ -91,8 +95,8 @@ def chart_block(key, title, unit_note, d, extra_meta=""):
 
 
 def build(d):
-    us_light = light("🇺🇸", "美國", d["peak"]["us"])
-    tw_light = light("🇹🇼", "台灣", d["peak"]["tw"])
+    us_light = light("US", "美國", d["peak"]["us"])
+    tw_light = light("TW", "台灣", d["peak"]["tw"])
 
     asof = d["tw"].get("forecast_asof")
     annual = d["tw"].get("annual") or {}
@@ -103,9 +107,9 @@ def build(d):
         tw_meta += "".join(f' · {y} 全年預測 {v:+.2f}%' for y, v in sorted(annual.items()))
 
     us_html, us_cfg = chart_block(
-        "us", "🇺🇸 美國實質 GDP", "季增年率 SAAR（美國慣例口徑）· 實際＝FRED · 預測＝Philly Fed SPF 中位數", d["us"])
+        "us", "US 美國實質 GDP", "季增年率 SAAR（美國慣例口徑）· 實際＝FRED · 預測＝Philly Fed SPF 中位數", d["us"])
     tw_html, tw_cfg = chart_block(
-        "tw", "🇹🇼 台灣實質 GDP", "年增率 YoY（台灣慣例口徑）· 實際＝主計總處", d["tw"], tw_meta)
+        "tw", "TW 台灣實質 GDP", "年增率 YoY（台灣慣例口徑）· 實際＝主計總處", d["tw"], tw_meta)
 
     return f"""<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
