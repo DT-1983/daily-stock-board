@@ -15,6 +15,8 @@ from datetime import datetime
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
+from board_theme import BASE_CSS, header, NAV  # noqa: E402  統一頁首（2026-08-04 首頁改版）
+
 OBIS = r"C:\Users\Mophy\Documents\Google drive\BB-8 工作區\04_AI Report\Investment"
 
 
@@ -39,43 +41,24 @@ def parse_card(path: str) -> dict:
     }
 
 
-CSS = """
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap');
-*{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#020617;--surface:#0F172A;--line:#1E293B;--ink:#F8FAFC;
- --muted:#94A3B8;--dim:#64748B;--accent:#3B82F6}
-body{background:var(--bg);color:var(--ink);line-height:1.55;font-size:15px;
- font-family:Inter,-apple-system,"Microsoft JhengHei","PingFang TC",sans-serif;
- -webkit-font-smoothing:antialiased}
-.wrap{max-width:900px;margin:0 auto;padding:16px 14px 60px}
-.num{font-family:'Fira Code',monospace;font-variant-numeric:tabular-nums}
-header{padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:18px}
-h1{font-size:20px;font-weight:800;display:flex;align-items:center;gap:9px;letter-spacing:-.3px}
-.sub{color:var(--muted);font-size:12.5px;margin-top:6px;line-height:1.7}
-.back{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:8px 13px;
- min-height:38px;border:1px solid var(--line);border-radius:9px;background:var(--surface);
- color:#BFDBFE;text-decoration:none;font-size:12.5px;font-weight:600;transition:border-color .18s}
-.back:hover,.back:focus-visible{border-color:var(--accent)}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(272px,1fr));gap:11px}
-.card{display:block;background:var(--surface);border:1px solid var(--line);border-radius:12px;
+CSS_EXTRA = """
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(272px,1fr));gap:11px;margin-top:16px}
+.ecard{display:block;background:var(--surface);border:1px solid var(--line);border-radius:12px;
  padding:14px;text-decoration:none;color:inherit;transition:border-color .18s,transform .18s}
-.card:hover,.card:focus-visible{border-color:var(--accent);transform:translateY(-2px)}
+.ecard:hover,.ecard:focus-visible{border-color:var(--accent);transform:translateY(-2px)}
 .crow{display:flex;justify-content:space-between;align-items:flex-start;gap:9px}
-.tk{font-size:17px;font-weight:800;letter-spacing:-.2px}
-.nm{color:var(--dim);font-size:11.5px;margin-top:1px;overflow:hidden;
- text-overflow:ellipsis;white-space:nowrap}
+.crow .tk{font-size:17px;font-weight:800;letter-spacing:-.2px}
+.crow+.q,.q{color:var(--muted);font-size:11.5px;margin-top:8px}
+.ecard .nm{color:var(--dim);font-size:11.5px;margin-top:1px;overflow:hidden;
+ text-overflow:ellipsis;white-space:nowrap;max-width:none;display:block}
 .badge{font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px;flex-shrink:0}
-.q{color:var(--muted);font-size:11.5px;margin-top:8px}
 .gates{display:flex;gap:5px;margin-top:9px}
 .gv{font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:5px}
 .ok{background:#052e16;color:#4ADE80}.no{background:#2E1418;color:#FCA5A5}
 .bl{color:#C7D8EC;font-size:12px;line-height:1.6;margin-top:10px;
  border-top:1px solid #16223A;padding-top:9px}
-.empty{background:var(--surface);border:1px dashed var(--line);border-radius:12px;
- padding:34px 20px;text-align:center;color:var(--muted);font-size:13.5px;line-height:1.8}
-.note{color:var(--dim);font-size:11.5px;margin-top:26px;padding-top:14px;
+.enote{color:var(--dim);font-size:11.5px;margin-top:26px;padding-top:14px;
  border-top:1px solid var(--line);line-height:1.8}
-@media(prefers-reduced-motion:reduce){*{transition:none!important}}
 """
 
 BADGE = {"STRONG BUY": ("#0E3A22", "#22C55E"), "BUY": ("#0E3A22", "#22C55E"),
@@ -94,7 +77,7 @@ def build(cards):
                          f'<span class="gv ok">洪瑞泰過 {c["gates"]}</span>'
                          f'<span class="gv no">不過 {c["gates_bad"]}</span></div>')
             items.append(
-                f'<a class="card" href="{c["file"]}">'
+                f'<a class="ecard" href="{c["file"]}">'
                 f'<div class="crow"><div style="min-width:0">'
                 f'<div class="tk num">{c["ticker"]}</div>'
                 f'<div class="nm">{c["name"]}</div></div>'
@@ -112,21 +95,13 @@ def build(cards):
     return f"""<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex"><title>財報深度分析</title>
-<style>{CSS}</style></head><body><div class="wrap">
-<header>
-  <h1><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B82F6"
-    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-    <path d="M14 2v6h6M8 13h8M8 17h5"/></svg>財報深度分析</h1>
-  <div class="sub">單檔財報懶人包 · <b style="color:#CBD5E1">兩套策略並列</b>：
-    洪瑞泰三大關卡（ROE／盈再率／配息率）＋ 俗貴價　｜　分析師共識 ＋ 估值倍數<br>
-    兩者可能給相反結論，那是不同策略的正常結果，不是資料錯誤。</div>
-  <a class="back" href="./"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-    stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-    回產業鏈看板</a>
-</header>
+<style>{BASE_CSS}{CSS_EXTRA}</style></head><body><div class="wrap">
+{header("earnings", "財報深度分析",
+  '單檔財報懶人包 · <b>兩套策略並列</b>：洪瑞泰三大關卡（ROE／盈再率／配息率）＋俗貴價'
+  '　｜　分析師共識＋估值倍數<br>兩者可能給相反結論，那是不同策略的正常結果，不是資料錯誤。',
+  NAV, "earnings")}
 {content}
-<div class="note">
+<div class="enote">
   每季自動更新（4/5、5/20、8/19、11/19），由 <code>earnings_watch.py</code> 在持股公布財報後觸發。<br>
   所有財務數字取自 yfinance 實際申報財報，未經 AI 生成；AI 只負責文字敘述。<br>
   產生於 {datetime.now():%Y-%m-%d %H:%M}

@@ -16,7 +16,7 @@ from tw_report import convert
 
 TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 CHAT = os.environ.get("TELEGRAM_CHAT_ID", "")
-PAGES_URL = "https://dt-1983.github.io/daily-stock-board/"
+PAGES_URL = "https://dt-1983.github.io/daily-stock-board/board.html"  # 2026-08-04 首頁改版：看板搬到 board.html
 STATE = "state/signals.json"
 TW_JSON = "tw_analysis.json"
 ALERT_SIGS = {"🔴", "🟢"}

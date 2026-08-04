@@ -11,16 +11,17 @@ import argparse
 from datetime import datetime
 
 from portfolio_html_legacy import usd, cls, holding_rows, OBIS
-from board_theme import BASE_CSS, header, icon, esc
+from board_theme import BASE_CSS, header, icon, esc, NAV
+
+import sys
+if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
+    sys.stdout.reconfigure(encoding="utf-8")  # Windows cp950 印 emoji 會炸
 
 ICON_NAME = {  # 中文 emoji 圖示 → Lucide SVG（不用 emoji 當結構圖示）
     "產業鏈全": "portfolio", "產業鏈+趨勢": "portfolio", "巴菲特價值": "buffett",
 }
 COLORS = ["#3B82F6", "#22C55E", "#F97316", "#A78BFA", "#EAB308",
          "#22D3EE", "#EF4444", "#94A3B8", "#60A5FA"]
-NAV = [("board", "board", "產業鏈看板", "./"), ("buffett", "buffett", "巴菲特價值清單", "buffett.html"),
-       ("portfolio", "portfolio", "策略賽馬模擬倉", "portfolios.html"),
-       ("earnings", "earnings", "財報深度分析", "earnings.html")]
 
 
 def build(state):

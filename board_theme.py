@@ -15,6 +15,8 @@ SIG_COLOR = {"buy": "#22C55E", "sell": "#EF4444", "hold": "#3B82F6", "watch": "#
 SIG_LABEL = {"buy": "買進", "sell": "賣出", "hold": "持有", "watch": "觀望"}
 
 ICONS = {
+    "home": '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/>',
+    "gdp": '<path d="M22 12h-4l-3 8-4-16-3 8H2"/>',
     "board": '<path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>',
     "buffett": '<path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/>',
     "portfolio": '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
@@ -23,6 +25,18 @@ ICONS = {
     "chevron": '<path d="M9 18l6-6-6-6"/>',
     "close": '<path d="M18 6 6 18M6 6l12 12"/>',
 }
+
+
+# 全站導覽（2026-08-04 首頁改版：儀表板當首頁，看板搬 board.html，新增 GDP 頁）
+# 各頁一律 from board_theme import NAV，不要自己再定義一份。
+NAV = [
+    ("home", "home", "首頁", "./"),
+    ("board", "board", "產業鏈看板", "board.html"),
+    ("buffett", "buffett", "巴菲特清單", "buffett.html"),
+    ("portfolio", "portfolio", "策略賽馬", "portfolios.html"),
+    ("earnings", "earnings", "財報分析", "earnings.html"),
+    ("gdp", "gdp", "GDP 觀察", "gdp.html"),
+]
 
 
 def esc(s):

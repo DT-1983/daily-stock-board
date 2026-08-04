@@ -1,0 +1,123 @@
+{
+ "updated": "2026-08-04 12:31",
+ "indices": [
+  {
+   "sym": "^TWII",
+   "name": "台股加權",
+   "grp": "TW",
+   "close": 43134.44,
+   "chg_pct": 0.03,
+   "date": "08/04"
+  },
+  {
+   "sym": "^GSPC",
+   "name": "S&P 500",
+   "grp": "US",
+   "close": 7489.72,
+   "chg_pct": 0.7,
+   "date": "07/31"
+  },
+  {
+   "sym": "^IXIC",
+   "name": "那斯達克",
+   "grp": "US",
+   "close": 25373.85,
+   "chg_pct": 1.0,
+   "date": "07/31"
+  },
+  {
+   "sym": "^DJI",
+   "name": "道瓊工業",
+   "grp": "US",
+   "close": 52485.03,
+   "chg_pct": 0.53,
+   "date": "07/31"
+  },
+  {
+   "sym": "^SOX",
+   "name": "費城半導體",
+   "grp": "US",
+   "close": 11311.08,
+   "chg_pct": 0.07,
+   "date": "07/31"
+  },
+  {
+   "sym": "^VIX",
+   "name": "VIX 恐慌指數",
+   "grp": "US",
+   "close": 15.86,
+   "chg_pct": -0.81,
+   "date": "08/03"
+  },
+  {
+   "sym": "TWD=X",
+   "name": "美元/台幣",
+   "grp": "FX",
+   "close": 32.37,
+   "chg_pct": 0.25,
+   "date": "08/04"
+  }
+ ],
+ "news": [
+  {
+   "title": "輝達卡關200美元區間 科技巨頭財報也未能助突破",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6557895",
+   "ts": "08/04 12:30"
+  },
+  {
+   "title": "《大賣空》貝瑞警告美股恐「一片狼藉」！點「這一」被忽視潛在風險",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6557940",
+   "ts": "08/04 12:20"
+  },
+  {
+   "title": "東擎發表首款O-PAS認證工業物聯網控制器 加速關鍵工業數位轉型",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6558493",
+   "ts": "08/04 12:12"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：台燿(6274-TW)EPS預估上修至36.05元，預估目標價為2032.5元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6558498",
+   "ts": "08/04 12:10"
+  },
+  {
+   "title": "槓桿ETF規模逼近2500億美元！華爾街玩起「崩盤期權」 年化報酬率最高20%",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6557959",
+   "ts": "08/04 12:10"
+  },
+  {
+   "title": "川普罕見列時間表 稱美國將在他任期結束前控制格陵蘭島",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6557945",
+   "ts": "08/04 12:02"
+  },
+  {
+   "title": "不是護日元是議價！專家：天下沒有免費午餐　華府「友誼信號」背後藏三大盤算",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6558408",
+   "ts": "08/04 12:00"
+  },
+  {
+   "title": "〈房產〉非六都房貸壓力也不小  這兩縣市晚一年買房貸多扛逾百萬元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6558437",
+   "ts": "08/04 11:57"
+  },
+  {
+   "title": "〈焦點股〉Lumentum示警磷化銦缺料危機 聯亞、全新逾5檔亮燈漲停",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6558466",
+   "ts": "08/04 11:53"
+  },
+  {
+   "title": "〈焦點股〉緯穎AI伺服器看旺獲外資喊高目標價 股價衝破6300元飆天價",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6558451",
+   "ts": "08/04 11:52"
+  }
+ ]
+}

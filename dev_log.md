@@ -226,3 +226,47 @@ Actions 09:00（cron 0 0 → 0 1）
 - 放棄 Tavily 新聞層（輿情情緒/風險警報/利好催化/最新動態），
   改為精簡的「結論 + 理由 + 觀察條件 + 風險 + 空手者/持有者建議」。
 - **電腦沒開機就沒有當日判讀**；Actions 沿用前一日報告並發 warning。
+
+## 2026-08-04 · 投資資訊首頁改版 + GDP 觀察頁 + 修今日看板 workflow 失敗
+
+### 改版（用戶拍板三決定：儀表板當首頁／加 14:05 排程／新聞用鉅亨）
+
+```
+首頁 index.html（新：大盤行情 + 鉅亨頭條10條 + 分頁入口動態摘要）
+├── board.html      產業鏈看板（原 index.html 搬家）
+├── buffett.html    巴菲特清單
+├── portfolios.html 策略賽馬
+├── earnings.html   財報分析
+└── gdp.html        GDP 觀察（新）
+```
+
+- **NAV 中心化**：六頁導覽統一定義在 `board_theme.NAV`，各頁不再自維護
+  （board_html 原本硬編 4 連結、buffett/portfolio 各一份 NAV，全數收攏）。
+- **新增 `gdp_fetch.py` → gdp_data.json**：
+  美國實際＝FRED CSV（GDPC1 自算 SAAR）、預測＝Philly Fed SPF（移植 TradingBot/gdp.py）；
+  台灣實際＝主計總處 nstatdb API（自動）、預測＝`gdp_manual.json` 手動維護，
+  asof 超過 120 天自動推 TG 提醒（主計總處每季 2/5/8/11 月發新聞稿，只有 PDF）。
+- **新增 `gdp_html.py` → docs/gdp.html**：洪瑞泰「GDP 高點賣股票、不買股票」提醒燈，
+  高點判定＝近 8 季實際＋預測取最大：未來=尚未到頂(綠)/最新季=接近高點(黃)/過去=已過高點(紅)。
+  維持既有定案：只顯示不接買賣訊號。首跑結果：美國已過高點(2025-Q3)、台灣接近高點(2026-Q1 14.55%)。
+- **新增 `market_fetch.py` + `home_html.py`**：指數 7 檔（美 4+加權+VIX+美元/台幣）走 yfinance；
+  頭條走鉅亨 JSON API（`api.cnyes.com/media/api/v1/newslist/category/{tw_stock,wd_stock}`）各 5 條。
+- **新增 `market-home.yml`**：週一~五 14:05（UTC 06:05）台股收盤後重建首頁，純 yfinance 零 LLM。
+
+### 修今日 09:00 workflow 失敗（用戶轉來 GH 失敗信）
+
+1. **ImportError CHAIN_ICON/TW_NAME**：昨天 v2 扶正成 board_html.py 時漏了
+   alert_telegram.py 還從它 import 這兩個名字 → 已在 board_html.py re-export。
+2. **`ls -t` 挑報告失準**：checkout 後所有檔 mtime 相同，今天實挑到 6/24 舊報告。
+   檔名帶日期 → 改 `ls | sort | tail -1`；逾期警告同步改由檔名取日期（原 mtime 算法在
+   Actions 上永遠是 checkout 時間，等於從未生效過）。
+
+### 踩到的坑
+
+- FRED/主計總處都會擋 python 的 TLS（前者 reset 連線、後者憑證缺 SKI 被 3.13 拒收），
+  curl 卻都通 → `_get_text_curl_fallback()`：requests 失敗改走 subprocess curl。
+  curl 回傳**不可用 text=True**（Windows 會拿 cp950 解 UTF-8，reader thread 直接炸）。
+- 主計總處 2026-05-29 新聞稿的 Q3/Q4 逐季預測網路查不到（在 PDF 表格內），
+  gdp_manual.json 只填了查證過的 Q2 10.83% 與全年 9.64%，不瞎編；8 月中新版發布時提醒會叫人補。
+- cp950 印 emoji 炸 print：board/portfolio/buffett/gdp/market/home 全部補
+  `sys.stdout.reconfigure(encoding="utf-8")`。
