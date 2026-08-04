@@ -42,6 +42,7 @@ ICONS = {
     "AI 電力/核能": '<path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/>',
     "太陽能": '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M6.3 17.7l-1.4 1.4M19.1 4.9l-1.4 1.4"/>',
     "Bitcoin→AI 機房": '<path d="M11 7h4a3 3 0 0 1 0 6h-4zM11 13h5a3 3 0 0 1 0 6h-5zM11 7V4M11 20v-3M15 7V4M15 20v-3M7 7h4M7 13h4M7 19h4"/>',
+    "玻璃基板/TGV": '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 8h.01M12 8h.01M16 8h.01M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"/>',
 }
 SIG = {"🟢": ("buy", "買進", "#22C55E"), "🔴": ("sell", "賣出", "#EF4444"),
        "🔵": ("hold", "持有", "#3B82F6"), "🟡": ("watch", "觀望", "#EAB308"),
@@ -352,8 +353,8 @@ def main():
     body, modals, nav = [], [], []
     for i, c in enumerate(CHAIN_ORDER):
         us, tw = us_by.get(c, []), tw_by.get(c, [])
-        if not us and not tw:
-            continue
+        if not us and not tw and not CHAIN_REPORTS.get(c):
+            continue  # 沒個股也沒深度報告才跳過——新鏈上線首日判讀還沒跑，仍要露出報告
         nav.append(f'<a href="#c{i}" title="{esc_tw(c)}" aria-label="{esc_tw(c)}">{_icon(c, 15)}</a>')
         rows = []
         for sig, tk, nm, blk in us:

@@ -6,11 +6,15 @@
 輸出:screen_result.json
 用法:python screen.py
 """
+import sys
 import json
 import time
 from datetime import datetime, timedelta
 import requests
 import yfinance as yf
+
+if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
+    sys.stdout.reconfigure(encoding="utf-8")  # Windows cp950 印 emoji 會炸
 
 FINMIND = "https://api.finmindtrade.com/api/v4/data"
 TOPN = 8
@@ -24,6 +28,11 @@ US_ETFS = {
     "AI 電力/核能": ["URA", "NLR", "GRID"],
     "機器人": ["BOTZ", "KOID", "ROBO"],
 }
+# 第 8 條鏈（2026-08-05）：玻璃基板/TGV。題材驗證期、無對應 ETF → 手選池。
+# 逐鏈獨立取 top N，所以不會跟 AI 伺服器鏈的巨頭比。賽馬模擬倉明確排除（paper_portfolio）。
+US_MANUAL = {
+    "玻璃基板/TGV": ["GLW", "INTC", "AMAT", "ONTO", "CAMT", "KLIC"],
+}
 TW_POOL = {
     "AI 伺服器": ["2330", "2317", "2382", "6669", "3231", "3017", "3324", "2376",
                 "2356", "2308", "2368", "3037", "8046", "3533"],
@@ -32,6 +41,8 @@ TW_POOL = {
     "低軌衛星": ["3491", "6285", "2314", "3105", "2454", "6271"],
     "太陽能": ["6443", "5483", "6182", "3576"],
     "AI 電力/核能": ["1513", "1503", "1504", "1519", "1605"],
+    "玻璃基板/TGV": ["3037", "8046", "3189", "3149", "8027", "6664", "1595",
+                   "3055", "3481", "4768", "3580", "8064"],
 }
 NAME = {}  # code → name 快取
 
@@ -51,6 +62,8 @@ def us_pool():
                 pass
             time.sleep(0.5)
         pool[chain] = sorted(s)
+    for chain, syms in US_MANUAL.items():   # 無 ETF 的鏈用手選池
+        pool[chain] = sorted(set(pool.get(chain, [])) | set(syms))
     return pool
 
 
