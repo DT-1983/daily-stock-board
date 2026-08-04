@@ -1,64 +1,83 @@
 {
- "updated": "2026-08-04 12:57",
+ "updated": "2026-08-04 13:16",
  "indices": [
-  {
-   "sym": "^TWII",
-   "name": "台股加權",
-   "grp": "TW",
-   "close": 43252.48,
-   "chg_pct": 0.31,
-   "date": "08/04"
-  },
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
+   "date": "07/31",
    "close": 7489.72,
-   "chg_pct": 0.7,
-   "date": "07/31"
+   "chg_pct": 0.7
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
+   "date": "07/31",
    "close": 25373.85,
-   "chg_pct": 1.0,
-   "date": "07/31"
+   "chg_pct": 1.0
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
+   "date": "07/31",
    "close": 52485.03,
-   "chg_pct": 0.53,
-   "date": "07/31"
+   "chg_pct": 0.53
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
+   "date": "07/31",
    "close": 11311.08,
-   "chg_pct": 0.07,
-   "date": "07/31"
+   "chg_pct": 0.07
   },
   {
-   "sym": "^VIX",
-   "name": "VIX 恐慌指數",
-   "grp": "US",
-   "close": 15.86,
-   "chg_pct": -0.81,
-   "date": "08/03"
+   "sym": "^TWII",
+   "name": "台股加權",
+   "grp": "TW",
+   "date": "08/04",
+   "close": 43350.17,
+   "chg_pct": 0.53
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
+   "date": "08/04",
    "close": 32.38,
-   "chg_pct": 0.27,
-   "date": "08/04"
+   "chg_pct": 0.28
+  },
+  {
+   "sym": "^TNX",
+   "name": "美債 10 年殖利率",
+   "grp": "US",
+   "date": "07/31",
+   "close": 4.74,
+   "fmt": "yield",
+   "chg_bp": 8.2
   }
  ],
  "news": [
+  {
+   "title": "美AI股反彈動能本周迎「硬門檻」！華爾街估7月非農就業新增8.5萬人 Kalshi押7萬區間",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6558411",
+   "ts": "08/04 13:10"
+  },
+  {
+   "title": "〈焦點股〉健策均熱片比重持續提升 亮燈漲停",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6558537",
+   "ts": "08/04 13:07"
+  },
+  {
+   "title": "〈焦點股〉亞馬遜財報亮眼持續加碼AI基建 光通訊股多檔齊嗨漲停",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6558513",
+   "ts": "08/04 13:04"
+  },
   {
    "title": "股匯動盪避險需求升溫 台新Richart推6個月2.2%優利定存吸資金",
    "mkt": "TW",
@@ -100,24 +119,12 @@
    "mkt": "TW",
    "url": "https://news.cnyes.com/news/id/6558498",
    "ts": "08/04 12:10"
-  },
-  {
-   "title": "槓桿ETF規模逼近2500億美元！華爾街玩起「崩盤期權」 年化報酬率最高20%",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6557959",
-   "ts": "08/04 12:10"
-  },
-  {
-   "title": "〈房產〉非六都房貸壓力也不小  這兩縣市晚一年買房貸多扛逾百萬元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6558437",
-   "ts": "08/04 11:57"
-  },
-  {
-   "title": "〈焦點股〉Lumentum示警磷化銦缺料危機 聯亞、全新逾5檔亮燈漲停",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6558466",
-   "ts": "08/04 11:53"
   }
- ]
+ ],
+ "inst": {
+  "date": "08/03",
+  "total_yi": -165.2,
+  "foreign_yi": -191.9,
+  "trust_yi": 233.2
+ }
 }

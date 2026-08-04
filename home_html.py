@@ -26,7 +26,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 GDP_STATUS_COLOR = {"尚未到頂": "#22C55E", "接近高點": "#EAB308", "已過高點": "#EF4444"}
 
 CSS_EXTRA = """
-.idxgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:9px;margin:12px 0}
+.idxgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:12px 0}
+@media(max-width:700px){.idxgrid{grid-template-columns:repeat(2,1fr)}}
 .idx{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:11px 13px}
 .idx .nm{font-size:11.5px;color:var(--muted);font-weight:600}
 .idx .px{font-size:17px;font-weight:700;margin-top:3px}
@@ -72,11 +73,31 @@ def _load(path):
 
 
 def idx_card(i):
+    if i.get("fmt") == "yield":  # 美債殖利率：值顯示 %、漲跌顯示 bp
+        chg = i["chg_bp"]
+        cls = "pos" if chg > 0 else ("neg" if chg < 0 else "flat")
+        return (f'<div class="idx"><div class="nm">{esc(i["name"])}</div>'
+                f'<div class="px num">{i["close"]:.2f}%</div>'
+                f'<div class="chg num {cls}">{chg:+.1f} bp<span class="dt">{esc(i["date"])} 收</span></div></div>')
     chg = i["chg_pct"]
     cls = "pos" if chg > 0 else ("neg" if chg < 0 else "flat")
     return (f'<div class="idx"><div class="nm">{esc(i["name"])}</div>'
             f'<div class="px num">{i["close"]:,.2f}</div>'
             f'<div class="chg num {cls}">{chg:+.2f}%<span class="dt">{esc(i["date"])} 收</span></div></div>')
+
+
+def inst_card(inst):
+    """三大法人買賣超（上市）。買超綠、賣超紅，跟全站漲跌色一致。"""
+    if not inst:
+        return ('<div class="idx"><div class="nm">三大法人買賣超</div>'
+                '<div class="px num">—</div><div class="chg flat">資料未取得</div></div>')
+    t = inst["total_yi"]
+    cls = "pos" if t > 0 else ("neg" if t < 0 else "flat")
+    return (f'<div class="idx"><div class="nm">三大法人買賣超（上市）</div>'
+            f'<div class="px num {cls}">{t:+,.0f} 億</div>'
+            f'<div class="chg num flat" style="font-weight:400">'
+            f'外資 {inst["foreign_yi"]:+,.0f} · 投信 {inst["trust_yi"]:+,.0f}'
+            f'<span class="dt">{esc(inst["date"])}</span></div></div>')
 
 
 def news_row(n):
@@ -134,7 +155,13 @@ def build():
     m = _load("market_data.json") or {"updated": "—", "indices": [], "news": []}
     s = build_summaries()
 
-    idx_html = "".join(idx_card(i) for i in m["indices"]) or \
+    # 2 排 × 4 格（用戶 2026-08-04 定版）：美股 4 檔｜台股加權、法人、匯率、美債殖利率
+    cards = []
+    for i in m["indices"]:
+        cards.append(idx_card(i))
+        if i["sym"] == "^TWII":  # 法人卡緊跟在台股加權後面
+            cards.append(inst_card(m.get("inst")))
+    idx_html = "".join(cards) or \
         '<div class="empty">尚無行情資料，先跑 python market_fetch.py</div>'
     news_html = "".join(news_row(n) for n in m["news"]) or \
         '<div class="empty" style="border:0">尚無新聞資料</div>'
@@ -151,7 +178,7 @@ def build():
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex"><title>投資資訊首頁</title>
 <style>{BASE_CSS}{CSS_EXTRA}</style></head><body><div class="wrap">
-{header("home", "投資資訊首頁", f"行情更新 {esc(m['updated'])} · 平日 09:00／14:05 自動更新", NAV, "home")}
+{header("home", "投資資訊首頁", f"行情更新 {esc(m['updated'])} · 平日 09:00／15:10 自動更新", NAV, "home")}
 <div class="hsec"><h2>{icon("board", 16, "#3B82F6")}大盤行情</h2>
 <div class="hnote">漲跌為對前一交易日收盤；美股為美東前一晚收盤</div>
 <div class="idxgrid">{idx_html}</div></div>
