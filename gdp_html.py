@@ -53,15 +53,31 @@ CSS_EXTRA = """
 """
 
 
-def light(flag, name, pk):
+def light(flag, name, pk, dd):
     # flag 用純文字（🇺🇸/🇹🇼 emoji 在 Windows 會退化成小寫字母 us/tw）
     col, why = STATUS_STYLE.get(pk["status"], STATUS_STYLE["無資料"])
-    peak = f'高點：{esc(pk.get("peak_period") or "—")}' if pk.get("peak_period") else ""
+    # 數字鏈：高點 xx% → 最新 xx%（· 下季預測 xx%）——用戶要求看得到具體數字
+    act, fc = dd.get("actual") or [], dd.get("forecast") or []
+    vals = {a["period"]: a["value"] for a in act}
+    vals.update({f["period"]: f["value"] for f in fc if f["period"] not in vals})
+    parts = []
+    pp = pk.get("peak_period")
+    if pp and pp in vals:
+        parts.append(f'高點 {pp} <b>{vals[pp]:+.2f}%</b>')
+    if act:
+        a = act[-1]
+        tag = "概估 " if a.get("est") else ""
+        if a["period"] != pp or tag:
+            parts.append(f'最新 {a["period"]} {tag}<b>{a["value"]:+.2f}%</b>')
+        nxt = next((f for f in fc if f["period"] > a["period"]), None)
+        if nxt:
+            parts.append(f'{nxt["period"]} 預測 <b>{nxt["value"]:+.2f}%</b>')
+    chain = " → ".join(parts) if parts else "—"
     return (f'<div class="glight"><div class="flag"><b>{esc(flag)}</b> {esc(name)}</div>'
             f'<div class="st"><i style="background:{col}"></i>'
             f'<span style="color:{col}">{esc(pk["status"])}</span></div>'
             f'<div class="why">{esc(why)}</div>'
-            f'<div class="pk">{peak}（近 8 季實際＋預測合併判定）</div></div>')
+            f'<div class="pk">{chain}<br>（近 8 季實際＋預測合併判定）</div></div>')
 
 
 def chart_block(key, title, unit_note, d, extra_meta=""):
@@ -95,8 +111,8 @@ def chart_block(key, title, unit_note, d, extra_meta=""):
 
 
 def build(d):
-    us_light = light("US", "美國", d["peak"]["us"])
-    tw_light = light("TW", "台灣", d["peak"]["tw"])
+    us_light = light("US", "美國", d["peak"]["us"], d["us"])
+    tw_light = light("TW", "台灣", d["peak"]["tw"], d["tw"])
 
     asof = d["tw"].get("forecast_asof")
     annual = d["tw"].get("annual") or {}
