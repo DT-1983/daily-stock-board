@@ -41,13 +41,15 @@ CSS_EXTRA = """
 .gchart h2{font-size:14.5px;font-weight:700;margin-bottom:4px}
 .gchart .meta{font-size:11.5px;color:var(--dim);margin-bottom:8px}
 .gcbox{height:220px}
-.gtable{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:10px}
-.gtable th{color:var(--dim);font-weight:600;text-align:right;padding:6px 8px;
- border-bottom:1px solid var(--line);font-size:11px}
-.gtable th:first-child,.gtable td:first-child{text-align:left}
-.gtable td{padding:6px 8px;border-bottom:1px solid var(--line2);text-align:right}
-.gtable tr:last-child td{border-bottom:0}
-.ftag{font-size:10px;color:#93C5FD;background:#1E3A5F;padding:1px 6px;border-radius:4px;margin-left:5px}
+.gstrip{display:flex;gap:6px;margin-top:12px;overflow-x:auto;padding-bottom:4px;
+ scrollbar-width:thin}
+.gcell{flex:1;min-width:76px;background:var(--card);border:1px solid var(--line);
+ border-radius:9px;padding:8px 6px;text-align:center}
+.gcell.fc{border-style:dashed;border-color:#EAB30866}
+.gcell .gq{color:var(--dim);font-size:10.5px;letter-spacing:.2px;white-space:nowrap}
+.gcell .gvv{font-size:14.5px;font-weight:700;margin-top:3px}
+.gcell.fc .gvv{color:#EAB308}
+.gcell .gt{font-size:9px;color:#EAB308;margin-top:2px}
 """
 
 
@@ -69,16 +71,21 @@ def chart_block(key, title, unit_note, d, extra_meta=""):
     a_vals = [a["value"] for a in act] + [None] * len(fut)
     # 預測線從最後一個實際點接出去，視覺上連續
     f_vals = [None] * (len(act) - 1) + ([act[-1]["value"]] if act else []) + [f["value"] for f in fut]
-    rows = "".join(
-        f'<tr><td>{esc(a["period"])}</td><td class="num">{a["value"]:+.2f}%</td></tr>'
+    def _short(p):  # 2026-Q1 → 26Q1，橫排時省寬度
+        return p[2:4] + p[5:]
+
+    cells = "".join(
+        f'<div class="gcell"><div class="gq">{esc(_short(a["period"]))}</div>'
+        f'<div class="gvv num">{a["value"]:+.2f}</div></div>'
         for a in act[-6:]) + "".join(
-        f'<tr><td>{esc(f["period"])}<span class="ftag">預測</span></td>'
-        f'<td class="num">{f["value"]:+.2f}%</td></tr>' for f in fut)
+        f'<div class="gcell fc"><div class="gq">{esc(_short(f["period"]))}</div>'
+        f'<div class="gvv num">{f["value"]:+.2f}</div><div class="gt">預測</div></div>'
+        for f in fut)
     cfg = {"labels": labels, "actual": a_vals, "forecast": f_vals}
     return (f'<div class="gchart"><h2>{title}</h2>'
             f'<div class="meta">{unit_note}{extra_meta}</div>'
             f'<div class="gcbox"><canvas id="c_{key}"></canvas></div>'
-            f'<table class="gtable"><tr><th>季度</th><th>成長率</th></tr>{rows}</table></div>'), cfg
+            f'<div class="gstrip">{cells}</div></div>'), cfg
 
 
 def build(d):
