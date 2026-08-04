@@ -93,11 +93,12 @@ def inst_card(inst):
                 '<div class="px num">—</div><div class="chg flat">資料未取得</div></div>')
     t = inst["total_yi"]
     cls = "pos" if t > 0 else ("neg" if t < 0 else "flat")
-    return (f'<div class="idx"><div class="nm">三大法人買賣超（上市）</div>'
-            f'<div class="px num {cls}">{t:+,.0f} 億</div>'
+    word = "買超" if t > 0 else ("賣超" if t < 0 else "持平")  # 用字講明白，正負號易誤讀
+    return (f'<div class="idx"><div class="nm">三大法人（上市）</div>'
+            f'<div class="px {cls}">{word} <span class="num">{abs(t):,.0f}</span> 億</div>'
             f'<div class="chg num flat" style="font-weight:400">'
-            f'外資 {inst["foreign_yi"]:+,.0f} · 投信 {inst["trust_yi"]:+,.0f}'
-            f'<span class="dt">{esc(inst["date"])}</span></div></div>')
+            f'外資 {inst["foreign_yi"]:+,.0f} · 投信 {inst["trust_yi"]:+,.0f} 億'
+            f'<span class="dt">· {esc(inst["date"])}</span></div></div>')
 
 
 def news_row(n):
