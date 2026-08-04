@@ -291,3 +291,14 @@ Actions 09:00（cron 0 0 → 0 1）
   - 端到端驗證過：NVDA 判讀有引用估值重評新聞並點出「多空矛盾訊號」
 - 財報追蹤 US_WATCH 加 MU（美光）/AVGO（博通）/PLTR（Palantir），共 7 檔；
   三張圖卡已產出、earnings 索引頁 7 份。
+
+### 七鏈深度報告 8 月更（同日晚間，回應「8月有跑嗎?」）
+
+- **8/1 排程其實沒跑成**：Task Scheduler 回報成功(0)，但 log 只有一行 `end (exit 3)`、
+  連 start 都沒寫，chain_reports.json 從 7/17 上線至今沒動過。根因＝
+  `refresh_reports_monthly.cmd` 含中文（同 8/1 board_analyze_daily.cmd 的坑，當時漏了這支）。
+- 修法：.cmd 全英文、prompt 改 ASCII 斜線指令 `/refresh-chain-reports`；乾跑驗證 start/end 都有寫。
+  **教訓：所有給 Task Scheduler 跑的 .cmd 一律全英文，一支都不能漏。**
+- 8 月份已在對話內補跑：7 個研究 Agent 平行（各鏈 WebSearch 查證 2026/8 資料）→
+  reports_data/*.json → render → push → 線上驗證 rptbtn=7。
+  AI 伺服器 bespoke 版一併換成標準模板（資料新鮮度 > 客製表格）。
