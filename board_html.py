@@ -158,6 +158,52 @@ h1 svg{flex-shrink:0}
  border-radius:9px;cursor:pointer;font-size:19px;line-height:1}
 .mct{overflow-y:auto;padding:15px;color:#C7D8EC;font-size:13px;line-height:1.75}
 
+/* 產業深度解讀片段（chain_reports.json 預轉 HTML）的配套樣式。
+   2026-08-04 用戶回報格式跑掉——v2 改版時只搬了 .mct 基本字體，
+   漏了整組 .rpt 樣式（表格/TL;DR 卡/多空對照/統計盒），從 legacy 原封搬回。 */
+.rpt{font-size:14px}
+.rpt h2{font-size:15.5px;margin:18px 0 6px;border-left:3px solid #4a9eff;padding-left:9px}
+.rpt p{margin:7px 0}
+.rpt .note{background:#1a1d23;border:1px solid #2a2e35;border-radius:8px;padding:8px 11px;font-size:13px;color:#cfd3d8;margin:9px 0}
+.rpt .tldr{background:#12151b;border:1px solid #2a2e35;border-radius:10px;padding:12px 14px;margin:6px 0 16px}
+.rpt .tldr .lab{font-size:11.5px;font-weight:700;letter-spacing:.5px;color:#8a8f98;margin-bottom:9px}
+.rpt .tldr .row{display:flex;gap:8px;margin:8px 0;font-size:13.5px;align-items:flex-start}
+.rpt .tldr .ic{flex:0 0 auto}
+.rpt .tldr .r1{border-left:3px solid #4a9eff;padding-left:10px}
+.rpt .tldr .r2{border-left:3px solid #3ddc84;padding-left:10px}
+.rpt .tldr .r3{border-left:3px solid #ff5c5c;padding-left:10px}
+.rpt .tldr b,.rpt td b,.rpt p b{color:#fff}
+.rpt .tw{margin:9px 0}
+.rpt table{border-collapse:collapse;width:100%;font-size:13px}
+.rpt th,.rpt td{border-bottom:1px solid #2a2e35;padding:7px 9px;text-align:left;vertical-align:top}
+.rpt th{background:#222831;color:#bcd2ff;font-weight:700}
+.rpt .tag{display:inline-block;font-size:11.5px;padding:1px 7px;border-radius:9px;background:#262b33;color:#cfd3d8;margin-right:4px}
+.rpt ol,.rpt ul{margin:7px 0;padding-left:20px}.rpt li{margin:5px 0}
+.rpt .risk li b{color:#ffb4b4}
+.rpt .watch li{list-style:none;margin-left:-14px}.rpt .watch li::before{content:"🎯 "}
+.rpt .cap{background:#12151b;border:1px solid #2a2e35;border-radius:10px;padding:11px 13px;margin:12px 0 0}
+.rpt .stat{display:flex;flex-wrap:wrap;gap:9px;margin:11px 0}
+.rpt .stat .box{flex:1 1 150px;background:#1a1d23;border:1px solid #2a2e35;border-radius:9px;padding:10px 12px}
+.rpt .stat .n{font-size:17px;font-weight:800;color:#6db3ff}
+.rpt .stat .t{font-size:11.5px;color:#9aa0a6;margin-top:3px;line-height:1.4}
+.rpt .bb{display:flex;flex-wrap:wrap;gap:11px;margin:9px 0}
+.rpt .bb .col{flex:1 1 300px;border-radius:9px;padding:11px 13px}
+.rpt .bull{background:#12251a;border:1px solid #295c3c}
+.rpt .bear{background:#2a1618;border:1px solid #5c2f33}
+.rpt .bb h4{margin:0 0 6px;font-size:13.5px}
+.rpt .bull h4{color:#4ade80}.rpt .bear h4{color:#ff8a8a}
+.rpt .bb ul{padding-left:17px;margin:4px 0}.rpt .bb li{font-size:13px;margin:5px 0}
+.rpt details{margin:10px 0 0;border:1px solid #2a2e35;border-radius:8px;background:#161a20}
+.rpt details>summary{cursor:pointer;color:#bcd2ff;font-size:13.5px;font-weight:700;padding:9px 11px;display:block;list-style:none}
+.rpt details>summary::-webkit-details-marker{display:none}
+.rpt details>summary::after{content:" ▾";color:#6b7280}
+.rpt details[open]>summary::after{content:" ▴"}
+.rpt .inr{padding:0 11px 11px}
+.rpt .disc{color:#6b7280;font-size:11.5px;margin-top:16px;line-height:1.6}
+/* 手機上表格寬過螢幕 → 只讓表格自己橫滑，不撐破彈窗 */
+.mct table{display:block;overflow-x:auto;white-space:nowrap}
+@media(min-width:700px){.mct table{display:table;white-space:normal}}
+
 .jump{position:fixed;right:9px;top:50%;transform:translateY(-50%);z-index:30;
  display:flex;flex-direction:column;gap:3px}
 .jump a{width:34px;height:34px;display:grid;place-items:center;border-radius:9px;
