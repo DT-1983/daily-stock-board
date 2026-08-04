@@ -199,7 +199,10 @@ function drawChart(id){const c=CHARTS[id];if(!c)return;
  const el=document.getElementById('cv'+id);if(!el)return;
  const ds=[{label:'收盤',data:c.close,borderColor:'#3B82F6',borderWidth:2,pointRadius:0,tension:.25}];
  if(c.ma20)ds.push({label:'MA20',data:c.ma20,borderColor:'#94A3B8',borderWidth:1,pointRadius:0,borderDash:[4,3]});
- if(c.supertrend)ds.push({label:'SuperTrend',data:c.supertrend.st,borderColor:'#EAB308',borderWidth:1.2,pointRadius:0});
+ if(c.supertrend){const dir=c.supertrend.dir;
+  ds.push({label:'SuperTrend',data:c.supertrend.st,borderWidth:1.6,pointRadius:0,
+   segment:{borderColor:ctx=>{const i=ctx.p1DataIndex;
+    return dir[i]===-1?'#EF4444':(dir[i]===1?'#22C55E':'#94A3B8');}}});}
  new Chart(el,{type:'line',data:{labels:c.dates,datasets:ds},
   options:{responsive:true,maintainAspectRatio:false,interaction:{intersect:false,mode:'index'},
    plugins:{legend:{labels:{color:'#94A3B8',boxWidth:11,font:{size:10}}}},
