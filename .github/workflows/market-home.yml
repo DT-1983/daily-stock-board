@@ -1,0 +1,40 @@
+name: 首頁行情更新（台股收盤後 14:05）
+
+# 2026-08-04 首頁改版：投資資訊首頁的台股收盤價要當天下午就看得到。
+# 早上 09:00 那次由 tw-board.yml 順帶更新；這裡只補台股收盤後的一次。
+# 純 yfinance + 鉅亨 RSS，零 LLM 成本。
+
+on:
+  schedule:
+    - cron: '5 6 * * 1-5'   # UTC 06:05 = 台灣 14:05，週一~週五（台股交易日）
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  home:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 裝套件（只要 yfinance + requests）
+        run: pip install yfinance requests
+
+      - name: 抓行情+頭條 → 重建首頁
+        run: |
+          python market_fetch.py
+          python home_html.py -o docs/index.html
+
+      - name: 回存
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add market_data.json docs/index.html
+          git commit -m "chore: 首頁行情更新（台股收盤） [skip ci]" || echo "無變化"
+          git push || echo "push 略過"

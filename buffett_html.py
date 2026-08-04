@@ -12,13 +12,14 @@ from datetime import datetime
 
 import yfinance as yf
 from buffett_html_legacy import (hong_signal, quality_flags, sector_tw, DE_HIGH, OBIS)
-from board_theme import BASE_CSS, header, icon, esc, score_class, SIG_COLOR, SIG_LABEL
+from board_theme import BASE_CSS, header, icon, esc, score_class, SIG_COLOR, SIG_LABEL, NAV
+
+import sys
+if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
+    sys.stdout.reconfigure(encoding="utf-8")  # Windows cp950 印 emoji 會炸
 
 ORDER = ["buy", "watch", "sell", "na"]
 SIGMAP = {"buy": "buy", "watch": "watch", "sell": "sell", "na": "watch"}
-NAV = [("board", "board", "產業鏈看板", "./"), ("buffett", "buffett", "巴菲特價值清單", "buffett.html"),
-       ("portfolio", "portfolio", "策略賽馬模擬倉", "portfolios.html"),
-       ("earnings", "earnings", "財報深度分析", "earnings.html")]
 
 
 def _row(r, rid):

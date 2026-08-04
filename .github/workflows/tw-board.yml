@@ -37,12 +37,15 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          f=$(ls -t reports/report_*.md 2>/dev/null | head -1)
+          # 2026-08-04 修 bug：checkout 後所有檔案 mtime 相同，`ls -t` 挑檔變成碰運氣
+          # （今天實際挑到 6/24 的舊報告）。檔名帶日期，改用檔名排序才穩。
+          f=$(ls reports/report_*.md 2>/dev/null | sort | tail -1)
           if [ -z "$f" ]; then echo "::error::找不到任何 reports/report_*.md"; exit 1; fi
-          echo "採用報告：$f（$(date -r "$f" '+%Y-%m-%d %H:%M')）"
+          echo "採用報告：$f"
           # 報告超過 2 天沒更新 → 本機排程沒跑（電腦沒開機）。
-          # ::warning:: 只會躺在 Actions log 裡沒人看，所以直接推 Telegram。
-          age=$(( ($(date +%s) - $(date -r "$f" +%s)) / 86400 ))
+          # 同理不能用 mtime 算年齡，改從檔名取日期。
+          d=$(basename "$f" .md | sed 's/report_//')
+          age=$(( ($(date +%s) - $(date -d "$d" +%s)) / 86400 ))
           if [ "$age" -ge 2 ]; then
             msg="⚠️ <b>看板判讀已 ${age} 天未更新</b>%0A本機排程 BoardAnalyzeDaily（08:30）可能沒執行，電腦沒開機？%0A今天的看板用的是 $(basename "$f") 的舊判讀。"
             echo "::warning::報告已 $age 天未更新，已推 Telegram"
@@ -56,10 +59,24 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           mkdir -p docs
-          f=$(ls -t reports/report_*.md | head -1)
+          f=$(ls reports/report_*.md | sort | tail -1)
           echo "報告: $f"
-          python board_html.py "$f" -o docs/index.html
-          python alert_telegram.py "$f" docs/index.html
+          # 2026-08-04 首頁改版：看板搬 board.html，index.html 讓給投資資訊首頁
+          python board_html.py "$f" -o docs/board.html
+          python alert_telegram.py "$f" docs/board.html
+
+      - name: GDP 觀察頁（美台實際+預測、台灣預測過期會推 TG 提醒）
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python gdp_fetch.py || echo "GDP 抓取失敗，用上次的 gdp_data.json"
+          python gdp_html.py -o docs/gdp.html || echo "GDP 頁失敗，跳過"
+
+      - name: 投資資訊首頁（行情+頭條+分頁摘要）
+        run: |
+          python market_fetch.py || echo "行情抓取失敗，用上次的 market_data.json"
+          python home_html.py -o docs/index.html
 
       # 2026-08-03：趨勢倉調倉 + nav + 賽馬頁移到獨立的 portfolio-nav.yml
       # （週一~週六都跑，不綁 tw-board 的週二~週六，修掉週一淨值卡住不動的問題）
@@ -70,6 +87,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add state/signals.json state/st_state.json docs/index.html portfolios.json docs/portfolios.html docs/buffett.html
-          git commit -m "chore: update board + signals + 模擬倉 + 巴菲特頁 [skip ci]" || echo "無變化"
+          git add state/signals.json state/st_state.json docs/index.html docs/board.html \
+                  docs/gdp.html gdp_data.json market_data.json \
+                  portfolios.json docs/portfolios.html docs/buffett.html
+          git commit -m "chore: update 首頁+看板+GDP+signals+巴菲特頁 [skip ci]" || echo "無變化"
           git push || echo "push 略過"

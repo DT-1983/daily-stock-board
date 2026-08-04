@@ -24,7 +24,12 @@ import yfinance as yf
 from tw_report import convert
 from board_html_legacy import (parse_report, oneliner, CHAIN_ORDER, CHAIN_MAP,
                         CHAIN_THEMES, CHAIN_REPORTS, ma_series, supertrend,
-                        fetch_us_charts, esc_tw, TW_JSON, OBIS)
+                        fetch_us_charts, esc_tw, TW_JSON, OBIS,
+                        CHAIN_ICON, TW_NAME)  # alert_telegram.py 從本模組 import，要 re-export
+from board_theme import NAV, header as theme_header
+
+if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
+    sys.stdout.reconfigure(encoding="utf-8")  # Windows cp950 印 emoji 會炸
 
 PAGES = "https://dt-1983.github.io/daily-stock-board"
 
@@ -64,6 +69,7 @@ h1 svg{flex-shrink:0}
  color:#BFDBFE;text-decoration:none;font-size:12.5px;font-weight:600;
  transition:border-color .18s,background .18s}
 .nl:hover,.nl:focus-visible{border-color:var(--accent);background:#152238}
+.nl.cur{border-color:var(--accent);background:#152238;color:#fff}
 .nl svg{flex-shrink:0;opacity:.85}
 
 /* sticky controls */
@@ -270,7 +276,7 @@ def _row(rid, mkt, sig, tk, nm, score, one, detail_html):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("input")
-    ap.add_argument("-o", "--output", default="docs/index.html")
+    ap.add_argument("-o", "--output", default="docs/board.html")  # 2026-08-04 首頁改版：index 讓給儀表板
     args = ap.parse_args()
 
     raw = convert(open(args.input, encoding="utf-8").read())
@@ -363,20 +369,8 @@ def main():
 <meta name="robots" content="noindex"><title>{date} 產業鏈看板</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <style>{CSS}</style></head><body><div class="wrap">
-<header>
-  <h1><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#3B82F6"
-    stroke-width="2" stroke-linecap="round" aria-hidden="true">
-    <path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>產業鏈看板</h1>
-  <div class="sub">{date} · 7 條產業鏈 · 美股 yfinance／台股 FinMind · 判讀 Claude（本機）</div>
-  <div class="navlinks">
-    <a class="nl" href="buffett.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg>巴菲特價值清單</a>
-    <a class="nl" href="portfolios.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>策略賽馬模擬倉</a>
-    <a class="nl" href="earnings.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-      stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>財報深度分析{f' ({n_earn})' if n_earn else ''}</a>
-  </div>
-</header>
+{theme_header("board", "產業鏈看板",
+    f"{date} · 7 條產業鏈 · 美股 yfinance／台股 FinMind · 判讀 Claude（本機）", NAV, "board")}
 <div class="ctrl">
   <div class="seg" role="group" aria-label="切換市場">
     <button data-m="US" aria-pressed="true">美股</button>

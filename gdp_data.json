@@ -1,0 +1,155 @@
+{
+ "updated": "2026-08-04 12:28",
+ "us": {
+  "actual": [
+   {
+    "period": "2023-Q3",
+    "value": 4.69
+   },
+   {
+    "period": "2023-Q4",
+    "value": 3.42
+   },
+   {
+    "period": "2024-Q1",
+    "value": 0.84
+   },
+   {
+    "period": "2024-Q2",
+    "value": 3.59
+   },
+   {
+    "period": "2024-Q3",
+    "value": 3.34
+   },
+   {
+    "period": "2024-Q4",
+    "value": 1.85
+   },
+   {
+    "period": "2025-Q1",
+    "value": -0.65
+   },
+   {
+    "period": "2025-Q2",
+    "value": 3.84
+   },
+   {
+    "period": "2025-Q3",
+    "value": 4.38
+   },
+   {
+    "period": "2025-Q4",
+    "value": 0.48
+   },
+   {
+    "period": "2026-Q1",
+    "value": 2.09
+   },
+   {
+    "period": "2026-Q2",
+    "value": 1.5
+   }
+  ],
+  "forecast": [
+   {
+    "period": "2026-Q2",
+    "value": 2.1,
+    "source": "Philly Fed SPF"
+   },
+   {
+    "period": "2026-Q3",
+    "value": 2.22,
+    "source": "Philly Fed SPF"
+   },
+   {
+    "period": "2026-Q4",
+    "value": 1.58,
+    "source": "Philly Fed SPF"
+   },
+   {
+    "period": "2027-Q1",
+    "value": 1.93,
+    "source": "Philly Fed SPF"
+   },
+   {
+    "period": "2027-Q2",
+    "value": 1.91,
+    "source": "Philly Fed SPF"
+   }
+  ]
+ },
+ "tw": {
+  "actual": [
+   {
+    "period": "2023-Q2",
+    "value": 1.42
+   },
+   {
+    "period": "2023-Q3",
+    "value": 1.56
+   },
+   {
+    "period": "2023-Q4",
+    "value": 4.74
+   },
+   {
+    "period": "2024-Q1",
+    "value": 7.16
+   },
+   {
+    "period": "2024-Q2",
+    "value": 5.33
+   },
+   {
+    "period": "2024-Q3",
+    "value": 4.66
+   },
+   {
+    "period": "2024-Q4",
+    "value": 4.13
+   },
+   {
+    "period": "2025-Q1",
+    "value": 5.54
+   },
+   {
+    "period": "2025-Q2",
+    "value": 7.71
+   },
+   {
+    "period": "2025-Q3",
+    "value": 8.42
+   },
+   {
+    "period": "2025-Q4",
+    "value": 12.95
+   },
+   {
+    "period": "2026-Q1",
+    "value": 14.55
+   }
+  ],
+  "forecast": [
+   {
+    "period": "2026-Q2",
+    "value": 10.83,
+    "source": "主計總處"
+   }
+  ],
+  "forecast_asof": "2026-05-29",
+  "annual": {
+   "2026": 9.64
+  }
+ },
+ "peak": {
+  "us": {
+   "peak_period": "2025-Q3",
+   "status": "已過高點"
+  },
+  "tw": {
+   "peak_period": "2026-Q1",
+   "status": "接近高點"
+  }
+ }
+}
