@@ -76,7 +76,9 @@ def chart_block(key, title, unit_note, d, extra_meta=""):
 
     cells = "".join(
         f'<div class="gcell"><div class="gq">{esc(_short(a["period"]))}</div>'
-        f'<div class="gvv num">{a["value"]:+.2f}</div></div>'
+        f'<div class="gvv num">{a["value"]:+.2f}</div>'
+        + ('<div class="gt" style="color:#94A3B8">概估</div>' if a.get("est") else "")
+        + '</div>'
         for a in act[-6:]) + "".join(
         f'<div class="gcell fc"><div class="gq">{esc(_short(f["period"]))}</div>'
         f'<div class="gvv num">{f["value"]:+.2f}</div><div class="gt">預測</div></div>'

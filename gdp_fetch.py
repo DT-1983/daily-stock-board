@@ -226,6 +226,12 @@ def main():
         print(f"⚠️ 台灣實際值抓取失敗：{e}")
         data["tw"]["actual"] = []
     twf = load_tw_forecast()
+    # 概估（新聞稿比 nstatdb 資料庫早約 2 週）：接在實際值後面，標 est 供頁面標注
+    last_tw = data["tw"]["actual"][-1]["period"] if data["tw"]["actual"] else ""
+    for e in twf.get("actual_est", []):
+        if e["period"] > last_tw:
+            data["tw"]["actual"].append(
+                {"period": e["period"], "value": e["value"], "est": True})
     data["tw"]["forecast"] = [
         {"period": q["period"], "value": q["value"], "source": twf.get("source", "主計總處")}
         for q in twf.get("quarters", [])]
