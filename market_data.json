@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-04 13:16",
+ "updated": "2026-08-04 17:46",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,16 +38,16 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "08/04",
-   "close": 43350.17,
-   "chg_pct": 0.53
+   "close": 43360.66,
+   "chg_pct": 0.56
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "08/04",
-   "close": 32.38,
-   "chg_pct": 0.28
+   "close": 32.41,
+   "chg_pct": 0.37
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "美AI股反彈動能本周迎「硬門檻」！華爾街估7月非農就業新增8.5萬人 Kalshi押7萬區間",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6558411",
-   "ts": "08/04 13:10"
-  },
-  {
-   "title": "〈焦點股〉健策均熱片比重持續提升 亮燈漲停",
+   "title": "連本帶利賺起來、大立光⊕、華邦電⊕、益登⊕、華星光⊕、建榮⊕",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6558537",
-   "ts": "08/04 13:07"
+   "url": "https://news.cnyes.com/news/id/6558863",
+   "ts": "08/04 17:43"
   },
   {
-   "title": "〈焦點股〉亞馬遜財報亮眼持續加碼AI基建 光通訊股多檔齊嗨漲停",
+   "title": "〈世界法說〉方略：2027年漲價無可避免 幅度不會低於今年",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6558513",
-   "ts": "08/04 13:04"
+   "url": "https://news.cnyes.com/news/id/6558856",
+   "ts": "08/04 17:41"
   },
   {
-   "title": "股匯動盪避險需求升溫 台新Richart推6個月2.2%優利定存吸資金",
+   "title": "〈世界法說〉Q3產能利用率達9成、Q4更好 全年AI營收翻倍增",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6554131",
-   "ts": "08/04 12:54"
+   "url": "https://news.cnyes.com/news/id/6558848",
+   "ts": "08/04 17:37"
   },
   {
-   "title": "俄羅斯警告愛爾蘭：這是海盜行為！後果很嚴重",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6557949",
-   "ts": "08/04 12:41"
-  },
-  {
-   "title": "蘋果20週年大改版！iPhone 20傳採玻璃超薄機身 散熱再升級",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6557874",
-   "ts": "08/04 12:40"
-  },
-  {
-   "title": "輝達卡關200美元區間 科技巨頭財報也未能助突破",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6557895",
-   "ts": "08/04 12:30"
-  },
-  {
-   "title": "《大賣空》貝瑞警告美股恐「一片狼藉」！點「這一」被忽視潛在風險",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6557940",
-   "ts": "08/04 12:20"
-  },
-  {
-   "title": "東擎發表首款O-PAS認證工業物聯網控制器 加速關鍵工業數位轉型",
+   "title": "信用管制放寬、資金暗中轉移！盤面主力換手，下一波評價修復行情在這裡",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6558493",
-   "ts": "08/04 12:12"
+   "url": "https://news.cnyes.com/news/id/6558860",
+   "ts": "08/04 17:33"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：台燿(6274-TW)EPS預估上修至36.05元，預估目標價為2032.5元",
+   "title": "美銀點名買入這「9檔」AI半導體股！最高潛在漲幅88%、雲端資本支出上看1.2兆美元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6558547",
+   "ts": "08/04 17:30"
+  },
+  {
+   "title": "大田精密第二季陷虧損拖累 上半年虧4841萬元每股虧0.58元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6558498",
-   "ts": "08/04 12:10"
+   "url": "https://news.cnyes.com/news/id/6558828",
+   "ts": "08/04 17:23"
+  },
+  {
+   "title": "美製造業景氣衝高反成警訊 Fed如何輸掉一場債市信任之戰？",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6558000",
+   "ts": "08/04 17:20"
+  },
+  {
+   "title": "銅價逼近高點！全球銅庫存大減 供需拉鋸加劇",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6558824",
+   "ts": "08/04 17:00"
+  },
+  {
+   "title": "豐田上調全年財測並啟動1兆日圓庫藏股 首季淨利年增75.6%",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6558823",
+   "ts": "08/04 17:00"
+  },
+  {
+   "title": "股價較高點回跌逾4成！SpaceX首份財報將掀牌 AI、星鏈、星艦受檢驗 ",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6557870",
+   "ts": "08/04 16:40"
   }
  ],
  "inst": {
-  "date": "08/03",
-  "total_yi": -165.2,
-  "foreign_yi": -191.9,
-  "trust_yi": 233.2
+  "date": "08/04",
+  "total_yi": 1.1,
+  "foreign_yi": -57.3,
+  "trust_yi": 252.7
  }
 }
