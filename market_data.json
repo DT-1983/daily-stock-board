@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-05 12:11",
+ "updated": "2026-08-05 17:44",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,16 +38,16 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "08/05",
-   "close": 44756.89,
-   "chg_pct": 3.22
+   "close": 44611.6,
+   "chg_pct": 2.88
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "08/05",
-   "close": 32.24,
-   "chg_pct": -0.48
+   "close": 32.31,
+   "chg_pct": -0.25
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "SK海力士獲華爾街齊聲喊買 估值有望追上美光",
+   "title": "高盛警告超大型科技股壟斷格局瓦解 市場集中度拐點已現",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6559598",
-   "ts": "08/05 12:10"
+   "url": "https://news.cnyes.com/news/id/6560337",
+   "ts": "08/05 17:40"
   },
   {
-   "title": "〈焦點股〉美擬封殺中國光收發器 光通訊股集體發光飆漲",
+   "title": "〈致伸法說〉Q2賺5.8億元 EPS 1.26元 原物料上漲及人民幣升值導致毛利承壓",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6560181",
-   "ts": "08/05 12:07"
+   "url": "https://news.cnyes.com/news/id/6558659",
+   "ts": "08/05 17:31"
   },
   {
-   "title": "SpaceX獵鷹9號火箭殘骸即將撞月球將留下史上最大人造撞擊坑",
+   "title": "美股獨霸時代鬆動！高盛：分散投資重新當道  資金轉向日本、亞太與新興市場",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6560187",
-   "ts": "08/05 12:00"
+   "url": "https://news.cnyes.com/news/id/6560299",
+   "ts": "08/05 17:20"
   },
   {
-   "title": "AI錢潮下一站在哪？主線轉向應用端 微軟可望吞「變現大餅」",
+   "title": "誰是AI競賽大贏家？黃仁勳點名馬斯克坐擁三大護城河",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6559768",
-   "ts": "08/05 12:00"
+   "url": "https://news.cnyes.com/news/id/6559651",
+   "ts": "08/05 17:10"
   },
   {
-   "title": "綠商標10年飆破12.6萬件 統一2274件奪冠、蘋果與任天堂緊追",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6559165",
-   "ts": "08/05 11:58"
-  },
-  {
-   "title": "華城除權息秀亮眼 先行完成填息 填權息幅度達61%",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6560161",
-   "ts": "08/05 11:56"
-  },
-  {
-   "title": "公開押寶下月升息？美財長：深信日本央行總裁植田和男將「做出最佳決策」",
+   "title": "Samsung SDI全力衝刺全固態電池產能 2028年後產能恐供不應求",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6559986",
-   "ts": "08/05 11:50"
+   "url": "https://news.cnyes.com/news/id/6560590",
+   "ts": "08/05 17:00"
   },
   {
-   "title": "〈焦點股〉百容處置出關見喜 半導體應用業務需求強早盤跳空漲停",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6560141",
-   "ts": "08/05 11:48"
-  },
-  {
-   "title": "〈焦點股〉藥華藥美國ET藥證本月可望取證 股價喜登漲停",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6560125",
-   "ts": "08/05 11:45"
-  },
-  {
-   "title": "美光挑戰全球第二！DRAM市占升至25% 中國CXMT加速擴張成隱憂",
+   "title": "黃仁勳深夜推文秀Alpamayo 2 Super　宣示「AI下一波浪潮將由自動駕駛開啟」",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6559568",
-   "ts": "08/05 11:40"
+   "url": "https://news.cnyes.com/news/id/6560338",
+   "ts": "08/05 17:00"
+  },
+  {
+   "title": "士電總經理郭約瑟看全球AIDC趨勢：五年內需求不成問題",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6560583",
+   "ts": "08/05 16:57"
+  },
+  {
+   "title": "志聖梁茂生登HBR台灣企業領袖100強 以人才與文化迎向60周年",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6560464",
+   "ts": "08/05 16:55"
+  },
+  {
+   "title": "營收速報  - 聯茂(6213)7月營收47.49億元年增率高達96.88％",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6560586",
+   "ts": "08/05 16:51"
+  },
+  {
+   "title": "營收速報  - 創意(3443)7月營收57.69億元年增率高達158.38％",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6560585",
+   "ts": "08/05 16:51"
   }
  ],
  "inst": {
-  "date": "08/04",
-  "total_yi": 20.0,
-  "foreign_yi": -57.3,
-  "trust_yi": 271.7
+  "date": "08/05",
+  "total_yi": 1004.1,
+  "foreign_yi": 903.1,
+  "trust_yi": 86.4
  }
 }
