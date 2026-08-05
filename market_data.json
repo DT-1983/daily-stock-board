@@ -1,130 +1,130 @@
 {
- "updated": "2026-08-04 17:46",
+ "updated": "2026-08-05 12:11",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "07/31",
-   "close": 7489.72,
-   "chg_pct": 0.7
+   "date": "08/04",
+   "close": 7736.52,
+   "chg_pct": 1.79
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "07/31",
-   "close": 25373.85,
-   "chg_pct": 1.0
+   "date": "08/04",
+   "close": 26584.99,
+   "chg_pct": 2.59
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "07/31",
-   "close": 52485.03,
-   "chg_pct": 0.53
+   "date": "08/04",
+   "close": 54085.88,
+   "chg_pct": 1.71
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "07/31",
-   "close": 11311.08,
-   "chg_pct": 0.07
+   "date": "08/04",
+   "close": 12179.26,
+   "chg_pct": 6.55
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "08/04",
-   "close": 43360.66,
-   "chg_pct": 0.56
+   "date": "08/05",
+   "close": 44756.89,
+   "chg_pct": 3.22
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "08/04",
-   "close": 32.41,
-   "chg_pct": 0.37
+   "date": "08/05",
+   "close": 32.24,
+   "chg_pct": -0.48
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "07/31",
-   "close": 4.74,
+   "date": "08/04",
+   "close": 4.63,
    "fmt": "yield",
-   "chg_bp": 8.2
+   "chg_bp": -5.9
   }
  ],
  "news": [
   {
-   "title": "連本帶利賺起來、大立光⊕、華邦電⊕、益登⊕、華星光⊕、建榮⊕",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6558863",
-   "ts": "08/04 17:43"
-  },
-  {
-   "title": "〈世界法說〉方略：2027年漲價無可避免 幅度不會低於今年",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6558856",
-   "ts": "08/04 17:41"
-  },
-  {
-   "title": "〈世界法說〉Q3產能利用率達9成、Q4更好 全年AI營收翻倍增",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6558848",
-   "ts": "08/04 17:37"
-  },
-  {
-   "title": "信用管制放寬、資金暗中轉移！盤面主力換手，下一波評價修復行情在這裡",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6558860",
-   "ts": "08/04 17:33"
-  },
-  {
-   "title": "美銀點名買入這「9檔」AI半導體股！最高潛在漲幅88%、雲端資本支出上看1.2兆美元",
+   "title": "SK海力士獲華爾街齊聲喊買 估值有望追上美光",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6558547",
-   "ts": "08/04 17:30"
+   "url": "https://news.cnyes.com/news/id/6559598",
+   "ts": "08/05 12:10"
   },
   {
-   "title": "大田精密第二季陷虧損拖累 上半年虧4841萬元每股虧0.58元",
+   "title": "〈焦點股〉美擬封殺中國光收發器 光通訊股集體發光飆漲",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6558828",
-   "ts": "08/04 17:23"
+   "url": "https://news.cnyes.com/news/id/6560181",
+   "ts": "08/05 12:07"
   },
   {
-   "title": "美製造業景氣衝高反成警訊 Fed如何輸掉一場債市信任之戰？",
+   "title": "SpaceX獵鷹9號火箭殘骸即將撞月球將留下史上最大人造撞擊坑",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6558000",
-   "ts": "08/04 17:20"
+   "url": "https://news.cnyes.com/news/id/6560187",
+   "ts": "08/05 12:00"
   },
   {
-   "title": "銅價逼近高點！全球銅庫存大減 供需拉鋸加劇",
+   "title": "AI錢潮下一站在哪？主線轉向應用端 微軟可望吞「變現大餅」",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6558824",
-   "ts": "08/04 17:00"
+   "url": "https://news.cnyes.com/news/id/6559768",
+   "ts": "08/05 12:00"
   },
   {
-   "title": "豐田上調全年財測並啟動1兆日圓庫藏股 首季淨利年增75.6%",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6558823",
-   "ts": "08/04 17:00"
+   "title": "綠商標10年飆破12.6萬件 統一2274件奪冠、蘋果與任天堂緊追",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6559165",
+   "ts": "08/05 11:58"
   },
   {
-   "title": "股價較高點回跌逾4成！SpaceX首份財報將掀牌 AI、星鏈、星艦受檢驗 ",
+   "title": "華城除權息秀亮眼 先行完成填息 填權息幅度達61%",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6560161",
+   "ts": "08/05 11:56"
+  },
+  {
+   "title": "公開押寶下月升息？美財長：深信日本央行總裁植田和男將「做出最佳決策」",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6557870",
-   "ts": "08/04 16:40"
+   "url": "https://news.cnyes.com/news/id/6559986",
+   "ts": "08/05 11:50"
+  },
+  {
+   "title": "〈焦點股〉百容處置出關見喜 半導體應用業務需求強早盤跳空漲停",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6560141",
+   "ts": "08/05 11:48"
+  },
+  {
+   "title": "〈焦點股〉藥華藥美國ET藥證本月可望取證 股價喜登漲停",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6560125",
+   "ts": "08/05 11:45"
+  },
+  {
+   "title": "美光挑戰全球第二！DRAM市占升至25% 中國CXMT加速擴張成隱憂",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6559568",
+   "ts": "08/05 11:40"
   }
  ],
  "inst": {
   "date": "08/04",
-  "total_yi": 1.1,
+  "total_yi": 20.0,
   "foreign_yi": -57.3,
-  "trust_yi": 252.7
+  "trust_yi": 271.7
  }
 }
