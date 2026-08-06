@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-06 12:14",
+ "updated": "2026-08-06 17:47",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,16 +38,16 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "08/06",
-   "close": 44413.39,
-   "chg_pct": -0.44
+   "close": 44396.7,
+   "chg_pct": -0.48
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "08/06",
-   "close": 32.24,
-   "chg_pct": -0.48
+   "close": 32.26,
+   "chg_pct": -0.42
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "鉅亨速報 - Factset 最新調查：慧洋-KY(2637-TW)EPS預估上修至8.63元，預估目標價為88元",
+   "title": "你的想法不能停在原點、大立光、世芯、上詮、華邦電、國巨、群創",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6562058",
-   "ts": "08/06 12:10"
+   "url": "https://news.cnyes.com/news/id/6562678",
+   "ts": "08/06 17:46"
   },
   {
-   "title": "三星4奈米產能爆滿至明年 強推5奈米迎中印轉單潮",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6562056",
-   "ts": "08/06 12:09"
-  },
-  {
-   "title": "占比衝35%！南韓每賣3輛EV就有1輛中國製 來自上海超級工廠的特斯拉是主力",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6558477",
-   "ts": "08/06 12:00"
-  },
-  {
-   "title": "伊朗總統：目前很難與最高領袖穆吉塔巴聯繫",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6562045",
-   "ts": "08/06 11:59"
-  },
-  {
-   "title": "Yardeni：AI交易進入成果導向時代 市場不再為題材埋單",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6561493",
-   "ts": "08/06 11:46"
-  },
-  {
-   "title": "〈焦點股〉雙鴻GB系列產品加單7月營收創高 漲停重回千金股行列",
+   "title": "9400億量縮藏玄機！獨家數據曝賣壓轉折，兩大霸主營收創高「這時機」發動？",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6562028",
-   "ts": "08/06 11:40"
+   "url": "https://news.cnyes.com/news/id/6562622",
+   "ts": "08/06 17:42"
   },
   {
-   "title": "輝達急尋中國AI基地台供應商 明後年啟動端側算力組網",
+   "title": "統一Q2獲利創34季新高 上半年淨利大增36.37%每股純益達2.65元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6562616",
+   "ts": "08/06 17:41"
+  },
+  {
+   "title": "〈遠傳法說〉成長引擎同步啟動 上半年EPS 2.14元創歷史新高",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6562615",
+   "ts": "08/06 17:40"
+  },
+  {
+   "title": "【量大強漲股整理】台股迎接八月份選股關鍵大公開",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6562609",
+   "ts": "08/06 17:34"
+  },
+  {
+   "title": "巴菲特罕見警告股市狂熱 歷史數據已預告接下來會發生什麼",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6561836",
-   "ts": "08/06 11:37"
+   "url": "https://news.cnyes.com/news/id/6561570",
+   "ts": "08/06 17:30"
   },
   {
-   "title": "〈房產〉房市降溫拖累都更進度 上半年全台拆照量創6年同期新低",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6562015",
-   "ts": "08/06 11:36"
+   "title": "摩根大通：亞洲科技股回檔 不代表AI投資周期終結",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6562149",
+   "ts": "08/06 17:10"
   },
   {
-   "title": "〈焦點股〉聯亞報復性反彈連拉5根漲停 7月營收年增1.76倍創新高",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6562000",
-   "ts": "08/06 11:20"
+   "title": "記憶體「三國」掀變局：三星市佔重返39%登頂 美光緊咬SK海力士",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6559653",
+   "ts": "08/06 16:50"
   },
   {
-   "title": "《價值型投資 最新產業研究報告》雙鴻 (3324-TW)、奇鋐 (3017-TW) AI伺服器功耗升高，液冷散熱進入放量期",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6561988",
-   "ts": "08/06 11:06"
+   "title": "全球第二大矽晶圓廠SUMCO(3436-JP)陷折舊高峰 新廠投產拖累前三季虧損擴大",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6562383",
+   "ts": "08/06 16:30"
+  },
+  {
+   "title": "川普稱與伊朗協議進展順利 堅決否認彈藥短缺傳聞",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6562224",
+   "ts": "08/06 16:20"
   }
  ],
  "inst": {
-  "date": "08/05",
-  "total_yi": 1030.3,
-  "foreign_yi": 903.1,
-  "trust_yi": 112.7
+  "date": "08/06",
+  "total_yi": 45.6,
+  "foreign_yi": 20.2,
+  "trust_yi": 88.6
  }
 }
