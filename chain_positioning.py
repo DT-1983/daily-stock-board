@@ -62,7 +62,9 @@ def _extract_tickers(raw):
 
 
 def load_chain_structure():
-    """回 {chain_name: [{"seg":..., "tickers":[...]}]}，供分組渲染用。"""
+    """回 {chain_name: {"positioning":..., "segs":[{"seg","do","tickers"}]}}。
+    2026-08-06：加 positioning／do——之前只取 stocks 沒取這兩個欄位，
+    使用者反應「看不出上下游關係」，其實深度報告資料裡本來就有，只是沒渲染。"""
     out = {}
     for f in sorted(glob.glob(os.path.join(HERE, "chain_reports_src/reports_data/*.json"))):
         d = json.load(open(f, encoding="utf-8"))
@@ -71,16 +73,17 @@ def load_chain_structure():
             continue
         segs = []
         for seg in d.get("valuechain", []):
-            segs.append({"seg": seg["seg"], "tickers": _extract_tickers(seg["stocks"])})
-        out[chain] = segs
+            segs.append({"seg": seg["seg"], "do": seg.get("do", ""),
+                        "tickers": _extract_tickers(seg["stocks"])})
+        out[chain] = {"positioning": d.get("positioning", ""), "segs": segs}
     return out
 
 
 def ticker_lookup(structure):
     """{ticker: (chain, seg)}——同一檔若出現在多鏈/多環節，取第一個。"""
     m = {}
-    for chain, segs in structure.items():
-        for seg in segs:
+    for chain, info in structure.items():
+        for seg in info["segs"]:
             for tk in seg["tickers"]:
                 m.setdefault(tk, (chain, seg["seg"]))
     return m
@@ -190,7 +193,8 @@ def summary_text(ticker):
     chain, my_seg = hit
     metrics = cache["metrics"]
     my = metrics.get(tk, {})
-    peers = [metrics.get(t, {}) for seg in cache["structure"][chain] for t in seg["tickers"] if t != tk]
+    peers = [metrics.get(t, {}) for seg in cache["structure"][chain]["segs"]
+             for t in seg["tickers"] if t != tk]
     peer_gm = [p["gross_margin"] for p in peers if p.get("gross_margin") is not None]
     peer_ret = [p["ret60"] for p in peers if p.get("ret60") is not None]
     gm_avg = sum(peer_gm) / len(peer_gm) if peer_gm else None
@@ -214,11 +218,12 @@ def build_html(ticker):
     if not hit:
         return ""
     chain, my_seg = hit
-    segs = cache["structure"][chain]
+    chain_info = cache["structure"][chain]
+    segs = chain_info["segs"]
     metrics = cache["metrics"]
 
     rows = []
-    for seg in segs:
+    for i, seg in enumerate(segs):
         cells = []
         for t in seg["tickers"]:
             m = metrics.get(t, {})
@@ -233,12 +238,18 @@ def build_html(ticker):
             cells.append(
                 f'<div class="peer{focus}"><div class="pt">{_name(t)}<span class="pc">{t}</span></div>'
                 f'<div class="pv">毛利 <b class="num">{gm_s}</b>　60日 {ret_s}</div></div>')
-        mark = " · <b>你的標的所在環節</b>" if seg["seg"] == my_seg else ""
-        rows.append(f'<div class="segrow"><div class="segname">{seg["seg"]}{mark}</div>'
-                    f'<div class="segcells">{"".join(cells)}</div></div>')
+        mark = ' <span class="segmine">· 你的標的在這裡</span>' if seg["seg"] == my_seg else ""
+        do = f'<div class="segdo">{seg["do"]}</div>' if seg.get("do") else ""
+        arrow = '<div class="segarrow">↓ 往下游</div>' if i > 0 else ""
+        rows.append(f'{arrow}<div class="segrow"><div class="segname">{seg["seg"]}{mark}</div>'
+                    f'{do}<div class="segcells">{"".join(cells)}</div></div>')
+
+    pos_line = (f'<div class="chainpos">{chain_info["positioning"]}</div>'
+               if chain_info.get("positioning") else "")
 
     return (f'<div class="positioning"><h3>產業鏈定位 · {chain}</h3>'
-            f'<div class="posnote">同鏈股票毛利率與近60日報酬對照，'
+            f'{pos_line}'
+            f'<div class="posnote">依上游→下游排列，同鏈股票毛利率與近60日報酬對照，'
             f'資料 {cache["updated"]}（青框＝本檔所在環節）</div>{"".join(rows)}</div>')
 
 
@@ -249,9 +260,14 @@ def _is_tw_yf(ticker):
 CSS = """
 .positioning{margin-top:16px;padding-top:14px;border-top:1px solid #16223A}
 .positioning h3{font-size:14px;font-weight:700;color:#F5B841;margin-bottom:4px}
+.chainpos{font-size:12.5px;color:#C7D8EC;line-height:1.6;margin-bottom:8px;
+ padding:8px 10px;background:#161a20;border-radius:8px}
 .posnote{font-size:11.5px;color:#8a8f98;margin-bottom:10px}
-.segrow{margin:10px 0}
-.segname{font-size:11.5px;color:#93C5FD;font-weight:600;margin-bottom:5px}
+.segarrow{text-align:center;font-size:10.5px;color:#4a5568;margin:2px 0}
+.segrow{margin:6px 0 10px}
+.segname{font-size:12px;color:#93C5FD;font-weight:600}
+.segmine{color:#F5B841;font-weight:700;font-size:10.5px}
+.segdo{font-size:11px;color:#8a8f98;margin:2px 0 6px}
 .segcells{display:flex;flex-wrap:wrap;gap:6px}
 .peer{background:#1a1d23;border:1px solid #2a2e35;border-radius:8px;padding:6px 9px;font-size:11.5px;min-width:120px}
 .peer.focus{border-color:#4a9eff;box-shadow:0 0 0 1px #4a9eff}

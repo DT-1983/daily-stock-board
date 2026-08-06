@@ -16,6 +16,7 @@
 """
 import sys
 import re
+import json
 import argparse
 
 import numpy as np
@@ -130,6 +131,19 @@ def mansfield_rs(closes, bench_closes, short=25, long=200):
     return out
 
 
+def mansfield_rs_series(closes, bench_closes, win):
+    """整段序列版（給畫圖用），不是只取最新一值。"""
+    n = min(len(closes), len(bench_closes))
+    c = np.array(closes[-n:], dtype=float)
+    b = np.array(bench_closes[-n:], dtype=float)
+    rs_raw = c / b
+    out = np.full(n, np.nan)
+    for i in range(win, n):
+        avg = rs_raw[i - win:i].mean()
+        out[i] = (rs_raw[i] / avg - 1) * 100 if avg else np.nan
+    return out
+
+
 # ── 綜合：抓資料＋算四指標＋渲染 ──────────────────────────────────────
 
 def _flip_bars(dr):
@@ -197,9 +211,93 @@ def build(ticker):
         _tile("RS 相對強弱", rs_html, ""),
     ])
 
+    # ── 展開圖表：最近 120 個交易日，價格+雙趨勢線／動能柱／RS 雙線 ──
+    uid = re.sub(r"[^A-Za-z0-9]", "_", ticker.upper())
+    N = 120
+    n_all = len(closes)
+    cut = max(0, n_all - N)
+    dates = [d.strftime("%m/%d") for d in hist.index[cut:]]
+
+    def _clean(arr):
+        out = []
+        for v in arr[cut:]:
+            if v is None or (isinstance(v, float) and np.isnan(v)):
+                out.append(None)
+            else:
+                out.append(round(float(v), 2))
+        return out
+
+    rs_s_series = mansfield_rs_series(closes, bench_closes, 25) if bench_closes else None
+    rs_l_series = mansfield_rs_series(closes, bench_closes, 200) if bench_closes else None
+
+    chart_data = {
+        "dates": dates,
+        "closes": _clean(closes),
+        "st": _clean(st["st"]) if st else [],
+        "st_dir": [int(x) if x is not None else None for x in (st["dir"][cut:] if st else [])],
+        "dt": _clean(dt["st"]) if dt else [],
+        "dt_dir": [int(x) if x is not None else None for x in (dt["dir"][cut:] if dt else [])],
+        "mom": _clean(sq["momentum"]) if sq is not None else [],
+        "rs_s": _clean(rs_s_series) if rs_s_series is not None else [],
+        "rs_l": _clean(rs_l_series) if rs_l_series is not None else [],
+    }
+
     html = f"""<div class="technical"><h3>技術面四指標</h3>
 <div class="posnote">近一年日線計算，基準指數：{_benchmark(ticker)}</div>
 <div class="techgrid">{tiles}</div>
+<button class="techtoggle" onclick="ti_toggle_{uid}()" id="ti_btn_{uid}">展開圖表 ▾</button>
+<div class="techcharts" id="ti_charts_{uid}" style="display:none">
+  <div class="tclabel">價格 + SuperTrend + 雙重颱風K線</div>
+  <div class="tcbox"><canvas id="ti_c1_{uid}"></canvas></div>
+  <div class="tclabel">EXCEED CHARGE 動能柱</div>
+  <div class="tcbox tcbox-sm"><canvas id="ti_c2_{uid}"></canvas></div>
+  <div class="tclabel">RS 相對強弱（短線25日／長線200日）</div>
+  <div class="tcbox tcbox-sm"><canvas id="ti_c3_{uid}"></canvas></div>
+</div>
+<script>
+window.TI_DATA_{uid} = {json.dumps(chart_data, ensure_ascii=False)};
+let ti_drawn_{uid} = false;
+function ti_toggle_{uid}(){{
+  const box = document.getElementById('ti_charts_{uid}');
+  const btn = document.getElementById('ti_btn_{uid}');
+  const open = box.style.display !== 'none';
+  box.style.display = open ? 'none' : 'block';
+  btn.textContent = open ? '展開圖表 ▾' : '收合圖表 ▴';
+  if (!open && !ti_drawn_{uid}) {{ ti_drawn_{uid} = true; ti_draw_{uid}(); }}
+}}
+function ti_draw_{uid}(){{
+  const d = window.TI_DATA_{uid};
+  const segColor = dir => ctx => {{
+    const i = ctx.p1DataIndex; const v = dir[i];
+    return v === -1 ? '#ff8a8a' : (v === 1 ? '#4ade80' : '#6b7280');
+  }};
+  new Chart(document.getElementById('ti_c1_{uid}'), {{type:'line',
+    data:{{labels:d.dates,datasets:[
+      {{label:'收盤',data:d.closes,borderColor:'#8FA8C8',borderWidth:1.2,pointRadius:0,tension:.15}},
+      {{label:'SuperTrend',data:d.st,borderWidth:1.6,pointRadius:0,
+        segment:{{borderColor:segColor(d.st_dir)}}}},
+      {{label:'雙重颱風',data:d.dt,borderWidth:1.6,pointRadius:0,borderDash:[4,3],
+        segment:{{borderColor:segColor(d.dt_dir)}}}}]}},
+    options:{{responsive:true,maintainAspectRatio:false,interaction:{{mode:'index',intersect:false}},
+      plugins:{{legend:{{labels:{{color:'#9aa0a6',boxWidth:14,font:{{size:10}}}}}}}},
+      scales:{{x:{{ticks:{{color:'#6b7280',font:{{size:9}},maxRotation:0,autoSkip:true,maxTicksLimit:8}},grid:{{display:false}}}},
+        y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
+  new Chart(document.getElementById('ti_c2_{uid}'), {{type:'bar',
+    data:{{labels:d.dates,datasets:[{{label:'動能',data:d.mom,
+      backgroundColor:d.mom.map(v=>v==null?'#2a2e35':(v>=0?'#4ade8099':'#ff8a8a99'))}}]}},
+    options:{{responsive:true,maintainAspectRatio:false,plugins:{{legend:{{display:false}}}},
+      scales:{{x:{{ticks:{{display:false}},grid:{{display:false}}}},
+        y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
+  new Chart(document.getElementById('ti_c3_{uid}'), {{type:'line',
+    data:{{labels:d.dates,datasets:[
+      {{label:'短線25日',data:d.rs_s,borderColor:'#EAB308',borderWidth:1.4,pointRadius:0,tension:.15}},
+      {{label:'長線200日',data:d.rs_l,borderColor:'#4a9eff',borderWidth:1.4,pointRadius:0,tension:.15}}]}},
+    options:{{responsive:true,maintainAspectRatio:false,
+      plugins:{{legend:{{labels:{{color:'#9aa0a6',boxWidth:14,font:{{size:10}}}}}}}},
+      scales:{{x:{{ticks:{{display:false}},grid:{{display:false}}}},
+        y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
+}}
+</script>
 </div>"""
 
     def _lbl(dir_, bars):
@@ -230,6 +328,13 @@ CSS = """
 .tn{font-size:10px;color:#6b7280;letter-spacing:.3px;font-weight:600}
 .tv{font-size:14px;font-weight:700;margin-top:4px;color:#e8eaed}
 .ts{font-size:11px;color:#9aa0a6;margin-top:2px}
+.techtoggle{margin-top:12px;width:100%;padding:9px;background:#1a1d23;border:1px solid #2a2e35;
+ border-radius:8px;color:#93C5FD;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.techtoggle:hover{border-color:#4a9eff}
+.techcharts{margin-top:10px}
+.tclabel{font-size:11px;color:#8a8f98;margin:10px 0 4px}
+.tcbox{height:180px}
+.tcbox-sm{height:100px}
 """
 
 
