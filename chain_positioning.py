@@ -177,6 +177,32 @@ def _name(tk):
     return tk
 
 
+def summary_text(ticker):
+    """給 narrative() LLM prompt 用的一行文字摘要。純讀快取，零額外 API 成本。"""
+    if not os.path.exists(CACHE):
+        return ""
+    cache = json.load(open(CACHE, encoding="utf-8"))
+    lookup = ticker_lookup(cache["structure"])
+    tk = ticker.replace(".TW", "").replace(".TWO", "") if _is_tw_yf(ticker) else ticker.upper()
+    hit = lookup.get(tk)
+    if not hit:
+        return ""
+    chain, my_seg = hit
+    metrics = cache["metrics"]
+    my = metrics.get(tk, {})
+    peers = [metrics.get(t, {}) for seg in cache["structure"][chain] for t in seg["tickers"] if t != tk]
+    peer_gm = [p["gross_margin"] for p in peers if p.get("gross_margin") is not None]
+    peer_ret = [p["ret60"] for p in peers if p.get("ret60") is not None]
+    gm_avg = sum(peer_gm) / len(peer_gm) if peer_gm else None
+    ret_avg = sum(peer_ret) / len(peer_ret) if peer_ret else None
+    parts = [f"屬於「{chain}」鏈、{my_seg}環節"]
+    if my.get("gross_margin") is not None and gm_avg is not None:
+        parts.append(f"毛利率{my['gross_margin']:.1f}%（同鏈平均{gm_avg:.1f}%）")
+    if my.get("ret60") is not None and ret_avg is not None:
+        parts.append(f"近60日{my['ret60']:+.1f}%（同鏈平均{ret_avg:+.1f}%）")
+    return "、".join(parts)
+
+
 def build_html(ticker):
     """回 HTML 片段字串；查不到鏈就回空字串（呼叫端據此決定要不要顯示這個區塊）。"""
     if not os.path.exists(CACHE):
