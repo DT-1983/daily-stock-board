@@ -352,3 +352,43 @@ Actions 09:00（cron 0 0 → 0 1）
   已上線驗證。
 
 其餘三項（財報營收實況/綜合判斷/技術面四指標）待後續依序動工。
+
+## 2026-08-06（下半）· 財報卡三項新功能：財報營收實況／技術面四指標／綜合判斷
+
+BEST MATCH 拆解的剩餘三項一次做完（用戶：「都做一做吧」）。
+
+- **`fundamentals_reality.py`**：近6季趨勢表（台FinMind FinancialStatements／美yfinance）
+  ＋月營收YoY（台股專屬，FinMind無現成YoY欄位、自己拿去年同月算）＋業外>本業自動警示。
+  驗證：3037 抓到的 Q2 數字跟 BEST MATCH 報告逐項對上（營收428.9億/毛利24.8%/
+  業外89.2億/本業66.5億/EPS8.45），連月營收YoY六個月數字都精確吻合。
+- **`technical_indicators.py`**：SuperTrend 復用 board_html_legacy 既有實作；雙重颱風K線＝
+  SuperTrend 的 SMA-ATR 變體；EXCEED CHARGE＝TTM Squeeze擠壓動能（布林帶樣本標準差 vs
+  凱特納SMA-of-TR，動能用線性迴歸投影）；RS相對強弱＝Mansfield RS（股價/大盤比值對其均線乖離%，
+  短線25日+長線200日）。四個指標全部只需 OHLCV，yfinance 一次抓齊，不需新資料源。
+  驗證：3037 SuperTrend翻多「第2根」，比對股價確實從7/31的787反彈到8/6的973（+23.6%），
+  指標即時反應，不是套錯資料。
+- **`narrative()` 擴充**：新增 `verdict` 欄位整合前兩項+產業鏈定位，LLM 輸出實測會同時引用
+  洪瑞泰三關卡（盈再率203%地雷）、業外品質警示、技術面動能、同鏈定位，不是各講各的。
+
+### 架構決策：compute+render 兩層拆分
+
+FR/TI 的 `build(ticker)` 一次抓資料回傳 `(html, summary_text)`，`earnings_infographic.py`
+的 `main()` 只呼叫一次，html 進版面、summary_text 進 LLM prompt——避免財報卡渲染跟
+narrative() 敘事層各自重打一次 API（8/5 FinMind 限流的教訓內化進架構）。
+CP 走快取讀取，天生零額外成本，加 `summary_text()` 供 narrative() 引用。
+
+### 踩坑：發現既有 bug（非本次新增，但擋住整合測試）
+
+`earnings_infographic.py` 的 `facts` 字串對 6 個 yoy 欄位直接 `:+.1f` 格式化，
+沒防 None。3037.TW 的 EPS yoy 剛好是 None（yfinance 台股 EPS 欄位缺值，非固定規律，
+2317.TW 有值但3037.TW沒有）→ LLM 敘事層每次都拋例外退化成純數據版，
+且錯誤訊息「unsupported format string passed to NoneType.__format__」不會講是哪個欄位。
+修法：加 `yoy()` helper 統一 None-safe 格式化，6 處全部替換。
+
+### 已知限制：資料源季度落差
+
+核心卡片（洪瑞泰/分析師共識）走 yfinance，台股季報更新常落後 FinMind 一季以上；
+新的「財報與營收實況」區塊走 FinMind，比較新。已在頁尾加說明，兩者季度標籤
+不一致時以「財報與營收實況」為準，不是抓錯。
+
+至此 BEST MATCH 拆解的四項功能全數上線：①產業鏈定位 ②財報營收實況 ③綜合判斷 ④技術面四指標。
