@@ -1,6 +1,7 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex"><title>AMD Q1 2026 財報懶人包</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#0A1628;color:#E8EEF7;
@@ -61,69 +62,186 @@ td:first-child{text-align:left;color:#C7D8EC}
 .bl .e{font-size:29px;flex-shrink:0}
 .bl .t{font-size:11.5px;color:#F5B841;font-weight:800;letter-spacing:1.2px;margin-bottom:3px}
 .bl .c{font-size:14.5px;line-height:1.6}
+.verdict{margin-top:14px;padding:14px 16px;background:#161a20;border:1px solid #2a2e35;
+ border-left:3px solid #F5B841;border-radius:10px}
+.verdict .vt{font-size:11.5px;font-weight:700;color:#F5B841;letter-spacing:.5px;margin-bottom:6px}
+.verdict .vc{font-size:13.5px;line-height:1.7;color:#C7D8EC}
 .ftr{color:#6B84A6;font-size:11px;margin-top:16px;line-height:1.7;
  border-top:1px solid #1E3A5F;padding-top:12px}
 .warn{background:#3A2A0E;border:1px solid #7A5A1E;color:#F5C96B;border-radius:9px;
  padding:9px 13px;font-size:12px;margin-bottom:14px}
 @media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}
  .grid3,.two,.dec{grid-template-columns:1fr}}
+
+.positioning{margin-top:16px;padding-top:14px;border-top:1px solid #16223A}
+.positioning h3{font-size:14px;font-weight:700;color:#F5B841;margin-bottom:4px}
+.chainpos{font-size:12.5px;color:#C7D8EC;line-height:1.6;margin-bottom:8px;
+ padding:8px 10px;background:#161a20;border-radius:8px}
+.posnote{font-size:11.5px;color:#8a8f98;margin-bottom:10px}
+.segarrow{text-align:center;font-size:10.5px;color:#4a5568;margin:2px 0}
+.segrow{margin:6px 0 10px}
+.segname{font-size:12px;color:#93C5FD;font-weight:600}
+.segmine{color:#F5B841;font-weight:700;font-size:10.5px}
+.segdo{font-size:11px;color:#8a8f98;margin:2px 0 6px}
+.segcells{display:flex;flex-wrap:wrap;gap:6px}
+.peer{background:#1a1d23;border:1px solid #2a2e35;border-radius:8px;padding:6px 9px;font-size:11.5px;min-width:120px}
+.peer.focus{border-color:#4a9eff;box-shadow:0 0 0 1px #4a9eff}
+.pt{font-weight:700;color:#e8eaed}
+.pc{color:#6b7280;font-weight:400;margin-left:4px;font-size:10.5px}
+.pv{color:#9aa0a6;margin-top:2px}
+.pv .pos{color:#4ade80}.pv .neg{color:#ff8a8a}.pv .flat{color:#6b7280}
+
+.reality{margin-top:16px;padding-top:14px;border-top:1px solid #16223A}
+.reality h3{font-size:14px;font-weight:700;color:#F5B841;margin-bottom:4px}
+.realitysub{font-size:11.5px;color:#93C5FD;font-weight:600;margin:12px 0 5px}
+.realitytbl{width:100%;border-collapse:collapse;font-size:12px}
+.realitytbl th{color:#8a8f98;font-weight:600;text-align:right;padding:5px 7px;
+ border-bottom:1px solid #2a2e35;font-size:10.5px}
+.realitytbl th:first-child,.realitytbl td:first-child{text-align:left}
+.realitytbl td{padding:5px 7px;border-bottom:1px solid #1a1d23;text-align:right;color:#e8eaed}
+.realitytbl tr:last-child td{border-bottom:0}
+.realitytbl .pos{color:#4ade80}.realitytbl .neg{color:#ff8a8a}.realitytbl .flat{color:#6b7280}
+.ndot{color:#EAB308;cursor:help}
+.realitywarn{background:#2a2410;border:1px solid #5c4a1a;border-radius:8px;
+ padding:9px 11px;font-size:12px;line-height:1.6;color:#F5D98B;margin-top:10px}
+
+.technical{margin-top:16px;padding-top:14px;border-top:1px solid #16223A}
+.technical h3{font-size:14px;font-weight:700;color:#F5B841;margin-bottom:4px}
+.techgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:10px}
+.ttile{background:#1a1d23;border:1px solid #2a2e35;border-radius:9px;padding:9px 11px}
+.tn{font-size:10px;color:#6b7280;letter-spacing:.3px;font-weight:600}
+.tv{font-size:14px;font-weight:700;margin-top:4px;color:#e8eaed}
+.ts{font-size:11px;color:#9aa0a6;margin-top:2px}
+.techtoggle{margin-top:12px;width:100%;padding:9px;background:#1a1d23;border:1px solid #2a2e35;
+ border-radius:8px;color:#93C5FD;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.techtoggle:hover{border-color:#4a9eff}
+.techcharts{margin-top:10px}
+.tclabel{font-size:11px;color:#8a8f98;margin:10px 0 4px}
+.tcbox{height:180px}
+.tcbox-sm{height:100px}
 </style></head><body><div class="wrap">
 
 <div class="hd">
   <div><h1>Advanced Micro Devices, Inc.</h1>
     <div class="sub">Q1 2026 財報懶人包　·　會計期間截至 2026-03-31　·　YoY 基準 2025-03-31</div></div>
   <div><div class="tk">AMD</div>
-    <div class="tk-sub">股價 485.89 USD　·　產生於 2026-08-04 01:52</div></div>
+    <div class="tk-sub">股價 482.05 USD　·　產生於 2026-08-06 19:50</div></div>
 </div>
 
 <div class="kpis"><div class="kpi"><div class="lb">營收 Revenue</div><div class="vl">$10.25B</div><span class="yo up">▲ +37.8% YoY</span></div><div class="kpi"><div class="lb">毛利 Gross Profit</div><div class="vl">$5.42B</div><span class="yo up">▲ +45.0% YoY</span></div><div class="kpi"><div class="lb">營業利益 Op. Income</div><div class="vl">$1.48B</div><span class="yo up">▲ +83.1% YoY</span></div><div class="kpi"><div class="lb">淨利 Net Income</div><div class="vl">$1.38B</div><span class="yo up">▲ +95.1% YoY</span></div><div class="kpi"><div class="lb">資本支出 CapEx</div><div class="vl">$389M</div><span class="yo neu">+83.5% YoY</span></div></div>
 
 <div class="grid3">
-  <div class="card"><h2>營運亮點 Highlights</h2><div class="item"><div class="ic">📈</div><div><div class="it-t">營收獲利雙升</div><div class="it-d">營收 10.25B 年增 37.8%，淨利 1.38B 大增 95.1%，EPS 0.84 年增 90.9%</div></div></div><div class="item"><div class="ic">💰</div><div><div class="it-t">毛利率突破五成</div><div class="it-d">毛利 5.42B 年增 45.0%，毛利率達 52.8%，產品組合獲利能力提升</div></div></div><div class="item"><div class="ic">⚙️</div><div><div class="it-t">營益率跳升</div><div class="it-d">營業利益 1.48B 年增 83.1%，營益率 14.4%，優於去年同期 10.8%</div></div></div><div class="item"><div class="ic">🏦</div><div><div class="it-t">淨現金體質</div><div class="it-d">總現金 12.35B、總負債僅 3.87B，淨現金 8.48B，無高負債變壞訊號</div></div></div></div>
+  <div class="card"><h2>營運亮點 Highlights</h2><div class="item"><div class="ic">🚀</div><div><div class="it-t">營收破百億創歷史</div><div class="it-d">Q1營收$10.25B，YoY+37.8%，六季內從$7.44B躍升至雙位數十億</div></div></div><div class="item"><div class="ic">💥</div><div><div class="it-t">淨利近乎翻倍</div><div class="it-d">淨利$1.38B YoY+95.1%，EPS $0.84 YoY+90.9%，盈利爆發力強勁</div></div></div><div class="item"><div class="ic">🏦</div><div><div class="it-t">現金流大幅改善</div><div class="it-d">FCF $2.57B YoY+253%，盈再率32.2%達印鈔機等級（<40%）</div></div></div><div class="item"><div class="ic">📈</div><div><div class="it-t">利潤率全面擴張</div><div class="it-d">毛利率52.8%、營益率14.4%，較去年同期10.8%顯著改善</div></div></div></div>
   <div class="card"><h2>財務數據 Financial Results</h2>
     <table><tr><th>項目</th><th>本季</th><th>YoY</th></tr><tr><td>營收</td><td>$10.25B</td><td class="up">+37.8%</td></tr><tr><td>毛利</td><td>$5.42B</td><td class="up">+45.0%</td></tr><tr><td>營業利益</td><td>$1.48B</td><td class="up">+83.1%</td></tr><tr><td>淨利</td><td>$1.38B</td><td class="up">+95.1%</td></tr><tr><td>營運現金流</td><td>$2.96B</td><td class="up">+214.7%</td></tr><tr><td>自由現金流</td><td>$2.57B</td><td class="up">+253.0%</td></tr></table>
     <div class="gauge"><h2 style="margin-top:16px">市場情緒 Sentiment</h2>
       <svg viewBox="0 0 220 118" style="width:100%;max-width:220px"><path d="M34.0,100.0 A76,76 0 0 1 48.5,55.3" stroke="#EF4444" stroke-width="15" fill="none" stroke-linecap="butt"/><path d="M48.5,55.3 A76,76 0 0 1 86.5,27.7" stroke="#F97316" stroke-width="15" fill="none" stroke-linecap="butt"/><path d="M86.5,27.7 A76,76 0 0 1 133.5,27.7" stroke="#8FA8C8" stroke-width="15" fill="none" stroke-linecap="butt"/><path d="M133.5,27.7 A76,76 0 0 1 171.5,55.3" stroke="#4ADE80" stroke-width="15" fill="none" stroke-linecap="butt"/><path d="M171.5,55.3 A76,76 0 0 1 186.0,100.0" stroke="#22C55E" stroke-width="15" fill="none" stroke-linecap="butt"/><line x1="110" y1="100" x2="154.1" y2="55.9" stroke="#E8EEF7" stroke-width="3.5" stroke-linecap="round"/><circle cx="110" cy="100" r="7" fill="#E8EEF7"/></svg><div class="lbl" style="color:#4ADE80">BULLISH</div>
-      <div class="rsn">47 位分析師共識 strong_buy，市場情緒偏多但估值已極高</div></div>
+      <div class="rsn">EPS+91%、FCF+253%，法人47位共識strong_buy</div></div>
   </div>
-  <div class="card"><h2>資本與產能動態 Capital &amp; Capacity</h2><div class="item"><div class="ic">🖨️</div><div><div class="it-t">盈再率印鈔機</div><div class="it-d">盈再率僅 32.2%（<40%），賺錢不必一直砸錢再投資，屬印鈔機等級</div></div></div><div class="item"><div class="ic">💵</div><div><div class="it-t">自由現金流暴增</div><div class="it-d">營運現金流 2.96B 年增 214.7%，自由現金流 2.57B 年增 253.0%</div></div></div><div class="item"><div class="ic">🔧</div><div><div class="it-t">資本支出可控</div><div class="it-d">資本支出 0.39B，僅占營運現金流約 13%，擴產負擔輕</div></div></div><div class="item"><div class="ic">🚫</div><div><div class="it-t">零配息</div><div class="it-d">配息率 0.0%，現金留在公司未回饋股東，須留意盈餘品質</div></div></div></div>
+  <div class="card"><h2>資本與產能動態 Capital &amp; Capacity</h2><div class="item"><div class="ic">🏗️</div><div><div class="it-t">輕資產現金轉換</div><div class="it-d">資本支出僅$0.39B，FCF $2.57B，FCF轉換率極高，不需重資產</div></div></div><div class="item"><div class="ic">💰</div><div><div class="it-t">淨現金部位充裕</div><div class="it-d">總現金$13.11B、總負債$4.28B，淨現金$8.84B，財務防禦力強</div></div></div><div class="item"><div class="ic">⚙️</div><div><div class="it-t">營運現金流爆增</div><div class="it-d">營運現金流$2.96B YoY+214.7%，本業收現能力大幅提升</div></div></div></div>
 </div>
 
 <div class="two">
   <div class="card pos"><h2>✓ 利多 Key Positives</h2>
-    <div class="li"><span class="m">✓</span><span>EPS 年增 90.9%，獲利明顯改善</span></div><div class="li"><span class="m">✓</span><span>毛利率 52.8%、營益率 14.4% 同步走高</span></div><div class="li"><span class="m">✓</span><span>盈再率 32.2%，過三大關卡中的資本效率關</span></div><div class="li"><span class="m">✓</span><span>自由現金流 2.57B，現金創造力強</span></div><div class="li"><span class="m">✓</span><span>淨現金 8.48B，財務結構穩健</span></div></div>
+    <div class="li"><span class="m">✓</span><span>營收YoY+37.8%達$10.25B，六季連續成長軌跡確立</span></div><div class="li"><span class="m">✓</span><span>FCF $2.57B YoY+253%，盈再率32.2%是印鈔機體質</span></div><div class="li"><span class="m">✓</span><span>淨現金$8.84B，財務彈性充裕無債務壓力</span></div><div class="li"><span class="m">✓</span><span>毛利率52.8%、營益率14.4%，兩者同步擴張</span></div><div class="li"><span class="m">✓</span><span>47位分析師共識strong_buy，平均目標價$579</span></div></div>
   <div class="card neg"><h2>✕ 風險 Key Risks &amp; Concerns</h2>
-    <div class="li"><span class="m">✕</span><span>ROE 僅 8.1%，近 4 年 0/4 年達標，品質關不過</span></div><div class="li"><span class="m">✕</span><span>配息率 0%，配不出現金給股東</span></div><div class="li"><span class="m">✕</span><span>現價 485.89 遠超貴價 90（EPS×30），嚴重偏貴</span></div><div class="li"><span class="m">✕</span><span>市值 792.29B 已反映大量未實現的期待</span></div><div class="li"><span class="m">✕</span><span>股價近 52 週高點 584.73，回檔空間大</span></div></div>
+    <div class="li"><span class="m">✕</span><span>ROE僅10.2%，近4年0/4年達標，洪瑞泰首關連續失守</span></div><div class="li"><span class="m">✕</span><span>不配息（配息率0%），盈餘品質無現金配發驗證</span></div><div class="li"><span class="m">✕</span><span>現價$482遠超貴價$117，超出貴價逾3倍，估值極度偏高</span></div><div class="li"><span class="m">✕</span><span>技術面SuperTrend+颱風K線同步空頭第7根，動能指標-33.61</span></div><div class="li"><span class="m">✕</span><span>業外損益Q4 2025高點$0.32B後Q1回落至$0.13B，存在波動性</span></div></div>
 </div>
 
 <div class="dec">
-  <div class="card"><h2>洪瑞泰選股法 Decision Framework</h2><div class="rate"><div>① 高 ROE ≥ 15%<div style="color:#6B84A6;font-size:10.5px;font-weight:400;margin-top:1px">近 4 年 0/4 年達標（需 ≥3）</div></div><div style="text-align:right"><div style="font-weight:700">8.1%</div><span style="color:#EF4444;font-weight:800">❌ 不過</span></div></div><div class="rate"><div>② 盈再率 < 80%<div style="color:#6B84A6;font-size:10.5px;font-weight:400;margin-top:1px">🏆 印鈔機（<40%）</div></div><div style="text-align:right"><div style="font-weight:700">32.2%</div><span style="color:#22C55E;font-weight:800">✅ 過</span></div></div><div class="rate"><div>③ 配息率 ≥ 40%<div style="color:#6B84A6;font-size:10.5px;font-weight:400;margin-top:1px">配息偏低，留意盈餘品質</div></div><div style="text-align:right"><div style="font-weight:700">0.0%</div><span style="color:#EF4444;font-weight:800">❌ 不過</span></div></div><div style="margin-top:12px;padding-top:11px;border-top:1px solid #1E3A5F"><div style="color:#F5B841;font-size:11.5px;font-weight:700;margin-bottom:5px">俗貴價（EPS×12 買／EPS×30 賣）</div><div style="font-size:12.5px;color:#C7D8EC;line-height:1.7">近四季 EPS 3.00　<span style="color:#22C55E">俗價 36.00</span>　<span style="color:#EF4444">貴價 90.00</span><br>現價 485.89 → <b>🔴 現價 > 貴價 → 太貴，考慮賣出</b></div></div><div style="margin-top:12px;padding-top:11px;border-top:1px solid #1E3A5F"><div style="color:#F5B841;font-size:11.5px;font-weight:700;margin-bottom:5px">變壞判定（EPS 衰退／照妖鏡）</div><div style="color:#22C55E;font-weight:700;font-size:13.5px">✅ 沒有變壞跡象</div><div style="color:#6B84A6;font-size:12px;margin-top:3px">· 無</div></div>
+  <div class="card"><h2>洪瑞泰選股法 Decision Framework</h2><div class="rate"><div>① 高 ROE ≥ 15%<div style="color:#6B84A6;font-size:10.5px;font-weight:400;margin-top:1px">近 4 年 0/4 年達標（需 ≥3）</div></div><div style="text-align:right"><div style="font-weight:700">10.2%</div><span style="color:#EF4444;font-weight:800">❌ 不過</span></div></div><div class="rate"><div>② 盈再率 < 80%<div style="color:#6B84A6;font-size:10.5px;font-weight:400;margin-top:1px">🏆 印鈔機（<40%）</div></div><div style="text-align:right"><div style="font-weight:700">32.2%</div><span style="color:#22C55E;font-weight:800">✅ 過</span></div></div><div class="rate"><div>③ 配息率 ≥ 40%<div style="color:#6B84A6;font-size:10.5px;font-weight:400;margin-top:1px">配息偏低，留意盈餘品質</div></div><div style="text-align:right"><div style="font-weight:700">0.0%</div><span style="color:#EF4444;font-weight:800">❌ 不過</span></div></div><div style="margin-top:12px;padding-top:11px;border-top:1px solid #1E3A5F"><div style="color:#F5B841;font-size:11.5px;font-weight:700;margin-bottom:5px">俗貴價（EPS×12 買／EPS×30 賣）</div><div style="font-size:12.5px;color:#C7D8EC;line-height:1.7">近四季 EPS 3.90　<span style="color:#22C55E">俗價 46.80</span>　<span style="color:#EF4444">貴價 117.00</span><br>現價 482.05 → <b>🔴 現價 > 貴價 → 太貴，考慮賣出</b></div></div><div style="margin-top:12px;padding-top:11px;border-top:1px solid #1E3A5F"><div style="color:#F5B841;font-size:11.5px;font-weight:700;margin-bottom:5px">變壞判定（EPS 衰退／照妖鏡）</div><div style="color:#22C55E;font-weight:700;font-size:13.5px">✅ 沒有變壞跡象</div><div style="color:#6B84A6;font-size:12px;margin-top:3px">· 無</div></div>
     <div style="margin-top:13px;padding-top:12px;border-top:1px solid #1E3A5F">
       <div style="color:#F5B841;font-size:11.5px;font-weight:700;margin-bottom:4px">長線投資邏輯</div>
-      <div style="font-size:12.8px;line-height:1.6;color:#C7D8EC">ROE 僅 8.1% 且連四年不達標、配息率 0%，三關只過盈再率一關，獲利才剛好轉、穩定度未經驗證，還不算「不會變的好公司」。</div>
+      <div style="font-size:12.8px;line-height:1.6;color:#C7D8EC">ROE 10.2%連4年未達15%，首關不過；不配息，現金配發驗證缺席；唯盈再率32.2%達印鈔機。三關只過一關，洪瑞泰框架下非好公司，且現價遠超貴價，不在考慮範圍。</div>
       <div style="color:#F5B841;font-size:11.5px;font-weight:700;margin:11px 0 4px">適合的投資人</div>
-      <div style="font-size:12.8px;color:#C7D8EC">只適合觀察名單追蹤者，不適合依巴菲特法進場的價值投資人</div>
+      <div style="font-size:12.8px;color:#C7D8EC">願承擔高估值與高波動的科技成長型投資人</div>
     </div>
   </div>
   <div class="card"><h2>分析師共識與估值 Consensus</h2>
     <div class="badge" style="background:#0E3A22;border:1px solid #22C55E">
       <div class="bg" style="color:#22C55E">STRONG BUY</div>
       <div class="bs" style="color:#22C55E">47 位分析師共識　·　平均目標價 579.1064
-        （潛在空間 +19.2%）</div>
+        （潛在空間 +20.1%）</div>
     </div>
-    <table><tr><td>Forward P/E</td><td>35.03</td><td style="color:#6B84A6;font-size:11px;text-align:right">低於 20 偏便宜</td></tr><tr><td>PEG Ratio</td><td>1.12</td><td style="color:#6B84A6;font-size:11px;text-align:right">小於 1＝成長性被低估</td></tr><tr><td>FCF Yield</td><td>0.32%</td><td style="color:#6B84A6;font-size:11px;text-align:right">自由現金流／市值，越高越好</td></tr><tr><td>EV / Sales</td><td>20.50</td><td style="color:#6B84A6;font-size:11px;text-align:right">越低越好</td></tr><tr><td>Trailing P/E</td><td>161.96</td><td style="color:#6B84A6;font-size:11px;text-align:right">看過去 12 個月</td></tr><tr><td>P / B</td><td>12.29</td><td style="color:#6B84A6;font-size:11px;text-align:right">資產面估值</td></tr></table>
+    <table><tr><td>Forward P/E</td><td>31.34</td><td style="color:#6B84A6;font-size:11px;text-align:right">低於 20 偏便宜</td></tr><tr><td>PEG Ratio</td><td>1.14</td><td style="color:#6B84A6;font-size:11px;text-align:right">小於 1＝成長性被低估</td></tr><tr><td>FCF Yield</td><td>0.33%</td><td style="color:#6B84A6;font-size:11px;text-align:right">自由現金流／市值，越高越好</td></tr><tr><td>EV / Sales</td><td>18.83</td><td style="color:#6B84A6;font-size:11px;text-align:right">越低越好</td></tr><tr><td>Trailing P/E</td><td>123.60</td><td style="color:#6B84A6;font-size:11px;text-align:right">看過去 12 個月</td></tr><tr><td>P / B</td><td>11.70</td><td style="color:#6B84A6;font-size:11px;text-align:right">資產面估值</td></tr></table>
     <div style="margin-top:11px;padding-top:10px;border-top:1px solid #1E3A5F">
       <div style="color:#F5B841;font-size:11.5px;font-weight:700;margin-bottom:4px">進場策略</div>
-      <div style="font-size:12.8px;line-height:1.6;color:#C7D8EC">現價 485.89 高於貴價 90，依洪瑞泰法無進場點；先等 ROE 連續達標再談買價</div>
-      <div class="note">52 週區間 149.22 ~ 584.73　·　市值 $792.29B
-        　·　淨現金 $8.48B</div>
+      <div style="font-size:12.8px;line-height:1.6;color:#C7D8EC">洪瑞泰框架現價$482遠超貴價$117不建議進場；技術空頭訊號需等SuperTrend轉多且回測52週低點$149支撐區確認</div>
+      <div class="note">52 週區間 149.22 ~ 584.73　·　市值 $786.03B
+        　·　淨現金 $8.84B</div>
     </div>
   </div>
 </div>
 
 <div class="bl"><div class="e">💡</div>
-  <div><div class="t">BOTTOM LINE</div><div class="c">還不是好公司（ROE 不過關、零配息），現價又遠超貴價 90，品質與價格兩頭都不合格，不碰。</div></div>
+  <div><div class="t">BOTTOM LINE</div><div class="c">本業爆發但ROE未達標、零配息，非洪瑞泰好公司；現價$482超貴價$117逾3倍，大幅高估。</div></div>
   <div class="e">📈</div></div>
+
+<div class="verdict"><div class="vt">🔎 綜合判斷</div><div class="vc">查核含6季趨勢、業外序列與技術面。①毛利率多季穩於50-54%（2025-Q2例外39.8%），本業體質漸穩；②業外損益Q4 2025衝高$0.32B後Q1回落$0.13B，為波動而非上升趨勢；③SuperTrend+颱風K線同步空頭第7根，動能-33.61。下季驗證：業外損益走向與ROE是否改善。</div></div>
+<div class="reality"><h3>財報與營收實況</h3>
+<div class="posnote">近 6 季趨勢，⚠ 標記業外收益大於本業營業利益的季度</div>
+<table class="realitytbl"><tr><th>季度</th><th>營收</th><th>毛利率</th><th>營益率</th><th>EPS</th><th>業外損益</th></tr><tr><td>2024-12</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td><td class="num">—</td></tr><tr><td>2025-03</td><td class="num">$7.44B</td><td class="num">50.2%</td><td class="num">10.8%</td><td class="num">0.44</td><td class="num"><span class="num pos">$0.02B</span></td></tr><tr><td>2025-06 <span class="ndot" title="業外收益大於本業營業利益">⚠</span></td><td class="num">$7.68B</td><td class="num">39.8%</td><td class="num">-1.7%</td><td class="num">0.54</td><td class="num"><span class="num pos">$0.06B</span></td></tr><tr><td>2025-09</td><td class="num">$9.25B</td><td class="num">51.7%</td><td class="num">13.7%</td><td class="num">0.75</td><td class="num"><span class="num pos">$0.04B</span></td></tr><tr><td>2025-12</td><td class="num">$10.27B</td><td class="num">54.3%</td><td class="num">17.1%</td><td class="num">0.92</td><td class="num"><span class="num pos">$0.32B</span></td></tr><tr><td>2026-03</td><td class="num">$10.25B</td><td class="num">52.8%</td><td class="num">14.4%</td><td class="num">0.84</td><td class="num"><span class="num pos">$0.13B</span></td></tr></table>
+
+
+</div>
+<div class="technical"><h3>技術面四指標</h3>
+<div class="posnote">近一年日線計算，基準指數：S&P 500</div>
+<div class="techgrid"><div class="ttile"><div class="tn">SUPER TREND</div><div class="tv"><span style="color:#ff8a8a">空頭</span></div><div class="ts">第 7 根</div></div><div class="ttile"><div class="tn">雙重颱風K線</div><div class="tv"><span style="color:#ff8a8a">空頭</span></div><div class="ts">第 7 根</div></div><div class="ttile"><div class="tn">EXCEED CHARGE</div><div class="tv"><span style="color:#ff8a8a">無擠壓</span></div><div class="ts">動能 -33.61</div></div><div class="ttile"><div class="tn">RS 相對強弱</div><div class="tv">短線 <b class="num" style="color:#ff8a8a">-8.8%</b>　長線 <b class="num" style="color:#4ade80">+41.3%</b></div><div class="ts"></div></div></div>
+<button class="techtoggle" onclick="ti_toggle_AMD()" id="ti_btn_AMD">展開圖表 ▾</button>
+<div class="techcharts" id="ti_charts_AMD" style="display:none">
+  <div class="tclabel">價格 + SuperTrend + 雙重颱風K線</div>
+  <div class="tcbox"><canvas id="ti_c1_AMD"></canvas></div>
+  <div class="tclabel">EXCEED CHARGE 動能柱</div>
+  <div class="tcbox tcbox-sm"><canvas id="ti_c2_AMD"></canvas></div>
+  <div class="tclabel">RS 相對強弱（短線25日／長線200日）</div>
+  <div class="tcbox tcbox-sm"><canvas id="ti_c3_AMD"></canvas></div>
+</div>
+<script>
+window.TI_DATA_AMD = {"dates": ["02/12", "02/13", "02/17", "02/18", "02/19", "02/20", "02/23", "02/24", "02/25", "02/26", "02/27", "03/02", "03/03", "03/04", "03/05", "03/06", "03/09", "03/10", "03/11", "03/12", "03/13", "03/16", "03/17", "03/18", "03/19", "03/20", "03/23", "03/24", "03/25", "03/26", "03/27", "03/30", "03/31", "04/01", "04/02", "04/06", "04/07", "04/08", "04/09", "04/10", "04/13", "04/14", "04/15", "04/16", "04/17", "04/20", "04/21", "04/22", "04/23", "04/24", "04/27", "04/28", "04/29", "04/30", "05/01", "05/04", "05/05", "05/06", "05/07", "05/08", "05/11", "05/12", "05/13", "05/14", "05/15", "05/18", "05/19", "05/20", "05/21", "05/22", "05/26", "05/27", "05/28", "05/29", "06/01", "06/02", "06/03", "06/04", "06/05", "06/08", "06/09", "06/10", "06/11", "06/12", "06/15", "06/16", "06/17", "06/18", "06/22", "06/23", "06/24", "06/25", "06/26", "06/29", "06/30", "07/01", "07/02", "07/06", "07/07", "07/08", "07/09", "07/10", "07/13", "07/14", "07/15", "07/16", "07/17", "07/20", "07/21", "07/22", "07/23", "07/24", "07/27", "07/28", "07/29", "07/30", "07/31", "08/03", "08/04", "08/05"], "closes": [205.94, 207.32, 203.08, 200.12, 203.37, 200.15, 196.6, 213.84, 210.86, 203.68, 200.21, 198.62, 190.95, 202.07, 199.45, 192.43, 202.68, 203.23, 204.83, 197.74, 193.39, 196.58, 196.31, 199.46, 205.27, 201.33, 202.68, 205.37, 220.27, 203.77, 201.99, 196.04, 203.43, 210.21, 217.5, 220.18, 221.53, 231.82, 236.64, 245.04, 246.83, 255.07, 258.12, 278.26, 278.39, 274.95, 284.49, 303.46, 305.33, 347.81, 334.63, 323.21, 337.11, 354.49, 360.54, 341.54, 355.26, 421.39, 408.46, 455.19, 458.79, 448.29, 445.5, 449.7, 424.1, 420.99, 414.05, 447.58, 449.59, 467.51, 503.89, 495.54, 518.09, 516.1, 510.13, 521.54, 542.52, 523.2, 466.38, 490.33, 475.51, 452.4, 488.45, 511.57, 547.26, 507.29, 512.48, 537.37, 551.63, 519.85, 519.74, 532.57, 521.58, 539.49, 580.91, 540.88, 517.82, 552.05, 516.11, 517.41, 546.72, 557.89, 534.39, 548.13, 529.14, 500.94, 495.76, 503.57, 544.43, 552.33, 539.69, 521.95, 494.95, 454.62, 429.56, 485.39, 476.15, 484.64, 518.58, 482.05], "st": [243.17, 243.17, 239.19, 236.77, 236.77, 235.69, 229.14, 229.14, 229.14, 229.14, 229.14, 225.79, 222.33, 222.33, 222.33, 222.33, 222.33, 222.33, 222.33, 222.33, 222.33, 222.33, 222.33, 222.33, 222.33, 222.33, 222.33, 222.33, 222.33, 222.33, 222.33, 222.33, 222.33, 222.33, 222.33, 222.33, 222.33, 199.33, 204.05, 213.43, 215.34, 221.24, 226.71, 238.59, 246.87, 247.47, 248.93, 260.04, 270.21, 298.16, 298.16, 298.16, 298.16, 298.16, 304.41, 304.41, 304.41, 345.6, 345.6, 360.09, 385.07, 385.07, 385.07, 385.07, 385.07, 385.07, 385.07, 385.07, 385.07, 390.27, 408.59, 414.87, 425.05, 430.36, 430.36, 430.48, 454.66, 454.66, 454.66, 454.66, 454.66, 565.88, 565.88, 565.88, 565.88, 565.88, 565.88, 565.88, 565.88, 565.88, 565.88, 565.88, 565.88, 565.88, 456.1, 456.1, 456.1, 456.1, 456.1, 456.1, 456.1, 456.1, 456.1, 456.1, 456.1, 456.1, 456.1, 456.1, 456.1, 456.1, 456.1, 456.1, 456.1, 576.12, 557.33, 557.33, 557.33, 557.33, 557.33, 557.33], "st_dir": [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1], "dt": [245.83, 245.83, 245.3, 242.11, 233.06, 231.48, 223.3, 223.3, 223.3, 223.3, 223.3, 221.62, 217.55, 217.55, 217.55, 217.55, 217.55, 217.55, 217.55, 217.55, 217.55, 217.55, 217.55, 217.55, 217.55, 217.55, 217.55, 217.55, 191.06, 191.06, 191.06, 191.06, 191.06, 191.06, 191.06, 191.06, 191.06, 194.94, 201.33, 212.98, 213.63, 221.27, 226.19, 238.36, 248.6, 248.77, 249.02, 260.61, 269.13, 297.49, 297.49, 297.49, 297.49, 297.49, 297.49, 297.49, 297.49, 333.26, 333.26, 351.12, 374.5, 374.5, 374.5, 374.5, 374.5, 374.5, 374.5, 374.5, 374.5, 389.93, 405.63, 413.22, 423.09, 425.17, 425.17, 425.17, 451.71, 451.71, 451.71, 451.71, 451.71, 451.71, 451.71, 451.71, 451.71, 451.71, 451.71, 451.71, 451.71, 451.71, 451.71, 451.71, 451.71, 451.71, 459.07, 459.07, 459.07, 459.07, 459.07, 459.07, 459.07, 459.07, 459.07, 459.07, 459.07, 459.07, 459.07, 459.07, 459.07, 459.07, 459.07, 459.07, 459.07, 578.92, 557.19, 557.19, 557.19, 557.19, 557.19, 557.19], "dt_dir": [-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1], "mom": [-24.39, -28.43, -32.38, -36.24, -37.33, -37.82, -37.38, -33.67, -29.91, -26.83, -23.39, -21.12, -18.74, -12.54, -10.81, -11.3, -8.66, -5.43, -2.32, -0.66, -0.56, 0.14, 0.22, 0.37, 1.66, 1.63, 1.41, 3.17, 7.07, 6.93, 6.18, 4.08, 2.53, 3.92, 6.2, 7.65, 9.79, 13.21, 17.1, 20.78, 23.66, 27.33, 30.57, 35.94, 40.76, 43.29, 46.76, 52.16, 57.8, 66.44, 70.62, 70.34, 71.64, 75.16, 77.78, 75.52, 74.12, 80.92, 83.32, 91.68, 97.72, 99.99, 99.65, 99.39, 93.01, 84.38, 74.08, 70.16, 65.3, 65.5, 69.11, 67.94, 69.3, 70.26, 69.05, 66.69, 64.61, 62.61, 48.56, 43.5, 36.45, 24.97, 20.64, 21.06, 24.73, 19.6, 12.52, 12.25, 13.55, 9.99, 9.65, 11.07, 12.18, 16.79, 27.44, 31.15, 31.33, 36.55, 29.26, 24.31, 22.67, 19.51, 12.85, 10.9, 8.82, -1.47, -10.88, -15.86, -11.4, -8.51, -8.25, -10.0, -17.29, -28.43, -37.36, -37.61, -40.93, -38.51, -32.69, -33.61], "rs_s": [-8.43, -7.84, -9.9, -11.76, -10.0, -11.81, -12.11, -4.66, -6.47, -8.75, -9.14, -9.03, -10.74, -5.28, -5.16, -6.41, -1.25, -0.2, 1.39, 0.03, -1.65, -1.14, -1.42, 1.78, 5.13, 4.65, 4.05, 5.76, 12.57, 5.37, 5.97, 2.87, 3.43, 6.1, 9.43, 9.77, 9.75, 11.36, 12.08, 15.41, 14.09, 15.45, 14.93, 22.53, 19.75, 17.2, 20.65, 25.71, 25.05, 39.24, 31.17, 25.1, 28.48, 31.46, 31.1, 22.33, 24.21, 42.6, 35.24, 46.09, 43.09, 36.44, 31.59, 28.91, 20.47, 17.57, 14.42, 20.44, 18.54, 20.83, 27.14, 22.38, 24.84, 21.78, 17.94, 18.87, 22.7, 15.76, 4.46, 8.5, 4.37, -0.16, 5.04, 8.85, 13.6, 5.19, 7.19, 10.61, 13.14, 7.27, 6.49, 8.23, 5.04, 6.7, 13.18, 4.7, -0.07, 5.57, -1.13, -0.64, 4.02, 5.46, 1.72, 3.82, -0.7, -5.71, -5.84, -4.4, 2.35, 3.77, 2.56, -1.15, -6.35, -13.93, -16.83, -6.93, -9.06, -8.32, -3.23, -9.61], "rs_l": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 86.91, 99.13, 94.65, 101.19, 98.77, 94.79, 97.78, 106.06, 96.67, 79.01, 86.66, 80.46, 73.58, 83.25, 89.89, 98.66, 84.03, 87.13, 92.97, 97.59, 87.7, 86.71, 90.15, 85.12, 88.1, 99.7, 85.06, 76.08, 85.32, 72.96, 72.91, 80.21, 82.01, 74.67, 77.46, 69.66, 60.56, 59.7, 61.71, 72.4, 74.14, 71.26, 64.61, 55.34, 41.8, 35.64, 50.34, 45.91, 45.83, 52.75, 41.73]};
+let ti_drawn_AMD = false;
+function ti_toggle_AMD(){
+  const box = document.getElementById('ti_charts_AMD');
+  const btn = document.getElementById('ti_btn_AMD');
+  const open = box.style.display !== 'none';
+  box.style.display = open ? 'none' : 'block';
+  btn.textContent = open ? '展開圖表 ▾' : '收合圖表 ▴';
+  if (!open && !ti_drawn_AMD) { ti_drawn_AMD = true; ti_draw_AMD(); }
+}
+function ti_draw_AMD(){
+  const d = window.TI_DATA_AMD;
+  const segColor = dir => ctx => {
+    const i = ctx.p1DataIndex; const v = dir[i];
+    return v === -1 ? '#ff8a8a' : (v === 1 ? '#4ade80' : '#6b7280');
+  };
+  new Chart(document.getElementById('ti_c1_AMD'), {type:'line',
+    data:{labels:d.dates,datasets:[
+      {label:'收盤',data:d.closes,borderColor:'#8FA8C8',borderWidth:1.2,pointRadius:0,tension:.15},
+      {label:'SuperTrend',data:d.st,borderWidth:1.6,pointRadius:0,
+        segment:{borderColor:segColor(d.st_dir)}},
+      {label:'雙重颱風',data:d.dt,borderWidth:1.6,pointRadius:0,borderDash:[4,3],
+        segment:{borderColor:segColor(d.dt_dir)}}]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{labels:{color:'#9aa0a6',boxWidth:14,font:{size:10}}}},
+      scales:{x:{ticks:{color:'#6b7280',font:{size:9},maxRotation:0,autoSkip:true,maxTicksLimit:8},grid:{display:false}},
+        y:{ticks:{color:'#6b7280',font:{size:9}},grid:{color:'#1a1d23'}}}}});
+  new Chart(document.getElementById('ti_c2_AMD'), {type:'bar',
+    data:{labels:d.dates,datasets:[{label:'動能',data:d.mom,
+      backgroundColor:d.mom.map(v=>v==null?'#2a2e35':(v>=0?'#4ade8099':'#ff8a8a99'))}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{ticks:{display:false},grid:{display:false}},
+        y:{ticks:{color:'#6b7280',font:{size:9}},grid:{color:'#1a1d23'}}}}});
+  new Chart(document.getElementById('ti_c3_AMD'), {type:'line',
+    data:{labels:d.dates,datasets:[
+      {label:'短線25日',data:d.rs_s,borderColor:'#EAB308',borderWidth:1.4,pointRadius:0,tension:.15},
+      {label:'長線200日',data:d.rs_l,borderColor:'#4a9eff',borderWidth:1.4,pointRadius:0,tension:.15}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:'#9aa0a6',boxWidth:14,font:{size:10}}}},
+      scales:{x:{ticks:{display:false},grid:{display:false}},
+        y:{ticks:{color:'#6b7280',font:{size:9}},grid:{color:'#1a1d23'}}}}});
+}
+</script>
+</div>
+
 
 <div class="ftr">
   <b>資料來源</b>：所有財務數字與估值指標皆取自 yfinance 之公司申報財報，未經 AI 生成或修改。
@@ -135,6 +253,8 @@ td:first-child{text-align:left;color:#C7D8EC}
   搭配 Forward P/E、PEG、FCF Yield、EV/Sales。市場派觀點，含成長性預期。<br>
   兩者衝突時（例：分析師喊 BUY 但洪瑞泰三關全不過）＝ 該檔是「市場看好但體質不合格」，
   請自行判斷要跟哪一套。本頁為研究參考，不構成投資建議。<br>
-  <b>已知限制</b>：無法取得法說會內容、管理層展望與新聞，因此「下季展望」類資訊不予呈現，避免編造。
+  <b>已知限制</b>：無法取得法說會內容、管理層展望與新聞，因此「下季展望」類資訊不予呈現，避免編造。<br>
+  <b>資料源落差</b>：上方核心卡片（洪瑞泰／分析師共識）用 yfinance，「財報與營收實況」用 FinMind（台股）——
+  兩者更新頻率不同，若季度標籤看起來不一致，是資料源落後、不是抓錯。以「財報與營收實況」區塊數字為準。
 </div>
 </div></body></html>
