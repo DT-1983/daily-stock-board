@@ -144,9 +144,15 @@ def _row(q, is_tw):
     gm = f'{q["gross_margin"]:.1f}%' if q["gross_margin"] is not None else "—"
     om = f'{q["op_margin"]:.1f}%' if q["op_margin"] is not None else "—"
     eps = f'{q["eps"]:.2f}' if q["eps"] is not None else "—"
+    if q["non_op"] is not None:
+        cls = "pos" if q["non_op"] > 0 else ("neg" if q["non_op"] < 0 else "flat")
+        nonop = f'<span class="num {cls}">{_fmt_rev(q["non_op"], is_tw)}</span>'
+    else:
+        nonop = "—"
     warn = ' <span class="ndot" title="業外收益大於本業營業利益">⚠</span>' if q["non_op_dominant"] else ""
     return (f'<tr><td>{q["period"]}{warn}</td><td class="num">{_fmt_rev(q["revenue"], is_tw)}</td>'
-            f'<td class="num">{gm}</td><td class="num">{om}</td><td class="num">{eps}</td></tr>')
+            f'<td class="num">{gm}</td><td class="num">{om}</td><td class="num">{eps}</td>'
+            f'<td class="num">{nonop}</td></tr>')
 
 
 def build(ticker):
@@ -191,7 +197,7 @@ def build(ticker):
 
     html = f"""<div class="reality"><h3>財報與營收實況</h3>
 <div class="posnote">近 {len(quarters)} 季趨勢，⚠ 標記業外收益大於本業營業利益的季度</div>
-<table class="realitytbl"><tr><th>季度</th><th>營收</th><th>毛利率</th><th>營益率</th><th>EPS</th></tr>{rows}</table>
+<table class="realitytbl"><tr><th>季度</th><th>營收</th><th>毛利率</th><th>營益率</th><th>EPS</th><th>業外損益</th></tr>{rows}</table>
 {warn_html}
 {monthly_html}
 </div>"""
@@ -202,6 +208,23 @@ def build(ticker):
 
     trend = "、".join(_tsum(q) for q in quarters)
     summary = f"近{len(quarters)}季趨勢：{trend}"
+
+    # 業外損益逐季序列——2026-08-06 修：原本只比較「最新一季業外 vs 本業」的單點快照，
+    # 沒看趨勢。用戶指出報告真正的重點是「業外正在連續成長」，不只是「這季比較大」。
+    nonop_series = [q["non_op"] for q in quarters if q["non_op"] is not None]
+    if len(nonop_series) >= 3:
+        nonop_trend = "、".join(f'{q["period"]} {_fmt_rev(q["non_op"], is_tw)}'
+                                for q in quarters if q["non_op"] is not None)
+        summary += f"\n業外損益逐季序列：{nonop_trend}"
+        # 近4季（或全部，不足4季時）是否連續遞增——不要求整段6季都單調，
+        # 抓「最近在加速」比「從頭到尾沒有一次回檔」更貼近報告想表達的重點
+        tail = nonop_series[-4:] if len(nonop_series) >= 4 else nonop_series
+        rising = len(tail) >= 3 and all(b >= a for a, b in zip(tail, tail[1:]))
+        if rising and tail[-1] > tail[0]:
+            n_q = len(tail)
+            summary += (f"（近{n_q}季**連續上升**，不是單季波動——這個加速趨勢本身要被指出來，"
+                        f"不只是跟本業比大小）")
+
     if latest["non_op_dominant"]:
         pct = latest["non_op"] / (latest["op_income"] + latest["non_op"]) * 100
         summary += (f"\n⚠️ 最新一季（{latest['period']}）業外收益"
