@@ -28,6 +28,8 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
 import yfinance as yf
 
+import chain_positioning as CP  # 2026-08-06：產業鏈定位區塊（BEST MATCH 拆解功能之一）
+
 OBIS = r"C:\Users\Mophy\Documents\Google drive\BB-8 工作區\04_AI Report\Investment"
 
 
@@ -513,7 +515,7 @@ def render(d, sc, n):
     return f"""<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex"><title>{d['ticker']} {d['quarter']} 財報懶人包</title>
-<style>{CSS}</style></head><body><div class="wrap">
+<style>{CSS}{CP.CSS}</style></head><body><div class="wrap">
 
 <div class="hd">
   <div><h1>{d['name']}</h1>
@@ -570,6 +572,8 @@ def render(d, sc, n):
 <div class="bl"><div class="e">💡</div>
   <div><div class="t">BOTTOM LINE</div><div class="c">{n.get('bottom_line', '')}</div></div>
   <div class="e">📈</div></div>
+
+{CP.build_html(d['ticker'])}
 
 <div class="ftr">
   <b>資料來源</b>：所有財務數字與估值指標皆取自 yfinance 之公司申報財報，未經 AI 生成或修改。
