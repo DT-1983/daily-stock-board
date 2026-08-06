@@ -19,6 +19,7 @@
 """
 import os
 import io
+import re
 import sys
 import json
 import argparse
@@ -68,9 +69,18 @@ def fetch(ticker: str) -> dict:
         pct = ((a / b - 1) * 100) if (a is not None and b not in (None, 0)) else None
         return {"cur": a, "prev": b, "yoy": pct}
 
+    tw_code = re.match(r"^(\d{4,5})(\.TWO?)?$", ticker.upper())
+    tw_name = None
+    if tw_code:
+        try:
+            import board_html_legacy as _L
+            tw_name = _L.TW_NAME.get(tw_code.group(1))
+        except Exception:
+            pass
+
     d = {
         "ticker": ticker.upper(),
-        "name": info.get("longName") or info.get("shortName") or ticker.upper(),
+        "name": tw_name or info.get("longName") or info.get("shortName") or ticker.upper(),
         "quarter": f"Q{(cur.month - 1)//3 + 1} {cur.year}",
         "period_end": str(cur.date()),
         "yoy_period": str(yoy.date()),
@@ -255,16 +265,27 @@ def narrative(d: dict, sc: dict, extra_facts: str = "") -> dict:
     if extra_facts:
         facts += f"\n【補充查核資料（財報趨勢／技術面／同鏈定位）】\n{extra_facts}\n"
 
-    prompt = f"""你是依循**洪瑞泰（Mike桑）巴菲特選股法**的分析師，為這季財報寫一份懶人包。
+    prompt = f"""你是財報分析師，為這季財報寫一份懶人包。這份懶人包用**兩套獨立視角**，
+不要讓其中一套覆蓋另一套：
 
-【洪瑞泰的框架 — 你的判斷一律以此為準，不要套用別的估值學派】
+【視角①：洪瑞泰（Mike桑）巴菲特選股法 —— 只管 thesis／sentiment／entry 這幾個欄位】
 · **核心順序：先挑「好公司」（不會變的公司），再等「便宜」才買。品質第一、估值第二。**
 · 三大量化關卡：① ROE≥15% 且要連續穩定 ② 盈再率<80%（理想<40%，>200% 是掏空地雷）
   ③ 配息率≥40%（配得出現金才是真賺錢，作假帳的公司配不出現金）
 · 估值**只有兩條線**：俗價 EPS×12（買）、貴價 EPS×30（賣）。**沒有合理價，不要用 PEG／EV倍數／目標價來論估值。**
 · **「不聽未來轉機、爆發力的鬼故事」** —— 不要用「未來成長想像」當利多，要看已實現的獲利穩定度。
 · **公司變壞就該賣**：EPS 衰退、預估 EPS 下修、高負債都是變壞訊號。
-· 「多種果樹」＝分散持股，單一持股建議 10%、最多 20%。
+· 這套框架**只回答「這是不是洪瑞泰會買的股票」**，不代表這是公司唯一值得看的角度。
+
+【視角②：verdict 欄位 —— 獨立的資料查核總結，不受洪瑞泰框架限制】
+verdict 是這份懶人包的「我們幫你查了什麼」總結，**視野要比洪瑞泰框架寬**：
+· 財報趨勢裡如果有連續多季的變化模式（例如業外損益連續上升、毛利率連續改善／惡化），
+  這個「模式本身」就是值得單獨點出的觀察，**不要把它壓縮成洪瑞泰三關卡的附註**。
+  三關卡是財務體質的健檢，不是唯一觀點——業外收入的成長軌跡是另一件事，兩者平行呈現。
+· 技術面與同鏈定位如果有明確訊號，也是獨立輸入，不用先問「洪瑞泰框架同不同意」才寫。
+· verdict 的寫法：先講資料查得到什麼（給查核者的信任基礎），再依重要性列出 2-4 個
+  獨立觀察（不用湊成同一個結論，財務體質差跟業外趨勢異常是兩件事可以並列），
+  最後給下一個驗證點。
 
 【鐵則】
 1. **只能引用下方提供的真實數據，絕對不可以編造任何數字、日期、產品名稱、管理層發言或新聞事件。**
@@ -272,7 +293,8 @@ def narrative(d: dict, sc: dict, extra_facts: str = "") -> dict:
 2. 需要提到具體數字時，直接引用下方數據。不確定的事情就不要寫。
 3. 用繁體中文台灣用語（營收/毛利率/營益率/資本支出/自由現金流/部位/盈再率）。
 4. 要點出「數字背後的矛盾」——例如營收成長但獲利衰退、現金流轉負等，這才是懶人包的價值。
-5. 若補充查核資料出現「業外收益大於本業」的警示，寫 verdict 時一定要提，這是 EPS 品質的核心問題。
+5. 若補充查核資料出現「連續上升趨勢」這類標記（例如業外損益），verdict 一定要點出這是趨勢
+   而非單點異常，這通常比「哪個數字比較大」更重要。
 6. 若補充查核資料有技術面/同鏈定位，verdict 可以引用，但不要過度解讀技術指標（僅供參考，不是預測）。
 
 {facts}
@@ -293,7 +315,7 @@ def narrative(d: dict, sc: dict, extra_facts: str = "") -> dict:
   "sentiment_reason": "情緒評級理由(30字內)",
   "entry": "最佳進場策略 Best Entry Strategy(40字內，可參考 52 週區間與目標價)",
   "bottom_line": "一句話總結(50字內，先講是不是好公司、再講現在貴不貴)",
-  "verdict": "綜合判斷(100字內)：整合財報品質(尤其業外/本業占比)、洪瑞泰三關卡、技術面/同鏈定位(若有)，先肯定查得到的部分，再點出數字裡藏的問題，最後給下一個驗證點(例如下季財報要看什麼)。不是重複 bottom_line。"
+  "verdict": "獨立資料查核總結(120字內，見上方視角②)：先講查得到什麼，再列2-4個獨立觀察(財務趨勢/技術面/同鏈定位平行呈現，不用套進洪瑞泰框架)，最後給下一個驗證點。財報趨勢裡若有連續多季的變化模式(如業外損益連續成長)要單獨點出，不要只跟本業比大小。不是重複 bottom_line。"
 }}
 highlights 與 capital 各給 3-4 項，positives 與 risks 各給 4-5 項。"""
     return ask_json(prompt)

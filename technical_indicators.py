@@ -36,6 +36,9 @@ def _benchmark(ticker):
     return "^TWII" if _is_tw(ticker) else "^GSPC"
 
 
+_BENCHMARK_NAME = {"^TWII": "台股加權指數", "^GSPC": "S&P 500"}
+
+
 # ── 雙重颱風K線：SuperTrend 的 SMA-ATR 變體 ──────────────────────────
 
 def double_typhoon(highs, lows, closes, period=10, mult=3.0):
@@ -243,7 +246,7 @@ def build(ticker):
     }
 
     html = f"""<div class="technical"><h3>技術面四指標</h3>
-<div class="posnote">近一年日線計算，基準指數：{_benchmark(ticker)}</div>
+<div class="posnote">近一年日線計算，基準指數：{_BENCHMARK_NAME.get(_benchmark(ticker), _benchmark(ticker))}</div>
 <div class="techgrid">{tiles}</div>
 <button class="techtoggle" onclick="ti_toggle_{uid}()" id="ti_btn_{uid}">展開圖表 ▾</button>
 <div class="techcharts" id="ti_charts_{uid}" style="display:none">
