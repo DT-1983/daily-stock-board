@@ -29,6 +29,8 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 import yfinance as yf
 
 import chain_positioning as CP  # 2026-08-06：產業鏈定位區塊（BEST MATCH 拆解功能之一）
+import fundamentals_reality as FR  # 2026-08-06：財報與營收實況（BEST MATCH 拆解功能之二）
+import technical_indicators as TI  # 2026-08-06：技術面四指標（BEST MATCH 拆解功能之四）
 
 OBIS = r"C:\Users\Mophy\Documents\Google drive\BB-8 工作區\04_AI Report\Investment"
 
@@ -209,7 +211,7 @@ def score(d: dict) -> dict:
 
 # ────────────────────────────── 敘事層（LLM） ──────────────────────────────
 
-def narrative(d: dict, sc: dict) -> dict:
+def narrative(d: dict, sc: dict, extra_facts: str = "") -> dict:
     from llm_board import ask_json
 
     def f(x, unit="B"):
@@ -217,20 +219,23 @@ def narrative(d: dict, sc: dict) -> dict:
             return "N/A"
         return f"{x/1e9:.2f}B" if abs(x) > 1e6 else f"{x:.2f}"
 
+    def yoy(x):
+        return f"{x:+.1f}%" if x is not None else "N/A"
+
     facts = f"""公司：{d['name']}（{d['ticker']}）　產業：{d['sector']}
 本季：{d['quarter']}（截至 {d['period_end']}），YoY 比較基準 {d['yoy_period']}
 
 損益（{d['currency']}）
-  營收       {f(d['revenue']['cur'])}   YoY {d['revenue']['yoy']:+.1f}%
-  毛利       {f(d['gross']['cur'])}   YoY {d['gross']['yoy']:+.1f}%　毛利率 {d.get('gross_margin') or 0:.1f}%
-  營業利益   {f(d['op_income']['cur'])}   YoY {d['op_income']['yoy']:+.1f}%　營益率 {d.get('op_margin') or 0:.1f}%（去年同期 {d.get('op_margin_prev') or 0:.1f}%）
-  淨利       {f(d['net_income']['cur'])}   YoY {d['net_income']['yoy']:+.1f}%
-  EPS        {f(d['eps']['cur'])}   YoY {d['eps']['yoy']:+.1f}%
+  營收       {f(d['revenue']['cur'])}   YoY {yoy(d['revenue']['yoy'])}
+  毛利       {f(d['gross']['cur'])}   YoY {yoy(d['gross']['yoy'])}　毛利率 {d.get('gross_margin') or 0:.1f}%
+  營業利益   {f(d['op_income']['cur'])}   YoY {yoy(d['op_income']['yoy'])}　營益率 {d.get('op_margin') or 0:.1f}%（去年同期 {d.get('op_margin_prev') or 0:.1f}%）
+  淨利       {f(d['net_income']['cur'])}   YoY {yoy(d['net_income']['yoy'])}
+  EPS        {f(d['eps']['cur'])}   YoY {yoy(d['eps']['yoy'])}
 
 現金流
-  營運現金流 {f(d['ocf']['cur'])}   YoY {d['ocf']['yoy']:+.1f}%
-  資本支出   {f(d['capex']['cur'])}   YoY {d['capex']['yoy']:+.1f}%
-  自由現金流 {f(d['fcf']['cur'])}   YoY {d['fcf']['yoy']:+.1f}%
+  營運現金流 {f(d['ocf']['cur'])}   YoY {yoy(d['ocf']['yoy'])}
+  資本支出   {f(d['capex']['cur'])}   YoY {yoy(d['capex']['yoy'])}
+  自由現金流 {f(d['fcf']['cur'])}   YoY {yoy(d['fcf']['yoy'])}
 
 洪瑞泰三大關卡（品質第一，估值第二）
   ① 高 ROE：{sc['gates'][0]['value']}　{sc['gates'][0]['detail']}　→ {'過' if sc['gates'][0]['pass'] else '不過' if sc['gates'][0]['pass'] is False else '資料不足'}
@@ -247,6 +252,8 @@ def narrative(d: dict, sc: dict) -> dict:
   總現金 {f(d['cash'])}　總負債 {f(d['debt'])}　淨現金 {f(sc['net_cash'])}
   分析師共識 {d['reco']}（{d['n_analysts']} 位）　平均目標價 {d['target']}
 """
+    if extra_facts:
+        facts += f"\n【補充查核資料（財報趨勢／技術面／同鏈定位）】\n{extra_facts}\n"
 
     prompt = f"""你是依循**洪瑞泰（Mike桑）巴菲特選股法**的分析師，為這季財報寫一份懶人包。
 
@@ -265,6 +272,8 @@ def narrative(d: dict, sc: dict) -> dict:
 2. 需要提到具體數字時，直接引用下方數據。不確定的事情就不要寫。
 3. 用繁體中文台灣用語（營收/毛利率/營益率/資本支出/自由現金流/部位/盈再率）。
 4. 要點出「數字背後的矛盾」——例如營收成長但獲利衰退、現金流轉負等，這才是懶人包的價值。
+5. 若補充查核資料出現「業外收益大於本業」的警示，寫 verdict 時一定要提，這是 EPS 品質的核心問題。
+6. 若補充查核資料有技術面/同鏈定位，verdict 可以引用，但不要過度解讀技術指標（僅供參考，不是預測）。
 
 {facts}
 
@@ -283,7 +292,8 @@ def narrative(d: dict, sc: dict) -> dict:
   "sentiment": "市場情緒評級，只能從這五選一：VERY BEARISH / BEARISH / NEUTRAL / BULLISH / VERY BULLISH",
   "sentiment_reason": "情緒評級理由(30字內)",
   "entry": "最佳進場策略 Best Entry Strategy(40字內，可參考 52 週區間與目標價)",
-  "bottom_line": "一句話總結(50字內，先講是不是好公司、再講現在貴不貴)"
+  "bottom_line": "一句話總結(50字內，先講是不是好公司、再講現在貴不貴)",
+  "verdict": "綜合判斷(100字內)：整合財報品質(尤其業外/本業占比)、洪瑞泰三關卡、技術面/同鏈定位(若有)，先肯定查得到的部分，再點出數字裡藏的問題，最後給下一個驗證點(例如下季財報要看什麼)。不是重複 bottom_line。"
 }}
 highlights 與 capital 各給 3-4 項，positives 與 risks 各給 4-5 項。"""
     return ask_json(prompt)
@@ -351,6 +361,10 @@ td:first-child{text-align:left;color:#C7D8EC}
 .bl .e{font-size:29px;flex-shrink:0}
 .bl .t{font-size:11.5px;color:#F5B841;font-weight:800;letter-spacing:1.2px;margin-bottom:3px}
 .bl .c{font-size:14.5px;line-height:1.6}
+.verdict{margin-top:14px;padding:14px 16px;background:#161a20;border:1px solid #2a2e35;
+ border-left:3px solid #F5B841;border-radius:10px}
+.verdict .vt{font-size:11.5px;font-weight:700;color:#F5B841;letter-spacing:.5px;margin-bottom:6px}
+.verdict .vc{font-size:13.5px;line-height:1.7;color:#C7D8EC}
 .ftr{color:#6B84A6;font-size:11px;margin-top:16px;line-height:1.7;
  border-top:1px solid #1E3A5F;padding-top:12px}
 .warn{background:#3A2A0E;border:1px solid #7A5A1E;color:#F5C96B;border-radius:9px;
@@ -426,7 +440,8 @@ BADGE_STYLE = {
 }
 
 
-def render(d, sc, n):
+def render(d, sc, n, extra_html=None):
+    extra_html = extra_html or {}
     cur = d["currency"]
     up = d["target"] and d["price"] and (d["target"] / d["price"] - 1) * 100
     bg, fg, txt = BADGE_STYLE.get(d["reco"], ("#22374F", "#8FA8C8", (d["reco"] or "N/A").upper()))
@@ -515,7 +530,7 @@ def render(d, sc, n):
     return f"""<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex"><title>{d['ticker']} {d['quarter']} 財報懶人包</title>
-<style>{CSS}{CP.CSS}</style></head><body><div class="wrap">
+<style>{CSS}{CP.CSS}{FR.CSS}{TI.CSS}</style></head><body><div class="wrap">
 
 <div class="hd">
   <div><h1>{d['name']}</h1>
@@ -573,7 +588,10 @@ def render(d, sc, n):
   <div><div class="t">BOTTOM LINE</div><div class="c">{n.get('bottom_line', '')}</div></div>
   <div class="e">📈</div></div>
 
-{CP.build_html(d['ticker'])}
+{f'<div class="verdict"><div class="vt">🔎 綜合判斷</div><div class="vc">{n["verdict"]}</div></div>' if n.get('verdict') else ''}
+{extra_html.get('reality', '')}
+{extra_html.get('technical', '')}
+{extra_html.get('positioning', '')}
 
 <div class="ftr">
   <b>資料來源</b>：所有財務數字與估值指標皆取自 yfinance 之公司申報財報，未經 AI 生成或修改。
@@ -603,11 +621,23 @@ def main():
     print(f"{d['quarter']}（截至 {d['period_end']}）")
     sc = score(d)
 
+    print("財報趨勢／技術面／產業鏈定位 …", end=" ", flush=True)
+    reality_html, reality_sum = FR.build(d["ticker"])
+    technical_html, technical_sum = TI.build(d["ticker"])
+    positioning_html = CP.build_html(d["ticker"])
+    positioning_sum = CP.summary_text(d["ticker"])
+    print("完成")
+    extra_facts = "\n".join(x for x in [
+        f"財報趨勢：{reality_sum}" if reality_sum else "",
+        f"技術面：{technical_sum}" if technical_sum else "",
+        f"產業鏈定位：{positioning_sum}" if positioning_sum else "",
+    ] if x)
+
     n = {}
     if not args.no_llm:
         print("AI 撰寫敘事層 …", end=" ", flush=True)
         try:
-            n = narrative(d, sc)
+            n = narrative(d, sc, extra_facts)
             print("完成")
         except Exception as e:
             print(f"失敗：{e}\n  → 改出純數據版")
@@ -618,7 +648,8 @@ def main():
 
     out = args.output or f"docs/earnings_{d['ticker'].replace('.', '_')}.html"
     os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
-    html = render(d, sc, n)
+    html = render(d, sc, n, extra_html={
+        "reality": reality_html, "technical": technical_html, "positioning": positioning_html})
     targets = [out] + ([os.path.join(OBIS, f"{d['ticker']}_{d['quarter']}_財報懶人包.html")]
                        if args.obis else [])
     for p in targets:
