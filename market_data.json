@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-07 11:51",
+ "updated": "2026-08-07 16:20",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,7 +38,7 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "08/07",
-   "close": 44226.4,
+   "close": 44225.91,
    "chg_pct": -0.38
   },
   {
@@ -46,8 +46,8 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "08/07",
-   "close": 32.2,
-   "chg_pct": -0.2
+   "close": 32.25,
+   "chg_pct": -0.04
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "華爾街不信AI紅利能持久？SanDisk、美光估值跌至科技股谷底 6倍本益比引兩派論戰",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6563913",
-   "ts": "08/07 11:45"
-  },
-  {
-   "title": "營收速報  - 立敦(6175)7月營收4.75億元年增率高達40.64％",
+   "title": "中鋼9月盤價止跌開平盤 鋼價落底迎補庫存商機",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6563998",
-   "ts": "08/07 11:20"
+   "url": "https://news.cnyes.com/news/id/6564325",
+   "ts": "08/07 16:05"
   },
   {
-   "title": "營收速報  - 精確(3162)7月營收10.76億元年增率高達77.54％",
+   "title": "〈富采法說〉通膨及原物料上漲Q3營運恐下滑 Micro LED今年營收看增倍數",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6563997",
-   "ts": "08/07 11:20"
+   "url": "https://news.cnyes.com/news/id/6564331",
+   "ts": "08/07 16:04"
   },
   {
-   "title": "營收速報  - 立隆電(2472)7月營收13.28億元年增率高達36.23％",
+   "title": "〈富采法說〉Q2資產活化進補賺12.5億元 EPS 1.69元 世足賽拉貨營運回溫",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6563996",
-   "ts": "08/07 11:20"
+   "url": "https://news.cnyes.com/news/id/6564327",
+   "ts": "08/07 15:58"
   },
   {
-   "title": "伊朗-阿曼荷姆茲海峽新規意味著什麼？航運業者陷兩難：不能不付 但也不能付",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6563952",
-   "ts": "08/07 11:20"
-  },
-  {
-   "title": "AI及BBU訂單放量助攻 邑昇7月營收1.85億元創歷史新高",
+   "title": "致新：PMIC缺貨重返疫情盛況 明年晶圓增加有限",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6563975",
-   "ts": "08/07 11:14"
+   "url": "https://news.cnyes.com/news/id/6564323",
+   "ts": "08/07 15:55"
   },
   {
-   "title": "台普威Q2獲利翻倍、EPS 3.6元 擬買回庫藏股600張",
+   "title": "〈川湖法說〉王俊強預告下半年營運會更好 提早佈局2027至2029新產品迭代",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6563973",
-   "ts": "08/07 11:11"
+   "url": "https://news.cnyes.com/news/id/6564316",
+   "ts": "08/07 15:50"
   },
   {
-   "title": "特斯拉打造超大Terafab晶片園區 這些個股可望受惠",
+   "title": "法國第二季失業率升至8.3% 創6年新高",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6563741",
-   "ts": "08/07 11:00"
+   "url": "https://news.cnyes.com/news/id/6564158",
+   "ts": "08/07 15:40"
   },
   {
-   "title": "先斬後奏！ FT：美賣歐元推高日元   歐洲央行直到交易執行才收到華府通知",
+   "title": "德銀看好美光SCA轉型！AI讓記憶體價值占比飆至50% 獲利有上修空間",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6563901",
-   "ts": "08/07 10:30"
+   "url": "https://news.cnyes.com/news/id/6563576",
+   "ts": "08/07 15:20"
   },
   {
-   "title": "大摩翻多記憶體股：最劇烈修正已過 AI需求支撐新一波行情 看好三星、海力士",
+   "title": "WSJ：針對五角大廈彈藥短缺報導 川普已下令徹查「洩密者」",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6563898",
-   "ts": "08/07 10:10"
+   "url": "https://news.cnyes.com/news/id/6564141",
+   "ts": "08/07 15:08"
+  },
+  {
+   "title": "不怕業界反對！韓國交易所強推9/14盤後ETF上路 對決虛擬資產交易所與ATS",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6564142",
+   "ts": "08/07 14:50"
+  },
+  {
+   "title": "菲律賓第二季經濟增速創5年新低 營建業低迷與高通膨成主因",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6564131",
+   "ts": "08/07 14:40"
   }
  ],
  "inst": {
-  "date": "08/06",
-  "total_yi": 51.2,
-  "foreign_yi": 20.2,
-  "trust_yi": 94.1
+  "date": "08/07",
+  "total_yi": -442.4,
+  "foreign_yi": -407.2,
+  "trust_yi": -25.6
  }
 }
