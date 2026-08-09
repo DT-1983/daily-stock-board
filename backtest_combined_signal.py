@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""回測：SuperTrend翻多+RS贏過大盤+EXCEED CHARGE準備突破 三指標合流訊號，
+"""回測：SuperTrend翻多+RS(30日)贏過大盤+EXCEED CHARGE剛噴出 三指標合流訊號，
 vs 純SuperTrend單指標，訊號後續報酬比較。
 
 背景（2026-08-11）：用戶想知道「多指標合流」是否比模擬倉現有的純SuperTrend策略準。
@@ -14,10 +14,6 @@ vs 純SuperTrend單指標，訊號後續報酬比較。
 用法：python backtest_combined_signal.py [--weeks 2] [--eval-days 5]
 """
 import argparse
-import json
-from datetime import datetime, timedelta
-
-import numpy as np
 import yfinance as yf
 
 import board_html_legacy as L
@@ -43,7 +39,7 @@ def _signals_for(ticker, window_days, eval_days):
         return []
     dr = st["dir"]
     sq = squeeze_momentum(highs, lows, closes)
-    rs_s = mansfield_rs_series(closes, bench_closes, 25) if bench_closes else None
+    rs_s = mansfield_rs_series(closes, bench_closes, 30) if bench_closes else None  # 2026-08-11：25→30日
     n = len(closes)
 
     # 訊號偵測窗：最近 window_days 個交易日；但要留 eval_days 天算「訊號後報酬」，
@@ -62,15 +58,16 @@ def _signals_for(ticker, window_days, eval_days):
         fwd_ret = (closes[i + eval_days] / closes[i] - 1) * 100
         sig_type = "buy" if flip_bull else "sell"
 
+        # 2026-08-11 修正：不是「還在擠壓中」，是「擠壓剛噴出」——
+        # squeeze_on 前一根True、這一根False，代表能量蓄積完成、方向剛炸開
         confirm = False
-        if rs_s is not None and rs_s[i] is not None and sq is not None:
-            sqv = sq["squeeze_on"][i]
-            sq_ok = not (isinstance(sqv, float) and np.isnan(sqv))
-            if sq_ok:
+        if rs_s is not None and rs_s[i] is not None and sq is not None and i > 0:
+            fired = bool(sq["squeeze_on"][i - 1]) and not bool(sq["squeeze_on"][i])
+            if fired:
                 if flip_bull:
-                    confirm = rs_s[i] > 0 and bool(sqv)
+                    confirm = rs_s[i] > 0
                 else:
-                    confirm = rs_s[i] < 0 and bool(sqv)
+                    confirm = rs_s[i] < 0
 
         out.append({"ticker": ticker, "date": str(hist.index[i].date()),
                     "type": sig_type, "fwd_ret": fwd_ret, "confirmed": confirm})
