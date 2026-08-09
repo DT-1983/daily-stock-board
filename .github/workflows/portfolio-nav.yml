@@ -23,9 +23,10 @@ jobs:
           python-version: '3.12'
       - name: 裝套件
         run: pip install -r requirements.txt
-      - name: 趨勢倉調倉 + 記淨值 + 出賽馬頁
+      - name: 趨勢倉/合流倉調倉 + 記淨值 + 出賽馬頁
         run: |
           python paper_portfolio.py rebalance-trend || echo "趨勢倉每日調倉失敗，跳過"
+          python paper_portfolio.py rebalance-combo || echo "合流倉每日調倉失敗，跳過"
           python paper_portfolio.py nav || echo "模擬倉更新失敗，跳過"
           python portfolio_html.py -o docs/portfolios.html || echo "賽馬頁失敗，跳過"
       - name: 回存狀態 + 發佈

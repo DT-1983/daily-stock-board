@@ -12,13 +12,18 @@
   · 產業鏈全 / 巴菲特價值 / 7 鏈明細 → 每週日隨守備清單重篩調倉
   · 產業鏈+趨勢 → 每日追 SuperTrend，綠燈名單一有變就換股（翻燈才動，不天天重配）
 
-用法:python paper_portfolio.py [init|rebalance|rebalance-trend|nav]
+  · 三指標合流 → 每日檢查SuperTrend+RS30日+EXCEED CHARGE噴出，事件觸發才動（見下方CHAIN_COMBO）
+
+用法:python paper_portfolio.py [init|rebalance|rebalance-trend|rebalance-combo|nav]
 """
 import sys
 import json
 import os
 from datetime import datetime
 import yfinance as yf
+
+import board_html_legacy as _L
+from technical_indicators import squeeze_momentum, mansfield_rs_series, _benchmark
 
 STORE = "portfolios.json"
 SCREEN = "screen_result.json"
@@ -43,6 +48,15 @@ TREND_MIN_SLOTS    = 8         # 最少切成 N 份；綠燈不足時剩餘留�
 # 不是回測過擬合：等權重讓它一檔就能砸掉整個精選倉。
 BTC_CHAIN = "Bitcoin→AI 機房"
 BTC_MAX_WEIGHT = 0.10          # 該鏈標的在跨鏈主倉的合計權重上限
+# ── 三指標合流倉（2026-08-11 新設，實驗性）───────────────────────────
+# 假說：純日線SuperTrend翻燈雜訊多（見上方TREND_WEEKLY註解，75%賣訊是錯的），
+# 用RS(30日)+EXCEED CHARGE擠壓噴出當「降噪濾網」是否能改善。
+# backtest_combined_signal.py 6個月回測：合流篩選把賣錯率從57%降到38%，
+# 方向正確但樣本(10筆)不足以下定論——這個倉就是拿真金白銀(模擬)去累積更長樣本。
+# 買：SuperTrend翻多 + RS30日>0 + 擠壓剛噴出(前一根還在擠壓、這一根釋放)
+# 賣：三個相反同時成立才賣，純粹策略、刻意不加額外停損（用戶2026-08-11指示：
+#     不混入其他規則，才能單獨看清楚這套假說本身有沒有用）
+CHAIN_COMBO = "三指標合流"
 MAIN = [CHAIN_ALL, CHAIN_TREND, BUFFETT_NAME]
 FX_FALLBACK = 32.0              # USD/TWD 備援匯率
 
@@ -176,6 +190,47 @@ def trend_longs(tickers, weekly=None):
         except Exception:
             longs.append(tk)
     return sorted(longs)
+
+
+def combo_signal_events(tickers, held):
+    """三指標合流：回 (buy_list, sell_list)，只回「今天剛觸發」的事件，不是持續狀態。
+    買：SuperTrend(日線)翻多 + RS(30日)>0 + EXCEED CHARGE擠壓剛噴出（今天held裡沒有的才算買訊）
+    賣：三個相反同時成立（今天held裡有的才算賣訊）——純粹策略，不加額外停損，
+    詳見 CHAIN_COMBO 常數註解與 backtest_combined_signal.py。"""
+    buy, sell = [], []
+    for tk in tickers:
+        try:
+            hist = yf.Ticker(tk).history(period="1y")
+            if hist.empty or len(hist) < 35:
+                continue
+            highs, lows, closes = hist["High"].tolist(), hist["Low"].tolist(), hist["Close"].tolist()
+            bench = yf.Ticker(_benchmark(tk)).history(period="1y")
+            bench_closes = bench["Close"].tolist() if not bench.empty else []
+        except Exception:
+            continue
+        st = _L.supertrend(highs, lows, closes)
+        if not st:
+            continue
+        dr = st["dir"]
+        i = len(closes) - 1
+        if i < 1 or dr[i] is None or dr[i - 1] is None:
+            continue
+        flip_bull = dr[i] == 1 and dr[i - 1] == -1
+        flip_bear = dr[i] == -1 and dr[i - 1] == 1
+        if not (flip_bull or flip_bear):
+            continue
+        sq = squeeze_momentum(highs, lows, closes)
+        rs_s = mansfield_rs_series(closes, bench_closes, 30) if bench_closes else None
+        if sq is None or rs_s is None or rs_s[i] is None:
+            continue
+        fired = bool(sq["squeeze_on"][i - 1]) and not bool(sq["squeeze_on"][i])
+        if not fired:
+            continue
+        if flip_bull and rs_s[i] > 0 and tk not in held:
+            buy.append(tk)
+        elif flip_bear and rs_s[i] < 0 and tk in held:
+            sell.append(tk)
+    return sorted(buy), sorted(sell)
 
 
 def market_is_green(symbol="QQQ"):
@@ -406,9 +461,10 @@ def rebalance(state, hmap, prices, fx, date, only=None):
         if only and name not in only:
             continue
         v = _value(pf, prices, fx) if (pf["holdings"] or pf.get("cash")) else BASE
-        slots = TREND_MIN_SLOTS if name == CHAIN_TREND else 0   # 趨勢倉：綠燈不足留現金
+        # 趨勢倉/合流倉：訊號檔數常常很少，留現金避免硬集中在1-2檔（合流倉事件觸發更稀疏，同理套用）
+        slots = TREND_MIN_SLOTS if name in (CHAIN_TREND, CHAIN_COMBO) else 0
         # Bitcoin 鏈限重：套用在所有「跨鏈」主倉（單一鏈明細倉不套，那本來就是純曝險）
-        caps = _btc_caps() if name in (CHAIN_ALL, CHAIN_TREND) else None
+        caps = _btc_caps() if name in (CHAIN_ALL, CHAIN_TREND, CHAIN_COMBO) else None
         pf["holdings"] = _alloc_shares(hmap.get(name, list(pf["holdings"])), v, prices, fx,
                                        slots, caps)
         invested = sum(h["sh"] * h["eu"] for h in pf["holdings"].values())
@@ -460,6 +516,15 @@ def main():
         return
     fx = get_fx()
 
+    # 三指標合流倉延遲建倉（2026-08-11新設）：跟其他倉不同，一開始不buy整個宇宙，
+    # 空手等第一個事件觸發訊號才進場——所以只需要在state裡補一個空倉位當起點
+    if CHAIN_COMBO not in state["portfolios"]:
+        state["portfolios"][CHAIN_COMBO] = {
+            "holdings": {}, "cash": BASE, "value": BASE, "pnl": 0.0, "ret": 0.0,
+            "rebalanced": date, "history": [[date, BASE]]}
+        save(state)
+        print(f"✅ 已建立「{CHAIN_COMBO}」倉，起始 ${BASE:,.0f}現金，等待第一個訊號")
+
     if cmd == "rebalance":
         allt = _all_tickers(state) | set(json.load(open(BUFFETT, encoding="utf-8")).keys())
         prices = fetch_prices(allt)
@@ -489,6 +554,22 @@ def main():
             add = sorted(set(longs) - cur)
             rm = sorted(cur - set(longs))
             print(f"✅ 趨勢倉調倉 {date}（匯率 {fx:.2f}）：+{add or '無'} / -{rm or '無'} → {len(longs)} 檔")
+    elif cmd == "rebalance-combo":
+        # 三指標合流倉：事件觸發才動，跟趨勢倉的「狀態維持」不同（見combo_signal_events）
+        select = chain_select_union()
+        pf = state["portfolios"][CHAIN_COMBO]
+        held = set(pf["holdings"].keys())
+        buy, sell = combo_signal_events(select, held)
+        if not buy and not sell:
+            print("三指標合流倉無新訊號，不調倉")
+        else:
+            new_holdings = sorted((held - set(sell)) | set(buy))
+            allt = _all_tickers(state) | set(new_holdings)
+            prices = fetch_prices(allt)
+            rebalance(state, {CHAIN_COMBO: new_holdings}, prices, fx, date, only={CHAIN_COMBO})
+            save(state)
+            print(f"✅ 三指標合流倉調倉 {date}（匯率 {fx:.2f}）：+{buy or '無'} / -{sell or '無'} "
+                 f"→ {len(new_holdings)} 檔")
     elif cmd == "nav":
         prices = fetch_prices(_all_tickers(state))
         update_nav(state, prices, fx, date)
