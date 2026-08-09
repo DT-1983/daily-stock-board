@@ -23,7 +23,7 @@ import re
 import sys
 import json
 import argparse
-from datetime import datetime
+from datetime import datetime, timedelta, date
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
@@ -45,6 +45,41 @@ def _safe(df, row, col):
         return float(v) if v == v else None      # NaN → None
     except Exception:
         return None
+
+
+def _tw_core(code, n=8):
+    """台股核心 KPI 卡改用 FinMind，只在它比 yfinance 新的時候才覆蓋。
+
+    2026-08-10 教訓：兩個資料源誰新誰舊沒有固定答案——3037/2313/6134/2308
+    這批 yfinance 卡在 Q1 2026，FinMind 也卡在 Q1 2026（一樣舊）；但 2330 反而
+    yfinance 已經有 Q2 2026、FinMind 還停在 Q1 2026（FinMind 比較舊）。
+    不能寫死「TW 一律改用 FinMind」，只能兩邊都查、取真正比較新的那個。
+    只覆蓋損益表項目（營收/毛利/營業利益/淨利/EPS）；FinMind 沒有現金流量表，
+    ocf/capex/fcf 覆蓋時清成 None，避免跟新季度損益表混搭出不同季度的假一致。"""
+    try:
+        start = (datetime.now() - timedelta(days=95 * (n + 2))).strftime("%Y-%m-%d")
+        d = FR._fm("TaiwanStockFinancialStatements", code, start)
+    except Exception:
+        return None
+    if not d:
+        return None
+    dates = sorted(set(x["date"] for x in d))
+    by_date = {dt: {x["type"]: x["value"] for x in d if x["date"] == dt} for dt in dates}
+    cur_date = dates[-1]
+    cd = date.fromisoformat(cur_date)
+    yoy_date = next((dt for dt in dates if date.fromisoformat(dt).year == cd.year - 1
+                     and date.fromisoformat(dt).month == cd.month), None)
+
+    def pair(field):
+        a = by_date[cur_date].get(field)
+        b = by_date.get(yoy_date, {}).get(field) if yoy_date else None
+        pct = ((a / b - 1) * 100) if (a is not None and b not in (None, 0)) else None
+        return {"cur": a, "prev": b, "yoy": pct}
+
+    return {"cur_date": cur_date, "yoy_date": yoy_date, "partial_yoy": yoy_date is None,
+            "revenue": pair("Revenue"), "gross": pair("GrossProfit"),
+            "op_income": pair("OperatingIncome"), "net_income": pair("IncomeAfterTaxes"),
+            "eps": pair("EPS")}
 
 
 def fetch(ticker: str) -> dict:
@@ -114,6 +149,23 @@ def fetch(ticker: str) -> dict:
         "wk_low": info.get("fiftyTwoWeekLow"),
         "sector": info.get("sector", ""),
     }
+    # 台股核心卡改用 FinMind——只在它真的比 yfinance 新的時候才覆蓋（2026-08-10，
+    # 見 _tw_core() 說明：兩邊誰新誰舊視個股而定，不能寫死一律換源）
+    if tw_code:
+        tw_core = _tw_core(tw_code.group(1))
+        if tw_core and tw_core["cur_date"] > d["period_end"]:
+            cd = date.fromisoformat(tw_core["cur_date"])
+            d["quarter"] = f"Q{(cd.month - 1)//3 + 1} {cd.year}"
+            d["period_end"] = tw_core["cur_date"]
+            d["yoy_period"] = tw_core["yoy_date"] or d["yoy_period"]
+            d["partial_yoy"] = tw_core["partial_yoy"]
+            d["revenue"] = tw_core["revenue"]
+            d["gross"] = tw_core["gross"]
+            d["op_income"] = tw_core["op_income"]
+            d["net_income"] = tw_core["net_income"]
+            d["eps"] = tw_core["eps"]
+            d["ocf"] = d["capex"] = d["fcf"] = {"cur": None, "prev": None, "yoy": None}
+
     # 毛利率 / 營益率（自己算，不靠 info 的口徑）
     rev = d["revenue"]["cur"]
     if rev:
