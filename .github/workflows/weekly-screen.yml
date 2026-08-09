@@ -1,15 +1,58 @@
 name: 每週重篩守備清單（市值+成長+籌碼）
 
+# 2026-08-10 改版：美股/台股拆成兩個獨立 job 平行跑，互不拖累失敗
+# （原本合在一支，美股 yfinance 限流會連台股一起卡住）；時間從週日 20:00
+# 挪到週六早上——週五收盤後到週一開盤前資料本來就不會變，沒理由拖到週日晚上，
+# 週六早上（台灣時間）美股（週五美東收盤後約 3-4 小時）、台股（週五台北收盤）
+# 都已經是定案數據，提早完成對週一 09:00 的 portfolio-nav 更有緩衝。
 on:
   schedule:
-    - cron: '0 12 * * 0'    # UTC 12:00 週日 = 台灣 20:00 週日
+    - cron: '0 0 * * 6'    # UTC 週六 00:00 = 台灣週六 08:00
   workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
-  screen:
+  screen-us:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: 裝套件
+        run: pip install yfinance requests tradingview_screener pandas numpy
+      - name: 重篩美股（每鏈 top N）
+        run: python screen.py --market us -o screen_us.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: screen-us
+          path: screen_us.json
+          retention-days: 3
+
+  screen-tw:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: 裝套件
+        run: pip install yfinance requests tradingview_screener pandas numpy
+      - name: 重篩台股（每鏈 top N）
+        run: python screen.py --market tw -o screen_tw.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: screen-tw
+          path: screen_tw.json
+          retention-days: 3
+
+  merge-and-downstream:
+    needs: [screen-us, screen-tw]
+    if: always()   # 其中一邊失敗也要跑：用舊資料補那一邊，另一邊的新資料照樣上線
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -17,12 +60,40 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
       - name: 裝套件
         run: pip install yfinance requests tradingview_screener pandas numpy litellm
 
-      - name: 重篩（每鏈 top N）
-        run: python screen.py
+      - uses: actions/download-artifact@v4
+        with:
+          name: screen-us
+        continue-on-error: true   # 美股那個 job 若失敗，這裡拿不到檔案，繼續用舊資料
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: screen-tw
+        continue-on-error: true
+
+      - name: 合併成 screen_result.json（缺哪邊就沿用 repo 裡舊的那一半）
+        run: |
+          python - <<'PY'
+          import json, os
+          try:
+              base = json.load(open("screen_result.json", encoding="utf-8"))
+          except FileNotFoundError:
+              base = {"us": {}, "tw": {}}
+          from datetime import datetime
+          out = {"date": datetime.now().strftime("%Y-%m-%d"),
+                 "us": base.get("us", {}), "tw": base.get("tw", {})}
+          used_new = []
+          if os.path.exists("screen_us.json"):
+              out["us"] = json.load(open("screen_us.json", encoding="utf-8"))["us"]
+              used_new.append("美股")
+          if os.path.exists("screen_tw.json"):
+              out["tw"] = json.load(open("screen_tw.json", encoding="utf-8"))["tw"]
+              used_new.append("台股")
+          json.dump(out, open("screen_result.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+          print("合併完成，這次有新資料：", "、".join(used_new) or "無（兩邊都沿用舊資料）")
+          PY
 
       - name: 七鏈題材層（Gemini 綜整每鏈一句催化劑 → chain_themes.json）
         env:
@@ -44,7 +115,7 @@ jobs:
           d = json.load(open("screen_result.json", encoding="utf-8"))
           us = sorted({x["code"] for l in d["us"].values() for x in l})
           tw = sorted({x["code"] for l in d["tw"].values() for x in l})
-          lines = [f"📋 <b>本週守備清單已重篩</b>（每週日）",
+          lines = [f"📋 <b>本週守備清單已重篩</b>（每週六）",
                    f"美股 {len(us)} 檔、台股 {len(tw)} 檔",
                    f"<i>依 市值＋成長＋籌碼 三因子，每鏈取最強。週二起的盤後警示將用新清單。</i>"]
           requests.post(f"https://api.telegram.org/bot{os.environ['TELEGRAM_BOT_TOKEN']}/sendMessage",
@@ -72,5 +143,5 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add screen_result.json chain_themes.json buffett_watch.json docs/buffett.html portfolios.json docs/portfolios.html
-          git commit -m "chore: weekly re-screen + 巴菲特掃描 + 頁 + 模擬倉 [skip ci]" || echo "無變化"
+          git commit -m "chore: weekly re-screen(美台分開) + 巴菲特掃描 + 頁 + 模擬倉 [skip ci]" || echo "無變化"
           git push || echo "push 略過"

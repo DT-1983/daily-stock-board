@@ -9,6 +9,7 @@
 import sys
 import json
 import time
+import argparse
 from datetime import datetime, timedelta
 import requests
 import yfinance as yf
@@ -164,21 +165,43 @@ def screen(pool, metric_fn, label):
 
 
 def main():
-    print("=== 美股候選池(ETF 成分股)===")
-    upool = us_pool()
-    for c, l in upool.items():
-        print(f"  {c}: {len(l)} 檔")
-    us = screen(upool, us_metrics, "US")
-    tw = screen(TW_POOL, tw_metrics, "TW")
-    out = {"date": datetime.now().strftime("%Y-%m-%d"), "us": us, "tw": tw}
-    json.dump(out, open("screen_result.json", "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--market", choices=["us", "tw", "both"], default="both",
+                    help="2026-08-10：美股/台股各自收盤時間、資料源不同，"
+                         "拆成兩個獨立 workflow 互不拖累失敗；預設 both 保留給手動整份重跑用")
+    ap.add_argument("-o", "--output", default="screen_result.json",
+                    help="拆開跑時通常指定各自的暫存檔（如 screen_us.json），"
+                         "由外層 merge 成正式的 screen_result.json，避免兩個 job 互相覆蓋對方市場的資料")
+    args = ap.parse_args()
+
+    us, tw = {}, {}
+    if args.market in ("us", "both"):
+        print("=== 美股候選池(ETF 成分股)===")
+        upool = us_pool()
+        for c, l in upool.items():
+            print(f"  {c}: {len(l)} 檔")
+        us = screen(upool, us_metrics, "US")
+    if args.market in ("tw", "both"):
+        tw = screen(TW_POOL, tw_metrics, "TW")
+
+    out = {"date": datetime.now().strftime("%Y-%m-%d")}
+    if args.market == "both":
+        out["us"], out["tw"] = us, tw
+    elif args.market == "us":
+        out["us"] = us
+    else:
+        out["tw"] = tw
+    json.dump(out, open(args.output, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+
     # 印出守備清單
     print("\n===== 篩選結果 =====")
     for mkt, data in [("美股", us), ("台股", tw)]:
+        if not data:
+            continue
         print(f"\n【{mkt}】")
         for chain, lst in data.items():
             print(f"  {chain}: " + ", ".join(f"{x['code']}({x['name'][:6]})" for x in lst))
-    print("\n✅ → screen_result.json")
+    print(f"\n✅ → {args.output}")
 
 
 if __name__ == "__main__":
