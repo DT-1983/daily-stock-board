@@ -214,16 +214,14 @@ def build(ticker):
         _tile("RS 相對強弱", rs_html, ""),
     ])
 
-    # ── 展開圖表：最近 120 個交易日，價格+雙趨勢線／動能柱／RS 雙線 ──
+    # ── 展開圖表：全部一年份資料都送到前端，90天/1年是前端切片切換，
+    # 不用重抓資料（2026-08-11：原本寫死近120個交易日，用戶要求可切換90天/一年）
     uid = re.sub(r"[^A-Za-z0-9]", "_", ticker.upper())
-    N = 120
-    n_all = len(closes)
-    cut = max(0, n_all - N)
-    dates = [d.strftime("%m/%d") for d in hist.index[cut:]]
+    dates = [d.strftime("%m/%d") for d in hist.index]
 
     def _clean(arr):
         out = []
-        for v in arr[cut:]:
+        for v in arr:
             if v is None or (isinstance(v, float) and np.isnan(v)):
                 out.append(None)
             else:
@@ -237,10 +235,12 @@ def build(ticker):
         "dates": dates,
         "closes": _clean(closes),
         "st": _clean(st["st"]) if st else [],
-        "st_dir": [int(x) if x is not None else None for x in (st["dir"][cut:] if st else [])],
+        "st_dir": [int(x) if x is not None else None for x in (st["dir"] if st else [])],
         "dt": _clean(dt["st"]) if dt else [],
-        "dt_dir": [int(x) if x is not None else None for x in (dt["dir"][cut:] if dt else [])],
+        "dt_dir": [int(x) if x is not None else None for x in (dt["dir"] if dt else [])],
         "mom": _clean(sq["momentum"]) if sq is not None else [],
+        "sq_on": [(None if (isinstance(v, float) and np.isnan(v)) else bool(v))
+                  for v in (sq["squeeze_on"] if sq is not None else [])],
         "rs_s": _clean(rs_s_series) if rs_s_series is not None else [],
         "rs_l": _clean(rs_l_series) if rs_l_series is not None else [],
     }
@@ -250,16 +250,22 @@ def build(ticker):
 <div class="techgrid">{tiles}</div>
 <button class="techtoggle" onclick="ti_toggle_{uid}()" id="ti_btn_{uid}">展開圖表 ▾</button>
 <div class="techcharts" id="ti_charts_{uid}" style="display:none">
+  <div class="tcwin" id="ti_win_{uid}">
+    <button data-w="90" aria-pressed="true">90天</button>
+    <button data-w="365" aria-pressed="false">1年</button>
+  </div>
   <div class="tclabel">價格 + SuperTrend + 雙重颱風K線</div>
   <div class="tcbox"><canvas id="ti_c1_{uid}"></canvas></div>
-  <div class="tclabel">EXCEED CHARGE 動能柱</div>
+  <div class="tclabel">EXCEED CHARGE 動能柱（金點＝擠壓中，綠/紅點＝已釋放）</div>
   <div class="tcbox tcbox-sm"><canvas id="ti_c2_{uid}"></canvas></div>
-  <div class="tclabel">RS 相對強弱（短線25日／長線200日）</div>
+  <div class="tclabel">RS 相對強弱（短線25日／長線200日，紅線＝與大盤同步基準線）</div>
   <div class="tcbox tcbox-sm"><canvas id="ti_c3_{uid}"></canvas></div>
 </div>
 <script>
 window.TI_DATA_{uid} = {json.dumps(chart_data, ensure_ascii=False)};
 let ti_drawn_{uid} = false;
+let ti_charts_{uid} = null;
+let ti_win_{uid} = 90;
 function ti_toggle_{uid}(){{
   const box = document.getElementById('ti_charts_{uid}');
   const btn = document.getElementById('ti_btn_{uid}');
@@ -268,13 +274,27 @@ function ti_toggle_{uid}(){{
   btn.textContent = open ? '展開圖表 ▾' : '收合圖表 ▴';
   if (!open && !ti_drawn_{uid}) {{ ti_drawn_{uid} = true; ti_draw_{uid}(); }}
 }}
+document.getElementById('ti_win_{uid}').addEventListener('click', function(e){{
+  const b = e.target.closest('button');
+  if (!b) return;
+  Array.prototype.forEach.call(this.querySelectorAll('button'), x => x.setAttribute('aria-pressed', x === b));
+  ti_win_{uid} = b.dataset.w === '365' ? 365 : 90;
+  if (ti_drawn_{uid}) ti_draw_{uid}();
+}});
 function ti_draw_{uid}(){{
-  const d = window.TI_DATA_{uid};
+  const full = window.TI_DATA_{uid};
+  const n = full.dates.length;
+  const cut = Math.max(0, n - ti_win_{uid});
+  const slice = arr => (arr || []).slice(cut);
+  const d = {{dates: slice(full.dates), closes: slice(full.closes), st: slice(full.st),
+    st_dir: slice(full.st_dir), dt: slice(full.dt), dt_dir: slice(full.dt_dir),
+    mom: slice(full.mom), sq_on: slice(full.sq_on), rs_s: slice(full.rs_s), rs_l: slice(full.rs_l)}};
+  if (ti_charts_{uid}) {{ ti_charts_{uid}.forEach(c => c.destroy()); }}
   const segColor = dir => ctx => {{
     const i = ctx.p1DataIndex; const v = dir[i];
     return v === -1 ? '#ff8a8a' : (v === 1 ? '#4ade80' : '#6b7280');
   }};
-  new Chart(document.getElementById('ti_c1_{uid}'), {{type:'line',
+  const c1 = new Chart(document.getElementById('ti_c1_{uid}'), {{type:'line',
     data:{{labels:d.dates,datasets:[
       {{label:'收盤',data:d.closes,borderColor:'#8FA8C8',borderWidth:1.2,pointRadius:0,tension:.15}},
       {{label:'SuperTrend',data:d.st,borderWidth:1.6,pointRadius:0,
@@ -285,20 +305,39 @@ function ti_draw_{uid}(){{
       plugins:{{legend:{{labels:{{color:'#9aa0a6',boxWidth:14,font:{{size:10}}}}}}}},
       scales:{{x:{{ticks:{{color:'#6b7280',font:{{size:9}},maxRotation:0,autoSkip:true,maxTicksLimit:8}},grid:{{display:false}}}},
         y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
-  new Chart(document.getElementById('ti_c2_{uid}'), {{type:'bar',
-    data:{{labels:d.dates,datasets:[{{label:'動能',data:d.mom,
-      backgroundColor:d.mom.map(v=>v==null?'#2a2e35':(v>=0?'#4ade8099':'#ff8a8a99'))}}]}},
+  // 動能柱：多頭轉強亮綠/轉弱暗綠，空頭轉強亮紅/轉弱暗紅（TTM Squeeze 慣例）；
+  // sq_on 點陣列（擠壓中金色、已釋放依動能方向上色）疊在 y=0 當擠壓/釋放標記
+  const momColor = d.mom.map((v, i) => {{
+    if (v == null) return '#2a2e35';
+    const prev = i > 0 ? d.mom[i - 1] : v;
+    if (v >= 0) return v >= prev ? '#4ade80' : '#1e7a45';
+    return v <= prev ? '#ff8a8a' : '#8a2e2e';
+  }});
+  const dotColor = d.sq_on.map((on, i) => {{
+    if (on) return '#EAB308';
+    const m = d.mom[i];
+    return m == null ? '#6b7280' : (m >= 0 ? '#4ade80' : '#ff8a8a');
+  }});
+  const c2 = new Chart(document.getElementById('ti_c2_{uid}'), {{type:'bar',
+    data:{{labels:d.dates,datasets:[
+      {{label:'動能',data:d.mom,backgroundColor:momColor,order:2}},
+      {{label:'擠壓/釋放',type:'line',data:d.mom.map(()=>0),showLine:false,
+        pointRadius:2.6,pointBackgroundColor:dotColor,pointBorderWidth:0,order:1}}]}},
     options:{{responsive:true,maintainAspectRatio:false,plugins:{{legend:{{display:false}}}},
       scales:{{x:{{ticks:{{display:false}},grid:{{display:false}}}},
         y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
-  new Chart(document.getElementById('ti_c3_{uid}'), {{type:'line',
+  const c3 = new Chart(document.getElementById('ti_c3_{uid}'), {{type:'line',
     data:{{labels:d.dates,datasets:[
-      {{label:'短線25日',data:d.rs_s,borderColor:'#EAB308',borderWidth:1.4,pointRadius:0,tension:.15}},
-      {{label:'長線200日',data:d.rs_l,borderColor:'#4a9eff',borderWidth:1.4,pointRadius:0,tension:.15}}]}},
+      {{label:'基準線(0%)',data:d.mom.map(()=>0),borderColor:'#EF4444',borderWidth:2,
+        pointRadius:0,order:3}},
+      {{label:'短線25日',data:d.rs_s,borderColor:'#EAB308',borderWidth:1.4,pointRadius:0,tension:.15,order:1}},
+      {{label:'長線200日',data:d.rs_l,borderColor:'#4a9eff',borderWidth:1.4,pointRadius:0,tension:.15,order:2}}]}},
     options:{{responsive:true,maintainAspectRatio:false,
-      plugins:{{legend:{{labels:{{color:'#9aa0a6',boxWidth:14,font:{{size:10}}}}}}}},
+      plugins:{{legend:{{labels:{{color:'#9aa0a6',boxWidth:14,font:{{size:10}},
+        filter:item=>item.text!=='基準線(0%)'}}}}}},
       scales:{{x:{{ticks:{{display:false}},grid:{{display:false}}}},
         y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
+  ti_charts_{uid} = [c1, c2, c3];
 }}
 </script>
 </div>"""
@@ -338,6 +377,11 @@ CSS = """
 .tclabel{font-size:11px;color:#8a8f98;margin:10px 0 4px}
 .tcbox{height:180px}
 .tcbox-sm{height:100px}
+.tcwin{display:inline-flex;background:#1a1d23;border:1px solid #2a2e35;border-radius:8px;
+ padding:2px;margin-bottom:6px}
+.tcwin button{border:0;background:transparent;color:#8a8f98;font-size:11px;font-weight:600;
+ padding:5px 12px;border-radius:6px;cursor:pointer;font-family:inherit}
+.tcwin button[aria-pressed=true]{background:#334155;color:#e8eaed}
 """
 
 
