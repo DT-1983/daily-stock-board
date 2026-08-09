@@ -32,6 +32,7 @@ import yfinance as yf
 import chain_positioning as CP  # 2026-08-06：產業鏈定位區塊（BEST MATCH 拆解功能之一）
 import fundamentals_reality as FR  # 2026-08-06：財報與營收實況（BEST MATCH 拆解功能之二）
 import technical_indicators as TI  # 2026-08-06：技術面四指標（BEST MATCH 拆解功能之四）
+import earnings_call as EC  # 2026-08-09：管理層口頭重點（法說會逐字稿，補財報三表沒有的公司自訂KPI）
 
 OBIS = r"C:\Users\Mophy\Documents\Google drive\BB-8 工作區\04_AI Report\Investment"
 
@@ -553,7 +554,7 @@ def render(d, sc, n, extra_html=None):
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex"><title>{d['ticker']} {d['quarter']} 財報懶人包</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
-<style>{CSS}{CP.CSS}{FR.CSS}{TI.CSS}</style></head><body><div class="wrap">
+<style>{CSS}{CP.CSS}{FR.CSS}{TI.CSS}{EC.CSS}</style></head><body><div class="wrap">
 
 <div class="hd">
   <div><h1>{d['name']}</h1>
@@ -615,6 +616,7 @@ def render(d, sc, n, extra_html=None):
 {extra_html.get('reality', '')}
 {extra_html.get('technical', '')}
 {extra_html.get('positioning', '')}
+{extra_html.get('call', '')}
 
 <div class="ftr">
   <b>資料來源</b>：所有財務數字與估值指標皆取自 yfinance 之公司申報財報，未經 AI 生成或修改。
@@ -652,10 +654,18 @@ def main():
     positioning_html = CP.build_html(d["ticker"])
     positioning_sum = CP.summary_text(d["ticker"])
     print("完成")
+    print("法說會逐字稿摘要（本機 claude 上網搜尋，較慢）…", end=" ", flush=True)
+    try:
+        call_html, call_sum = EC.build(d["ticker"], d.get("name", ""), d["quarter"])
+    except Exception as e:
+        print(f"失敗：{e}", end=" ")
+        call_html, call_sum = "", ""
+    print("完成" if call_html else "（無資料，跳過）")
     extra_facts = "\n".join(x for x in [
         f"財報趨勢：{reality_sum}" if reality_sum else "",
         f"技術面：{technical_sum}" if technical_sum else "",
         f"產業鏈定位：{positioning_sum}" if positioning_sum else "",
+        call_sum if call_sum else "",
     ] if x)
 
     n = {}
@@ -674,7 +684,8 @@ def main():
     out = args.output or f"docs/earnings_{d['ticker'].replace('.', '_')}.html"
     os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
     html = render(d, sc, n, extra_html={
-        "reality": reality_html, "technical": technical_html, "positioning": positioning_html})
+        "reality": reality_html, "technical": technical_html, "positioning": positioning_html,
+        "call": call_html})
     targets = [out] + ([os.path.join(OBIS, f"{d['ticker']}_{d['quarter']}_財報懶人包.html")]
                        if args.obis else [])
     for p in targets:
