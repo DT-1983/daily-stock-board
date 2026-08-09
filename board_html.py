@@ -376,7 +376,10 @@ def main():
                                  ("買點", "buy_point"), ("停損", "stop_loss")]
                 if r.get(key))
             ch = f'<div class="chartbox"><canvas id="cv{code}"></canvas></div>' if code in charts else ""
-            rows.append(_row(code, "TW", r.get("emoji", "⚪"), code, r.get("name", code),
+            # 2026-08-11：台股名字一律優先查 TW_NAME（中文），report_*.md 裡的 name
+            # 是本機判讀當天自己查yfinance寫的、常常是英文——只當TW_NAME沒收錄時的備援
+            nm = TW_NAME.get(code) or r.get("name", code)
+            rows.append(_row(code, "TW", r.get("emoji", "⚪"), code, nm,
                              r.get("score", "—"), r.get("oneliner", ""),
                              ch + f'<div class="dgrid">{grid}</div><div class="mdbody">{extra}</div>'))
 
