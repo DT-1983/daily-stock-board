@@ -27,9 +27,11 @@ def parse_card(path: str) -> dict:
         r = re.search(p, h, re.S)
         return r.group(1).strip() if r else d
     ticker = os.path.basename(path)[9:-5].replace("_", ".")
+    market = "TW" if re.match(r"^\d{4,5}$", ticker) else "US"
     return {
         "file": os.path.basename(path),
         "ticker": ticker,
+        "market": market,
         "name": m(r'<h1>([^<]*)</h1>', ticker),
         "quarter": m(r'<div class="sub">([^·]*?)財報懶人包'),
         "period": m(r'會計期間截至\s*([\d-]+)'),
@@ -68,6 +70,14 @@ BADGE = {"STRONG BUY": ("#0E3A22", "#22C55E"), "BUY": ("#0E3A22", "#22C55E"),
 
 def build(cards):
     if cards:
+        n_us = sum(1 for c in cards if c["market"] == "US")
+        n_tw = sum(1 for c in cards if c["market"] == "TW")
+        seg = (f'<div class="ctrl" style="position:static;padding:0 0 12px;border-bottom:0;margin-bottom:0">'
+               f'<div class="seg" id="mktSeg">'
+               f'<button data-m="ALL" aria-pressed="true">全部 {len(cards)}</button>'
+               f'<button data-m="US" aria-pressed="false">美股 {n_us}</button>'
+               f'<button data-m="TW" aria-pressed="false">台股 {n_tw}</button>'
+               f'</div></div>')
         items = []
         for c in cards:
             bg, fg = BADGE.get(c["consensus"], ("#22374F", "#8FA8C8"))
@@ -77,7 +87,7 @@ def build(cards):
                          f'<span class="gv ok">洪瑞泰過 {c["gates"]}</span>'
                          f'<span class="gv no">不過 {c["gates_bad"]}</span></div>')
             items.append(
-                f'<a class="ecard" href="{c["file"]}">'
+                f'<a class="ecard" data-mkt="{c["market"]}" href="{c["file"]}">'
                 f'<div class="crow"><div style="min-width:0">'
                 f'<div class="tk num">{c["ticker"]}</div>'
                 f'<div class="nm">{c["name"]}</div></div>'
@@ -86,7 +96,7 @@ def build(cards):
                 f'<div class="q">{c["quarter"]}　·　截至 {c["period"]}</div>'
                 f'{gates}'
                 f'<div class="bl">{c["bottom"][:90]}</div></a>')
-        content = f'<div class="grid">{"".join(items)}</div>'
+        content = f'{seg}<div class="grid" id="ecardGrid">{"".join(items)}</div>'
     else:
         content = ('<div class="empty">還沒有任何財報分析。<br>'
                    '財報守望會在<b>你的持股公布財報後</b>自動產生（每季一次）。<br>'
@@ -106,7 +116,26 @@ def build(cards):
   所有財務數字取自 yfinance 實際申報財報，未經 AI 生成；AI 只負責文字敘述。<br>
   產生於 {datetime.now():%Y-%m-%d %H:%M}
 </div>
-</div></body></html>"""
+</div>
+<script>
+(function(){{
+  var seg = document.getElementById('mktSeg');
+  if(!seg) return;
+  var cards = Array.prototype.slice.call(document.querySelectorAll('#ecardGrid .ecard'));
+  seg.addEventListener('click', function(e){{
+    var b = e.target.closest('button');
+    if(!b) return;
+    Array.prototype.forEach.call(seg.querySelectorAll('button'), function(x){{
+      x.setAttribute('aria-pressed', x === b);
+    }});
+    var m = b.dataset.m;
+    cards.forEach(function(c){{
+      c.style.display = (m === 'ALL' || c.dataset.mkt === m) ? '' : 'none';
+    }});
+  }});
+}})();
+</script>
+</body></html>"""
 
 
 def main():
