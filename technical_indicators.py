@@ -119,7 +119,7 @@ def squeeze_momentum(highs, lows, closes, length=20, bb_mult=2.0, kc_mult=1.5):
 
 # ── RS 相對強弱（Mansfield） ──────────────────────────────────────────
 
-def mansfield_rs(closes, bench_closes, short=25, long=200):
+def mansfield_rs(closes, bench_closes, short=30, long=250):
     n = min(len(closes), len(bench_closes))
     c = np.array(closes[-n:], dtype=float)
     b = np.array(bench_closes[-n:], dtype=float)
@@ -163,17 +163,20 @@ def _flip_bars(dr):
     return cur, n
 
 
-def build(ticker):
+def build(ticker, disp_days=252):
     """算一次，回 (html, summary_text)。理由同 fundamentals_reality.build()：
-    避免財報卡渲染跟 narrative() 的 LLM prompt 各自重抓一次價量資料。"""
+    避免財報卡渲染跟 narrative() 的 LLM prompt 各自重抓一次價量資料。
+    2026-08-11：RS窗改30日/1年、抓2年資料當暖機（原本抓1年配200日長線窗，暖機不夠，
+    圖表前面一大段長線RS是空的，跟看板 board_html_legacy.fetch_us_charts 同一個修法）
+    ——算完指標後只裁回近 disp_days(≈1年交易日) 給前端顯示，時間範圍跟改版前一樣。"""
     try:
         t = yf.Ticker(ticker)
-        hist = t.history(period="1y")
+        hist = t.history(period="2y")
         if hist.empty or len(hist) < 60:
             return "", ""
         highs, lows, closes = hist["High"].tolist(), hist["Low"].tolist(), hist["Close"].tolist()
 
-        bench = yf.Ticker(_benchmark(ticker)).history(period="1y")
+        bench = yf.Ticker(_benchmark(ticker)).history(period="2y")
         bench_closes = bench["Close"].tolist() if not bench.empty else []
     except Exception as e:
         print(f"  [technical_indicators] {ticker} 抓取失敗：{e}")
@@ -217,7 +220,7 @@ def build(ticker):
     # ── 展開圖表：全部一年份資料都送到前端，90天/1年是前端切片切換，
     # 不用重抓資料（2026-08-11：原本寫死近120個交易日，用戶要求可切換90天/一年）
     uid = re.sub(r"[^A-Za-z0-9]", "_", ticker.upper())
-    dates = [d.strftime("%m/%d") for d in hist.index]
+    dates_full = [d.strftime("%m/%d") for d in hist.index]
 
     def _clean(arr):
         out = []
@@ -228,21 +231,22 @@ def build(ticker):
                 out.append(round(float(v), 2))
         return out
 
-    rs_s_series = mansfield_rs_series(closes, bench_closes, 25) if bench_closes else None
-    rs_l_series = mansfield_rs_series(closes, bench_closes, 200) if bench_closes else None
+    rs_s_series = mansfield_rs_series(closes, bench_closes, 30) if bench_closes else None
+    rs_l_series = mansfield_rs_series(closes, bench_closes, 250) if bench_closes else None
 
+    cut = max(0, len(dates_full) - disp_days)
     chart_data = {
-        "dates": dates,
-        "closes": _clean(closes),
-        "st": _clean(st["st"]) if st else [],
-        "st_dir": [int(x) if x is not None else None for x in (st["dir"] if st else [])],
-        "dt": _clean(dt["st"]) if dt else [],
-        "dt_dir": [int(x) if x is not None else None for x in (dt["dir"] if dt else [])],
-        "mom": _clean(sq["momentum"]) if sq is not None else [],
+        "dates": dates_full[cut:],
+        "closes": _clean(closes)[cut:],
+        "st": (_clean(st["st"]) if st else [])[cut:],
+        "st_dir": [int(x) if x is not None else None for x in (st["dir"] if st else [])][cut:],
+        "dt": (_clean(dt["st"]) if dt else [])[cut:],
+        "dt_dir": [int(x) if x is not None else None for x in (dt["dir"] if dt else [])][cut:],
+        "mom": (_clean(sq["momentum"]) if sq is not None else [])[cut:],
         "sq_on": [(None if (isinstance(v, float) and np.isnan(v)) else bool(v))
-                  for v in (sq["squeeze_on"] if sq is not None else [])],
-        "rs_s": _clean(rs_s_series) if rs_s_series is not None else [],
-        "rs_l": _clean(rs_l_series) if rs_l_series is not None else [],
+                  for v in (sq["squeeze_on"] if sq is not None else [])][cut:],
+        "rs_s": (_clean(rs_s_series) if rs_s_series is not None else [])[cut:],
+        "rs_l": (_clean(rs_l_series) if rs_l_series is not None else [])[cut:],
     }
 
     html = f"""<div class="technical"><h3>技術面四指標</h3>
@@ -258,7 +262,7 @@ def build(ticker):
   <div class="tcbox"><canvas id="ti_c1_{uid}"></canvas></div>
   <div class="tclabel">EXCEED CHARGE 動能柱（金點＝擠壓中，綠/紅點＝已釋放）</div>
   <div class="tcbox tcbox-sm"><canvas id="ti_c2_{uid}"></canvas></div>
-  <div class="tclabel">RS 相對強弱（短線25日／長線200日，紅線＝與大盤同步基準線）</div>
+  <div class="tclabel">RS 相對強弱（短線30日／長線1年，紅線＝與大盤同步基準線）</div>
   <div class="tcbox tcbox-sm"><canvas id="ti_c3_{uid}"></canvas></div>
 </div>
 <script>
@@ -330,8 +334,8 @@ function ti_draw_{uid}(){{
     data:{{labels:d.dates,datasets:[
       {{label:'基準線(0%)',data:d.mom.map(()=>0),borderColor:'#EF4444',borderWidth:2,
         pointRadius:0,order:3}},
-      {{label:'短線25日',data:d.rs_s,borderColor:'#EAB308',borderWidth:1.4,pointRadius:0,tension:.15,order:1}},
-      {{label:'長線200日',data:d.rs_l,borderColor:'#4a9eff',borderWidth:1.4,pointRadius:0,tension:.15,order:2}}]}},
+      {{label:'短線30日',data:d.rs_s,borderColor:'#EAB308',borderWidth:1.4,pointRadius:0,tension:.15,order:1}},
+      {{label:'長線1年',data:d.rs_l,borderColor:'#4a9eff',borderWidth:1.4,pointRadius:0,tension:.15,order:2}}]}},
     options:{{responsive:true,maintainAspectRatio:false,
       plugins:{{legend:{{labels:{{color:'#9aa0a6',boxWidth:14,font:{{size:10}},
         filter:item=>item.text!=='基準線(0%)'}}}}}},
