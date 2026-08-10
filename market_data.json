@@ -1,130 +1,130 @@
 {
- "updated": "2026-08-07 16:20",
+ "updated": "2026-08-10 16:48",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "08/06",
-   "close": 7709.96,
-   "chg_pct": -0.18
+   "date": "08/07",
+   "close": 7757.64,
+   "chg_pct": 0.62
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "08/06",
-   "close": 26348.35,
-   "chg_pct": -0.06
+   "date": "08/07",
+   "close": 26690.62,
+   "chg_pct": 1.3
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "08/06",
-   "close": 53885.1,
-   "chg_pct": -0.85
+   "date": "08/07",
+   "close": 54036.93,
+   "chg_pct": 0.28
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "08/06",
-   "close": 12048.69,
-   "chg_pct": 0.33
+   "date": "08/07",
+   "close": 12356.79,
+   "chg_pct": 2.56
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "08/07",
-   "close": 44225.91,
-   "chg_pct": -0.38
+   "date": "08/10",
+   "close": 44928.76,
+   "chg_pct": 1.59
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "08/07",
-   "close": 32.25,
-   "chg_pct": -0.04
+   "date": "08/10",
+   "close": 32.24,
+   "chg_pct": 0.1
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "08/06",
-   "close": 4.67,
+   "date": "08/07",
+   "close": 4.66,
    "fmt": "yield",
-   "chg_bp": 5.3
+   "chg_bp": -1.0
   }
  ],
  "news": [
   {
-   "title": "中鋼9月盤價止跌開平盤 鋼價落底迎補庫存商機",
+   "title": "日月光投控7月營收738億元 年增43%飆單月新高",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6564325",
-   "ts": "08/07 16:05"
+   "url": "https://news.cnyes.com/news/id/6560298",
+   "ts": "08/10 16:40"
   },
   {
-   "title": "〈富采法說〉通膨及原物料上漲Q3營運恐下滑 Micro LED今年營收看增倍數",
+   "title": "日月光投控7月營收738億元 年增43%飆單月新高",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6560298",
+   "ts": "08/10 16:40"
+  },
+  {
+   "title": "〈台幣〉聯準會升息預期降溫 升值5.7分收32.231元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6564331",
-   "ts": "08/07 16:04"
+   "url": "https://news.cnyes.com/news/id/6568053",
+   "ts": "08/10 16:37"
   },
   {
-   "title": "〈富采法說〉Q2資產活化進補賺12.5億元 EPS 1.69元 世足賽拉貨營運回溫",
+   "title": "信驊將在OCP APAC大會 展示兩大新世代平台技術",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6564327",
-   "ts": "08/07 15:58"
+   "url": "https://news.cnyes.com/news/id/6568022",
+   "ts": "08/10 16:37"
   },
   {
-   "title": "致新：PMIC缺貨重返疫情盛況 明年晶圓增加有限",
+   "title": "〈陸股盤後〉三大指數漲跌不一 滬指連5紅 重返3950點之上",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6567858",
+   "ts": "08/10 16:30"
+  },
+  {
+   "title": "保瑞7月營收19億元創同期高 在手訂單處歷史高檔Q3營運添柴火",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6564323",
-   "ts": "08/07 15:55"
+   "url": "https://news.cnyes.com/news/id/6568018",
+   "ts": "08/10 16:25"
   },
   {
-   "title": "〈川湖法說〉王俊強預告下半年營運會更好 提早佈局2027至2029新產品迭代",
+   "title": "營收速報  - 泰銘(9927)7月營收9.98億元年增率高達62.5％",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6564316",
-   "ts": "08/07 15:50"
+   "url": "https://news.cnyes.com/news/id/6568052",
+   "ts": "08/10 16:22"
   },
   {
-   "title": "法國第二季失業率升至8.3% 創6年新高",
+   "title": "五角大廈要求國防巨頭加速生產以補充庫存",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6564158",
-   "ts": "08/07 15:40"
+   "url": "https://news.cnyes.com/news/id/6567896",
+   "ts": "08/10 16:20"
   },
   {
-   "title": "德銀看好美光SCA轉型！AI讓記憶體價值占比飆至50% 獲利有上修空間",
+   "title": "OpenAI「GPT-6」Astra傳8月登場！10兆參數、代號「Doug」模型年底再戰",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6563576",
-   "ts": "08/07 15:20"
+   "url": "https://news.cnyes.com/news/id/6567540",
+   "ts": "08/10 16:00"
   },
   {
-   "title": "WSJ：針對五角大廈彈藥短缺報導 川普已下令徹查「洩密者」",
+   "title": "黃仁勳罕見開口挺AI開源！一封公開信炸出矽谷「開源vs閉源」兩大陣營博弈",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6564141",
-   "ts": "08/07 15:08"
-  },
-  {
-   "title": "不怕業界反對！韓國交易所強推9/14盤後ETF上路 對決虛擬資產交易所與ATS",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6564142",
-   "ts": "08/07 14:50"
-  },
-  {
-   "title": "菲律賓第二季經濟增速創5年新低 營建業低迷與高通膨成主因",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6564131",
-   "ts": "08/07 14:40"
+   "url": "https://news.cnyes.com/news/id/6567539",
+   "ts": "08/10 15:10"
   }
  ],
  "inst": {
-  "date": "08/07",
-  "total_yi": -442.4,
-  "foreign_yi": -407.2,
-  "trust_yi": -25.6
+  "date": "08/10",
+  "total_yi": 731.7,
+  "foreign_yi": 517.1,
+  "trust_yi": 29.8
  }
 }
