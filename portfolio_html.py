@@ -110,7 +110,7 @@ def build(state):
 <div class="card">
   <div class="ctrl" style="position:static;border:0;padding:0 0 10px">
     <div class="seg" role="group" aria-label="切換圖表範圍">
-      <button data-c="main" aria-pressed="true">3 主策略</button>
+      <button data-c="main" aria-pressed="true">{len(main)} 主策略</button>
       <button data-c="chain" aria-pressed="false">7 產業鏈</button>
       <button data-c="all" aria-pressed="false">全部</button></div>
   </div>
@@ -118,7 +118,7 @@ def build(state):
   <div class="chartlegend">{legend}</div>
 </div>
 
-<section class="sec"><div class="sechd"><h2>三套方法對決</h2></div>{vs}</section>
+<section class="sec"><div class="sechd"><h2>{len(main)} 套方法對決</h2></div>{vs}</section>
 
 <section class="sec"><div class="sechd"><h2>7 條產業鏈明細</h2>
   <span class="cnt">點列展開持股</span></div>
