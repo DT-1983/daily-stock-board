@@ -54,8 +54,11 @@ BTC_MAX_WEIGHT = 0.10          # 該鏈標的在跨鏈主倉的合計權重上�
 # backtest_combined_signal.py 6個月回測：合流篩選把賣錯率從57%降到38%，
 # 方向正確但樣本(10筆)不足以下定論——這個倉就是拿真金白銀(模擬)去累積更長樣本。
 # 買：SuperTrend翻多 + RS30日>0 + 擠壓剛噴出(前一根還在擠壓、這一根釋放)
-# 賣：三個相反同時成立才賣，純粹策略、刻意不加額外停損（用戶2026-08-11指示：
-#     不混入其他規則，才能單獨看清楚這套假說本身有沒有用）
+# 賣（2026-08-11改為不對稱兩階段，用戶依自己回測結果指示的「最優進出法」）：
+#   ① SuperTrend單獨翻空 → 賣一半（不用等RS/squeeze同時翻）
+#   ② RS(60日)線跌破自己的60日均線（rs_60由正轉負）→ 剩餘部位全出
+# 詳見 backtest_position_sim.py（完整倉位模擬回測，跟backtest_combined_signal.py
+# 的「訊號後N日報酬統計」是互補的兩支，不是同一套評測方法）
 CHAIN_COMBO = "三指標合流"
 MAIN = [CHAIN_ALL, CHAIN_TREND, BUFFETT_NAME, CHAIN_COMBO]
 FX_FALLBACK = 32.0              # USD/TWD 備援匯率
@@ -192,21 +195,26 @@ def trend_longs(tickers, weekly=None):
     return sorted(longs)
 
 
-def combo_signal_events(tickers, held):
-    """三指標合流：回 (buy_list, sell_list)，只回「今天剛觸發」的事件，不是持續狀態。
-    買：SuperTrend(日線)翻多 + RS(30日)>0 + EXCEED CHARGE擠壓剛噴出（今天held裡沒有的才算買訊）
-    賣：三個相反同時成立（今天held裡有的才算賣訊）——純粹策略，不加額外停損，
-    詳見 CHAIN_COMBO 常數註解與 backtest_combined_signal.py。"""
-    buy, sell = [], []
+def combo_signal_events(tickers, held_frac):
+    """三指標合流：回 (buy_list, half_sell_list, full_exit_list)，只回「今天剛觸發」的事件。
+    買：SuperTrend(日線)翻多 + RS(30日)>0 + EXCEED CHARGE擠壓剛噴出（未持有才算買訊）
+    賣分兩階段（2026-08-11 用戶指示改為不對稱出場，其回測驗證為最優進出法）：
+      ① ST單獨翻空 → 賣一半（不用等RS/squeeze同時翻，全倉時才觸發，已經賣過一半的不重複觸發）
+      ② RS(60日)線跌破自己的60日均線（rs_60由正轉負）→ 剩餘部位全出，任何持倉比例都適用
+    held_frac：{ticker: 0.5或1.0}，目前持倉比例（0或不在字典裡＝未持有）。
+    詳見 CHAIN_COMBO 常數註解、backtest_position_sim.py（完整回測）。"""
+    buy, half_sell, full_exit = [], [], []
     for tk in tickers:
         try:
             hist = yf.Ticker(tk).history(period="1y")
-            if hist.empty or len(hist) < 35:
+            if hist.empty or len(hist) < 210:
                 continue
             highs, lows, closes = hist["High"].tolist(), hist["Low"].tolist(), hist["Close"].tolist()
             bench = yf.Ticker(_benchmark(tk)).history(period="1y")
             bench_closes = bench["Close"].tolist() if not bench.empty else []
         except Exception:
+            continue
+        if not bench_closes:
             continue
         st = _L.supertrend(highs, lows, closes)
         if not st:
@@ -215,22 +223,35 @@ def combo_signal_events(tickers, held):
         i = len(closes) - 1
         if i < 1 or dr[i] is None or dr[i - 1] is None:
             continue
+        frac = held_frac.get(tk, 0.0)
         flip_bull = dr[i] == 1 and dr[i - 1] == -1
         flip_bear = dr[i] == -1 and dr[i - 1] == 1
-        if not (flip_bull or flip_bear):
-            continue
-        sq = squeeze_momentum(highs, lows, closes)
-        rs_s = mansfield_rs_series(closes, bench_closes, 30) if bench_closes else None
-        if sq is None or rs_s is None or rs_s[i] is None:
-            continue
-        fired = bool(sq["squeeze_on"][i - 1]) and not bool(sq["squeeze_on"][i])
-        if not fired:
-            continue
-        if flip_bull and rs_s[i] > 0 and tk not in held:
-            buy.append(tk)
-        elif flip_bear and rs_s[i] < 0 and tk in held:
-            sell.append(tk)
-    return sorted(buy), sorted(sell)
+
+        # mansfield_rs_series 內部用 min(len(closes),len(bench_closes)) 右對齊，
+        # 台美交易日曆天數常不同，陣列長度可能小於closes——只看「今天」故直接用[-1]/[-2]，
+        # 不要用絕對索引i去查（那是backtest_position_sim.py踩過的IndexError同一個坑）。
+        if frac == 0.0 and flip_bull:
+            sq = squeeze_momentum(highs, lows, closes)
+            rs_30 = mansfield_rs_series(closes, bench_closes, 30)
+            if sq is not None and rs_30 is not None and len(rs_30) and rs_30[-1] is not None \
+                    and not (rs_30[-1] != rs_30[-1]):
+                fired = bool(sq["squeeze_on"][i - 1]) and not bool(sq["squeeze_on"][i])
+                if fired and rs_30[-1] > 0:
+                    buy.append(tk)
+                    continue
+
+        if frac == 1.0 and flip_bear:
+            half_sell.append(tk)
+            continue    # 這天已經觸發賣一半，RS60全出訊號留到之後某天再判斷，不同天疊加動作
+
+        if frac > 0.0:
+            rs_60 = mansfield_rs_series(closes, bench_closes, 60)
+            if rs_60 is not None and len(rs_60) >= 2:
+                a, b = rs_60[-2], rs_60[-1]
+                if a is not None and b is not None and not (a != a) and not (b != b):
+                    if a >= 0 and b < 0:
+                        full_exit.append(tk)
+    return sorted(buy), sorted(half_sell), sorted(full_exit)
 
 
 def market_is_green(symbol="QQQ"):
@@ -404,6 +425,54 @@ def _alloc_shares(tickers, capital, prices, fx, min_slots=0, caps=None):
     return h
 
 
+def combo_apply(state, pf, combo_frac, buy, half_sell, full_exit, prices, fx, date):
+    """三指標合流倉的實際下單：直接動股數，不走 _alloc_shares/rebalance() 的整籃子等權重重配
+    ——「賣一半A」不該連動改變B的股數，這是跟其他倉本質不同的地方（單一部位獨立管理）。
+    combo_frac：state裡的{ticker: 0.5或1.0}持倉比例追蹤，跟pf["holdings"]分開存。"""
+    for tk in full_exit:
+        h = pf["holdings"].pop(tk, None)
+        combo_frac.pop(tk, None)
+        if h and prices.get(tk):
+            pf["cash"] = pf.get("cash", 0.0) + h["sh"] * to_usd(tk, prices[tk], fx)
+
+    for tk in half_sell:
+        h = pf["holdings"].get(tk)
+        if not h or not prices.get(tk):
+            continue
+        pu = to_usd(tk, prices[tk], fx)
+        sold_sh = h["sh"] * 0.5
+        h["sh"] = round(h["sh"] - sold_sh, 4)
+        pf["cash"] = pf.get("cash", 0.0) + sold_sh * pu
+        combo_frac[tk] = 0.5
+
+    if buy:
+        v = _value(pf, prices, fx)
+        slot = v / TREND_MIN_SLOTS   # 跟趨勢倉同一套「最少切N份」精神，避免單檔all-in
+        for tk in buy:
+            if not prices.get(tk):
+                continue
+            size = min(pf.get("cash", 0.0), slot)
+            if size <= 0:
+                continue
+            pu = to_usd(tk, prices[tk], fx)
+            if not pu or pu <= 0:
+                continue
+            pf["holdings"][tk] = {"sh": round(size / pu, 4), "eu": round(pu, 4),
+                                  "en": round(prices[tk], 2)}
+            pf["cash"] -= size
+            combo_frac[tk] = 1.0
+
+    _refresh_current(pf, prices, fx)
+    v = _value(pf, prices, fx)
+    pf["value"] = round(v, 2)
+    pf["pnl"] = round(v - BASE, 2)
+    pf["ret"] = round((v / BASE - 1) * 100, 2)
+    pf["rebalanced"] = date
+    if not pf["history"] or pf["history"][-1][0] != date:
+        pf["history"].append([date, round(v, 2)])
+    state["combo_frac"] = combo_frac
+
+
 def _btc_caps():
     """Bitcoin→AI 機房「整條鏈」標的的個別權重上限（該鏈合計不超過 BTC_MAX_WEIGHT）。"""
     try:
@@ -562,21 +631,24 @@ def main():
             rm = sorted(cur - set(longs))
             print(f"✅ 趨勢倉調倉 {date}（匯率 {fx:.2f}）：+{add or '無'} / -{rm or '無'} → {len(longs)} 檔")
     elif cmd == "rebalance-combo":
-        # 三指標合流倉：事件觸發才動，跟趨勢倉的「狀態維持」不同（見combo_signal_events）
+        # 三指標合流倉：事件觸發才動，跟趨勢倉的「狀態維持」不同（見combo_signal_events）。
+        # 2026-08-11 改不對稱出場：ST單獨翻空賣一半、RS(60日)跌破自己60MA才全出。
         select = chain_select_union()
         pf = state["portfolios"][CHAIN_COMBO]
-        held = set(pf["holdings"].keys())
-        buy, sell = combo_signal_events(select, held)
-        if not buy and not sell:
+        combo_frac = state.setdefault("combo_frac", {})
+        # 持股裡沒有紀錄比例的（例如舊資料或手動調整過）預設當作全倉
+        for tk in pf["holdings"]:
+            combo_frac.setdefault(tk, 1.0)
+        buy, half_sell, full_exit = combo_signal_events(select, combo_frac)
+        if not buy and not half_sell and not full_exit:
             print("三指標合流倉無新訊號，不調倉")
         else:
-            new_holdings = sorted((held - set(sell)) | set(buy))
-            allt = _all_tickers(state) | set(new_holdings)
+            allt = _all_tickers(state) | set(buy) | set(half_sell) | set(full_exit)
             prices = fetch_prices(allt)
-            rebalance(state, {CHAIN_COMBO: new_holdings}, prices, fx, date, only={CHAIN_COMBO})
+            combo_apply(state, pf, combo_frac, buy, half_sell, full_exit, prices, fx, date)
             save(state)
-            print(f"✅ 三指標合流倉調倉 {date}（匯率 {fx:.2f}）：+{buy or '無'} / -{sell or '無'} "
-                 f"→ {len(new_holdings)} 檔")
+            print(f"✅ 三指標合流倉 {date}（匯率 {fx:.2f}）：買進+{buy or '無'} / "
+                 f"賣一半{half_sell or '無'} / 全出{full_exit or '無'} → 現持 {len(pf['holdings'])} 檔")
     elif cmd == "nav":
         prices = fetch_prices(_all_tickers(state))
         update_nav(state, prices, fx, date)
