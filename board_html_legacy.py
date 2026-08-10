@@ -164,21 +164,24 @@ def _align_rs(rs, n):
     return [None if (v is None or v != v) else round(float(v), 2) for v in vals]
 
 
-def fetch_us_charts(tickers, bench="^GSPC"):
+def fetch_us_charts(tickers, bench="^GSPC", disp_days=252):
     """yf.download 批次抓美股走勢（比逐檔 Ticker.history 穩、不易限流）
-    2026-08-11：期間 3mo→1y，附帶算 EXCEED CHARGE(squeeze) + RS(相對強弱)，
-    供看板產業鏈明細跟財報卡一樣多兩張圖（用戶要求）。"""
+    2026-08-11：期間 3mo→2y，附帶算 EXCEED CHARGE(squeeze) + RS(相對強弱，短線30日/長線1年)，
+    供看板產業鏈明細跟財報卡一樣多兩張圖（用戶要求）。
+    多抓一年當「暖機」：長線RS要250個交易日的均線，只抓1年的話前面一整年都算不出值、
+    圖幾乎是空的——抓2年、算完指標後只裁回近1年(disp_days)顯示，圖表時間範圍不變，
+    但長線RS從顯示範圍第一天就有值。"""
     from technical_indicators import squeeze_momentum, mansfield_rs_series
     charts = {}
     if not tickers:
         return charts
     try:
-        data = yf.download(tickers, period="1y", group_by="ticker",
+        data = yf.download(tickers, period="2y", group_by="ticker",
                            progress=False, threads=False, auto_adjust=True)
     except Exception:
         return charts
     try:
-        bench_closes = yf.Ticker(bench).history(period="1y")["Close"].tolist()
+        bench_closes = yf.Ticker(bench).history(period="2y")["Close"].tolist()
     except Exception:
         bench_closes = []
     for t in tickers:
@@ -189,17 +192,22 @@ def fetch_us_charts(tickers, bench="^GSPC"):
                 continue
             highs = h["High"].round(2).tolist()
             lows = h["Low"].round(2).tolist()
+            dates = [d.strftime("%m/%d") for d in h.index]
             n = len(closes)
             sq = squeeze_momentum(highs, lows, closes)
-            rs_s = mansfield_rs_series(closes, bench_closes, 25) if bench_closes else None
-            rs_l = mansfield_rs_series(closes, bench_closes, 200) if bench_closes else None
-            charts[t] = {"dates": [d.strftime("%m/%d") for d in h.index], "close": closes,
-                         "ma5": ma_series(closes, 5), "ma10": ma_series(closes, 10),
-                         "ma20": ma_series(closes, 20), "last": closes[-1],
-                         "supertrend": supertrend(highs, lows, closes),
-                         "mom": [None if (v is None or v != v) else round(float(v), 2) for v in sq["momentum"]] if sq else [],
-                         "sq_on": [None if (isinstance(v, float) and v != v) else bool(v) for v in sq["squeeze_on"]] if sq else [],
-                         "rs_s": _align_rs(rs_s, n), "rs_l": _align_rs(rs_l, n)}
+            rs_s = mansfield_rs_series(closes, bench_closes, 30) if bench_closes else None
+            rs_l = mansfield_rs_series(closes, bench_closes, 250) if bench_closes else None
+            st = supertrend(highs, lows, closes)
+            mom = [None if (v is None or v != v) else round(float(v), 2) for v in sq["momentum"]] if sq else [None] * n
+            sq_on = [None if (isinstance(v, float) and v != v) else bool(v) for v in sq["squeeze_on"]] if sq else [None] * n
+            rs_s_a, rs_l_a = _align_rs(rs_s, n), _align_rs(rs_l, n)
+            cut = max(0, n - disp_days)
+            charts[t] = {"dates": dates[cut:], "close": closes[cut:],
+                         "ma5": ma_series(closes, 5)[cut:], "ma10": ma_series(closes, 10)[cut:],
+                         "ma20": ma_series(closes, 20)[cut:], "last": closes[-1],
+                         "supertrend": {"st": st["st"][cut:], "dir": st["dir"][cut:]} if st else None,
+                         "mom": mom[cut:], "sq_on": sq_on[cut:],
+                         "rs_s": rs_s_a[cut:], "rs_l": rs_l_a[cut:]}
         except Exception:
             pass
     return charts
