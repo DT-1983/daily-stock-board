@@ -39,7 +39,17 @@ def _signals_for(ticker, window_days, eval_days):
         return []
     dr = st["dir"]
     sq = squeeze_momentum(highs, lows, closes)
-    rs_s = mansfield_rs_series(closes, bench_closes, 30) if bench_closes else None  # 2026-08-11：25→30日
+    # mansfield_rs_series 內部用 min(len(closes),len(bench_closes)) 右對齊——台美交易日曆
+    # 天數常不同，bench較短時回傳陣列比closes短，直接拿i去索引兩邊會對錯位（2026-08-11
+    # 在backtest_position_sim.py/paper_portfolio.py都踩過同一個坑，這裡一併補上）。
+    # 補None對齊到跟closes同長度，下面迴圈才能安心用同一個i。
+    def _align(rs):
+        if rs is None:
+            return None
+        pad = len(closes) - len(rs)
+        vals = [None] * pad + list(rs) if pad > 0 else list(rs)
+        return [None if (v is None or v != v) else v for v in vals]
+    rs_s = _align(mansfield_rs_series(closes, bench_closes, 30)) if bench_closes else None  # 2026-08-11：25→30日
     n = len(closes)
 
     # 訊號偵測窗：最近 window_days 個交易日；但要留 eval_days 天算「訊號後報酬」，
