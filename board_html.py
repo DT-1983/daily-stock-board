@@ -282,8 +282,8 @@ function drawExtra(id,c){
  if(elRs&&((c.rs_s&&c.rs_s.length)||(c.rs_l&&c.rs_l.length))){
   const base=(c.rs_s&&c.rs_s.length?c.rs_s:c.rs_l).map(()=>0);
   const rsds=[{label:'基準線(0%)',data:base,borderColor:'#EF4444',borderWidth:2,pointRadius:0,order:3}];
-  if(c.rs_s&&c.rs_s.length)rsds.push({label:'短線25日',data:c.rs_s,borderColor:'#EAB308',borderWidth:1.4,pointRadius:0,tension:.15,order:1});
-  if(c.rs_l&&c.rs_l.length)rsds.push({label:'長線200日',data:c.rs_l,borderColor:'#4a9eff',borderWidth:1.4,pointRadius:0,tension:.15,order:2});
+  if(c.rs_s&&c.rs_s.length)rsds.push({label:'短線30日',data:c.rs_s,borderColor:'#EAB308',borderWidth:1.4,pointRadius:0,tension:.15,order:1});
+  if(c.rs_l&&c.rs_l.length)rsds.push({label:'長線1年',data:c.rs_l,borderColor:'#4a9eff',borderWidth:1.4,pointRadius:0,tension:.15,order:2});
   new Chart(elRs,{type:'line',data:{labels:c.dates,datasets:rsds},
    options:{responsive:true,maintainAspectRatio:false,
     plugins:{legend:{labels:{color:'#9aa0a6',boxWidth:11,font:{size:10},
@@ -388,7 +388,7 @@ def main():
         if cl:
             highs, lows = r.get("highs"), r.get("lows")
             sq = squeeze_momentum(highs, lows, cl) if highs and lows else None
-            rs_s = mansfield_rs_series(cl, tw_bench_closes, 25) if tw_bench_closes else None
+            rs_s = mansfield_rs_series(cl, tw_bench_closes, 30) if tw_bench_closes else None
             charts[r["code"]] = {
                 "dates": r.get("dates", []), "close": cl, "ma20": ma_series(cl, 20),
                 "supertrend": supertrend(highs, lows, cl) if highs else None,
