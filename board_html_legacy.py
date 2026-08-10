@@ -154,16 +154,33 @@ def supertrend(highs, lows, closes, period=10, mult=3.0):
     return {"st": [round(x, 2) if x is not None else None for x in st], "dir": dr}
 
 
-def fetch_us_charts(tickers):
-    """yf.download 批次抓美股走勢（比逐檔 Ticker.history 穩、不易限流）"""
+def _align_rs(rs, n):
+    """mansfield_rs_series 內部右對齊、長度可能比 closes 短，補 None 到長度一致
+    （跟 backtest_position_sim.py 同一個坑同一個修法，2026-08-11）。"""
+    if rs is None:
+        return []
+    pad = n - len(rs)
+    vals = [None] * pad + list(rs) if pad > 0 else list(rs)
+    return [None if (v is None or v != v) else round(float(v), 2) for v in vals]
+
+
+def fetch_us_charts(tickers, bench="^GSPC"):
+    """yf.download 批次抓美股走勢（比逐檔 Ticker.history 穩、不易限流）
+    2026-08-11：期間 3mo→1y，附帶算 EXCEED CHARGE(squeeze) + RS(相對強弱)，
+    供看板產業鏈明細跟財報卡一樣多兩張圖（用戶要求）。"""
+    from technical_indicators import squeeze_momentum, mansfield_rs_series
     charts = {}
     if not tickers:
         return charts
     try:
-        data = yf.download(tickers, period="3mo", group_by="ticker",
+        data = yf.download(tickers, period="1y", group_by="ticker",
                            progress=False, threads=False, auto_adjust=True)
     except Exception:
         return charts
+    try:
+        bench_closes = yf.Ticker(bench).history(period="1y")["Close"].tolist()
+    except Exception:
+        bench_closes = []
     for t in tickers:
         try:
             h = data[t].dropna() if len(tickers) > 1 else data.dropna()
@@ -172,10 +189,17 @@ def fetch_us_charts(tickers):
                 continue
             highs = h["High"].round(2).tolist()
             lows = h["Low"].round(2).tolist()
+            n = len(closes)
+            sq = squeeze_momentum(highs, lows, closes)
+            rs_s = mansfield_rs_series(closes, bench_closes, 25) if bench_closes else None
+            rs_l = mansfield_rs_series(closes, bench_closes, 200) if bench_closes else None
             charts[t] = {"dates": [d.strftime("%m/%d") for d in h.index], "close": closes,
                          "ma5": ma_series(closes, 5), "ma10": ma_series(closes, 10),
                          "ma20": ma_series(closes, 20), "last": closes[-1],
-                         "supertrend": supertrend(highs, lows, closes)}
+                         "supertrend": supertrend(highs, lows, closes),
+                         "mom": [None if (v is None or v != v) else round(float(v), 2) for v in sq["momentum"]] if sq else [],
+                         "sq_on": [None if (isinstance(v, float) and v != v) else bool(v) for v in sq["squeeze_on"]] if sq else [],
+                         "rs_s": _align_rs(rs_s, n), "rs_l": _align_rs(rs_l, n)}
         except Exception:
             pass
     return charts

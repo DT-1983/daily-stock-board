@@ -25,7 +25,8 @@ from tw_report import convert
 from board_html_legacy import (parse_report, oneliner, CHAIN_ORDER, CHAIN_MAP,
                         CHAIN_THEMES, CHAIN_REPORTS, ma_series, supertrend,
                         fetch_us_charts, esc_tw, TW_JSON, OBIS,
-                        CHAIN_ICON, TW_NAME)  # alert_telegram.py 從本模組 import，要 re-export
+                        CHAIN_ICON, TW_NAME, _align_rs)  # alert_telegram.py 從本模組 import，要 re-export
+from technical_indicators import squeeze_momentum, mansfield_rs_series
 from board_theme import NAV, header as theme_header
 
 if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
@@ -135,6 +136,8 @@ h1 svg{flex-shrink:0}
  background:#101B2E}
 .detail.on{display:block}
 .chartbox{height:180px;margin-top:4px}
+.chartbox-sm{height:100px}
+.tclabel{font-size:11px;color:#8a8f98;margin:10px 0 4px}
 .dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:8px;margin-top:10px}
 .dcell{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 9px}
 .dcell .k{color:var(--dim);font-size:10px;letter-spacing:.3px}
@@ -260,7 +263,33 @@ function drawChart(id){const c=CHARTS[id];if(!c)return;
   options:{responsive:true,maintainAspectRatio:false,interaction:{intersect:false,mode:'index'},
    plugins:{legend:{labels:{color:'#94A3B8',boxWidth:11,font:{size:10}}}},
    scales:{x:{ticks:{color:'#64748B',maxTicksLimit:6,font:{size:9}},grid:{color:'#1E293B'}},
-           y:{ticks:{color:'#64748B',font:{size:9}},grid:{color:'#1E293B'}}}}});}
+           y:{ticks:{color:'#64748B',font:{size:9}},grid:{color:'#1E293B'}}}}});
+ drawExtra(id,c);}
+function drawExtra(id,c){
+ const elSq=document.getElementById('cvsq'+id),elRs=document.getElementById('cvrs'+id);
+ if(elSq&&c.mom&&c.mom.length){
+  const momColor=c.mom.map((v,i)=>{if(v==null)return'#2a2e35';const prev=i>0?c.mom[i-1]:v;
+   if(v>=0)return v>=prev?'#4ade80':'#1e7a45';return v<=prev?'#ff8a8a':'#8a2e2e';});
+  const dotColor=(c.sq_on||[]).map((on,i)=>{if(on)return'#EAB308';const m=c.mom[i];
+   return m==null?'#6b7280':(m>=0?'#4ade80':'#ff8a8a');});
+  new Chart(elSq,{type:'bar',data:{labels:c.dates,datasets:[
+    {label:'動能',data:c.mom,backgroundColor:momColor,order:2},
+    {label:'擠壓/釋放',type:'line',data:c.mom.map(()=>0),showLine:false,
+     pointRadius:2.6,pointBackgroundColor:dotColor,pointBorderWidth:0,order:1}]},
+   options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+    scales:{x:{ticks:{display:false},grid:{display:false}},
+     y:{ticks:{color:'#64748B',font:{size:9}},grid:{color:'#1E293B'}}}}});}
+ if(elRs&&((c.rs_s&&c.rs_s.length)||(c.rs_l&&c.rs_l.length))){
+  const base=(c.rs_s&&c.rs_s.length?c.rs_s:c.rs_l).map(()=>0);
+  const rsds=[{label:'基準線(0%)',data:base,borderColor:'#EF4444',borderWidth:2,pointRadius:0,order:3}];
+  if(c.rs_s&&c.rs_s.length)rsds.push({label:'短線25日',data:c.rs_s,borderColor:'#EAB308',borderWidth:1.4,pointRadius:0,tension:.15,order:1});
+  if(c.rs_l&&c.rs_l.length)rsds.push({label:'長線200日',data:c.rs_l,borderColor:'#4a9eff',borderWidth:1.4,pointRadius:0,tension:.15,order:2});
+  new Chart(elRs,{type:'line',data:{labels:c.dates,datasets:rsds},
+   options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{labels:{color:'#9aa0a6',boxWidth:11,font:{size:10},
+     filter:item=>item.text!=='基準線(0%)'}}},
+    scales:{x:{ticks:{display:false},grid:{display:false}},
+     y:{ticks:{color:'#64748B',font:{size:9}},grid:{color:'#1E293B'}}}}});}}
 function openM(i){$('#m'+i).classList.add('on');document.body.style.overflow='hidden';}
 function closeM(i){$('#m'+i).classList.remove('on');document.body.style.overflow='';}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')
@@ -296,6 +325,15 @@ def _theme_html(t):
 def _score_color(s):
     s = int(s) if str(s).isdigit() else 0
     return "#F8FAFC" if s >= 50 else "#94A3B8"      # 只分「較高/較低」兩階，不搶訊號的顏色
+
+
+# 2026-08-11：跟財報卡（technical_indicators.py）一樣多兩張圖——EXCEED CHARGE 動能柱、
+# RS 相對強弱。資料在 CHARTS[id] 裡（mom/sq_on/rs_s/rs_l），JS 的 drawChart() 沒資料會自動跳過畫布。
+def _extra_charts(rid):
+    return (f'<div class="tclabel">EXCEED CHARGE 動能柱</div>'
+            f'<div class="chartbox chartbox-sm"><canvas id="cvsq{rid}"></canvas></div>'
+            f'<div class="tclabel">RS 相對強弱</div>'
+            f'<div class="chartbox chartbox-sm"><canvas id="cvrs{rid}"></canvas></div>')
 
 
 def _row(rid, mkt, sig, tk, nm, score, one, detail_html):
@@ -339,13 +377,24 @@ def main():
         tw_by.setdefault(r["chain"], []).append(r)
 
     charts = fetch_us_charts([tk for _, tk, _, _ in stocks])
+    # 2026-08-11：台股 EXCEED CHARGE / RS 圖表要跟財報卡一樣多兩張圖（用戶要求）。
+    # tw_analyze.py 的 closes 只存近60天，不夠算RS長線200日——只算短線25日，長線留空。
+    try:
+        tw_bench_closes = yf.Ticker("^TWII").history(period="6mo")["Close"].tolist()
+    except Exception:
+        tw_bench_closes = []
     for r in tw_data:
         cl = r.get("closes")
         if cl:
+            highs, lows = r.get("highs"), r.get("lows")
+            sq = squeeze_momentum(highs, lows, cl) if highs and lows else None
+            rs_s = mansfield_rs_series(cl, tw_bench_closes, 25) if tw_bench_closes else None
             charts[r["code"]] = {
                 "dates": r.get("dates", []), "close": cl, "ma20": ma_series(cl, 20),
-                "supertrend": supertrend(r.get("highs"), r.get("lows"), cl)
-                if r.get("highs") else None}
+                "supertrend": supertrend(highs, lows, cl) if highs else None,
+                "mom": [None if (v is None or v != v) else round(float(v), 2) for v in sq["momentum"]] if sq else [],
+                "sq_on": [None if (isinstance(v, float) and v != v) else bool(v) for v in sq["squeeze_on"]] if sq else [],
+                "rs_s": _align_rs(rs_s, len(cl)) if rs_s is not None else [], "rs_l": []}
 
     import markdown as md
     mdc = md.Markdown(extensions=["tables", "sane_lists", "nl2br"])
@@ -359,7 +408,7 @@ def main():
         rows = []
         for sig, tk, nm, blk in us:
             det = mdc.convert(re.sub(r"(?s)^##.*?\n", "", blk, count=1)); mdc.reset()
-            ch = (f'<div class="chartbox"><canvas id="cv{tk}"></canvas></div>'
+            ch = (f'<div class="chartbox"><canvas id="cv{tk}"></canvas></div>{_extra_charts(tk)}'
                   if tk in charts else "")
             rows.append(_row(tk, "US", sig, tk, nm, us_score.get(tk, "—"),
                              oneliner(blk), ch + f'<div class="mdbody">{det}</div>'))
@@ -375,7 +424,8 @@ def main():
                 for lab, key in [("理由", "reason"), ("風險", "risk"),
                                  ("買點", "buy_point"), ("停損", "stop_loss")]
                 if r.get(key))
-            ch = f'<div class="chartbox"><canvas id="cv{code}"></canvas></div>' if code in charts else ""
+            ch = (f'<div class="chartbox"><canvas id="cv{code}"></canvas></div>{_extra_charts(code)}'
+                  if code in charts else "")
             # 2026-08-11：台股名字一律優先查 TW_NAME（中文），report_*.md 裡的 name
             # 是本機判讀當天自己查yfinance寫的、常常是英文——只當TW_NAME沒收錄時的備援
             nm = TW_NAME.get(code) or r.get("name", code)
