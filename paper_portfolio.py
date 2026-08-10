@@ -57,7 +57,7 @@ BTC_MAX_WEIGHT = 0.10          # 該鏈標的在跨鏈主倉的合計權重上�
 # 賣：三個相反同時成立才賣，純粹策略、刻意不加額外停損（用戶2026-08-11指示：
 #     不混入其他規則，才能單獨看清楚這套假說本身有沒有用）
 CHAIN_COMBO = "三指標合流"
-MAIN = [CHAIN_ALL, CHAIN_TREND, BUFFETT_NAME]
+MAIN = [CHAIN_ALL, CHAIN_TREND, BUFFETT_NAME, CHAIN_COMBO]
 FX_FALLBACK = 32.0              # USD/TWD 備援匯率
 
 
@@ -517,13 +517,20 @@ def main():
     fx = get_fx()
 
     # 三指標合流倉延遲建倉（2026-08-11新設）：跟其他倉不同，一開始不buy整個宇宙，
-    # 空手等第一個事件觸發訊號才進場——所以只需要在state裡補一個空倉位當起點
+    # 空手等第一個事件觸發訊號才進場——所以只需要在state裡補一個空倉位當起點。
+    # 同時補state["main"]（portfolio_html.py讀這個決定「主策略」分組，不是讀MAIN常數）。
+    dirty = False
     if CHAIN_COMBO not in state["portfolios"]:
         state["portfolios"][CHAIN_COMBO] = {
             "holdings": {}, "cash": BASE, "value": BASE, "pnl": 0.0, "ret": 0.0,
             "rebalanced": date, "history": [[date, BASE]]}
-        save(state)
         print(f"✅ 已建立「{CHAIN_COMBO}」倉，起始 ${BASE:,.0f}現金，等待第一個訊號")
+        dirty = True
+    if CHAIN_COMBO not in state.get("main", []):
+        state["main"] = MAIN
+        dirty = True
+    if dirty:
+        save(state)
 
     if cmd == "rebalance":
         allt = _all_tickers(state) | set(json.load(open(BUFFETT, encoding="utf-8")).keys())
