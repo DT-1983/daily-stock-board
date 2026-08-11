@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-11 11:05",
+ "updated": "2026-08-11 16:13",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,16 +38,16 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "08/11",
-   "close": 44988.72,
-   "chg_pct": 0.13
+   "close": 45120.72,
+   "chg_pct": 0.43
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "08/11",
-   "close": 32.24,
-   "chg_pct": 0.01
+   "close": 32.25,
+   "chg_pct": 0.06
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "新光三越進駐北車商場 吳昕陽、吳昕昌兄弟首度談遠景",
+   "title": "矽品雲林斗六新廠2028年啟用 將導入CoWoS製程",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6570548",
-   "ts": "08/11 11:00"
+   "url": "https://news.cnyes.com/news/id/6570929",
+   "ts": "08/11 16:11"
   },
   {
-   "title": "台股站穩季線有利波段行情 高含積ETF吹反攻號角",
+   "title": "矽品雲林斗六新廠2028年啟用 將導入CoWoS製程",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6570929",
+   "ts": "08/11 16:11"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：新日興(3376-TW)目標價調升至272元，幅度約4.21%",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6570534",
-   "ts": "08/11 11:00"
+   "url": "https://news.cnyes.com/news/id/6570941",
+   "ts": "08/11 16:10"
   },
   {
-   "title": "貝萊德Q2末持倉名單！狂押AI全產業鏈 美光、AMD、設備股成加碼重心",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6570512",
-   "ts": "08/11 11:00"
-  },
-  {
-   "title": "威力德受惠檢測需求穩健成長 上半年獲利1.32億元EPS 2.9元創同期高",
+   "title": "矽品投資千億建CoWoS雲林新廠 龔明鑫：打造中部先進封裝聚落",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6570540",
-   "ts": "08/11 10:59"
+   "url": "https://news.cnyes.com/news/id/6570928",
+   "ts": "08/11 16:10"
   },
   {
-   "title": "正文1.6T光模組預計Q4量產 可望因地緣政治與資安防護爭取轉單",
+   "title": "華許喊2%通膨目標能守住？美債恐藏長期風險、投資人小心通膨「偷走」財富",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6570553",
+   "ts": "08/11 16:10"
+  },
+  {
+   "title": "價格戰升溫！Anthropic取消Sonnet 5漲價50% AI代理成本有望趨穩",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6570021",
+   "ts": "08/11 16:00"
+  },
+  {
+   "title": "〈南茂法說〉下半年營運穩健樂觀 宣布啟動兩年大擴產計畫",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6570528",
-   "ts": "08/11 10:57"
+   "url": "https://news.cnyes.com/news/id/6570849",
+   "ts": "08/11 15:57"
   },
   {
-   "title": "金融建言白皮書31建言 籲當沖降稅再延10年、開放外幣繳費及穩定幣支付",
+   "title": "永擎7月賺5.05億元年增11倍 EPS 7.18元賺贏Q2一半",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6570511",
-   "ts": "08/11 10:49"
+   "url": "https://news.cnyes.com/news/id/6570831",
+   "ts": "08/11 15:52"
   },
   {
-   "title": "台積電砸640億美元擴產、英特爾增資150億美元拚翻身！AI半導體資本戰誰會勝出？",
+   "title": "通用出售印第安納電池廠49.99%持股！由三星SDI接手轉攻儲能",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6570440",
-   "ts": "08/11 10:31"
+   "url": "https://news.cnyes.com/news/id/6570681",
+   "ts": "08/11 15:46"
   },
   {
-   "title": "就業市場壞消息就是好消息？分析師喊標普上看8500點",
+   "title": "今年上半狂虧逾6億美元！川普媒體科技集團放棄加密貨幣 豪賭核融合技術",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6569951",
-   "ts": "08/11 10:30"
-  },
-  {
-   "title": "資料中心引爆民怨！ 艾克曼力挺Ramaswamy「Ohioans First」居民免電費、降房產稅",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6570330",
-   "ts": "08/11 10:20"
-  },
-  {
-   "title": "貝佐斯等超級富豪抱團 即將收購英超球隊股權",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6570043",
-   "ts": "08/11 10:15"
+   "url": "https://news.cnyes.com/news/id/6570747",
+   "ts": "08/11 15:40"
   }
  ],
  "inst": {
-  "date": "08/10",
-  "total_yi": 736.1,
-  "foreign_yi": 517.4,
-  "trust_yi": 34.0
+  "date": "08/11",
+  "total_yi": 281.8,
+  "foreign_yi": 223.3,
+  "trust_yi": 33.9
  }
 }
