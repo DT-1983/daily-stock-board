@@ -1,130 +1,130 @@
 {
- "updated": "2026-08-11 16:13",
+ "updated": "2026-08-12 11:25",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "08/10",
-   "close": 7753.11,
-   "chg_pct": -0.06
+   "date": "08/11",
+   "close": 7728.2,
+   "chg_pct": -0.32
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "08/10",
-   "close": 26605.36,
-   "chg_pct": -0.32
+   "date": "08/11",
+   "close": 26445.45,
+   "chg_pct": -0.6
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "08/10",
-   "close": 53975.98,
-   "chg_pct": -0.11
+   "date": "08/11",
+   "close": 53791.85,
+   "chg_pct": -0.34
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "08/10",
-   "close": 11993.86,
-   "chg_pct": -2.94
+   "date": "08/11",
+   "close": 12098.47,
+   "chg_pct": 0.87
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "08/11",
-   "close": 45120.72,
-   "chg_pct": 0.43
+   "date": "08/12",
+   "close": 45476.74,
+   "chg_pct": 0.79
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "08/11",
-   "close": 32.25,
-   "chg_pct": 0.06
+   "date": "08/12",
+   "close": 32.2,
+   "chg_pct": -0.08
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "08/10",
-   "close": 4.7,
+   "date": "08/11",
+   "close": 4.68,
    "fmt": "yield",
-   "chg_bp": 3.9
+   "chg_bp": -1.5
   }
  ],
  "news": [
   {
-   "title": "矽品雲林斗六新廠2028年啟用 將導入CoWoS製程",
+   "title": "立凱-KY擬斥10億元建新廠 估2027年下半年貢獻營收",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6570929",
-   "ts": "08/11 16:11"
+   "url": "https://news.cnyes.com/news/id/6572660",
+   "ts": "08/12 11:22"
   },
   {
-   "title": "矽品雲林斗六新廠2028年啟用 將導入CoWoS製程",
+   "title": "馬斯克提出具體時間表 五年後AI佔SpaceX價值99%",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6570929",
-   "ts": "08/11 16:11"
+   "url": "https://news.cnyes.com/news/id/6572673",
+   "ts": "08/12 11:15"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：新日興(3376-TW)目標價調升至272元，幅度約4.21%",
+   "title": "美股夏季派對遇亂流 美債殖利率飆升成最大威脅",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6571926",
+   "ts": "08/12 11:10"
+  },
+  {
+   "title": "力積電上半年配息0.23元 近3年來首度配息 股價強攻漲停表態",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6570941",
-   "ts": "08/11 16:10"
+   "url": "https://news.cnyes.com/news/id/6563982",
+   "ts": "08/12 11:08"
   },
   {
-   "title": "矽品投資千億建CoWoS雲林新廠 龔明鑫：打造中部先進封裝聚落",
+   "title": "2028年AI需求恐「震驚世界」！ 亞馬遜CEO示警：到2027年算力都不夠用 現在砸2200億美元還是不夠",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6572560",
+   "ts": "08/12 11:02"
+  },
+  {
+   "title": "無懼回調！外資狂增持中際旭創H股 小摩持股衝15.6% 高盛、大摩亦加碼至12.19%及6.23%",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6572166",
+   "ts": "08/12 11:02"
+  },
+  {
+   "title": "多家早午餐和速食業業績衝高 揚秦：推動加盟「複數店」策略",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6570928",
-   "ts": "08/11 16:10"
+   "url": "https://news.cnyes.com/news/id/6572644",
+   "ts": "08/12 11:00"
   },
   {
-   "title": "華許喊2%通膨目標能守住？美債恐藏長期風險、投資人小心通膨「偷走」財富",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6570553",
-   "ts": "08/11 16:10"
-  },
-  {
-   "title": "價格戰升溫！Anthropic取消Sonnet 5漲價50% AI代理成本有望趨穩",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6570021",
-   "ts": "08/11 16:00"
-  },
-  {
-   "title": "〈南茂法說〉下半年營運穩健樂觀 宣布啟動兩年大擴產計畫",
+   "title": "人難找又快閃？104報告曝招募3大難！逾97%企業卡關「這事」成留才關鍵",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6570849",
-   "ts": "08/11 15:57"
+   "url": "https://news.cnyes.com/news/id/6572639",
+   "ts": "08/12 11:00"
   },
   {
-   "title": "永擎7月賺5.05億元年增11倍 EPS 7.18元賺贏Q2一半",
+   "title": "AI不只炒晶片了！大摩看好智慧硬體 大幅調升LG目標價",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6572286",
+   "ts": "08/12 10:46"
+  },
+  {
+   "title": "〈房產〉大學畢業未滿30歲就能成家 這一族群首季在桃園現踪最多",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6570831",
-   "ts": "08/11 15:52"
-  },
-  {
-   "title": "通用出售印第安納電池廠49.99%持股！由三星SDI接手轉攻儲能",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6570681",
-   "ts": "08/11 15:46"
-  },
-  {
-   "title": "今年上半狂虧逾6億美元！川普媒體科技集團放棄加密貨幣 豪賭核融合技術",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6570747",
-   "ts": "08/11 15:40"
+   "url": "https://news.cnyes.com/news/id/6572627",
+   "ts": "08/12 10:45"
   }
  ],
  "inst": {
   "date": "08/11",
-  "total_yi": 281.8,
+  "total_yi": 280.1,
   "foreign_yi": 223.3,
-  "trust_yi": 33.9
+  "trust_yi": 32.2
  }
 }
