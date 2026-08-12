@@ -54,11 +54,16 @@ def _tw_core(code, n=8):
     這批 yfinance 卡在 Q1 2026，FinMind 也卡在 Q1 2026（一樣舊）；但 2330 反而
     yfinance 已經有 Q2 2026、FinMind 還停在 Q1 2026（FinMind 比較舊）。
     不能寫死「TW 一律改用 FinMind」，只能兩邊都查、取真正比較新的那個。
-    只覆蓋損益表項目（營收/毛利/營業利益/淨利/EPS）；FinMind 沒有現金流量表，
-    ocf/capex/fcf 覆蓋時清成 None，避免跟新季度損益表混搭出不同季度的假一致。"""
+    損益表項目（營收/毛利/營業利益/淨利/EPS）覆蓋用 TaiwanStockFinancialStatements。
+    2026-08-12 補：FinMind 另有 TaiwanStockCashFlowsStatement，之前誤以為沒有
+    現金流量表所以把 ocf/capex/fcf 清成 None——其實有，補上算 OCF/CapEx/FCF。
+    現金流量表跟損益表兩個 dataset 各自查詢，季底日期理論上一致，用損益表選定的
+    cur_date/yoy_date 去查現金流量表，查不到就是那個 field 本來沒揭露（None），
+    不強行湊別的日期。"""
     try:
         start = (datetime.now() - timedelta(days=95 * (n + 2))).strftime("%Y-%m-%d")
         d = FR._fm("TaiwanStockFinancialStatements", code, start)
+        cf = FR._fm("TaiwanStockCashFlowsStatement", code, start)
     except Exception:
         return None
     if not d:
@@ -76,10 +81,27 @@ def _tw_core(code, n=8):
         pct = ((a / b - 1) * 100) if (a is not None and b not in (None, 0)) else None
         return {"cur": a, "prev": b, "yoy": pct}
 
+    cf_by_date = {}
+    for x in (cf or []):
+        cf_by_date.setdefault(x["date"], {})[x["type"]] = x["value"]
+
+    def cf_pair(field):
+        a = cf_by_date.get(cur_date, {}).get(field)
+        b = cf_by_date.get(yoy_date, {}).get(field) if yoy_date else None
+        pct = ((a / b - 1) * 100) if (a is not None and b not in (None, 0)) else None
+        return {"cur": a, "prev": b, "yoy": pct}
+
+    ocf = cf_pair("CashFlowsFromOperatingActivities")
+    capex = cf_pair("PropertyAndPlantAndEquipment")  # 已是負值(現金流出)，跟 yfinance 口徑一致
+    fcf_cur = (ocf["cur"] + capex["cur"]) if (ocf["cur"] is not None and capex["cur"] is not None) else None
+    fcf_prev = (ocf["prev"] + capex["prev"]) if (ocf["prev"] is not None and capex["prev"] is not None) else None
+    fcf_pct = ((fcf_cur / fcf_prev - 1) * 100) if (fcf_cur is not None and fcf_prev not in (None, 0)) else None
+
     return {"cur_date": cur_date, "yoy_date": yoy_date, "partial_yoy": yoy_date is None,
             "revenue": pair("Revenue"), "gross": pair("GrossProfit"),
             "op_income": pair("OperatingIncome"), "net_income": pair("IncomeAfterTaxes"),
-            "eps": pair("EPS")}
+            "eps": pair("EPS"), "ocf": ocf, "capex": capex,
+            "fcf": {"cur": fcf_cur, "prev": fcf_prev, "yoy": fcf_pct}}
 
 
 def fetch(ticker: str) -> dict:
@@ -164,7 +186,9 @@ def fetch(ticker: str) -> dict:
             d["op_income"] = tw_core["op_income"]
             d["net_income"] = tw_core["net_income"]
             d["eps"] = tw_core["eps"]
-            d["ocf"] = d["capex"] = d["fcf"] = {"cur": None, "prev": None, "yoy": None}
+            d["ocf"] = tw_core["ocf"]
+            d["capex"] = tw_core["capex"]
+            d["fcf"] = tw_core["fcf"]
 
     # 毛利率 / 營益率（自己算，不靠 info 的口徑）
     rev = d["revenue"]["cur"]
