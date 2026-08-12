@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-12 11:25",
+ "updated": "2026-08-12 16:36",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,16 +38,16 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "08/12",
-   "close": 45476.74,
-   "chg_pct": 0.79
+   "close": 45518.07,
+   "chg_pct": 0.88
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "08/12",
-   "close": 32.2,
-   "chg_pct": -0.08
+   "close": 32.21,
+   "chg_pct": -0.07
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "立凱-KY擬斥10億元建新廠 估2027年下半年貢獻營收",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6572660",
-   "ts": "08/12 11:22"
-  },
-  {
-   "title": "馬斯克提出具體時間表 五年後AI佔SpaceX價值99%",
+   "title": "記憶體長約擴散至二三線！長鑫拒蘋果降價、SanDisk最長鎖5年",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6572673",
-   "ts": "08/12 11:15"
+   "url": "https://news.cnyes.com/news/id/6572325",
+   "ts": "08/12 16:20"
   },
   {
-   "title": "美股夏季派對遇亂流 美債殖利率飆升成最大威脅",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6571926",
-   "ts": "08/12 11:10"
-  },
-  {
-   "title": "力積電上半年配息0.23元 近3年來首度配息 股價強攻漲停表態",
+   "title": "車用透鏡與AI伺服器雙引擎發威 雷笛克光學Q3營運看好更上層樓",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6563982",
-   "ts": "08/12 11:08"
+   "url": "https://news.cnyes.com/news/id/6573070",
+   "ts": "08/12 16:19"
   },
   {
-   "title": "2028年AI需求恐「震驚世界」！ 亞馬遜CEO示警：到2027年算力都不夠用 現在砸2200億美元還是不夠",
+   "title": "仍有望漲350%！大摩預測SpaceX股價衝擊600美元 但前提條件極為苛刻",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6572560",
-   "ts": "08/12 11:02"
+   "url": "https://news.cnyes.com/news/id/6572947",
+   "ts": "08/12 16:10"
   },
   {
-   "title": "無懼回調！外資狂增持中際旭創H股 小摩持股衝15.6% 高盛、大摩亦加碼至12.19%及6.23%",
+   "title": "Gogolook三率三升 Q2獲利創新高 上半年EPS達3.33元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6572978",
+   "ts": "08/12 16:05"
+  },
+  {
+   "title": "榮成轉型為控股公司分割工紙及紙箱事業 暫訂明年1月完成",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6572977",
+   "ts": "08/12 16:02"
+  },
+  {
+   "title": "川普媒體戰略轉向：削減多元業務 每月10萬美元賣「總統訊息」優先存取權",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6572166",
-   "ts": "08/12 11:02"
+   "url": "https://news.cnyes.com/news/id/6572909",
+   "ts": "08/12 15:50"
   },
   {
-   "title": "多家早午餐和速食業業績衝高 揚秦：推動加盟「複數店」策略",
+   "title": "〈鴻海法說〉Q2純益季增2成 EPS4.27元 上半年每股賺7.84元均創同期高",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6572644",
-   "ts": "08/12 11:00"
+   "url": "https://news.cnyes.com/news/id/6572962",
+   "ts": "08/12 15:44"
   },
   {
-   "title": "人難找又快閃？104報告曝招募3大難！逾97%企業卡關「這事」成留才關鍵",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6572639",
-   "ts": "08/12 11:00"
-  },
-  {
-   "title": "AI不只炒晶片了！大摩看好智慧硬體 大幅調升LG目標價",
+   "title": "日三大車廠Q1復甦！豐田淨利飆75.6%、本田129%、日產終於轉盈  但賣車主業利潤全都掉",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6572286",
-   "ts": "08/12 10:46"
+   "url": "https://news.cnyes.com/news/id/6572872",
+   "ts": "08/12 15:30"
   },
   {
-   "title": "〈房產〉大學畢業未滿30歲就能成家 這一族群首季在桃園現踪最多",
+   "title": "公公併恐引人才逃亡潮？官、公股經理年薪差150萬！董瑞斌拋合併成功3要件",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6572627",
-   "ts": "08/12 10:45"
+   "url": "https://news.cnyes.com/news/id/6572876",
+   "ts": "08/12 15:11"
+  },
+  {
+   "title": "記憶體漲不動了怎麼辦？SK海力士、三星找到新解方",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6572348",
+   "ts": "08/12 15:10"
   }
  ],
  "inst": {
-  "date": "08/11",
-  "total_yi": 280.1,
-  "foreign_yi": 223.3,
-  "trust_yi": 32.2
+  "date": "08/12",
+  "total_yi": 225.2,
+  "foreign_yi": 110.2,
+  "trust_yi": 28.0
  }
 }
