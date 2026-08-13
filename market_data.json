@@ -1,130 +1,130 @@
 {
- "updated": "2026-08-12 16:36",
+ "updated": "2026-08-13 11:28",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "08/11",
-   "close": 7728.2,
-   "chg_pct": -0.32
+   "date": "08/12",
+   "close": 7748.5,
+   "chg_pct": 0.26
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "08/11",
-   "close": 26445.45,
-   "chg_pct": -0.6
+   "date": "08/12",
+   "close": 26588.49,
+   "chg_pct": 0.54
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "08/11",
-   "close": 53791.85,
-   "chg_pct": -0.34
+   "date": "08/12",
+   "close": 53770.3,
+   "chg_pct": -0.04
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "08/11",
-   "close": 12098.47,
-   "chg_pct": 0.87
+   "date": "08/12",
+   "close": 12399.38,
+   "chg_pct": 2.49
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "08/12",
-   "close": 45518.07,
-   "chg_pct": 0.88
+   "date": "08/13",
+   "close": 46011.3,
+   "chg_pct": 1.08
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "08/12",
-   "close": 32.21,
-   "chg_pct": -0.07
+   "date": "08/13",
+   "close": 32.14,
+   "chg_pct": -0.21
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "08/11",
+   "date": "08/12",
    "close": 4.68,
    "fmt": "yield",
-   "chg_bp": -1.5
+   "chg_bp": -0.2
   }
  ],
  "news": [
   {
-   "title": "記憶體長約擴散至二三線！長鑫拒蘋果降價、SanDisk最長鎖5年",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6572325",
-   "ts": "08/12 16:20"
-  },
-  {
-   "title": "車用透鏡與AI伺服器雙引擎發威 雷笛克光學Q3營運看好更上層樓",
+   "title": "虛擬資產法制化 RWA代幣化掀巨浪 安永揭金融業和VASP是「海景第一排」面4大挑戰",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6573070",
-   "ts": "08/12 16:19"
+   "url": "https://news.cnyes.com/news/id/6574952",
+   "ts": "08/13 11:26"
   },
   {
-   "title": "仍有望漲350%！大摩預測SpaceX股價衝擊600美元 但前提條件極為苛刻",
+   "title": "白銀多頭列車要加速！花旗喊上看90美元 潛在漲幅近4成",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6572947",
-   "ts": "08/12 16:10"
+   "url": "https://news.cnyes.com/news/id/6574347",
+   "ts": "08/13 11:10"
   },
   {
-   "title": "Gogolook三率三升 Q2獲利創新高 上半年EPS達3.33元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6572978",
-   "ts": "08/12 16:05"
-  },
-  {
-   "title": "榮成轉型為控股公司分割工紙及紙箱事業 暫訂明年1月完成",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6572977",
-   "ts": "08/12 16:02"
-  },
-  {
-   "title": "川普媒體戰略轉向：削減多元業務 每月10萬美元賣「總統訊息」優先存取權",
+   "title": "月底生效！獲MSCI中國指數納入 智譜早盤在港股飆逾6%",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6572909",
-   "ts": "08/12 15:50"
+   "url": "https://news.cnyes.com/news/id/6574912",
+   "ts": "08/13 11:05"
   },
   {
-   "title": "〈鴻海法說〉Q2純益季增2成 EPS4.27元 上半年每股賺7.84元均創同期高",
+   "title": "星宇打造第二營運基地 台中-名古屋航線10/25開航",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6572962",
-   "ts": "08/12 15:44"
+   "url": "https://news.cnyes.com/news/id/6574939",
+   "ts": "08/13 11:01"
   },
   {
-   "title": "日三大車廠Q1復甦！豐田淨利飆75.6%、本田129%、日產終於轉盈  但賣車主業利潤全都掉",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6572872",
-   "ts": "08/12 15:30"
-  },
-  {
-   "title": "公公併恐引人才逃亡潮？官、公股經理年薪差150萬！董瑞斌拋合併成功3要件",
+   "title": "高明鐵H1業績已超越去年全年並轉虧盈淨利1.21億元EPS達2.9元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6572876",
-   "ts": "08/12 15:11"
+   "url": "https://news.cnyes.com/news/id/6574927",
+   "ts": "08/13 10:56"
   },
   {
-   "title": "記憶體漲不動了怎麼辦？SK海力士、三星找到新解方",
+   "title": "量產延至2028！三星電機玻璃基板認證受挫 恢復測試至少耗時一年",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6572348",
-   "ts": "08/12 15:10"
+   "url": "https://news.cnyes.com/news/id/6574896",
+   "ts": "08/13 10:50"
+  },
+  {
+   "title": "Anthropic傳砸60億美元買Decart 史上最大收購補強AI算力",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6574893",
+   "ts": "08/13 10:50"
+  },
+  {
+   "title": "〈焦點股〉美降息預期+AI加持 00988A漲逾4%居所有ETF之冠",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6570945",
+   "ts": "08/13 10:46"
+  },
+  {
+   "title": "東森上半年獲利年增7% 將辦現增募資20億元推動三大事業",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6574873",
+   "ts": "08/13 10:45"
+  },
+  {
+   "title": "硬體股大幅跑贏標普500！高盛最看好這三家公司",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6574348",
+   "ts": "08/13 10:30"
   }
  ],
  "inst": {
   "date": "08/12",
-  "total_yi": 225.2,
+  "total_yi": 220.0,
   "foreign_yi": 110.2,
-  "trust_yi": 28.0
+  "trust_yi": 22.8
  }
 }
