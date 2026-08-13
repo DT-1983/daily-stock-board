@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-13 11:28",
+ "updated": "2026-08-13 16:40",
  "indices": [
   {
    "sym": "^GSPC",
@@ -22,7 +22,7 @@
    "name": "道瓊工業",
    "grp": "US",
    "date": "08/12",
-   "close": 53770.3,
+   "close": 53770.27,
    "chg_pct": -0.04
   },
   {
@@ -38,8 +38,8 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "08/13",
-   "close": 46011.3,
-   "chg_pct": 1.08
+   "close": 46021.48,
+   "chg_pct": 1.11
   },
   {
    "sym": "TWD=X",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "虛擬資產法制化 RWA代幣化掀巨浪 安永揭金融業和VASP是「海景第一排」面4大挑戰",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6574952",
-   "ts": "08/13 11:26"
-  },
-  {
-   "title": "白銀多頭列車要加速！花旗喊上看90美元 潛在漲幅近4成",
+   "title": "思科AI需求推升營收展望，但硬體占比攀升、零組件成本高檔壓抑利潤率",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6574347",
-   "ts": "08/13 11:10"
+   "url": "https://news.cnyes.com/news/id/6575359",
+   "ts": "08/13 16:30"
   },
   {
-   "title": "月底生效！獲MSCI中國指數納入 智譜早盤在港股飆逾6%",
+   "title": "〈陸股盤後〉市場失望央行未釋降息訊號 三大指數開高走低",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6574912",
-   "ts": "08/13 11:05"
+   "url": "https://news.cnyes.com/news/id/6575162",
+   "ts": "08/13 16:30"
   },
   {
-   "title": "星宇打造第二營運基地 台中-名古屋航線10/25開航",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6574939",
-   "ts": "08/13 11:01"
-  },
-  {
-   "title": "高明鐵H1業績已超越去年全年並轉虧盈淨利1.21億元EPS達2.9元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6574927",
-   "ts": "08/13 10:56"
-  },
-  {
-   "title": "量產延至2028！三星電機玻璃基板認證受挫 恢復測試至少耗時一年",
+   "title": "做大空頭不如當網紅？貝瑞做空AI慘遭軋 電子報反成億元金雞母",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6574896",
-   "ts": "08/13 10:50"
+   "url": "https://news.cnyes.com/news/id/6574550",
+   "ts": "08/13 16:20"
   },
   {
-   "title": "Anthropic傳砸60億美元買Decart 史上最大收購補強AI算力",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6574893",
-   "ts": "08/13 10:50"
-  },
-  {
-   "title": "〈焦點股〉美降息預期+AI加持 00988A漲逾4%居所有ETF之冠",
+   "title": "〈玉山金法說〉黃男州曝股利政策二大原則 海外獲利占比拚3成以上",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6570945",
-   "ts": "08/13 10:46"
+   "url": "https://news.cnyes.com/news/id/6575246",
+   "ts": "08/13 16:15"
   },
   {
-   "title": "東森上半年獲利年增7% 將辦現增募資20億元推動三大事業",
+   "title": "鉅亨速報 - Factset 最新調查：奇鋐(3017-TW)EPS預估上修至102.37元，預估目標價為3880元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6574873",
-   "ts": "08/13 10:45"
+   "url": "https://news.cnyes.com/news/id/6575345",
+   "ts": "08/13 16:10"
   },
   {
-   "title": "硬體股大幅跑贏標普500！高盛最看好這三家公司",
+   "title": "鉅亨速報 - Factset 最新調查：華碩(2357-TW)EPS預估上修至56.27元，預估目標價為860元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6575344",
+   "ts": "08/13 16:10"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：上銀(2049-TW)目標價調升至415.5元，幅度約6.54%",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6575343",
+   "ts": "08/13 16:10"
+  },
+  {
+   "title": "〈房產〉預售市場買氣連續18個月探底 6月揭露量僅剩高峰期2成",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6575260",
+   "ts": "08/13 16:01"
+  },
+  {
+   "title": "南韓KOSPI指數收漲3.6% 已連續4日上漲",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6574348",
-   "ts": "08/13 10:30"
+   "url": "https://news.cnyes.com/news/id/6575254",
+   "ts": "08/13 15:50"
+  },
+  {
+   "title": "FedEx、Amazon加速導入機械手臂物流業自動化從分揀走向裝卸環節",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6575262",
+   "ts": "08/13 15:30"
   }
  ],
  "inst": {
-  "date": "08/12",
-  "total_yi": 220.0,
-  "foreign_yi": 110.2,
-  "trust_yi": 22.8
+  "date": "08/13",
+  "total_yi": 907.6,
+  "foreign_yi": 756.9,
+  "trust_yi": 0.0
  }
 }
