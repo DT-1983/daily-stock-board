@@ -1,130 +1,130 @@
 {
- "updated": "2026-08-13 16:40",
+ "updated": "2026-08-14 11:26",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "08/12",
-   "close": 7748.5,
-   "chg_pct": 0.26
+   "date": "08/13",
+   "close": 7798.99,
+   "chg_pct": 0.65
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "08/12",
-   "close": 26588.49,
-   "chg_pct": 0.54
+   "date": "08/13",
+   "close": 26803.03,
+   "chg_pct": 0.81
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "08/12",
-   "close": 53770.27,
-   "chg_pct": -0.04
+   "date": "08/13",
+   "close": 53839.99,
+   "chg_pct": 0.13
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "08/12",
-   "close": 12399.38,
-   "chg_pct": 2.49
+   "date": "08/13",
+   "close": 12456.0,
+   "chg_pct": 0.46
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "08/13",
-   "close": 46021.48,
-   "chg_pct": 1.11
+   "date": "08/14",
+   "close": 46041.5,
+   "chg_pct": 0.04
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "08/13",
-   "close": 32.14,
-   "chg_pct": -0.21
+   "date": "08/14",
+   "close": 31.95,
+   "chg_pct": -0.8
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "08/12",
-   "close": 4.68,
+   "date": "08/13",
+   "close": 4.64,
    "fmt": "yield",
-   "chg_bp": -0.2
+   "chg_bp": -4.1
   }
  ],
  "news": [
   {
-   "title": "思科AI需求推升營收展望，但硬體占比攀升、零組件成本高檔壓抑利潤率",
+   "title": "AI推理成最大引擎！閃迪3大目標 營收中高雙位數成長、毛利率80%、現金全還股東",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6575359",
-   "ts": "08/13 16:30"
+   "url": "https://news.cnyes.com/news/id/6576225",
+   "ts": "08/14 11:17"
   },
   {
-   "title": "〈陸股盤後〉市場失望央行未釋降息訊號 三大指數開高走低",
+   "title": "美時受收購成本與匯損影響 上半年稅後純益12億元年減逾4成",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6573693",
+   "ts": "08/14 11:08"
+  },
+  {
+   "title": "AI熱潮延燒 10大科技股EPS驚喜出爐 Sandisk、美光包辦前兩名",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6575162",
-   "ts": "08/13 16:30"
+   "url": "https://news.cnyes.com/news/id/6576645",
+   "ts": "08/14 10:55"
   },
   {
-   "title": "做大空頭不如當網紅？貝瑞做空AI慘遭軋 電子報反成億元金雞母",
+   "title": "SK Hynix掀AI記憶體熱潮 10檔槓桿ETF搶搭行情",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6574550",
-   "ts": "08/13 16:20"
+   "url": "https://news.cnyes.com/news/id/6576478",
+   "ts": "08/14 10:42"
   },
   {
-   "title": "〈玉山金法說〉黃男州曝股利政策二大原則 海外獲利占比拚3成以上",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6575246",
-   "ts": "08/13 16:15"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：奇鋐(3017-TW)EPS預估上修至102.37元，預估目標價為3880元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6575345",
-   "ts": "08/13 16:10"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：華碩(2357-TW)EPS預估上修至56.27元，預估目標價為860元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6575344",
-   "ts": "08/13 16:10"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：上銀(2049-TW)目標價調升至415.5元，幅度約6.54%",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6575343",
-   "ts": "08/13 16:10"
-  },
-  {
-   "title": "〈房產〉預售市場買氣連續18個月探底 6月揭露量僅剩高峰期2成",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6575260",
-   "ts": "08/13 16:01"
-  },
-  {
-   "title": "南韓KOSPI指數收漲3.6% 已連續4日上漲",
+   "title": "韓國出手管槓桿ETF 門檻暴漲3倍、沒模擬交易不能買",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6575254",
-   "ts": "08/13 15:50"
+   "url": "https://news.cnyes.com/news/id/6576331",
+   "ts": "08/14 10:40"
   },
   {
-   "title": "FedEx、Amazon加速導入機械手臂物流業自動化從分揀走向裝卸環節",
+   "title": "今國光H1獲利超越去年全年EPS 1.53元 在台建置紅外線鏡頭Q4量產",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6576620",
+   "ts": "08/14 10:37"
+  },
+  {
+   "title": "干預越多、空頭笑越大聲！高盛：日本15年來最大干預引發日元套利部位大幅平倉",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6575262",
-   "ts": "08/13 15:30"
+   "url": "https://news.cnyes.com/news/id/6576538",
+   "ts": "08/14 10:30"
+  },
+  {
+   "title": "〈焦點股〉萬海上半年獲利近翻倍 股價站上9字頭創5個月來新高",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6576603",
+   "ts": "08/14 10:25"
+  },
+  {
+   "title": "台驊空運獲利增 H1 EPS 3.84元 暫不分派上半年盈餘",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6576515",
+   "ts": "08/14 09:55"
+  },
+  {
+   "title": "〈台股開盤〉台積電熄火聯發科、鴻海挺身  漲逾300點衝高至46402點",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6576459",
+   "ts": "08/14 09:37"
   }
  ],
  "inst": {
   "date": "08/13",
-  "total_yi": 907.6,
+  "total_yi": 892.5,
   "foreign_yi": 756.9,
-  "trust_yi": 0.0
+  "trust_yi": -15.0
  }
 }
