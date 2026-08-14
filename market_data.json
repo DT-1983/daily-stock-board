@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-14 11:26",
+ "updated": "2026-08-14 16:24",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,16 +38,16 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "08/14",
-   "close": 46041.5,
-   "chg_pct": 0.04
+   "close": 45811.01,
+   "chg_pct": -0.46
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "08/14",
-   "close": 31.95,
-   "chg_pct": -0.8
+   "close": 31.99,
+   "chg_pct": -0.67
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "AI推理成最大引擎！閃迪3大目標 營收中高雙位數成長、毛利率80%、現金全還股東",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6576225",
-   "ts": "08/14 11:17"
-  },
-  {
-   "title": "美時受收購成本與匯損影響 上半年稅後純益12億元年減逾4成",
+   "title": "市場需求旺 尖點大力開拓PCB鑽針新產能估到2028年成長100%",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6573693",
-   "ts": "08/14 11:08"
+   "url": "https://news.cnyes.com/news/id/6577060",
+   "ts": "08/14 16:15"
   },
   {
-   "title": "AI熱潮延燒 10大科技股EPS驚喜出爐 Sandisk、美光包辦前兩名",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6576645",
-   "ts": "08/14 10:55"
-  },
-  {
-   "title": "SK Hynix掀AI記憶體熱潮 10檔槓桿ETF搶搭行情",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6576478",
-   "ts": "08/14 10:42"
-  },
-  {
-   "title": "韓國出手管槓桿ETF 門檻暴漲3倍、沒模擬交易不能買",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6576331",
-   "ts": "08/14 10:40"
-  },
-  {
-   "title": "今國光H1獲利超越去年全年EPS 1.53元 在台建置紅外線鏡頭Q4量產",
+   "title": "〈華紙法說〉木片與運輸價格居高不下推升成本 將減產至10月",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6576620",
-   "ts": "08/14 10:37"
+   "url": "https://news.cnyes.com/news/id/6577067",
+   "ts": "08/14 16:10"
   },
   {
-   "title": "干預越多、空頭笑越大聲！高盛：日本15年來最大干預引發日元套利部位大幅平倉",
+   "title": "〈航運指數〉SCFI連3漲 美東線運價有望衝破1萬美元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6577058",
+   "ts": "08/14 16:05"
+  },
+  {
+   "title": "中鴻9月內銷開平盤 鋼價底部支撐力道增強",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6577042",
+   "ts": "08/14 16:03"
+  },
+  {
+   "title": "燁聯唐榮聯手反擊！財政部立案 對越南進口特定冷軋不銹鋼展開反傾銷調查",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6577037",
+   "ts": "08/14 15:58"
+  },
+  {
+   "title": "日銀傳最快9月升息 並考慮加速緊縮節奏以抑制通膨風險",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6576538",
-   "ts": "08/14 10:30"
+   "url": "https://news.cnyes.com/news/id/6576933",
+   "ts": "08/14 15:40"
   },
   {
-   "title": "〈焦點股〉萬海上半年獲利近翻倍 股價站上9字頭創5個月來新高",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6576603",
-   "ts": "08/14 10:25"
+   "title": "營收上看5000億美元！馬斯克再發豪語： 2027年底xAI資料中心供電容量衝上10GW",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6576626",
+   "ts": "08/14 15:00"
   },
   {
-   "title": "台驊空運獲利增 H1 EPS 3.84元 暫不分派上半年盈餘",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6576515",
-   "ts": "08/14 09:55"
+   "title": "AI浪潮與內需發力 馬來西亞年第二季經濟成長6% 超乎預期",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6576925",
+   "ts": "08/14 14:40"
   },
   {
-   "title": "〈台股開盤〉台積電熄火聯發科、鴻海挺身  漲逾300點衝高至46402點",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6576459",
-   "ts": "08/14 09:37"
+   "title": "烏克蘭無人機大廠Vyriy擬募資約1.2億美元 擴大FPV無人機生產",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6576961",
+   "ts": "08/14 14:30"
+  },
+  {
+   "title": "超越美光與AMD！戴爾今年股價狂飆285% 美超微亮眼財報指引新榮景 ",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6576239",
+   "ts": "08/14 14:20"
   }
  ],
  "inst": {
-  "date": "08/13",
-  "total_yi": 892.5,
-  "foreign_yi": 756.9,
-  "trust_yi": -15.0
+  "date": "08/14",
+  "total_yi": 508.9,
+  "foreign_yi": 453.5,
+  "trust_yi": 72.0
  }
 }
