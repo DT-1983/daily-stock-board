@@ -1,130 +1,130 @@
 {
- "updated": "2026-08-13 16:40",
+ "updated": "2026-08-14 16:24",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "08/12",
-   "close": 7748.5,
-   "chg_pct": 0.26
+   "date": "08/13",
+   "close": 7798.99,
+   "chg_pct": 0.65
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "08/12",
-   "close": 26588.49,
-   "chg_pct": 0.54
+   "date": "08/13",
+   "close": 26803.03,
+   "chg_pct": 0.81
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "08/12",
-   "close": 53770.27,
-   "chg_pct": -0.04
+   "date": "08/13",
+   "close": 53839.99,
+   "chg_pct": 0.13
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "08/12",
-   "close": 12399.38,
-   "chg_pct": 2.49
+   "date": "08/13",
+   "close": 12456.0,
+   "chg_pct": 0.46
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "08/13",
-   "close": 46021.48,
-   "chg_pct": 1.11
+   "date": "08/14",
+   "close": 45811.01,
+   "chg_pct": -0.46
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "08/13",
-   "close": 32.14,
-   "chg_pct": -0.21
+   "date": "08/14",
+   "close": 31.99,
+   "chg_pct": -0.67
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "08/12",
-   "close": 4.68,
+   "date": "08/13",
+   "close": 4.64,
    "fmt": "yield",
-   "chg_bp": -0.2
+   "chg_bp": -4.1
   }
  ],
  "news": [
   {
-   "title": "思科AI需求推升營收展望，但硬體占比攀升、零組件成本高檔壓抑利潤率",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6575359",
-   "ts": "08/13 16:30"
-  },
-  {
-   "title": "〈陸股盤後〉市場失望央行未釋降息訊號 三大指數開高走低",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6575162",
-   "ts": "08/13 16:30"
-  },
-  {
-   "title": "做大空頭不如當網紅？貝瑞做空AI慘遭軋 電子報反成億元金雞母",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6574550",
-   "ts": "08/13 16:20"
-  },
-  {
-   "title": "〈玉山金法說〉黃男州曝股利政策二大原則 海外獲利占比拚3成以上",
+   "title": "市場需求旺 尖點大力開拓PCB鑽針新產能估到2028年成長100%",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6575246",
-   "ts": "08/13 16:15"
+   "url": "https://news.cnyes.com/news/id/6577060",
+   "ts": "08/14 16:15"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：奇鋐(3017-TW)EPS預估上修至102.37元，預估目標價為3880元",
+   "title": "〈華紙法說〉木片與運輸價格居高不下推升成本 將減產至10月",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6575345",
-   "ts": "08/13 16:10"
+   "url": "https://news.cnyes.com/news/id/6577067",
+   "ts": "08/14 16:10"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：華碩(2357-TW)EPS預估上修至56.27元，預估目標價為860元",
+   "title": "〈航運指數〉SCFI連3漲 美東線運價有望衝破1萬美元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6575344",
-   "ts": "08/13 16:10"
+   "url": "https://news.cnyes.com/news/id/6577058",
+   "ts": "08/14 16:05"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：上銀(2049-TW)目標價調升至415.5元，幅度約6.54%",
+   "title": "中鴻9月內銷開平盤 鋼價底部支撐力道增強",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6575343",
-   "ts": "08/13 16:10"
+   "url": "https://news.cnyes.com/news/id/6577042",
+   "ts": "08/14 16:03"
   },
   {
-   "title": "〈房產〉預售市場買氣連續18個月探底 6月揭露量僅剩高峰期2成",
+   "title": "燁聯唐榮聯手反擊！財政部立案 對越南進口特定冷軋不銹鋼展開反傾銷調查",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6575260",
-   "ts": "08/13 16:01"
+   "url": "https://news.cnyes.com/news/id/6577037",
+   "ts": "08/14 15:58"
   },
   {
-   "title": "南韓KOSPI指數收漲3.6% 已連續4日上漲",
+   "title": "日銀傳最快9月升息 並考慮加速緊縮節奏以抑制通膨風險",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6575254",
-   "ts": "08/13 15:50"
+   "url": "https://news.cnyes.com/news/id/6576933",
+   "ts": "08/14 15:40"
   },
   {
-   "title": "FedEx、Amazon加速導入機械手臂物流業自動化從分揀走向裝卸環節",
+   "title": "營收上看5000億美元！馬斯克再發豪語： 2027年底xAI資料中心供電容量衝上10GW",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6575262",
-   "ts": "08/13 15:30"
+   "url": "https://news.cnyes.com/news/id/6576626",
+   "ts": "08/14 15:00"
+  },
+  {
+   "title": "AI浪潮與內需發力 馬來西亞年第二季經濟成長6% 超乎預期",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6576925",
+   "ts": "08/14 14:40"
+  },
+  {
+   "title": "烏克蘭無人機大廠Vyriy擬募資約1.2億美元 擴大FPV無人機生產",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6576961",
+   "ts": "08/14 14:30"
+  },
+  {
+   "title": "超越美光與AMD！戴爾今年股價狂飆285% 美超微亮眼財報指引新榮景 ",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6576239",
+   "ts": "08/14 14:20"
   }
  ],
  "inst": {
-  "date": "08/13",
-  "total_yi": 907.6,
-  "foreign_yi": 756.9,
-  "trust_yi": 0.0
+  "date": "08/14",
+  "total_yi": 508.9,
+  "foreign_yi": 453.5,
+  "trust_yi": 72.0
  }
 }
