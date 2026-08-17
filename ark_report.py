@@ -399,7 +399,8 @@ def build():
 <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
 <title>ARK ETF 追蹤</title>
 <style>{BASE_CSS}{CP.CSS}{FR.CSS}{TI.CSS}{EC.CSS}{CSS_EXTRA}</style></head><body><div class="wrap">
-{header("ark", "ARK ETF 追蹤", f"{' + '.join(FUNDS)} · 產業方向／重倉法說會／3·5·10年回測 · 更新 {date}", NAV, "ark")}
+{header("ark", "ARK ETF 追蹤", f"{' + '.join(FUNDS)} · 產業方向／重倉法說會／3·5·10年回測 · "
+        f"更新 {date}（每 14 天自動更新一次，本機排程 ArkReportBiweekly）", NAV, "ark")}
 <div class="ctrl" style="position:static;border:0;padding:0 0 12px;margin-bottom:0">
   <div class="seg" role="group" aria-label="切換 ARK 基金" id="fundSeg">
     <button data-f="ALL" aria-pressed="true">全部</button>
