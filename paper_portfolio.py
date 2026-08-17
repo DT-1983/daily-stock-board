@@ -281,13 +281,20 @@ def _hong_score(rank, roe, rr):
 
 def buffett_top30(prices):
     """洪瑞泰選股：好公司（龍頭 + ROE≥15% + 盈再率<80% + 排照妖鏡）在便宜時買。
-    優先現價≤俗價，不足 30 才放寬到≤合理價。取品質分前 30。"""
+    現價 ≤ 俗價（EPS×12）才買，取品質分前 30。
+
+    2026-08-17 修 bug：原本讀 d["fair"]（合理價）當第二層放寬條件，但洪瑞泰方法論
+    只有俗價/貴價兩條線、沒有合理價，buffett_scan.py 早就改成輸出 cheap/expensive，
+    這裡沒跟著改 → `if not (p and cheap and fair)` 因為 fair 永遠是 None 而把每一檔
+    都跳過，巴菲特倉持股長期是 0（頁面顯示 0 檔、淨值凍結）。
+    合理價那層放寬直接拿掉不補回來：俗價~貴價之間在這套方法裡是「觀望」不是「買進」，
+    硬補會讓模擬倉買進方法論明講不該買的區間。目前買進區有 20+ 檔，不需要放寬。"""
     wl = json.load(open(BUFFETT, encoding="utf-8")) if os.path.exists(BUFFETT) else {}
-    tier1, tier2 = [], []   # ≤俗價 / ≤合理價
+    picks = []
     for tk, d in wl.items():
-        p, cheap, fair = prices.get(tk), d.get("cheap"), d.get("fair")
+        p, cheap = prices.get(tk), d.get("cheap")
         roe, rr = d.get("roe") or 0, d.get("reinvest")
-        if not (p and cheap and fair):
+        if not (p and cheap):
             continue
         if d.get("trap_flags"):           # 照妖鏡：EPS估降/高負債 → 排除
             continue
@@ -295,17 +302,10 @@ def buffett_top30(prices):
             continue
         if rr is not None and rr >= 0.80:  # 第二關：盈再率 < 80%（吃資本的爛生意淘汰）
             continue
-        s = _hong_score(d.get("rank"), roe, rr)
-        if p <= cheap:
-            tier1.append((tk, s))
-        elif p <= fair:
-            tier2.append((tk, s))
-    tier1.sort(key=lambda x: -x[1])
-    tier2.sort(key=lambda x: -x[1])
-    picked = [tk for tk, _ in tier1[:BUFFETT_TOPN]]
-    if len(picked) < BUFFETT_TOPN:
-        picked += [tk for tk, _ in tier2[:BUFFETT_TOPN - len(picked)]]
-    return sorted(picked)
+        if p <= cheap:                     # 第三關：現價 ≤ 俗價才進場
+            picks.append((tk, _hong_score(d.get("rank"), roe, rr)))
+    picks.sort(key=lambda x: -x[1])
+    return sorted(tk for tk, _ in picks[:BUFFETT_TOPN])
 
 
 def _batch(tickers):
