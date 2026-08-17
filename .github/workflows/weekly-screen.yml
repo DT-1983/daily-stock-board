@@ -61,7 +61,10 @@ jobs:
         with:
           python-version: '3.12'
       - name: 裝套件
-        run: pip install yfinance requests tradingview_screener pandas numpy litellm
+        # markdown/opencc-python-reimplemented: paper_portfolio.py rebalance 間接 import
+        # board_html_legacy.py -> tw_report.py 需要，2026-08-17 發現這裡漏裝，
+        # 導致巴菲特倉每週調倉靜默失敗（被 || echo 接住，job 顯示成功）
+        run: pip install yfinance requests tradingview_screener pandas numpy litellm markdown opencc-python-reimplemented
 
       - uses: actions/download-artifact@v4
         with:
