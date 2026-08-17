@@ -39,6 +39,21 @@ TOP_N = 10
 # 私募/未上市部位，沒有公開財報可查，排除在「前N大持股」的法說會查證名單外
 EXCLUDE_PRIVATE = {"SPCX"}
 
+# 基金介紹（依 yfinance longBusinessSummary 的公開說明書文字改寫成好讀的中文，
+# 不是逐字翻譯——原文是法律文件語氣，這裡保留投資主題跟持股邏輯的重點）
+FUND_DESC = {
+    "ARKK": "ARK 的旗艦主動式 ETF，主題是「顛覆式創新」——不綁定單一產業，只要公司的核心"
+            "業務跟顛覆式創新有關，橫跨 AI、機器人、能源儲存、基因體、金融科技等主題都可能入選。"
+            "至少 65% 資產投資在跟這個主題相關的內外資股票，屬於非分散型(non-diversified)基金，"
+            "意味著持股集中度高、單一持股波動會明顯反映在淨值上。",
+    "ARKW": "聚焦「next generation internet」（次世代網路）主題，至少 80% 資產投資在雲端運算、"
+            "巨量資料、人工智慧、行動裝置、社群平台、物聯網、區塊鏈這類跟網路基礎設施升級相關的"
+            "公司。可以理解成 ARKK 的「網路/科技聚焦版」，持股跟 ARKK 高度重疊但更集中在科技股。",
+    "ARKG": "聚焦「基因體革命」（genomics revolution）主題，至少 80% 資產投資在跨醫療保健、"
+            "資訊科技、材料、能源、非必需消費等多產業、但業務跟基因定序、CRISPR基因編輯、"
+            "生物資訊、分子診斷、精準醫療相關的公司。三檔基金中持股方向最集中在生技/醫療的一檔。",
+}
+
 SECTOR_ZH = {
     "realestate": "房地產", "consumer_cyclical": "非必需消費", "basic_materials": "原物料",
     "consumer_defensive": "必需消費", "technology": "科技", "communication_services": "通訊服務",
@@ -207,18 +222,47 @@ def _bt_note(bt):
             f'請往上對照各期間表格自行比較。</p>')
 
 
+def _perf_narrative(tk, bt):
+    """依 3/5/10 年回測數字自動寫一段表現摘要，不寫死具體數字（回測資料每次跑會變）。"""
+    parts = []
+    for years in sorted(bt.keys()):
+        r = bt[years]["rows"][tk]
+        spy = bt[years]["rows"]["SPY"]
+        vs = "跑贏" if r["cagr"] > spy["cagr"] else "落後"
+        parts.append(f"{years}年年化{_pct(r['cagr'])}（{vs}大盤，Sharpe {_num(r['sharpe'])}）")
+    longest = max(bt.keys())
+    mdd = bt[longest]["rows"][tk]["mdd"]
+    return f"{'；'.join(parts)}；{longest}年最大回撤 {_pct(mdd)}。"
+
+
 def _overview_html(snaps, bt, top10):
-    cards = "".join(f"""<div class="fcard" data-fund="{tk}">
-  <div class="fname">{FUND_LABEL[tk]}</div>
-  <div class="fmeta">類別 {esc(snaps[tk]['category']) or '—'}　規模 {_fmt_usd_m(snaps[tk]['aum'])}
-    費用率 {_pct_w(snaps[tk]['expense'], 2) if snaps[tk]['expense'] else '—'}</div>
-</div>""" for tk in FUNDS)
+    cards = "".join(f"""<details class="fcard" data-fund="{tk}">
+  <summary>
+    <div class="fname">{FUND_LABEL[tk]}</div>
+    <div class="fmeta">類別 {esc(snaps[tk]['category']) or '—'}　規模 {_fmt_usd_m(snaps[tk]['aum'])}
+      費用率 {_pct_w(snaps[tk]['expense'], 2) if snaps[tk]['expense'] else '—'}</div>
+    <div class="fperf">{_perf_narrative(tk, bt)}</div>
+  </summary>
+  <div class="fdesc">{esc(FUND_DESC[tk])}</div>
+</details>""" for tk in FUNDS)
 
     ov_head = "".join(f"<th>{esc(tk)} 權重</th>" for tk in FUNDS)
     ov_rows = "".join(
         f'<tr><td>{esc(r["symbol"])}</td><td>{esc(r["name"])}</td>'
         + "".join(f'<td class="num">{_pct_w(r["w"][tk])}</td>' for tk in FUNDS) + '</tr>'
         for r in top10)
+    combined_table = (f'<div data-holdview="ALL"><table class="dt">'
+                      f'<tr><th>代號</th><th>名稱</th>{ov_head}</tr>{ov_rows}</table></div>')
+
+    per_fund_tables = ""
+    for tk in FUNDS:
+        rows = "".join(
+            f'<tr><td>{esc(r["symbol"])}</td><td>{esc(r["name"])}</td>'
+            f'<td class="num">{_pct_w(r["weight"])}</td></tr>'
+            for r in snaps[tk]["holdings"])
+        per_fund_tables += (f'<div data-holdview="{tk}" style="display:none"><table class="dt">'
+                            f'<tr><th>代號</th><th>名稱</th><th>權重</th></tr>{rows}</table></div>')
+    holdings_html = combined_table + per_fund_tables
 
     def _bt_table(period):
         rows = "".join(
@@ -241,8 +285,9 @@ def _overview_html(snaps, bt, top10):
   <div class="sechd"><h2>總覽</h2></div>
   <div class="fgrid">{cards}</div>
 
-  <div class="sub2" style="margin-top:16px">前 {len(top10)} 大持股（跨三檔基金合計權重排序，橫槓代表該基金未持有）</div>
-  <table class="dt"><tr><th>代號</th><th>名稱</th>{ov_head}</tr>{ov_rows}</table>
+  <div class="sub2" style="margin-top:16px">前 {len(top10)} 大持股
+    <span class="note">選「全部」看跨三檔基金合計排序；點選單一基金會換成該基金自己的前10大</span></div>
+  {holdings_html}
   {bt_sections}
   {_bt_note(bt)}
 </section>"""
@@ -360,8 +405,8 @@ def build():
     <button data-f="ALL" aria-pressed="true">全部</button>
     {"".join(f'<button data-f="{tk}" aria-pressed="false">{tk}</button>' for tk in FUNDS)}
   </div>
-  <p class="note" style="margin-top:8px">總覽卡片、產業曝險、每期回測表格、重倉個股法說會（依該股是否被選中基金持有）
-    會依你選的基金篩選；前N大持股表跟 Big Ideas 觀點是跨基金整合內容，不受此篩選影響。</p>
+  <p class="note" style="margin-top:8px">總覽卡片、前N大持股表、產業曝險、每期回測表格、重倉個股法說會
+    都會依你選的基金換成該基金自己的視角；只有 Big Ideas 觀點是跨基金整合內容，不受此篩選影響。</p>
 </div>
 {body}
 <section class="sec"><div class="sechd"><h2>資料來源</h2></div>
@@ -378,6 +423,9 @@ def build():
       var vs=el.dataset.fund.split(' ');
       var show=(f==='ALL'||vs.indexOf(f)!==-1||vs.indexOf('bench')!==-1);
       el.style.display=show?'':'none';
+    }});
+    $$('[data-holdview]').forEach(function(el){{
+      el.style.display=(el.dataset.holdview===f)?'':'none';
     }});
   }}
   $$('#fundSeg button').forEach(function(b){{
@@ -396,8 +444,15 @@ CSS_EXTRA = """
 .fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-top:12px}
 .fgrid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;margin-top:10px}
 .fcard{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.fcard summary{cursor:pointer;list-style:none}
+.fcard summary::-webkit-details-marker{display:none}
+.fcard summary::after{content:"點看基金介紹 ▾";display:block;color:#93C5FD;font-size:11px;margin-top:8px}
+.fcard[open] summary::after{content:"收合 ▴"}
 .fname{font-weight:700;font-size:14px}
 .fmeta{color:var(--muted);font-size:12px;margin-top:5px}
+.fperf{color:#93C5FD;font-size:12px;margin-top:7px;line-height:1.6}
+.fdesc{color:#C7D8EC;font-size:12.5px;line-height:1.7;margin-top:10px;padding-top:10px;
+ border-top:1px solid var(--line2)}
 .dt{width:100%;border-collapse:collapse;margin-top:8px;font-size:13px}
 .dt th{text-align:left;color:var(--dim);font-size:11px;padding:6px 8px;border-bottom:1px solid var(--line)}
 .dt td{padding:7px 8px;border-bottom:1px solid var(--line2)}
