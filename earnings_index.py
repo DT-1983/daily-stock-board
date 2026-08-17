@@ -107,8 +107,9 @@ def build(cards):
 <meta name="robots" content="noindex"><title>財報深度分析</title>
 <style>{BASE_CSS}{CSS_EXTRA}</style></head><body><div class="wrap">
 {header("earnings", "財報深度分析",
-  '單檔財報懶人包 · <b>兩套策略並列</b>：洪瑞泰三大關卡（ROE／盈再率／配息率）＋俗貴價'
-  '　｜　分析師共識＋估值倍數<br>兩者可能給相反結論，那是不同策略的正常結果，不是資料錯誤。',
+  f'{len(cards)} 檔 · 更新 {datetime.now():%Y-%m-%d %H:%M} · 財報季由 earnings_watch 自動補卡，'
+  f'平時手動指定個股<br><b>兩套策略並列</b>：洪瑞泰三大關卡（ROE／盈再率／配息率）＋俗貴價'
+  '　｜　分析師共識＋估值倍數。兩者可能給相反結論，那是不同策略的正常結果，不是資料錯誤。',
   NAV, "earnings")}
 {content}
 <div class="enote">

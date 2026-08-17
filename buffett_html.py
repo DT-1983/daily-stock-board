@@ -118,7 +118,8 @@ def build(watch):
 <meta name="robots" content="noindex"><title>巴菲特價值清單</title>
 <style>{BASE_CSS}</style></head><body><div class="wrap">
 {header("buffett", "巴菲特價值清單",
-  f"洪瑞泰俗貴價法 · 資料更新 {esc(upd)} · 美股 {n_us} / 台股 {n_tw} 檔", NAV, "buffett")}
+  f"洪瑞泰俗貴價法 · 資料更新 {esc(upd)} · 美股 {n_us} / 台股 {n_tw} 檔"
+  f" · 每週六重新掃描全市場", NAV, "buffett")}
 <div class="note">
 <b>訊號</b>：買進＝現價≤俗價　觀望＝俗價~貴價之間　太貴＝現價&gt;貴價<br>
 <b>俗價</b>=EPS×12（買進線，報酬15%）　<b>貴價</b>=EPS×30（賣出線，報酬0%）—— 洪瑞泰只設這兩條線，不用合理價<br>

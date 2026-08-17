@@ -471,7 +471,8 @@ def main():
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <style>{CSS}</style></head><body><div class="wrap">
 {theme_header("board", "產業鏈看板",
-    f"{date} · 7 條產業鏈 · 美股 yfinance／台股 FinMind · 判讀 Claude（本機）", NAV, "board")}
+    f"{date} · {len(nav)} 條產業鏈 · 美股 yfinance／台股 FinMind · 判讀 Claude（本機）"
+    f" · 每日 09:00 自動更新", NAV, "board")}
 <div class="ctrl">
   <div class="seg" role="group" aria-label="切換市場">
     <button data-m="US" aria-pressed="true">美股</button>
