@@ -21,6 +21,7 @@ ICONS = {
     "buffett": '<path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/>',
     "portfolio": '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
     "earnings": '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/>',
+    "ark": '<path d="M3 3v18h18"/><path d="m7 14 4-5 3 3 5-7"/>',
     "back": '<path d="M19 12H5M12 19l-7-7 7-7"/>',
     "chevron": '<path d="M9 18l6-6-6-6"/>',
     "close": '<path d="M18 6 6 18M6 6l12 12"/>',
@@ -36,6 +37,7 @@ NAV = [
     ("portfolio", "portfolio", "策略賽馬", "portfolios.html"),
     ("earnings", "earnings", "財報分析", "earnings.html"),
     ("gdp", "gdp", "GDP 觀察", "gdp.html"),
+    ("ark", "ark", "ARK 追蹤", "ark.html"),
 ]
 
 
