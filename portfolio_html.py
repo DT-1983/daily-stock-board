@@ -83,11 +83,15 @@ def build(state):
     for i, (n, pf) in enumerate(chains):
         m = medals.get(i, f"{i+1}")
         detail = f'<div class="mdbody">{holding_rows(pf)}</div>'
+        # 中途加入的鏈起跑日跟大盤不同，報酬率不能跟從頭跑的鏈直接比大小 → 明確標出來
+        late = pf.get("inception") and pf["inception"] != inception
+        late_tag = (f'<span class="nm" style="color:#EAB308">⚠ {esc(pf["inception"])} 才加入</span>'
+                    if late else "")
         rows.append(
             f'<button class="row" data-id="c{i}" aria-expanded="false">'
             f'<span style="width:22px;text-align:center;flex-shrink:0">{m}</span>'
             f'<span class="info"><span class="t1"><span class="tk">{esc(n)}</span>'
-            f'<span class="nm">{len(pf["holdings"])} 檔</span></span>'
+            f'<span class="nm">{len(pf["holdings"])} 檔</span>{late_tag}</span>'
             f'<span class="one">{usd(pf["value"])}　'
             f'<span class="{cls(pf["pnl"])}">{usd(pf["pnl"],1)}</span></span></span>'
             f'<span class="rt"><span class="sv num {cls(pf["ret"])}">{pf["ret"]:+.1f}%</span></span>'
