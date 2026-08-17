@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""ARK ETF（ARKK/ARKW）追蹤報告 → docs/ark.html
+"""ARK ETF（ARKK/ARKW/ARKG）追蹤報告 → docs/ark.html
 
 用戶 2026-08-17 指示：不追逐日持股異動，只追「產業方向」；同時要 10 年回測
 （vs SPY/QQQ，含 Sharpe/Sortino）；報告要包含重倉個股法說會重點跟 ARK 自己的
@@ -17,6 +17,7 @@ import argparse
 from datetime import datetime, timedelta
 
 import numpy as np
+import pandas as pd
 import yfinance as yf
 
 if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
@@ -24,15 +25,19 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
 
 from board_theme import BASE_CSS, header, NAV, esc
 import earnings_call as EC
+import chain_positioning as CP
+import fundamentals_reality as FR
+import technical_indicators as TI
 
-FUNDS = ["ARKK", "ARKW"]
-FUND_LABEL = {"ARKK": "ARKK · ARK 創新旗艦 ETF", "ARKW": "ARKW · ARK Next Generation Internet ETF"}
+FUNDS = ["ARKK", "ARKW", "ARKG"]
+FUND_LABEL = {"ARKK": "ARKK · ARK 創新旗艦 ETF", "ARKW": "ARKW · ARK Next Generation Internet ETF",
+              "ARKG": "ARKG · ARK 基因體革命 ETF"}
 BENCH = ["SPY", "QQQ"]
 BENCH_LABEL = {"SPY": "SPY（大盤代表）", "QQQ": "QQQ（那斯達克100）"}
 
-# 前 8 大合計加權持股（2026-08-17 依 ARKK/ARKW 當時 top holdings 加權排序選出，
-# 排除 SPCX 因為是私募股權部位、無公開財報可查）
-TOP_TICKERS = ["TSLA", "AMD", "SHOP", "COIN", "HOOD", "CRCL", "TEM", "CRSP"]
+# 前 10 大合計加權持股（2026-08-17 依 ARKK/ARKW/ARKG 三檔當時 top holdings 加權
+# 排序選出，排除 SPCX 因為是私募股權部位、無公開財報可查）
+TOP_TICKERS = ["TSLA", "TXG", "AMD", "TEM", "CRSP", "SHOP", "COIN", "HOOD", "TWST", "CRCL"]
 
 SECTOR_ZH = {
     "realestate": "房地產", "consumer_cyclical": "非必需消費", "basic_materials": "原物料",
@@ -62,10 +67,12 @@ def _fund_snapshot(tk):
             "category": ov.get("categoryName", ""), "aum": aum, "expense": expense}
 
 
-def _backtest(years=10, rf_annual=0.0):
+def _backtest_all(periods=(3, 5, 10), rf_annual=0.0):
+    """一次抓最長區間(max(periods))的資料，各期間用同一份資料切片算——
+    不用每個期間各自打一次 yfinance，省網路來回（用戶要求同時加 3年/5年，跟原本10年一起比）。"""
     tickers = FUNDS + BENCH
     end = datetime.now()
-    start = end - timedelta(days=365 * years + 10)
+    start = end - timedelta(days=365 * max(periods) + 10)
     data = {}
     for tk in tickers:
         h = yf.Ticker(tk).history(start=start.strftime("%Y-%m-%d"), auto_adjust=True)
@@ -75,37 +82,53 @@ def _backtest(years=10, rf_annual=0.0):
         common = common.intersection(data[tk].index)
     for tk in tickers:
         data[tk] = data[tk].reindex(common)
-    n = len(common)
 
-    out = {"start": str(common[0].date()), "end": str(common[-1].date()),
-           "years": round(n / 252, 1), "rows": {}}
-    for tk in tickers:
-        px = data[tk].values
-        rets = px[1:] / px[:-1] - 1
-        cagr = (px[-1] / px[0]) ** (252 / (n - 1)) - 1
-        vol = rets.std(ddof=1) * np.sqrt(252)
-        rf_daily = rf_annual / 252
-        excess = rets - rf_daily
-        sharpe = excess.mean() / rets.std(ddof=1) * np.sqrt(252) if rets.std(ddof=1) else None
-        downside = rets[rets < rf_daily] - rf_daily
-        dd_dev = np.sqrt((downside ** 2).mean()) * np.sqrt(252) if len(downside) else None
-        sortino = (excess.mean() * 252) / dd_dev if dd_dev else None
-        cum = px / px[0]
-        peak = np.maximum.accumulate(cum)
-        mdd = ((cum - peak) / peak).min()
-        out["rows"][tk] = {"total_ret": px[-1] / px[0] - 1, "cagr": cagr, "vol": vol,
-                           "sharpe": sharpe, "sortino": sortino, "mdd": mdd}
+    out = {}
+    for years in periods:
+        cutoff = end - timedelta(days=365 * years)
+        cutoff_ts = pd.Timestamp(cutoff)
+        if common.tz is not None:
+            cutoff_ts = cutoff_ts.tz_localize(common.tz) if cutoff_ts.tz is None else cutoff_ts.tz_convert(common.tz)
+        idx = common[common >= cutoff_ts]
+        n = len(idx)
+        period = {"start": str(idx[0].date()), "end": str(idx[-1].date()),
+                  "years": round(n / 252, 1), "rows": {}}
+        for tk in tickers:
+            px = data[tk].reindex(idx).values
+            rets = px[1:] / px[:-1] - 1
+            cagr = (px[-1] / px[0]) ** (252 / (n - 1)) - 1
+            vol = rets.std(ddof=1) * np.sqrt(252)
+            rf_daily = rf_annual / 252
+            excess = rets - rf_daily
+            sharpe = excess.mean() / rets.std(ddof=1) * np.sqrt(252) if rets.std(ddof=1) else None
+            downside = rets[rets < rf_daily] - rf_daily
+            dd_dev = np.sqrt((downside ** 2).mean()) * np.sqrt(252) if len(downside) else None
+            sortino = (excess.mean() * 252) / dd_dev if dd_dev else None
+            cum = px / px[0]
+            peak = np.maximum.accumulate(cum)
+            mdd = ((cum - peak) / peak).min()
+            period["rows"][tk] = {"total_ret": px[-1] / px[0] - 1, "cagr": cagr, "vol": vol,
+                                  "sharpe": sharpe, "sortino": sortino, "mdd": mdd}
+        out[years] = period
     return out
 
 
 def _overlap(snaps):
-    a = {r["symbol"]: r["weight"] for r in snaps["ARKK"]["holdings"]}
-    b = {r["symbol"]: r["weight"] for r in snaps["ARKW"]["holdings"]}
-    names = {r["symbol"]: r["name"] for r in snaps["ARKK"]["holdings"]}
-    names.update({r["symbol"]: r["name"] for r in snaps["ARKW"]["holdings"]})
-    common = sorted(set(a) & set(b), key=lambda s: -(a.get(s, 0) + b.get(s, 0)))
-    return [{"symbol": s, "name": names.get(s, s), "w_arkk": a.get(s), "w_arkw": b.get(s)}
-            for s in common]
+    """跨 N 檔基金找「至少 2 檔都有持有」的重倉股，依合計權重排序。"""
+    weights = {tk: {r["symbol"]: r["weight"] for r in snaps[tk]["holdings"]} for tk in FUNDS}
+    names = {}
+    for tk in FUNDS:
+        names.update({r["symbol"]: r["name"] for r in snaps[tk]["holdings"]})
+    all_syms = set().union(*[set(w) for w in weights.values()])
+    rows = []
+    for s in all_syms:
+        held_by = [tk for tk in FUNDS if s in weights[tk]]
+        if len(held_by) < 2:
+            continue
+        total = sum(weights[tk].get(s, 0) for tk in FUNDS)
+        rows.append({"symbol": s, "name": names.get(s, s), "total": total,
+                     "w": {tk: weights[tk].get(s) for tk in FUNDS}})
+    return sorted(rows, key=lambda r: -r["total"])
 
 
 # ── ARK 自己的觀點／近期持股異動：2026-08-17 WebSearch 查證，來源見文末 ──
@@ -169,39 +192,61 @@ def _fmt_usd_m(x):
     return f"${x/1000:.1f}B" if x >= 1000 else f"${x:.0f}M"
 
 
+def _bt_note(bt):
+    """動態總結：用最長區間的數字講重點，不寫死具體數字（回測資料每次跑會變）。"""
+    longest = max(bt.keys())
+    r = bt[longest]["rows"]
+    ark_sharpe = max((r[tk]["sharpe"] or 0) for tk in FUNDS)
+    bench_sharpe = max((r[tk]["sharpe"] or 0) for tk in BENCH)
+    ark_mdd = min(r[tk]["mdd"] for tk in FUNDS)
+    bench_mdd = max(r[tk]["mdd"] for tk in BENCH)
+    verdict = ("風險調整後報酬（Sharpe/Sortino）都輸給大盤/QQQ" if ark_sharpe < bench_sharpe
+               else "風險調整後報酬（Sharpe/Sortino）優於大盤/QQQ")
+    return (f'<p class="note">拉長到 {longest} 年看，三檔 ARK 基金{verdict}，'
+            f'且最大回撤達 {_pct(ark_mdd)}（大盤/QQQ 約 {_pct(bench_mdd)}），'
+            f'代表同樣的報酬用了遠高於大盤的風險去換。短天期（3年/5年）的排序可能不同，'
+            f'請往上對照各期間表格自行比較。</p>')
+
+
 def _overview_html(snaps, bt):
-    cards = "".join(f"""<div class="fcard">
+    cards = "".join(f"""<div class="fcard" data-fund="{tk}">
   <div class="fname">{FUND_LABEL[tk]}</div>
   <div class="fmeta">類別 {esc(snaps[tk]['category']) or '—'}　規模 {_fmt_usd_m(snaps[tk]['aum'])}
     費用率 {_pct_w(snaps[tk]['expense'], 2) if snaps[tk]['expense'] else '—'}</div>
 </div>""" for tk in FUNDS)
 
     overlap = _overlap(snaps)
+    ov_head = "".join(f"<th>{esc(tk)} 權重</th>" for tk in FUNDS)
     ov_rows = "".join(
         f'<tr><td>{esc(r["symbol"])}</td><td>{esc(r["name"])}</td>'
-        f'<td class="num">{_pct_w(r["w_arkk"])}</td><td class="num">{_pct_w(r["w_arkw"])}</td></tr>'
+        + "".join(f'<td class="num">{_pct_w(r["w"][tk])}</td>' for tk in FUNDS) + '</tr>'
         for r in overlap[:8])
 
-    bt_rows = "".join(f"""<tr><td>{FUND_LABEL.get(tk, BENCH_LABEL.get(tk, tk)).split(' · ')[0].split('（')[0]}</td>
-  <td class="num">{_pct(r['total_ret'])}</td><td class="num">{_pct(r['cagr'])}</td>
-  <td class="num">{_pct(r['vol'])}</td><td class="num">{_num(r['sharpe'])}</td>
-  <td class="num">{_num(r['sortino'])}</td><td class="num">{_pct(r['mdd'])}</td></tr>"""
-        for tk, r in bt["rows"].items())
+    def _bt_table(period):
+        rows = "".join(
+            f'<tr data-fund="{"bench" if tk in BENCH else tk}">'
+            f'<td>{FUND_LABEL.get(tk, BENCH_LABEL.get(tk, tk)).split(" · ")[0].split("（")[0]}</td>'
+            f'<td class="num">{_pct(r["total_ret"])}</td><td class="num">{_pct(r["cagr"])}</td>'
+            f'<td class="num">{_pct(r["vol"])}</td><td class="num">{_num(r["sharpe"])}</td>'
+            f'<td class="num">{_num(r["sortino"])}</td><td class="num">{_pct(r["mdd"])}</td></tr>'
+            for tk, r in period["rows"].items())
+        return f"""<table class="dt bttable"><tr><th>標的</th><th>總報酬</th><th>年化報酬</th><th>年化波動</th>
+    <th>Sharpe</th><th>Sortino</th><th>最大回撤</th></tr>{rows}</table>"""
+
+    bt_sections = "".join(f"""
+  <div class="sub2" style="margin-top:20px">{years} 年回測（{bt[years]['start']} ~ {bt[years]['end']}，約 {bt[years]['years']} 年）
+    <span class="note">無風險利率簡化用 0%</span></div>
+  {_bt_table(bt[years])}""" for years in sorted(bt.keys()))
 
     return f"""
 <section class="sec">
   <div class="sechd"><h2>總覽</h2></div>
   <div class="fgrid">{cards}</div>
 
-  <div class="sub2" style="margin-top:16px">兩檔基金共同重倉（依合計權重排序）</div>
-  <table class="dt"><tr><th>代號</th><th>名稱</th><th>ARKK 權重</th><th>ARKW 權重</th></tr>{ov_rows}</table>
-
-  <div class="sub2" style="margin-top:20px">10 年回測（{bt['start']} ~ {bt['end']}，約 {bt['years']} 年）
-    <span class="note">無風險利率簡化用 0%</span></div>
-  <table class="dt"><tr><th>標的</th><th>總報酬</th><th>年化報酬</th><th>年化波動</th>
-    <th>Sharpe</th><th>Sortino</th><th>最大回撤</th></tr>{bt_rows}</table>
-  <p class="note">兩檔 ARK 基金 10 年總報酬看起來亮眼，但風險調整後報酬（Sharpe/Sortino）都輸給 QQQ，
-    且最大回撤逼近 −81%（QQQ/SPY 約 −34%），代表同樣的報酬用了遠高於大盤的風險去換。</p>
+  <div class="sub2" style="margin-top:16px">三檔基金共同重倉（至少兩檔同時持有，依合計權重排序）</div>
+  <table class="dt"><tr><th>代號</th><th>名稱</th>{ov_head}</tr>{ov_rows}</table>
+  {bt_sections}
+  {_bt_note(bt)}
 </section>"""
 
 
@@ -219,10 +264,7 @@ def _sector_html(snaps):
   <p class="note">ark-funds.com 的每日持股 CSV 被 Cloudflare 擋掉，抓不到歷史快照做「這個月 vs 上個月」
     的精確比對；下面是<b>現在的產業曝險快照</b>，配合下方 ARK 官方近期公開的持股異動報導（有查證來源），
     交叉解讀「錢正在往哪個方向移動」——不是我自己猜的百分比。</p>
-  <div class="fgrid2">
-    <div><div class="sub2">{FUND_LABEL['ARKK']}</div>{bars('ARKK')}</div>
-    <div><div class="sub2">{FUND_LABEL['ARKW']}</div>{bars('ARKW')}</div>
-  </div>
+  <div class="fgrid2">{"".join(f'<div data-fund="{tk}"><div class="sub2">{FUND_LABEL[tk]}</div>{bars(tk)}</div>' for tk in FUNDS)}</div>
 
   <div class="sub2" style="margin-top:20px">近期公開持股異動（查證來源見文末）</div>
   <div class="movegrid">{"".join(f'''<div class="movecard">
@@ -254,15 +296,16 @@ def _holdings_earnings_html():
             print(f"失敗：{e}")
         if html:
             print("完成")
-            blocks.append(f'<div class="ecard2"><h3>{esc(tk)}</h3>{html}</div>')
+            blocks.append(f'<div class="ecard2"><div class="ecard2hd">{esc(tk)}</div>{html}</div>')
         else:
             print("（無資料，跳過）")
-            blocks.append(f'<div class="ecard2"><h3>{esc(tk)}</h3><p class="note">查無最新法說會逐字稿摘要。</p></div>')
+            blocks.append(f'<div class="ecard2"><div class="ecard2hd">{esc(tk)}</div>'
+                          f'<p class="note">查無最新法說會逐字稿摘要。</p></div>')
     return f"""
 <section class="sec">
   <div class="sechd"><h2>重倉個股法說會重點</h2>
-    <span class="cnt">兩檔基金合計權重前 {len(TOP_TICKERS)} 大（不含私募的 SPCX）</span></div>
-  {"".join(blocks)}
+    <span class="cnt">三檔基金合計權重前 {len(TOP_TICKERS)} 大（不含私募的 SPCX）</span></div>
+  <div class="ecard2grid">{"".join(blocks)}</div>
 </section>"""
 
 
@@ -274,21 +317,21 @@ def _synthesis_html():
   <p><b>方向是否一致：大致一致，但要拆開看。</b> ARK 近期的加碼動作（特斯拉、Coinbase、
   Robinhood、Amazon）跟 Big Ideas 2026 講的「AI+自駕+加密+電商」敘事對得上；賣出台積電跟
   百度則是「從半導體製造龍頭/中國曝險撤出、轉向下游應用」的具體動作，不是單純故事。</p>
-  <p><b>但回測數據給了一個必要的提醒</b>：過去 10 年 ARKK/ARKW 的風險調整後報酬（Sharpe/Sortino）
+  <p><b>但回測數據給了一個必要的提醒</b>：過去長期來看三檔 ARK 基金的風險調整後報酬（Sharpe/Sortino）
   都不如大盤跟 QQQ，最大回撤是大盤的兩倍以上。也就是說「ARK 說的故事」跟「ARK 過去的績效效率」
   是兩件事——故事聽起來對，不代表用 ARK 的方式參與這個故事是效率最好的做法。</p>
-  <p><b>怎麼用這份報告</b>：與其直接買 ARKK/ARKW 跟著 ARK 的高波動度一起承受，不如把這份報告
+  <p><b>怎麼用這份報告</b>：與其直接買 ARK 系列基金跟著它的高波動度一起承受，不如把這份報告
   當「主題雷達」——ARK 在加碼什麼方向，可以自己去該方向裡挑風險調整後報酬更好的標的
-  （例如直接持有 TSLA/COIN 本身，而不是透過 ARKK 承擔額外一層基金層級的波動）。</p>
+  （例如直接持有 TSLA/COIN 本身，而不是透過基金承擔額外一層基金層級的波動）。</p>
   </div>
 </section>"""
 
 
 def build():
-    print("抓 ARKK/ARKW 持股快照 …")
+    print(f"抓 {'/'.join(FUNDS)} 持股快照 …")
     snaps = {tk: _fund_snapshot(tk) for tk in FUNDS}
-    print("10 年回測 …")
-    bt = _backtest()
+    print("3/5/10 年回測 …")
+    bt = _backtest_all()
     date = datetime.now().strftime("%Y-%m-%d %H:%M")
 
     src_html = "".join(f'<li><a href="{u}" target="_blank" rel="noopener">{esc(t)}</a></li>'
@@ -305,15 +348,41 @@ def build():
     html = f"""<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
 <title>ARK ETF 追蹤</title>
-<style>{BASE_CSS}{EC.CSS}{CSS_EXTRA}</style></head><body><div class="wrap">
-{header("ark", "ARK ETF 追蹤", f"ARKK + ARKW · 產業方向／重倉法說會／10年回測 · 更新 {date}", NAV, "ark")}
+<style>{BASE_CSS}{CP.CSS}{FR.CSS}{TI.CSS}{EC.CSS}{CSS_EXTRA}</style></head><body><div class="wrap">
+{header("ark", "ARK ETF 追蹤", f"{' + '.join(FUNDS)} · 產業方向／重倉法說會／3·5·10年回測 · 更新 {date}", NAV, "ark")}
+<div class="ctrl" style="position:static;border:0;padding:0 0 12px;margin-bottom:0">
+  <div class="seg" role="group" aria-label="切換 ARK 基金" id="fundSeg">
+    <button data-f="ALL" aria-pressed="true">全部</button>
+    {"".join(f'<button data-f="{tk}" aria-pressed="false">{tk}</button>' for tk in FUNDS)}
+  </div>
+  <p class="note" style="margin-top:8px">總覽卡片、產業曝險、每期回測表格會依你選的基金篩選；
+    共同重倉、重倉個股法說會、Big Ideas 觀點是跨基金整合內容，不受此篩選影響。</p>
+</div>
 {body}
 <section class="sec"><div class="sechd"><h2>資料來源</h2></div>
 <ul class="srclist">{src_html}</ul>
 <p class="disc">本頁非投資建議，僅供研究參考。持股/產業曝險為 Yahoo Finance 即時快照，
 會隨基金每日調倉變動；法說會摘要由本機 Claude 上網查證 Motley Fool 逐字稿彙整，
 可能有遺漏或延遲，正式決策前請自行查核最新公開資訊。</p></section>
-</div></body></html>"""
+</div>
+<script>
+(function(){{
+  var $=function(s){{return document.querySelector(s);}},$$=function(s){{return [].slice.call(document.querySelectorAll(s));}};
+  function apply(f){{
+    $$('[data-fund]').forEach(function(el){{
+      var v=el.dataset.fund;
+      el.style.display=(f==='ALL'||v===f||v==='bench')?'':'none';
+    }});
+  }}
+  $$('#fundSeg button').forEach(function(b){{
+    b.onclick=function(){{
+      $$('#fundSeg button').forEach(function(x){{x.setAttribute('aria-pressed',x===b);}});
+      apply(b.dataset.f);
+    }};
+  }});
+}})();
+</script>
+</body></html>"""
     return html
 
 
@@ -342,9 +411,15 @@ CSS_EXTRA = """
 .bicard{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
 .bit{font-weight:700;font-size:13.5px;color:#F5B841}
 .bid{color:var(--muted);font-size:12.5px;margin-top:4px;line-height:1.7}
-.ecard2{margin-top:14px;padding-top:14px;border-top:1px solid var(--line2)}
-.ecard2 h3{font-size:15px;color:#F5B841}
-.ecard2 .technical{border-top:0;margin-top:0}
+.ecard2grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));
+ gap:14px;margin-top:14px;align-items:start}
+.ecard2{background:var(--surface);border:1px solid var(--line);border-radius:12px;
+ padding:14px 16px}
+.ecard2hd{font-size:16px;font-weight:800;color:#F5B841;letter-spacing:.3px;
+ padding-bottom:9px;margin-bottom:2px;border-bottom:1px solid var(--line2)}
+.ecard2 .reality{border-top:0;margin-top:8px;padding-top:0}
+.ecard2 .reality h3{display:none}
+.ecard2 .techgrid{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
 .card p{margin:8px 0;font-size:13.5px;line-height:1.75;color:#C7D8EC}
 .srclist{font-size:12.5px;line-height:2;color:var(--muted)}

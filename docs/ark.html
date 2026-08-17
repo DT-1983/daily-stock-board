@@ -131,6 +131,58 @@ h1 svg{flex-shrink:0}
 .chartlegend span{display:inline-flex;align-items:center;gap:5px}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
+.positioning{margin-top:16px;padding-top:14px;border-top:1px solid #16223A}
+.positioning h3{font-size:14px;font-weight:700;color:#F5B841;margin-bottom:4px}
+.chainpos{font-size:12.5px;color:#C7D8EC;line-height:1.6;margin-bottom:8px;
+ padding:8px 10px;background:#161a20;border-radius:8px}
+.posnote{font-size:11.5px;color:#8a8f98;margin-bottom:10px}
+.segarrow{text-align:center;font-size:10.5px;color:#4a5568;margin:2px 0}
+.segrow{margin:6px 0 10px}
+.segname{font-size:12px;color:#93C5FD;font-weight:600}
+.segmine{color:#F5B841;font-weight:700;font-size:10.5px}
+.segdo{font-size:11px;color:#8a8f98;margin:2px 0 6px}
+.segcells{display:flex;flex-wrap:wrap;gap:6px}
+.peer{background:#1a1d23;border:1px solid #2a2e35;border-radius:8px;padding:6px 9px;font-size:11.5px;min-width:120px}
+.peer.focus{border-color:#4a9eff;box-shadow:0 0 0 1px #4a9eff}
+.pt{font-weight:700;color:#e8eaed}
+.pc{color:#6b7280;font-weight:400;margin-left:4px;font-size:10.5px}
+.pv{color:#9aa0a6;margin-top:2px}
+.pv .pos{color:#4ade80}.pv .neg{color:#ff8a8a}.pv .flat{color:#6b7280}
+
+.reality{margin-top:16px;padding-top:14px;border-top:1px solid #16223A}
+.reality h3{font-size:14px;font-weight:700;color:#F5B841;margin-bottom:4px}
+.realitysub{font-size:11.5px;color:#93C5FD;font-weight:600;margin:12px 0 5px}
+.realitytbl{width:100%;border-collapse:collapse;font-size:12px}
+.realitytbl th{color:#8a8f98;font-weight:600;text-align:right;padding:5px 7px;
+ border-bottom:1px solid #2a2e35;font-size:10.5px}
+.realitytbl th:first-child,.realitytbl td:first-child{text-align:left}
+.realitytbl td{padding:5px 7px;border-bottom:1px solid #1a1d23;text-align:right;color:#e8eaed}
+.realitytbl tr:last-child td{border-bottom:0}
+.realitytbl .pos{color:#4ade80}.realitytbl .neg{color:#ff8a8a}.realitytbl .flat{color:#6b7280}
+.ndot{color:#EAB308;cursor:help}
+.realitywarn{background:#2a2410;border:1px solid #5c4a1a;border-radius:8px;
+ padding:9px 11px;font-size:12px;line-height:1.6;color:#F5D98B;margin-top:10px}
+
+.technical{margin-top:16px;padding-top:14px;border-top:1px solid #16223A}
+.technical h3{font-size:14px;font-weight:700;color:#F5B841;margin-bottom:4px}
+.techgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:10px}
+.ttile{background:#1a1d23;border:1px solid #2a2e35;border-radius:9px;padding:9px 11px}
+.tn{font-size:10px;color:#6b7280;letter-spacing:.3px;font-weight:600}
+.tv{font-size:14px;font-weight:700;margin-top:4px;color:#e8eaed}
+.ts{font-size:11px;color:#9aa0a6;margin-top:2px}
+.techtoggle{margin-top:12px;width:100%;padding:9px;background:#1a1d23;border:1px solid #2a2e35;
+ border-radius:8px;color:#93C5FD;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.techtoggle:hover{border-color:#4a9eff}
+.techcharts{margin-top:10px}
+.tclabel{font-size:11px;color:#8a8f98;margin:10px 0 4px}
+.tcbox{height:180px}
+.tcbox-sm{height:100px}
+.tcwin{display:inline-flex;background:#1a1d23;border:1px solid #2a2e35;border-radius:8px;
+ padding:2px;margin-bottom:6px}
+.tcwin button{border:0;background:transparent;color:#8a8f98;font-size:11px;font-weight:600;
+ padding:5px 12px;border-radius:6px;cursor:pointer;font-family:inherit}
+.tcwin button[aria-pressed=true]{background:#334155;color:#e8eaed}
+
 .callnote-block{margin-top:10px}
 .callnote-text{font-size:12.5px;color:#e8eaed;line-height:1.6;background:#1a1d23;
  border:1px solid #2a2e35;border-radius:8px;padding:9px 11px;margin-top:6px}
@@ -162,9 +214,15 @@ h1 svg{flex-shrink:0}
 .bicard{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
 .bit{font-weight:700;font-size:13.5px;color:#F5B841}
 .bid{color:var(--muted);font-size:12.5px;margin-top:4px;line-height:1.7}
-.ecard2{margin-top:14px;padding-top:14px;border-top:1px solid var(--line2)}
-.ecard2 h3{font-size:15px;color:#F5B841}
-.ecard2 .technical{border-top:0;margin-top:0}
+.ecard2grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));
+ gap:14px;margin-top:14px;align-items:start}
+.ecard2{background:var(--surface);border:1px solid var(--line);border-radius:12px;
+ padding:14px 16px}
+.ecard2hd{font-size:16px;font-weight:800;color:#F5B841;letter-spacing:.3px;
+ padding-bottom:9px;margin-bottom:2px;border-bottom:1px solid var(--line2)}
+.ecard2 .reality{border-top:0;margin-top:8px;padding-top:0}
+.ecard2 .reality h3{display:none}
+.ecard2 .techgrid{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
 .card p{margin:8px 0;font-size:13.5px;line-height:1.75;color:#C7D8EC}
 .srclist{font-size:12.5px;line-height:2;color:var(--muted)}
@@ -172,51 +230,55 @@ h1 svg{flex-shrink:0}
 .disc{color:var(--dim);font-size:11.5px;margin-top:14px;line-height:1.7}
 .cnt{font-size:11.5px;color:var(--dim);background:var(--line);padding:2px 9px;border-radius:16px}
 </style></head><body><div class="wrap">
-<header><h1><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 14 4-5 3 3 5-7"/></svg>ARK ETF 追蹤</h1><div class="sub">ARKK + ARKW · 產業方向／重倉法說會／10年回測 · 更新 2026-08-17 13:44</div><div class="navlinks"><a class="nl" href="./"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>首頁</a><a class="nl" href="board.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>產業鏈看板</a><a class="nl" href="buffett.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg>巴菲特清單</a><a class="nl" href="portfolios.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>策略賽馬</a><a class="nl" href="earnings.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>財報分析</a><a class="nl" href="gdp.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 8-4-16-3 8H2"/></svg>GDP 觀察</a><a class="nl cur" href="ark.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 14 4-5 3 3 5-7"/></svg>ARK 追蹤</a></div></header>
+<header><h1><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 14 4-5 3 3 5-7"/></svg>ARK ETF 追蹤</h1><div class="sub">ARKK + ARKW + ARKG · 產業方向／重倉法說會／3·5·10年回測 · 更新 2026-08-17 14:20</div><div class="navlinks"><a class="nl" href="./"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>首頁</a><a class="nl" href="board.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>產業鏈看板</a><a class="nl" href="buffett.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg>巴菲特清單</a><a class="nl" href="portfolios.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>策略賽馬</a><a class="nl" href="earnings.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>財報分析</a><a class="nl" href="gdp.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 8-4-16-3 8H2"/></svg>GDP 觀察</a><a class="nl cur" href="ark.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 14 4-5 3 3 5-7"/></svg>ARK 追蹤</a></div></header>
+<div class="ctrl" style="position:static;border:0;padding:0 0 12px;margin-bottom:0">
+  <div class="seg" role="group" aria-label="切換 ARK 基金" id="fundSeg">
+    <button data-f="ALL" aria-pressed="true">全部</button>
+    <button data-f="ARKK" aria-pressed="false">ARKK</button><button data-f="ARKW" aria-pressed="false">ARKW</button><button data-f="ARKG" aria-pressed="false">ARKG</button>
+  </div>
+  <p class="note" style="margin-top:8px">總覽卡片、產業曝險、每期回測表格會依你選的基金篩選；
+    共同重倉、重倉個股法說會、Big Ideas 觀點是跨基金整合內容，不受此篩選影響。</p>
+</div>
 
 <section class="sec">
   <div class="sechd"><h2>總覽</h2></div>
-  <div class="fgrid"><div class="fcard">
+  <div class="fgrid"><div class="fcard" data-fund="ARKK">
   <div class="fname">ARKK · ARK 創新旗艦 ETF</div>
   <div class="fmeta">類別 Technology　規模 $73.2B
-    費用率 +0.75%</div>
-</div><div class="fcard">
+    費用率 0.75%</div>
+</div><div class="fcard" data-fund="ARKW">
   <div class="fname">ARKW · ARK Next Generation Internet ETF</div>
   <div class="fmeta">類別 Mid-Cap Growth　規模 $191.1B
-    費用率 +0.76%</div>
+    費用率 0.76%</div>
+</div><div class="fcard" data-fund="ARKG">
+  <div class="fname">ARKG · ARK 基因體革命 ETF</div>
+  <div class="fmeta">類別 Health　規模 $5.5B
+    費用率 0.75%</div>
 </div></div>
 
-  <div class="sub2" style="margin-top:16px">兩檔基金共同重倉（依合計權重排序）</div>
-  <table class="dt"><tr><th>代號</th><th>名稱</th><th>ARKK 權重</th><th>ARKW 權重</th></tr><tr><td>TSLA</td><td>Tesla Inc</td><td class="num">9.4%</td><td class="num">7.3%</td></tr><tr><td>AMD</td><td>Advanced Micro Devices Inc</td><td class="num">4.0%</td><td class="num">7.5%</td></tr><tr><td>SHOP</td><td>Shopify Inc Registered Shs -A- Subord Vtg</td><td class="num">4.5%</td><td class="num">4.7%</td></tr><tr><td>COIN</td><td>Coinbase Global Inc Ordinary Shares - Class A</td><td class="num">4.5%</td><td class="num">3.8%</td></tr><tr><td>HOOD</td><td>Robinhood Markets Inc Class A</td><td class="num">3.5%</td><td class="num">4.5%</td></tr><tr><td>CRCL</td><td>Circle Internet Group Inc Ordinary Shares - Class A</td><td class="num">3.8%</td><td class="num">3.6%</td></tr></table>
-
-  <div class="sub2" style="margin-top:20px">10 年回測（2016-08-09 ~ 2026-08-14，約 10.0 年）
+  <div class="sub2" style="margin-top:16px">三檔基金共同重倉（至少兩檔同時持有，依合計權重排序）</div>
+  <table class="dt"><tr><th>代號</th><th>名稱</th><th>ARKK 權重</th><th>ARKW 權重</th><th>ARKG 權重</th></tr><tr><td>TSLA</td><td>Tesla Inc</td><td class="num">9.4%</td><td class="num">7.3%</td><td class="num">—</td></tr><tr><td>TXG</td><td>10x Genomics Inc Ordinary Shares - Class A</td><td class="num">3.4%</td><td class="num">—</td><td class="num">9.5%</td></tr><tr><td>AMD</td><td>Advanced Micro Devices Inc</td><td class="num">4.0%</td><td class="num">7.5%</td><td class="num">—</td></tr><tr><td>TEM</td><td>Tempus AI Inc Class A common stock</td><td class="num">4.8%</td><td class="num">—</td><td class="num">6.4%</td></tr><tr><td>CRSP</td><td>CRISPR Therapeutics AG</td><td class="num">4.7%</td><td class="num">—</td><td class="num">6.4%</td></tr><tr><td>SHOP</td><td>Shopify Inc Registered Shs -A- Subord Vtg</td><td class="num">4.5%</td><td class="num">4.7%</td><td class="num">—</td></tr><tr><td>COIN</td><td>Coinbase Global Inc Ordinary Shares - Class A</td><td class="num">4.5%</td><td class="num">3.8%</td><td class="num">—</td></tr><tr><td>HOOD</td><td>Robinhood Markets Inc Class A</td><td class="num">3.5%</td><td class="num">4.5%</td><td class="num">—</td></tr></table>
+  
+  <div class="sub2" style="margin-top:20px">3 年回測（2023-08-21 ~ 2026-08-14，約 3.0 年）
     <span class="note">無風險利率簡化用 0%</span></div>
-  <table class="dt"><tr><th>標的</th><th>總報酬</th><th>年化報酬</th><th>年化波動</th>
-    <th>Sharpe</th><th>Sortino</th><th>最大回撤</th></tr><tr><td>ARKK</td>
-  <td class="num">+320.6%</td><td class="num">+15.5%</td>
-  <td class="num">+40.5%</td><td class="num">0.56</td>
-  <td class="num">0.55</td><td class="num">-80.9%</td></tr><tr><td>ARKW</td>
-  <td class="num">+660.3%</td><td class="num">+22.5%</td>
-  <td class="num">+37.8%</td><td class="num">0.73</td>
-  <td class="num">0.70</td><td class="num">-80.0%</td></tr><tr><td>SPY</td>
-  <td class="num">+317.7%</td><td class="num">+15.4%</td>
-  <td class="num">+17.9%</td><td class="num">0.89</td>
-  <td class="num">0.84</td><td class="num">-33.7%</td></tr><tr><td>QQQ</td>
-  <td class="num">+570.1%</td><td class="num">+21.0%</td>
-  <td class="num">+22.5%</td><td class="num">0.96</td>
-  <td class="num">0.90</td><td class="num">-35.1%</td></tr></table>
-  <p class="note">兩檔 ARK 基金 10 年總報酬看起來亮眼，但風險調整後報酬（Sharpe/Sortino）都輸給 QQQ，
-    且最大回撤逼近 −81%（QQQ/SPY 約 −34%），代表同樣的報酬用了遠高於大盤的風險去換。</p>
+  <table class="dt bttable"><tr><th>標的</th><th>總報酬</th><th>年化報酬</th><th>年化波動</th>
+    <th>Sharpe</th><th>Sortino</th><th>最大回撤</th></tr><tr data-fund="ARKK"><td>ARKK</td><td class="num">+99.0%</td><td class="num">+26.1%</td><td class="num">+39.5%</td><td class="num">0.78</td><td class="num">0.80</td><td class="num">-39.6%</td></tr><tr data-fund="ARKW"><td>ARKW</td><td class="num">+180.0%</td><td class="num">+41.5%</td><td class="num">+35.2%</td><td class="num">1.16</td><td class="num">1.17</td><td class="num">-36.2%</td></tr><tr data-fund="ARKG"><td>ARKG</td><td class="num">+40.4%</td><td class="num">+12.1%</td><td class="num">+43.6%</td><td class="num">0.48</td><td class="num">0.52</td><td class="num">-46.5%</td></tr><tr data-fund="bench"><td>SPY</td><td class="num">+83.4%</td><td class="num">+22.7%</td><td class="num">+15.4%</td><td class="num">1.40</td><td class="num">1.38</td><td class="num">-18.8%</td></tr><tr data-fund="bench"><td>QQQ</td><td class="num">+104.4%</td><td class="num">+27.2%</td><td class="num">+20.5%</td><td class="num">1.28</td><td class="num">1.23</td><td class="num">-22.8%</td></tr></table>
+  <div class="sub2" style="margin-top:20px">5 年回測（2021-08-19 ~ 2026-08-14，約 5.0 年）
+    <span class="note">無風險利率簡化用 0%</span></div>
+  <table class="dt bttable"><tr><th>標的</th><th>總報酬</th><th>年化報酬</th><th>年化波動</th>
+    <th>Sharpe</th><th>Sortino</th><th>最大回撤</th></tr><tr data-fund="ARKK"><td>ARKK</td><td class="num">-27.6%</td><td class="num">-6.3%</td><td class="num">+46.7%</td><td class="num">0.09</td><td class="num">0.10</td><td class="num">-76.1%</td></tr><tr data-fund="ARKW"><td>ARKW</td><td class="num">+11.6%</td><td class="num">+2.2%</td><td class="num">+43.9%</td><td class="num">0.27</td><td class="num">0.27</td><td class="num">-76.8%</td></tr><tr data-fund="ARKG"><td>ARKG</td><td class="num">-44.4%</td><td class="num">-11.2%</td><td class="num">+46.3%</td><td class="num">-0.03</td><td class="num">-0.03</td><td class="num">-79.0%</td></tr><tr data-fund="bench"><td>SPY</td><td class="num">+88.8%</td><td class="num">+13.7%</td><td class="num">+17.2%</td><td class="num">0.83</td><td class="num">0.82</td><td class="num">-24.5%</td></tr><tr data-fund="bench"><td>QQQ</td><td class="num">+107.0%</td><td class="num">+15.8%</td><td class="num">+23.0%</td><td class="num">0.75</td><td class="num">0.73</td><td class="num">-35.1%</td></tr></table>
+  <div class="sub2" style="margin-top:20px">10 年回測（2016-08-22 ~ 2026-08-14，約 10.0 年）
+    <span class="note">無風險利率簡化用 0%</span></div>
+  <table class="dt bttable"><tr><th>標的</th><th>總報酬</th><th>年化報酬</th><th>年化波動</th>
+    <th>Sharpe</th><th>Sortino</th><th>最大回撤</th></tr><tr data-fund="ARKK"><td>ARKK</td><td class="num">+315.3%</td><td class="num">+15.4%</td><td class="num">+40.6%</td><td class="num">0.56</td><td class="num">0.54</td><td class="num">-80.9%</td></tr><tr data-fund="ARKW"><td>ARKW</td><td class="num">+659.0%</td><td class="num">+22.6%</td><td class="num">+37.9%</td><td class="num">0.73</td><td class="num">0.70</td><td class="num">-80.0%</td></tr><tr data-fund="ARKG"><td>ARKG</td><td class="num">+147.5%</td><td class="num">+9.5%</td><td class="num">+41.5%</td><td class="num">0.43</td><td class="num">0.43</td><td class="num">-83.6%</td></tr><tr data-fund="bench"><td>SPY</td><td class="num">+317.1%</td><td class="num">+15.4%</td><td class="num">+18.0%</td><td class="num">0.89</td><td class="num">0.84</td><td class="num">-33.7%</td></tr><tr data-fund="bench"><td>QQQ</td><td class="num">+567.6%</td><td class="num">+21.0%</td><td class="num">+22.6%</td><td class="num">0.96</td><td class="num">0.90</td><td class="num">-35.1%</td></tr></table>
+  <p class="note">拉長到 10 年看，三檔 ARK 基金風險調整後報酬（Sharpe/Sortino）都輸給大盤/QQQ，且最大回撤達 -83.6%（大盤/QQQ 約 -33.7%），代表同樣的報酬用了遠高於大盤的風險去換。短天期（3年/5年）的排序可能不同，請往上對照各期間表格自行比較。</p>
 </section>
 <section class="sec">
   <div class="sechd"><h2>產業方向</h2></div>
   <p class="note">ark-funds.com 的每日持股 CSV 被 Cloudflare 擋掉，抓不到歷史快照做「這個月 vs 上個月」
     的精確比對；下面是<b>現在的產業曝險快照</b>，配合下方 ARK 官方近期公開的持股異動報導（有查證來源），
     交叉解讀「錢正在往哪個方向移動」——不是我自己猜的百分比。</p>
-  <div class="fgrid2">
-    <div><div class="sub2">ARKK · ARK 創新旗艦 ETF</div><div class="sbar"><span class="sn">醫療保健</span><div class="sbg"><div class="sfg" style="width:29.1%"></div></div><span class="sv num">29.1%</span></div><div class="sbar"><span class="sn">科技</span><div class="sbg"><div class="sfg" style="width:25.9%"></div></div><span class="sv num">25.9%</span></div><div class="sbar"><span class="sn">金融服務</span><div class="sbg"><div class="sfg" style="width:14.8%"></div></div><span class="sv num">14.8%</span></div><div class="sbar"><span class="sn">非必需消費</span><div class="sbg"><div class="sfg" style="width:12.3%"></div></div><span class="sv num">12.3%</span></div><div class="sbar"><span class="sn">工業</span><div class="sbg"><div class="sfg" style="width:10.8%"></div></div><span class="sv num">10.8%</span></div><div class="sbar"><span class="sn">通訊服務</span><div class="sbg"><div class="sfg" style="width:7.1%"></div></div><span class="sv num">7.1%</span></div></div>
-    <div><div class="sub2">ARKW · ARK Next Generation Internet ETF</div><div class="sbar"><span class="sn">科技</span><div class="sbg"><div class="sfg" style="width:51.2%"></div></div><span class="sv num">51.2%</span></div><div class="sbar"><span class="sn">非必需消費</span><div class="sbg"><div class="sfg" style="width:16.1%"></div></div><span class="sv num">16.1%</span></div><div class="sbar"><span class="sn">金融服務</span><div class="sbg"><div class="sfg" style="width:14.8%"></div></div><span class="sv num">14.8%</span></div><div class="sbar"><span class="sn">通訊服務</span><div class="sbg"><div class="sfg" style="width:14.2%"></div></div><span class="sv num">14.2%</span></div><div class="sbar"><span class="sn">工業</span><div class="sbg"><div class="sfg" style="width:3.7%"></div></div><span class="sv num">3.7%</span></div></div>
-  </div>
+  <div class="fgrid2"><div data-fund="ARKK"><div class="sub2">ARKK · ARK 創新旗艦 ETF</div><div class="sbar"><span class="sn">醫療保健</span><div class="sbg"><div class="sfg" style="width:29.1%"></div></div><span class="sv num">29.1%</span></div><div class="sbar"><span class="sn">科技</span><div class="sbg"><div class="sfg" style="width:25.9%"></div></div><span class="sv num">25.9%</span></div><div class="sbar"><span class="sn">金融服務</span><div class="sbg"><div class="sfg" style="width:14.8%"></div></div><span class="sv num">14.8%</span></div><div class="sbar"><span class="sn">非必需消費</span><div class="sbg"><div class="sfg" style="width:12.3%"></div></div><span class="sv num">12.3%</span></div><div class="sbar"><span class="sn">工業</span><div class="sbg"><div class="sfg" style="width:10.8%"></div></div><span class="sv num">10.8%</span></div><div class="sbar"><span class="sn">通訊服務</span><div class="sbg"><div class="sfg" style="width:7.1%"></div></div><span class="sv num">7.1%</span></div></div><div data-fund="ARKW"><div class="sub2">ARKW · ARK Next Generation Internet ETF</div><div class="sbar"><span class="sn">科技</span><div class="sbg"><div class="sfg" style="width:51.2%"></div></div><span class="sv num">51.2%</span></div><div class="sbar"><span class="sn">非必需消費</span><div class="sbg"><div class="sfg" style="width:16.1%"></div></div><span class="sv num">16.1%</span></div><div class="sbar"><span class="sn">金融服務</span><div class="sbg"><div class="sfg" style="width:14.8%"></div></div><span class="sv num">14.8%</span></div><div class="sbar"><span class="sn">通訊服務</span><div class="sbg"><div class="sfg" style="width:14.2%"></div></div><span class="sv num">14.2%</span></div><div class="sbar"><span class="sn">工業</span><div class="sbg"><div class="sfg" style="width:3.7%"></div></div><span class="sv num">3.7%</span></div></div><div data-fund="ARKG"><div class="sub2">ARKG · ARK 基因體革命 ETF</div><div class="sbar"><span class="sn">醫療保健</span><div class="sbg"><div class="sfg" style="width:100.0%"></div></div><span class="sv num">100.0%</span></div></div></div>
 
   <div class="sub2" style="margin-top:20px">近期公開持股異動（查證來源見文末）</div>
   <div class="movegrid"><div class="movecard">
@@ -227,48 +289,58 @@ h1 svg{flex-shrink:0}
 </section>
 <section class="sec">
   <div class="sechd"><h2>重倉個股法說會重點</h2>
-    <span class="cnt">兩檔基金合計權重前 8 大（不含私募的 SPCX）</span></div>
-  <div class="ecard2"><h3>TSLA</h3><div class="reality"><h3>管理層口頭重點</h3>
+    <span class="cnt">三檔基金合計權重前 10 大（不含私募的 SPCX）</span></div>
+  <div class="ecard2grid"><div class="ecard2"><div class="ecard2hd">TSLA</div><div class="reality"><h3>管理層口頭重點</h3>
 <div class="posnote">資料來源：法說會逐字稿公開內容（Motley Fool／GuruFocus等），管理層口頭發言，非公司正式財報數字，數字未經覆核</div>
-<div class="techgrid"><div class="ttile"><div class="tn">第二季總營收（年增26%）</div><div class="tv">282億美元</div></div><div class="ttile"><div class="tn">第二季汽車交付量（年增25%）</div><div class="tv">480,126台</div></div><div class="ttile"><div class="tn">各地區交付量季增幅</div><div class="tv">美洲+60%、亞太+27%、歐非中東+12%</div></div><div class="ttile"><div class="tn">第二季儲能部署量（年增41%，季增53%）</div><div class="tv">13.5 GWh</div></div><div class="ttile"><div class="tn">第二季汽車毛利率（不含碳積分）</div><div class="tv">16.3%（上季19.2%，季減2.9個百分點）</div></div><div class="ttile"><div class="tn">第二季儲能部門毛利率</div><div class="tv">20.4%（上季39.5%，因保固準備金一次性壓縮）</div></div><div class="ttile"><div class="tn">第二季自由現金流（FCF）</div><div class="tv">負11億美元</div></div><div class="ttile"><div class="tn">FSD全球累計付費客戶數</div><div class="tv">近150萬（55%買斷、45%訂閱制）</div></div><div class="ttile"><div class="tn">北美新車FSD附加率（第二季交付）</div><div class="tv">55%</div></div><div class="ttile"><div class="tn">Robotaxi無人監督累計行駛里程</div><div class="tv">超過38萬英里，涵蓋6個城市、2個州，零重大事故</div></div></div>
-<div class="callnote-block"><div class="realitysub">管理層展望</div><div class="callnote-text"><b>2026全年資本支出指引</b>：超過250億美元；另已額外取得最高300億美元新增借貸額度</div><div class="callnote-text"><b>儲能部門毛利率中長期正常化目標</b>：排除本季一次性保固準備金因素後，長期正常化目標為中低20%水準</div><div class="callnote-text"><b>Tesla Semi自動駕駛及量產時程</b>：自動駕駛預計於2026年底或2027年初達成；產能將持續在2026至2027年爬坡</div><div class="callnote-text"><b>Optimus 4年產量目標</b>：Austin廠Optimus 4目標年產1,000萬台，為前代目標（約100萬台）的10倍</div></div>
-<div class="callnote-quote">「客戶實際上是在購買Tesla完全自動駕駛，車子只是附帶的——而不是反過來。」<div class="callnote-speaker">—— Elon Musk，執行長</div></div>
-</div></div><div class="ecard2"><h3>AMD</h3><div class="reality"><h3>管理層口頭重點</h3>
+<div class="techgrid"><div class="ttile"><div class="tn">Q2 2026 總營收</div><div class="tv">$28.2B，年增26%</div></div><div class="ttile"><div class="tn">Q2 2026 車輛交付量</div><div class="tv">480,126台，年增25%</div></div><div class="ttile"><div class="tn">Q2 2026 能源儲存部署量</div><div class="tv">13.5 GWh，年增41%</div></div><div class="ttile"><div class="tn">Q2 2026 汽車毛利率（不含碳權）</div><div class="tv">16.3%（去年同期19.2%，季比下滑）</div></div><div class="ttile"><div class="tn">北美FSD訂閱滲透率</div><div class="tv">Q2交付量中55%附帶FSD訂閱</div></div><div class="ttile"><div class="tn">全球付費FSD客戶數</div><div class="tv">近150萬人（55%買斷、45%訂閱）</div></div><div class="ttile"><div class="tn">Robotaxi無監督自動駕駛累計里程</div><div class="tv">380,000英里，覆蓋六個城市，零重大事故；2026年初以來每週維持雙位數成長</div></div><div class="ttile"><div class="tn">車輛訂單Backlog</div><div class="tv">達2023年以來最大規模</div></div></div>
+<div class="callnote-block"><div class="realitysub">管理層展望</div><div class="callnote-text"><b>2026全年資本支出指引</b>：超過$250億，下半年CapEx預計持續增加</div><div class="callnote-text"><b>未來2至3年資本支出方向</b>：Robotaxi車隊擴張、Optimus量產線、自製半導體廠（Terafab）及太陽能製造將持續推升CapEx，並已籌備最高$300億新借貸額度</div><div class="callnote-text"><b>能源業務長期毛利率目標</b>：正常化後預計維持在低至中20%區間</div><div class="callnote-text"><b>Tesla Semi自動駕駛軟體上線時程</b>：預計2027年初投入運營</div><div class="callnote-text"><b>AI5自研晶片量產時程</b>：目標2027年中進入量產</div><div class="callnote-text"><b>Optimus機器人年產量目標</b>：Optimus 3目標年產100萬台；Optimus 4目標年產1000萬台</div></div>
+<div class="callnote-quote">「就算只有一個人受傷，也會成為全球頭條新聞，監管機構會立刻限制我們的活動。」<div class="callnote-speaker">—— Elon Musk, CEO</div></div>
+</div></div><div class="ecard2"><div class="ecard2hd">TXG</div><div class="reality"><h3>管理層口頭重點</h3>
 <div class="posnote">資料來源：法說會逐字稿公開內容（Motley Fool／GuruFocus等），管理層口頭發言，非公司正式財報數字，數字未經覆核</div>
-<div class="techgrid"><div class="ttile"><div class="tn">總營收（創歷史新高）</div><div class="tv">115億美元，年增50%、季增13%，為連續第六季年增幅超30%</div></div><div class="ttile"><div class="tn">資料中心部門營收</div><div class="tv">67億美元，年增107%，占總營收約58%</div></div><div class="ttile"><div class="tn">客戶端部門營收</div><div class="tv">31億美元，年增23%，行動處理器銷售創歷史新高</div></div><div class="ttile"><div class="tn">遊戲部門營收</div><div class="tv">7.79億美元，年減31%，受主機產品週期影響</div></div><div class="ttile"><div class="tn">嵌入式部門營收</div><div class="tv">9.77億美元，年增19%，為三年多來最強成長表現</div></div><div class="ttile"><div class="tn">非GAAP毛利率</div><div class="tv">56%，年增200個基點、季增80個基點</div></div><div class="ttile"><div class="tn">非GAAP稀釋EPS 年增幅</div><div class="tv">年增82%，達每股1.66美元</div></div><div class="ttile"><div class="tn">自由現金流（FCF）與現金部位</div><div class="tv">FCF 16億美元；營業現金流24億美元；現金及短期投資131億美元</div></div></div>
-<div class="callnote-block"><div class="realitysub">管理層展望</div><div class="callnote-text"><b>Q3 2026 營收展望</b>：約130億美元（±3億美元），年增約41%、季增約13%</div><div class="callnote-text"><b>Q3 2026 非GAAP毛利率與營運支出展望</b>：毛利率約56%，非GAAP營運費用約36.5億美元，稅率約13%</div><div class="callnote-text"><b>2026年下半年伺服器CPU成長展望</b>：伺服器CPU營收年增幅預計超過80%；資料中心部門整體為「強勁雙位數成長」</div><div class="callnote-text"><b>2027年資料中心與伺服器CPU展望</b>：資料中心部門年增幅預計超過100%（管理層用語：well over 100%）；伺服器CPU年增幅預計超過70%</div><div class="callnote-text"><b>長期EPS目標上修</b>：管理層預期將「大幅超越」財務分析師日所設定的年度EPS 20美元長期目標</div><div class="callnote-text"><b>Helios機架平台與MI450出貨時程</b>：Q3 2026小批量出貨、Q4擴大出貨、2027年Q1再顯著提升；Anthropic承諾部署高達2GW MI450，首批1GW於2027年上半年交付</div></div>
-<div class="callnote-quote">「我們仍處於多年AI採用週期的早期階段，隨著部署遍及廣泛市場與工作負載，對算力的需求持續成長，為未來顯著的營收成長與獲利能力奠定清晰的道路。」<div class="callnote-speaker">—— Dr. Lisa Su，執行長（CEO）</div></div>
-</div></div><div class="ecard2"><h3>SHOP</h3><div class="reality"><h3>管理層口頭重點</h3>
+<div class="techgrid"><div class="ttile"><div class="tn">Q2 2026 總營收（不含2025年一次性和解收入）</div><div class="tv">1.51億美元，年增3%</div></div><div class="ttile"><div class="tn">調整後毛利率</div><div class="tv">74%（前年同期67%）</div></div><div class="ttile"><div class="tn">消耗品總營收</div><div class="tv">年增7%</div></div><div class="ttile"><div class="tn">空間消耗品營收</div><div class="tv">4,230萬美元，年增16%</div></div><div class="ttile"><div class="tn">單細胞消耗品營收</div><div class="tv">8,850萬美元，年增3%</div></div><div class="ttile"><div class="tn">儀器營收（Atera 換代過渡期）</div><div class="tv">770萬美元，年減47%</div></div><div class="ttile"><div class="tn">美洲地區營收（不含和解金）</div><div class="tv">8,500萬美元，年增6%</div></div><div class="ttile"><div class="tn">EMEA 地區營收</div><div class="tv">4,000萬美元，年增15%</div></div><div class="ttile"><div class="tn">APAC 地區營收（中國前年提前拉貨效應消退）</div><div class="tv">2,600萬美元，年減19%</div></div><div class="ttile"><div class="tn">Atera 平台已接訂單</div><div class="tv">已超過全年出貨目標40台，多數排程於第四季交貨</div></div></div>
+<div class="callnote-block"><div class="realitysub">管理層展望</div><div class="callnote-text"><b>2026全年營收指引（本季上調）</b>：6.10億至6.30億美元，不含和解金年增2%至5%</div><div class="callnote-text"><b>2026第三季營收展望</b>：預期溫和季減，客戶因等待Atera出貨而暫緩空間產品採購</div><div class="callnote-text"><b>2026第四季營收展望</b>：預期大幅成長，Atera大批出貨疊加正常季節性旺季</div><div class="callnote-text"><b>Atera每台儀器最大拉動消耗品潛力</b>：每台預估達150萬至300萬美元，約為Xenium的2倍</div></div>
+<div class="callnote-quote">「我們看到的成長動能非常驚人——幾個月前，這個平台對我們的客戶而言還完全陌生。」<div class="callnote-speaker">—— Serge Saxonov, CEO</div></div>
+</div></div><div class="ecard2"><div class="ecard2hd">AMD</div><div class="reality"><h3>管理層口頭重點</h3>
 <div class="posnote">資料來源：法說會逐字稿公開內容（Motley Fool／GuruFocus等），管理層口頭發言，非公司正式財報數字，數字未經覆核</div>
-<div class="techgrid"><div class="ttile"><div class="tn">Q2 GMV 年增（連續第五季超過30%）</div><div class="tv">$1,156億美元，年增32%，連續第五季維持30%以上增速</div></div><div class="ttile"><div class="tn">Q2 整體營收年增</div><div class="tv">$36億美元，年增34%</div></div><div class="ttile"><div class="tn">商家解決方案（Merchant Solutions）營收年增</div><div class="tv">$28億美元，年增37%</div></div><div class="ttile"><div class="tn">訂閱解決方案（Subscription Solutions）營收年增</div><div class="tv">$8.02億美元，年增22%</div></div><div class="ttile"><div class="tn">B2B GMV 年增</div><div class="tv">年增76%</div></div><div class="ttile"><div class="tn">國際GMV年增</div><div class="tv">年增37%</div></div><div class="ttile"><div class="tn">支付滲透率（Payments Penetration）</div><div class="tv">佔全球GMV的68%，較去年同期增加3個百分點</div></div><div class="ttile"><div class="tn">Shop Pay GMV年增與終身累計</div><div class="tv">本季GMV年增53%；終身累計突破4,000億美元</div></div><div class="ttile"><div class="tn">MRR 及 Shopify Plus佔比</div><div class="tv">MRR $2.21億美元，年增19%；Shopify Plus佔MRR的34%</div></div><div class="ttile"><div class="tn">自由現金流（FCF）及FCF Margin</div><div class="tv">$6.54億美元，FCF Margin 18%（去年同期為16%）</div></div><div class="ttile"><div class="tn">AI助手 Sidekick 使用量與AI導購訂單年增</div><div class="tv">Sidekick日活商家數年增3.6倍，Q2處理3,400萬次對話；AI驅動流量與訂單均年增3倍；75%的AI導購訂單來自前100大品類之外</div></div></div>
-<div class="callnote-block"><div class="realitysub">管理層展望</div><div class="callnote-text"><b>Q3 2026 營收年增展望</b>：預期年增幅為「低三十幾個百分點（low-thirties percentage）」，且各地區與通路成長均衡</div><div class="callnote-text"><b>Q3 2026 FCF Margin展望</b>：預期FCF Margin為「高十幾到低二十幾個百分點（high-teens to low-twenties percentage）」</div><div class="callnote-text"><b>Q3 2026 營業費用佔比展望</b>：預期營業費用佔營收比例為33%至34%，股票薪酬約$1.5億美元</div></div>
-<div class="callnote-quote">「自2025年初以來，我們掌握了美國幾乎一半的新增電商消費——這正是我們在大規模搶奪市場份額的最好說明。」<div class="callnote-speaker">—— Jeff Hoffmeister，CFO</div></div>
-</div></div><div class="ecard2"><h3>COIN</h3><div class="reality"><h3>管理層口頭重點</h3>
+<div class="techgrid"><div class="ttile"><div class="tn">Q2 2026 總營收</div><div class="tv">115億美元，年增50%，季增13%，創歷史新高</div></div><div class="ttile"><div class="tn">Q2 2026 資料中心分部營收</div><div class="tv">67億美元，年增107%，季增16%，佔總營收58%</div></div><div class="ttile"><div class="tn">Q2 2026 客戶端（Client）分部營收</div><div class="tv">31億美元，年增23%，季增6%</div></div><div class="ttile"><div class="tn">Q2 2026 遊戲（Gaming）分部營收</div><div class="tv">7.79億美元，年減31%，季增8%</div></div><div class="ttile"><div class="tn">Q2 2026 嵌入式（Embedded）分部營收</div><div class="tv">9.77億美元，年增19%，季增12%</div></div><div class="ttile"><div class="tn">Q2 2026 非GAAP稀釋EPS</div><div class="tv">1.66美元，年增82%</div></div><div class="ttile"><div class="tn">Q2 2026 自由現金流（FCF）</div><div class="tv">16億美元</div></div><div class="ttile"><div class="tn">Q2 2026 年度設計訂單金額</div><div class="tv">逾180億美元，由網路、資料中心、通訊領域領銜</div></div></div>
+<div class="callnote-block"><div class="realitysub">管理層展望</div><div class="callnote-text"><b>Q3 2026 營收展望</b>：約130億美元（±3億美元），年增約41%，季增約13%</div><div class="callnote-text"><b>Q3 2026 非GAAP毛利率展望</b>：約56%</div><div class="callnote-text"><b>2027年資料中心分部全年展望</b>：資料中心預計全年年增逾一倍；其中伺服器CPU年增逾70%</div><div class="callnote-text"><b>Helios機架AI平台出貨與爬坡時程</b>：2026年第三季末首批出貨，第四季開始加速爬坡並延續至2027年全年；相較競品每美元可提供30%更多算力</div><div class="callnote-text"><b>資料中心AI加速器長期市場展望</b>：至2030年資料中心AI加速器市場年均增長逾45%，TAM達1.4兆美元，整體AI算力TAM約達2兆美元</div><div class="callnote-text"><b>長期EPS與營收成長目標</b>：長期年度EPS目標將「顯著超越」20美元；長期營收成長目標將「實質超越」35%年增</div></div>
+<div class="callnote-quote">「我們仍處於多年AI採用週期的早期階段，隨著部署在廣泛的市場和工作負載中持續擴大，對更多算力的需求不斷驅動成長。」<div class="callnote-speaker">—— Lisa Su，執行長（CEO）</div></div>
+</div></div><div class="ecard2"><div class="ecard2hd">TEM</div><div class="reality"><h3>管理層口頭重點</h3>
 <div class="posnote">資料來源：法說會逐字稿公開內容（Motley Fool／GuruFocus等），管理層口頭發言，非公司正式財報數字，數字未經覆核</div>
-<div class="techgrid"><div class="ttile"><div class="tn">比特幣交易營收佔比</div><div class="tv">本季比特幣相關交易營收僅佔公司總營收 12%，歷史上曾超過 50%</div></div><div class="ttile"><div class="tn">Coinbase One 付費訂閱用戶數</div><div class="tv">突破 100 萬付費會員，創歷史新高；值得注意的是此成就在加密交易量下滑的熊市期間達成</div></div><div class="ttile"><div class="tn">Base 穩定幣轉帳量（過去 12 個月）</div><div class="tv">32 兆美元穩定幣轉帳量，為以太坊最大 L2，穩定幣轉帳量排名第一</div></div><div class="ttile"><div class="tn">Base 佔 AI 代理人穩定幣交易量比例</div><div class="tv">超過 90% 的 AI 代理人穩定幣交易量在 Base 上結算（X402 協議為主）</div></div><div class="ttile"><div class="tn">USDC 市場排名</div><div class="tv">USDC 在穩定幣交易量上已排名全球第一（受監管類別），但市值（AUM）仍次於 Tether 排名第二</div></div><div class="ttile"><div class="tn">成長行銷投資回收期</div><div class="tv">成長行銷投資回收期通常為 1 年，本季表現優於此基準，且預測市場等新產品帶動增量現貨交易，無蠶食效應</div></div></div>
-<div class="callnote-block"><div class="realitysub">管理層展望</div><div class="callnote-text"><b>預上市永續合約（Pre-IPO Perps）美國市場開放時程</b>：SpaceX 為首檔推出，獲早期正面反應；美國用戶開放使用已列入產品路線圖，持續推進中</div><div class="callnote-text"><b>USDC 市佔目標：拿下市值排名第一</b>：將持續分享 USDC 經濟利益以驅動全球採用，目標是在交易量與市值兩項指標上均達到全球第一（目前市值仍次於 Tether）</div><div class="callnote-text"><b>Base 去中心化路線圖與中立基礎設施目標</b>：計畫分階段推進 Base 去中心化，目標成為多方公司均可建構的中立基礎設施；目前已有約 2 年先發優勢，將持續投資</div><div class="callnote-text"><b>產品線擴充展望：股票選擇權交易</b>：股票選擇權（stock options）交易列入近期路線圖，持續推進「everything exchange」多資產策略以分散交易費收入來源</div><div class="callnote-text"><b>Coinbase One 訂閱業務對財務的整體影響</b>：雖付費會員享有零手續費交易，但整體對業務屬增益（accretive）關係，因會員跨產品使用率、留存率更高，收入分散至質押、信用卡等多個產品線</div><div class="callnote-text"><b>多穩定幣平台策略：對所有主要穩定幣談判經濟分成</b>：Coinbase 定位為多穩定幣平台，將對 USDC、PYUSD、USDT、Onyx USD 等所有主要穩定幣爭取有利的經濟分成安排，以最大化收入機會</div></div>
-<div class="callnote-quote">「本季加密交易量下滑，但 Coinbase One 付費會員數卻創歷史新高——這正代表了訂閱產品的真實價值。這些會員往往是我們平台上最深度參與的客戶，他們嘗試最多的產品與服務。」<div class="callnote-speaker">—— Alesia Jeanne Haas，首席財務長（CFO）</div></div>
-</div></div><div class="ecard2"><h3>HOOD</h3><div class="reality"><h3>管理層口頭重點</h3>
+<div class="techgrid"><div class="ttile"><div class="tn">Q2 2026 總營收</div><div class="tv">3.825億美元，年增22%</div></div><div class="ttile"><div class="tn">Q2 2026 診斷部門營收</div><div class="tv">2.893億美元，年增20%</div></div><div class="ttile"><div class="tn">Q2 2026 數據與應用部門營收</div><div class="tv">9,320萬美元，年增28%（其中數據授權與建模子項目年增36%）</div></div><div class="ttile"><div class="tn">Q2 MRD（微小殘存病灶）檢測量</div><div class="tv">約9,000例，較Q1約6,500例季增38%</div></div><div class="ttile"><div class="tn">腫瘤實體瘤演算法附加率</div><div class="tv">45%（Q1為40%，持續提升）</div></div><div class="ttile"><div class="tn">Q2 訂單金額（Bookings）</div><div class="tv">約2億美元</div></div><div class="ttile"><div class="tn">Q2 調整後 EBITDA</div><div class="tv">800萬美元，年增1,360萬美元</div></div><div class="ttile"><div class="tn">Q2 GAAP 淨利潤（首次轉正）</div><div class="tv">560萬美元</div></div></div>
+<div class="callnote-block"><div class="realitysub">管理層展望</div><div class="callnote-text"><b>2026全年營收指引（本季上調）</b>：15.95億至16.05億美元，年增約25%</div><div class="callnote-text"><b>2026全年調整後 EBITDA 目標</b>：約6,500萬美元，較2025年改善約7,200萬美元</div><div class="callnote-text"><b>自由現金流（FCF）轉正時程</b>：預計2026年底前實現正 FCF</div><div class="callnote-text"><b>xT CDx 獲 FDA 批准後 ASP 提升效益（2027年起）</b>：平均售價（ASP）預計每次提升約200美元，年化貢獻增量收入約8,500萬美元</div><div class="callnote-text"><b>xF 液態切片核准時程與定價展望</b>：預計2027年下半年獲 FDA 核准，定價約7,500美元（ADLT 類別），ASP 較現有產品再提升約550美元</div><div class="callnote-text"><b>xT CDx + xF 兩產品合計2028年增量年化收入潛力</b>：兩項產品合計預計帶來約4億美元增量年化收入</div></div>
+<div class="callnote-quote">「數據業務正熊熊燃燒，我們在簽約方面的動能是多年來最強的。」<div class="callnote-speaker">—— Eric Lefkofsky，執行長（CEO）</div></div>
+</div></div><div class="ecard2"><div class="ecard2hd">CRSP</div><div class="reality"><h3>管理層口頭重點</h3>
 <div class="posnote">資料來源：法說會逐字稿公開內容（Motley Fool／GuruFocus等），管理層口頭發言，非公司正式財報數字，數字未經覆核</div>
-<div class="techgrid"><div class="ttile"><div class="tn">交易型營收總計</div><div class="tv">$7.76 億，年增 44%</div></div><div class="ttile"><div class="tn">選擇權交易營收</div><div class="tv">$3.42 億，年增 29%；交易合約 7.74 億口</div></div><div class="ttile"><div class="tn">股票交易營收</div><div class="tv">$1.29 億，年增 95%</div></div><div class="ttile"><div class="tn">事件合約營收（預測市場）</div><div class="tv">$1.56 億，年增約 10 倍</div></div><div class="ttile"><div class="tn">有資金客戶數及 Q2 淨新增</div><div class="tv">總計 2,840 萬；Q2 單季新增近 100 萬，為上市以來最高單季增量</div></div><div class="ttile"><div class="tn">平均每用戶營收（ARPU）</div><div class="tv">$187，年增 24%</div></div><div class="ttile"><div class="tn">Gold 訂閱用戶數及附率</div><div class="tv">480 萬人，附率 17%（創歷史新高）</div></div><div class="ttile"><div class="tn">保證金帳冊規模</div><div class="tv">$216 億，年增 127%</div></div><div class="ttile"><div class="tn">AI 代理交易活躍帳戶</div><div class="tv">超過 10 萬個帳戶透過 AI 代理進行股票、選擇權、加密貨幣交易</div></div></div>
-<div class="callnote-block"><div class="realitysub">管理層展望</div><div class="callnote-text"><b>2026 全年調整後營運費用指引（下修）</b>：$26.75 億至 $27.75 億，低於先前指引區間 $27 億至 $28.25 億</div><div class="callnote-text"><b>Q3 早期信號：7 月淨存款追蹤進度</b>：7 月淨存款朝 $40 億推進，且此數字尚未計入 Trump Accounts 新資金流入</div><div class="callnote-text"><b>中長期淨存款成長目標</b>：維持淨存款年化成長率 20% 以上，為管理層財務三大北極星指標之一</div><div class="callnote-text"><b>長期業務規模目標</b>：管理層相信未來 10 年業務可成長 10 倍，驅動力為 AI 代理金融、國際擴張（加拿大、新加坡）與區塊鏈基礎設施</div></div>
-<div class="callnote-quote">「我們的財務北極星始終不變：為股東長期最大化每股盈餘（EPS）與每股自由現金流（FCF）。」<div class="callnote-speaker">—— Shiv Kumar Verma，財務長（CFO）</div></div>
-</div></div><div class="ecard2"><h3>CRCL</h3><div class="reality"><h3>管理層口頭重點</h3>
+<div class="techgrid"><div class="ttile"><div class="tn">CASGEVY 第二季淨產品營收</div><div class="tv">7,600 萬美元，年增 151%，季增 78%</div></div><div class="ttile"><div class="tn">本季淨虧損</div><div class="tv">9,120 萬美元（前年同期 2.085 億美元，大幅收窄）</div></div><div class="ttile"><div class="tn">稀釋每股淨損 EPS</div><div class="tv">-$0.94（前年同期 -$2.40，年增改善 61%）</div></div><div class="ttile"><div class="tn">現金及約當現金（含有價證券）</div><div class="tv">23.644 億美元（2026/6/30），年初為 19.758 億美元</div></div><div class="ttile"><div class="tn">CASGEVY 全球累計核准國家數</div><div class="tv">39 個國家，涵蓋北美、歐洲、中東</div></div><div class="ttile"><div class="tn">FDA 核准 CASGEVY 兒科適應症新增潛在患者數</div><div class="tv">約 5,500 名患有 SCD 或 TDT 的兒童患者（2 歲以上）新納入適應症</div></div><div class="ttile"><div class="tn">FDA 兒科適應症審核速度</div><div class="tv">遞交後 53 天即完成核准</div></div><div class="ttile"><div class="tn">德國給付覆蓋</div><div class="tv">已為 12 歲以上 SCD／TDT 患者取得德國法定保險給付</div></div></div>
+<div class="callnote-block"><div class="realitysub">管理層展望</div><div class="callnote-text"><b>CTX310（ANGPTL3 抑制劑）臨床數據發布時程</b>：Phase 1a 更新預計於 2026 年 8 月 28 日歐洲心臟病學會（ESC）年會發表；Phase 1b 臨床更新預計於 2026 年下半年公布</div><div class="callnote-text"><b>CTX611 siRNA（FXI 抑制劑）Phase 2 更新時程與市場規模</b>：用於全膝關節置換術患者的 Phase 2 試驗更新預計 2026 年下半年公布；管理層定位為多十億美元的血栓栓塞症市場機會</div><div class="callnote-text"><b>Zugo-cel 自體免疫及免疫腫瘤多籃式試驗里程碑</b>：涵蓋 SLE、系統性硬化症、炎性肌病、ITP、溫型自體免疫溶血性貧血，以及新啟動的神經系統疾病籃（進行性多發性硬化症、NMOSD、MOGAD 等）的試驗更新，預計 2026 年下半年公布</div><div class="callnote-text"><b>CTX321 Lp(a) 心血管計畫里程碑</b>：CTX321（針對高 Lp(a) 患者）更新預計於 2026 年內公布；前期顯示效能較前代提升兩倍</div><div class="callnote-text"><b>CASGEVY 地理擴張與兒科給付拓展計畫</b>：沙烏地阿拉伯及英國已完成 5-11 歲兒科適應症監管送件，審核進行中；持續推動各已核准市場的保險給付談判</div></div>
+<div class="callnote-quote">「第二季反映了 CRISPR Therapeutics 整個產品組合與技術平台的強勁執行力。CASGEVY 的動能持續積累，FDA 核准其用於 2 歲以上兒童患者是一大亮點，我們同步擴大活體基因編輯管線，啟動了 CTX340 與 CTX460 的第一期臨床試驗。我們以充足實力進入 2026 年下半年，管線中有多項重要里程碑即將兌現。」<div class="callnote-speaker">—— Samarth Kulkarni 博士，董事長暨執行長</div></div>
+</div></div><div class="ecard2"><div class="ecard2hd">SHOP</div><div class="reality"><h3>管理層口頭重點</h3>
 <div class="posnote">資料來源：法說會逐字稿公開內容（Motley Fool／GuruFocus等），管理層口頭發言，非公司正式財報數字，數字未經覆核</div>
-<div class="techgrid"><div class="ttile"><div class="tn">總營收（含準備金收益）</div><div class="tv">7.01 億美元，年增 7%</div></div><div class="ttile"><div class="tn">調整後 EBITDA 及利潤率</div><div class="tv">1.43 億美元，年增 8%；EBITDA 利潤率 50%</div></div><div class="ttile"><div class="tn">USDC 流通量</div><div class="tv">733 億美元，年增 19%；季內平均流通量創歷史新高達 765 億美元</div></div><div class="ttile"><div class="tn">USDC 鏈上交易量</div><div class="tv">14.8 兆美元，年增 151%；日均鑄幣與贖回量 19 億美元，年增 105%</div></div><div class="ttile"><div class="tn">Circle 平台上的 USDC 存量</div><div class="tv">124 億美元，年增 106%，佔總流通量 17%</div></div><div class="ttile"><div class="tn">Circle Payments Network（CPN）年化支付量</div><div class="tv">Q2 末達 150 億美元；截至 7 月 31 日已成長至 230 億美元</div></div><div class="ttile"><div class="tn">金融機構合作夥伴數</div><div class="tv">175 家，季增 30%</div></div><div class="ttile"><div class="tn">USDC 穩定幣交易量市佔率</div><div class="tv">2026 年 6 月達 70%</div></div><div class="ttile"><div class="tn">USYC（代幣化貨幣市場基金）資產規模</div><div class="tv">超過 30 億美元，年增逾 10 倍，為業界最大</div></div><div class="ttile"><div class="tn">Arc 區塊鏈代幣預售收入</div><div class="tv">Q2 產生 2.42 億美元預售收入</div></div></div>
-<div class="callnote-block"><div class="realitysub">管理層展望</div><div class="callnote-text"><b>其他營收全年指引（因 Arc 成功大幅上調）</b>：由原先 1.5–1.7 億美元上調至 3.1–3.3 億美元；其中 1.8 億美元預計於 Arc 主網達成里程碑後認列為 2026 年營收</div><div class="callnote-text"><b>RLDC 毛利率全年指引（上調）</b>：由原先 38–40% 上調至 41.7–43.7%</div><div class="callnote-text"><b>Arc 主網正式上線時程</b>：預計 2026 年 9 月 16 日主網上線；測試網已處理超過 5 億筆交易、覆蓋近 300 萬個錢包</div><div class="callnote-text"><b>USDC 長期年化複合成長率目標</b>：管理層設定穿越利率週期的長期 USDC 流通量成長目標為年化複合成長率 40%</div></div>
-<div class="callnote-quote">「這是一個全新經濟活動作業系統層在世界誕生的時刻。」<div class="callnote-speaker">—— Jeremy Allaire，聯合創辦人、執行長暨董事長</div></div>
-</div></div><div class="ecard2"><h3>TEM</h3><div class="reality"><h3>管理層口頭重點</h3>
+<div class="techgrid"><div class="ttile"><div class="tn">Q2 GMV</div><div class="tv">1,160億美元，年增32%，連續第五季GMV成長逾30%</div></div><div class="ttile"><div class="tn">Q2 營收</div><div class="tv">36億美元，年增34%</div></div><div class="ttile"><div class="tn">商家解決方案（Merchant Solutions）營收</div><div class="tv">28億美元，年增37%</div></div><div class="ttile"><div class="tn">訂閱解決方案（Subscription Solutions）營收與MRR</div><div class="tv">8.02億美元，年增22%；MRR 2.21億美元，年增19%，Shopify Plus佔MRR比重34%</div></div><div class="ttile"><div class="tn">自由現金流（FCF）</div><div class="tv">6.54億美元，FCF利潤率18%（去年同期16%）</div></div><div class="ttile"><div class="tn">Shopify Payments 滲透率與Shop Pay</div><div class="tv">Payments滲透率佔全球GMV 68%，年增3個百分點；Shop Pay本季GMV年增53%，終身加速GMV突破4,000億美元；GPV突破1兆美元門檻</div></div><div class="ttile"><div class="tn">B2B GMV</div><div class="tv">年增76%</div></div><div class="ttile"><div class="tn">國際GMV與歐洲支付滲透率</div><div class="tv">國際GMV年增37%；歐洲Payments滲透率年增350個基點；Shopify Payments現覆蓋40個國家</div></div><div class="ttile"><div class="tn">Sidekick AI 使用量</div><div class="tv">Q2對話數近3,400萬次；日活躍商家年增3.6倍；日使用次數年增4.8倍；本季新建自訂應用3.6萬個（Q1為1.2萬個）；新商家入駐15天內達成前5筆訂單的比例提升8%</div></div><div class="ttile"><div class="tn">AI商務（Agentic Commerce）成長</div><div class="tv">AI導流量及訂單均年增三倍；75%的AI歸因訂單來自前100大類別以外的長尾商家；Catalog搜尋轉換率為爬蟲數據兩倍；AI搜尋轉換率比傳統自然搜尋高80%</div></div><div class="ttile"><div class="tn">大型商家留存率與隊列成長</div><div class="tv">年GMV逾100萬美元商家留存率92%；逾1,000萬美元商家留存率97%；2015年Q1加入商家的季度GMV已達入駐初期的5倍</div></div></div>
+<div class="callnote-block"><div class="realitysub">管理層展望</div><div class="callnote-text"><b>Q3 2026 營收年增展望</b>：預期Q3營收年增幅度在低30%區間</div><div class="callnote-text"><b>Q3 2026 毛利潤美元年增展望</b>：預期Q3毛利潤（美元）年增幅度在中至高20%區間</div><div class="callnote-text"><b>Q3 2026 FCF利潤率與營業費用展望</b>：FCF利潤率預期在高十幾至低二十幾百分比；營業費用預期佔營收33%至34%</div></div>
+<div class="callnote-quote">「我們是全球商業基礎設施……而我們才剛剛開始。」<div class="callnote-speaker">—— Harley Finkelstein，總裁</div></div>
+</div></div><div class="ecard2"><div class="ecard2hd">COIN</div><div class="reality"><h3>管理層口頭重點</h3>
 <div class="posnote">資料來源：法說會逐字稿公開內容（Motley Fool／GuruFocus等），管理層口頭發言，非公司正式財報數字，數字未經覆核</div>
-<div class="techgrid"><div class="ttile"><div class="tn">Q2 總營收</div><div class="tv">$382.5M，年增22%</div></div><div class="ttile"><div class="tn">診斷業務營收</div><div class="tv">$289.3M，年增20%</div></div><div class="ttile"><div class="tn">數據與應用營收</div><div class="tv">$93.2M，年增28%；其中數據授權與建模業務年增36%</div></div><div class="ttile"><div class="tn">遺傳癌症檢測營收</div><div class="tv">$107.4M，年增5%</div></div><div class="ttile"><div class="tn">GAAP 淨利</div><div class="tv">$5.6M，首次轉虧為盈</div></div><div class="ttile"><div class="tn">調整後 EBITDA</div><div class="tv">$8M，年增 $13.6M</div></div><div class="ttile"><div class="tn">MRD 檢測量</div><div class="tv">Q2 約9,000次，季增38%（Q1 約6,500次）</div></div><div class="ttile"><div class="tn">演算法附加率（實體腫瘤）</div><div class="tv">45%，較Q1的40%提升5個百分點</div></div><div class="ttile"><div class="tn">Q2 訂單金額</div><div class="tv">約 $2億；新簽數據授權客戶包含 BioNTech、Daiichi Sankyo 等</div></div><div class="ttile"><div class="tn">MRD 銷售團隊滲透率</div><div class="tv">目前約10%的銷售人員積極銷售MRD產品，仍有大量擴展空間</div></div></div>
-<div class="callnote-block"><div class="realitysub">管理層展望</div><div class="callnote-text"><b>2026全年營收指引（上調）</b>：$15.95億至$16.05億，年增約25%</div><div class="callnote-text"><b>2026全年調整後 EBITDA 指引</b>：約 $6,500萬，較2025年改善約 $7,200萬</div><div class="callnote-text"><b>xT CDx 腫瘤獨立檢測 FDA 獲批後年度增量收入</b>：ASP 提升 $200，預計2027年起每年貢獻約 $8,500萬增量營收</div><div class="callnote-text"><b>xF 液態切片批准時程與 ASP 目標，及中長期合計增量收入</b>：xF 預計2027年下半年獲FDA批准，ASP 預估 $7,500；結合 xT CDx，兩項合計2028年增量營收目標約 $4億</div></div>
-<div class="callnote-quote">「數據業務正在全速燃燒。我們在簽約動能上的表現，是相當長一段時間以來最強的。」<div class="callnote-speaker">—— Eric Lefkofsky，聯合創辦人兼執行長</div></div>
-</div></div><div class="ecard2"><h3>CRSP</h3><div class="reality"><h3>管理層口頭重點</h3>
+<div class="techgrid"><div class="ttile"><div class="tn">全球現貨交易量市占率</div><div class="tv">10.3%，史上最高，較 Q1 的 9.1% 進一步提升，連續第三季創新高</div></div><div class="ttile"><div class="tn">調整後 EBITDA</div><div class="tv">$2.078 億，連續第 14 季維持正值，年減 59.4%</div></div><div class="ttile"><div class="tn">訂閱及服務收入及佔淨營收比重</div><div class="tv">$5.55 億，占淨營收 48%（Q4 2024 時為 29%，Q2 2020 時僅 $600 萬）</div></div><div class="ttile"><div class="tn">穩定幣收入（主要為 USDC）</div><div class="tv">$2.92 億，USDC 過去一年 Coinbase 約取得全市場 USDC 經濟利益的 50%</div></div><div class="ttile"><div class="tn">預測市場收入</div><div class="tv">季增 106%，年化收入突破 $1 億；新加密二元選擇權功能上線後日活交易者增 3 倍、日收入增 4 倍</div></div><div class="ttile"><div class="tn">Coinbase 1 付費訂閱用戶數</div><div class="tv">突破 100 萬（史上新高）；付費會員交易量與客戶單位經濟效益均優於非付費用戶</div></div><div class="ttile"><div class="tn">USDC 平均持倉量與流通占比</div><div class="tv">平均持倉 $200 億（史上新高），占全球 USDC 流通量 30%；年初至今市場穩定幣交易量 $37 兆，其中 79% 來自 USDC 及合作夥伴穩定幣</div></div><div class="ttile"><div class="tn">比特幣現貨佔總淨營收比重</div><div class="tv">降至 12%（兩年前超過 50%），非比特幣現貨交易佔淨營收已達 88%</div></div><div class="ttile"><div class="tn">Base 鏈穩定幣交易量</div><div class="tv">年增 7 倍；過去 12 個月鏈上穩定幣轉帳量累計 $32 兆，結算速度低於 1 美分、低於 1 秒</div></div><div class="ttile"><div class="tn">鏈上代理金融（Agentic Finance）採用率</div><div class="tv">99%+ 鏈上代理商業使用 USDC；90%+ 代理穩定幣交易量在 Base 上結算；97%+ 鏈上代理交易使用 Coinbase x402 協議</div></div><div class="ttile"><div class="tn">工程效率提升</div><div class="tv">每位工程師 Pull Request 數年增 2.2 倍；整合測試覆蓋率過去 6 個月成長 2.5 倍</div></div></div>
+<div class="callnote-block"><div class="realitysub">管理層展望</div><div class="callnote-text"><b>Q3 2026 訂閱及服務收入指引</b>：$5.00 億–$5.80 億</div><div class="callnote-text"><b>Q3 2026 交易手續費收入進度（截至 7 月 26 日）</b>：累計約 $1.30 億，供市場估算本季走勢參考</div><div class="callnote-text"><b>全年 2026 費用展望</b>：調整後費用指引範圍收窄並下調；全年無形資產攤銷預計 $1.40 億–$1.50 億</div></div>
+<div class="callnote-quote">「Q2 我們創下連續第三季現貨交易量市占率史上新高，證明我們的『萬能交易所』在任何市場環境下都能繳出成績。」<div class="callnote-speaker">—— Brian Armstrong，執行長</div></div>
+</div></div><div class="ecard2"><div class="ecard2hd">HOOD</div><div class="reality"><h3>管理層口頭重點</h3>
 <div class="posnote">資料來源：法說會逐字稿公開內容（Motley Fool／GuruFocus等），管理層口頭發言，非公司正式財報數字，數字未經覆核</div>
-<div class="techgrid"><div class="ttile"><div class="tn">CASGEVY 第二季全球銷售額</div><div class="tv">7,600萬美元，季增78%，年增151%</div></div><div class="ttile"><div class="tn">FDA 兒科適應症審核時間與新增患者規模</div><div class="tv">FDA在提交後53天內完成審核，批准CASGEVY用於2歲以上SCD/TDT患者，新增約5,500名符合資格的兒科患者</div></div><div class="ttile"><div class="tn">CASGEVY 全球核准國家數</div><div class="tv">已在北美、歐洲及中東共39個國家獲批</div></div><div class="ttile"><div class="tn">現金及可上市證券（季末）</div><div class="tv">截至2026年6月30日為23.64億美元，較2025年底19.76億美元增加，主因2026年3月完成5.854億美元可轉換公司債發行</div></div><div class="ttile"><div class="tn">協作費用（淨額）季度表現</div><div class="tv">本季4,030萬美元，較去年同期4,520萬美元下降，主因CRISPR在CASGEVY合作架構中分享更高比例的銷售收益</div></div><div class="ttile"><div class="tn">CTX321（Lp(a)靶向）次世代計畫效能</div><div class="tv">效力較前一版本提升約2倍，目前處於IND/CTA準備階段</div></div><div class="ttile"><div class="tn">Zugo-cel 新增自免疫神經疾病第1期試驗</div><div class="tv">新啟動針對自免疫神經疾病的第1期試驗，涵蓋進展性多發性硬化（PMS）、NMOSD、MOGAD、NMDAR/LGI1 AIE及僵人症候群</div></div></div>
-<div class="callnote-block"><div class="realitysub">管理層展望</div><div class="callnote-text"><b>CTX310（ANGPTL3體內肝臟基因編輯）臨床更新時程</b>：第1b期臨床更新預計於2026年下半年公布；ESC 2026心臟病學大會遲發性摘要已獲接受（8月28日），優先聚焦嚴重高三酸甘油脂血症及難治性高膽固醇血症</div><div class="callnote-text"><b>CTX611 siRNA（Factor XI靶向）第2期更新與市場展望</b>：膝關節置換術患者第2期試驗更新預計於2026年下半年公布；目標涵蓋心房顫動、靜脈血栓栓塞、缺血性中風、癌症相關血栓等多項適應症，具備數十億美元市場規模</div><div class="callnote-text"><b>Zugo-cel 自免疫及血液腫瘤多項臨床更新時程</b>：風濕科、血液科籃式第1期，以及B細胞惡性腫瘤第1/2期（含與禮來旗下pirtobrutinib聯合用藥研究）更新均預計於2026年下半年公布</div><div class="callnote-text"><b>CASGEVY 德國報銷及英國、沙烏地阿拉伯拓展計畫</b>：德國已獲12歲以上患者報銷資格；英國及沙烏地阿拉伯5-11歲患者監管申請均已完成提交</div><div class="callnote-text"><b>CTX213（1型糖尿病無裝置Beta細胞替換）臨床進程展望</b>：使用來自編輯iPSC的未包封前體胰島細胞，臨床前療效已驗證，正積極推進向臨床進入，後續隨開發進展持續公布更新</div><div class="callnote-text"><b>體內自免疫CAR-T平台下一步開發展望</b>：公司同時推進兩種模式：可重複給藥的mRNA型體內CAR-T，以及非病毒整合型CAR-T；使用抗體偶聯LNP遞送系統，目標打造同類最佳（best-in-class）產品，現處於IND/CTA準備階段</div></div>
-<div class="callnote-quote">「第二季反映了CRISPR Therapeutics在整個產品組合與平台上的強力執行力。CASGEVY的動能持續積累，FDA批准最小2歲兒童使用是一大亮點，同時我們透過啟動CTX340與CTX460的第一期臨床試驗，進一步擴大了體內管線。我們以充分準備的姿態進入2026年下半年，前方還有許多重要的管線里程碑等待實現。」<div class="callnote-speaker">—— Samarth Kulkarni 博士，董事長暨執行長</div></div>
-</div></div>
+<div class="techgrid"><div class="ttile"><div class="tn">已開戶客戶數</div><div class="tv">2,840 萬，年增 190 萬</div></div><div class="ttile"><div class="tn">淨存款與年化成長率</div><div class="tv">217 億美元，年化成長率 28%（相對於上季末平台資產）</div></div><div class="ttile"><div class="tn">Gold 訂閱戶數與附著率</div><div class="tv">480 萬訂閱戶，附著率 17%</div></div><div class="ttile"><div class="tn">事件合約（Event Contracts）營收</div><div class="tv">1.56 億美元，年增約十倍</div></div><div class="ttile"><div class="tn">保證金帳簿規模</div><div class="tv">216 億美元，年增 127%</div></div><div class="ttile"><div class="tn">Trump 帳戶（政府合作兒童帳戶）開戶與存款</div><div class="tv">開戶 700 萬個，存入 15 億美元</div></div><div class="ttile"><div class="tn">銀行產品存款（自 2025 年 11 月推出至今）</div><div class="tv">超過 30 億美元；直接存款採用率達 40%</div></div><div class="ttile"><div class="tn">Gold 卡持卡人數與年化購買額</div><div class="tv">超過 100 萬持卡人，年化購買額 170 億美元</div></div><div class="ttile"><div class="tn">年化經常性收入超過 1 億美元的業務線數</div><div class="tv">13 條業務線</div></div><div class="ttile"><div class="tn">AgenTic AI 自動交易活躍帳戶數</div><div class="tv">超過 10 萬個帳戶使用 AI 交易代理（涵蓋股票、選擇權）</div></div><div class="ttile"><div class="tn">Q2 股票回購金額</div><div class="tv">Q2 回購 440 萬股、耗資 4.14 億美元；今年累計回購 750 萬股、6.64 億美元</div></div></div>
+<div class="callnote-block"><div class="realitysub">管理層展望</div><div class="callnote-text"><b>2026 全年調整後營業費用指引（下調）</b>：26.75 億至 27.75 億美元，較先前指引的 27 億至 28.25 億美元下調</div><div class="callnote-text"><b>7 月淨存款趨勢（已排除 Trump 帳戶貢獻）</b>：趨向 40 億美元，接近 Q2 水準</div><div class="callnote-text"><b>7 月每日平均交易量趨勢</b>：接近 Q2 創紀錄水準，顯示動能延續</div></div>
+<div class="callnote-quote">「Robinhood 的使命是讓每個人都成為資產擁有者。我們正同時沿三條主軸推進：成為活躍交易者的首選平台、搶佔年輕世代的金融錢包份額，以及打造全球性的金融生態系統。」<div class="callnote-speaker">—— Vladimir Tenev，Chairman &amp; CEO</div></div>
+</div></div><div class="ecard2"><div class="ecard2hd">TWST</div><div class="reality"><h3>管理層口頭重點</h3>
+<div class="posnote">資料來源：法說會逐字稿公開內容（Motley Fool／GuruFocus等），管理層口頭發言，非公司正式財報數字，數字未經覆核</div>
+<div class="techgrid"><div class="ttile"><div class="tn">Q3 2026 總營收</div><div class="tv">1.184億美元，年增23%，為連續第14季環比成長</div></div><div class="ttile"><div class="tn">DNA合成暨蛋白質解決方案分部營收</div><div class="tv">5,660萬美元，年增39%，季增6%</div></div><div class="ttile"><div class="tn">NGS應用分部營收</div><div class="tv">6,180萬美元，年增12%，季增8%</div></div><div class="ttile"><div class="tn">治療藥物終端市場營收</div><div class="tv">4,040萬美元，年增49%，主要受AI驅動新藥探索需求帶動</div></div><div class="ttile"><div class="tn">診斷終端市場營收</div><div class="tv">4,380萬美元，年增15%</div></div><div class="ttile"><div class="tn">美洲地區營收</div><div class="tv">7,730萬美元，年增30%</div></div><div class="ttile"><div class="tn">本季基因出貨量</div><div class="tv">36.9萬單位，去年同期23.7萬單位</div></div><div class="ttile"><div class="tn">毛利率</div><div class="tv">52.8%，季增120個基點</div></div><div class="ttile"><div class="tn">調整後EBITDA</div><div class="tv">虧損1,130萬美元（含200萬美元過渡成本）</div></div><div class="ttile"><div class="tn">NGS客戶數及商業產品採用</div><div class="tv">累計657家客戶，其中182家已採用商業化產品，前十大客戶佔分部營收48%</div></div></div>
+<div class="callnote-block"><div class="realitysub">管理層展望</div><div class="callnote-text"><b>FY2026全年營收指引（上調）</b>：4.56億至4.57億美元，年增約21%</div><div class="callnote-text"><b>Q4 2026季度營收展望</b>：1.23億至1.24億美元，年增約25%</div><div class="callnote-text"><b>調整後EBITDA損益平衡時程</b>：預計於Q4 2026達到調整後EBITDA損益平衡</div><div class="callnote-text"><b>AI驅動新藥探索業務成長展望</b>：預計FY2026及FY2027均實現三位數百分比年增；業務擴展方向從VHH抗體延伸至完整IgG及雙特異性抗體應用</div></div>
+<div class="callnote-quote">「生物學正在變得愈來愈數位化、數據驅動，以及AI賦能。」<div class="callnote-speaker">—— Emily Leproust，執行長</div></div>
+</div></div><div class="ecard2"><div class="ecard2hd">CRCL</div><div class="reality"><h3>管理層口頭重點</h3>
+<div class="posnote">資料來源：法說會逐字稿公開內容（Motley Fool／GuruFocus等），管理層口頭發言，非公司正式財報數字，數字未經覆核</div>
+<div class="techgrid"><div class="ttile"><div class="tn">總收入及準備金收益</div><div class="tv">7.01億美元，年增7%</div></div><div class="ttile"><div class="tn">調整後 EBITDA 及利潤率</div><div class="tv">1.43億美元，利潤率50%，年增8%</div></div><div class="ttile"><div class="tn">USDC 流通量</div><div class="tv">733億美元，年增19%（同期數位資產市場下跌40%）</div></div><div class="ttile"><div class="tn">鏈上交易量（單季）</div><div class="tv">14.8兆美元，年增151%</div></div><div class="ttile"><div class="tn">日均鑄造與贖回量</div><div class="tv">19億美元，年增105%</div></div><div class="ttile"><div class="tn">Circle Payments Network（CPN）年化支付量</div><div class="tv">季末達150億美元，7月31日更新至230億美元，季增130%</div></div><div class="ttile"><div class="tn">CPN 加入金融機構數</div><div class="tv">175家，季增30%</div></div><div class="ttile"><div class="tn">USDC 穩定幣交易量市占率（2026年6月）</div><div class="tv">70%</div></div><div class="ttile"><div class="tn">USYC 代幣化貨幣市場基金資產規模</div><div class="tv">超過30億美元，年增10倍</div></div><div class="ttile"><div class="tn">Arc 代幣預售收入（第二季）</div><div class="tv">2.42億美元</div></div></div>
+<div class="callnote-block"><div class="realitysub">管理層展望</div><div class="callnote-text"><b>Arc 主網上線時程</b>：2026年9月16日正式上線，驗證節點包含BlackRock、Mastercard、Visa及DTCC</div><div class="callnote-text"><b>全年其他收入指引（大幅上調）</b>：3.10億至3.30億美元（前次指引為1.50億至1.70億美元）；其中Arc代幣預計於2026年認列1.80億美元收入</div><div class="callnote-text"><b>全年調整後營業費用指引</b>：5.70億至5.85億美元，預計落在區間高端</div><div class="callnote-text"><b>USDC 中長期成長目標及市場規模展望</b>：管理層設定USDC年複合成長率（CAGR）達40%；引用第三方預測，穩定幣市場規模至2030年可達1兆至4兆美元</div></div>
+<div class="callnote-quote">「Arc 是一個新的經濟活動作業系統層的誕生。」<div class="callnote-speaker">—— Jeremy Allaire，共同創辦人兼執行長暨董事長</div></div>
+</div></div></div>
 </section>
 <section class="sec">
   <div class="sechd"><h2>ARK 自己的觀點——Big Ideas 2026</h2></div>
@@ -283,12 +355,12 @@ h1 svg{flex-shrink:0}
   <p><b>方向是否一致：大致一致，但要拆開看。</b> ARK 近期的加碼動作（特斯拉、Coinbase、
   Robinhood、Amazon）跟 Big Ideas 2026 講的「AI+自駕+加密+電商」敘事對得上；賣出台積電跟
   百度則是「從半導體製造龍頭/中國曝險撤出、轉向下游應用」的具體動作，不是單純故事。</p>
-  <p><b>但回測數據給了一個必要的提醒</b>：過去 10 年 ARKK/ARKW 的風險調整後報酬（Sharpe/Sortino）
+  <p><b>但回測數據給了一個必要的提醒</b>：過去長期來看三檔 ARK 基金的風險調整後報酬（Sharpe/Sortino）
   都不如大盤跟 QQQ，最大回撤是大盤的兩倍以上。也就是說「ARK 說的故事」跟「ARK 過去的績效效率」
   是兩件事——故事聽起來對，不代表用 ARK 的方式參與這個故事是效率最好的做法。</p>
-  <p><b>怎麼用這份報告</b>：與其直接買 ARKK/ARKW 跟著 ARK 的高波動度一起承受，不如把這份報告
+  <p><b>怎麼用這份報告</b>：與其直接買 ARK 系列基金跟著它的高波動度一起承受，不如把這份報告
   當「主題雷達」——ARK 在加碼什麼方向，可以自己去該方向裡挑風險調整後報酬更好的標的
-  （例如直接持有 TSLA/COIN 本身，而不是透過 ARKK 承擔額外一層基金層級的波動）。</p>
+  （例如直接持有 TSLA/COIN 本身，而不是透過基金承擔額外一層基金層級的波動）。</p>
   </div>
 </section>
 <section class="sec"><div class="sechd"><h2>資料來源</h2></div>
@@ -296,4 +368,22 @@ h1 svg{flex-shrink:0}
 <p class="disc">本頁非投資建議，僅供研究參考。持股/產業曝險為 Yahoo Finance 即時快照，
 會隨基金每日調倉變動；法說會摘要由本機 Claude 上網查證 Motley Fool 逐字稿彙整，
 可能有遺漏或延遲，正式決策前請自行查核最新公開資訊。</p></section>
-</div></body></html>
+</div>
+<script>
+(function(){
+  var $=function(s){return document.querySelector(s);},$$=function(s){return [].slice.call(document.querySelectorAll(s));};
+  function apply(f){
+    $$('[data-fund]').forEach(function(el){
+      var v=el.dataset.fund;
+      el.style.display=(f==='ALL'||v===f||v==='bench')?'':'none';
+    });
+  }
+  $$('#fundSeg button').forEach(function(b){
+    b.onclick=function(){
+      $$('#fundSeg button').forEach(function(x){x.setAttribute('aria-pressed',x===b);});
+      apply(b.dataset.f);
+    };
+  });
+})();
+</script>
+</body></html>
