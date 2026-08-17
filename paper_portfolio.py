@@ -89,11 +89,12 @@ def to_usd(tk, native, fx):
     return native / fx if is_tw(tk) else native
 
 
-# 賽馬排除鏈：比賽中途不換賽制。玻璃基板（2026-08-05 新增第 8 鏈）是題材驗證期
-# 觀察鏈，只上看板+深度報告，不進任何模擬倉。
-# 關鍵金屬/原物料（2026-08-17 新增第 9 鏈）同理：賽馬 6/30 開跑，這時候才加入的鏈
-# 會拿著全新的 $10,000 跟已經跑了 48 天的鏈比，數字沒有可比性 → 一併排除。
-RACE_EXCLUDE = {"玻璃基板/TGV", "關鍵金屬/原物料"}
+# 賽馬排除鏈。2026-08-18 用戶指示把玻璃基板/TGV 放進賽馬（原本 08-05 上線時列為
+# 題材驗證期觀察鏈、只上看板不進模擬倉）。
+# 關鍵金屬/原物料（2026-08-17 新增第 9 鏈）維持排除。
+# ⚠️ 中途加入的鏈是從加入當天以 $10,000 起跑，跟 6/30 就開跑的鏈比「報酬率」時
+# 期間不同、不可直接比大小——賽馬頁會標示起跑日，看的時候要注意。
+RACE_EXCLUDE = {"關鍵金屬/原物料"}
 
 
 def chain_holdings():
@@ -604,9 +605,24 @@ def main():
         save(state)
 
     if cmd == "rebalance":
-        allt = _all_tickers(state) | set(json.load(open(BUFFETT, encoding="utf-8")).keys())
+        # 一定要把「所有鏈的守備清單」也算進抓價範圍：新鏈第一次進賽馬時還不在
+        # state["portfolios"] 裡，只靠 _all_tickers(state) 會漏掉它的個股 →
+        # 配股時查不到價格、建了倉卻是 0 檔（2026-08-18 玻璃基板進賽馬時踩到）。
+        allt = (_all_tickers(state)
+                | set(json.load(open(BUFFETT, encoding="utf-8")).keys())
+                | {t for v in chain_holdings().values() for t in v})
         prices = fetch_prices(allt)
-        rebalance(state, build_holdings_map(prices), prices, fx, date)
+        hmap = build_holdings_map(prices)
+        # 新鏈上線（或從 RACE_EXCLUDE 移出）時補建倉：rebalance() 只走
+        # state["portfolios"] 既有的倉，不會自己長出新鏈，沒這段新鏈永遠不會進賽馬。
+        # 記自己的 inception，之後頁面才能標示「中途加入、起跑日不同」。
+        for name in hmap:
+            if name not in state["portfolios"]:
+                state["portfolios"][name] = {
+                    "holdings": {}, "cash": BASE, "value": BASE, "pnl": 0.0, "ret": 0.0,
+                    "inception": date, "rebalanced": date, "history": [[date, BASE]]}
+                print(f"✅ 新增「{name}」倉，起始 ${BASE:,.0f}（起跑日 {date}）")
+        rebalance(state, hmap, prices, fx, date)
         save(state)
         print(f"✅ rebalance {date}（匯率 {fx:.2f}）")
         for n, pf in state["portfolios"].items():

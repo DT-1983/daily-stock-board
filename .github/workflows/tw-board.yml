@@ -65,11 +65,20 @@ jobs:
           python board_html.py "$f" -o docs/board.html
           python alert_telegram.py "$f" docs/board.html
 
-      - name: GDP 觀察頁（美台實際+預測、台灣預測過期會推 TG 提醒）
+      # 2026-08-18 用戶指示改每月一次：GDP 是季頻資料（主計總處/BEA 一季才發布一次），
+      # 每天抓 99% 的日子拿到同一份數字，只是白跑。改成每月 1-3 號才更新
+      # （抓 3 天窗口而非只認 1 號，因為本 workflow 只在週二~週六跑，
+      #  1 號若落在週日/週一就整個月都不會更新）。手動觸發一律更新。
+      - name: GDP 觀察頁（每月初；美台實際+預測、台灣預測過期會推 TG 提醒）
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
+          d=$(date -u +%d)
+          if [ "${{ github.event_name }}" != "workflow_dispatch" ] && [ "$d" -gt 03 ]; then
+            echo "今天 $d 號，非月初 → 跳過 GDP 更新（每月 1-3 號才跑）"
+            exit 0
+          fi
           python gdp_fetch.py || echo "GDP 抓取失敗，用上次的 gdp_data.json"
           python gdp_html.py -o docs/gdp.html || echo "GDP 頁失敗，跳過"
 
