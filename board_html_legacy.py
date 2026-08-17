@@ -37,10 +37,11 @@ def _load_chain_map():
 
 CHAIN_MAP = _load_chain_map()
 CHAIN_ORDER = ["AI 伺服器", "矽光子/光通訊", "機器人", "低軌衛星",
-               "AI 電力/核能", "太陽能", "Bitcoin→AI 機房", "玻璃基板/TGV"]
+               "AI 電力/核能", "太陽能", "Bitcoin→AI 機房", "玻璃基板/TGV",
+               "關鍵金屬/原物料"]
 CHAIN_ICON = {"AI 伺服器": "🖥️", "矽光子/光通訊": "🔦", "機器人": "🤖",
               "低軌衛星": "🛰️", "AI 電力/核能": "⚡", "太陽能": "☀️",
-              "Bitcoin→AI 機房": "⛏️", "玻璃基板/TGV": "🧊"}
+              "Bitcoin→AI 機房": "⛏️", "玻璃基板/TGV": "🧊", "關鍵金屬/原物料": "🧠"}
 SIG_CLASS = {"🔴": "sell", "🟢": "buy", "🔵": "hold", "🟡": "watch", "⚪": "watch"}
 
 
