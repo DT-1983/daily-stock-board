@@ -121,7 +121,8 @@ def build_summaries():
          "buffett": "洪瑞泰俗貴價法選股清單",
          "portfolio": "三主策略＋七產業鏈績效對決",
          "earnings": "每季財報圖卡（洪瑞泰＋分析師共識雙軌）",
-         "gdp": "GDP 高點賣股票、不買股票"}
+         "gdp": "GDP 高點賣股票、不買股票",
+         "ark": "ARKK/ARKW/ARKG 產業方向＋重倉法說會＋回測"}
 
     w = _load("buffett_watch.json")
     if w:
@@ -173,6 +174,7 @@ def build():
         entry("portfolio", "策略賽馬模擬倉", s["portfolio"], "portfolios.html"),
         entry("earnings", "財報深度分析", s["earnings"], "earnings.html"),
         entry("gdp", "GDP 觀察", s["gdp"], "gdp.html"),
+        entry("ark", "ARK ETF 追蹤", s["ark"], "ark.html"),
     ])
 
     return f"""<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">

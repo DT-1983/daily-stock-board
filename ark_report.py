@@ -34,10 +34,10 @@ FUND_LABEL = {"ARKK": "ARKK · ARK 創新旗艦 ETF", "ARKW": "ARKW · ARK Next 
               "ARKG": "ARKG · ARK 基因體革命 ETF"}
 BENCH = ["SPY", "QQQ"]
 BENCH_LABEL = {"SPY": "SPY（大盤代表）", "QQQ": "QQQ（那斯達克100）"}
+TOP_N = 10
 
-# 前 10 大合計加權持股（2026-08-17 依 ARKK/ARKW/ARKG 三檔當時 top holdings 加權
-# 排序選出，排除 SPCX 因為是私募股權部位、無公開財報可查）
-TOP_TICKERS = ["TSLA", "TXG", "AMD", "TEM", "CRSP", "SHOP", "COIN", "HOOD", "TWST", "CRCL"]
+# 私募/未上市部位，沒有公開財報可查，排除在「前N大持股」的法說會查證名單外
+EXCLUDE_PRIVATE = {"SPCX"}
 
 SECTOR_ZH = {
     "realestate": "房地產", "consumer_cyclical": "非必需消費", "basic_materials": "原物料",
@@ -113,8 +113,9 @@ def _backtest_all(periods=(3, 5, 10), rf_annual=0.0):
     return out
 
 
-def _overlap(snaps):
-    """跨 N 檔基金找「至少 2 檔都有持有」的重倉股，依合計權重排序。"""
+def _top_combined(snaps):
+    """跨 N 檔基金合併排名：不限「至少兩檔持有」，單一基金的重倉股也算，
+    依合計權重排序給「前N大持股」表跟法說會查證名單共用同一份排名。"""
     weights = {tk: {r["symbol"]: r["weight"] for r in snaps[tk]["holdings"]} for tk in FUNDS}
     names = {}
     for tk in FUNDS:
@@ -123,11 +124,9 @@ def _overlap(snaps):
     rows = []
     for s in all_syms:
         held_by = [tk for tk in FUNDS if s in weights[tk]]
-        if len(held_by) < 2:
-            continue
         total = sum(weights[tk].get(s, 0) for tk in FUNDS)
         rows.append({"symbol": s, "name": names.get(s, s), "total": total,
-                     "w": {tk: weights[tk].get(s) for tk in FUNDS}})
+                     "held_by": held_by, "w": {tk: weights[tk].get(s) for tk in FUNDS}})
     return sorted(rows, key=lambda r: -r["total"])
 
 
@@ -208,19 +207,18 @@ def _bt_note(bt):
             f'請往上對照各期間表格自行比較。</p>')
 
 
-def _overview_html(snaps, bt):
+def _overview_html(snaps, bt, top10):
     cards = "".join(f"""<div class="fcard" data-fund="{tk}">
   <div class="fname">{FUND_LABEL[tk]}</div>
   <div class="fmeta">類別 {esc(snaps[tk]['category']) or '—'}　規模 {_fmt_usd_m(snaps[tk]['aum'])}
     費用率 {_pct_w(snaps[tk]['expense'], 2) if snaps[tk]['expense'] else '—'}</div>
 </div>""" for tk in FUNDS)
 
-    overlap = _overlap(snaps)
     ov_head = "".join(f"<th>{esc(tk)} 權重</th>" for tk in FUNDS)
     ov_rows = "".join(
         f'<tr><td>{esc(r["symbol"])}</td><td>{esc(r["name"])}</td>'
         + "".join(f'<td class="num">{_pct_w(r["w"][tk])}</td>' for tk in FUNDS) + '</tr>'
-        for r in overlap[:8])
+        for r in top10)
 
     def _bt_table(period):
         rows = "".join(
@@ -243,7 +241,7 @@ def _overview_html(snaps, bt):
   <div class="sechd"><h2>總覽</h2></div>
   <div class="fgrid">{cards}</div>
 
-  <div class="sub2" style="margin-top:16px">三檔基金共同重倉（至少兩檔同時持有，依合計權重排序）</div>
+  <div class="sub2" style="margin-top:16px">前 {len(top10)} 大持股（跨三檔基金合計權重排序，橫槓代表該基金未持有）</div>
   <table class="dt"><tr><th>代號</th><th>名稱</th>{ov_head}</tr>{ov_rows}</table>
   {bt_sections}
   {_bt_note(bt)}
@@ -284,27 +282,32 @@ def _bigideas_html():
 </section>"""
 
 
-def _holdings_earnings_html():
-    print(f"重倉個股法說會重點（{len(TOP_TICKERS)} 檔）…")
+def _holdings_earnings_html(top10):
+    tickers = [r for r in top10 if r["symbol"] not in EXCLUDE_PRIVATE]
+    print(f"重倉個股法說會重點（{len(tickers)} 檔）…")
     blocks = []
-    for tk in TOP_TICKERS:
+    for r in tickers:
+        tk = r["symbol"]
         print(f"  {tk} …", end=" ", flush=True)
         try:
             html, _ = EC.build(tk, "", "")
         except Exception as e:
             html = ""
             print(f"失敗：{e}")
+        fund_attr = esc(" ".join(r["held_by"]))
         if html:
             print("完成")
-            blocks.append(f'<div class="ecard2"><div class="ecard2hd">{esc(tk)}</div>{html}</div>')
+            blocks.append(f'<div class="ecard2" data-fund="{fund_attr}"><div class="ecard2hd">{esc(tk)}'
+                          f'<span class="ecard2fund">{esc("/".join(r["held_by"]))}</span></div>{html}</div>')
         else:
             print("（無資料，跳過）")
-            blocks.append(f'<div class="ecard2"><div class="ecard2hd">{esc(tk)}</div>'
+            blocks.append(f'<div class="ecard2" data-fund="{fund_attr}"><div class="ecard2hd">{esc(tk)}'
+                          f'<span class="ecard2fund">{esc("/".join(r["held_by"]))}</span></div>'
                           f'<p class="note">查無最新法說會逐字稿摘要。</p></div>')
     return f"""
 <section class="sec">
   <div class="sechd"><h2>重倉個股法說會重點</h2>
-    <span class="cnt">三檔基金合計權重前 {len(TOP_TICKERS)} 大（不含私募的 SPCX）</span></div>
+    <span class="cnt">三檔基金合計權重前 {len(tickers)} 大（不含私募的 SPCX）</span></div>
   <div class="ecard2grid">{"".join(blocks)}</div>
 </section>"""
 
@@ -337,11 +340,13 @@ def build():
     src_html = "".join(f'<li><a href="{u}" target="_blank" rel="noopener">{esc(t)}</a></li>'
                        for t, u in SOURCES)
 
+    top10 = _top_combined(snaps)[:TOP_N]
+
     body = "".join([
-        _overview_html(snaps, bt),
+        _overview_html(snaps, bt, top10),
         _sector_html(snaps),
-        _holdings_earnings_html(),
         _bigideas_html(),
+        _holdings_earnings_html(top10),
         _synthesis_html(),
     ])
 
@@ -355,8 +360,8 @@ def build():
     <button data-f="ALL" aria-pressed="true">全部</button>
     {"".join(f'<button data-f="{tk}" aria-pressed="false">{tk}</button>' for tk in FUNDS)}
   </div>
-  <p class="note" style="margin-top:8px">總覽卡片、產業曝險、每期回測表格會依你選的基金篩選；
-    共同重倉、重倉個股法說會、Big Ideas 觀點是跨基金整合內容，不受此篩選影響。</p>
+  <p class="note" style="margin-top:8px">總覽卡片、產業曝險、每期回測表格、重倉個股法說會（依該股是否被選中基金持有）
+    會依你選的基金篩選；前N大持股表跟 Big Ideas 觀點是跨基金整合內容，不受此篩選影響。</p>
 </div>
 {body}
 <section class="sec"><div class="sechd"><h2>資料來源</h2></div>
@@ -370,8 +375,9 @@ def build():
   var $=function(s){{return document.querySelector(s);}},$$=function(s){{return [].slice.call(document.querySelectorAll(s));}};
   function apply(f){{
     $$('[data-fund]').forEach(function(el){{
-      var v=el.dataset.fund;
-      el.style.display=(f==='ALL'||v===f||v==='bench')?'':'none';
+      var vs=el.dataset.fund.split(' ');
+      var show=(f==='ALL'||vs.indexOf(f)!==-1||vs.indexOf('bench')!==-1);
+      el.style.display=show?'':'none';
     }});
   }}
   $$('#fundSeg button').forEach(function(b){{
@@ -416,7 +422,10 @@ CSS_EXTRA = """
 .ecard2{background:var(--surface);border:1px solid var(--line);border-radius:12px;
  padding:14px 16px}
 .ecard2hd{font-size:16px;font-weight:800;color:#F5B841;letter-spacing:.3px;
- padding-bottom:9px;margin-bottom:2px;border-bottom:1px solid var(--line2)}
+ padding-bottom:9px;margin-bottom:2px;border-bottom:1px solid var(--line2);
+ display:flex;align-items:center;gap:8px}
+.ecard2fund{font-size:10.5px;font-weight:600;color:var(--dim);background:var(--line);
+ padding:2px 8px;border-radius:16px;letter-spacing:.2px}
 .ecard2 .reality{border-top:0;margin-top:8px;padding-top:0}
 .ecard2 .reality h3{display:none}
 .ecard2 .techgrid{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
