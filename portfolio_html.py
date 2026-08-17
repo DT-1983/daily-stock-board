@@ -105,13 +105,14 @@ def build(state):
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <style>{BASE_CSS}</style></head><body><div class="wrap">
 {header("portfolio", "策略賽馬模擬倉",
-  f"起始 {esc(inception)}（第 {days} 天）· 更新 {date} · 每倉 {usd(base)} · 匯率 1美元={fx}台幣", NAV, "portfolio")}
+  f"起始 {esc(inception)}（第 {days} 天）· 更新 {date} · 每倉 {usd(base)} · 匯率 1美元={fx}台幣"
+  f" · 淨值每日 09:00 更新，清單每週六重篩", NAV, "portfolio")}
 {stat}
 <div class="card">
   <div class="ctrl" style="position:static;border:0;padding:0 0 10px">
     <div class="seg" role="group" aria-label="切換圖表範圍">
       <button data-c="main" aria-pressed="true">{len(main)} 主策略</button>
-      <button data-c="chain" aria-pressed="false">7 產業鏈</button>
+      <button data-c="chain" aria-pressed="false">{len(chains)} 產業鏈</button>
       <button data-c="all" aria-pressed="false">全部</button></div>
   </div>
   <canvas id="race" height="150"></canvas>
@@ -120,7 +121,7 @@ def build(state):
 
 <section class="sec"><div class="sechd"><h2>{len(main)} 套方法對決</h2></div>{vs}</section>
 
-<section class="sec"><div class="sechd"><h2>7 條產業鏈明細</h2>
+<section class="sec"><div class="sechd"><h2>{len(chains)} 條產業鏈明細</h2>
   <span class="cnt">點列展開持股</span></div>
   <div class="rows">{"".join(rows)}</div>
 </section>

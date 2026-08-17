@@ -131,7 +131,8 @@ def build(d):
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex"><title>GDP 觀察</title>
 <style>{BASE_CSS}{CSS_EXTRA}</style></head><body><div class="wrap">
-{header("gdp", "GDP 觀察", f"洪瑞泰：GDP 高點賣股票、不買股票 · 更新 {esc(d['updated'])}", NAV, "gdp")}
+{header("gdp", "GDP 觀察", f"洪瑞泰：GDP 高點賣股票、不買股票 · 更新 {esc(d['updated'])}"
+        f" · 每日 09:00 自動更新（台灣預測值需手動維護）", NAV, "gdp")}
 <div class="glights">{us_light}{tw_light}</div>
 <div class="note">
 <b>怎麼用</b>：洪瑞泰把 GDP 成長率當「大盤溫度計」——成長率衝到高點時市場最熱，該賣不該買；
