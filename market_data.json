@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-17 15:57",
+ "updated": "2026-08-18 15:48",
  "indices": [
   {
    "sym": "^GSPC",
@@ -37,17 +37,17 @@
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "08/17",
-   "close": 45857.27,
-   "chg_pct": 0.1
+   "date": "08/18",
+   "close": 45308.68,
+   "chg_pct": -1.1
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "08/17",
-   "close": 31.76,
-   "chg_pct": -1.12
+   "date": "08/18",
+   "close": 31.9,
+   "chg_pct": -0.29
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "8月機器人雙展開跑 永豐金證推「參展廠商×資金動能」二大投資指標",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6579166",
-   "ts": "08/17 15:50"
-  },
-  {
-   "title": "台新新光金攜手兩廳院打造夏日爵士戶外派對 數萬樂迷齊聚同樂",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6579163",
-   "ts": "08/17 15:48"
-  },
-  {
-   "title": "中信銀主辦矽品5年期500億元永續連結聯合授信 12家銀行超額認購",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6579149",
-   "ts": "08/17 15:47"
-  },
-  {
-   "title": "〈億光法說〉原物料漲勢趨緩助下半年毛利率改善 泰國新廠2027年投產布局AI與機器人",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6579181",
-   "ts": "08/17 15:46"
-  },
-  {
-   "title": "高盛評美股第二季財報：AI基礎設施大賺 應用端獲利仍處「畫餅」階段",
+   "title": "30年美債殖利率飆破5.31%創近20年新高   三大因素恐推動進一步上升",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6579061",
-   "ts": "08/17 15:40"
+   "url": "https://news.cnyes.com/news/id/6580313",
+   "ts": "08/18 15:40"
   },
   {
-   "title": "中芯國際Q2毛利率連兩季超預期！高盛喊買茂135港元、大和證券微幅調高卻續喊「減持」",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6578453",
-   "ts": "08/17 15:40"
-  },
-  {
-   "title": "台灣加速打造無人機「地獄景觀」防線目標2030年月產100,000架嚇阻中國犯台",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6579173",
-   "ts": "08/17 15:30"
-  },
-  {
-   "title": "Anthropic估值玩大的！華爾街直接看到2028年，IPO身價全看2,000億美元營收能否達標",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6579170",
-   "ts": "08/17 15:30"
-  },
-  {
-   "title": "〈億光法說〉車用產品線成Q2營收主要引擎 銅鑼廠Q4交割",
+   "title": "強茂交期拉長至52週，數據透露功率半導體供需失衡，下半年營收有機會大成長嗎?",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6579165",
-   "ts": "08/17 15:26"
+   "url": "https://news.cnyes.com/news/id/6580348",
+   "ts": "08/18 15:30"
   },
   {
-   "title": "顯卡價格狂飆 但真正漲的不是GPU 而是GDDR7顯存",
+   "title": "韓股暴衝後急殺！KOSPI從漲3.4%到跌1.55%，真正壓力來自債市",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6579118",
-   "ts": "08/17 15:20"
+   "url": "https://news.cnyes.com/news/id/6580350",
+   "ts": "08/18 15:30"
+  },
+  {
+   "title": "日經重挫1,759點、終止連五漲！中東局勢、升息預期壓低半導體股",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6580346",
+   "ts": "08/18 15:30"
+  },
+  {
+   "title": "永豐銀主辦展頌27.25億元永續指標聯貸 省水、節電達標可獲利率優惠",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6580325",
+   "ts": "08/18 15:25"
+  },
+  {
+   "title": "廣宇AI伺服器Q4量產 全年營收維持雙位數成長目標明年迎爆發",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6580314",
+   "ts": "08/18 15:22"
+  },
+  {
+   "title": "《財富階梯》你所不知道的0.01%威力",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6580326",
+   "ts": "08/18 15:20"
+  },
+  {
+   "title": "債券義警重新集結？Yardeni警告：5%殖利率恐成全球市場壓力測試",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6580302",
+   "ts": "08/18 15:20"
+  },
+  {
+   "title": "華府、AI巨頭搶同一池錢！美債殖利率逼近5% 市場緊盯「這群人」",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6580153",
+   "ts": "08/18 15:20"
+  },
+  {
+   "title": "外資終結連六買提款119億 三大法人賣超239.3億元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6580316",
+   "ts": "08/18 15:00"
   }
  ],
  "inst": {
-  "date": "08/17",
-  "total_yi": 291.1,
-  "foreign_yi": 454.5,
-  "trust_yi": -177.5
+  "date": "08/18",
+  "total_yi": -239.3,
+  "foreign_yi": -119.9,
+  "trust_yi": 56.6
  }
 }
