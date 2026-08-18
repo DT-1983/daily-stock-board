@@ -406,3 +406,61 @@ CP 走快取讀取，天生零額外成本，加 `summary_text()` 供 narrative(
   強制整段6季嚴格單調（3037 案例 2025Q2 有一次回檔打斷全段單調性，但近4季仍是清楚加速）
 - 驗證：verdict 輸出三個平行獨立觀察（本業改善/業外加速結構性轉變/技術面），
   不再全部繞著洪瑞泰三關卡打轉；bottom_line 仍是純洪瑞泰視角，兩套視角分工清楚
+
+## 2026-08-17～18 · ARK 追蹤頁上線 + 第9條鏈 + 三個靜默失敗 bug + 模擬倉全部重建
+
+### 新功能
+
+- **第 9 條產業鏈「關鍵金屬/原物料」**（FCX/SCCO/PAAS/CCJ，銅/銀/鈾）。
+  用戶原本問「記憶體要不要也開一條」，查證後發現 **MU 已經在 AI 伺服器鏈的 top 8 裡**
+  （透過 SMH/SOXX 這些半導體 ETF 自然篩進來），另開會變重複曝險 → 新鏈只留純原物料。
+  台股沒有夠格的礦業標的，這條鏈只有美股池。
+- **ARK ETF 追蹤頁**（`ark_report.py` → `docs/ark.html`），詳見 memory `ark_etf_tracker`。
+  ARKK/ARKW/ARKG 三檔，五節結構、3/5/10 年回測 vs SPY/QQQ（含 Sharpe/Sortino）、
+  點選基金可切換全頁視角。本機排程 `ArkReportBiweekly` 每 14 天跑。
+- **GDP 頁改每月更新**（原每日）：季頻資料每天抓 99% 的日子拿到同一份數字。
+  抓 1-3 號三天窗口而非只認 1 號——tw-board 只在週二~週六跑，1 號落在週日/週一會整月跳過。
+- **玻璃基板/TGV 進賽馬**（原列題材驗證期觀察鏈）。關鍵金屬維持排除。
+
+### 🔴 三個靜默失敗 bug（全部綠燈、全部壞超過一週）
+
+通用教訓已寫進 memory `silent_failure_pattern`。
+
+1. **缺套件被 `|| echo` 吃掉**：`requirements.txt` 少 `markdown`/`opencc-python-reimplemented`，
+   `portfolio-nav.yml` 每天 ModuleNotFoundError 但 job 回綠燈 → 模擬倉淨值凍結 7 天。
+   `weekly-screen.yml` 同一個坑（該 job 自己 pip install 一串，也沒帶這兩個）→ 巴菲特倉每週調倉從沒成功。
+2. **`buffett_top30()` 讀已移除的 `fair` 欄位**：洪瑞泰方法論只剩俗價/貴價兩條線，
+   `buffett_scan.py` 早改成輸出 `cheap`/`expensive`，這支沒跟著改。`fair` 永遠 None
+   → `if not (p and cheap and fair): continue` 把 82 檔候選全部跳過，**持股永遠 0**。
+   修法：改成方法論真正的規則（現價 ≤ 俗價才買），拿掉「合理價」那層放寬——
+   俗價~貴價之間在這套方法裡是「觀望」不是「買進」，補了會跟賽馬頁自己寫的說明矛盾。修完 21-23 檔。
+3. **`rebalance` 抓價範圍 ≠ 目標範圍**：`allt = _all_tickers(state)`（目前持股）+ 巴菲特清單，
+   但目標清單來自 `screen_result.json`。每週重篩新選進來、目前沒持有的股票沒被抓價
+   → `_alloc_shares` 靜默丟掉。實測產業鏈全目標 87 檔只買到 71 檔，
+   AVAV/RKLB/TXN/NET/UEC 等 16 檔從來買不進去 → **每週重篩形同半殘：只能賣落選的，加不進新入選的**。
+   修法：`allt` 併入所有鏈的守備清單。修完產業鏈全 71 → 101 檔。
+
+### 模擬倉全部重建（用戶決定）
+
+bug 3 代表那 48 天跑的並不是「產業鏈全」這個策略本身 → 留著錯的基準會誤導決策。
+4 主策略 + 8 條產業鏈明細**全部以 $10,000 於 2026-08-18 重新起跑**，起跑線一致可互相比較。
+舊資料在 git commit `4cce070`。
+
+配套：`rebalance` 補新鏈建倉邏輯（原本只走既有 portfolios，新鏈永遠長不出來），
+新倉記自己的 `inception`，賽馬頁標「⚠ 才加入」避免跟從頭跑的鏈比錯報酬率。
+
+### 其他修正
+
+- 全頁面稽核：board/portfolio 標題寫死「7 條產業鏈」（實際 9 條）改動態；
+  board/buffett/earnings/gdp 導覽列缺 ARK 入口（產生時間早於 ARK 上線，NAV 是共用的但要各自重跑）。
+- **各頁 header 加註更新頻率**，資料新鮮度一眼可辨。
+- `earnings_index.py` 從未進任何自動化 → 財報季 `earnings_watch.py` 自動產的新卡不會出現在
+  索引頁。已加進 `board_analyze_daily.cmd`。
+- 佳必琪代號修正 **6134 → 6197**（6134 其實是萬旭電子、上櫃股，跟佳必琪無關；
+  FinMind TaiwanStockInfo 查證）。也是為什麼 6134.TW 一直抓不到財報。
+- 台股財報卡補齊 OCF/CapEx/FCF：原本誤判 FinMind 沒有現金流量表所以清成 N/A，
+  其實有 `TaiwanStockCashFlowsStatement`，FCF = OCF + CapEx。
+- 財報卡與看板的 RS 窗口統一成 30 日/1 年（原 25/200），並多抓一年資料暖機
+  （長線 RS 要 250 個交易日均線，只抓 1 年的話圖表前段全空）。
+- 看板產業鏈明細新增 EXCEED CHARGE + RS 兩張圖（跟財報卡同規格）。
+  踩坑：只帶了 `EC.CSS`，漏掉 `CP/FR/TI` 三個模組的 CSS，個股卡片完全沒版面。
