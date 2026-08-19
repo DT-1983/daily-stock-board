@@ -133,6 +133,14 @@ h1 svg{flex-shrink:0}
 .mdbody{color:#C7D8EC;font-size:12.5px;line-height:1.7;margin-top:10px}
 .mdbody h3{font-size:13px;color:#F5B841;margin:11px 0 4px;font-weight:700}
 
+/* 資料過期警示（2026-08-19）：抓取/調倉失敗時頁面照樣會產生，
+   若不明講，使用者看到的是「今天的頁面＋上次的數字」而毫無察覺。
+   刻意用醒目的紅底，不要做成低調的小灰字——這是要讓人看見的。 */
+.stalewarn{margin:14px 0;padding:12px 15px;border-radius:11px;
+ background:#2E1418;border:1px solid #7F1D1D;color:#FCA5A5;
+ font-size:13px;line-height:1.8}
+.stalewarn b{color:#FEE2E2}
+
 .legend{margin-top:26px;padding:12px 14px;background:var(--surface);
  border:1px solid var(--line);border-radius:11px;font-size:12.5px;color:var(--muted);line-height:2}
 .legend span{margin-right:13px;white-space:nowrap}

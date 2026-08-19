@@ -82,9 +82,20 @@ jobs:
           python gdp_fetch.py || echo "GDP 抓取失敗，用上次的 gdp_data.json"
           python gdp_html.py -o docs/gdp.html || echo "GDP 頁失敗，跳過"
 
+      # 2026-08-19：行情抓失敗時仍沿用舊 market_data.json 畫首頁（這是刻意的：
+      # 首頁還有頭條、分頁入口，為了行情一項整頁不更新太過頭）。但降級不能無聲——
+      # home_html.py 會比對資料日期，過期就在頁面頂端標紅字說明；這裡再補一則 TG。
       - name: 投資資訊首頁（行情+頭條+分頁摘要）
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          python market_fetch.py || echo "行情抓取失敗，用上次的 market_data.json"
+          if ! python market_fetch.py; then
+            echo "::warning::行情抓取失敗，首頁將沿用上次的 market_data.json 並標示過期"
+            curl -sS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+              -d chat_id="${TELEGRAM_CHAT_ID}" -d parse_mode=HTML \
+              -d text="🟡 <b>大盤行情抓取失敗</b>%0A首頁沿用上次資料，頁面已標示過期日期。頭條與各分頁不受影響。" >/dev/null || true
+          fi
           python home_html.py -o docs/index.html
 
       # 2026-08-03：趨勢倉調倉 + nav + 賽馬頁移到獨立的 portfolio-nav.yml
