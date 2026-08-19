@@ -101,7 +101,17 @@ def build(state):
     legend = "".join(
         f'<span><i style="width:9px;height:9px;border-radius:50%;display:inline-block;'
         f'background:{color_map[n]}"></i>{esc(n)}</span>' for n in order)
-    date = datetime.now().strftime("%Y-%m-%d %H:%M")
+    # 2026-08-19：這裡原本用 datetime.now()（畫圖當下的時間），資料沒更新時
+    # 頁面照樣寫著今天 → 「今天的日期＋昨天的數字」，看不出來。
+    # 改成顯示 portfolios.json 自己的 updated（資料的時間），並在資料落後時明講。
+    render_time = datetime.now().strftime("%Y-%m-%d %H:%M")
+    today = datetime.now().strftime("%Y-%m-%d")
+    stale = updated != today
+    stale_note = ""
+    if stale:
+        stale_note = (f'<div class="stalewarn">⚠️ 資料停在 <b>{esc(updated)}</b>，'
+                      f'今天（{today}）的調倉／淨值更新沒有成功。'
+                      f'下面的數字是上次成功更新時的結果，不是今天的。</div>')
 
     return f"""<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
@@ -109,8 +119,12 @@ def build(state):
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <style>{BASE_CSS}</style></head><body><div class="wrap">
 {header("portfolio", "策略賽馬模擬倉",
-  f"起始 {esc(inception)}（第 {days} 天）· 更新 {date} · 每倉 {usd(base)} · 匯率 1美元={fx}台幣"
-  f" · 淨值每日 09:00 更新，清單每週六重篩", NAV, "portfolio")}
+  f"起始 {esc(inception)}（第 {days} 天）· <b>資料日期 {esc(updated)}</b>"
+  f" · 每倉 {usd(base)} · 匯率 1美元={fx}台幣"
+  f" · 淨值每日 09:00 更新，清單每週六重篩"
+  f"<br><span style='color:var(--dim);font-size:11px'>頁面產生於 {render_time}"
+  f"（產生時間≠資料時間，以上面的資料日期為準）</span>", NAV, "portfolio")}
+{stale_note}
 {stat}
 <div class="card">
   <div class="ctrl" style="position:static;border:0;padding:0 0 10px">

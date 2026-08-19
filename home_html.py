@@ -177,11 +177,28 @@ def build():
         entry("ark", "ARK ETF 追蹤", s["ark"], "ark.html"),
     ])
 
+    # 行情過期警示（2026-08-19）：market_fetch.py 失敗時 workflow 會沿用舊的
+    # market_data.json 照樣畫首頁。標題的時間本來就是「資料時間」不是「畫圖時間」
+    # （這點原本就沒騙人），但只是一個小小的日期，落後了不容易注意到 → 明講出來。
+    # 只比日期不比時分：盤中每次更新時分本來就會不同，比到分會天天誤報。
+    stale_note = ""
+    try:
+        data_day = str(m["updated"])[:10]
+        today = datetime.now().strftime("%Y-%m-%d")
+        if data_day and data_day != today:
+            stale_note = (f'<div class="stalewarn">⚠️ 大盤行情停在 <b>{esc(m["updated"])}</b>，'
+                          f'今天（{today}）沒有抓到新行情。'
+                          f'下方價格是上次成功抓取的，不是最新的。'
+                          f'<br><span style="font-size:12px">（頭條新聞與下方各分頁入口不受影響）</span></div>')
+    except Exception:   # noqa: BLE001
+        pass
+
     return f"""<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex"><title>投資資訊首頁</title>
 <style>{BASE_CSS}{CSS_EXTRA}</style></head><body><div class="wrap">
 {header("home", "投資資訊首頁", f"行情更新 {esc(m['updated'])} · 平日 09:00／15:10 自動更新", NAV, "home")}
+{stale_note}
 <div class="hsec"><h2>{icon("board", 16, "#3B82F6")}大盤行情</h2>
 <div class="hnote">漲跌為對前一交易日收盤；美股為美東前一晚收盤</div>
 <div class="idxgrid">{idx_html}</div></div>

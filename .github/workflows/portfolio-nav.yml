@@ -23,16 +23,48 @@ jobs:
           python-version: '3.12'
       - name: 裝套件
         run: pip install -r requirements.txt
+      # 2026-08-19：原本四行各自 `|| echo`，前三行（算數字）失敗也會走到第四行
+      # 把頁面重畫一次，而頁面當時寫的是「畫圖時間」→ 今天的日期配昨天的數字，
+      # 完全看不出來（8/17 數字凍結 7 天就是這樣被蓋過去的）。
+      # 現在：失敗累積成 FAILED，頁面照樣產生（portfolio_html 會自己標「資料停在 X 日」），
+      # 但步驟會紅燈 + 推 Telegram，不再無聲降級。
       - name: 趨勢倉/合流倉調倉 + 記淨值 + 出賽馬頁
+        id: rebal
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          python paper_portfolio.py rebalance-trend || echo "趨勢倉每日調倉失敗，跳過"
-          python paper_portfolio.py rebalance-combo || echo "合流倉每日調倉失敗，跳過"
-          python paper_portfolio.py nav || echo "模擬倉更新失敗，跳過"
-          python portfolio_html.py -o docs/portfolios.html || echo "賽馬頁失敗，跳過"
+          FAILED=""
+          python paper_portfolio.py rebalance-trend || FAILED="$FAILED 趨勢倉調倉"
+          python paper_portfolio.py rebalance-combo || FAILED="$FAILED 合流倉調倉"
+          python paper_portfolio.py nav            || FAILED="$FAILED 淨值更新"
+          # 頁面還是要產生：它會自己偵測資料日期並在頁面上標示過期，
+          # 不產生的話反而變成「頁面停在更舊的版本」，更難判斷。
+          python portfolio_html.py -o docs/portfolios.html || FAILED="$FAILED 賽馬頁"
+          if [ -n "$FAILED" ]; then
+            echo "::error::模擬倉更新失敗：$FAILED"
+            curl -sS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+              -d chat_id="${TELEGRAM_CHAT_ID}" -d parse_mode=HTML \
+              -d text="🔴 <b>模擬倉更新失敗</b>%0A失敗步驟：${FAILED}%0A賽馬頁上的數字停在上次成功更新，頁面已標示資料日期。" >/dev/null || true
+            exit 1
+          fi
+      # if: always() —— 上一步失敗時「帶過期警示的頁面」更要發佈出去，
+      # 不發的話線上停在更舊的版本，使用者反而看不到警示。
       - name: 回存狀態 + 發佈
+        if: always()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add portfolios.json docs/portfolios.html
-          git commit -m "chore: 模擬倉每日淨值更新 [skip ci]" || echo "無變化"
-          git push || echo "push 略過"
+          git commit -m "chore: 模擬倉每日淨值更新 [skip ci]" || echo "無變化（沒有檔案異動）"
+          # push 失敗＝整趟白跑且不會自我修復，必須讓人知道，不能只 echo 一句
+          if ! git push; then
+            echo "::error::push 失敗，這次的更新沒有上線"
+            curl -sS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+              -d chat_id="${TELEGRAM_CHAT_ID}" -d parse_mode=HTML \
+              -d text="🔴 <b>模擬倉 push 失敗</b>%0A數字算好了但沒推上線，網站看到的還是舊的。" >/dev/null || true
+            exit 1
+          fi
