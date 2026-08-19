@@ -1,130 +1,130 @@
 {
- "updated": "2026-08-18 15:48",
+ "updated": "2026-08-19 15:49",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "08/14",
-   "close": 7785.76,
-   "chg_pct": -0.17
+   "date": "08/18",
+   "close": 7691.76,
+   "chg_pct": -0.69
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "08/14",
-   "close": 26729.16,
-   "chg_pct": -0.28
+   "date": "08/18",
+   "close": 26289.71,
+   "chg_pct": -1.33
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "08/14",
-   "close": 53732.41,
-   "chg_pct": -0.2
+   "date": "08/18",
+   "close": 53343.4,
+   "chg_pct": -0.22
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "08/14",
-   "close": 12417.05,
-   "chg_pct": -0.31
+   "date": "08/18",
+   "close": 11992.46,
+   "chg_pct": -4.98
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "08/18",
-   "close": 45308.68,
-   "chg_pct": -1.1
+   "date": "08/19",
+   "close": 44719.35,
+   "chg_pct": -1.3
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "08/18",
+   "date": "08/19",
    "close": 31.9,
-   "chg_pct": -0.29
+   "chg_pct": 0.15
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "08/14",
-   "close": 4.7,
+   "date": "08/18",
+   "close": 4.71,
    "fmt": "yield",
-   "chg_bp": 5.5
+   "chg_bp": -1.8
   }
  ],
  "news": [
   {
-   "title": "30年美債殖利率飆破5.31%創近20年新高   三大因素恐推動進一步上升",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6580313",
-   "ts": "08/18 15:40"
-  },
-  {
-   "title": "強茂交期拉長至52週，數據透露功率半導體供需失衡，下半年營收有機會大成長嗎?",
+   "title": "你中獎了嗎？手機報稅今抽獎！近2萬幸運兒瓜分大獎 頭獎現金5萬",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6580348",
-   "ts": "08/18 15:30"
+   "url": "https://news.cnyes.com/news/id/6581463",
+   "ts": "08/19 15:32"
   },
   {
-   "title": "韓股暴衝後急殺！KOSPI從漲3.4%到跌1.55%，真正壓力來自債市",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6580350",
-   "ts": "08/18 15:30"
-  },
-  {
-   "title": "日經重挫1,759點、終止連五漲！中東局勢、升息預期壓低半導體股",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6580346",
-   "ts": "08/18 15:30"
-  },
-  {
-   "title": "永豐銀主辦展頌27.25億元永續指標聯貸 省水、節電達標可獲利率優惠",
+   "title": "美時學名藥獲日本PMDA上市許可 攻1.55億美元市場",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6580325",
-   "ts": "08/18 15:25"
+   "url": "https://news.cnyes.com/news/id/6581464",
+   "ts": "08/19 15:31"
   },
   {
-   "title": "廣宇AI伺服器Q4量產 全年營收維持雙位數成長目標明年迎爆發",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6580314",
-   "ts": "08/18 15:22"
-  },
-  {
-   "title": "《財富階梯》你所不知道的0.01%威力",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6580326",
-   "ts": "08/18 15:20"
-  },
-  {
-   "title": "債券義警重新集結？Yardeni警告：5%殖利率恐成全球市場壓力測試",
+   "title": "通膨擔憂壓抑經濟復甦！歐洲五分之四國家猛儲蓄 美卻跌破疫情前 大西洋兩岸為何經濟裂口擴大？",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6580302",
-   "ts": "08/18 15:20"
+   "url": "https://news.cnyes.com/news/id/6581419",
+   "ts": "08/19 15:30"
   },
   {
-   "title": "華府、AI巨頭搶同一池錢！美債殖利率逼近5% 市場緊盯「這群人」",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6580153",
-   "ts": "08/18 15:20"
-  },
-  {
-   "title": "外資終結連六買提款119億 三大法人賣超239.3億元",
+   "title": "〈台北國際自動化展〉新漢營運甩陰霾下半年步步高 AI/人形機器人產品明年放量",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6580316",
-   "ts": "08/18 15:00"
+   "url": "https://news.cnyes.com/news/id/6581415",
+   "ts": "08/19 15:20"
+  },
+  {
+   "title": "台積電A16背面供電技術突破！埃米級競賽再進一步：速度增10%、功耗降20%",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6581372",
+   "ts": "08/19 15:20"
+  },
+  {
+   "title": "日化大廠花王變身「洗晶片冠軍」 海外首座洗淨中心在新竹",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6581416",
+   "ts": "08/19 15:20"
+  },
+  {
+   "title": "永續債熱度不減！台積電、台電成發行領頭羊 今年已發30檔 年底可望達標千億",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6581401",
+   "ts": "08/19 15:18"
+  },
+  {
+   "title": "油價、債息夾殺！日股狂瀉逾2100點、韓股跌逾5% 晶片股成重災區",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6581429",
+   "ts": "08/19 15:17"
+  },
+  {
+   "title": "宇樹上市首日逼近發行價六倍！500億美元市值背後，商業化能否跟上？",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6581413",
+   "ts": "08/19 14:30"
+  },
+  {
+   "title": "AI雙雄季報逆轉！WSJ：OpenAI Q2營收僅季增18%  遠低於Anthropic逾140%增速",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6581375",
+   "ts": "08/19 14:30"
   }
  ],
  "inst": {
-  "date": "08/18",
-  "total_yi": -239.3,
-  "foreign_yi": -119.9,
-  "trust_yi": 56.6
+  "date": "08/19",
+  "total_yi": -708.5,
+  "foreign_yi": -416.4,
+  "trust_yi": -120.9
  }
 }
