@@ -1,22 +1,25 @@
-name: 每月產業深度報告更新提醒
+name: 每季產業深度報告更新提醒
 
 on:
   schedule:
-    - cron: '7 1 1 * *'      # 每月 1 號 UTC 01:07 = 台灣 09:07
+    # 2026-08-19 月更改季更：報告寫的是產業結構（供需/競爭格局），一個月不會有
+    # 意義變化；每週在動的題材層是 chain_themes.py，本來就跟著週篩跑。
+    # 對齊財報季：1/4/7/10 月 1 號，每次重跑都吃得到最新一季財報。
+    - cron: '7 1 1 1,4,7,10 *'   # 1/4/7/10 月 1 號 UTC 01:07 = 台灣 09:07
   workflow_dispatch:
 
 jobs:
   remind:
     runs-on: ubuntu-latest
     steps:
-      - name: 推播月更提醒
+      - name: 推播季更提醒
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           python - <<'PY'
           import os, requests
-          msg = ("📊 <b>產業深度報告 · 月更日</b>\n"
+          msg = ("📊 <b>產業深度報告 · 季更日</b>\n"
                  "本機排程今天 09:23 會自動重跑七鏈「📖 產業深度解讀」。\n"
                  "<i>若電腦沒開機沒跑到，跟 Claude 說一句「重跑產業深度報告」即可手動觸發。</i>")
           requests.post(f"https://api.telegram.org/bot{os.environ['TELEGRAM_BOT_TOKEN']}/sendMessage",
