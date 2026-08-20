@@ -1,130 +1,130 @@
 {
- "updated": "2026-08-19 15:49",
+ "updated": "2026-08-20 15:51",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "08/18",
-   "close": 7691.76,
-   "chg_pct": -0.69
+   "date": "08/19",
+   "close": 7707.98,
+   "chg_pct": 0.21
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "08/18",
-   "close": 26289.71,
-   "chg_pct": -1.33
+   "date": "08/19",
+   "close": 26331.09,
+   "chg_pct": 0.16
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "08/18",
-   "close": 53343.4,
-   "chg_pct": -0.22
+   "date": "08/19",
+   "close": 53463.05,
+   "chg_pct": 0.22
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "08/18",
-   "close": 11992.46,
-   "chg_pct": -4.98
+   "date": "08/19",
+   "close": 11738.23,
+   "chg_pct": -2.12
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "08/19",
-   "close": 44719.35,
-   "chg_pct": -1.3
+   "date": "08/20",
+   "close": 44933.74,
+   "chg_pct": 0.48
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "08/19",
-   "close": 31.9,
-   "chg_pct": 0.15
+   "date": "08/20",
+   "close": 31.85,
+   "chg_pct": -0.08
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "08/18",
-   "close": 4.71,
+   "date": "08/19",
+   "close": 4.65,
    "fmt": "yield",
-   "chg_bp": -1.8
+   "chg_bp": -5.3
   }
  ],
  "news": [
   {
-   "title": "你中獎了嗎？手機報稅今抽獎！近2萬幸運兒瓜分大獎 頭獎現金5萬",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6581463",
-   "ts": "08/19 15:32"
-  },
-  {
-   "title": "美時學名藥獲日本PMDA上市許可 攻1.55億美元市場",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6581464",
-   "ts": "08/19 15:31"
-  },
-  {
-   "title": "通膨擔憂壓抑經濟復甦！歐洲五分之四國家猛儲蓄 美卻跌破疫情前 大西洋兩岸為何經濟裂口擴大？",
+   "title": "AI硬體「搶飛機」掀空運新周期：亞洲—北美航線連續5個月雙位數成長 貨值佔比破五成",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6581419",
-   "ts": "08/19 15:30"
+   "url": "https://news.cnyes.com/news/id/6582546",
+   "ts": "08/20 15:50"
   },
   {
-   "title": "〈台北國際自動化展〉新漢營運甩陰霾下半年步步高 AI/人形機器人產品明年放量",
+   "title": "〈房產〉淡海輕軌V07淡水行政中心站捷運開發案基地910坪公告招商",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6581415",
-   "ts": "08/19 15:20"
+   "url": "https://news.cnyes.com/news/id/6582550",
+   "ts": "08/20 15:35"
   },
   {
-   "title": "台積電A16背面供電技術突破！埃米級競賽再進一步：速度增10%、功耗降20%",
+   "title": "到底誰控制荷姆茲海峽？美國未必掌控，但伊朗控制力明顯下降",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6582561",
+   "ts": "08/20 15:30"
+  },
+  {
+   "title": "永豐領先優化處置股「預收款券」盤中到位 看Q4行情樂觀但須留意2變數",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6581372",
-   "ts": "08/19 15:20"
+   "url": "https://news.cnyes.com/news/id/6582549",
+   "ts": "08/20 15:30"
   },
   {
-   "title": "日化大廠花王變身「洗晶片冠軍」 海外首座洗淨中心在新竹",
+   "title": "不只拚HBM！SK海力士把「光」塞進封裝 布局CPO突破AI頻寬牆",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6581416",
-   "ts": "08/19 15:20"
+   "url": "https://news.cnyes.com/news/id/6582493",
+   "ts": "08/20 15:20"
   },
   {
-   "title": "永續債熱度不減！台積電、台電成發行領頭羊 今年已發30檔 年底可望達標千億",
+   "title": "政府規劃普發現金一萬 商總建議發「消費券」更能發揮普發效益",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6581401",
-   "ts": "08/19 15:18"
+   "url": "https://news.cnyes.com/news/id/6582533",
+   "ts": "08/20 15:13"
   },
   {
-   "title": "油價、債息夾殺！日股狂瀉逾2100點、韓股跌逾5% 晶片股成重災區",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6581429",
-   "ts": "08/19 15:17"
+   "title": "首度「零赤字」普發！財長拆解2357億元怎麼來？國發會估助攻GDP成長0.35個百分點",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6581709",
+   "ts": "08/20 15:12"
   },
   {
-   "title": "宇樹上市首日逼近發行價六倍！500億美元市值背後，商業化能否跟上？",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6581413",
-   "ts": "08/19 14:30"
+   "title": "AI伺服器滑軌放量助攻 日系外資看好南俊國際突破千元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6582532",
+   "ts": "08/20 15:10"
   },
   {
-   "title": "AI雙雄季報逆轉！WSJ：OpenAI Q2營收僅季增18%  遠低於Anthropic逾140%增速",
+   "title": "【鋁市追蹤】鋁價進入整理期中東、中國兩大供給瓶頸未解",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6581375",
-   "ts": "08/19 14:30"
+   "url": "https://news.cnyes.com/news/id/6582545",
+   "ts": "08/20 15:00"
+  },
+  {
+   "title": "Skanska拿下11.9億美元大單將在美國東南部興建4座資料中心",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6582544",
+   "ts": "08/20 15:00"
   }
  ],
  "inst": {
-  "date": "08/19",
-  "total_yi": -708.5,
-  "foreign_yi": -416.4,
-  "trust_yi": -120.9
+  "date": "08/20",
+  "total_yi": -35.4,
+  "foreign_yi": 37.8,
+  "trust_yi": -12.1
  }
 }
