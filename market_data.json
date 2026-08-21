@@ -1,130 +1,130 @@
 {
- "updated": "2026-08-20 15:51",
+ "updated": "2026-08-21 15:52",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "08/19",
-   "close": 7707.98,
-   "chg_pct": 0.21
+   "date": "08/20",
+   "close": 7641.16,
+   "chg_pct": -0.87
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "08/19",
-   "close": 26331.09,
-   "chg_pct": 0.16
+   "date": "08/20",
+   "close": 26067.17,
+   "chg_pct": -1.0
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "08/19",
-   "close": 53463.05,
-   "chg_pct": 0.22
+   "date": "08/20",
+   "close": 52759.21,
+   "chg_pct": -1.32
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "08/19",
-   "close": 11738.23,
-   "chg_pct": -2.12
+   "date": "08/20",
+   "close": 11800.02,
+   "chg_pct": 0.53
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "08/20",
-   "close": 44933.74,
-   "chg_pct": 0.48
+   "date": "08/21",
+   "close": 45224.29,
+   "chg_pct": 0.65
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "08/20",
-   "close": 31.85,
-   "chg_pct": -0.08
+   "date": "08/21",
+   "close": 31.82,
+   "chg_pct": -0.0
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "08/19",
-   "close": 4.65,
+   "date": "08/20",
+   "close": 4.7,
    "fmt": "yield",
-   "chg_bp": -5.3
+   "chg_bp": 4.3
   }
  ],
  "news": [
   {
-   "title": "AI硬體「搶飛機」掀空運新周期：亞洲—北美航線連續5個月雙位數成長 貨值佔比破五成",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6582546",
-   "ts": "08/20 15:50"
-  },
-  {
-   "title": "〈房產〉淡海輕軌V07淡水行政中心站捷運開發案基地910坪公告招商",
+   "title": "【盤後贏指標】量縮重返 4 萬 5，台積電、傳產族群助攻",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6582550",
-   "ts": "08/20 15:35"
+   "url": "https://news.cnyes.com/news/id/6583584",
+   "ts": "08/21 15:40"
   },
   {
-   "title": "到底誰控制荷姆茲海峽？美國未必掌控，但伊朗控制力明顯下降",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6582561",
-   "ts": "08/20 15:30"
-  },
-  {
-   "title": "永豐領先優化處置股「預收款券」盤中到位 看Q4行情樂觀但須留意2變數",
+   "title": "零組件漲價恐壓抑後市需求 TPK-KY深化客戶分散降風險",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6582549",
-   "ts": "08/20 15:30"
+   "url": "https://news.cnyes.com/news/id/6583578",
+   "ts": "08/21 15:34"
   },
   {
-   "title": "不只拚HBM！SK海力士把「光」塞進封裝 布局CPO突破AI頻寬牆",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6582493",
-   "ts": "08/20 15:20"
-  },
-  {
-   "title": "政府規劃普發現金一萬 商總建議發「消費券」更能發揮普發效益",
+   "title": "TPK-KY中壢玻璃穿孔試產線9月營運 泰國新廠明年初量產",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6582533",
-   "ts": "08/20 15:13"
+   "url": "https://news.cnyes.com/news/id/6583577",
+   "ts": "08/21 15:31"
   },
   {
-   "title": "首度「零赤字」普發！財長拆解2357億元怎麼來？國發會估助攻GDP成長0.35個百分點",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6581709",
-   "ts": "08/20 15:12"
-  },
-  {
-   "title": "AI伺服器滑軌放量助攻 日系外資看好南俊國際突破千元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6582532",
-   "ts": "08/20 15:10"
-  },
-  {
-   "title": "【鋁市追蹤】鋁價進入整理期中東、中國兩大供給瓶頸未解",
+   "title": "【李寧財報快評】營收、淨利維持成長，但促銷與行銷支出限制獲利率改善空間",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6582545",
-   "ts": "08/20 15:00"
+   "url": "https://news.cnyes.com/news/id/6583579",
+   "ts": "08/21 15:30"
   },
   {
-   "title": "Skanska拿下11.9億美元大單將在美國東南部興建4座資料中心",
+   "title": "南韓8月前20天出口激增 或推動央行再度升息",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6582544",
-   "ts": "08/20 15:00"
+   "url": "https://news.cnyes.com/news/id/6583539",
+   "ts": "08/21 15:20"
+  },
+  {
+   "title": "法槌落下！許家印無期、恒大罰158.2億、兩個兒子等56人獲刑",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6583546",
+   "ts": "08/21 15:10"
+  },
+  {
+   "title": "股價飆、營收也衝！這9檔工業股有望一路旺到2028年",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6581953",
+   "ts": "08/21 15:10"
+  },
+  {
+   "title": "AI診斷「落地」！衛福部與羅氏大廠簽MOU 首波瞄準腎臟病推AI臨床決策",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6583558",
+   "ts": "08/21 15:02"
+  },
+  {
+   "title": "【Vertiv亞洲擴產】柔佛新廠首批液冷設備出貨AI散熱需求進入在地供應階段",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6583570",
+   "ts": "08/21 15:00"
+  },
+  {
+   "title": "〈SEMICON〉徐秀蘭：下一代半導體材料要在台灣先被定義 隱形冠軍不再隱形",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6583549",
+   "ts": "08/21 14:45"
   }
  ],
  "inst": {
-  "date": "08/20",
-  "total_yi": -35.4,
-  "foreign_yi": 37.8,
-  "trust_yi": -12.1
+  "date": "08/21",
+  "total_yi": 331.1,
+  "foreign_yi": 283.1,
+  "trust_yi": 18.8
  }
 }
