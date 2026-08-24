@@ -106,7 +106,12 @@ jobs:
       - name: 全市場巴菲特掃描（美+台）→ buffett_watch.json（取代 Zeabur /bsp500，Actions IP 不限流）
         env:
           FINMIND_TOKEN: ${{ secrets.FINMIND_TOKEN }}
-        run: python buffett_scan.py --max-candidates 200 --tw-max-candidates 200 || echo "巴菲特掃描失敗，跳過（沿用舊 json）"
+        # 2026-08-25：拿掉 --max-candidates 200（改吃預設 0 = 過篩的全部評估）。
+        # 原本只算最便宜的 200 檔，美股 585 檔中有 385 檔連算都沒算。
+        # 也拿掉 `|| echo`：那會讓掃描失敗變成 exit 0、workflow 綠燈、頁面照舊，
+        # 完全看不出來資料沒更新（記憶庫 silent_failure_pattern）。
+        # 失敗就讓這步紅燈，舊 json 本來就還在，不會有資料損失。
+        run: python buffett_scan.py
 
       - name: 推播「本週守備清單已更新」
         env:

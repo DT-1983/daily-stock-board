@@ -46,6 +46,13 @@ def _collect(results, market, today, out):
             "sector": r.get("sector"), "rank": r.get("leader_rank"),
             "eps": r.get("eps_ttm"), "roe": r.get("roe_current"),
             "payout": r.get("payout_ratio"), "reinvest": r.get("reinvest_ratio"),
+            # official_tw=FinMind / official_us(_ifrs)(_nolti)=SEC EDGAR
+            # capex_fallback=資料不足退回舊算法，僅供參考
+            "reinvest_method": r.get("reinvest_method"),
+            # 2026-08-25：grade/note 之前算了卻沒寫出去，JSON 裡永遠是 None，
+            # 等於「說清楚哪裡異常」這個需求做了一半——前端根本拿不到。
+            "reinvest_grade": r.get("reinvest_grade"),
+            "reinvest_note": r.get("reinvest_note"),
             "cheap": r.get("cheap_price"), "roe_years": r.get("roe_pass_years"),
             "expensive": r.get("exp_price"), "trap_flags": r.get("trap_flags"),
             "updated": today,
@@ -57,9 +64,9 @@ def _collect(results, market, today, out):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--min-cap", type=float, default=2e9)          # 美股 USD
-    ap.add_argument("--max-candidates", type=int, default=200)     # 美股 stage2 上限
+    ap.add_argument("--max-candidates", type=int, default=0)       # 0=過篩的全評估（2026-08-25 起）
     ap.add_argument("--tw-min-cap", type=float, default=5e9)       # 台股 50 億 TWD（含中小型高 ROE）
-    ap.add_argument("--tw-max-candidates", type=int, default=200)  # 台股 stage2 上限（涵蓋過關全部）
+    ap.add_argument("--tw-max-candidates", type=int, default=0)    # 0=過篩的全評估
     ap.add_argument("--markets", default="us,tw",
                     help="要掃的市場，逗號分隔（us / tw）")
     args = ap.parse_args()
@@ -91,6 +98,16 @@ def main():
     ranked = sum(1 for v in out.values() if v.get("rank"))
     n_tw_total = sum(1 for v in out.values() if v.get("market") == "TW")
     print(f"✅ buffett_watch.json：{len(out)} 檔 BUY/WATCH（美 {len(out)-n_tw_total} / 台 {n_tw_total}、龍頭 {ranked}）")
+
+    # 盈再率是用哪個方法算的，一定要印出來。
+    # 2026-08-24/25 兩次踩到：一批股票安靜退回 capex_fallback，
+    # 掃描照樣 exit 0、檔案照樣產生，看起來完全正常，
+    # 但那批數字其實是**漏算長期投資的替代算法**。不印出來就發現不了。
+    import collections as _c
+    from buffett_screener import fm_error_report
+    _m = _c.Counter(v.get("reinvest_method") or "無" for v in out.values())
+    print("   盈再率來源：" + "、".join(f"{k} {n}" for k, n in _m.most_common()))
+    fm_error_report()
 
 
 if __name__ == "__main__":

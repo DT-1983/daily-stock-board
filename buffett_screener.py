@@ -17,9 +17,11 @@
 import yfinance as yf
 import pandas as pd
 import numpy as np
+import re
 import requests
 import argparse
 import time
+import json
 import os
 from datetime import datetime
 
@@ -34,6 +36,13 @@ PE_FAIR          = 20     # 合理價（EPS×20）— 2026-07-31 起【不參與
 PE_EXPENSIVE     = 30     # 貴價（EPS×30，報酬0%）＝ 賣出線
 REINVEST_IDEAL   = 0.40   # 盈再率理想門檻（< 40% = 真洪瑞泰）
 REINVEST_MAX     = 0.80   # 盈再率上限（> 80% 拒絕）
+REINVEST_ABSURD  = 3.00   # |盈再率| > 300% 視為「structural change」不可用於判斷。
+                          #   2026-08-24：實測 2105 正新 −431%、1216 統一 +332%。
+                          #   數學上沒錯（固資四年少了 261 億、四年淨利才 60 億），
+                          #   但它反映的是「公司結構大變動（處分資產/併購）」，
+                          #   不是「資本效率好壞」——拿去比 80% 門檻會篩出錯的東西。
+                          #   洪瑞泰官方表用「常利」平滑掉這種情況，我們沒有那個欄位，
+                          #   所以改成明講「無法判斷」並附異常原因。
 PAYOUT_MIN       = 0.40   # 配息率下限（洪瑞泰：配息 < 40% 代表盈餘可能是假的）
 LEADER_TOP_N     = 3      # 產業龍頭顯示前幾名
 
@@ -202,6 +211,233 @@ def get_combined_universe(include: list[str], limit: int = 0) -> pd.DataFrame:
     print(f"[Universe] 合計 {len(df)} 支（去重後）")
     return df
 
+# ── 台股盈再率：走 FinMind ─────────────────────────────
+# yfinance 的資產負債表拿不到 4 年前那一期（第 5 期一律 NaN，AAPL/9904 實測皆然），
+# 而盈再率的定義就是「今年 vs 四年前」，少了期初根本算不了。
+# FinMind 台股有完整 6 期年報，欄位也直接對應公式，所以台股一律走這裡。
+
+# .env 裡有 FINMIND_TOKEN（付費額度），但本模組原本沒載入 .env，
+# 於是一直用免費額度 → 2026-08-24 重掃 200 檔時中途撞 HTTP 402 被限流。
+# 有 token 的額度高很多，載進來才用得到。
+try:
+    from dotenv import load_dotenv
+    load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))
+except Exception:
+    pass
+
+_FINMIND_API = "https://api.finmindtrade.com/api/v4/data"
+_FM_CACHE: dict = {}
+_FM_DISK_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".fm_cache")
+_FM_DISK_TTL = 7 * 86400   # 財報是年報，一年才變四次，快取 7 天綽綽有餘
+
+
+def _disk_path(dataset, sid):
+    return os.path.join(_FM_DISK_DIR, f"{dataset}_{sid}.json")
+
+
+def _disk_get(dataset, sid):
+    """讀磁碟快取。過期或壞掉一律當沒有。"""
+    fp = _disk_path(dataset, sid)
+    try:
+        if time.time() - os.path.getmtime(fp) > _FM_DISK_TTL:
+            return None
+        with open(fp, encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return None
+
+
+def _disk_put(dataset, sid, data):
+    """只存**成功抓到**的資料。空結果不存——空可能是失敗也可能是真的沒有，
+    存了就分不出來，而且會把一次失敗變成七天的錯誤答案。"""
+    if not data:
+        return
+    try:
+        os.makedirs(_FM_DISK_DIR, exist_ok=True)
+        tmp = _disk_path(dataset, sid) + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(data, f)
+        os.replace(tmp, _disk_path(dataset, sid))   # 原子換檔，避免寫到一半被讀到
+    except Exception:
+        pass
+
+
+_FM_ERRORS: list = []      # 連線失敗紀錄（跟『真的沒資料』分開）
+_FM_RATE_LIMITED = False   # 被限流過就設 True，讓結果能標示「拿不到」而非「沒有」
+
+
+def _fm(dataset: str, sid: str):
+    """FinMind 查詢 + 行程內快取（同一檔會被盈再率/其他欄位重複查）。"""
+    key = (dataset, sid)
+    if key in _FM_CACHE:
+        return _FM_CACHE[key]
+    # 2026-08-25：FinMind 免費額度是**每小時**上限，而一次全市場掃描要打 400 次。
+    # 同一天連跑三次就被 402 擋掉，台股官方公式從 41 檔掉回 11 檔。
+    # 財報是年報（一年才變四次），沒有理由每次掃描都重抓 → 落地成磁碟快取。
+    cached = _disk_get(dataset, sid)
+    if cached is not None:
+        _FM_CACHE[key] = cached
+        return cached
+    try:
+        params = {"dataset": dataset, "data_id": sid, "start_date": "2018-01-01"}
+        tok = os.environ.get("FINMIND_TOKEN")
+        if tok:
+            params["token"] = tok
+        r = requests.get(_FINMIND_API, params=params, timeout=30)
+        # 402 = 免費額度用完。**這是「拿不到」不是「沒有」**——
+        # 2026-08-24 踩過：重掃 200 檔時中途被限流，43 檔安靜退回 capex_fallback，
+        # 看起來像「這些公司資料不全」，其實是我們被擋了。
+        # 全域旗標讓呼叫端能分辨，不要把限流偽裝成資料不足。
+        if r.status_code == 402 or "upper limit" in (r.text or "")[:200]:
+            global _FM_RATE_LIMITED
+            if not _FM_RATE_LIMITED:
+                print("  ⚠️ FinMind 免費額度已用完（HTTP 402）——"
+                      "後續台股盈再率一律標 rate_limited，不是資料缺")
+            _FM_RATE_LIMITED = True
+            _FM_CACHE[key] = []
+            return []
+        data = r.json().get("data") or []
+    except Exception as e:                      # noqa: BLE001
+        # 2026-08-25 修：原本例外時 data=[] 並且**照樣寫進快取**，
+        # 等於把一次網路逾時永久記成「這家公司沒有財報」。
+        # 實測：單獨跑 9910/2404/2421 都算得出 official_tw，
+        # 但在 200 檔的長掃描裡同樣三檔卻退回 capex_fallback——
+        # 差別只在掃描途中有過短暫失敗，而失敗被快取了。
+        # 現在：重試一次，仍失敗就回空但**不快取**，並計數讓掃描結束能報出來。
+        try:
+            time.sleep(2)
+            r = requests.get(_FINMIND_API, params=params, timeout=45)
+            data = r.json().get("data") or []
+        except Exception:
+            _FM_ERRORS.append((dataset, sid, str(e)[:60]))
+            return []                            # 不進快取，下次還有機會
+    _FM_CACHE[key] = data
+    _disk_put(dataset, sid, data)
+    return data
+
+
+def fm_error_report():
+    """掃描結束時呼叫：把「抓失敗」跟「真的沒資料」分開講。"""
+    if _FM_RATE_LIMITED:
+        print("  ⚠️ 本次掃描曾被 FinMind 限流，部分台股盈再率是『拿不到』不是『沒有』")
+    if _FM_ERRORS:
+        print(f"  ⚠️ FinMind 連線失敗 {len(_FM_ERRORS)} 次（重試後仍失敗），"
+              f"這些檔的盈再率會退回 capex_fallback：")
+        for ds, sid, msg in _FM_ERRORS[:10]:
+            print(f"      {sid} {ds}: {msg}")
+
+
+def _reinvest_tw(code: str):
+    """台股盈再率。回 (值, 方法)；算不出來回 (None, None) 讓呼叫端退回 fallback。
+
+    公式（洪瑞泰講稿原文，公開資料）：
+        (期末固資+長投 − 期初固資+長投) ÷ 近 4 年稅後淨利
+    期末＝最新年報，期初＝4 年前年報。缺任一期就不算，不用 0 代替。
+    """
+    bs = _fm("TaiwanStockBalanceSheet", code)
+    fs = _fm("TaiwanStockFinancialStatements", code)
+    if not bs or not fs:
+        return (None, "rate_limited") if _FM_RATE_LIMITED else (None, None)
+    years = sorted({x["date"][:4] for x in bs if x["date"].endswith("12-31")})
+    if len(years) < 5:
+        return None, None
+    end_y, start_y = int(years[-1]), int(years[-1]) - 4
+    if str(start_y) not in years:
+        return None, None
+
+    def bval(y, typ):
+        for x in bs:
+            if x["date"] == f"{y}-12-31" and x["type"] == typ:
+                return x["value"]
+        return None
+
+    def base(y):
+        ppe = bval(y, "PropertyPlantAndEquipment")
+        if ppe is None:
+            return None                      # 固資缺 → 整個算式作廢
+        lti = bval(y, "InvestmentAccountedForUsingEquityMethod")
+        return ppe + (lti or 0)              # 長投缺視為 0（很多公司本來就沒有）
+
+    e, s = base(end_y), base(start_y)
+    if e is None or s is None:
+        return None, None
+
+    # 分母用合併稅後淨利（TotalConsolidatedProfitForThePeriod）：
+    # 2026-08-24 實測寶成 9904，IncomeAfterTaxes（歸屬母公司）只有官方「常利」的一半，
+    # 合併口徑才對得上數量級——資產負債表是合併的，分母也要合併才一致。
+    ni = 0.0
+    got = 0
+    for y in range(end_y - 3, end_y + 1):
+        v = None
+        for fld in ("TotalConsolidatedProfitForThePeriod", "IncomeAfterTaxes"):
+            v = next((x["value"] for x in fs
+                      if x["date"] == f"{y}-12-31" and x["type"] == fld), None)
+            if v is not None:
+                break
+        if v is None:
+            return None, None                # 四年淨利缺任一年就不算
+        ni += v
+        got += 1
+    if got < 4 or ni <= 0:
+        return None, None
+    return round(float((e - s) / ni), 4), "official_tw"
+
+
+def _reinvest_grade(ratio, method):
+    """把盈再率轉成分級 + 異常原因。回 {reinvest_grade, reinvest_note}。
+
+    2026-08-24 用戶指示：算不出來或數字異常時，要**寫清楚哪裡異常**，
+    不要只丟一個「無法判斷」讓人不知道發生什麼事。
+    """
+    if ratio is None:
+        return {"reinvest_grade": "unknown",
+                "reinvest_note": "無法判斷：抓不到固定資產或四年淨利（資料源缺該期年報）"}
+    if abs(ratio) > REINVEST_ABSURD:
+        why = ("固資/長投大幅減少（可能處分資產或分割），分子為大額負值"
+               if ratio < 0 else
+               "四年淨利偏低而投資額極大（可能大擴張或獲利低基期），分母被稀釋")
+        return {"reinvest_grade": "unknown",
+                "reinvest_note": f"無法判斷：數值 {ratio*100:.0f}% 超出合理範圍——{why}。"
+                                 f"這反映公司結構變動，不是資本效率，不納入門檻比較"}
+    if method == "rate_limited":
+        return {"reinvest_grade": "unknown",
+                "reinvest_note": "無法判斷：FinMind 免費額度用完（HTTP 402），"
+                                 "**拿不到資料，不是公司沒有資料**——換日或加 token 後重掃即可"}
+    if method == "capex_fallback":
+        # 2026-08-25：這句話我訂正過兩次。先寫「可能低估」、再寫「系統性高估」，
+        # 都是拿單邊樣本講死方向。實測兩個方向都有（美股 CPB +56%→+14% 高估、
+        # 台股 9917 +59%→+174% 低估），因為毛支出拉高與漏長投壓低是兩個反向誤差。
+        # 正確的說法是：它跟官方公式偏差方向不定，不能當近似值。
+        base = {"reinvest_note": "僅供參考：用 CapEx÷淨利 的替代算法（缺 4 年前資產負債表）。"
+                                 "與官方公式偏差方向不定（實測高估、低估都出現過，"
+                                 "最大差距達 115pp），**不可視為近似值**"}
+    elif method and method.endswith("_nolti"):
+        base = {"reinvest_note": "已用官方公式（SEC EDGAR 申報資料），"
+                                 "但該公司財報無長期投資科目，分子僅含固定資產"}
+    else:
+        base = {"reinvest_note": ""}
+    if ratio < 0:
+        # 2026-08-24：負盈再率＝四年來固資+長投「淨減少」，代表公司在縮表
+        #（處分廠房/收掉事業），不是「資本效率好」。歸到 ideal 會讓收縮中的公司
+        # 被當成優質標的，方向完全相反 → 單獨一級，要人看過再決定。
+        base["reinvest_grade"] = "shrinking"
+        # 2026-08-25：原本「已有 method 說明就不寫縮表說明」，
+        # 結果 PGR 只顯示「無長投科目」，完全沒提到它是負值——最重要的那句被吃掉。
+        # 兩段講的是不同的事，要並存。
+        warn = (f"注意：盈再率為負（{ratio*100:.0f}%），"
+                f"代表四年來固定資產+長期投資淨減少，"
+                f"公司在縮減規模而非擴張——不等於資本效率好")
+        prev = base.get("reinvest_note")
+        base["reinvest_note"] = f"{warn}（{prev}）" if prev else warn
+    elif ratio < REINVEST_IDEAL:
+        base["reinvest_grade"] = "ideal"        # 0~40%
+    elif ratio < REINVEST_MAX:
+        base["reinvest_grade"] = "acceptable"   # 40~80%
+    else:
+        base["reinvest_grade"] = "warn"         # >= 80%
+    return base
+
+
 # ── 基本面資料抓取 ─────────────────────────────────────
 
 def fetch_fundamentals(ticker: str) -> dict:
@@ -278,22 +514,102 @@ def fetch_fundamentals(ticker: str) -> dict:
         except Exception:
             pass
 
-        # 盈再率（洪瑞泰核心指標）：|CapEx 累積| / Net Income 累積
+        # 盈再率（洪瑞泰核心指標）：（期末固資+長投 − 期初固資+長投）÷ 近 4 年稅後淨利
         # < 40% = 理想；< 80% = 可接受；>= 80% = 拒絕
+        #
+        # 2026-08-24 兩次修正的完整經過（很重要，別再踩）：
+        # ① 原本用 |CapEx 累積| ÷ 淨利累積 當替代算法，**漏掉長期投資**——
+        #    盈再率要抓的地雷之一正是「靠長投亂擴張」的公司。
+        # ② 改成正式公式後仍對不上官方，追下去才發現真因：
+        #    **yfinance 的第 5 期（4 年前）幾乎一律是 NaN**（AAPL、9904 實測皆然），
+        #    而當時的取值函式把缺值當 0 → 期初基數＝0
+        #    → 等於宣稱「這四年把全部固資長投從零蓋起來」→ 9904 算出 272%（官方 −4%）。
+        #    **所以「正式公式」從頭到尾沒真正算對過**，先前顯示 official 的都是假數字。
+        # ③ 結論：yfinance 拿不到 4 年前資產負債表 → **台股改走 FinMind**（實測有 6 期年報，
+        #    欄位 PropertyPlantAndEquipment / InvestmentAccountedForUsingEquityMethod）。
+        #    美股 FinMind 沒有財報（只有 USStockInfo 清單）→ 2026-08-25 改走 SEC EDGAR，
+        #    見 sec_edgar.py；EDGAR 也拿不到才退回 CapEx 版並標記。
+        # 缺資料一律標 capex_fallback，不硬算——寧可標「資料不足」也不要給看似精確的錯數字。
         reinvest_ratio = None
+        reinvest_method = None
+        tw_code = None
+        _m = re.match(r"^(\d{4,5})\.TWO?$", ticker.upper()) if ticker else None
+        if _m:
+            tw_code = _m.group(1)
+        if tw_code:
+            reinvest_ratio, reinvest_method = _reinvest_tw(tw_code)
+        else:
+            # 美股走 SEC EDGAR（官方申報，免費、歷史完整）。
+            # 原因同上：yfinance 拿不到「4 年前」那一期資產負債表，正式公式根本算不了，
+            # 只能退回 CapEx÷淨利。實測那算法高估、低估都出現過（毛支出拉高、漏長投壓低，
+            # 兩個反向誤差），**不是近似值而是另一個東西**。詳見 sec_edgar.py 開頭。
+            # ⚠️ 這只是「算得更正確」，不代表「跟洪瑞泰官方數字一致」——
+            # 他的分母是自訂的常利（無公開定義），且他的美股頁抓不到，無從驗證。
+            try:
+                from sec_edgar import reinvest_us
+                reinvest_ratio, reinvest_method = reinvest_us(ticker)
+            except Exception:
+                reinvest_ratio, reinvest_method = None, None
         try:
-            cf = stock.cashflow
+            if reinvest_ratio is not None:
+                raise StopIteration              # 台股已用 FinMind 算出，跳過 yfinance 這段
+            bs = stock.balance_sheet
             fi = stock.financials
-            if not cf.empty and not fi.empty:
+            ni_label = next((r for r in fi.index if r.lower() == "net income"), None)
+
+            def _row(labels):
+                for want in labels:
+                    for r in bs.index:
+                        if r.lower() == want.lower():
+                            return r
+                return None
+
+            # 固資取 Net PPE（淨額，已扣折舊）；長投優先取 Long Term Equity Investment，
+            # 沒有就退 Investments And Advances（美股常見的合併科目）
+            ppe_label = _row(["Net PPE"])
+            lti_label = _row(["Long Term Equity Investment", "Investments And Advances"])
+
+            if (bs is not None and not bs.empty and fi is not None and not fi.empty
+                    and ni_label and ppe_label and len(bs.columns) >= 5):
+                cols = list(bs.columns)[:5]          # [0]=最新, [4]=4 年前
+
+                # 2026-08-24 修：原本查無資料一律回 0.0，等於把「不知道」當成「是零」。
+                # yfinance 台股第 5 期（4 年前）常常是空的 → 期初基數變 0
+                # → 「這四年把全部固資長投都當成新增投資」→ 9904 算出 272%（實際官方 −4%）。
+                # 現在區分兩種 None：
+                #   固資缺 → 整個算式作廢（回 None，由呼叫端退回 fallback 並標記）
+                #   長投缺 → 視為 0（很多公司本來就沒有長期投資，這是合理的預設）
+                def _v(label, col, required):
+                    if not label:
+                        return None if required else 0.0
+                    try:
+                        v = bs.loc[label, col]
+                        if v != v:                             # v!=v 抓 NaN
+                            return None if required else 0.0
+                        return float(v)
+                    except Exception:
+                        return None if required else 0.0
+
+                ppe_end, ppe_start = _v(ppe_label, cols[0], True), _v(ppe_label, cols[4], True)
+                lti_end, lti_start = _v(lti_label, cols[0], False), _v(lti_label, cols[4], False)
+                # 期末或期初的固資任一缺 → 這檔算不出正式盈再率，不硬湊
+                if ppe_end is not None and ppe_start is not None:
+                    ni_4y = fi.loc[ni_label].dropna()[:4].sum()
+                    if ni_4y > 0:
+                        reinvest_ratio = round(
+                            float(((ppe_end + lti_end) - (ppe_start + lti_start)) / ni_4y), 4)
+                        reinvest_method = "official"     # 正式公式（含長投）
+
+            if reinvest_ratio is None:               # 退回舊算法，但標記出來
+                cf = stock.cashflow
                 capex_label = next((r for r in cf.index
                                     if "capital expenditure" in r.lower()), None)
-                ni_label = next((r for r in fi.index
-                                 if "net income" in r.lower()), None)
-                if capex_label and ni_label:
+                if capex_label and ni_label and not cf.empty:
                     capex_sum = abs(cf.loc[capex_label].dropna()).sum()
                     ni_sum = fi.loc[ni_label].dropna().sum()
                     if ni_sum > 0:
                         reinvest_ratio = round(float(capex_sum / ni_sum), 4)
+                        reinvest_method = "capex_fallback"   # 資料不足，僅供參考
         except Exception:
             pass
 
@@ -313,6 +629,9 @@ def fetch_fundamentals(ticker: str) -> dict:
             "dividend_yield": dividend_yield,
             "payout_ratio":  payout_ratio,
             "reinvest_ratio": reinvest_ratio,  # 洪瑞泰盈再率
+            "reinvest_method": reinvest_method,  # official_tw=FinMind正式 / official_us=EDGAR正式
+            # official_us_nolti=EDGAR但該公司無長投科目 / capex_fallback=資料不足退回
+            **_reinvest_grade(reinvest_ratio, reinvest_method),
         }
 
     except Exception as e:
@@ -328,13 +647,31 @@ def evaluate(data: dict) -> dict:
     """
     result = {**data}
 
-    eps  = data.get("eps_ttm") or 0
     roe  = data.get("roe_current") or 0
     d_e  = data.get("debt_to_equity") or 0
     price = data.get("price") or 0
 
-    # ── 1. 俗價 / 合理價 / 貴價 ──────────────────────────
-    # 美股因 NAV 常為負，採 EPS 倍數法
+    # ── 1. 俗價 / 貴價 ──────────────────────────────────
+    # 美股因 NAV 常為負，採 EPS 倍數法。
+    #
+    # 2026-08-24 起【美股改用預期 EPS，台股維持實績 EPS】：
+    # 洪瑞泰官方表用的是預期獲利（他的表有「預期」列與「預期報酬%」欄），
+    # 但兩個市場的資料可得性差很多——實測預期 EPS 涵蓋率：美股 11/11=100%、
+    # 台股只有 8/14=57%（缺的全是上櫃中小型股，正是守備清單主體）。
+    # 台股若改用預期，會讓一半標的算不出俗貴價而整個消失，所以分開處理。
+    # ⚠️ 影響很直接：實測 11 檔美股有 5 檔判定改變（4 檔從買進降為觀望、
+    #    1 檔從觀望升為買進），方向是「買進變少」，因為這批分析師多預估獲利下滑。
+    eps_ttm_v = data.get("eps_ttm") or 0
+    eps_fwd_v = data.get("eps_forward") or 0
+    _is_tw = bool(re.match(r"^\d{4,5}\.TWO?$", str(data.get("ticker", "")).upper()))
+    if _is_tw:
+        eps, eps_basis = eps_ttm_v, "ttm"
+    else:
+        # 美股優先預期；沒有預期值才退回實績並標記（不要因為缺值就整檔消失）
+        eps, eps_basis = (eps_fwd_v, "forward") if eps_fwd_v > 0 else (eps_ttm_v, "ttm_fallback")
+    result["eps_basis"] = eps_basis
+    result["eps_used"] = eps if eps > 0 else None
+
     cheap_price = round(eps * PE_CHEAP, 2) if eps > 0 else None
     fair_price  = round(eps * PE_FAIR,  2) if eps > 0 else None
     exp_price   = round(eps * PE_EXPENSIVE, 2) if eps > 0 else None
@@ -412,8 +749,15 @@ def evaluate(data: dict) -> dict:
     #   WATCH= 品質關過 + 俗價 < 現價 <= 貴價
     #   SELL = 現價 > 貴價
     #   SKIP = 品質關沒過（含盈再率地雷、只賺不配、ROE 只有今年好看）
+    # 盈再率關卡改吃分級（2026-08-24）——原本只比 `rr < 0.80`，會有兩個漏洞：
+    #   ① 「無法判斷」(unknown) 的極端值被當成合格（-431% < 0.80 成立）
+    #   ② 「縮表中」(shrinking) 的負值也被當成資本效率好
+    # 現在只有 ideal / acceptable 才算過關；unknown / shrinking 不自動淘汰也不自動放行，
+    # 標記 needs_review 讓人看過再決定（避免用錯的數字做非黑即白的判斷）。
     rr = data.get("reinvest_ratio")
-    reinvest_ok = is_financial or rr is None or rr < 0.80
+    grade = data.get("reinvest_grade")
+    reinvest_ok = is_financial or grade in ("ideal", "acceptable") or rr is None
+    result["needs_review"] = (not is_financial) and grade in ("unknown", "shrinking")
     roe_stable  = roe_pass_years >= ROE_YEARS          # 近 4 年至少 3 年 ROE ≥ 15%
     quality_ok  = (roe_pass_current and roe_stable and eps > 0
                    and reinvest_ok and payout_ok)

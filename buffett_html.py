@@ -119,11 +119,13 @@ def build(watch):
 <style>{BASE_CSS}</style></head><body><div class="wrap">
 {header("buffett", "巴菲特價值清單",
   f"洪瑞泰俗貴價法 · 資料更新 {esc(upd)} · 美股 {n_us} / 台股 {n_tw} 檔"
-  f" · 每週六重新掃描全市場", NAV, "buffett")}
+  f" · 每週六重掃", NAV, "buffett")}
 <div class="note">
 <b>訊號</b>：買進＝現價≤俗價　觀望＝俗價~貴價之間　太貴＝現價&gt;貴價<br>
 <b>俗價</b>=EPS×12（買進線，報酬15%）　<b>貴價</b>=EPS×30（賣出線，報酬0%）—— 洪瑞泰只設這兩條線，不用合理價<br>
+<b>初篩母體</b>（依洪瑞泰講稿的篩選器設定）：美股 <b>S&amp;P 500</b> 成分股、PE≤15、ROE≥10%　·　台股 <b>TWSE+TPEX</b>、PE≤15、ROE≥15%<br>
 <b>品質關（全過才進買進/觀望）</b>：ROE≥15% 且近4年至少3年達標　·　盈再率&lt;80%　·　配息率≥40%<br>
+初篩 ROE 放寬到 10% 是他刻意的——現在 ROE 12% 但過去 4 年有 3 年達標的公司，才不會在第一關就被刷掉。<br>
 龍頭#N＝同 sector 市值前3（補充參考）　⚠ 照妖鏡＝forward EPS 衰退／負債&gt;{DE_HIGH}%
 </div>
 <div class="ctrl">
