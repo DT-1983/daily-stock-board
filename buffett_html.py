@@ -35,11 +35,30 @@ def _row(r, rid):
     cheap = f'{r["cheap"]:.1f}' if r.get("cheap") else "—"
     exp = f'{r["exp"]:.0f}' if r.get("exp") else "—"
     price = f'{r["price"]:.1f}' if r.get("price") else "—"
+    # 盈再率：2026-08-25 補上。先前頁面說明寫著「品質關：盈再率<80%」卻**沒有這一欄**——
+    # 使用者看得到條件、看不到數值，也看不出這個數字是官方公式算的還是替代算法。
+    ri, rg = r.get("reinvest"), r.get("reinvest_grade")
+    if ri is None:
+        reinv = '<span style="color:var(--dim)">—</span>'
+    else:
+        # 顏色照分級，不是照數字大小：負值（縮表）不是好事，不能跟低盈再率同色
+        rc = {"ideal": "#34D399", "acceptable": "#F5B841",
+              "shrinking": "#FCA5A5", "warn": "#FCA5A5"}.get(rg, "var(--dim)")
+        mark = ""
+        if (r.get("reinvest_method") or "") == "capex_fallback":
+            mark = '<span style="color:#FCA5A5;font-size:10px">＊</span>'   # 替代算法
+        elif rg == "shrinking":
+            mark = '<span style="color:#FCA5A5;font-size:10px">↓</span>'    # 縮表
+        reinv = f'<span style="color:{rc}">{ri*100:.0f}%</span>{mark}'
     grid = "".join(f'<div class="dcell"><div class="k">{k}</div><div class="v num">{v}</div></div>'
                    for k, v in [("現價", price), ("俗價", cheap), ("貴價", exp), ("折價%", dis),
                                ("ROE", r.get("roe") and f'{r["roe"]*100:.0f}%' or "—"),
+                               ("盈再率", reinv),
                                ("配息率", po), ("產業", sector_tw(r.get("sector", "")))])
+    note = r.get("reinvest_note")
     detail = f'<div class="dgrid">{grid}</div>' + (
+        f'<div class="mdbody" style="color:var(--muted);font-size:11.5px">{esc(note)}</div>'
+        if note else "") + (
         f'<div class="mdbody">{trap}</div>' if trap else "")
     return (
         f'<button class="row" data-id="{rid}" data-sig="{cls}" aria-expanded="false">'
@@ -47,7 +66,8 @@ def _row(r, rid):
         f'<span class="info"><span class="t1">{lead}<span class="tk">{esc(r["tk"])}</span>'
         f'<span class="nm">{esc(r.get("name",""))}</span>'
         f'<span class="sigtag" style="background:{col}22;color:{col}">{SIG_LABEL[cls]}</span></span>'
-        f'<span class="one">俗價 {cheap} · 貴價 {exp} · ROE {roe}{" · " + trap if trap else ""}</span></span>'
+        f'<span class="one">俗價 {cheap} · 貴價 {exp} · ROE {roe} · 盈再 {reinv}'
+        f'{" · " + trap if trap else ""}</span></span>'
         f'<span class="rt"><span class="sv num {score_class(r.get("dis") or 0)}">{dis}</span>'
         f'<span class="bar" style="width:{min(max((r.get("dis") or 0)*1.2,4),46):.0f}px"></span></span>'
         f'{icon("chevron",15,"currentColor",2.5)}</button>'
@@ -83,11 +103,18 @@ def build(watch):
             "rank": d.get("rank"), "price": price, "cheap": cheap, "exp": exp,
             "roe": d.get("roe"), "eps": d.get("eps"), "dis": dis, "tags": tags,
             "payout": d.get("payout"), "roe_years": d.get("roe_years"),
+            "reinvest": d.get("reinvest"), "reinvest_grade": d.get("reinvest_grade"),
+            "reinvest_method": d.get("reinvest_method"), "reinvest_note": d.get("reinvest_note"),
         })
 
     n_us = sum(len(mkts["US"][s]) for s in ORDER)
     n_tw = sum(len(mkts["TW"][s]) for s in ORDER)
     upd = next((v.get("updated") for v in watch.values() if v.get("updated")), "?")
+    # 盈再率有多少檔是官方公式算的——這個比例要讓使用者看得到，
+    # 否則「替代算法」跟「官方公式」在頁面上長得一模一樣。
+    n_total = len(watch)
+    n_official = sum(1 for v in watch.values()
+                     if (v.get("reinvest_method") or "").startswith("official"))
 
     def section(mkt_key, label):
         rows_html, i = [], 0
@@ -126,6 +153,11 @@ def build(watch):
 <b>初篩母體</b>（依洪瑞泰講稿的篩選器設定）：美股 <b>S&amp;P 500</b> 成分股、PE≤15、ROE≥10%　·　台股 <b>TWSE+TPEX</b>、PE≤15、ROE≥15%<br>
 <b>品質關（全過才進買進/觀望）</b>：ROE≥15% 且近4年至少3年達標　·　盈再率&lt;80%　·　配息率≥40%<br>
 初篩 ROE 放寬到 10% 是他刻意的——現在 ROE 12% 但過去 4 年有 3 年達標的公司，才不會在第一關就被刷掉。<br>
+<b>盈再率</b>＝四年來（固資+長投）的增加 ÷ 四年稅後淨利，看「賺的錢留不留得住」。
+<span style="color:#34D399">綠 &lt;40% 理想</span>　<span style="color:#F5B841">黃 40~80% 可接受</span>
+<span style="color:#FCA5A5">紅 ↓為負＝公司在縮表（處分資產），不等於資本效率好</span>
+<span style="color:#FCA5A5">＊</span>＝資料不足、用 CapEx÷淨利 替代算法，<b>與官方公式偏差方向不定，不可比大小</b><br>
+資料源：台股 FinMind、美股 SEC EDGAR 官方申報。本次 {n_official}/{n_total} 檔走官方公式。<br>
 龍頭#N＝同 sector 市值前3（補充參考）　⚠ 照妖鏡＝forward EPS 衰退／負債&gt;{DE_HIGH}%
 </div>
 <div class="ctrl">

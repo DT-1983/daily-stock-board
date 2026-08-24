@@ -532,7 +532,7 @@
   "reinvest": 0.0271,
   "reinvest_method": "capex_fallback",
   "reinvest_grade": "ideal",
-  "reinvest_note": "僅供參考：用 CapEx÷淨利 的替代算法（缺 4 年前資產負債表）。與官方公式偏差方向不定（實測高估、低估都出現過，最大差距達 115pp），**不可視為近似值**",
+  "reinvest_note": "僅供參考：用 CapEx÷淨利 的替代算法（缺 4 年前資產負債表）。與官方公式偏差方向不定（實測高估、低估都出現過，最大差距達 115pp），不可視為近似值",
   "cheap": 147.36,
   "roe_years": 3,
   "expensive": 368.4,

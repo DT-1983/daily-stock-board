@@ -402,7 +402,7 @@ def _reinvest_grade(ratio, method):
     if method == "rate_limited":
         return {"reinvest_grade": "unknown",
                 "reinvest_note": "無法判斷：FinMind 免費額度用完（HTTP 402），"
-                                 "**拿不到資料，不是公司沒有資料**——換日或加 token 後重掃即可"}
+                                 "拿不到資料，不是公司沒有資料——換日或加 token 後重掃即可"}
     if method == "capex_fallback":
         # 2026-08-25：這句話我訂正過兩次。先寫「可能低估」、再寫「系統性高估」，
         # 都是拿單邊樣本講死方向。實測兩個方向都有（美股 CPB +56%→+14% 高估、
@@ -410,7 +410,7 @@ def _reinvest_grade(ratio, method):
         # 正確的說法是：它跟官方公式偏差方向不定，不能當近似值。
         base = {"reinvest_note": "僅供參考：用 CapEx÷淨利 的替代算法（缺 4 年前資產負債表）。"
                                  "與官方公式偏差方向不定（實測高估、低估都出現過，"
-                                 "最大差距達 115pp），**不可視為近似值**"}
+                                 "最大差距達 115pp），不可視為近似值"}
     elif method and method.endswith("_nolti"):
         base = {"reinvest_note": "已用官方公式（SEC EDGAR 申報資料），"
                                  "但該公司財報無長期投資科目，分子僅含固定資產"}
