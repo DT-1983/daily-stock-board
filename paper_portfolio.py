@@ -301,7 +301,20 @@ def buffett_top30(prices):
             continue
         if roe < 0.15:                     # 洪瑞泰第一關：ROE ≥ 15%
             continue
-        if rr is not None and rr >= 0.80:  # 第二關：盈再率 < 80%（吃資本的爛生意淘汰）
+        # 第二關：盈再率。2026-08-25 改用分級，原本是 `rr is not None and rr >= 0.80`，
+        # 有兩個漏洞：
+        #   ① 抓不到資料（rr is None）直接放行——「一無所知」比「知道有問題」還容易過關。
+        #      當初這樣寫是因為涵蓋率只有 6 成，硬擋會殺掉太多；今天接完 SEC EDGAR
+        #      並修好 FinMind 快取後涵蓋率 97.6%（41 檔只剩 1 檔抓不到），代價已經很小。
+        #   ② 只比大小，沒看方向。盈再率 −43% 是公司在**縮表**（處分廠房、收掉事業），
+        #      不是「資本效率好」，但 −43 < 0.80 會被當成優等生買進。
+        grade = d.get("reinvest_grade")
+        if grade is None:
+            # 舊版 buffett_watch.json 沒有這欄。**不要直接當不合格**——
+            # 2026-08-17 就是因為讀一個永遠不存在的欄位（"fair"），
+            # 讓巴菲特倉持股長期是 0、淨值凍結而且完全沒有報錯。
+            grade = "ideal" if (rr is not None and 0 <= rr < 0.80) else "unknown"
+        if grade not in ("ideal", "acceptable"):   # unknown / shrinking / warn 都不買
             continue
         if p <= cheap:                     # 第三關：現價 ≤ 俗價才進場
             picks.append((tk, _hong_score(d.get("rank"), roe, rr)))

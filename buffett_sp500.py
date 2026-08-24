@@ -15,18 +15,108 @@ buffett_sp500.py — Plan C: TV-Screener 預篩 + yfinance 4 年回溯
 import sys, io, os, argparse, time
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 
+import json
+import ssl
+import urllib.request
+
 import data_tv
 from buffett_screener import (
     fetch_fundamentals, evaluate, write_to_db, inject_leader_ranks,
     PE_CHEAP, PE_FAIR, PE_EXPENSIVE, ROE_MIN,
 )
 
+# ── Stage 1 預篩門檻：依洪瑞泰講稿原文（2026-08-25 對齊）──────────────
+# 講稿 1190-1206 行他親口講篩選器怎麼設：
+#   台股（網龍大富翁）：ROE 最近 3 年至少 15%、本益比 < 15
+#   美股（Finviz）    ：S&P 500、本益比 < 15、ROE 10% 以上
+#                       「為什麼 10%？初步篩選條件放寬一點。」
+#
+# ⚠️ 這裡的 PE 15 是**初步篩選**用的，跟賣出線 PE_EXPENSIVE=30（貴價）不同層次，
+#    兩個都要存在。先前把預篩門檻設成 30 是拿賣出線當篩選線——
+#    等於把「快到賣點」的股票也收進觀察池，觀察它沒有意義。
+PE_SCREEN     = 15     # 初篩本益比上限（講稿：兩國都是 15）
+ROE_SCREEN_US = 0.10   # 美股初篩 ROE（他刻意放寬到 10%，真正把關在盈再表那關）
+ROE_SCREEN_TW = 0.15   # 台股初篩 ROE（講稿：最近 3 年至少 15%）
+
+_SP500_CACHE = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                            ".fm_cache", "sp500_members.json")
+_SP500_TTL = 30 * 86400      # 成分股一季才調整一次，快取 30 天
+
+
+def sp500_members():
+    """S&P 500 成分股代號集合。抓不到回 None（呼叫端要當「不知道」處理，不是空集合）。
+
+    洪瑞泰美股篩選器限定 S&P 500。我們先前掃全市場（NASDAQ+NYSE+AMEX 1,674 檔），
+    結果清單長成一堆 ADR（NVO/ITUB/CIG）＋航運（BWLP/HAFN/TRMD）＋MLP——
+    這些在他的篩選器裡本來就進不來。
+
+    TradingView 的 index / indexes_tickers 欄位實測是空的，只能另外抓成分股清單。
+    """
+    try:
+        if time.time() - os.path.getmtime(_SP500_CACHE) < _SP500_TTL:
+            with open(_SP500_CACHE, encoding="utf-8") as f:
+                return set(json.load(f))
+    except Exception:
+        pass
+    try:
+        import pandas as pd
+        ctx = ssl.create_default_context()
+        ctx.check_hostname = False
+        ctx.verify_mode = ssl.CERT_NONE
+        req = urllib.request.Request(
+            "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies",
+            headers={"User-Agent": "Mozilla/5.0"})
+        html = urllib.request.urlopen(req, timeout=45, context=ctx).read().decode("utf-8")
+        tbl = pd.read_html(io.StringIO(html))[0]
+        syms = {str(s).strip().upper() for s in tbl["Symbol"]}
+        # BRK.B / BF.B：Wikipedia 用點、各家資料源有用 dash 的，兩種都收
+        syms |= {s.replace(".", "-") for s in syms if "." in s}
+        if len(syms) < 400:                     # 明顯抓壞就當失敗，不要用半套清單去篩
+            return None
+        os.makedirs(os.path.dirname(_SP500_CACHE), exist_ok=True)
+        with open(_SP500_CACHE, "w", encoding="utf-8") as f:
+            json.dump(sorted(syms), f)
+        return syms
+    except Exception as e:                      # noqa: BLE001
+        print(f"⚠️ 抓 S&P 500 成分股失敗：{e}")
+        return None
+
+
+
+def _take_candidates(df, max_candidates, label):
+    """決定哪些過篩股票進 Stage 2。
+
+    2026-08-25 修：原本是 `df.sort_values('pe_implied').head(200)`——
+    **拿便宜當主排序再截斷**。美股過篩 585 檔卻只算最便宜的 200 檔，385 檔連算都沒算；
+    台股 305 → 200。被砍掉的正好是 PE 相對高、但品質可能更好的那一段。
+
+    這正是記憶庫「跑偏史 ②」那條通則：
+      「永遠不用便宜／折價當主排序，便宜是最後一關買點不是選股標準」
+    洪瑞泰的順序是**先挑好公司、再等便宜**。
+    ROE≥15% 與 PE≤30 都已經是他自己的條件（PE≤30 就是貴價線），
+    過關的就該全部評估，不該再用第三個標準（便宜程度）去砍。
+
+    max_candidates <= 0 → 全部取用（現在的預設）。
+    真要設上限就改用 **ROE 由高到低**（品質優先），而且**一定要印出砍掉多少**——
+    靜默截斷會讓人以為「全掃過了」。
+    """
+    df = df.sort_values("roe_current", ascending=False)
+    if max_candidates and 0 < max_candidates < len(df):
+        kept = df.head(max_candidates)
+        print(f"[取樣] ⚠️ 上限 {max_candidates} 檔（ROE 由高到低），"
+              f"**{len(df) - max_candidates} 檔未評估**"
+              f"——最低被保留的 ROE={kept['roe_current'].iloc[-1]:.1%}")
+        return kept["ticker"].tolist()
+    print(f"[取樣] {label}過篩 {len(df)} 檔全部進入 Stage 2（未截斷）")
+    return df["ticker"].tolist()
+
 
 def stage1_prefilter(min_market_cap: float, max_candidates: int) -> list:
-    """Stage 1: TV snapshot 全市場 → PE≤15 + ROE≥15% 候選清單"""
+    """Stage 1（美股）：S&P 500 + PE < 15 + ROE ≥ 10%（洪瑞泰 Finviz 設定）"""
     print("=" * 70)
-    print(f"  Plan C - Stage 1: TV-Screener 預篩")
-    print(f"  市值 ≥ ${min_market_cap:,.0f}, ROE ≥ {ROE_MIN*100:.0f}%, PE ≤ {PE_EXPENSIVE}")
+    print(f"  Plan C - Stage 1: TV-Screener 預篩（對齊洪瑞泰講稿）")
+    print(f"  S&P 500 + 市值 ≥ ${min_market_cap:,.0f}"
+          f"，ROE ≥ {ROE_SCREEN_US*100:.0f}%，PE ≤ {PE_SCREEN}")
     print("=" * 70)
 
     t0 = time.time()
@@ -41,25 +131,30 @@ def stage1_prefilter(min_market_cap: float, max_candidates: int) -> list:
         print("⚠️ TV 沒回任何資料")
         return []
 
-    # client-side 篩 ROE + PE
+    # client-side 篩 S&P 500 + ROE + PE（順序照講稿：先限指數成分，再看品質與價格）
     before = len(df)
-    df = df[(df['roe_current'] >= ROE_MIN) & (df['eps_ttm'] > 0)].copy()
+    members = sp500_members()
+    if members:
+        df = df[df['ticker'].astype(str).str.upper().isin(members)].copy()
+        print(f"[S&P500] {before} → {len(df)} 檔（限指數成分股）")
+    else:
+        # 抓不到成分股就照實說並掃全市場，不要假裝篩過了
+        print("⚠️ 拿不到 S&P 500 成分股，本次改掃全市場——"
+              "清單會混入 ADR/航運/MLP，與洪瑞泰篩選器不一致")
+    df = df[(df['roe_current'] >= ROE_SCREEN_US) & (df['eps_ttm'] > 0)].copy()
     df['pe_implied'] = df['price'] / df['eps_ttm']
-    df = df[df['pe_implied'] <= PE_EXPENSIVE]   # 2026-07-31：對齊貴價線（原為合理價 20，會讓 PE20~30 永遠進不了 WATCH）
-    df = df.sort_values('pe_implied')
-
-    print(f"[篩選] {before} → {len(df)} 檔（ROE ≥ 15% + PE ≤ {PE_EXPENSIVE}）")
-
-    tickers = df['ticker'].head(max_candidates).tolist()
-    print(f"[取樣] PE 最低 {len(tickers)} 檔進入 Stage 2\n")
-    return tickers
+    df = df[df['pe_implied'] <= PE_SCREEN]
+    print(f"[篩選] {before} → {len(df)} 檔"
+          f"（ROE ≥ {ROE_SCREEN_US*100:.0f}% + PE ≤ {PE_SCREEN}）")
+    return _take_candidates(df, max_candidates, "美股")
 
 
 def stage1_prefilter_tw(min_market_cap: float, max_candidates: int) -> list:
-    """Stage 1（台股）：TV taiwan snapshot → PE≤合理 + ROE≥15% 候選（.TW 後綴）"""
+    """Stage 1（台股）：PE < 15 + ROE ≥ 15%（洪瑞泰網龍大富翁設定）"""
     print("=" * 70)
-    print(f"  台股 Stage 1: TV-Screener 預篩（TWSE+TPEX）")
-    print(f"  市值 ≥ NT${min_market_cap:,.0f}, ROE ≥ {ROE_MIN*100:.0f}%, PE ≤ {PE_EXPENSIVE}")
+    print(f"  台股 Stage 1: TV-Screener 預篩（TWSE+TPEX，對齊洪瑞泰講稿）")
+    print(f"  市值 ≥ NT${min_market_cap:,.0f}"
+          f"，ROE ≥ {ROE_SCREEN_TW*100:.0f}%，PE ≤ {PE_SCREEN}")
     print("=" * 70)
     t0 = time.time()
     count, df = data_tv.get_buffett_snapshot_taiwan(
@@ -69,14 +164,12 @@ def stage1_prefilter_tw(min_market_cap: float, max_candidates: int) -> list:
         print("⚠️ TV 台股沒回資料")
         return []
     before = len(df)
-    df = df[(df['roe_current'] >= ROE_MIN) & (df['eps_ttm'] > 0)].copy()
+    df = df[(df['roe_current'] >= ROE_SCREEN_TW) & (df['eps_ttm'] > 0)].copy()
     df['pe_implied'] = df['price'] / df['eps_ttm']
-    df = df[df['pe_implied'] <= PE_EXPENSIVE]   # 2026-07-31：對齊貴價線（原為合理價 20，會讓 PE20~30 永遠進不了 WATCH）
-    df = df.sort_values('pe_implied')
-    print(f"[篩選] {before} → {len(df)} 檔（ROE ≥ 15% + PE ≤ {PE_EXPENSIVE}）")
-    tickers = df['ticker'].head(max_candidates).tolist()
-    print(f"[取樣] PE 最低 {len(tickers)} 檔進入 Stage 2\n")
-    return tickers
+    df = df[df['pe_implied'] <= PE_SCREEN]
+    print(f"[篩選] {before} → {len(df)} 檔"
+          f"（ROE ≥ {ROE_SCREEN_TW*100:.0f}% + PE ≤ {PE_SCREEN}）")
+    return _take_candidates(df, max_candidates, "台股")
 
 
 def stage2_yfinance(tickers: list) -> list:
