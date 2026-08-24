@@ -1,130 +1,130 @@
 {
- "updated": "2026-08-21 15:52",
+ "updated": "2026-08-24 16:02",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "08/20",
-   "close": 7641.16,
-   "chg_pct": -0.87
+   "date": "08/21",
+   "close": 7674.37,
+   "chg_pct": 0.43
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "08/20",
-   "close": 26067.17,
-   "chg_pct": -1.0
+   "date": "08/21",
+   "close": 26180.46,
+   "chg_pct": 0.43
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "08/20",
-   "close": 52759.21,
-   "chg_pct": -1.32
+   "date": "08/21",
+   "close": 53277.01,
+   "chg_pct": 0.98
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "08/20",
-   "close": 11800.02,
-   "chg_pct": 0.53
+   "date": "08/21",
+   "close": 11740.37,
+   "chg_pct": -0.51
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "08/21",
-   "close": 45224.29,
-   "chg_pct": 0.65
+   "date": "08/24",
+   "close": 44762.32,
+   "chg_pct": -1.02
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "08/21",
+   "date": "08/24",
    "close": 31.82,
-   "chg_pct": -0.0
+   "chg_pct": -0.04
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "08/20",
-   "close": 4.7,
+   "date": "08/21",
+   "close": 4.74,
    "fmt": "yield",
-   "chg_bp": 4.3
+   "chg_bp": 4.2
   }
  ],
  "news": [
   {
-   "title": "【盤後贏指標】量縮重返 4 萬 5，台積電、傳產族群助攻",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6583584",
-   "ts": "08/21 15:40"
-  },
-  {
-   "title": "零組件漲價恐壓抑後市需求 TPK-KY深化客戶分散降風險",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6583578",
-   "ts": "08/21 15:34"
-  },
-  {
-   "title": "TPK-KY中壢玻璃穿孔試產線9月營運 泰國新廠明年初量產",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6583577",
-   "ts": "08/21 15:31"
-  },
-  {
-   "title": "【李寧財報快評】營收、淨利維持成長，但促銷與行銷支出限制獲利率改善空間",
+   "title": "【中韓台科技股同步承壓】指數下跌背後，資金轉向高股息與非科技族群",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6583579",
-   "ts": "08/21 15:30"
+   "url": "https://news.cnyes.com/news/id/6585286",
+   "ts": "08/24 16:00"
   },
   {
-   "title": "南韓8月前20天出口激增 或推動央行再度升息",
+   "title": "高盛大幅上修WFE支出 2027年估增45%、市場規模突破2,000億美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6583539",
-   "ts": "08/21 15:20"
+   "url": "https://news.cnyes.com/news/id/6585254",
+   "ts": "08/24 15:30"
   },
   {
-   "title": "法槌落下！許家印無期、恒大罰158.2億、兩個兒子等56人獲刑",
+   "title": "特變電工上半年營收增17% 輸變電、黃金撐成長，資產減損拖累淨利",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6583546",
-   "ts": "08/21 15:10"
+   "url": "https://news.cnyes.com/news/id/6585252",
+   "ts": "08/24 15:30"
   },
   {
-   "title": "股價飆、營收也衝！這9檔工業股有望一路旺到2028年",
+   "title": "【南韓製造業愈來愈靠半導體】電子產業占比升至37.4%，傳統產業成長停滯",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6581953",
-   "ts": "08/21 15:10"
+   "url": "https://news.cnyes.com/news/id/6585251",
+   "ts": "08/24 15:30"
   },
   {
-   "title": "AI診斷「落地」！衛福部與羅氏大廠簽MOU 首波瞄準腎臟病推AI臨床決策",
+   "title": "蘋果10年沒讓人驚豔了 首款摺疊iPhone有望重現「創新魔力」",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6585206",
+   "ts": "08/24 15:20"
+  },
+  {
+   "title": "婚內贈與不是換個名字 節稅前先看懂風險",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6583558",
-   "ts": "08/21 15:02"
+   "url": "https://news.cnyes.com/news/id/6585240",
+   "ts": "08/24 15:05"
   },
   {
-   "title": "【Vertiv亞洲擴產】柔佛新廠首批液冷設備出貨AI散熱需求進入在地供應階段",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6583570",
-   "ts": "08/21 15:00"
-  },
-  {
-   "title": "〈SEMICON〉徐秀蘭：下一代半導體材料要在台灣先被定義 隱形冠軍不再隱形",
+   "title": "台股成交量創逾4個月新低、外資翻空 三大法人賣超163.77億元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6583549",
-   "ts": "08/21 14:45"
+   "url": "https://news.cnyes.com/news/id/6585241",
+   "ts": "08/24 15:00"
+  },
+  {
+   "title": "小米發表新一代自研晶片Xring O3 傳台積電3奈米代工、鎖定旗艦折疊手機",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6585236",
+   "ts": "08/24 15:00"
+  },
+  {
+   "title": "AI吃電大戶皮繃緊了！能管法三讀通過 新設AIDC要自備電力或儲能",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6585224",
+   "ts": "08/24 14:56"
+  },
+  {
+   "title": "力達-KY上半年陷虧損每股淨損0.07元 去年0.6元股息10/28除息",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6585227",
+   "ts": "08/24 14:41"
   }
  ],
  "inst": {
-  "date": "08/21",
-  "total_yi": 331.1,
-  "foreign_yi": 283.1,
-  "trust_yi": 18.8
+  "date": "08/24",
+  "total_yi": -163.8,
+  "foreign_yi": -157.5,
+  "trust_yi": 37.1
  }
 }
