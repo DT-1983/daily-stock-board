@@ -600,6 +600,39 @@ function quadrantBgPlugin() {
   };
 }
 
+// 泡泡本身標上產業名字（原本只有 hover tooltip 跟右側排行清單看得到名字，
+// 圖上一堆彩色泡泡卻不知道哪個是哪個，用戶反饋要直接標出來）。
+// 用自訂 plugin 畫在 Canvas 上，不引入 chartjs-plugin-datalabels 這種外部套件——
+// 跟現有 quadrantBgPlugin 同一種做法，全站不多加 CDN 依賴。
+function bubbleLabelPlugin() {
+  return {
+    id: 'bubbleLabels',
+    afterDatasetsDraw: function(chart) {
+      var pts = window._rrgCurPts;
+      if (!pts || !pts.length) return;
+      var meta = chart.getDatasetMeta(0);
+      if (!meta || !meta.data) return;
+      var ctx = chart.ctx;
+      ctx.save();
+      ctx.font = '10px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'bottom';
+      meta.data.forEach(function(el, i) {
+        var p = pts[i];
+        if (!p || !el) return;
+        var x = el.x, y = el.y - (el.options.radius || 8) - 3;
+        // 深色描邊再疊亮色字：泡泡顏色深淺不一，純色字在某些泡泡上會糊掉看不清楚
+        ctx.lineWidth = 3;
+        ctx.strokeStyle = 'rgba(4,7,15,.85)';
+        ctx.strokeText(p.name, x, y);
+        ctx.fillStyle = '#e8f2ff';
+        ctx.fillText(p.name, x, y);
+      });
+      ctx.restore();
+    }
+  };
+}
+
 var playTimer = null, playIdx = 0;
 var SUBSTEPS = 12;     // 兩個真實週資料點之間補幾格——數字越大動畫越滑順但播放總長越久
 var TICK_MS = 35;      // 每格間隔
@@ -698,7 +731,7 @@ function updateChartPoints(pts, trailDs) {
           y: {title: {display:true, text:'RS-Momentum 強弱變化率', color:'#8fb0d6'}, ticks:{color:'#5f80a6'}, grid:{color:'#16223A'}}
         }
       },
-      plugins: [quadrantBgPlugin()]
+      plugins: [quadrantBgPlugin(), bubbleLabelPlugin()]
     });
   } else {
     // 更新既有 chart 的資料集，不整個銷毀重建——搭配補間點快速更新，肉眼看起來平滑移動。
