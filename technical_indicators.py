@@ -8,7 +8,19 @@
   EXCEED CHARGE   TTM Squeeze／擠壓動能：布林帶(樣本標準差) vs 凱特納通道(SMA of TR)，
                    擠壓＝布林帶縮進凱特納通道內；動能＝對 value 序列做線性迴歸取末端值
   RS 相對強弱     Weinstein/Mansfield：(股價/大盤 比值) 對其自身均線的乖離%，
-                   短線(25日)＋長線(200日)兩組
+                   短線(30日)＋長線(1年)兩組
+
+2026-08-25：對照老墨 XQ 官方指標（mophyfei/MOFI_XQ）的說明頁後補上三層，
+原本這三個指標只有「基礎線」，缺了官方版真正拿來判斷的加值層——
+指標邏輯不開源（.xsb 是編譯過的二進位），這裡是照他公開的說明頁文字重新設計，
+不是照抄程式碼：
+  SuperTrend    + 過去N年歷史統計：多空平均/最短持續根數、歷史延續機率、
+                  這波走了幾根、贏過歷史幾成（見 supertrend_stats）
+  EXCEED CHARGE + 擠壓三級強度（微/中/極，見 squeeze_intensity）
+                + 動能四色文字標籤（見 momentum_label，圖表本來就有四色只是tile沒講出來）
+  RS 相對強弱   + RS創新高偵測 + 「RS領先股價」背離訊號 + 短長RS交叉訊號（見 rs_signals）
+⚠️ 沒有動 RS 短30日/長1年這兩個窗口——那是先前跟財報卡對齊的決定，不是老墨的預設(60/240)，
+   加值層的訊號計算直接套用在既有序列上，不重新定義基礎指標。
 
 用法：
     python technical_indicators.py 3037.TW
@@ -147,6 +159,136 @@ def mansfield_rs_series(closes, bench_closes, win):
     return out
 
 
+# ── SuperTrend 歷史統計層（老墨 SUPER TREND PRO MAX 加值層）────────────
+
+def supertrend_runs(dir_series):
+    """把方向序列切成一段段連續同向的「波段」。回 [(start_i, end_i, length, dir), ...]。
+    只收完整落在資料範圍內、方向不是 None 的段；最後一段若還在走（尚未翻轉）
+    照樣算進來，由呼叫端自己決定要不要排除「進行中」的這一段。"""
+    runs = []
+    start, cur = None, None
+    for i, d in enumerate(dir_series):
+        if d is None:
+            continue
+        if cur is None:
+            start, cur = i, d
+        elif d != cur:
+            runs.append((start, i - 1, i - start, cur))
+            start, cur = i, d
+    if cur is not None:
+        runs.append((start, len(dir_series) - 1, len(dir_series) - start, cur))
+    return runs
+
+
+def supertrend_stats(dir_series, window_m=20):
+    """老墨版數值欄：多空平均/最短持續根數、歷史延續機率、這波走了幾根、贏過歷史幾成。
+
+    「歷史延續機率」＝ 講稿定義是「該方向趨勢在其後 M 日內未翻轉的歷史比率」，
+    等價於「該方向歷史波段中，長度 ≥ M 根的比例」——用波段長度分布直接算，
+    不用逐點往前看，數學上一致且好驗證。
+    dir_series 建議傳「用於統計的長序列」（例如 10 年），跟畫圖用的近一年序列分開。
+    """
+    runs = supertrend_runs(dir_series)
+    if len(runs) < 2:
+        return None
+    completed = runs[:-1]              # 最後一段還在走，只用「已結束」的波段做歷史統計
+    cur_start, cur_end, cur_len, cur_dir = runs[-1]
+
+    out = {}
+    for d, label in ((1, "up"), (-1, "down")):
+        lens = [r[2] for r in completed if r[3] == d]
+        if not lens:
+            out[f"avg_len_{label}"] = out[f"min_len_{label}"] = out[f"prob_{label}"] = None
+            continue
+        out[f"avg_len_{label}"] = sum(lens) / len(lens)
+        out[f"min_len_{label}"] = min(lens)
+        out[f"prob_{label}"] = sum(1 for x in lens if x >= window_m) / len(lens) * 100
+
+    out["cur_dir"] = cur_dir
+    out["cur_len"] = cur_len
+    same_dir_lens = [r[2] for r in completed if r[3] == cur_dir]
+    if len(same_dir_lens) >= 5:         # 樣本太少的百分位沒意義，README同款門檻
+        out["cur_percentile"] = sum(1 for x in same_dir_lens if x < cur_len) / len(same_dir_lens) * 100
+    else:
+        out["cur_percentile"] = None
+    return out
+
+
+# ── EXCEED CHARGE 加值層：擠壓三級強度 + 動能四色標籤 ────────────────────
+
+def squeeze_intensity(sq, lookback=252):
+    """擠壓強度分三級（微/中/極）。老墨說明頁沒給絕對數字門檻，
+    用「布林帶縮進凱特納通道多深」這個比值，相對於近一年自己的擠壓分布分三等分
+    （同一檔股票自己比自己，不同波動特性的股票才不會用同一把尺）。
+    回傳 ("微壓"|"中壓"|"極壓"|None, 最新一根的緊縮比值)。squeeze_on=False 回 (None, None)。
+    """
+    on = sq["squeeze_on"]
+    mom = sq["momentum"]
+    if on is None or len(on) == 0 or not bool(on[-1]):
+        return None, None
+    # 用動能值的窄幅程度當代理：擠壓期動能貼近 0，越貼近 0 代表布林帶縮得越深。
+    # （sq 沒有直接存 bb/kc 寬度，重新算太重，這裡用等價的窄幅代理，方向一致。）
+    start = max(0, len(on) - lookback)
+    hist_tightness = [abs(mom[i]) for i in range(start, len(on))
+                      if on[i] and mom[i] is not None and not np.isnan(mom[i])]
+    cur = abs(mom[-1]) if mom[-1] is not None and not np.isnan(mom[-1]) else None
+    if cur is None or len(hist_tightness) < 10:
+        return "中壓", cur          # 樣本不足時給中性標籤，不硬分級
+    hist_sorted = sorted(hist_tightness)
+    p33 = hist_sorted[len(hist_sorted) // 3]
+    p66 = hist_sorted[len(hist_sorted) * 2 // 3]
+    # 動能絕對值越小＝越窄＝壓得越緊＝級別越高
+    level = "極壓" if cur <= p33 else ("中壓" if cur <= p66 else "微壓")
+    return level, cur
+
+
+def momentum_label(mom):
+    """動能四色文字標籤：強多(加速)/弱多(衰退)/強空(加速)/弱空(收斂)。
+    跟前端圖表 momColor 用同一套邏輯（value 正負 × 比前一根更強或更弱），
+    只是這裡輸出給 tile 讀的文字，圖表已經在用顏色表達，兩邊要一致不能各自一套。
+    """
+    if mom is None or len(mom) < 2:
+        return None
+    v, prev = mom[-1], mom[-2]
+    if v is None or (isinstance(v, float) and np.isnan(v)):
+        return None
+    prev = prev if (prev is not None and not (isinstance(prev, float) and np.isnan(prev))) else v
+    if v >= 0:
+        return "強多動能" if v >= prev else "弱多動能"
+    return "強空動能" if v <= prev else "弱空動能"
+
+
+# ── RS 加值層：新高偵測 + RS領先股價背離 + 短長線交叉 ────────────────────
+
+def rs_signals(rs_s_series, rs_l_series, closes, newhigh_lookback=120):
+    """老墨版真正拿來判斷的三個訊號：
+      accel     短線RS 上穿長線RS＝相對動能在加速
+      turn_up   長線RS 上穿零軸＝Weinstein突破確認、轉強
+      new_high  短線RS 創 N 日新高
+      lead      RS創新高但股價沒創同期新高＝「資金比股價先動」（老墨自己說最有價值的訊號）
+    只判斷「最新一根」是不是剛發生，不回溯整段歷史（tile 用途，夠了）。
+    """
+    def _valid(a):
+        return a is not None and len(a) >= 2 and not np.isnan(a[-1]) and not np.isnan(a[-2])
+
+    out = {"accel": False, "turn_up": False, "new_high": False, "lead": False}
+    if _valid(rs_s_series) and _valid(rs_l_series):
+        s0, s1 = rs_s_series[-2], rs_s_series[-1]
+        l0, l1 = rs_l_series[-2], rs_l_series[-1]
+        out["accel"] = bool(s0 <= l0 and s1 > l1)
+        out["turn_up"] = bool(l0 <= 0 and l1 > 0)
+
+    if rs_s_series is not None and len(rs_s_series) >= newhigh_lookback:
+        window = rs_s_series[-newhigh_lookback:]
+        valid_w = [x for x in window if not np.isnan(x)]
+        if len(valid_w) >= newhigh_lookback // 2 and not np.isnan(rs_s_series[-1]):
+            out["new_high"] = bool(rs_s_series[-1] >= max(valid_w))
+            if out["new_high"] and closes is not None and len(closes) >= newhigh_lookback:
+                price_window = closes[-newhigh_lookback:]
+                out["lead"] = bool(closes[-1] < max(price_window))  # RS新高、股價還沒破前高
+    return out
+
+
 # ── 綜合：抓資料＋算四指標＋渲染 ──────────────────────────────────────
 
 def _flip_bars(dr):
@@ -190,17 +332,40 @@ def build(ticker, disp_days=252):
     st_dir, st_bars = _flip_bars(st["dir"]) if st else (None, None)
     dt_dir, dt_bars = _flip_bars(dt["dir"]) if dt else (None, None)
 
-    def trend_tile(name, dir_, bars):
+    # 2026-08-25：SuperTrend 歷史統計層另外抓 10 年資料——老墨官方版統計窗口是 10 年，
+    # 2 年不夠算「歷史延續機率」這種東西。跟展示用的 2 年序列分開抓，互不影響。
+    st_stats = None
+    try:
+        hist10 = t.history(period="10y")
+        if len(hist10) >= 250:
+            st10 = supertrend(hist10["High"].tolist(), hist10["Low"].tolist(), hist10["Close"].tolist())
+            if st10:
+                st_stats = supertrend_stats(st10["dir"])
+    except Exception as e:
+        print(f"  [technical_indicators] {ticker} 10年統計抓取失敗（不影響其他三格）：{e}")
+
+    def trend_tile(name, dir_, bars, stats=None):
         if dir_ is None:
             return _tile(name, "—", "無資料")
         label = "多頭" if dir_ == 1 else "空頭"
         col = "#4ade80" if dir_ == 1 else "#ff8a8a"
-        return _tile(name, f'<span style="color:{col}">{label}</span>', f"第 {bars} 根")
+        sub = f"第 {bars} 根"
+        if stats:
+            key = "up" if dir_ == 1 else "down"
+            prob, avg = stats.get(f"prob_{key}"), stats.get(f"avg_len_{key}")
+            if prob is not None and avg is not None:
+                sub = f"第{bars}根／史上平均{avg:.0f}根／20日延續率{prob:.0f}%"
+                pct = stats.get("cur_percentile")
+                if pct is not None:
+                    sub += f"／贏過歷史{pct:.0f}%"
+        return _tile(name, f'<span style="color:{col}">{label}</span>', sub)
 
     sq_on = bool(sq["squeeze_on"][-1]) if sq and not np.isnan(sq["squeeze_on"][-1:].astype(float)).any() else None
     sq_mom = sq["momentum"][-1] if sq is not None else None
     sq_mom_s = f"{sq_mom:+.2f}" if sq_mom is not None and not np.isnan(sq_mom) else "—"
-    sq_label = ("擠壓中" if sq_on else "無擠壓") if sq_on is not None else "—"
+    sq_level, _ = squeeze_intensity(sq) if sq is not None else (None, None)
+    sq_mlabel = momentum_label(sq["momentum"]) if sq is not None else None
+    sq_label = (sq_level or "擠壓中") if sq_on else "無擠壓"
     sq_col = "#EAB308" if sq_on else ("#4ade80" if (sq_mom or 0) > 0 else "#ff8a8a")
 
     rs_s = rs.get("short")
@@ -210,11 +375,29 @@ def build(ticker, disp_days=252):
                f'長線 <b class="num" style="color:{"#4ade80" if (rs_l or 0)>0 else "#ff8a8a"}">'
                f'{f"{rs_l:+.1f}%" if rs_l is not None else "—"}</b>')
 
+    # RS 加值訊號：需要完整序列（不只最新一值），搬到這裡先算，圖表資料那段直接複用同一份
+    rs_s_series = mansfield_rs_series(closes, bench_closes, 30) if bench_closes else None
+    rs_l_series = mansfield_rs_series(closes, bench_closes, 250) if bench_closes else None
+    rs_sig = rs_signals(rs_s_series, rs_l_series, closes) if rs_s_series is not None else None
+    rs_sub = ""
+    if rs_sig:
+        badges = []
+        if rs_sig["lead"]:
+            badges.append("🔴RS領先股價")
+        elif rs_sig["new_high"]:
+            badges.append("🟢RS創新高")
+        if rs_sig["accel"]:
+            badges.append("動能加速")
+        if rs_sig["turn_up"]:
+            badges.append("轉強")
+        rs_sub = "　".join(badges)
+
     tiles = "".join([
-        trend_tile("SUPER TREND", st_dir, st_bars),
+        trend_tile("SUPER TREND", st_dir, st_bars, st_stats),
         trend_tile("雙重颱風K線", dt_dir, dt_bars),
-        _tile("EXCEED CHARGE", f'<span style="color:{sq_col}">{sq_label}</span>', f"動能 {sq_mom_s}"),
-        _tile("RS 相對強弱", rs_html, ""),
+        _tile("EXCEED CHARGE", f'<span style="color:{sq_col}">{sq_label}</span>',
+              f"{sq_mlabel or ''}（動能 {sq_mom_s}）" if sq_mlabel else f"動能 {sq_mom_s}"),
+        _tile("RS 相對強弱", rs_html, rs_sub),
     ])
 
     # ── 展開圖表：全部一年份資料都送到前端，90天/1年是前端切片切換，
@@ -231,9 +414,7 @@ def build(ticker, disp_days=252):
                 out.append(round(float(v), 2))
         return out
 
-    rs_s_series = mansfield_rs_series(closes, bench_closes, 30) if bench_closes else None
-    rs_l_series = mansfield_rs_series(closes, bench_closes, 250) if bench_closes else None
-
+    # rs_s_series / rs_l_series 已在上面算過（RS 加值訊號要用），這裡直接沿用，不重算
     cut = max(0, len(dates_full) - disp_days)
     chart_data = {
         "dates": dates_full[cut:],
@@ -349,10 +530,17 @@ function ti_draw_{uid}(){{
     def _lbl(dir_, bars):
         return f'{"多頭" if dir_==1 else "空頭"}第{bars}根' if dir_ is not None else "無資料"
 
-    summary = (f"SuperTrend {_lbl(st_dir, st_bars)}　雙重颱風K線 {_lbl(dt_dir, dt_bars)}　"
-               f"EXCEED CHARGE {sq_label}(動能{sq_mom_s})　"
+    st_extra = ""
+    if st_stats:
+        key = "up" if st_dir == 1 else "down"
+        prob = st_stats.get(f"prob_{key}")
+        if prob is not None:
+            st_extra = f"/20日延續率{prob:.0f}%"
+    summary = (f"SuperTrend {_lbl(st_dir, st_bars)}{st_extra}　雙重颱風K線 {_lbl(dt_dir, dt_bars)}　"
+               f"EXCEED CHARGE {sq_label}{f'/{sq_mlabel}' if sq_mlabel else ''}(動能{sq_mom_s})　"
                f"RS相對強弱 短線{f'{rs_s:+.1f}%' if rs_s is not None else '—'}"
-               f"/長線{f'{rs_l:+.1f}%' if rs_l is not None else '—'}")
+               f"/長線{f'{rs_l:+.1f}%' if rs_l is not None else '—'}"
+               f"{'　'+rs_sub if rs_sub else ''}")
     return html, summary
 
 
