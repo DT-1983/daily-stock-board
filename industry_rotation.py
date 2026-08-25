@@ -388,24 +388,45 @@ def _frames_data(hist_rows, snapshot, period, radius_fn, max_frames=26):
     每格是「當天所有籃子的座標」，不是單一籃子的軌跡（那是 _trail_data 的事）。
     最後一格永遠是「現在」（用當下 snapshot，不是歷史裡的最後一筆——避免
     歷史還沒來得及 append 這次結果時動畫少一格）。
-    歷史筆數 <2 時回傳只有1格的清單，前端要檢查長度決定播放鍵能不能按。"""
+
+    2026-08-25 補：原本每幀的籃子清單是「當天有算出來的就收」，不同幀的
+    籃子數量/順序可能不一樣——前端要做平滑補間動畫（一週一格跳動太生硬，
+    看不出移動方向），補間需要每幀是「同一組籃子、同一個順序」對應著算，
+    不然會補間到不同籃子身上變亂跳。改成：用「現在」的籃子清單當基準順序，
+    某幀缺該籃子就沿用它上一個已知位置（不是补0、不是跳過），
+    這樣每幀陣列長度/順序永遠一致，前端才能安全逐一補間。
+    """
+    keys_order = list(snapshot.keys())
+    last_known = {}
     frames = []
     for row in hist_rows[-max_frames:]:
         d = row.get("snapshot", {})
         pts = []
-        for key, basket in d.items():
-            p = basket.get("periods", {}).get(str(period)) or basket.get("periods", {}).get(period)
-            if not p:
-                continue
-            size = basket.get("size", 0.0)
-            pts.append({"key": key, "name": basket.get("name", key), "ratio": p["ratio"],
-                       "momentum": p["momentum"], "quadrant": p["quadrant"],
-                       "radius": radius_fn(size)})
+        for key in keys_order:
+            basket = d.get(key)
+            p = None
+            if basket:
+                p = basket.get("periods", {}).get(str(period)) or basket.get("periods", {}).get(period)
+            if p:
+                size = basket.get("size", 0.0)
+                pt = {"key": key, "name": basket.get("name", key), "ratio": p["ratio"],
+                      "momentum": p["momentum"], "quadrant": p["quadrant"], "radius": radius_fn(size)}
+                last_known[key] = pt
+            elif key in last_known:
+                pt = last_known[key]     # 沿用上一個已知位置，不留空、不讓泡泡消失
+            else:
+                continue                  # 從頭到尾都沒資料的籃子才真的跳過
+            pts.append(pt)
         if pts:
             frames.append({"date": row["date"], "points": pts})
+
     cur_pts = _bubble_data(snapshot, period, radius_fn)
+    for pt in cur_pts:
+        last_known[pt["key"]] = pt
     if not frames or frames[-1]["date"] != time.strftime("%Y-%m-%d"):
-        frames.append({"date": time.strftime("%Y-%m-%d") + "（現在）", "points": cur_pts})
+        # 用同一個 keys_order + last_known 補齊，跟歷史幀維持同一組籃子/順序
+        final_pts = [last_known[k] for k in keys_order if k in last_known]
+        frames.append({"date": time.strftime("%Y-%m-%d") + "（現在）", "points": final_pts})
     return frames
 
 
@@ -523,6 +544,8 @@ function quadrantBgPlugin() {
 }
 
 var playTimer = null, playIdx = 0;
+var SUBSTEPS = 12;     // 兩個真實週資料點之間補幾格——數字越大動畫越滑順但播放總長越久
+var TICK_MS = 35;      // 每格間隔；12補間×26週約等於 312 格 × 35ms ≈ 11 秒播完全程
 
 function stopPlay() {
   if (playTimer) { clearInterval(playTimer); playTimer = null; }
@@ -531,38 +554,68 @@ function stopPlay() {
   document.getElementById('rrgFrameLabel').style.display = 'none';
 }
 
-function drawFrame(pts, trailDs, frameLabel) {
-  if (rrgChart) rrgChart.destroy();
+// 每個真實週之間線性補 SUBSTEPS 個中間點（ratio/momentum/radius 都補），
+// 原本一週一格會跳得很生硬看不出方向；帶著補間點快速播放，肉眼看起來就是連續移動。
+// 這只是視覺補間，不是真的推算出中間某天的數值——兩個端點才是真實資料。
+function _buildPlaySequence(frames) {
+  var seq = [];
+  for (var i = 0; i < frames.length - 1; i++) {
+    var a = frames[i].points, b = frames[i + 1].points;
+    for (var s = 0; s < SUBSTEPS; s++) {
+      var t = s / SUBSTEPS;
+      var pts = a.map(function(pa, idx) {
+        var pb = b[idx] || pa;
+        return {
+          key: pa.key, name: pa.name,
+          ratio: pa.ratio + (pb.ratio - pa.ratio) * t,
+          momentum: pa.momentum + (pb.momentum - pa.momentum) * t,
+          radius: (pa.radius || 10) + ((pb.radius || 10) - (pa.radius || 10)) * t,
+          quadrant: t < 0.5 ? pa.quadrant : pb.quadrant,
+        };
+      });
+      seq.push({points: pts, label: frames[i].date + ' → ' + frames[i + 1].date,
+                isReal: s === 0, realDate: frames[i].date});
+    }
+  }
+  var last = frames[frames.length - 1];
+  seq.push({points: last.points, label: last.date, isReal: true, realDate: last.date});
+  return seq;
+}
+
+function updateChartPoints(pts, trailDs) {
   var bubbleDs = {
     label: '位置',
     data: pts.map(function(p) { return {x: p.ratio, y: p.momentum, r: p.radius || 10}; }),
     backgroundColor: pts.map(function(p) { return (QCOLOR[p.quadrant] || '#8fb0d6') + 'cc'; }),
     borderColor: '#0a1222', borderWidth: 1.5
   };
-  rrgChart = new Chart(document.getElementById('rrgChart'), {
-    type: 'bubble',
-    data: {datasets: [bubbleDs].concat(trailDs || [])},
-    options: {
-      responsive: true, maintainAspectRatio: false, animation: {duration: 350},
-      plugins: {
-        legend: {display: false},
-        tooltip: {callbacks: {label: function(ctx) {
-          var p = pts[ctx.dataIndex];
-          return p ? (p.name + '：RS-Ratio ' + p.ratio.toFixed ? p.ratio.toFixed(1) : p.ratio) +
-            '／RS-Momentum ' + (p.momentum.toFixed ? p.momentum.toFixed(1) : p.momentum) +
-            '（' + QLABEL[p.quadrant] + '）' : '';
-        }}}
+  if (!rrgChart) {
+    rrgChart = new Chart(document.getElementById('rrgChart'), {
+      type: 'bubble',
+      data: {datasets: [bubbleDs].concat(trailDs || [])},
+      options: {
+        responsive: true, maintainAspectRatio: false, animation: false,
+        plugins: {
+          legend: {display: false},
+          tooltip: {callbacks: {label: function(ctx) {
+            var p = window._rrgCurPts && window._rrgCurPts[ctx.dataIndex];
+            return p ? (p.name + '：RS-Ratio ' + p.ratio.toFixed(1) +
+              '／RS-Momentum ' + p.momentum.toFixed(1) + '（' + QLABEL[p.quadrant] + '）') : '';
+          }}}
+        },
+        scales: {
+          x: {title: {display:true, text:'RS-Ratio 相對強弱', color:'#8fb0d6'}, ticks:{color:'#5f80a6'}, grid:{color:'#16223A'}},
+          y: {title: {display:true, text:'RS-Momentum 強弱變化率', color:'#8fb0d6'}, ticks:{color:'#5f80a6'}, grid:{color:'#16223A'}}
+        }
       },
-      scales: {
-        x: {title: {display:true, text:'RS-Ratio 相對強弱', color:'#8fb0d6'}, ticks:{color:'#5f80a6'}, grid:{color:'#16223A'}},
-        y: {title: {display:true, text:'RS-Momentum 強弱變化率', color:'#8fb0d6'}, ticks:{color:'#5f80a6'}, grid:{color:'#16223A'}}
-      }
-    },
-    plugins: [quadrantBgPlugin()]
-  });
-  var lbl = document.getElementById('rrgFrameLabel');
-  if (frameLabel) { lbl.textContent = frameLabel; lbl.style.display = 'block'; }
-  else { lbl.style.display = 'none'; }
+      plugins: [quadrantBgPlugin()]
+    });
+  } else {
+    // 更新既有 chart 的資料集，不整個銷毀重建——搭配補間點快速更新，肉眼看起來平滑移動。
+    rrgChart.data.datasets = [bubbleDs].concat(trailDs || []);
+    rrgChart.update('none');   // 'none' 關掉 Chart.js 自己的動畫，避免跟我們手動補間互相打架、變卡頓
+  }
+  window._rrgCurPts = pts;
 }
 
 function draw() {
@@ -583,7 +636,9 @@ function draw() {
     };
   }).filter(Boolean);
 
-  drawFrame(pts, trailDs, null);
+  if (rrgChart) { rrgChart.destroy(); rrgChart = null; }   // 換市場/週期時強制重建一次（軸範圍等設定要重來）
+  updateChartPoints(pts, trailDs);
+  document.getElementById('rrgFrameLabel').style.display = 'none';
 
   var rank = pts.slice().sort(function(a,b){ return (b.ratio+b.momentum)-(a.ratio+a.momentum); });
   document.getElementById('rrgRank').innerHTML = rank.map(function(p) {
@@ -601,7 +656,7 @@ function draw() {
     hint.textContent = '（資料還在累積，需要至少2週歷史才能播放）';
   } else {
     btn.disabled = false;
-    hint.textContent = '（共 ' + frames.length + ' 週）';
+    hint.textContent = '（共 ' + frames.length + ' 週，補間播放較滑順）';
   }
 }
 
@@ -609,15 +664,19 @@ document.getElementById('playBtn').addEventListener('click', function() {
   if (playTimer) { stopPlay(); return; }
   var frames = ((window.RRG_DATA['frames_' + curM] || {})[curP]) || [];
   if (frames.length < 2) return;
+  var seq = _buildPlaySequence(frames);
   playIdx = 0;
   document.getElementById('playBtn').classList.add('playing');
   document.getElementById('playBtn').textContent = '⏸ 播放中…';
+  var lbl = document.getElementById('rrgFrameLabel');
+  lbl.style.display = 'block';
   playTimer = setInterval(function() {
-    var f = frames[playIdx];
-    drawFrame(f.points, [], f.date);
+    var f = seq[playIdx];
+    updateChartPoints(f.points, []);
+    lbl.textContent = f.label;
     playIdx++;
-    if (playIdx >= frames.length) { stopPlay(); draw(); }
-  }, 700);
+    if (playIdx >= seq.length) { stopPlay(); draw(); }
+  }, TICK_MS);
 });
 
 document.getElementById('mktSeg').addEventListener('click', function(e) {
