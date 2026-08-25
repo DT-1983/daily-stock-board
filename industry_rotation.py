@@ -72,7 +72,11 @@ def _fetch_closes(ticker, period="3y"):
 
 def _tw_sector_members(min_market_cap=3e9):
     """台股各 sector 市值前 TW_BASKET_SIZE 大成分股。用 TradingView 一次性快照，
-    不逐檔查——這一步快（幾秒），真正貴的是後面逐檔抓歷史價格。"""
+    不逐檔查——這一步快（幾秒），真正貴的是後面逐檔抓歷史價格。
+    回 {sector: (tickers, 全部合格成分股市值合計)}——市值合計是「資金大小」的代理值，
+    2026-08-25 補：原本完全沒算這個，泡泡大小美股全部一樣、台股只是算成分股檔數，
+    根本不是「資金大小」。這裡用「合格成分股（市值≥門檻）市值合計」而非只加前8大，
+    比較貼近整個產業的資金規模，不會因為只取前8大而低估大產業。"""
     base = Query().set_markets("taiwan")
     q = base.select("name", "sector", "market_cap_basic", "exchange", "close").where(
         col("market_cap_basic") >= min_market_cap,
@@ -89,7 +93,8 @@ def _tw_sector_members(min_market_cap=3e9):
             continue
         top = grp.sort_values("market_cap_basic", ascending=False).head(TW_BASKET_SIZE)
         if len(top) >= TW_MIN_MEMBERS:
-            out[sector] = top["ticker"].tolist()
+            total_cap = float(grp["market_cap_basic"].sum())   # 全部合格成分股，不只前8大
+            out[sector] = (top["ticker"].tolist(), total_cap)
     return out
 
 
@@ -157,9 +162,22 @@ QUADRANT_COLOR = {"leading": "#ff5277", "improving": "#25e6ff", "lagging": "#8fb
 
 # ── 快照組裝：算出每個籃子在 4 個週期下的最新座標 ─────────────────────────
 
+def _spdr_aum(ticker):
+    """SPDR ETF 的資產規模（美元）——這就是「這個籃子裡有多少資金」的直接數字，
+    不用像台股那樣拿市值當代理，ETF 的 AUM 本身就是資金量。抓不到就回 None，
+    呼叫端要用「不知道」處理，不能當 0（0 會讓泡泡整個消失或算錯排名）。"""
+    try:
+        info = yf.Ticker(ticker).info
+        aum = info.get("totalAssets") or info.get("netAssets")
+        return float(aum) if aum else None
+    except Exception:
+        return None
+
+
 def build_market_snapshot(market):
     """market: "us" 或 "tw"。回 {sector_key: {"name":.., "periods": {20:{ratio,momentum,quadrant},...},
-    "size": 市值代理值}}，算不出來的籃子直接跳過（不用 0 硬湊）。"""
+    "size": 資金規模（美股=ETF資產規模美元／台股=合格成分股市值合計台幣，兩邊單位不同、
+    不能互比，只在各自市場內部比大小用）}}，算不出來的籃子直接跳過（不用 0 硬湊）。"""
     if market == "us":
         bench_h = yf.Ticker(US_BENCHMARK).history(period="3y")
         if bench_h.empty:
@@ -183,7 +201,8 @@ def build_market_snapshot(market):
                 periods[n] = {"ratio": round(float(r), 2), "momentum": round(float(m), 2),
                               "quadrant": quadrant(r, m)}
             if periods:
-                out[tk] = {"name": name, "periods": periods, "size": 1.0}
+                aum = _spdr_aum(tk)
+                out[tk] = {"name": name, "periods": periods, "size": aum or 0.0}
         return out
 
     if market == "tw":
@@ -194,8 +213,8 @@ def build_market_snapshot(market):
         bench = bench_h["Close"]
         members = _tw_sector_members()
         out = {}
-        for sector, tks in members.items():
-            closes, mcaps = [], []
+        for sector, (tks, total_cap) in members.items():
+            closes = []
             for tk in tks:
                 h = yf.Ticker(tk).history(period="3y")
                 if h.empty:
@@ -217,7 +236,7 @@ def build_market_snapshot(market):
                               "quadrant": quadrant(r, m)}
             if periods:
                 out[sector] = {"name": SECTOR_TW_LABEL.get(sector, sector),
-                               "periods": periods, "size": len(closes)}
+                               "periods": periods, "size": total_cap}
         return out
 
     raise ValueError(f"未知市場：{market}")
@@ -269,14 +288,38 @@ def save_history(hist):
 
 # ── HTML 渲染（跟 ark_report.py 同款：BASE_CSS + header + click-selector）────
 
-def _bubble_data(snapshot, period):
+def _size_scale(all_sizes, min_r=6, max_r=26):
+    """資金規模→泡泡半徑。用 log10 是因為規模橫跨好幾個數量級
+    （SPDR AUM 從幾十億到上千億美元、台股產業市值合計也是同樣量級差），
+    線性映射會讓小的全部擠成一個點。回傳一個 size→radius 的函式，
+    lo/hi 用「這個市場所有已知規模（含歷史）」算，不是只看單一快照——
+    這樣動畫播放時泡泡大小才不會因為每幀重新正規化而忽大忽小亂跳。"""
+    sizes = [s for s in all_sizes if s and s > 0]
+    if not sizes:
+        return lambda s: (min_r + max_r) / 2
+    logs = [np.log10(s) for s in sizes]
+    lo, hi = min(logs), max(logs)
+    if hi <= lo:
+        return lambda s: (min_r + max_r) / 2
+
+    def scale(s):
+        if not s or s <= 0:
+            return min_r
+        frac = (np.log10(s) - lo) / (hi - lo)
+        frac = max(0.0, min(1.0, frac))
+        return round(min_r + frac * (max_r - min_r), 1)
+    return scale
+
+
+def _bubble_data(snapshot, period, radius_fn):
     pts = []
     for key, d in snapshot.items():
         p = d["periods"].get(period)
         if not p:
             continue
+        size = d.get("size", 0.0)
         pts.append({"key": key, "name": d["name"], "ratio": p["ratio"], "momentum": p["momentum"],
-                    "quadrant": p["quadrant"], "size": d.get("size", 1.0)})
+                    "quadrant": p["quadrant"], "size": size, "radius": radius_fn(size)})
     return pts
 
 
@@ -294,15 +337,54 @@ def _trail_data(hist_rows, market_key, period, max_points=8):
     return out
 
 
+def _frames_data(hist_rows, snapshot, period, radius_fn, max_frames=26):
+    """「圈圈會跑」動畫用：把歷史快照依日期切成一格一格的畫面，
+    每格是「當天所有籃子的座標」，不是單一籃子的軌跡（那是 _trail_data 的事）。
+    最後一格永遠是「現在」（用當下 snapshot，不是歷史裡的最後一筆——避免
+    歷史還沒來得及 append 這次結果時動畫少一格）。
+    歷史筆數 <2 時回傳只有1格的清單，前端要檢查長度決定播放鍵能不能按。"""
+    frames = []
+    for row in hist_rows[-max_frames:]:
+        d = row.get("snapshot", {})
+        pts = []
+        for key, basket in d.items():
+            p = basket.get("periods", {}).get(str(period)) or basket.get("periods", {}).get(period)
+            if not p:
+                continue
+            size = basket.get("size", 0.0)
+            pts.append({"key": key, "name": basket.get("name", key), "ratio": p["ratio"],
+                       "momentum": p["momentum"], "quadrant": p["quadrant"],
+                       "radius": radius_fn(size)})
+        if pts:
+            frames.append({"date": row["date"], "points": pts})
+    cur_pts = _bubble_data(snapshot, period, radius_fn)
+    if not frames or frames[-1]["date"] != time.strftime("%Y-%m-%d"):
+        frames.append({"date": time.strftime("%Y-%m-%d") + "（現在）", "points": cur_pts})
+    return frames
+
+
 def render_html(snap_us, snap_tw, hist):
     import json as _json
     from board_theme import BASE_CSS, header, NAV, esc
 
+    # 資金大小→泡泡半徑：用「這個市場所有已知規模（含歷史）」一起算 lo/hi，
+    # 動畫播放時泡泡大小才不會因為每幀重新正規化而忽大忽小亂跳。
+    def _all_sizes(market, snapshot):
+        sizes = [d.get("size", 0.0) for d in snapshot.values()]
+        for row in hist.get(market, []):
+            sizes += [b.get("size", 0.0) for b in row.get("snapshot", {}).values()]
+        return sizes
+
+    us_radius = _size_scale(_all_sizes("us", snap_us))
+    tw_radius = _size_scale(_all_sizes("tw", snap_tw))
+
     payload = {
-        "us": {str(n): _bubble_data(snap_us, n) for n in PERIODS},
-        "tw": {str(n): _bubble_data(snap_tw, n) for n in PERIODS},
+        "us": {str(n): _bubble_data(snap_us, n, us_radius) for n in PERIODS},
+        "tw": {str(n): _bubble_data(snap_tw, n, tw_radius) for n in PERIODS},
         "trail_us": {str(n): {k: _trail_data(hist.get("us", []), k, n) for k in snap_us} for n in PERIODS},
         "trail_tw": {str(n): {k: _trail_data(hist.get("tw", []), k, n) for k in snap_tw} for n in PERIODS},
+        "frames_us": {str(n): _frames_data(hist.get("us", []), snap_us, n, us_radius) for n in PERIODS},
+        "frames_tw": {str(n): _frames_data(hist.get("tw", []), snap_tw, n, tw_radius) for n in PERIODS},
     }
     date = time.strftime("%Y-%m-%d %H:%M")
 
@@ -331,7 +413,10 @@ def render_html(snap_us, snap_tw, hist):
         '資料源：美股用 11 檔 SPDR 類股 ETF（業界標準籃子）；台股沒有官方類股指數可直接抓，'
         f'改成 TradingView 產業分類下市值前 {TW_BASKET_SIZE} 大成分股等權聚合。'
         '公式為業界公開重建版（非老墨官方精確值），數字不會跟他的工具逐點對上，方法論一致。<br>'
-        '<span style="color:var(--muted)">軌跡尾巴需要累積幾週資料才看得出來，剛上線時多半只有一個點是正常的。</span>'
+        '<b>泡泡大小＝資金規模</b>（美股用 SPDR ETF 資產規模美元、台股用該產業合格成分股市值合計台幣）——'
+        '兩個市場單位不同、不能互比，只在各自市場內部比大小。<br>'
+        '<span style="color:var(--muted)">軌跡尾巴與「▶ 播放資金移動軌跡」需要累積幾週資料才看得出來，'
+        '剛上線時多半只有一個點/一幀是正常的，不是壞掉。</span>'
         '</div>'
     )
     ctrl_html = (
@@ -340,8 +425,11 @@ def render_html(snap_us, snap_tw, hist):
         '<button data-m="us" aria-pressed="true">美股</button>'
         '<button data-m="tw" aria-pressed="false">台股</button></div>'
         f'<div class="seg" role="group" aria-label="切換週期" id="perSeg">{period_btns}</div>'
+        '<button id="playBtn" class="playbtn">▶ 播放資金移動軌跡</button>'
+        '<span id="playHint" class="playhint"></span>'
         '</div>'
-        '<div class="rrgwrap"><div class="rrgbox"><canvas id="rrgChart"></canvas></div>'
+        '<div class="rrgwrap"><div class="rrgbox"><canvas id="rrgChart"></canvas>'
+        '<div class="rrgframe" id="rrgFrameLabel"></div></div>'
         '<div class="rrgrank" id="rrgRank"></div></div>'
         '<p class="disc">RRG 是產業/籃子層級的相對強弱統計工具，不是個股買賣訊號，'
         '不構成投資建議。台股籃子由少數大型股等權聚合，會被成分股個別異動放大，'
@@ -387,18 +475,54 @@ function quadrantBgPlugin() {
   };
 }
 
-function draw() {
-  var pts = (window.RRG_DATA[curM] || {})[curP] || [];
-  var trailKey = 'trail_' + curM;
-  var trails = (window.RRG_DATA[trailKey] || {})[curP] || {};
-  if (rrgChart) rrgChart.destroy();
+var playTimer = null, playIdx = 0;
 
+function stopPlay() {
+  if (playTimer) { clearInterval(playTimer); playTimer = null; }
+  document.getElementById('playBtn').classList.remove('playing');
+  document.getElementById('playBtn').textContent = '▶ 播放資金移動軌跡';
+  document.getElementById('rrgFrameLabel').style.display = 'none';
+}
+
+function drawFrame(pts, trailDs, frameLabel) {
+  if (rrgChart) rrgChart.destroy();
   var bubbleDs = {
-    label: '目前位置',
-    data: pts.map(function(p) { return {x: p.ratio, y: p.momentum, r: 6 + Math.min(p.size, 10)}; }),
+    label: '位置',
+    data: pts.map(function(p) { return {x: p.ratio, y: p.momentum, r: p.radius || 10}; }),
     backgroundColor: pts.map(function(p) { return (QCOLOR[p.quadrant] || '#8fb0d6') + 'cc'; }),
     borderColor: '#0a1222', borderWidth: 1.5
   };
+  rrgChart = new Chart(document.getElementById('rrgChart'), {
+    type: 'bubble',
+    data: {datasets: [bubbleDs].concat(trailDs || [])},
+    options: {
+      responsive: true, maintainAspectRatio: false, animation: {duration: 350},
+      plugins: {
+        legend: {display: false},
+        tooltip: {callbacks: {label: function(ctx) {
+          var p = pts[ctx.dataIndex];
+          return p ? (p.name + '：RS-Ratio ' + p.ratio.toFixed ? p.ratio.toFixed(1) : p.ratio) +
+            '／RS-Momentum ' + (p.momentum.toFixed ? p.momentum.toFixed(1) : p.momentum) +
+            '（' + QLABEL[p.quadrant] + '）' : '';
+        }}}
+      },
+      scales: {
+        x: {title: {display:true, text:'RS-Ratio 相對強弱', color:'#8fb0d6'}, ticks:{color:'#5f80a6'}, grid:{color:'#16223A'}},
+        y: {title: {display:true, text:'RS-Momentum 強弱變化率', color:'#8fb0d6'}, ticks:{color:'#5f80a6'}, grid:{color:'#16223A'}}
+      }
+    },
+    plugins: [quadrantBgPlugin()]
+  });
+  var lbl = document.getElementById('rrgFrameLabel');
+  if (frameLabel) { lbl.textContent = frameLabel; lbl.style.display = 'block'; }
+  else { lbl.style.display = 'none'; }
+}
+
+function draw() {
+  stopPlay();
+  var pts = (window.RRG_DATA[curM] || {})[curP] || [];
+  var trailKey = 'trail_' + curM;
+  var trails = (window.RRG_DATA[trailKey] || {})[curP] || {};
   var trailDs = Object.keys(trails).map(function(k) {
     var seq = trails[k];
     if (!seq || seq.length < 2) return null;
@@ -412,25 +536,7 @@ function draw() {
     };
   }).filter(Boolean);
 
-  rrgChart = new Chart(document.getElementById('rrgChart'), {
-    type: 'bubble',
-    data: {datasets: [bubbleDs].concat(trailDs)},
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: {
-        legend: {display: false},
-        tooltip: {callbacks: {label: function(ctx) {
-          var p = pts[ctx.dataIndex];
-          return p ? (p.name + '：RS-Ratio ' + p.ratio + '／RS-Momentum ' + p.momentum + '（' + QLABEL[p.quadrant] + '）') : '';
-        }}}
-      },
-      scales: {
-        x: {title: {display:true, text:'RS-Ratio 相對強弱', color:'#8fb0d6'}, ticks:{color:'#5f80a6'}, grid:{color:'#16223A'}},
-        y: {title: {display:true, text:'RS-Momentum 強弱變化率', color:'#8fb0d6'}, ticks:{color:'#5f80a6'}, grid:{color:'#16223A'}}
-      }
-    },
-    plugins: [quadrantBgPlugin()]
-  });
+  drawFrame(pts, trailDs, null);
 
   var rank = pts.slice().sort(function(a,b){ return (b.ratio+b.momentum)-(a.ratio+a.momentum); });
   document.getElementById('rrgRank').innerHTML = rank.map(function(p) {
@@ -439,7 +545,33 @@ function draw() {
       '<span class="qv">'+QLABEL[p.quadrant]+'</span>'+
       '<span class="num">'+p.ratio.toFixed(1)+' / '+p.momentum.toFixed(1)+'</span></div>';
   }).join('') || '<div class="rrgrow">（本次無資料）</div>';
+
+  var frames = ((window.RRG_DATA['frames_' + curM] || {})[curP]) || [];
+  var btn = document.getElementById('playBtn');
+  var hint = document.getElementById('playHint');
+  if (frames.length < 2) {
+    btn.disabled = true;
+    hint.textContent = '（資料還在累積，需要至少2週歷史才能播放）';
+  } else {
+    btn.disabled = false;
+    hint.textContent = '（共 ' + frames.length + ' 週）';
+  }
 }
+
+document.getElementById('playBtn').addEventListener('click', function() {
+  if (playTimer) { stopPlay(); return; }
+  var frames = ((window.RRG_DATA['frames_' + curM] || {})[curP]) || [];
+  if (frames.length < 2) return;
+  playIdx = 0;
+  document.getElementById('playBtn').classList.add('playing');
+  document.getElementById('playBtn').textContent = '⏸ 播放中…';
+  playTimer = setInterval(function() {
+    var f = frames[playIdx];
+    drawFrame(f.points, [], f.date);
+    playIdx++;
+    if (playIdx >= frames.length) { stopPlay(); draw(); }
+  }, 700);
+});
 
 document.getElementById('mktSeg').addEventListener('click', function(e) {
   var b = e.target.closest('button'); if (!b) return;
@@ -458,7 +590,7 @@ draw();
 
 CSS_EXTRA = """
 .rrgwrap{display:grid;grid-template-columns:1.6fr 1fr;gap:14px;margin-top:12px}
-.rrgbox{height:520px;background:#0a1222;border:1px solid #16223A;border-radius:12px;padding:10px}
+.rrgbox{height:520px;background:#0a1222;border:1px solid #16223A;border-radius:12px;padding:10px;position:relative}
 .rrgrank{background:#0a1222;border:1px solid #16223A;border-radius:12px;padding:10px;
  max-height:520px;overflow-y:auto}
 .rrgrow{display:flex;align-items:center;gap:8px;padding:7px 4px;border-bottom:1px solid #131c30;font-size:12.5px}
@@ -466,7 +598,16 @@ CSS_EXTRA = """
 .rrgrow .nm{flex:1;color:#cfe6ff}
 .rrgrow .qv{color:#8fb0d6;font-size:11px;width:36px;text-align:center}
 .rrgrow .num{color:#5f80a6;font-variant-numeric:tabular-nums;width:90px;text-align:right}
-@media (max-width:820px){.rrgwrap{grid-template-columns:1fr}.rrgbox{height:400px}}
+.playbtn{margin-left:10px;background:#132038;border:1px solid #2a3550;color:#25e6ff;
+ font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:8px;cursor:pointer;font-family:inherit;
+ vertical-align:middle}
+.playbtn:hover{border-color:#25e6ff}
+.playbtn:disabled{color:#5f80a6;border-color:#16223A;cursor:not-allowed}
+.playbtn.playing{color:#ffb020;border-color:#ffb020}
+.playhint{font-size:11px;color:#5f80a6;margin-left:8px;align-self:center}
+.rrgframe{position:absolute;top:14px;right:20px;font-size:12px;color:#8fb0d6;
+ background:#0a122299;padding:3px 10px;border-radius:6px;pointer-events:none}
+@media (max-width:820px){.rrgwrap{grid-template-columns:1fr}.rrgbox{height:400px}.ctrl{flex-wrap:wrap}.playbtn{margin-left:0}}
 """
 
 
