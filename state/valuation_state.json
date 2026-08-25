@@ -1,0 +1,596 @@
+{
+  "1227": {
+    "price": 28.85,
+    "cheap": 19.32,
+    "expensive": 48.3,
+    "icon": "🟡",
+    "eps_basis": "ttm",
+    "market": "TW",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "1733": {
+    "price": 32.2,
+    "cheap": 22.8,
+    "expensive": 57.0,
+    "icon": "🟡",
+    "eps_basis": "ttm",
+    "market": "TW",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "2105": {
+    "price": 31.35,
+    "cheap": 21.84,
+    "expensive": 54.6,
+    "icon": "🟡",
+    "eps_basis": "ttm",
+    "market": "TW",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "2317": {
+    "price": 243.0,
+    "cheap": 181.32,
+    "expensive": 453.3,
+    "icon": "🟡",
+    "eps_basis": "ttm",
+    "market": "TW",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "2412": {
+    "price": 136.5,
+    "cheap": 60.96,
+    "expensive": 152.4,
+    "icon": "🟡",
+    "eps_basis": "ttm",
+    "market": "TW",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "3045": {
+    "price": 115.5,
+    "cheap": 62.76,
+    "expensive": 156.9,
+    "icon": "🟡",
+    "eps_basis": "ttm",
+    "market": "TW",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "6592": {
+    "price": 61.6,
+    "cheap": 59.04,
+    "expensive": 147.6,
+    "icon": "🟡",
+    "eps_basis": "ttm",
+    "market": "TW",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "AAOI": {
+    "price": 113.15,
+    "cheap": 55.22,
+    "expensive": 138.06,
+    "icon": "🟡",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "AAPL": {
+    "price": 309.9,
+    "cheap": 114.46,
+    "expensive": 286.16,
+    "icon": "🔴",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "ACGL": {
+    "price": 100.56,
+    "cheap": 117.19,
+    "expensive": 292.99,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "AER": {
+    "price": 147.44,
+    "cheap": 218.51,
+    "expensive": 546.29,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "AES": {
+    "price": 14.73,
+    "cheap": 28.53,
+    "expensive": 71.33,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "AGO": {
+    "price": 75.14,
+    "cheap": 85.19,
+    "expensive": 212.97,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "ALL": {
+    "price": 257.62,
+    "cheap": 330.31,
+    "expensive": 825.77,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "AMD": {
+    "price": 479.18,
+    "cheap": 185.83,
+    "expensive": 464.58,
+    "icon": "🔴",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "API": {
+    "price": 4.12,
+    "cheap": 1.2,
+    "expensive": 3.0,
+    "icon": "🔴",
+    "eps_basis": "ttm_fallback",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "BA": {
+    "price": 211.08,
+    "cheap": 49.45,
+    "expensive": 123.63,
+    "icon": "🔴",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "BAC": {
+    "price": 62.43,
+    "cheap": 63.54,
+    "expensive": 158.86,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "BAYRY": {
+    "price": 14.31,
+    "cheap": 16.4,
+    "expensive": 41.0,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "BCS": {
+    "price": 27.23,
+    "cheap": 40.81,
+    "expensive": 102.02,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "BEN": {
+    "price": 35.03,
+    "cheap": 37.98,
+    "expensive": 94.96,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "BNY": {
+    "price": 163.65,
+    "cheap": 122.95,
+    "expensive": 307.37,
+    "icon": "🟡",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "BWA": {
+    "price": 65.1,
+    "cheap": 71.28,
+    "expensive": 178.21,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "C": {
+    "price": 133.25,
+    "cheap": 154.6,
+    "expensive": 386.5,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "CCL": {
+    "price": 26.14,
+    "cheap": 31.65,
+    "expensive": 79.13,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "CI": {
+    "price": 279.32,
+    "cheap": 401.68,
+    "expensive": 1004.21,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "CICHY": {
+    "price": 23.5,
+    "cheap": 46.44,
+    "expensive": 116.1,
+    "icon": "🟢",
+    "eps_basis": "ttm_fallback",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "CLS": {
+    "price": 306.86,
+    "cheap": 233.76,
+    "expensive": 584.4,
+    "icon": "🟡",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "CNH": {
+    "price": 11.56,
+    "cheap": 8.24,
+    "expensive": 20.59,
+    "icon": "🟡",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "COHR": {
+    "price": 288.14,
+    "cheap": 167.39,
+    "expensive": 418.47,
+    "icon": "🟡",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "CPA": {
+    "price": 133.47,
+    "cheap": 232.66,
+    "expensive": 581.64,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "CVSA": {
+    "price": 136.38,
+    "cheap": 120.06,
+    "expensive": 300.15,
+    "icon": "🟡",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "DNKEY": {
+    "price": 29.15,
+    "cheap": 27.24,
+    "expensive": 68.1,
+    "icon": "🟡",
+    "eps_basis": "ttm_fallback",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "FNF": {
+    "price": 47.38,
+    "cheap": 69.46,
+    "expensive": 173.66,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "GLW": {
+    "price": 147.16,
+    "cheap": 51.85,
+    "expensive": 129.61,
+    "icon": "🔴",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "GOOG": {
+    "price": 343.34,
+    "cheap": 177.73,
+    "expensive": 444.33,
+    "icon": "🟡",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "GSK": {
+    "price": 52.07,
+    "cheap": 59.83,
+    "expensive": 149.59,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "HENKY": {
+    "price": 20.54,
+    "cheap": 16.44,
+    "expensive": 41.1,
+    "icon": "🟡",
+    "eps_basis": "ttm_fallback",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "HIG": {
+    "price": 138.22,
+    "cheap": 164.27,
+    "expensive": 410.67,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "HPE": {
+    "price": 53.44,
+    "cheap": 48.88,
+    "expensive": 122.2,
+    "icon": "🟡",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "HSBC": {
+    "price": 104.38,
+    "cheap": 113.65,
+    "expensive": 284.13,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "ITOCY": {
+    "price": 13.31,
+    "cheap": 9.6,
+    "expensive": 24.0,
+    "icon": "🟡",
+    "eps_basis": "ttm_fallback",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "IX": {
+    "price": 39.53,
+    "cheap": 140.88,
+    "expensive": 352.2,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "JPM": {
+    "price": 356.69,
+    "cheap": 300.08,
+    "expensive": 750.21,
+    "icon": "🟡",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "KNBWY": {
+    "price": 19.48,
+    "cheap": 13.08,
+    "expensive": 32.7,
+    "icon": "🟡",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "KR": {
+    "price": 58.45,
+    "cheap": 66.49,
+    "expensive": 166.23,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "LH": {
+    "price": 337.68,
+    "cheap": 237.58,
+    "expensive": 593.95,
+    "icon": "🟡",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "LITE": {
+    "price": 885.565,
+    "cheap": 396.16,
+    "expensive": 990.4,
+    "icon": "🟡",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "MCK": {
+    "price": 905.09,
+    "cheap": 601.72,
+    "expensive": 1504.3,
+    "icon": "🟡",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "MSFT": {
+    "price": 491.71,
+    "cheap": 282.88,
+    "expensive": 707.2,
+    "icon": "🟡",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "MU": {
+    "price": 932.97,
+    "cheap": 1860.3,
+    "expensive": 4650.76,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "NVDA": {
+    "price": 213.05,
+    "cheap": 156.49,
+    "expensive": 391.23,
+    "icon": "🟡",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "ON": {
+    "price": 72.51,
+    "cheap": 54.34,
+    "expensive": 135.85,
+    "icon": "🟡",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "PAA": {
+    "price": 24.7,
+    "cheap": 22.59,
+    "expensive": 56.49,
+    "icon": "🟡",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "PHIN": {
+    "price": 70.92,
+    "cheap": 82.83,
+    "expensive": 207.08,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "PHM": {
+    "price": 130.86,
+    "cheap": 135.0,
+    "expensive": 337.49,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "SPCX": {
+    "price": 137.95,
+    "cheap": 19.22,
+    "expensive": 48.04,
+    "icon": "🔴",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "SSUMY": {
+    "price": 11.17,
+    "cheap": 35.28,
+    "expensive": 88.2,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "TFC": {
+    "price": 50.3,
+    "cheap": 59.88,
+    "expensive": 149.69,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "THC": {
+    "price": 271.88,
+    "cheap": 250.13,
+    "expensive": 625.33,
+    "icon": "🟡",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "TM": {
+    "price": 192.95,
+    "cheap": 189.36,
+    "expensive": 473.4,
+    "icon": "🟡",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "TSLA": {
+    "price": 350.25,
+    "cheap": 25.9,
+    "expensive": 64.76,
+    "icon": "🔴",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "TSM": {
+    "price": 417.41,
+    "cheap": 261.38,
+    "expensive": 653.44,
+    "icon": "🟡",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "UHS": {
+    "price": 175.76,
+    "cheap": 288.22,
+    "expensive": 720.54,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "UNM": {
+    "price": 89.69,
+    "cheap": 113.51,
+    "expensive": 283.76,
+    "icon": "🟢",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  },
+  "XYZ": {
+    "price": 82.72,
+    "cheap": 62.29,
+    "expensive": 155.73,
+    "icon": "🟡",
+    "eps_basis": "forward",
+    "market": "US",
+    "updated_at": "2026-08-26 07:54"
+  }
+}
