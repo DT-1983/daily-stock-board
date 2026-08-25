@@ -41,7 +41,7 @@ from tradingview_screener import Query, col
 
 PERIODS = [20, 60, 120, 240]
 HIST_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "industry_rotation_history.json")
-HIST_KEEP_WEEKS = 26          # 軌跡尾巴最多留半年份，太長圖會糊成一團
+HIST_KEEP_WEEKS = 52          # 回放範圍最長給「一年」，對齊老墨控制面板的選項
 
 # 美股：SPDR 11 大類股 ETF。免聚合、免猜產業分類，直接抓歷史價格。
 SPDR_SECTORS = {
@@ -174,7 +174,7 @@ def _spdr_aum(ticker):
         return None
 
 
-BACKFILL_WEEKS = 26   # 動畫回填幾週歷史。3年資料本來就抓了，回填不用多打任何API
+BACKFILL_WEEKS = 52   # 動畫回填幾週歷史，對齊「回放範圍：一年」。3年資料本來就抓了，回填不用多打任何API
 
 def _periods_at(rm, ts):
     """從已經算好的 rm（{period: {ratio,momentum}} 的 Series）取某個時間點的座標。
@@ -205,58 +205,31 @@ def _backfill_points(idx, weeks):
     return [(idx[p], idx[p].strftime("%Y-%m-%d")) for p in positions]
 
 
-def build_market_snapshot(market, backfill_weeks=0):
-    """market: "us" 或 "tw"。回 (current, history_rows)：
-      current       = {sector_key: {"name":.., "periods": {...}, "size": 資金規模}}（現在這一刻）
-      history_rows  = [(date_str, snapshot_dict), ...] 由舊到新，backfill_weeks>0 時才有內容
+BENCHMARK_LABEL = {"index": "加權指數／S&P500", "equal": "等權類股（全部籃子等權組成）"}
 
-    2026-08-25 補回填：本來就已經抓 3 年歷史價格來算「現在」這個點，
-    同一批資料回頭算過去每週的座標幾乎不用額外成本（沒有新的 API 呼叫，
-    純粹是在已經抓好的 pandas Series 上多取幾個歷史時間點）。
-    不用像原本設計那樣「每週排程跑一次才多一幀動畫」，第一次跑就有完整歷史可以播放。
 
-    ⚠️ 已知簡化：回填的歷史快照，「資金規模」(size) 用的是**現在**的 AUM/市值，
-    不是那個歷史時間點當時的規模（我們沒有歷史 AUM/市值資料）。RS-Ratio/Momentum
-    本身是用當時真實價格算的，只有泡泡大小這個視覺參考值是用現在的規模回貼過去，
-    可接受的簡化（規模不會一週內劇烈變化，且這只影響泡泡大小不影響位置判斷）。
-    """
+def _fetch_baskets(market):
+    """只做網路抓取（貴的部分），回 (baskets, index_bench)。
+    baskets = [(key, name, closes_series, size), ...]。
+    跟 benchmark 選擇無關——「等權類股」基準要用到全部籃子的價格序列，
+    所以基準運算要等全部籃子都抓完才能算，抓取本身跟基準選哪個無關，
+    拆開後同一批抓來的資料可以算多種基準，不用每切一次基準就重抓一次。"""
     if market == "us":
-        bench_h = yf.Ticker(US_BENCHMARK).history(period="3y")
-        if bench_h.empty:
-            print("  [industry_rotation] 美股基準抓取失敗，跳過整個美股快照")
-            return {}, []
-        bench = bench_h["Close"]
-        out, hist_by_date = {}, {}
+        index_bench = yf.Ticker(US_BENCHMARK).history(period="3y")["Close"]
+        baskets = []
         for tk, name in SPDR_SECTORS.items():
             h = yf.Ticker(tk).history(period="3y")
             if h.empty:
                 print(f"  [industry_rotation] {tk} 抓取失敗，跳過")
                 continue
-            rm = rs_ratio_momentum(h["Close"], bench)
-            if rm is None:
-                continue
-            idx = rm[PERIODS[0]]["ratio"].index
-            cur = _periods_at(rm, idx[-1])
-            if not cur:
-                continue
             aum = _spdr_aum(tk)
-            out[tk] = {"name": name, "periods": cur, "size": aum or 0.0}
-            if backfill_weeks:
-                for ts, date_str in _backfill_points(idx, backfill_weeks):
-                    p = _periods_at(rm, ts)
-                    if p:
-                        hist_by_date.setdefault(date_str, {})[tk] = {"name": name, "periods": p, "size": aum or 0.0}
-        rows = [(d, hist_by_date[d]) for d in sorted(hist_by_date)]
-        return out, rows
+            baskets.append((tk, name, h["Close"], aum or 0.0))
+        return baskets, index_bench
 
     if market == "tw":
-        bench_h = yf.Ticker(TW_BENCHMARK).history(period="3y")
-        if bench_h.empty:
-            print("  [industry_rotation] 台股基準抓取失敗，跳過整個台股快照")
-            return {}, []
-        bench = bench_h["Close"]
+        index_bench = yf.Ticker(TW_BENCHMARK).history(period="3y")["Close"]
         members = _tw_sector_members()
-        out, hist_by_date = {}, {}
+        baskets = []
         for sector, (tks, total_cap) in members.items():
             closes = []
             for tk in tks:
@@ -264,28 +237,59 @@ def build_market_snapshot(market, backfill_weeks=0):
                 if h.empty:
                     continue
                 closes.append(h["Close"])
-            basket = _basket_index(closes)
-            if basket is None:
+            b = _basket_index(closes)
+            if b is None:
                 print(f"  [industry_rotation] {sector} 成分股資料不足（<{TW_MIN_MEMBERS}檔），跳過")
                 continue
-            rm = rs_ratio_momentum(basket, bench)
-            if rm is None:
-                continue
-            idx = rm[PERIODS[0]]["ratio"].index
-            name = SECTOR_TW_LABEL.get(sector, sector)
-            cur = _periods_at(rm, idx[-1])
-            if not cur:
-                continue
-            out[sector] = {"name": name, "periods": cur, "size": total_cap}
-            if backfill_weeks:
-                for ts, date_str in _backfill_points(idx, backfill_weeks):
-                    p = _periods_at(rm, ts)
-                    if p:
-                        hist_by_date.setdefault(date_str, {})[sector] = {"name": name, "periods": p, "size": total_cap}
-        rows = [(d, hist_by_date[d]) for d in sorted(hist_by_date)]
-        return out, rows
+            baskets.append((sector, SECTOR_TW_LABEL.get(sector, sector), b, total_cap))
+        return baskets, index_bench
 
     raise ValueError(f"未知市場：{market}")
+
+
+BENCHMARK_LABEL = {"index": "加權指數／S&P500", "equal": "等權類股（全部籃子等權組成）"}
+
+
+def compute_snapshot(baskets, index_bench, benchmark="index", backfill_weeks=0):
+    """純計算（不打API），可以對同一批 baskets 重複呼叫算不同基準，成本很低。
+    benchmark: "index"（加權指數/S&P500）或 "equal"（用全部籃子自己等權組成的合成指數，
+    跟同儕比不跟大盤比）。回 (current, history_rows)，格式同舊版 build_market_snapshot。
+
+    2026-08-25 補「等權類股」：老墨控制面板有「加權指數/櫃買指數/等權類股」三選項。
+    櫃買指數（TPEx上櫃指數）查過幾種常見 yfinance ticker 猜法都拿不到資料，沒做——
+    寧可少一個選項也不要編一個假資料源。
+
+    2026-08-25 補回填：3年歷史資料本來就抓了，同一批資料回頭算過去每週座標
+    幾乎不用額外成本，不用等每週排程真的跑過才多一幀動畫。
+    ⚠️ 已知簡化：回填快照的「資金規模」用現在的 AUM/市值回貼過去（無歷史資料可用），
+    RS-Ratio/Momentum 本身是當時真實價格算的，只有泡泡大小是簡化。
+    """
+    if not baskets:
+        return {}, []
+    if benchmark == "equal":
+        bench = _basket_index([b[2] for b in baskets])
+    else:
+        if index_bench is None or index_bench.empty:
+            return {}, []
+        bench = index_bench
+
+    out, hist_by_date = {}, {}
+    for key, name, closes, size in baskets:
+        rm = rs_ratio_momentum(closes, bench)
+        if rm is None:
+            continue
+        idx = rm[PERIODS[0]]["ratio"].index
+        cur = _periods_at(rm, idx[-1])
+        if not cur:
+            continue
+        out[key] = {"name": name, "periods": cur, "size": size}
+        if backfill_weeks:
+            for ts, date_str in _backfill_points(idx, backfill_weeks):
+                p = _periods_at(rm, ts)
+                if p:
+                    hist_by_date.setdefault(date_str, {})[key] = {"name": name, "periods": p, "size": size}
+    rows = [(d, hist_by_date[d]) for d in sorted(hist_by_date)]
+    return out, rows
 
 
 SECTOR_TW_LABEL = {   # TradingView sector 英文 → 繁中（跟 buffett_html_legacy.SECTOR_TW 同一套語彙，這裡是TV自己的20分類不是GICS，名字對不上不能直接共用那份）
@@ -303,25 +307,45 @@ SECTOR_TW_LABEL = {   # TradingView sector 英文 → 繁中（跟 buffett_html_
 
 # ── 歷史存檔：給軌跡尾巴用 ────────────────────────────────────────────
 
+def _empty_history():
+    return {"us": {"index": [], "equal": []}, "tw": {"index": [], "equal": []}}
+
+
 def load_history():
+    """歷史存檔結構 2026-08-25 改成 hist[market][benchmark] = [rows...]（多了基準這一層，
+    才能讓「加權指數」跟「等權類股」兩種基準各自留自己的軌跡歷史）。
+    舊檔是 hist[market] = [rows...]（沒有基準這層），讀到舊格式時搬進 "index"
+    （原本就是用加權指數/S&P500算的），不丟掉已經回填好的歷史。"""
     if not os.path.exists(HIST_PATH):
-        return {"us": [], "tw": []}
+        return _empty_history()
     try:
         with open(HIST_PATH, encoding="utf-8") as f:
-            return json.load(f)
+            hist = json.load(f)
     except Exception:
-        return {"us": [], "tw": []}
+        return _empty_history()
+    out = _empty_history()
+    for market in ("us", "tw"):
+        v = hist.get(market)
+        if isinstance(v, list):            # 舊格式：搬進 index，不丟資料
+            out[market]["index"] = v
+        elif isinstance(v, dict):
+            out[market]["index"] = v.get("index", [])
+            out[market]["equal"] = v.get("equal", [])
+    return out
 
 
-def append_history(hist, market, snapshot, date_str):
+def append_history(hist, market, benchmark, snapshot, date_str):
     """把這次快照疊進歷史，並裁掉太舊的（軌跡尾巴不用留太長，留了也看不清）。"""
-    hist.setdefault(market, [])
+    hist.setdefault(market, {"index": [], "equal": []})
+    hist[market].setdefault(benchmark, [])
+    rows = hist[market][benchmark]
     # 同一天重跑會產生重複點——先移除同一天的舊紀錄再疊新的，不是每次都無限累加
-    hist[market] = [row for row in hist[market] if row.get("date") != date_str]
-    hist[market].append({"date": date_str, "snapshot": snapshot})
-    hist[market].sort(key=lambda r: r["date"])
-    if len(hist[market]) > HIST_KEEP_WEEKS:
-        hist[market] = hist[market][-HIST_KEEP_WEEKS:]
+    rows = [row for row in rows if row.get("date") != date_str]
+    rows.append({"date": date_str, "snapshot": snapshot})
+    rows.sort(key=lambda r: r["date"])
+    if len(rows) > HIST_KEEP_WEEKS:
+        rows = rows[-HIST_KEEP_WEEKS:]
+    hist[market][benchmark] = rows
     return hist
 
 
@@ -369,23 +393,11 @@ def _bubble_data(snapshot, period, radius_fn):
     return pts
 
 
-def _trail_data(hist_rows, market_key, period, max_points=8):
-    """某一籃子過去幾週的座標序列，給軌跡尾巴用。歷史累積不足時就是短尾巴或沒有，
-    不是 bug——這功能本來就要跑幾週才有東西可畫。"""
-    out = []
-    for row in hist_rows[-max_points:]:
-        d = row.get("snapshot", {}).get(market_key)
-        if not d:
-            continue
-        p = d.get("periods", {}).get(str(period)) or d.get("periods", {}).get(period)
-        if p:
-            out.append({"date": row["date"], "ratio": p["ratio"], "momentum": p["momentum"]})
-    return out
-
-
-def _frames_data(hist_rows, snapshot, period, radius_fn, max_frames=26):
-    """「圈圈會跑」動畫用：把歷史快照依日期切成一格一格的畫面，
-    每格是「當天所有籃子的座標」，不是單一籃子的軌跡（那是 _trail_data 的事）。
+def _frames_data(hist_rows, snapshot, period, radius_fn, max_frames=52):
+    """「圈圈會跑」動畫＋軌跡尾巴共用的資料來源：把歷史快照依日期切成一格一格的畫面，
+    每格是「當天所有籃子的座標」。前端用 buildTrailDs() 對這份資料動態切片組軌跡線，
+    不再另外算一份給尾巴專用的資料（原本 _trail_data 是分開算的，排序/缺值處理
+    不保證跟這裡一致，兩套「歷史」各算各的容易對不起來）。
     最後一格永遠是「現在」（用當下 snapshot，不是歷史裡的最後一筆——避免
     歷史還沒來得及 append 這次結果時動畫少一格）。
 
@@ -430,29 +442,42 @@ def _frames_data(hist_rows, snapshot, period, radius_fn, max_frames=26):
     return frames
 
 
-def render_html(snap_us, snap_tw, hist):
+PERIOD_LABEL = {20: "短線", 60: "波段", 120: "中期", 240: "長期"}
+RANGE_WEEKS = [("1m", "1個月", 4), ("3m", "3個月", 13), ("6m", "半年", 26), ("1y", "一年", 52)]
+
+
+def render_html(snaps, hist):
+    """snaps: {"us": {"index": current_snapshot, "equal": current_snapshot}, "tw": {...}}
+    hist:  {"us": {"index": [rows...], "equal": [rows...]}, "tw": {...}}"""
     import json as _json
     from board_theme import BASE_CSS, header, NAV, esc
 
-    # 資金大小→泡泡半徑：用「這個市場所有已知規模（含歷史）」一起算 lo/hi，
-    # 動畫播放時泡泡大小才不會因為每幀重新正規化而忽大忽小亂跳。
-    def _all_sizes(market, snapshot):
-        sizes = [d.get("size", 0.0) for d in snapshot.values()]
-        for row in hist.get(market, []):
-            sizes += [b.get("size", 0.0) for b in row.get("snapshot", {}).values()]
+    # 資金大小→泡泡半徑：兩種基準用的是同一批籃子同一個資金規模，只算一次、
+    # 兩個基準共用同一把尺（不然切換基準時同一顆泡泡大小會跳動，很奇怪）。
+    def _all_sizes(market):
+        sizes = [d.get("size", 0.0) for d in snaps[market]["index"].values()]
+        for bench_rows in hist.get(market, {}).values():
+            for row in bench_rows:
+                sizes += [b.get("size", 0.0) for b in row.get("snapshot", {}).values()]
         return sizes
 
-    us_radius = _size_scale(_all_sizes("us", snap_us))
-    tw_radius = _size_scale(_all_sizes("tw", snap_tw))
+    radius_fn = {m: _size_scale(_all_sizes(m)) for m in ("us", "tw")}
 
-    payload = {
-        "us": {str(n): _bubble_data(snap_us, n, us_radius) for n in PERIODS},
-        "tw": {str(n): _bubble_data(snap_tw, n, tw_radius) for n in PERIODS},
-        "trail_us": {str(n): {k: _trail_data(hist.get("us", []), k, n) for k in snap_us} for n in PERIODS},
-        "trail_tw": {str(n): {k: _trail_data(hist.get("tw", []), k, n) for k in snap_tw} for n in PERIODS},
-        "frames_us": {str(n): _frames_data(hist.get("us", []), snap_us, n, us_radius) for n in PERIODS},
-        "frames_tw": {str(n): _frames_data(hist.get("tw", []), snap_tw, n, tw_radius) for n in PERIODS},
-    }
+    # 軌跡尾巴改成前端用 frames（逐週快照）動態切片組出來（buildTrailDs），
+    # 不再另外算一份 trail_*——原本 _trail_data 產的軌跡跟 frames 是分開算的兩套資料，
+    # 排序/缺值處理不保證一致，且前端尾巴長度滑桿需要能動態切不同長度，
+    # 讓 frames 當唯一資料來源才不會有兩份「歷史軌跡」各算各的、可能對不起來。
+    payload = {}
+    for m in ("us", "tw"):
+        payload[m] = {}
+        payload["frames_" + m] = {}
+        for bench in ("index", "equal"):
+            snap = snaps[m][bench]
+            rows = hist.get(m, {}).get(bench, [])
+            payload[m][bench] = {str(n): _bubble_data(snap, n, radius_fn[m]) for n in PERIODS}
+            payload["frames_" + m][bench] = {str(n): _frames_data(rows, snap, n, radius_fn[m]) for n in PERIODS}
+
+    snap_tw_index = snaps["tw"]["index"]
     date = time.strftime("%Y-%m-%d %H:%M")
 
     quad_note = (
@@ -465,15 +490,23 @@ def render_html(snap_us, snap_tw, hist):
         '<b>「改善→領先」的轉折是資金剛轉強的甜蜜點</b>，值得優先注意。'
     )
     period_btns = "".join(
-        f'<button data-p="{n}" aria-pressed="{"true" if n == 20 else "false"}">{n}日</button>'
+        f'<button data-p="{n}" aria-pressed="{"true" if n == 20 else "false"}">{n}日<br><span class="pnote">{PERIOD_LABEL[n]}</span></button>'
         for n in PERIODS)
+    bench_btns = "".join(
+        f'<button data-b="{k}" aria-pressed="{"true" if k == "index" else "false"}">{v}</button>'
+        for k, v in (("index", "加權指數"), ("equal", "等權類股"))
+    )
+    range_btns = "".join(
+        f'<button data-r="{k}" aria-pressed="{"true" if k == "3m" else "false"}">{label}</button>'
+        for k, label, _ in RANGE_WEEKS
+    )
 
     head_html = ('<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">'
                  '<meta name="viewport" content="width=device-width,initial-scale=1">'
                  '<meta name="robots" content="noindex"><title>產業輪動雷達</title>'
                  '<style>' + BASE_CSS + CSS_EXTRA + '</style></head><body><div class="wrap">')
     hdr = header("rotation", "產業輪動雷達",
-                 f"RRG（Relative Rotation Graph）· 美股11大類股(SPDR ETF) + 台股{len(snap_tw)}個TradingView產業籃子"
+                 f"RRG（Relative Rotation Graph）· 美股11大類股(SPDR ETF) + 台股{len(snap_tw_index)}個TradingView產業籃子"
                  f" · 更新 {esc(date)}（每週六隨全市場重掃）", NAV, "rotation")
     note_html = (
         '<div class="note">' + quad_note + '<br>'
@@ -484,17 +517,40 @@ def render_html(snap_us, snap_tw, hist):
         '兩個市場單位不同、不能互比，只在各自市場內部比大小。<br>'
         f'<span style="color:var(--muted)">軌跡與「▶ 播放資金移動軌跡」已回填近 {BACKFILL_WEEKS} 週歷史'
         '（用既有3年價格資料反推，不是等出來的）；之後每週六會再多疊一幀「現在」。'
-        '回填歷史的泡泡大小是用現在的資金規模回貼過去，位置(RS-Ratio/Momentum)則是當時的真實值。</span>'
+        '回填歷史的泡泡大小是用現在的資金規模回貼過去，位置(RS-Ratio/Momentum)則是當時的真實值。<br>'
+        '基準只做了「加權指數」與「等權類股」——查過幾種常見 yfinance 代號寫法，'
+        '「櫃買指數」都拿不到資料，寧可少一個選項也不編假資料源。</span>'
         '</div>'
     )
     ctrl_html = (
-        '<div class="ctrl">'
+        '<div class="ctrl rrgctrl">'
+        '<div class="ctrlrow">'
+        '<span class="ctrllbl">市場</span>'
         '<div class="seg" role="group" aria-label="切換市場" id="mktSeg">'
         '<button data-m="us" aria-pressed="true">美股</button>'
         '<button data-m="tw" aria-pressed="false">台股</button></div>'
-        f'<div class="seg" role="group" aria-label="切換週期" id="perSeg">{period_btns}</div>'
+        '</div>'
+        '<div class="ctrlrow">'
+        '<span class="ctrllbl">基準（相對誰比強弱）</span>'
+        f'<div class="seg" role="group" aria-label="切換基準" id="benchSeg">{bench_btns}</div>'
+        '</div>'
+        '<div class="ctrlrow">'
+        '<span class="ctrllbl">計算週期</span>'
+        f'<div class="seg segwide" role="group" aria-label="切換週期" id="perSeg">{period_btns}</div>'
+        '</div>'
+        '<div class="ctrlrow">'
+        '<span class="ctrllbl">回放範圍</span>'
+        f'<div class="seg" role="group" aria-label="切換回放範圍" id="rangeSeg">{range_btns}</div>'
+        '</div>'
+        '<div class="ctrlrow">'
+        '<span class="ctrllbl">尾巴長度</span>'
+        '<input type="range" id="tailSlider" min="0" max="20" value="8" class="tailslider">'
+        '<span id="tailVal" class="tailval">8 週</span>'
+        '</div>'
+        '<div class="ctrlrow">'
         '<button id="playBtn" class="playbtn">▶ 播放資金移動軌跡</button>'
         '<span id="playHint" class="playhint"></span>'
+        '</div>'
         '</div>'
         '<div class="rrgwrap"><div class="rrgbox"><canvas id="rrgChart"></canvas>'
         '<div class="rrgframe" id="rrgFrameLabel"></div></div>'
@@ -514,9 +570,10 @@ def _rrg_script(payload):
     lines.append('<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>')
     lines.append("<script>")
     lines.append("window.RRG_DATA = " + _json.dumps(payload, ensure_ascii=False) + ";")
-    lines.append("var rrgChart = null, curM = 'us', curP = '20';")
+    lines.append("var rrgChart = null, curM = 'us', curP = '20', curBench = 'index', curRange = '3m', tailWeeks = 8;")
     lines.append("var QCOLOR = " + _json.dumps(QUADRANT_COLOR, ensure_ascii=False) + ";")
     lines.append("var QLABEL = " + _json.dumps(QUADRANT_LABEL, ensure_ascii=False) + ";")
+    lines.append("var RANGE_WEEKS = " + _json.dumps(dict((k, w) for k, _, w in RANGE_WEEKS)) + ";")
     lines.append("""
 function quadrantBgPlugin() {
   return {
@@ -545,7 +602,15 @@ function quadrantBgPlugin() {
 
 var playTimer = null, playIdx = 0;
 var SUBSTEPS = 12;     // 兩個真實週資料點之間補幾格——數字越大動畫越滑順但播放總長越久
-var TICK_MS = 35;      // 每格間隔；12補間×26週約等於 312 格 × 35ms ≈ 11 秒播完全程
+var TICK_MS = 35;      // 每格間隔
+
+function rrgGet(kind) {
+  // kind: 'bubble'(現在座標) | 'trail'（保留給舊資料相容） | 'frames'（動畫用逐週快照）
+  var key = (kind === 'bubble') ? curM : (kind + '_' + curM);
+  var byBench = window.RRG_DATA[key] || {};
+  var byPeriod = byBench[curBench] || {};
+  return byPeriod[curP] || [];
+}
 
 function stopPlay() {
   if (playTimer) { clearInterval(playTimer); playTimer = null; }
@@ -557,7 +622,9 @@ function stopPlay() {
 // 每個真實週之間線性補 SUBSTEPS 個中間點（ratio/momentum/radius 都補），
 // 原本一週一格會跳得很生硬看不出方向；帶著補間點快速播放，肉眼看起來就是連續移動。
 // 這只是視覺補間，不是真的推算出中間某天的數值——兩個端點才是真實資料。
-function _buildPlaySequence(frames) {
+// startOffset：這批 frames 在「完整歷史 frames」裡的起始位置，用來對回尾巴軌跡
+// （回放範圍可能只挑最近幾週，但尾巴軌跡要能往更早之前接，兩者是分開的概念）。
+function _buildPlaySequence(frames, startOffset) {
   var seq = [];
   for (var i = 0; i < frames.length - 1; i++) {
     var a = frames[i].points, b = frames[i + 1].points;
@@ -574,12 +641,35 @@ function _buildPlaySequence(frames) {
         };
       });
       seq.push({points: pts, label: frames[i].date + ' → ' + frames[i + 1].date,
-                isReal: s === 0, realDate: frames[i].date});
+                isReal: s === 0, realIdx: startOffset + i});
     }
   }
   var last = frames[frames.length - 1];
-  seq.push({points: last.points, label: last.date, isReal: true, realDate: last.date});
+  seq.push({points: last.points, label: last.date, isReal: true, realIdx: startOffset + frames.length - 1});
   return seq;
+}
+
+// 從完整歷史 frames 中，取 uptoIdx（含）往前數 weeks 週的每個籃子座標，接成軌跡線。
+// weeks<=0 時不畫尾巴。這是用戶要求加的功能：原本補間動畫只有會動的泡泡、
+// 沒有留下走過的路徑，看久了還是看不出「這一路怎麼走過來的」。
+function buildTrailDs(fullFrames, uptoIdx, weeks) {
+  if (weeks <= 0 || uptoIdx < 1) return [];
+  var start = Math.max(0, uptoIdx - weeks + 1);
+  var slice = fullFrames.slice(start, uptoIdx + 1);
+  if (slice.length < 2) return [];
+  var byKey = {};
+  slice.forEach(function(f) {
+    f.points.forEach(function(p) {
+      (byKey[p.key] = byKey[p.key] || []).push({x: p.ratio, y: p.momentum});
+    });
+  });
+  return Object.keys(byKey).map(function(k) {
+    var line = byKey[k];
+    if (line.length < 2) return null;
+    return {type: 'line', data: line, borderColor: 'rgba(139,160,200,.4)', borderWidth: 1.3,
+            pointRadius: 1.5, pointBackgroundColor: 'rgba(139,160,200,.55)',
+            showLine: true, fill: false, order: 5};
+  }).filter(Boolean);
 }
 
 function updateChartPoints(pts, trailDs) {
@@ -620,23 +710,13 @@ function updateChartPoints(pts, trailDs) {
 
 function draw() {
   stopPlay();
-  var pts = (window.RRG_DATA[curM] || {})[curP] || [];
-  var trailKey = 'trail_' + curM;
-  var trails = (window.RRG_DATA[trailKey] || {})[curP] || {};
-  var trailDs = Object.keys(trails).map(function(k) {
-    var seq = trails[k];
-    if (!seq || seq.length < 2) return null;
-    var cur = pts.find(function(p){ return p.key === k; });
-    var line = seq.map(function(s) { return {x: s.ratio, y: s.momentum}; });
-    if (cur) line.push({x: cur.ratio, y: cur.momentum});
-    return {
-      type: 'line', data: line,
-      borderColor: 'rgba(139,160,200,.35)', borderWidth: 1.2, pointRadius: 1.5,
-      pointBackgroundColor: 'rgba(139,160,200,.5)', showLine: true, fill: false, order: 5
-    };
-  }).filter(Boolean);
+  var pts = rrgGet('bubble');
+  var fullFrames = rrgGet('frames');
+  // 靜態（沒在播放）畫面也用尾巴長度滑桿控制要不要畫軌跡——跟播放時同一套邏輯，
+  // 不是播放才有軌跡、平常沒有，兩種狀態顯示邏輯要一致。
+  var trailDs = buildTrailDs(fullFrames, fullFrames.length - 1, tailWeeks);
 
-  if (rrgChart) { rrgChart.destroy(); rrgChart = null; }   // 換市場/週期時強制重建一次（軸範圍等設定要重來）
+  if (rrgChart) { rrgChart.destroy(); rrgChart = null; }   // 換市場/基準/週期要強制重建一次（軸範圍等設定要重來）
   updateChartPoints(pts, trailDs);
   document.getElementById('rrgFrameLabel').style.display = 'none';
 
@@ -648,23 +728,28 @@ function draw() {
       '<span class="num">'+p.ratio.toFixed(1)+' / '+p.momentum.toFixed(1)+'</span></div>';
   }).join('') || '<div class="rrgrow">（本次無資料）</div>';
 
-  var frames = ((window.RRG_DATA['frames_' + curM] || {})[curP]) || [];
   var btn = document.getElementById('playBtn');
   var hint = document.getElementById('playHint');
-  if (frames.length < 2) {
+  if (fullFrames.length < 2) {
     btn.disabled = true;
     hint.textContent = '（資料還在累積，需要至少2週歷史才能播放）';
   } else {
+    var rangeW = RANGE_WEEKS[curRange] || fullFrames.length;
+    var n = Math.min(rangeW, fullFrames.length);
     btn.disabled = false;
-    hint.textContent = '（共 ' + frames.length + ' 週，補間播放較滑順）';
+    hint.textContent = '（回放 ' + n + ' 週，共累積 ' + fullFrames.length + ' 週歷史）';
   }
 }
 
 document.getElementById('playBtn').addEventListener('click', function() {
   if (playTimer) { stopPlay(); return; }
-  var frames = ((window.RRG_DATA['frames_' + curM] || {})[curP]) || [];
-  if (frames.length < 2) return;
-  var seq = _buildPlaySequence(frames);
+  var fullFrames = rrgGet('frames');
+  if (fullFrames.length < 2) return;
+  var rangeW = RANGE_WEEKS[curRange] || fullFrames.length;
+  var startOffset = Math.max(0, fullFrames.length - rangeW);
+  var playFrames = fullFrames.slice(startOffset);
+  if (playFrames.length < 2) return;
+  var seq = _buildPlaySequence(playFrames, startOffset);
   playIdx = 0;
   document.getElementById('playBtn').classList.add('playing');
   document.getElementById('playBtn').textContent = '⏸ 播放中…';
@@ -672,7 +757,11 @@ document.getElementById('playBtn').addEventListener('click', function() {
   lbl.style.display = 'block';
   playTimer = setInterval(function() {
     var f = seq[playIdx];
-    updateChartPoints(f.points, []);
+    // 軌跡尾巴只在真實週的那一格重算（不必每個補間格都重算，太頻繁沒意義又耗效能），
+    // 補間格之間沿用同一份尾巴，肉眼看不出差異。
+    var trailDs = f.isReal ? buildTrailDs(fullFrames, f.realIdx, tailWeeks) : window._rrgLastTrail || [];
+    window._rrgLastTrail = trailDs;
+    updateChartPoints(f.points, trailDs);
     lbl.textContent = f.label;
     playIdx++;
     if (playIdx >= seq.length) { stopPlay(); draw(); }
@@ -684,10 +773,25 @@ document.getElementById('mktSeg').addEventListener('click', function(e) {
   document.querySelectorAll('#mktSeg button').forEach(function(x){x.setAttribute('aria-pressed', x===b);});
   curM = b.dataset.m; draw();
 });
+document.getElementById('benchSeg').addEventListener('click', function(e) {
+  var b = e.target.closest('button'); if (!b) return;
+  document.querySelectorAll('#benchSeg button').forEach(function(x){x.setAttribute('aria-pressed', x===b);});
+  curBench = b.dataset.b; draw();
+});
 document.getElementById('perSeg').addEventListener('click', function(e) {
   var b = e.target.closest('button'); if (!b) return;
   document.querySelectorAll('#perSeg button').forEach(function(x){x.setAttribute('aria-pressed', x===b);});
   curP = b.dataset.p; draw();
+});
+document.getElementById('rangeSeg').addEventListener('click', function(e) {
+  var b = e.target.closest('button'); if (!b) return;
+  document.querySelectorAll('#rangeSeg button').forEach(function(x){x.setAttribute('aria-pressed', x===b);});
+  curRange = b.dataset.r; draw();
+});
+document.getElementById('tailSlider').addEventListener('input', function(e) {
+  tailWeeks = parseInt(e.target.value, 10);
+  document.getElementById('tailVal').textContent = tailWeeks + ' 週';
+  if (!playTimer) draw();   // 播放中先不重畫，讓下一個真實週的格子自然套用新尾巴長度
 });
 draw();
 </script>""")
@@ -704,16 +808,25 @@ CSS_EXTRA = """
 .rrgrow .nm{flex:1;color:#cfe6ff}
 .rrgrow .qv{color:#8fb0d6;font-size:11px;width:36px;text-align:center}
 .rrgrow .num{color:#5f80a6;font-variant-numeric:tabular-nums;width:90px;text-align:right}
-.playbtn{margin-left:10px;background:#132038;border:1px solid #2a3550;color:#25e6ff;
- font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:8px;cursor:pointer;font-family:inherit;
- vertical-align:middle}
+.playbtn{background:#132038;border:1px solid #2a3550;color:#25e6ff;
+ font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:8px;cursor:pointer;font-family:inherit}
 .playbtn:hover{border-color:#25e6ff}
 .playbtn:disabled{color:#5f80a6;border-color:#16223A;cursor:not-allowed}
 .playbtn.playing{color:#ffb020;border-color:#ffb020}
-.playhint{font-size:11px;color:#5f80a6;margin-left:8px;align-self:center}
+.playhint{font-size:11px;color:#5f80a6;align-self:center}
 .rrgframe{position:absolute;top:14px;right:20px;font-size:12px;color:#8fb0d6;
  background:#0a122299;padding:3px 10px;border-radius:6px;pointer-events:none}
-@media (max-width:820px){.rrgwrap{grid-template-columns:1fr}.rrgbox{height:400px}.ctrl{flex-wrap:wrap}.playbtn{margin-left:0}}
+.rrgctrl{position:static;display:flex;flex-direction:column;gap:9px;padding:12px 14px;
+ background:#0a1222;border:1px solid #16223A;border-radius:12px;margin-bottom:14px}
+.ctrlrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.ctrllbl{font-size:11.5px;color:#5f80a6;min-width:112px;flex-shrink:0}
+.segwide button{line-height:1.35;padding:6px 14px}
+.pnote{font-size:9.5px;color:#5f80a6;font-weight:400}
+.seg button[aria-pressed=true] .pnote{color:#cfe6ff}
+.tailslider{flex:1;max-width:220px;accent-color:#25e6ff}
+.tailval{font-size:12px;color:#25e6ff;font-variant-numeric:tabular-nums;min-width:40px}
+@media (max-width:820px){.rrgwrap{grid-template-columns:1fr}.rrgbox{height:400px}
+ .ctrllbl{min-width:100%}}
 """
 
 
@@ -723,26 +836,27 @@ def main():
     ap.add_argument("-o", "--output", default="docs/rotation.html")
     args = ap.parse_args()
 
-    print("算美股 SPDR 11 大類股（含回填近", BACKFILL_WEEKS, "週歷史）…")
-    snap_us, backfill_us = build_market_snapshot("us", backfill_weeks=BACKFILL_WEEKS)
-    print(f"  {len(snap_us)}/11 檔算出結果，回填 {len(backfill_us)} 週歷史")
-    print("算台股產業籃子（需逐檔抓歷史價，較慢）…")
-    snap_tw, backfill_tw = build_market_snapshot("tw", backfill_weeks=BACKFILL_WEEKS)
-    print(f"  {len(snap_tw)} 個籃子算出結果，回填 {len(backfill_tw)} 週歷史")
+    print("抓美股 SPDR 11 大類股歷史價格（兩種基準共用同一批，只抓一次）…")
+    us_baskets, us_index_bench = _fetch_baskets("us")
+    print("抓台股產業籃子（需逐檔抓歷史價，較慢；兩種基準共用同一批，只抓一次）…")
+    tw_baskets, tw_index_bench = _fetch_baskets("tw")
 
     hist = load_history()
     date_str = time.strftime("%Y-%m-%d")
-    # 先疊回填的歷史（由舊到新），再疊「現在」這一筆——append_history 依日期去重，
-    # 重跑也不會累積出重複的同一天。
-    for d, snap in backfill_us:
-        hist = append_history(hist, "us", snap, d)
-    for d, snap in backfill_tw:
-        hist = append_history(hist, "tw", snap, d)
-    hist = append_history(hist, "us", snap_us, date_str)
-    hist = append_history(hist, "tw", snap_tw, date_str)
+    snaps = {"us": {}, "tw": {}}
+    for m, baskets, index_bench in (("us", us_baskets, us_index_bench), ("tw", tw_baskets, tw_index_bench)):
+        for bench in ("index", "equal"):
+            snap, backfill = compute_snapshot(baskets, index_bench, benchmark=bench, backfill_weeks=BACKFILL_WEEKS)
+            print(f"  {m}/{bench}: {len(snap)} 個籃子算出結果，回填 {len(backfill)} 週歷史")
+            snaps[m][bench] = snap
+            # 先疊回填的歷史（由舊到新），再疊「現在」這一筆——append_history 依日期去重，
+            # 重跑也不會累積出重複的同一天。
+            for d, s in backfill:
+                hist = append_history(hist, m, bench, s, d)
+            hist = append_history(hist, m, bench, snap, date_str)
     save_history(hist)
 
-    html = render_html(snap_us, snap_tw, hist)
+    html = render_html(snaps, hist)
     # obis 一律嘗試寫，不用額外參數——跟 buffett_html.py/portfolio_html.py 同款寫法
     # （本機成功；GitHub Actions 上這個路徑不存在，try/except 吞掉不影響其他輸出）。
     # 先前這裡要求 --obis 才寫，跟其他頁面不一致、容易忘記加，已改掉。
