@@ -1,130 +1,130 @@
 {
- "updated": "2026-08-24 16:02",
+ "updated": "2026-08-25 15:53",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "08/21",
-   "close": 7674.37,
-   "chg_pct": 0.43
+   "date": "08/24",
+   "close": 7652.86,
+   "chg_pct": -0.28
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "08/21",
-   "close": 26180.46,
-   "chg_pct": 0.43
+   "date": "08/24",
+   "close": 25980.19,
+   "chg_pct": -0.76
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "08/21",
-   "close": 53277.01,
-   "chg_pct": 0.98
+   "date": "08/24",
+   "close": 53417.16,
+   "chg_pct": 0.26
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "08/21",
-   "close": 11740.37,
-   "chg_pct": -0.51
+   "date": "08/24",
+   "close": 11423.17,
+   "chg_pct": -2.7
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "08/24",
-   "close": 44762.32,
-   "chg_pct": -1.02
+   "date": "08/25",
+   "close": 45169.46,
+   "chg_pct": 0.91
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "08/24",
-   "close": 31.82,
-   "chg_pct": -0.04
+   "date": "08/25",
+   "close": 31.88,
+   "chg_pct": 0.18
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "08/21",
-   "close": 4.74,
+   "date": "08/24",
+   "close": 4.7,
    "fmt": "yield",
-   "chg_bp": 4.2
+   "chg_bp": -3.4
   }
  ],
  "news": [
   {
-   "title": "【中韓台科技股同步承壓】指數下跌背後，資金轉向高股息與非科技族群",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6585286",
-   "ts": "08/24 16:00"
-  },
-  {
-   "title": "高盛大幅上修WFE支出 2027年估增45%、市場規模突破2,000億美元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6585254",
-   "ts": "08/24 15:30"
-  },
-  {
-   "title": "特變電工上半年營收增17% 輸變電、黃金撐成長，資產減損拖累淨利",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6585252",
-   "ts": "08/24 15:30"
-  },
-  {
-   "title": "【南韓製造業愈來愈靠半導體】電子產業占比升至37.4%，傳統產業成長停滯",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6585251",
-   "ts": "08/24 15:30"
-  },
-  {
-   "title": "蘋果10年沒讓人驚豔了 首款摺疊iPhone有望重現「創新魔力」",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6585206",
-   "ts": "08/24 15:20"
-  },
-  {
-   "title": "婚內贈與不是換個名字 節稅前先看懂風險",
+   "title": "績效掛帥！這檔定期定額族最愛海外基金 弟弟00411A將於8/26掛牌",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6585240",
-   "ts": "08/24 15:05"
+   "url": "https://news.cnyes.com/news/id/6586245",
+   "ts": "08/25 15:53"
   },
   {
-   "title": "台股成交量創逾4個月新低、外資翻空 三大法人賣超163.77億元",
+   "title": "台股月線失而復得 量縮震盪現轉機？ 半導體展前夕「高勝率名單」準備接棒！",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6585241",
-   "ts": "08/24 15:00"
+   "url": "https://news.cnyes.com/news/id/6586298",
+   "ts": "08/25 15:51"
   },
   {
-   "title": "小米發表新一代自研晶片Xring O3 傳台積電3奈米代工、鎖定旗艦折疊手機",
+   "title": "泓德能源小金雞星星電力預計年底登興櫃明年Q4上市 三大引擎拚年增翻倍",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6585236",
-   "ts": "08/24 15:00"
+   "url": "https://news.cnyes.com/news/id/6585938",
+   "ts": "08/25 15:41"
   },
   {
-   "title": "AI吃電大戶皮繃緊了！能管法三讀通過 新設AIDC要自備電力或儲能",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6585224",
-   "ts": "08/24 14:56"
+   "title": "美機器人產業現「中國製造」危機：大腦在美國、身體在中國的硬體瓶頸",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6586218",
+   "ts": "08/25 15:40"
   },
   {
-   "title": "力達-KY上半年陷虧損每股淨損0.07元 去年0.6元股息10/28除息",
+   "title": "Jane Street栽在「AI股神」手裡！罕見單月狂虧150億美元  AI曝險、槓桿風險全面浮現",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6585974",
+   "ts": "08/25 15:30"
+  },
+  {
+   "title": "巨虹擬以45億元收購百略82.35%股權 強化醫材通路價值",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6585227",
-   "ts": "08/24 14:41"
+   "url": "https://news.cnyes.com/news/id/6586230",
+   "ts": "08/25 15:26"
+  },
+  {
+   "title": "輝達財報即將來襲 選擇權暗示2800億美元市值波動",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6586190",
+   "ts": "08/25 15:10"
+  },
+  {
+   "title": "精確(3162)證實取得Cooler Master供應商代碼 打入AI液冷散熱供應鏈",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6586231",
+   "ts": "08/25 15:00"
+  },
+  {
+   "title": "Meta恐面臨1.4兆美元天價賠償！兒童安全案恐成社群平台責任轉捩點",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6585971",
+   "ts": "08/25 14:10"
+  },
+  {
+   "title": "蘋果為庫克舉辦告別派對 庫克提及伴侶Mike",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6586197",
+   "ts": "08/25 14:00"
   }
  ],
  "inst": {
-  "date": "08/24",
-  "total_yi": -163.8,
-  "foreign_yi": -157.5,
-  "trust_yi": 37.1
+  "date": "08/25",
+  "total_yi": -53.4,
+  "foreign_yi": -7.9,
+  "trust_yi": -46.1
  }
 }
