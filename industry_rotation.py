@@ -474,7 +474,6 @@ def main():
     import argparse
     ap = argparse.ArgumentParser()
     ap.add_argument("-o", "--output", default="docs/rotation.html")
-    ap.add_argument("--obis", action="store_true")
     args = ap.parse_args()
 
     print("算美股 SPDR 11 大類股 …")
@@ -491,12 +490,11 @@ def main():
     save_history(hist)
 
     html = render_html(snap_us, snap_tw, hist)
-    outs = [args.output]
-    if args.obis:
-        obis = os.path.join(
-            r"C:\Users\Mophy\Documents\Google drive\BB-8 工作區\04_AI Report\Investment",
-            "產業輪動雷達.html")
-        outs.append(obis)
+    # obis 一律嘗試寫，不用額外參數——跟 buffett_html.py/portfolio_html.py 同款寫法
+    # （本機成功；GitHub Actions 上這個路徑不存在，try/except 吞掉不影響其他輸出）。
+    # 先前這裡要求 --obis 才寫，跟其他頁面不一致、容易忘記加，已改掉。
+    OBIS = r"C:\Users\Mophy\Documents\Google drive\BB-8 工作區\04_AI Report\Investment"
+    outs = [args.output, os.path.join(OBIS, "產業輪動雷達.html")]
     for out in outs:
         try:
             os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
