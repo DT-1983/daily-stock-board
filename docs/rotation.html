@@ -1,0 +1,246 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>產業輪動雷達</title><style>
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#020617;--surface:#0F172A;--card:#131F35;--line:#1E293B;--line2:#16223A;
+ --ink:#F8FAFC;--muted:#94A3B8;--dim:#64748B;--accent:#3B82F6;
+ --up:#22C55E;--down:#EF4444;--warn:#EAB308}
+body{background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;
+ font-family:Inter,-apple-system,"Microsoft JhengHei","PingFang TC",sans-serif;font-size:15px}
+.wrap{max-width:1100px;margin:0 auto;padding:14px 14px 60px}
+.num{font-family:'Fira Code',monospace;font-variant-numeric:tabular-nums}
+a{color:inherit}
+
+header{padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:6px}
+h1{font-size:19px;font-weight:800;letter-spacing:-.3px;display:flex;align-items:center;gap:9px}
+h1 svg{flex-shrink:0}
+.sub{color:var(--muted);font-size:12.5px;margin-top:5px;line-height:1.7}
+.sub b{color:#CBD5E1}
+.navlinks{display:flex;gap:7px;margin-top:11px;flex-wrap:wrap}
+.nl{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;min-height:38px;
+ border:1px solid var(--line);border-radius:9px;background:var(--surface);
+ color:#BFDBFE;text-decoration:none;font-size:12.5px;font-weight:600;
+ transition:border-color .18s,background .18s}
+.nl:hover,.nl:focus-visible{border-color:var(--accent);background:#152238}
+.nl svg{flex-shrink:0;opacity:.85}
+.nl.cur{border-color:var(--accent);background:#152238;color:#fff}
+
+.ctrl{position:sticky;top:0;z-index:20;background:var(--bg);padding:11px 0 9px;
+ border-bottom:1px solid var(--line);margin-bottom:4px}
+.seg{display:inline-flex;background:var(--line);border-radius:9px;padding:3px}
+.seg button{border:0;background:transparent;color:var(--muted);font-size:13px;font-weight:600;
+ padding:7px 16px;min-height:38px;border-radius:7px;cursor:pointer;font-family:inherit;
+ transition:background .18s,color .18s}
+.seg button[aria-pressed=true]{background:#334155;color:var(--ink)}
+.sorts{display:flex;gap:6px;margin-top:9px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.sorts::-webkit-scrollbar{display:none}
+.sc{border:1px solid var(--line);background:var(--surface);color:var(--muted);
+ font-size:12px;padding:6px 12px;min-height:34px;border-radius:17px;cursor:pointer;
+ white-space:nowrap;font-family:inherit;font-weight:600;transition:all .18s}
+.sc[aria-pressed=true]{background:#334155;color:var(--ink);border-color:#475569}
+.sc b{font-family:'Fira Code',monospace;font-weight:600;margin-left:1px}
+.d2{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:middle}
+
+.sec{margin-top:22px;scroll-margin-top:104px}
+.sechd{display:flex;align-items:center;gap:9px;margin-bottom:3px;flex-wrap:wrap}
+.sechd .ico{width:30px;height:30px;border-radius:8px;background:#1E3A5F;display:grid;
+ place-items:center;flex-shrink:0}
+.sechd h2{font-size:16.5px;font-weight:700}
+.cnt{font-size:11.5px;color:var(--dim);background:var(--line);padding:2px 9px;border-radius:16px}
+.note{color:var(--muted);font-size:12.5px;line-height:1.6;margin:5px 0 10px}
+
+.rows{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+.row{display:flex;align-items:flex-start;gap:10px;padding:12px 13px;min-height:56px;
+ border-bottom:1px solid var(--line2);cursor:pointer;width:100%;text-align:left;
+ background:transparent;border-left:0;border-right:0;border-top:0;color:inherit;
+ font-family:inherit;font-size:inherit;transition:background .15s}
+.row:last-child{border-bottom:0}
+.row:hover,.row:focus-visible{background:#16223A}
+.row:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px}
+.info{flex:1;min-width:0}
+.t1{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
+.tk{font-weight:700;font-size:14.5px}
+.nm{color:var(--dim);font-size:11.5px;overflow:hidden;text-overflow:ellipsis;
+ white-space:nowrap;max-width:190px}
+.sigtag{font-size:10px;font-weight:700;padding:1px 7px;border-radius:5px}
+.one{color:var(--muted);font-size:12px;margin-top:3px;line-height:1.5}
+.rt{text-align:right;flex-shrink:0;min-width:52px}
+.sv{font-size:17px;font-weight:600;line-height:1;color:var(--ink)}
+.sv.dim{color:var(--dim)}
+.bar{height:4px;border-radius:2px;margin-top:5px;margin-left:auto;background:#475569}
+.chev{flex-shrink:0;margin-top:4px;opacity:.4;transition:transform .2s}
+.row[aria-expanded=true] .chev{transform:rotate(90deg)}
+.detail{display:none;padding:0 13px 14px;border-bottom:1px solid var(--line2);background:#101B2E}
+.detail.on{display:block}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:8px;margin-top:10px}
+.dcell{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 9px}
+.dcell .k{color:var(--dim);font-size:10px;letter-spacing:.3px}
+.dcell .v{font-size:13px;font-weight:600;margin-top:2px}
+.mdbody{color:#C7D8EC;font-size:12.5px;line-height:1.7;margin-top:10px}
+.mdbody h3{font-size:13px;color:#F5B841;margin:11px 0 4px;font-weight:700}
+
+/* 資料過期警示（2026-08-19）：抓取/調倉失敗時頁面照樣會產生，
+   若不明講，使用者看到的是「今天的頁面＋上次的數字」而毫無察覺。
+   刻意用醒目的紅底，不要做成低調的小灰字——這是要讓人看見的。 */
+.stalewarn{margin:14px 0;padding:12px 15px;border-radius:11px;
+ background:#2E1418;border:1px solid #7F1D1D;color:#FCA5A5;
+ font-size:13px;line-height:1.8}
+.stalewarn b{color:#FEE2E2}
+
+.legend{margin-top:26px;padding:12px 14px;background:var(--surface);
+ border:1px solid var(--line);border-radius:11px;font-size:12.5px;color:var(--muted);line-height:2}
+.legend span{margin-right:13px;white-space:nowrap}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:middle}
+.legend .lgnote{display:block;margin-top:5px;color:var(--dim);font-size:11.5px;line-height:1.7;white-space:normal}
+
+.modal{display:none;position:fixed;inset:0;z-index:60;background:rgba(2,6,23,.75);
+ backdrop-filter:blur(3px);padding:14px}
+.modal.on{display:block}
+.mbox{max-width:860px;margin:0 auto;height:100%;background:var(--surface);
+ border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;overflow:hidden}
+.mhd{display:flex;justify-content:space-between;align-items:center;gap:12px;
+ padding:13px 15px;border-bottom:1px solid var(--line);font-weight:700;font-size:14.5px}
+.mhd button{background:var(--line);border:0;color:var(--ink);width:40px;height:40px;
+ border-radius:9px;cursor:pointer;font-size:19px;line-height:1}
+.mct{overflow-y:auto;padding:15px;color:#C7D8EC;font-size:13px;line-height:1.75}
+
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:12px;
+ padding:34px 20px;text-align:center;color:var(--muted);font-size:13.5px;line-height:1.8}
+
+/* 賽馬頁：統計卡＋持股小卡（沿用 portfolio_html.py 的 holding_rows()，配對這裡的類別） */
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;
+ padding:16px;text-align:center;margin:10px 0}
+.stat .big{font-size:28px;font-weight:800}
+.stat .sub2{font-size:12.5px;color:var(--muted)}
+.vsgrid{display:flex;gap:10px;margin:10px 0;flex-wrap:wrap}
+.vsgrid .box{flex:1;min-width:160px;background:var(--surface);border:1px solid var(--line);
+ border-radius:12px;padding:13px;text-align:center}
+.vsgrid .box.win{border-color:#22C55E;box-shadow:0 0 0 1px #22C55E}
+.vsgrid .nm{font-size:13.5px;font-weight:700}
+.vsgrid .val{font-size:21px;font-weight:800;margin:5px 0}
+.vsgrid .pnl{font-size:13px;font-weight:700}
+.vsgrid details{margin-top:8px;text-align:left}
+.vsgrid summary{cursor:pointer;color:#93C5FD;font-size:12px;text-align:center}
+.pos{color:var(--up)}.neg{color:var(--down)}.flat{color:var(--dim)}
+.hlist{margin-top:8px}
+.hrow{padding:8px 0;border-bottom:1px solid var(--line2);font-size:12.5px}
+.hrow:last-child{border-bottom:0}
+.htop{display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.htk{font-size:13px}
+.hsub{color:var(--dim);font-size:11.5px;margin-top:2px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;margin:14px 0}
+.card h2,.explain h3{font-size:14.5px;font-weight:700;margin-bottom:8px;color:#F5B841}
+.explain p{font-size:13px;line-height:1.7;margin:8px 0;color:#C7D8EC}
+.explain hr{border:0;border-top:1px solid var(--line);margin:12px 0}
+.chartlegend{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;font-size:12px;color:var(--muted)}
+.chartlegend span{display:inline-flex;align-items:center;gap:5px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+.rrgwrap{display:grid;grid-template-columns:1.6fr 1fr;gap:14px;margin-top:12px}
+.rrgbox{height:520px;background:#0a1222;border:1px solid #16223A;border-radius:12px;padding:10px}
+.rrgrank{background:#0a1222;border:1px solid #16223A;border-radius:12px;padding:10px;
+ max-height:520px;overflow-y:auto}
+.rrgrow{display:flex;align-items:center;gap:8px;padding:7px 4px;border-bottom:1px solid #131c30;font-size:12.5px}
+.rrgrow .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.rrgrow .nm{flex:1;color:#cfe6ff}
+.rrgrow .qv{color:#8fb0d6;font-size:11px;width:36px;text-align:center}
+.rrgrow .num{color:#5f80a6;font-variant-numeric:tabular-nums;width:90px;text-align:right}
+@media (max-width:820px){.rrgwrap{grid-template-columns:1fr}.rrgbox{height:400px}}
+</style></head><body><div class="wrap"><header><h1><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3a9 9 0 0 1 8.5 6M21 12a9 9 0 0 1-8.5 6M3 12a9 9 0 0 1 3-6.7M6 20.7A9 9 0 0 1 3 14"/></svg>產業輪動雷達</h1><div class="sub">RRG（Relative Rotation Graph）· 美股11大類股(SPDR ETF) + 台股17個TradingView產業籃子 · 更新 2026-08-25 14:49（每週六隨全市場重掃）</div><div class="navlinks"><a class="nl" href="./"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>首頁</a><a class="nl" href="board.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>產業鏈看板</a><a class="nl" href="buffett.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg>巴菲特清單</a><a class="nl" href="portfolios.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>策略賽馬</a><a class="nl" href="earnings.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>財報分析</a><a class="nl" href="gdp.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 8-4-16-3 8H2"/></svg>GDP 觀察</a><a class="nl" href="ark.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 14 4-5 3 3 5-7"/></svg>ARK 追蹤</a><a class="nl cur" href="rotation.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3a9 9 0 0 1 8.5 6M21 12a9 9 0 0 1-8.5 6M3 12a9 9 0 0 1 3-6.7M6 20.7A9 9 0 0 1 3 14"/></svg>產業輪動</a></div></header><div class="note">X軸 <b>RS-Ratio 相對強弱</b>、Y軸 <b>RS-Momentum 強弱變化率</b>，兩軸中心值皆為 100。四象限順時針輪動：<b style="color:#25e6ff">改善</b> → <b style="color:#ff5277">領先</b> → <b style="color:#ffb020">弱化</b> → <b style="color:#8fb0d6">落後</b> → 回到改善。<b>「改善→領先」的轉折是資金剛轉強的甜蜜點</b>，值得優先注意。<br>資料源：美股用 11 檔 SPDR 類股 ETF（業界標準籃子）；台股沒有官方類股指數可直接抓，改成 TradingView 產業分類下市值前 8 大成分股等權聚合。公式為業界公開重建版（非老墨官方精確值），數字不會跟他的工具逐點對上，方法論一致。<br><span style="color:var(--muted)">軌跡尾巴需要累積幾週資料才看得出來，剛上線時多半只有一個點是正常的。</span></div><div class="ctrl"><div class="seg" role="group" aria-label="切換市場" id="mktSeg"><button data-m="us" aria-pressed="true">美股</button><button data-m="tw" aria-pressed="false">台股</button></div><div class="seg" role="group" aria-label="切換週期" id="perSeg"><button data-p="20" aria-pressed="true">20日</button><button data-p="60" aria-pressed="false">60日</button><button data-p="120" aria-pressed="false">120日</button><button data-p="240" aria-pressed="false">240日</button></div></div><div class="rrgwrap"><div class="rrgbox"><canvas id="rrgChart"></canvas></div><div class="rrgrank" id="rrgRank"></div></div><p class="disc">RRG 是產業/籃子層級的相對強弱統計工具，不是個股買賣訊號，不構成投資建議。台股籃子由少數大型股等權聚合，會被成分股個別異動放大，僅供研究參考，正式決策前請自行查核。</p></div><script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script>
+window.RRG_DATA = {"us": {"20": [{"key": "XLK", "name": "科技", "ratio": 99.19, "momentum": 100.32, "quadrant": "improving", "size": 1.0}, {"key": "XLF", "name": "金融", "ratio": 100.84, "momentum": 99.24, "quadrant": "weakening", "size": 1.0}, {"key": "XLV", "name": "醫療保健", "ratio": 101.61, "momentum": 100.58, "quadrant": "leading", "size": 1.0}, {"key": "XLY", "name": "非必需消費", "ratio": 101.1, "momentum": 101.75, "quadrant": "leading", "size": 1.0}, {"key": "XLP", "name": "必需消費", "ratio": 100.89, "momentum": 99.88, "quadrant": "weakening", "size": 1.0}, {"key": "XLE", "name": "能源", "ratio": 101.22, "momentum": 99.79, "quadrant": "weakening", "size": 1.0}, {"key": "XLI", "name": "工業", "ratio": 97.98, "momentum": 97.65, "quadrant": "lagging", "size": 1.0}, {"key": "XLB", "name": "原物料", "ratio": 101.46, "momentum": 100.1, "quadrant": "leading", "size": 1.0}, {"key": "XLU", "name": "公用事業", "ratio": 99.41, "momentum": 99.0, "quadrant": "lagging", "size": 1.0}, {"key": "XLRE", "name": "房地產", "ratio": 100.25, "momentum": 99.2, "quadrant": "weakening", "size": 1.0}, {"key": "XLC", "name": "通訊服務", "ratio": 101.18, "momentum": 100.98, "quadrant": "leading", "size": 1.0}], "60": [{"key": "XLK", "name": "科技", "ratio": 98.77, "momentum": 98.17, "quadrant": "lagging", "size": 1.0}, {"key": "XLF", "name": "金融", "ratio": 101.07, "momentum": 101.91, "quadrant": "leading", "size": 1.0}, {"key": "XLV", "name": "醫療保健", "ratio": 101.87, "momentum": 101.53, "quadrant": "leading", "size": 1.0}, {"key": "XLY", "name": "非必需消費", "ratio": 100.14, "momentum": 101.09, "quadrant": "leading", "size": 1.0}, {"key": "XLP", "name": "必需消費", "ratio": 100.91, "momentum": 101.87, "quadrant": "leading", "size": 1.0}, {"key": "XLE", "name": "能源", "ratio": 101.81, "momentum": 101.94, "quadrant": "leading", "size": 1.0}, {"key": "XLI", "name": "工業", "ratio": 98.86, "momentum": 100.84, "quadrant": "improving", "size": 1.0}, {"key": "XLB", "name": "原物料", "ratio": 101.57, "momentum": 102.16, "quadrant": "leading", "size": 1.0}, {"key": "XLU", "name": "公用事業", "ratio": 98.61, "momentum": 101.26, "quadrant": "improving", "size": 1.0}, {"key": "XLRE", "name": "房地產", "ratio": 99.95, "momentum": 101.66, "quadrant": "improving", "size": 1.0}, {"key": "XLC", "name": "通訊服務", "ratio": 100.09, "momentum": 102.35, "quadrant": "leading", "size": 1.0}], "120": [{"key": "XLK", "name": "科技", "ratio": 100.24, "momentum": 100.76, "quadrant": "leading", "size": 1.0}, {"key": "XLF", "name": "金融", "ratio": 101.27, "momentum": 102.04, "quadrant": "leading", "size": 1.0}, {"key": "XLV", "name": "醫療保健", "ratio": 101.66, "momentum": 100.48, "quadrant": "leading", "size": 1.0}, {"key": "XLY", "name": "非必需消費", "ratio": 99.19, "momentum": 100.35, "quadrant": "improving", "size": 1.0}, {"key": "XLP", "name": "必需消費", "ratio": 99.8, "momentum": 98.52, "quadrant": "lagging", "size": 1.0}, {"key": "XLE", "name": "能源", "ratio": 100.52, "momentum": 98.56, "quadrant": "weakening", "size": 1.0}, {"key": "XLI", "name": "工業", "ratio": 98.92, "momentum": 97.48, "quadrant": "lagging", "size": 1.0}, {"key": "XLB", "name": "原物料", "ratio": 99.92, "momentum": 98.64, "quadrant": "lagging", "size": 1.0}, {"key": "XLU", "name": "公用事業", "ratio": 98.66, "momentum": 97.87, "quadrant": "lagging", "size": 1.0}, {"key": "XLRE", "name": "房地產", "ratio": 99.43, "momentum": 98.02, "quadrant": "lagging", "size": 1.0}, {"key": "XLC", "name": "通訊服務", "ratio": 99.14, "momentum": 98.74, "quadrant": "lagging", "size": 1.0}], "240": [{"key": "XLK", "name": "科技", "ratio": 100.91, "momentum": 100.53, "quadrant": "leading", "size": 1.0}, {"key": "XLF", "name": "金融", "ratio": 100.25, "momentum": 100.42, "quadrant": "leading", "size": 1.0}, {"key": "XLV", "name": "醫療保健", "ratio": 101.31, "momentum": 102.15, "quadrant": "leading", "size": 1.0}, {"key": "XLY", "name": "非必需消費", "ratio": 98.63, "momentum": 98.61, "quadrant": "lagging", "size": 1.0}, {"key": "XLP", "name": "必需消費", "ratio": 99.73, "momentum": 101.8, "quadrant": "improving", "size": 1.0}, {"key": "XLE", "name": "能源", "ratio": 101.11, "momentum": 101.68, "quadrant": "leading", "size": 1.0}, {"key": "XLI", "name": "工業", "ratio": 99.76, "momentum": 100.01, "quadrant": "improving", "size": 1.0}, {"key": "XLB", "name": "原物料", "ratio": 100.28, "momentum": 101.12, "quadrant": "leading", "size": 1.0}, {"key": "XLU", "name": "公用事業", "ratio": 98.16, "momentum": 98.75, "quadrant": "lagging", "size": 1.0}, {"key": "XLRE", "name": "房地產", "ratio": 99.57, "momentum": 101.91, "quadrant": "improving", "size": 1.0}, {"key": "XLC", "name": "通訊服務", "ratio": 98.47, "momentum": 98.31, "quadrant": "lagging", "size": 1.0}]}, "tw": {"20": [{"key": "Commercial Services", "name": "商業服務", "ratio": 101.31, "momentum": 101.63, "quadrant": "leading", "size": 8}, {"key": "Communications", "name": "通訊", "ratio": 99.76, "momentum": 98.58, "quadrant": "lagging", "size": 6}, {"key": "Consumer Durables", "name": "耐久消費品", "ratio": 99.68, "momentum": 98.91, "quadrant": "lagging", "size": 8}, {"key": "Consumer Non-Durables", "name": "非耐久消費品", "ratio": 99.37, "momentum": 98.58, "quadrant": "lagging", "size": 8}, {"key": "Consumer Services", "name": "消費服務", "ratio": 100.01, "momentum": 98.66, "quadrant": "weakening", "size": 8}, {"key": "Distribution Services", "name": "流通服務", "ratio": 98.93, "momentum": 98.26, "quadrant": "lagging", "size": 8}, {"key": "Electronic Technology", "name": "電子科技", "ratio": 100.33, "momentum": 101.32, "quadrant": "leading", "size": 8}, {"key": "Finance", "name": "金融", "ratio": 99.92, "momentum": 98.73, "quadrant": "lagging", "size": 8}, {"key": "Health Technology", "name": "健康科技", "ratio": 102.08, "momentum": 101.17, "quadrant": "leading", "size": 8}, {"key": "Industrial Services", "name": "工業服務", "ratio": 99.01, "momentum": 99.54, "quadrant": "lagging", "size": 8}, {"key": "Non-Energy Minerals", "name": "非能源礦業", "ratio": 100.86, "momentum": 100.36, "quadrant": "leading", "size": 8}, {"key": "Process Industries", "name": "製程工業", "ratio": 100.74, "momentum": 101.25, "quadrant": "leading", "size": 8}, {"key": "Producer Manufacturing", "name": "生產製造", "ratio": 100.95, "momentum": 100.7, "quadrant": "leading", "size": 8}, {"key": "Retail Trade", "name": "零售貿易", "ratio": 99.41, "momentum": 98.66, "quadrant": "lagging", "size": 8}, {"key": "Technology Services", "name": "科技服務", "ratio": 101.61, "momentum": 100.5, "quadrant": "leading", "size": 8}, {"key": "Transportation", "name": "運輸", "ratio": 101.26, "momentum": 99.5, "quadrant": "weakening", "size": 8}, {"key": "Utilities", "name": "公用事業", "ratio": 99.12, "momentum": 98.42, "quadrant": "lagging", "size": 8}], "60": [{"key": "Commercial Services", "name": "商業服務", "ratio": 99.44, "momentum": 101.21, "quadrant": "improving", "size": 8}, {"key": "Communications", "name": "通訊", "ratio": 100.05, "momentum": 101.67, "quadrant": "leading", "size": 6}, {"key": "Consumer Durables", "name": "耐久消費品", "ratio": 100.56, "momentum": 101.73, "quadrant": "leading", "size": 8}, {"key": "Consumer Non-Durables", "name": "非耐久消費品", "ratio": 99.64, "momentum": 101.45, "quadrant": "improving", "size": 8}, {"key": "Consumer Services", "name": "消費服務", "ratio": 100.89, "momentum": 101.78, "quadrant": "leading", "size": 8}, {"key": "Distribution Services", "name": "流通服務", "ratio": 99.71, "momentum": 101.18, "quadrant": "improving", "size": 8}, {"key": "Electronic Technology", "name": "電子科技", "ratio": 100.26, "momentum": 98.2, "quadrant": "weakening", "size": 8}, {"key": "Finance", "name": "金融", "ratio": 100.89, "momentum": 101.34, "quadrant": "leading", "size": 8}, {"key": "Health Technology", "name": "健康科技", "ratio": 101.88, "momentum": 102.14, "quadrant": "leading", "size": 8}, {"key": "Industrial Services", "name": "工業服務", "ratio": 98.62, "momentum": 100.29, "quadrant": "improving", "size": 8}, {"key": "Non-Energy Minerals", "name": "非能源礦業", "ratio": 101.57, "momentum": 100.44, "quadrant": "leading", "size": 8}, {"key": "Process Industries", "name": "製程工業", "ratio": 100.63, "momentum": 101.46, "quadrant": "leading", "size": 8}, {"key": "Producer Manufacturing", "name": "生產製造", "ratio": 102.04, "momentum": 101.75, "quadrant": "leading", "size": 8}, {"key": "Retail Trade", "name": "零售貿易", "ratio": 99.87, "momentum": 101.32, "quadrant": "improving", "size": 8}, {"key": "Technology Services", "name": "科技服務", "ratio": 102.14, "momentum": 101.94, "quadrant": "leading", "size": 8}, {"key": "Transportation", "name": "運輸", "ratio": 101.83, "momentum": 101.81, "quadrant": "leading", "size": 8}, {"key": "Utilities", "name": "公用事業", "ratio": 98.51, "momentum": 101.06, "quadrant": "improving", "size": 8}], "120": [{"key": "Commercial Services", "name": "商業服務", "ratio": 98.9, "momentum": 98.78, "quadrant": "lagging", "size": 8}, {"key": "Communications", "name": "通訊", "ratio": 99.29, "momentum": 101.65, "quadrant": "improving", "size": 6}, {"key": "Consumer Durables", "name": "耐久消費品", "ratio": 99.56, "momentum": 101.39, "quadrant": "improving", "size": 8}, {"key": "Consumer Non-Durables", "name": "非耐久消費品", "ratio": 99.26, "momentum": 101.35, "quadrant": "improving", "size": 8}, {"key": "Consumer Services", "name": "消費服務", "ratio": 99.6, "momentum": 102.3, "quadrant": "improving", "size": 8}, {"key": "Distribution Services", "name": "流通服務", "ratio": 99.1, "momentum": 99.49, "quadrant": "lagging", "size": 8}, {"key": "Electronic Technology", "name": "電子科技", "ratio": 100.84, "momentum": 98.77, "quadrant": "weakening", "size": 8}, {"key": "Finance", "name": "金融", "ratio": 101.16, "momentum": 101.67, "quadrant": "leading", "size": 8}, {"key": "Health Technology", "name": "健康科技", "ratio": 101.83, "momentum": 102.11, "quadrant": "leading", "size": 8}, {"key": "Industrial Services", "name": "工業服務", "ratio": 98.85, "momentum": 100.8, "quadrant": "improving", "size": 8}, {"key": "Non-Energy Minerals", "name": "非能源礦業", "ratio": 101.72, "momentum": 101.55, "quadrant": "leading", "size": 8}, {"key": "Process Industries", "name": "製程工業", "ratio": 100.61, "momentum": 98.98, "quadrant": "weakening", "size": 8}, {"key": "Producer Manufacturing", "name": "生產製造", "ratio": 102.42, "momentum": 101.79, "quadrant": "leading", "size": 8}, {"key": "Retail Trade", "name": "零售貿易", "ratio": 99.52, "momentum": 101.83, "quadrant": "improving", "size": 8}, {"key": "Technology Services", "name": "科技服務", "ratio": 100.21, "momentum": 99.35, "quadrant": "weakening", "size": 8}, {"key": "Transportation", "name": "運輸", "ratio": 100.89, "momentum": 102.21, "quadrant": "leading", "size": 8}, {"key": "Utilities", "name": "公用事業", "ratio": 98.84, "momentum": 99.08, "quadrant": "lagging", "size": 8}], "240": [{"key": "Commercial Services", "name": "商業服務", "ratio": 98.62, "momentum": 98.78, "quadrant": "lagging", "size": 8}, {"key": "Communications", "name": "通訊", "ratio": 98.84, "momentum": 99.12, "quadrant": "lagging", "size": 6}, {"key": "Consumer Durables", "name": "耐久消費品", "ratio": 99.09, "momentum": 98.58, "quadrant": "lagging", "size": 8}, {"key": "Consumer Non-Durables", "name": "非耐久消費品", "ratio": 98.8, "momentum": 99.2, "quadrant": "lagging", "size": 8}, {"key": "Consumer Services", "name": "消費服務", "ratio": 98.97, "momentum": 99.19, "quadrant": "lagging", "size": 8}, {"key": "Distribution Services", "name": "流通服務", "ratio": 99.05, "momentum": 100.27, "quadrant": "improving", "size": 8}, {"key": "Electronic Technology", "name": "電子科技", "ratio": 101.36, "momentum": 100.89, "quadrant": "leading", "size": 8}, {"key": "Finance", "name": "金融", "ratio": 100.27, "momentum": 100.42, "quadrant": "leading", "size": 8}, {"key": "Health Technology", "name": "健康科技", "ratio": 100.54, "momentum": 99.2, "quadrant": "weakening", "size": 8}, {"key": "Industrial Services", "name": "工業服務", "ratio": 98.7, "momentum": 98.14, "quadrant": "lagging", "size": 8}, {"key": "Non-Energy Minerals", "name": "非能源礦業", "ratio": 101.91, "momentum": 98.69, "quadrant": "weakening", "size": 8}, {"key": "Process Industries", "name": "製程工業", "ratio": 100.95, "momentum": 99.41, "quadrant": "weakening", "size": 8}, {"key": "Producer Manufacturing", "name": "生產製造", "ratio": 102.57, "momentum": 100.28, "quadrant": "leading", "size": 8}, {"key": "Retail Trade", "name": "零售貿易", "ratio": 99.01, "momentum": 99.44, "quadrant": "lagging", "size": 8}, {"key": "Technology Services", "name": "科技服務", "ratio": 100.85, "momentum": 100.75, "quadrant": "leading", "size": 8}, {"key": "Transportation", "name": "運輸", "ratio": 99.56, "momentum": 99.68, "quadrant": "lagging", "size": 8}, {"key": "Utilities", "name": "公用事業", "ratio": 98.5, "momentum": 98.8, "quadrant": "lagging", "size": 8}]}, "trail_us": {"20": {"XLK": [{"date": "2026-08-25", "ratio": 99.19, "momentum": 100.32}], "XLF": [{"date": "2026-08-25", "ratio": 100.84, "momentum": 99.24}], "XLV": [{"date": "2026-08-25", "ratio": 101.61, "momentum": 100.58}], "XLY": [{"date": "2026-08-25", "ratio": 101.1, "momentum": 101.75}], "XLP": [{"date": "2026-08-25", "ratio": 100.89, "momentum": 99.88}], "XLE": [{"date": "2026-08-25", "ratio": 101.22, "momentum": 99.79}], "XLI": [{"date": "2026-08-25", "ratio": 97.98, "momentum": 97.65}], "XLB": [{"date": "2026-08-25", "ratio": 101.46, "momentum": 100.1}], "XLU": [{"date": "2026-08-25", "ratio": 99.41, "momentum": 99.0}], "XLRE": [{"date": "2026-08-25", "ratio": 100.25, "momentum": 99.2}], "XLC": [{"date": "2026-08-25", "ratio": 101.18, "momentum": 100.98}]}, "60": {"XLK": [{"date": "2026-08-25", "ratio": 98.77, "momentum": 98.17}], "XLF": [{"date": "2026-08-25", "ratio": 101.07, "momentum": 101.91}], "XLV": [{"date": "2026-08-25", "ratio": 101.87, "momentum": 101.53}], "XLY": [{"date": "2026-08-25", "ratio": 100.14, "momentum": 101.09}], "XLP": [{"date": "2026-08-25", "ratio": 100.91, "momentum": 101.87}], "XLE": [{"date": "2026-08-25", "ratio": 101.81, "momentum": 101.94}], "XLI": [{"date": "2026-08-25", "ratio": 98.86, "momentum": 100.84}], "XLB": [{"date": "2026-08-25", "ratio": 101.57, "momentum": 102.16}], "XLU": [{"date": "2026-08-25", "ratio": 98.61, "momentum": 101.26}], "XLRE": [{"date": "2026-08-25", "ratio": 99.95, "momentum": 101.66}], "XLC": [{"date": "2026-08-25", "ratio": 100.09, "momentum": 102.35}]}, "120": {"XLK": [{"date": "2026-08-25", "ratio": 100.24, "momentum": 100.76}], "XLF": [{"date": "2026-08-25", "ratio": 101.27, "momentum": 102.04}], "XLV": [{"date": "2026-08-25", "ratio": 101.66, "momentum": 100.48}], "XLY": [{"date": "2026-08-25", "ratio": 99.19, "momentum": 100.35}], "XLP": [{"date": "2026-08-25", "ratio": 99.8, "momentum": 98.52}], "XLE": [{"date": "2026-08-25", "ratio": 100.52, "momentum": 98.56}], "XLI": [{"date": "2026-08-25", "ratio": 98.92, "momentum": 97.48}], "XLB": [{"date": "2026-08-25", "ratio": 99.92, "momentum": 98.64}], "XLU": [{"date": "2026-08-25", "ratio": 98.66, "momentum": 97.87}], "XLRE": [{"date": "2026-08-25", "ratio": 99.43, "momentum": 98.02}], "XLC": [{"date": "2026-08-25", "ratio": 99.14, "momentum": 98.74}]}, "240": {"XLK": [{"date": "2026-08-25", "ratio": 100.91, "momentum": 100.53}], "XLF": [{"date": "2026-08-25", "ratio": 100.25, "momentum": 100.42}], "XLV": [{"date": "2026-08-25", "ratio": 101.31, "momentum": 102.15}], "XLY": [{"date": "2026-08-25", "ratio": 98.63, "momentum": 98.61}], "XLP": [{"date": "2026-08-25", "ratio": 99.73, "momentum": 101.8}], "XLE": [{"date": "2026-08-25", "ratio": 101.11, "momentum": 101.68}], "XLI": [{"date": "2026-08-25", "ratio": 99.76, "momentum": 100.01}], "XLB": [{"date": "2026-08-25", "ratio": 100.28, "momentum": 101.12}], "XLU": [{"date": "2026-08-25", "ratio": 98.16, "momentum": 98.75}], "XLRE": [{"date": "2026-08-25", "ratio": 99.57, "momentum": 101.91}], "XLC": [{"date": "2026-08-25", "ratio": 98.47, "momentum": 98.31}]}}, "trail_tw": {"20": {"Commercial Services": [{"date": "2026-08-25", "ratio": 101.31, "momentum": 101.63}], "Communications": [{"date": "2026-08-25", "ratio": 99.76, "momentum": 98.58}], "Consumer Durables": [{"date": "2026-08-25", "ratio": 99.68, "momentum": 98.91}], "Consumer Non-Durables": [{"date": "2026-08-25", "ratio": 99.37, "momentum": 98.58}], "Consumer Services": [{"date": "2026-08-25", "ratio": 100.01, "momentum": 98.66}], "Distribution Services": [{"date": "2026-08-25", "ratio": 98.93, "momentum": 98.26}], "Electronic Technology": [{"date": "2026-08-25", "ratio": 100.33, "momentum": 101.32}], "Finance": [{"date": "2026-08-25", "ratio": 99.92, "momentum": 98.73}], "Health Technology": [{"date": "2026-08-25", "ratio": 102.08, "momentum": 101.17}], "Industrial Services": [{"date": "2026-08-25", "ratio": 99.01, "momentum": 99.54}], "Non-Energy Minerals": [{"date": "2026-08-25", "ratio": 100.86, "momentum": 100.36}], "Process Industries": [{"date": "2026-08-25", "ratio": 100.74, "momentum": 101.25}], "Producer Manufacturing": [{"date": "2026-08-25", "ratio": 100.95, "momentum": 100.7}], "Retail Trade": [{"date": "2026-08-25", "ratio": 99.41, "momentum": 98.66}], "Technology Services": [{"date": "2026-08-25", "ratio": 101.61, "momentum": 100.5}], "Transportation": [{"date": "2026-08-25", "ratio": 101.26, "momentum": 99.5}], "Utilities": [{"date": "2026-08-25", "ratio": 99.12, "momentum": 98.42}]}, "60": {"Commercial Services": [{"date": "2026-08-25", "ratio": 99.44, "momentum": 101.21}], "Communications": [{"date": "2026-08-25", "ratio": 100.05, "momentum": 101.67}], "Consumer Durables": [{"date": "2026-08-25", "ratio": 100.56, "momentum": 101.73}], "Consumer Non-Durables": [{"date": "2026-08-25", "ratio": 99.64, "momentum": 101.45}], "Consumer Services": [{"date": "2026-08-25", "ratio": 100.89, "momentum": 101.78}], "Distribution Services": [{"date": "2026-08-25", "ratio": 99.71, "momentum": 101.18}], "Electronic Technology": [{"date": "2026-08-25", "ratio": 100.26, "momentum": 98.2}], "Finance": [{"date": "2026-08-25", "ratio": 100.89, "momentum": 101.34}], "Health Technology": [{"date": "2026-08-25", "ratio": 101.88, "momentum": 102.14}], "Industrial Services": [{"date": "2026-08-25", "ratio": 98.62, "momentum": 100.29}], "Non-Energy Minerals": [{"date": "2026-08-25", "ratio": 101.57, "momentum": 100.44}], "Process Industries": [{"date": "2026-08-25", "ratio": 100.63, "momentum": 101.46}], "Producer Manufacturing": [{"date": "2026-08-25", "ratio": 102.04, "momentum": 101.75}], "Retail Trade": [{"date": "2026-08-25", "ratio": 99.87, "momentum": 101.32}], "Technology Services": [{"date": "2026-08-25", "ratio": 102.14, "momentum": 101.94}], "Transportation": [{"date": "2026-08-25", "ratio": 101.83, "momentum": 101.81}], "Utilities": [{"date": "2026-08-25", "ratio": 98.51, "momentum": 101.06}]}, "120": {"Commercial Services": [{"date": "2026-08-25", "ratio": 98.9, "momentum": 98.78}], "Communications": [{"date": "2026-08-25", "ratio": 99.29, "momentum": 101.65}], "Consumer Durables": [{"date": "2026-08-25", "ratio": 99.56, "momentum": 101.39}], "Consumer Non-Durables": [{"date": "2026-08-25", "ratio": 99.26, "momentum": 101.35}], "Consumer Services": [{"date": "2026-08-25", "ratio": 99.6, "momentum": 102.3}], "Distribution Services": [{"date": "2026-08-25", "ratio": 99.1, "momentum": 99.49}], "Electronic Technology": [{"date": "2026-08-25", "ratio": 100.84, "momentum": 98.77}], "Finance": [{"date": "2026-08-25", "ratio": 101.16, "momentum": 101.67}], "Health Technology": [{"date": "2026-08-25", "ratio": 101.83, "momentum": 102.11}], "Industrial Services": [{"date": "2026-08-25", "ratio": 98.85, "momentum": 100.8}], "Non-Energy Minerals": [{"date": "2026-08-25", "ratio": 101.72, "momentum": 101.55}], "Process Industries": [{"date": "2026-08-25", "ratio": 100.61, "momentum": 98.98}], "Producer Manufacturing": [{"date": "2026-08-25", "ratio": 102.42, "momentum": 101.79}], "Retail Trade": [{"date": "2026-08-25", "ratio": 99.52, "momentum": 101.83}], "Technology Services": [{"date": "2026-08-25", "ratio": 100.21, "momentum": 99.35}], "Transportation": [{"date": "2026-08-25", "ratio": 100.89, "momentum": 102.21}], "Utilities": [{"date": "2026-08-25", "ratio": 98.84, "momentum": 99.08}]}, "240": {"Commercial Services": [{"date": "2026-08-25", "ratio": 98.62, "momentum": 98.78}], "Communications": [{"date": "2026-08-25", "ratio": 98.84, "momentum": 99.12}], "Consumer Durables": [{"date": "2026-08-25", "ratio": 99.09, "momentum": 98.58}], "Consumer Non-Durables": [{"date": "2026-08-25", "ratio": 98.8, "momentum": 99.2}], "Consumer Services": [{"date": "2026-08-25", "ratio": 98.97, "momentum": 99.19}], "Distribution Services": [{"date": "2026-08-25", "ratio": 99.05, "momentum": 100.27}], "Electronic Technology": [{"date": "2026-08-25", "ratio": 101.36, "momentum": 100.89}], "Finance": [{"date": "2026-08-25", "ratio": 100.27, "momentum": 100.42}], "Health Technology": [{"date": "2026-08-25", "ratio": 100.54, "momentum": 99.2}], "Industrial Services": [{"date": "2026-08-25", "ratio": 98.7, "momentum": 98.14}], "Non-Energy Minerals": [{"date": "2026-08-25", "ratio": 101.91, "momentum": 98.69}], "Process Industries": [{"date": "2026-08-25", "ratio": 100.95, "momentum": 99.41}], "Producer Manufacturing": [{"date": "2026-08-25", "ratio": 102.57, "momentum": 100.28}], "Retail Trade": [{"date": "2026-08-25", "ratio": 99.01, "momentum": 99.44}], "Technology Services": [{"date": "2026-08-25", "ratio": 100.85, "momentum": 100.75}], "Transportation": [{"date": "2026-08-25", "ratio": 99.56, "momentum": 99.68}], "Utilities": [{"date": "2026-08-25", "ratio": 98.5, "momentum": 98.8}]}}};
+var rrgChart = null, curM = 'us', curP = '20';
+var QCOLOR = {"leading": "#ff5277", "improving": "#25e6ff", "lagging": "#8fb0d6", "weakening": "#ffb020"};
+var QLABEL = {"leading": "領先", "improving": "改善", "lagging": "落後", "weakening": "弱化"};
+
+function quadrantBgPlugin() {
+  return {
+    id: 'quadrantBg',
+    beforeDraw: function(chart) {
+      var ctx = chart.ctx, area = chart.chartArea;
+      var xScale = chart.scales.x, yScale = chart.scales.y;
+      var midX = xScale.getPixelForValue(100), midY = yScale.getPixelForValue(100);
+      ctx.save();
+      ctx.fillStyle = 'rgba(37,230,255,.05)'; ctx.fillRect(area.left, area.top, midX-area.left, midY-area.top);
+      ctx.fillStyle = 'rgba(255,82,119,.06)'; ctx.fillRect(midX, area.top, area.right-midX, midY-area.top);
+      ctx.fillStyle = 'rgba(143,176,214,.05)'; ctx.fillRect(area.left, midY, midX-area.left, area.bottom-midY);
+      ctx.fillStyle = 'rgba(255,176,32,.06)'; ctx.fillRect(midX, midY, area.right-midX, area.bottom-midY);
+      ctx.strokeStyle = '#2a3550'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(midX, area.top); ctx.lineTo(midX, area.bottom);
+      ctx.moveTo(area.left, midY); ctx.lineTo(area.right, midY); ctx.stroke();
+      ctx.font = '11px sans-serif'; ctx.fillStyle = '#5f80a6';
+      ctx.fillText('改善 ▲', area.left+6, area.top+14);
+      ctx.fillText('領先 ▲', midX+6, area.top+14);
+      ctx.fillText('落後 ▼', area.left+6, area.bottom-6);
+      ctx.fillText('弱化 ▼', midX+6, area.bottom-6);
+      ctx.restore();
+    }
+  };
+}
+
+function draw() {
+  var pts = (window.RRG_DATA[curM] || {})[curP] || [];
+  var trailKey = 'trail_' + curM;
+  var trails = (window.RRG_DATA[trailKey] || {})[curP] || {};
+  if (rrgChart) rrgChart.destroy();
+
+  var bubbleDs = {
+    label: '目前位置',
+    data: pts.map(function(p) { return {x: p.ratio, y: p.momentum, r: 6 + Math.min(p.size, 10)}; }),
+    backgroundColor: pts.map(function(p) { return (QCOLOR[p.quadrant] || '#8fb0d6') + 'cc'; }),
+    borderColor: '#0a1222', borderWidth: 1.5
+  };
+  var trailDs = Object.keys(trails).map(function(k) {
+    var seq = trails[k];
+    if (!seq || seq.length < 2) return null;
+    var cur = pts.find(function(p){ return p.key === k; });
+    var line = seq.map(function(s) { return {x: s.ratio, y: s.momentum}; });
+    if (cur) line.push({x: cur.ratio, y: cur.momentum});
+    return {
+      type: 'line', data: line,
+      borderColor: 'rgba(139,160,200,.35)', borderWidth: 1.2, pointRadius: 1.5,
+      pointBackgroundColor: 'rgba(139,160,200,.5)', showLine: true, fill: false, order: 5
+    };
+  }).filter(Boolean);
+
+  rrgChart = new Chart(document.getElementById('rrgChart'), {
+    type: 'bubble',
+    data: {datasets: [bubbleDs].concat(trailDs)},
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: {display: false},
+        tooltip: {callbacks: {label: function(ctx) {
+          var p = pts[ctx.dataIndex];
+          return p ? (p.name + '：RS-Ratio ' + p.ratio + '／RS-Momentum ' + p.momentum + '（' + QLABEL[p.quadrant] + '）') : '';
+        }}}
+      },
+      scales: {
+        x: {title: {display:true, text:'RS-Ratio 相對強弱', color:'#8fb0d6'}, ticks:{color:'#5f80a6'}, grid:{color:'#16223A'}},
+        y: {title: {display:true, text:'RS-Momentum 強弱變化率', color:'#8fb0d6'}, ticks:{color:'#5f80a6'}, grid:{color:'#16223A'}}
+      }
+    },
+    plugins: [quadrantBgPlugin()]
+  });
+
+  var rank = pts.slice().sort(function(a,b){ return (b.ratio+b.momentum)-(a.ratio+a.momentum); });
+  document.getElementById('rrgRank').innerHTML = rank.map(function(p) {
+    return '<div class="rrgrow"><span class="dot" style="background:'+(QCOLOR[p.quadrant]||'#8fb0d6')+'"></span>'+
+      '<span class="nm">'+p.name+'</span>'+
+      '<span class="qv">'+QLABEL[p.quadrant]+'</span>'+
+      '<span class="num">'+p.ratio.toFixed(1)+' / '+p.momentum.toFixed(1)+'</span></div>';
+  }).join('') || '<div class="rrgrow">（本次無資料）</div>';
+}
+
+document.getElementById('mktSeg').addEventListener('click', function(e) {
+  var b = e.target.closest('button'); if (!b) return;
+  document.querySelectorAll('#mktSeg button').forEach(function(x){x.setAttribute('aria-pressed', x===b);});
+  curM = b.dataset.m; draw();
+});
+document.getElementById('perSeg').addEventListener('click', function(e) {
+  var b = e.target.closest('button'); if (!b) return;
+  document.querySelectorAll('#perSeg button').forEach(function(x){x.setAttribute('aria-pressed', x===b);});
+  curP = b.dataset.p; draw();
+});
+draw();
+</script></body></html>
