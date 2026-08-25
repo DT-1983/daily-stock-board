@@ -141,6 +141,14 @@ jobs:
       - name: 產巴菲特價值清單頁（docs/buffett.html）
         run: python buffett_html.py -o docs/buffett.html || echo "巴菲特頁失敗，跳過"
 
+      - name: 產業輪動雷達 RRG（docs/rotation.html，台股需逐檔抓歷史價較慢）
+        # 這裡用 || echo 跟上面巴菲特掃描拿掉 || echo 不是同一個判斷標準反悔——
+        # 差別在這步失敗會不會擋到後面步驟。巴菲特掃描是核心產出，它失敗代表
+        # 這週的清單根本沒更新，讓步驟紅燈是對的。這步是新增的附加功能，
+        # 排在 commit 步驟之前，若讓它紅燈會連帶擋掉後面「巴菲特頁/模擬倉/commit」
+        # 全部不執行——那反而是更大的傷害。失敗時舊頁與舊歷史檔案還在，不會掉資料。
+        run: python industry_rotation.py -o docs/rotation.html || echo "產業輪動頁失敗，跳過（保留舊頁與歷史）"
+
       - name: 模擬倉每週調倉（跟新清單）+ 出賽馬頁
         run: |
           python paper_portfolio.py rebalance || echo "調倉失敗，跳過"
@@ -150,6 +158,6 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add screen_result.json chain_themes.json buffett_watch.json docs/buffett.html portfolios.json docs/portfolios.html
+          git add screen_result.json chain_themes.json buffett_watch.json docs/buffett.html portfolios.json docs/portfolios.html docs/rotation.html industry_rotation_history.json
           git commit -m "chore: weekly re-screen(美台分開) + 巴菲特掃描 + 頁 + 模擬倉 [skip ci]" || echo "無變化"
           git push || echo "push 略過"
