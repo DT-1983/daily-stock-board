@@ -36,7 +36,16 @@ from buffett_screener import (
 #    等於把「快到賣點」的股票也收進觀察池，觀察它沒有意義。
 PE_SCREEN     = 15     # 初篩本益比上限（講稿：兩國都是 15）
 ROE_SCREEN_US = 0.10   # 美股初篩 ROE（他刻意放寬到 10%，真正把關在盈再表那關）
-ROE_SCREEN_TW = 0.15   # 台股初篩 ROE（講稿：最近 3 年至少 15%）
+ROE_SCREEN_TW = 0.15   # 台股初篩 ROE
+# ⚠️ 2026-08-25 查證：講稿台股條件是「最近3年至少15%」，
+#   但 TradingView 快照**沒有近3年 ROE 欄位**，只有當期值
+#   （試過 return_on_equity|1Y / _fy_h / ROEfy1 等命名，全部回 None，非 TV 支援範圍）。
+#   所以這裡只能先用當期值快篩，真正的「近4年至少3年達標」硬關卡在 Stage2
+#   （evaluate() 的 roe_pass_years >= ROE_YEARS，見下方 stage2_yfinance）。
+#   代價：極少數當期 ROE 剛好一年不達標的公司，會在 Stage1 就被濾掉、進不了 Stage2
+#   複查——目前未觀察到實際案例。若要根治需 Stage1 也逐檔查 yfinance 歷史，
+#   但那會讓 Stage1 失去「快速預篩」的意義（等於整批候選都先跑一次 Stage2 的成本）。
+#   2026-08-25 已與用戶討論，維持現狀。
 
 _SP500_CACHE = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                             ".fm_cache", "sp500_members.json")
