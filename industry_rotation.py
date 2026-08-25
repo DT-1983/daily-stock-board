@@ -564,6 +564,30 @@ def render_html(snaps, hist):
     return head_html + hdr + note_html + ctrl_html + script_html + "</body></html>"
 
 
+def _axis_bounds(payload, pad=2.0):
+    """算兩軸要固定在哪個範圍：掃過 payload 裡全部 ratio/momentum（含所有市場/基準/
+    週期/歷史幀），取最極端值再加緩衝。不是憑感覺挑一個數字——不同天重跑資料範圍
+    可能略有出入，讓它跟著實際資料算，比寫死一個猜的範圍可靠。"""
+    vals = []
+    for m in ("us", "tw"):
+        for bench in ("index", "equal"):
+            for p, pts in payload.get(m, {}).get(bench, {}).items():
+                for pt in pts:
+                    vals.append(pt["ratio"]); vals.append(pt["momentum"])
+            for p, frames in payload.get("frames_" + m, {}).get(bench, {}).items():
+                for f in frames:
+                    for pt in f["points"]:
+                        vals.append(pt["ratio"]); vals.append(pt["momentum"])
+    if not vals:
+        return 90.0, 110.0
+    lo, hi = min(vals), max(vals)
+    # 兩軸用同一個範圍（不要 x/y 各自的範圍不同，那樣象限對角線就不是45度，視覺會扭曲）
+    span = max(hi - lo, 1.0)
+    center = (hi + lo) / 2
+    half = span / 2 + pad
+    return round(center - half, 1), round(center + half, 1)
+
+
 def _rrg_script(payload):
     import json as _json
     lines = []
@@ -574,6 +598,8 @@ def _rrg_script(payload):
     lines.append("var QCOLOR = " + _json.dumps(QUADRANT_COLOR, ensure_ascii=False) + ";")
     lines.append("var QLABEL = " + _json.dumps(QUADRANT_LABEL, ensure_ascii=False) + ";")
     lines.append("var RANGE_WEEKS = " + _json.dumps(dict((k, w) for k, _, w in RANGE_WEEKS)) + ";")
+    _axis_lo, _axis_hi = _axis_bounds(payload)
+    lines.append(f"var AXIS_MIN = {_axis_lo}, AXIS_MAX = {_axis_hi};")
     lines.append("""
 function quadrantBgPlugin() {
   return {
@@ -685,6 +711,24 @@ function _buildPlaySequence(frames, startOffset) {
 // 從完整歷史 frames 中，取 uptoIdx（含）往前數 weeks 週的每個籃子座標，接成軌跡線。
 // weeks<=0 時不畫尾巴。這是用戶要求加的功能：原本補間動畫只有會動的泡泡、
 // 沒有留下走過的路徑，看久了還是看不出「這一路怎麼走過來的」。
+// 8 色分類色盤——原本泡泡顏色只有 4 種象限色，同象限裡好幾個產業長得一模一樣、
+// 只能靠標籤字認。改成每個籃子固定一個分類色（顏色數 > 籃子數時循環使用，
+// 8 色對 11~17 個籃子一定會重複，但比 4 色可辨識度高很多，配合標籤字已經夠用）；
+// 象限資訊改用泡泡邊框色表達，不丟掉這個訊號、只是換位置放。
+var CAT_PALETTE = ['#ff5277','#25e6ff','#ffb020','#9b7bff','#4ade80','#facc15','#f472b6','#60a5fa'];
+var _keyOrderCache = {};
+function keyColor(key) {
+  var order = _keyOrderCache[curM] || [];
+  var idx = order.indexOf(key);
+  return CAT_PALETTE[(idx >= 0 ? idx : 0) % CAT_PALETTE.length];
+}
+function _hexAlpha(hex, a) {
+  var r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return 'rgba(' + r + ',' + g + ',' + b + ',' + a.toFixed(2) + ')';
+}
+
+// 殘影效果：原本只有一條細線當軌跡，用戶反饋不明顯。改成「越舊越淡、越舊越小」
+// 的殘影泡泡疊在細線上——跟真實殘影/彗星尾巴的視覺邏輯一樣，比一條線好辨認方向與新舊。
 function buildTrailDs(fullFrames, uptoIdx, weeks) {
   if (weeks <= 0 || uptoIdx < 1) return [];
   var start = Math.max(0, uptoIdx - weeks + 1);
@@ -693,24 +737,39 @@ function buildTrailDs(fullFrames, uptoIdx, weeks) {
   var byKey = {};
   slice.forEach(function(f) {
     f.points.forEach(function(p) {
-      (byKey[p.key] = byKey[p.key] || []).push({x: p.ratio, y: p.momentum});
+      (byKey[p.key] = byKey[p.key] || []).push(p);
     });
   });
-  return Object.keys(byKey).map(function(k) {
-    var line = byKey[k];
-    if (line.length < 2) return null;
-    return {type: 'line', data: line, borderColor: 'rgba(139,160,200,.4)', borderWidth: 1.3,
-            pointRadius: 1.5, pointBackgroundColor: 'rgba(139,160,200,.55)',
-            showLine: true, fill: false, order: 5};
-  }).filter(Boolean);
+  var lineDs = [], ghostData = [], ghostColors = [];
+  Object.keys(byKey).forEach(function(k) {
+    var pts = byKey[k];
+    if (pts.length < 2) return;
+    var col = keyColor(k);
+    var hist = pts.slice(0, -1);   // 排除最後一個——那是現在的位置，主泡泡已經畫了，不用重疊一個殘影在上面
+    hist.forEach(function(p, i) {
+      var t = (i + 1) / hist.length;         // 0(最舊)→1(最接近現在)
+      ghostData.push({x: p.ratio, y: p.momentum, r: Math.max(3, (p.radius || 10) * (0.35 + 0.4 * t))});
+      ghostColors.push(_hexAlpha(col, 0.05 + t * 0.32));   // 越舊越透明
+    });
+    lineDs.push({type: 'line', data: pts.map(function(p){return {x: p.ratio, y: p.momentum};}),
+                 borderColor: _hexAlpha(col, 0.22), borderWidth: 1, pointRadius: 0,
+                 showLine: true, fill: false, order: 3});
+  });
+  if (ghostData.length) {
+    lineDs.push({data: ghostData, backgroundColor: ghostColors, borderWidth: 0, order: 4});
+  }
+  return lineDs;
 }
 
 function updateChartPoints(pts, trailDs) {
   var bubbleDs = {
     label: '位置',
     data: pts.map(function(p) { return {x: p.ratio, y: p.momentum, r: p.radius || 10}; }),
-    backgroundColor: pts.map(function(p) { return (QCOLOR[p.quadrant] || '#8fb0d6') + 'cc'; }),
-    borderColor: '#0a1222', borderWidth: 1.5
+    // 填色＝產業分類色（8色循環）、邊框＝象限色——原本兩者疊在一起用同一種色
+    // （象限色當填色），同象限的產業全部撞色。拆開後兩個訊號都留著。
+    backgroundColor: pts.map(function(p) { return _hexAlpha(keyColor(p.key), 0.85); }),
+    borderColor: pts.map(function(p) { return QCOLOR[p.quadrant] || '#8fb0d6'; }),
+    borderWidth: 2, order: 10   // order 要比殘影(3/4)高，確保主泡泡永遠畫在殘影上面
   };
   if (!rrgChart) {
     rrgChart = new Chart(document.getElementById('rrgChart'), {
@@ -727,8 +786,12 @@ function updateChartPoints(pts, trailDs) {
           }}}
         },
         scales: {
-          x: {title: {display:true, text:'RS-Ratio 相對強弱', color:'#8fb0d6'}, ticks:{color:'#5f80a6'}, grid:{color:'#16223A'}},
-          y: {title: {display:true, text:'RS-Momentum 強弱變化率', color:'#8fb0d6'}, ticks:{color:'#5f80a6'}, grid:{color:'#16223A'}}
+          // 固定死 min/max：原本 Chart.js 每次 update 都照當下資料自動縮放，
+          // 切市場/基準/週期或播放動畫時整張圖的座標尺度會跟著跳動，
+          // 泡泡明明沒怎麼動、畫面卻感覺在亂飄。實測全部資料落在95.8~104.9，
+          // 固定 AXIS_MIN~AXIS_MAX（留一點緩衝）之後，唯一會動的只有泡泡本身。
+          x: {min: AXIS_MIN, max: AXIS_MAX, title: {display:true, text:'RS-Ratio 相對強弱', color:'#8fb0d6'}, ticks:{color:'#5f80a6'}, grid:{color:'#16223A'}},
+          y: {min: AXIS_MIN, max: AXIS_MAX, title: {display:true, text:'RS-Momentum 強弱變化率', color:'#8fb0d6'}, ticks:{color:'#5f80a6'}, grid:{color:'#16223A'}}
         }
       },
       plugins: [quadrantBgPlugin(), bubbleLabelPlugin()]
@@ -745,6 +808,11 @@ function draw() {
   stopPlay();
   var pts = rrgGet('bubble');
   var fullFrames = rrgGet('frames');
+  // 每個籃子的分類色要固定不能每次重畫就換——用「現在」這一幀的籃子順序當基準
+  // （frames 最後一幀是最完整的籃子清單，見 Python 端 _frames_data 的順序修正）。
+  if (fullFrames.length) {
+    _keyOrderCache[curM] = fullFrames[fullFrames.length - 1].points.map(function(p){ return p.key; });
+  }
   // 靜態（沒在播放）畫面也用尾巴長度滑桿控制要不要畫軌跡——跟播放時同一套邏輯，
   // 不是播放才有軌跡、平常沒有，兩種狀態顯示邏輯要一致。
   var trailDs = buildTrailDs(fullFrames, fullFrames.length - 1, tailWeeks);
