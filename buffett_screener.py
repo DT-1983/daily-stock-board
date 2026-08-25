@@ -756,7 +756,11 @@ def evaluate(data: dict) -> dict:
     # 標記 needs_review 讓人看過再決定（避免用錯的數字做非黑即白的判斷）。
     rr = data.get("reinvest_ratio")
     grade = data.get("reinvest_grade")
-    reinvest_ok = is_financial or grade in ("ideal", "acceptable") or rr is None
+    # 2026-08-25：拿掉 `or rr is None` 的放行漏洞。原本「抓不到資料」比「抓到但異常」
+    # 還容易過關——一無所知反而放行，方向是反的。當時這樣寫是因為盈再率涵蓋率只有 6 成，
+    # 硬擋會誤殺太多；今天接完 SEC EDGAR + 修好 FinMind 快取後涵蓋率 97.6%
+    # （41 檔只剩 1 檔抓不到），代價已經很小，同一天已經在 paper_portfolio.py 用同樣邏輯堵過。
+    reinvest_ok = is_financial or grade in ("ideal", "acceptable")
     result["needs_review"] = (not is_financial) and grade in ("unknown", "shrinking")
     roe_stable  = roe_pass_years >= ROE_YEARS          # 近 4 年至少 3 年 ROE ≥ 15%
     quality_ok  = (roe_pass_current and roe_stable and eps > 0
