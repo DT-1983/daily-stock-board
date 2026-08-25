@@ -33,13 +33,13 @@ ICONS = {
 # 各頁一律 from board_theme import NAV，不要自己再定義一份。
 NAV = [
     ("home", "home", "首頁", "./"),
+    ("rotation", "rotation", "產業輪動", "rotation.html"),
     ("board", "board", "產業鏈看板", "board.html"),
     ("buffett", "buffett", "巴菲特清單", "buffett.html"),
     ("portfolio", "portfolio", "策略賽馬", "portfolios.html"),
     ("earnings", "earnings", "財報分析", "earnings.html"),
     ("gdp", "gdp", "GDP 觀察", "gdp.html"),
     ("ark", "ark", "ARK 追蹤", "ark.html"),
-    ("rotation", "rotation", "產業輪動", "rotation.html"),
 ]
 
 

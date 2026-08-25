@@ -174,17 +174,59 @@ def _spdr_aum(ticker):
         return None
 
 
-def build_market_snapshot(market):
-    """market: "us" 或 "tw"。回 {sector_key: {"name":.., "periods": {20:{ratio,momentum,quadrant},...},
-    "size": 資金規模（美股=ETF資產規模美元／台股=合格成分股市值合計台幣，兩邊單位不同、
-    不能互比，只在各自市場內部比大小用）}}，算不出來的籃子直接跳過（不用 0 硬湊）。"""
+BACKFILL_WEEKS = 26   # 動畫回填幾週歷史。3年資料本來就抓了，回填不用多打任何API
+
+def _periods_at(rm, ts):
+    """從已經算好的 rm（{period: {ratio,momentum}} 的 Series）取某個時間點的座標。
+    任一 period 在該時間點是 NaN 就跳過那個 period（不是整個時間點作廢）——
+    N=240 的 z-score 需要更長暖機期，資料剛開始那段短週期算得出來、長週期還算不出來很正常。"""
+    periods = {}
+    for n in PERIODS:
+        ratio_s, mom_s = rm[n]["ratio"], rm[n]["momentum"]
+        if ts not in ratio_s.index:
+            continue
+        r, m = ratio_s.loc[ts], mom_s.loc[ts]
+        if np.isnan(r) or np.isnan(m):
+            continue
+        periods[n] = {"ratio": round(float(r), 2), "momentum": round(float(m), 2),
+                      "quadrant": quadrant(r, m)}
+    return periods
+
+
+def _backfill_points(idx, weeks):
+    """從共同日期索引挑週頻回看點（近似每5個交易日=1週，不強求對到日曆週—
+    遇到假期本來就會有落差，這裡求「大致每週一格」不是精確對日曆）。
+    回傳 [(Timestamp, 'YYYY-MM-DD'), ...] 由舊到新，不含最後一筆（那是「現在」，外面另外處理）。"""
+    step = 5
+    if len(idx) < step + 1:
+        return []
+    positions = list(range(len(idx) - 1 - step, -1, -step))[:weeks]
+    positions.reverse()
+    return [(idx[p], idx[p].strftime("%Y-%m-%d")) for p in positions]
+
+
+def build_market_snapshot(market, backfill_weeks=0):
+    """market: "us" 或 "tw"。回 (current, history_rows)：
+      current       = {sector_key: {"name":.., "periods": {...}, "size": 資金規模}}（現在這一刻）
+      history_rows  = [(date_str, snapshot_dict), ...] 由舊到新，backfill_weeks>0 時才有內容
+
+    2026-08-25 補回填：本來就已經抓 3 年歷史價格來算「現在」這個點，
+    同一批資料回頭算過去每週的座標幾乎不用額外成本（沒有新的 API 呼叫，
+    純粹是在已經抓好的 pandas Series 上多取幾個歷史時間點）。
+    不用像原本設計那樣「每週排程跑一次才多一幀動畫」，第一次跑就有完整歷史可以播放。
+
+    ⚠️ 已知簡化：回填的歷史快照，「資金規模」(size) 用的是**現在**的 AUM/市值，
+    不是那個歷史時間點當時的規模（我們沒有歷史 AUM/市值資料）。RS-Ratio/Momentum
+    本身是用當時真實價格算的，只有泡泡大小這個視覺參考值是用現在的規模回貼過去，
+    可接受的簡化（規模不會一週內劇烈變化，且這只影響泡泡大小不影響位置判斷）。
+    """
     if market == "us":
         bench_h = yf.Ticker(US_BENCHMARK).history(period="3y")
         if bench_h.empty:
             print("  [industry_rotation] 美股基準抓取失敗，跳過整個美股快照")
-            return {}
+            return {}, []
         bench = bench_h["Close"]
-        out = {}
+        out, hist_by_date = {}, {}
         for tk, name in SPDR_SECTORS.items():
             h = yf.Ticker(tk).history(period="3y")
             if h.empty:
@@ -193,26 +235,28 @@ def build_market_snapshot(market):
             rm = rs_ratio_momentum(h["Close"], bench)
             if rm is None:
                 continue
-            periods = {}
-            for n in PERIODS:
-                r, m = rm[n]["ratio"].iloc[-1], rm[n]["momentum"].iloc[-1]
-                if np.isnan(r) or np.isnan(m):
-                    continue
-                periods[n] = {"ratio": round(float(r), 2), "momentum": round(float(m), 2),
-                              "quadrant": quadrant(r, m)}
-            if periods:
-                aum = _spdr_aum(tk)
-                out[tk] = {"name": name, "periods": periods, "size": aum or 0.0}
-        return out
+            idx = rm[PERIODS[0]]["ratio"].index
+            cur = _periods_at(rm, idx[-1])
+            if not cur:
+                continue
+            aum = _spdr_aum(tk)
+            out[tk] = {"name": name, "periods": cur, "size": aum or 0.0}
+            if backfill_weeks:
+                for ts, date_str in _backfill_points(idx, backfill_weeks):
+                    p = _periods_at(rm, ts)
+                    if p:
+                        hist_by_date.setdefault(date_str, {})[tk] = {"name": name, "periods": p, "size": aum or 0.0}
+        rows = [(d, hist_by_date[d]) for d in sorted(hist_by_date)]
+        return out, rows
 
     if market == "tw":
         bench_h = yf.Ticker(TW_BENCHMARK).history(period="3y")
         if bench_h.empty:
             print("  [industry_rotation] 台股基準抓取失敗，跳過整個台股快照")
-            return {}
+            return {}, []
         bench = bench_h["Close"]
         members = _tw_sector_members()
-        out = {}
+        out, hist_by_date = {}, {}
         for sector, (tks, total_cap) in members.items():
             closes = []
             for tk in tks:
@@ -227,17 +271,19 @@ def build_market_snapshot(market):
             rm = rs_ratio_momentum(basket, bench)
             if rm is None:
                 continue
-            periods = {}
-            for n in PERIODS:
-                r, m = rm[n]["ratio"].iloc[-1], rm[n]["momentum"].iloc[-1]
-                if np.isnan(r) or np.isnan(m):
-                    continue
-                periods[n] = {"ratio": round(float(r), 2), "momentum": round(float(m), 2),
-                              "quadrant": quadrant(r, m)}
-            if periods:
-                out[sector] = {"name": SECTOR_TW_LABEL.get(sector, sector),
-                               "periods": periods, "size": total_cap}
-        return out
+            idx = rm[PERIODS[0]]["ratio"].index
+            name = SECTOR_TW_LABEL.get(sector, sector)
+            cur = _periods_at(rm, idx[-1])
+            if not cur:
+                continue
+            out[sector] = {"name": name, "periods": cur, "size": total_cap}
+            if backfill_weeks:
+                for ts, date_str in _backfill_points(idx, backfill_weeks):
+                    p = _periods_at(rm, ts)
+                    if p:
+                        hist_by_date.setdefault(date_str, {})[sector] = {"name": name, "periods": p, "size": total_cap}
+        rows = [(d, hist_by_date[d]) for d in sorted(hist_by_date)]
+        return out, rows
 
     raise ValueError(f"未知市場：{market}")
 
@@ -415,8 +461,9 @@ def render_html(snap_us, snap_tw, hist):
         '公式為業界公開重建版（非老墨官方精確值），數字不會跟他的工具逐點對上，方法論一致。<br>'
         '<b>泡泡大小＝資金規模</b>（美股用 SPDR ETF 資產規模美元、台股用該產業合格成分股市值合計台幣）——'
         '兩個市場單位不同、不能互比，只在各自市場內部比大小。<br>'
-        '<span style="color:var(--muted)">軌跡尾巴與「▶ 播放資金移動軌跡」需要累積幾週資料才看得出來，'
-        '剛上線時多半只有一個點/一幀是正常的，不是壞掉。</span>'
+        f'<span style="color:var(--muted)">軌跡與「▶ 播放資金移動軌跡」已回填近 {BACKFILL_WEEKS} 週歷史'
+        '（用既有3年價格資料反推，不是等出來的）；之後每週六會再多疊一幀「現在」。'
+        '回填歷史的泡泡大小是用現在的資金規模回貼過去，位置(RS-Ratio/Momentum)則是當時的真實值。</span>'
         '</div>'
     )
     ctrl_html = (
@@ -617,15 +664,21 @@ def main():
     ap.add_argument("-o", "--output", default="docs/rotation.html")
     args = ap.parse_args()
 
-    print("算美股 SPDR 11 大類股 …")
-    snap_us = build_market_snapshot("us")
-    print(f"  {len(snap_us)}/11 檔算出結果")
+    print("算美股 SPDR 11 大類股（含回填近", BACKFILL_WEEKS, "週歷史）…")
+    snap_us, backfill_us = build_market_snapshot("us", backfill_weeks=BACKFILL_WEEKS)
+    print(f"  {len(snap_us)}/11 檔算出結果，回填 {len(backfill_us)} 週歷史")
     print("算台股產業籃子（需逐檔抓歷史價，較慢）…")
-    snap_tw = build_market_snapshot("tw")
-    print(f"  {len(snap_tw)} 個籃子算出結果")
+    snap_tw, backfill_tw = build_market_snapshot("tw", backfill_weeks=BACKFILL_WEEKS)
+    print(f"  {len(snap_tw)} 個籃子算出結果，回填 {len(backfill_tw)} 週歷史")
 
     hist = load_history()
     date_str = time.strftime("%Y-%m-%d")
+    # 先疊回填的歷史（由舊到新），再疊「現在」這一筆——append_history 依日期去重，
+    # 重跑也不會累積出重複的同一天。
+    for d, snap in backfill_us:
+        hist = append_history(hist, "us", snap, d)
+    for d, snap in backfill_tw:
+        hist = append_history(hist, "tw", snap, d)
     hist = append_history(hist, "us", snap_us, date_str)
     hist = append_history(hist, "tw", snap_tw, date_str)
     save_history(hist)
