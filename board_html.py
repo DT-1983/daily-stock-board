@@ -403,6 +403,11 @@ def main():
     body, modals, nav = [], [], []
     for i, c in enumerate(CHAIN_ORDER):
         us, tw = us_by.get(c, []), tw_by.get(c, [])
+        # 2026-08-25 修：兩邊都是照原始清單順序疊進去的，從沒依分數排序——
+        # 使用者截圖看到台股 76/30/65/62/40/28/43/47 完全打散，
+        # 不是資料問題，是這裡從來沒 sort 過。分數高的排最上面才有意義（一眼看重點）。
+        us = sorted(us, key=lambda x: int(us_score.get(x[1], -1)) if str(us_score.get(x[1], "-1")).lstrip("-").isdigit() else -1, reverse=True)
+        tw = sorted(tw, key=lambda r: r.get("score") if isinstance(r.get("score"), (int, float)) else -1, reverse=True)
         if not us and not tw and not CHAIN_REPORTS.get(c):
             continue  # 沒個股也沒深度報告才跳過——新鏈上線首日判讀還沒跑，仍要露出報告
         nav.append(f'<a href="#c{i}" title="{esc_tw(c)}" aria-label="{esc_tw(c)}">{_icon(c, 15)}</a>')
