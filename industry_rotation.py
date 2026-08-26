@@ -979,7 +979,7 @@ function buildTrailDs(fullFrames, uptoIdx, weeks, highlightKey, onlyKeys) {
     });
   });
   window._rrgTrailMarkers = [];   // 2026-08-26：起點/中點標記，只標「當下唯一高亮那條軌跡」
-  var lineDs = [], ghostData = [], ghostColors = [];
+  var lineDs = [], ghostData = [], ghostColors = [], ghostMeta = [];
   Object.keys(byKey).forEach(function(k) {
     if (onlyKeys && onlyKeys.size && !onlyKeys.has(k)) return;
     var pts = byKey[k];
@@ -1004,6 +1004,11 @@ function buildTrailDs(fullFrames, uptoIdx, weeks, highlightKey, onlyKeys) {
       var rMul = isHi ? 1.25 : 1;
       ghostData.push({x: p.ratio, y: p.momentum, r: Math.max(3, (p.radius || 10) * (0.35 + 0.4 * t) * rMul)});
       ghostColors.push(_hexAlpha(col, a));
+      // 2026-08-26：殘影圓圈本身要帶「當週」真實數值，不能只有座標——
+      // 反饋「點中間的圓圈沒顯示市場規模，只有最後會顯示」，根因是這些殘影點
+      // 原本只有 x/y/r，tooltip 只能查「現在」那組資料，點哪顆都查到同一份。
+      ghostMeta.push({name: p.name, date: p.date, ratio: p.ratio, momentum: p.momentum,
+                       size: p.size, quadrant: p.quadrant});
     });
     var lineA = isHi ? 0.95 : isDim ? 0.05 : 0.4;
     lineDs.push({type: 'line', data: pts.map(function(p){return {x: p.ratio, y: p.momentum};}),
@@ -1011,7 +1016,7 @@ function buildTrailDs(fullFrames, uptoIdx, weeks, highlightKey, onlyKeys) {
                  showLine: true, fill: false, order: isHi ? 5 : 3});
   });
   if (ghostData.length) {
-    lineDs.push({data: ghostData, backgroundColor: ghostColors, borderWidth: 0, order: 4});
+    lineDs.push({data: ghostData, backgroundColor: ghostColors, borderWidth: 0, order: 4, _meta: ghostMeta});
   }
   return lineDs;
 }
@@ -1054,9 +1059,14 @@ function updateChartPoints(pts, trailDs) {
         plugins: {
           legend: {display: false},
           tooltip: {callbacks: {label: function(ctx) {
-            var p = window._rrgCurPts && window._rrgCurPts[ctx.dataIndex];
+            // 2026-08-26：軌跡尾巴的殘影圓圈（datasetIndex 不是0）帶著自己那一週
+            // 的真實數值（見 buildTrailDs 的 ghostMeta），不能只查「現在」那組資料——
+            // 不然點中間的殘影圓圈永遠只顯示現在那顆泡泡的數字。
+            var meta = ctx.dataset && ctx.dataset._meta;
+            var p = meta ? meta[ctx.dataIndex] : (ctx.datasetIndex === 0 ? (window._rrgCurPts && window._rrgCurPts[ctx.dataIndex]) : null);
             if (!p) return '';
-            return [p.name + '（' + QLABEL[p.quadrant] + '）',
+            var head = p.name + (p.date ? '（' + p.date + '）' : '') + (p.quadrant ? '｜' + QLABEL[p.quadrant] : '');
+            return [head,
                     'RS-Ratio ' + p.ratio.toFixed(1) + '／RS-Momentum ' + p.momentum.toFixed(1),
                     '資金規模 ' + fmtSize(p.size)];
           }}}
