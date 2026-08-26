@@ -511,7 +511,8 @@ def _frames_data(hist_rows, snapshot, period, radius_fn, max_frames=52):
             if p:
                 size = basket.get("size", 0.0)
                 pt = {"key": key, "name": basket.get("name", key), "ratio": p["ratio"],
-                      "momentum": p["momentum"], "quadrant": p["quadrant"], "radius": radius_fn(size)}
+                      "momentum": p["momentum"], "quadrant": p["quadrant"], "size": size,
+                      "radius": radius_fn(size)}
                 last_known[key] = pt
             elif key in last_known:
                 pt = last_known[key]     # 沿用上一個已知位置，不留空、不讓泡泡消失
@@ -884,8 +885,8 @@ var playTimer = null, playRAF = null, playIdx = 0;
 // Chart.js 純粹畫「這一格算好的靜態座標」，绝对照真實軌跡走，不會被它自己的
 // 「新元素從哪裡長出來」規則干擾。rAF 而不是 setInterval，是因為 rAF 綁瀏覽器
 // 實際繪圖節奏，畫面忙不過來時會自動跳格而不是硬擠，比固定間隔更不容易卡頓。
-var ANIM_MS = 600;     // 一個真實週的補間時長
-var PAUSE_MS = 120;    // 補間完成後，接下一週之前留一點點停頓感
+var ANIM_MS = 300;     // 一個真實週的補間時長（2026-08-26 加快一倍：600→300）
+var PAUSE_MS = 60;     // 補間完成後，接下一週之前留一點點停頓感（120→60，同倍率）
 function _easeInOutQuad(t) { return t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2)/2; }
 function _lerp(a, b, t) { return a + (b - a) * t; }
 
@@ -1054,8 +1055,10 @@ function updateChartPoints(pts, trailDs) {
           legend: {display: false},
           tooltip: {callbacks: {label: function(ctx) {
             var p = window._rrgCurPts && window._rrgCurPts[ctx.dataIndex];
-            return p ? (p.name + '：RS-Ratio ' + p.ratio.toFixed(1) +
-              '／RS-Momentum ' + p.momentum.toFixed(1) + '（' + QLABEL[p.quadrant] + '）') : '';
+            if (!p) return '';
+            return [p.name + '（' + QLABEL[p.quadrant] + '）',
+                    'RS-Ratio ' + p.ratio.toFixed(1) + '／RS-Momentum ' + p.momentum.toFixed(1),
+                    '資金規模 ' + fmtSize(p.size)];
           }}}
         },
         scales: {
@@ -1243,6 +1246,7 @@ document.getElementById('playBtn').addEventListener('click', function() {
                 ratio: _lerp(pa.ratio, pb.ratio, e),
                 momentum: _lerp(pa.momentum, pb.momentum, e),
                 radius: _lerp(pa.radius || 10, pb.radius || 10, e),
+                size: _lerp(pa.size || 0, pb.size || 0, e),
                 quadrant: e < 0.5 ? pa.quadrant : pb.quadrant};
       });
       updateChartPoints(filteredPts(pts), trailDs);
@@ -1481,6 +1485,16 @@ def main():
             snap, backfill = compute_snapshot(baskets, index_bench, benchmark=bench, backfill_weeks=BACKFILL_WEEKS)
             print(f"  {m}/{bench}: {len(snap)} 個籃子算出結果，回填 {len(backfill)} 週歷史")
             snaps[m][bench] = snap
+            # 2026-08-26：先清掉跟現在籃子完全對不上的舊歷史列（例如美股從 SPDR ETF
+            # 換成 TV 產業分類前留下的 XLB/XLC/... 那些列）——這些舊列的日期常常跟
+            # 新方法論的回填日期錯開幾天，不會被下面「同一天去重」擋掉，會一直卡在
+            # 歷史裡跟新資料交錯，害動畫每兩格有一格是沿用舊值、看起來卡住不動。
+            keep = [r for r in hist.get(m, {}).get(bench, [])
+                    if set(r.get("snapshot", {}).keys()) & set(snap.keys())]
+            dropped = len(hist.get(m, {}).get(bench, [])) - len(keep)
+            if dropped:
+                print(f"  {m}/{bench}: 清掉 {dropped} 筆對不上現在籃子的舊方法論歷史列")
+            hist.setdefault(m, {"index": [], "equal": []})[bench] = keep
             # 先疊回填的歷史（由舊到新），再疊「現在」這一筆——append_history 依日期去重，
             # 重跑也不會累積出重複的同一天。
             for d, s in backfill:
