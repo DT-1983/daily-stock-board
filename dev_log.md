@@ -1735,3 +1735,11 @@ researcher_stock的push（用WARN log不用FAILED累加，因為推播/資料同
 
 輸出寫進新檔案 `state/advisor_verdicts.jsonl`（跟research_notes分開存，判斷跟原始
 研究資料是不同性質的東西）。尚未commit/push，等Leo確認。
+
+## 2026-08-26（續二十）· 投資長判斷加 Telegram 推播
+
+Leo問「投資長的結論會推給我嗎？」——原本只寫檔案沒推播，漏了。加 `_send_telegram()`，
+另開一則獨立訊息（不跟08:15投資晨報合併，Leo明確選這個選項），08:45投資長跑完才推。
+格式：每檔列出兩角度judgment+理由前80字，標題提醒「兩角度各自獨立，不合併結論」。
+跟valuation_alert.py同模式讀本機.env（researcher_stock_sync.cmd本機排程不會預先
+export環境變數）。已測過訊息格式（沒真的推播測試訊息），語法正常。
