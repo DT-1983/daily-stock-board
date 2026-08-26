@@ -1792,3 +1792,27 @@ Leo 親自跑官方盈再表 5 檔（BMY/PSX/DAL/TROW/VZ）對照我們的巴菲
 
 記憶 hongruitai_method.md 俗貴價段落已改版（7/18「已定案」那段被推翻一半，
 如實記錄查證過程）。
+
+## 2026-08-27（續）· 產業輪動動畫絲滑化：連續時間軸重寫
+
+Leo 反饋「很絲滑的移動不會有一張一張的卡頓感…是不是要換繪圖工具？」
+
+**不用換工具**——20顆泡泡對canvas是小菜，卡頓是舊動畫結構自己造成的，三個源頭：
+1. 「一週一段補間、段間 setTimeout(PAUSE_MS=60ms) 停頓」——動300ms→停60ms的節奏
+   本身就是逐格感
+2. 每段用 ease-in-out——速度週期性脈動（呼吸感）加重逐格感
+3. 每一幀整組換掉 datasets 陣列——Chart.js 每幀重新解析全部資料
+
+**改法**：連續時間軸（總時長=週數×ANIM_MS，等速跨週插值，段間不停、不加每段easing）
++ 播放中泡泡座標原地改值（新增 `fastUpdateBubbles()`，只改 dataset[0] 的 x/y/r 數字
+不重建陣列）+ 軌跡 datasets 只在跨週邊界重算（本來就一週才變一次）。
+PAUSE_MS/_easeInOutQuad/tweenWeek/stepPlay 全移除。
+
+**驗證的誠實限制**：沙盒瀏覽器 pane 的分頁是 document.hidden=true（pane沒真的顯示
+在螢幕上），瀏覽器對隱藏分頁會暫停所有 rAF——**動畫類功能在這個環境從根本上無法
+目視驗證**（舊版一樣會凍住，這是環境限制不是新bug）。已做的替代驗證：
+- 整頁 JS 過 node --check 語法檢查
+- fastUpdateBubbles 直接呼叫實測：座標正確改值(x+1.5/y-0.8如預期)、
+  window._rrgCurPts 同步（tooltip讀這個）、無console錯誤
+- 播放按鈕點擊後狀態機正常進入播放態（btn文字/日期標籤有切）
+絲滑與否最終要 Leo 開真實瀏覽器看。
