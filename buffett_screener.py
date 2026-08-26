@@ -30,10 +30,17 @@ ROE_MIN          = 0.15   # ROE 門檻：15%
 ROE_YEARS        = 3      # 連續幾年 ROE 需達標
 DEBT_RATIO_MAX   = 1.0    # 負債/淨值比門檻（D/E，yfinance 單位為 %/100）
 EPS_LOSS_MAX     = 0      # 近幾年可容忍虧損次數
-PE_CHEAP         = 12     # 俗價（EPS×12，預期報酬15%）＝ 買進線
+PE_CHEAP         = 12     # 【2026-08-27 起棄用於訊號】舊俗價倍數（EPS×12）。
+                          #   對照 MIKEON 官方盈再表 5 檔實測後發現官方淑價=貴價÷1.15^8
+                          #   （≈EPS×9.81，8年年化15%的折現，跟他部落格「房子8年漲3.05倍」
+                          #   同一邏輯），×12 是二手簡化版。常數保留給舊報表相容。
 PE_FAIR          = 20     # 合理價（EPS×20）— 2026-07-31 起【不參與訊號判斷】，僅保留給
                           #   Stage1 預篩的向下相容；洪瑞泰只設俗/貴兩條線
 PE_EXPENSIVE     = 30     # 貴價（EPS×30，報酬0%）＝ 賣出線
+CHEAP_DISCOUNT   = 1.15 ** 8   # 淑價 = 貴價 ÷ 1.15^8（=3.059）。2026-08-27 用 Leo 跑的
+                          #   MIKEON 官方盈再表（BMY/PSX/DAL/TROW/VZ）逆推驗證：
+                          #   4/5 檔精確吻合（TROW 疑似觸發 NAV 地板規則，未實作，
+                          #   影響方向是我們略保守，安全側）。
 REINVEST_IDEAL   = 0.40   # 盈再率理想門檻（< 40% = 真洪瑞泰）
 REINVEST_MAX     = 0.80   # 盈再率上限（> 80% 拒絕）
 REINVEST_ABSURD  = 3.00   # |盈再率| > 300% 視為「structural change」不可用於判斷。
@@ -492,6 +499,46 @@ def fetch_fundamentals(ticker: str) -> dict:
         except Exception:
             pass
 
+        # 常利 EPS（2026-08-27 加，MIKEON 官方盈再表同款公式）：
+        # 預期常利 = 近2年平均×0.7 + 近5年中位數×0.3，
+        # 其中「近2年」=［過去4季TTM, 去年年度］、「近5年」=［TTM, 前4個年度］。
+        # 這條公式用 Leo 跑的官方盈再表 5 檔（BMY/PSX/DAL/TROW/VZ）逐檔驗證，
+        # 官方「預期常利」欄位 5/5 精確吻合（誤差<0.1%），不是猜的。
+        # 常利用 Normalized Income（剔除一次性損益的近似），沒有才退 Net Income——
+        # 官方常利是人工調整值，Normalized Income 是最接近的自動化欄位
+        # （實測 PSX 幾乎全中；BMY 這種大額減損/併購費用多的還有差距，已知限制）。
+        changli_eps = None
+        changli_basis = None
+        try:
+            shares = info.get("sharesOutstanding") or info.get("impliedSharesOutstanding")
+            inc = stock.income_stmt
+            if shares and shares > 0 and inc is not None and not inc.empty:
+                fld = "Normalized Income" if "Normalized Income" in inc.index else (
+                    "Net Income" if "Net Income" in inc.index else None)
+                if fld:
+                    ann = [float(x) for x in inc.loc[fld].dropna().iloc[:4]]
+                    ttm_ni = None
+                    try:
+                        q = stock.quarterly_income_stmt
+                        qf = "Normalized Income" if (q is not None and not q.empty and
+                                                     "Normalized Income" in q.index) else (
+                            "Net Income" if (q is not None and not q.empty and
+                                             "Net Income" in q.index) else None)
+                        if qf:
+                            qs = q.loc[qf].dropna()
+                            if len(qs) >= 4:
+                                ttm_ni = float(qs.iloc[:4].sum())
+                    except Exception:
+                        pass
+                    vals = ([ttm_ni] + ann)[:5] if ttm_ni is not None else ann[:5]
+                    if len(vals) >= 3:   # 至少要3期才算得出有意義的中位數，太少不硬算
+                        changli = float(np.mean(vals[:2]) * 0.7 + np.median(vals) * 0.3)
+                        if changli > 0:
+                            changli_eps = round(changli / float(shares), 4)
+                            changli_basis = "normalized" if fld == "Normalized Income" else "net_income"
+        except Exception:
+            pass
+
         # 歷史 ROE（從資產負債表 + 損益表計算）
         roe_history = []
         try:
@@ -625,6 +672,8 @@ def fetch_fundamentals(ticker: str) -> dict:
             "eps_ttm":       eps_ttm,
             "eps_forward":   eps_forward,
             "eps_history":   eps_history,
+            "changli_eps":   changli_eps,      # 常利EPS（MIKEON同款公式），優先用於俗貴價
+            "changli_basis": changli_basis,    # normalized / net_income
             "debt_to_equity": debt_to_equity,  # yfinance 單位：% (150 = 150%)
             "dividend_yield": dividend_yield,
             "payout_ratio":  payout_ratio,
@@ -652,19 +701,22 @@ def evaluate(data: dict) -> dict:
     price = data.get("price") or 0
 
     # ── 1. 俗價 / 貴價 ──────────────────────────────────
-    # 美股因 NAV 常為負，採 EPS 倍數法。
-    #
-    # 2026-08-24 起【美股改用預期 EPS，台股維持實績 EPS】：
-    # 洪瑞泰官方表用的是預期獲利（他的表有「預期」列與「預期報酬%」欄），
-    # 但兩個市場的資料可得性差很多——實測預期 EPS 涵蓋率：美股 11/11=100%、
-    # 台股只有 8/14=57%（缺的全是上櫃中小型股，正是守備清單主體）。
-    # 台股若改用預期，會讓一半標的算不出俗貴價而整個消失，所以分開處理。
-    # ⚠️ 影響很直接：實測 11 檔美股有 5 檔判定改變（4 檔從買進降為觀望、
-    #    1 檔從觀望升為買進），方向是「買進變少」，因為這批分析師多預估獲利下滑。
+    # 2026-08-27 起【對齊 MIKEON 官方盈再表】（Leo 跑官方工具 5 檔對照後定案）：
+    # ① EPS 基礎優先用「常利EPS」（近2年平均×0.7＋近5年中位數×0.3，見 fetch_fundamentals
+    #    的 changli_eps）——舊做法（美股 forward、台股 ttm）對 PSX 這種景氣循環股會把
+    #    暴利年當常態，俗貴價比官方高 20%~112%，5 檔全部誤判成「可買」（官方全是觀望）。
+    # ② 貴價 = EPS×30 不變；俗價改成 貴價÷1.15^8（≈EPS×9.81）——官方淑價的真實定義
+    #    是「8年後漲到貴價、年化15%」的折現價，不是 EPS×12（那是二手簡化）。
+    # ③ 常利算不出來（資料不足）才退回舊鏈：美股 forward→ttm、台股 ttm，並標記 basis。
+    # 改動影響範圍：巴菲特看板、valuation_alert 翻貴警示、投資長價值角度、assets-dashboard。
+    # 換線當天 valuation_alert 可能噴一批新翻貴警示（舊線沒過、新線已過），一次性現象。
     eps_ttm_v = data.get("eps_ttm") or 0
     eps_fwd_v = data.get("eps_forward") or 0
+    changli_v = data.get("changli_eps") or 0
     _is_tw = bool(re.match(r"^\d{4,5}\.TWO?$", str(data.get("ticker", "")).upper()))
-    if _is_tw:
+    if changli_v > 0:
+        eps, eps_basis = changli_v, f"changli_{data.get('changli_basis') or ''}"
+    elif _is_tw:
         eps, eps_basis = eps_ttm_v, "ttm"
     else:
         # 美股優先預期；沒有預期值才退回實績並標記（不要因為缺值就整檔消失）
@@ -672,9 +724,9 @@ def evaluate(data: dict) -> dict:
     result["eps_basis"] = eps_basis
     result["eps_used"] = eps if eps > 0 else None
 
-    cheap_price = round(eps * PE_CHEAP, 2) if eps > 0 else None
-    fair_price  = round(eps * PE_FAIR,  2) if eps > 0 else None
     exp_price   = round(eps * PE_EXPENSIVE, 2) if eps > 0 else None
+    cheap_price = round(eps * PE_EXPENSIVE / CHEAP_DISCOUNT, 2) if eps > 0 else None
+    fair_price  = round(eps * PE_FAIR,  2) if eps > 0 else None
 
     result["cheap_price"] = cheap_price
     result["fair_price"]  = fair_price
