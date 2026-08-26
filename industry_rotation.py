@@ -96,8 +96,11 @@ def _sector_members(market, min_market_cap=3e9):
     ——total_cap 只用於 holdings 清單算權重百分比；「資金規模」拖尾動畫用的是
     另一條路（成分股歷史股價 × 股數，見 `_basket_size_series`），不是這個 total_cap。
 
-    company name 用 `description` 欄位（TradingView 給的英文全名，不是中文簡稱）——
-    沒有現成、覆蓋夠廣的中文對照表，寧可顯示英文全名也不要瞎猜。
+    company name 用 `description` 欄位（TradingView 給的英文全名）；台股額外查證交所/
+    櫃買中心的官方開放資料補中文簡稱（見 `_tw_chinese_names()`）——2026-08-26 之前這裡
+    沒做，是因為當時沒查到覆蓋夠廣的中文對照表，`board_html_legacy.TW_NAME` 只是手動
+    維護的產業鏈追蹤名單、覆蓋率不夠；這次查到證交所/櫃買中心本身就有免費開放API
+    （1095+890檔，公司代號對簡稱），覆蓋率遠比手動清單完整，直接用官方源。
 
     order_by market_cap 降冪 + limit 拉高到 5000：美股在 $30億市值門檻下
     符合資格的檔數（實測 3698 檔）已經超過台股慣用的 limit(3000)，若沒有
@@ -127,6 +130,7 @@ def _sector_members(market, min_market_cap=3e9):
     else:
         df["ticker"] = df["name"].astype(str)   # 美股代號本身就是 yfinance 可用格式
         df = df[~df["ticker"].str.contains("/", regex=False)]   # 排除特別股（同一家公司重複計算）
+    tw_names = _tw_chinese_names() if market == "taiwan" else {}
     out = {}
     for sector, grp in df.groupby("sector"):
         if not sector or str(sector).lower() == "nan":
@@ -135,7 +139,8 @@ def _sector_members(market, min_market_cap=3e9):
         if len(top) >= SECTOR_MIN_MEMBERS:
             total_cap = float(grp["market_cap_basic"].sum())   # 全部合格成分股，不只前8大
             top5 = top.head(TOP_HOLDINGS_N)
-            holdings = [{"ticker": r["name"], "name": r.get("description") or r["name"],
+            holdings = [{"ticker": r["name"],
+                        "name": tw_names.get(r["name"]) or r.get("description") or r["name"],
                         "weight_pct": round(float(r["market_cap_basic"]) / total_cap * 100, 1)}
                        for _, r in top5.iterrows()]
             members = [(r["ticker"],
@@ -293,6 +298,41 @@ BENCHMARK_LABEL = {"index": "加權指數／S&P500", "equal": "等權類股（�
 
 _MARKET_BENCH = {"us": US_BENCHMARK, "tw": TW_BENCHMARK}
 _MARKET_TV = {"us": "america", "tw": "taiwan"}   # 我們內部用 us/tw，TradingView 要 america/taiwan
+
+_TW_NAME_CACHE = None
+
+
+def _tw_chinese_names():
+    """證交所(上市)+櫃買中心(上櫃)官方開放資料，代號→中文簡稱。2026-08-26 查證：
+    兩邊都免登入免key，合計約2000檔，覆蓋率遠比 board_html_legacy.TW_NAME
+    （手動維護的產業鏈追蹤清單）完整。一次執行內快取，不用每個籃子都重打兩次API。
+    任一邊查詢失敗就回目前查到的部分（不因為一邊掛掉就整個放棄），呼叫端用
+    .get(code) 查不到時回退英文全名，不會因為這裡失敗而整頁掛掉。"""
+    global _TW_NAME_CACHE
+    if _TW_NAME_CACHE is not None:
+        return _TW_NAME_CACHE
+    import requests
+    out = {}
+    try:
+        r = requests.get("https://openapi.twse.com.tw/v1/opendata/t187ap03_L", timeout=15)
+        r.raise_for_status()
+        for row in r.json():
+            code, name = row.get("公司代號"), row.get("公司簡稱")
+            if code and name:
+                out[code] = name
+    except Exception as e:
+        print(f"  證交所中文名查詢失敗（不影響其他資料）：{e}")
+    try:
+        r = requests.get("https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O", timeout=15)
+        r.raise_for_status()
+        for row in r.json():
+            code, name = row.get("SecuritiesCompanyCode"), row.get("CompanyAbbreviation")
+            if code and name:
+                out[code] = name
+    except Exception as e:
+        print(f"  櫃買中心中文名查詢失敗（不影響其他資料）：{e}")
+    _TW_NAME_CACHE = out
+    return out
 
 
 def _fetch_baskets(market):
