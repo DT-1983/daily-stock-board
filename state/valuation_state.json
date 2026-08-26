@@ -1,48 +1,48 @@
 {
   "1227": {
-    "price": 28.85,
+    "price": 28.95,
     "cheap": 19.32,
     "expensive": 48.3,
     "icon": "🟡",
     "eps_basis": "ttm",
     "market": "TW",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "1733": {
-    "price": 32.2,
+    "price": 32.3,
     "cheap": 22.8,
     "expensive": 57.0,
     "icon": "🟡",
     "eps_basis": "ttm",
     "market": "TW",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "2105": {
-    "price": 31.35,
+    "price": 31.4,
     "cheap": 21.84,
     "expensive": 54.6,
     "icon": "🟡",
     "eps_basis": "ttm",
     "market": "TW",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "2317": {
-    "price": 243.0,
+    "price": 246.5,
     "cheap": 181.32,
     "expensive": 453.3,
     "icon": "🟡",
     "eps_basis": "ttm",
     "market": "TW",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "2412": {
-    "price": 136.5,
+    "price": 136.0,
     "cheap": 60.96,
     "expensive": 152.4,
     "icon": "🟡",
     "eps_basis": "ttm",
     "market": "TW",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "3045": {
     "price": 115.5,
@@ -51,16 +51,16 @@
     "icon": "🟡",
     "eps_basis": "ttm",
     "market": "TW",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "6592": {
-    "price": 61.6,
+    "price": 62.1,
     "cheap": 59.04,
     "expensive": 147.6,
     "icon": "🟡",
     "eps_basis": "ttm",
     "market": "TW",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "AAOI": {
     "price": 113.15,
@@ -69,7 +69,7 @@
     "icon": "🟡",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "AAPL": {
     "price": 309.9,
@@ -78,7 +78,7 @@
     "icon": "🔴",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "ACGL": {
     "price": 100.56,
@@ -87,7 +87,7 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "AER": {
     "price": 147.44,
@@ -96,7 +96,7 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "AES": {
     "price": 14.73,
@@ -105,7 +105,7 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "AGO": {
     "price": 75.14,
@@ -114,7 +114,7 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "ALL": {
     "price": 257.62,
@@ -123,7 +123,7 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "AMD": {
     "price": 479.18,
@@ -132,16 +132,16 @@
     "icon": "🔴",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "API": {
     "price": 4.12,
-    "cheap": 1.2,
-    "expensive": 3.0,
+    "cheap": 1.08,
+    "expensive": 2.7,
     "icon": "🔴",
     "eps_basis": "ttm_fallback",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "BA": {
     "price": 211.08,
@@ -150,7 +150,7 @@
     "icon": "🔴",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "BAC": {
     "price": 62.43,
@@ -159,7 +159,7 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "BAYRY": {
     "price": 14.31,
@@ -168,7 +168,7 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "BCS": {
     "price": 27.23,
@@ -177,7 +177,7 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "BEN": {
     "price": 35.03,
@@ -186,7 +186,7 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "BNY": {
     "price": 163.65,
@@ -195,7 +195,7 @@
     "icon": "🟡",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "BWA": {
     "price": 65.1,
@@ -204,7 +204,7 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "C": {
     "price": 133.25,
@@ -213,7 +213,7 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "CCL": {
     "price": 26.14,
@@ -222,7 +222,7 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "CI": {
     "price": 279.32,
@@ -231,25 +231,25 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "CICHY": {
     "price": 23.5,
-    "cheap": 46.44,
-    "expensive": 116.1,
+    "cheap": 46.56,
+    "expensive": 116.4,
     "icon": "🟢",
     "eps_basis": "ttm_fallback",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "CLS": {
     "price": 306.86,
-    "cheap": 233.76,
-    "expensive": 584.4,
+    "cheap": 234.53,
+    "expensive": 586.33,
     "icon": "🟡",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "CNH": {
     "price": 11.56,
@@ -258,7 +258,7 @@
     "icon": "🟡",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "COHR": {
     "price": 288.14,
@@ -267,7 +267,7 @@
     "icon": "🟡",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "CPA": {
     "price": 133.47,
@@ -276,7 +276,7 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "CVSA": {
     "price": 136.38,
@@ -285,16 +285,16 @@
     "icon": "🟡",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "DNKEY": {
     "price": 29.15,
-    "cheap": 27.24,
-    "expensive": 68.1,
+    "cheap": 27.48,
+    "expensive": 68.7,
     "icon": "🟡",
     "eps_basis": "ttm_fallback",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "FNF": {
     "price": 47.38,
@@ -303,7 +303,7 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "GLW": {
     "price": 147.16,
@@ -312,7 +312,7 @@
     "icon": "🔴",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "GOOG": {
     "price": 343.34,
@@ -321,7 +321,7 @@
     "icon": "🟡",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "GSK": {
     "price": 52.07,
@@ -330,16 +330,16 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "HENKY": {
     "price": 20.54,
-    "cheap": 16.44,
-    "expensive": 41.1,
+    "cheap": 16.32,
+    "expensive": 40.8,
     "icon": "🟡",
     "eps_basis": "ttm_fallback",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "HIG": {
     "price": 138.22,
@@ -348,7 +348,7 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "HPE": {
     "price": 53.44,
@@ -357,7 +357,7 @@
     "icon": "🟡",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "HSBC": {
     "price": 104.38,
@@ -366,16 +366,16 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "ITOCY": {
     "price": 13.31,
-    "cheap": 9.6,
-    "expensive": 24.0,
+    "cheap": 9.72,
+    "expensive": 24.3,
     "icon": "🟡",
     "eps_basis": "ttm_fallback",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "IX": {
     "price": 39.53,
@@ -384,7 +384,7 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "JPM": {
     "price": 356.69,
@@ -393,7 +393,7 @@
     "icon": "🟡",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "KNBWY": {
     "price": 19.48,
@@ -402,7 +402,7 @@
     "icon": "🟡",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "KR": {
     "price": 58.45,
@@ -411,7 +411,7 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "LH": {
     "price": 337.68,
@@ -420,7 +420,7 @@
     "icon": "🟡",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "LITE": {
     "price": 885.565,
@@ -429,7 +429,7 @@
     "icon": "🟡",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "MCK": {
     "price": 905.09,
@@ -438,7 +438,7 @@
     "icon": "🟡",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "MSFT": {
     "price": 491.71,
@@ -447,7 +447,7 @@
     "icon": "🟡",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "MU": {
     "price": 932.97,
@@ -456,7 +456,7 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "NVDA": {
     "price": 213.05,
@@ -465,7 +465,7 @@
     "icon": "🟡",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "ON": {
     "price": 72.51,
@@ -474,7 +474,7 @@
     "icon": "🟡",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "PAA": {
     "price": 24.7,
@@ -483,7 +483,7 @@
     "icon": "🟡",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "PHIN": {
     "price": 70.92,
@@ -492,7 +492,7 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "PHM": {
     "price": 130.86,
@@ -501,7 +501,7 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "SPCX": {
     "price": 137.95,
@@ -510,7 +510,7 @@
     "icon": "🔴",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "SSUMY": {
     "price": 11.17,
@@ -519,7 +519,7 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "TFC": {
     "price": 50.3,
@@ -528,7 +528,7 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "THC": {
     "price": 271.88,
@@ -537,7 +537,7 @@
     "icon": "🟡",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "TM": {
     "price": 192.95,
@@ -546,7 +546,7 @@
     "icon": "🟡",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "TSLA": {
     "price": 350.25,
@@ -555,7 +555,7 @@
     "icon": "🔴",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "TSM": {
     "price": 417.41,
@@ -564,7 +564,7 @@
     "icon": "🟡",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "UHS": {
     "price": 175.76,
@@ -573,7 +573,7 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "UNM": {
     "price": 89.69,
@@ -582,7 +582,7 @@
     "icon": "🟢",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   },
   "XYZ": {
     "price": 82.72,
@@ -591,6 +591,6 @@
     "icon": "🟡",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-08-26 07:54"
+    "updated_at": "2026-08-26 16:10"
   }
 }

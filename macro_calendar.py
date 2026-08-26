@@ -5,7 +5,11 @@
 跟 researcher_macro.py 的分工：這裡只回答「哪天有事」，不回答「發布的數字是多少／
 有沒有意外」——後者才需要真的花錢叫 AI 查證，且只在這裡判斷「最近有事」時才觸發。
 """
-from datetime import date, timedelta
+import sys
+from datetime import date, timedelta, datetime, timezone
+
+if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
+    sys.stdout.reconfigure(encoding="utf-8")
 
 # 來源：federalreserve.gov 2026 FOMC 會議公告（2024-08-09 發布的暫定時程）
 # https://www.federalreserve.gov/newsevents/pressreleases/monetary20240809a.htm
@@ -83,6 +87,32 @@ def upcoming_events(today_str=None, days_before=3, days_after=7):
                         "date": ds, "status": "released" if d < today else "scheduled", "confidence": "high"})
 
     out.sort(key=lambda e: e["date"])
+    return out
+
+
+TPE = timezone(timedelta(hours=8))
+NEWS_API = "https://api.cnyes.com/media/api/v1/newslist/category/{cat}?limit={n}"
+
+
+def macro_headlines(n=5):
+    """免費、非LLM：鉅亨網 tw_macro／wd_macro 分類（總經新聞，跟 market_fetch.py 用的
+    tw_stock/wd_stock 是不同分類，這兩個才是總經導向）。2026-08-26查證：這個公開JSON
+    API 不用登入不用key，跟 market_fetch.py 已經在正式環境穩定用的是同一個端點/機制。
+    查失敗要老實回空list，不要讓整個researcher_macro因為新聞抓不到而中斷。"""
+    import requests
+    out = []
+    for cat, mkt in (("tw_macro", "TW"), ("wd_macro", "global")):
+        try:
+            r = requests.get(NEWS_API.format(cat=cat, n=n), timeout=15)
+            r.raise_for_status()
+            items = r.json()["items"]["data"]
+            for it in items[:n]:
+                ts = datetime.fromtimestamp(it["publishAt"], tz=TPE)
+                out.append({"title": it["title"], "market": mkt,
+                            "url": f'https://news.cnyes.com/news/id/{it["newsId"]}',
+                            "ts": ts.strftime("%Y-%m-%d %H:%M")})
+        except Exception as e:
+            out.append({"title": f"（{cat} 新聞抓取失敗：{e}）", "market": mkt, "url": "", "ts": ""})
     return out
 
 

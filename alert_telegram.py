@@ -145,8 +145,16 @@ def main():
     # （原本只有「無訊號」那個分支有連結，「有訊號」分支完全沒有替代方案，
     # 拿掉附檔後要是沒補這個會直接失去看板入口，不是單純刪掉就好）。
 
+    # 2026-08-26：另存一份「這次翻面/AI訊號變化清單」給 researcher_stock.py 讀。
+    # 這支腳本跑在 GitHub Actions（台灣09:00），researcher_stock.py 跑在本機排程
+    # （台灣07:00，比這裡早2小時）——本機明天07:00讀到的會是「今天09:00這次」的結果，
+    # 落後一天，是刻意的已知限制，不是bug（兩邊執行環境不同，要即時對齊需要更大改動）。
     os.makedirs("state", exist_ok=True)
     json.dump(cur, open(STATE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
+    json.dump({"flips_hold": flips_hold, "flips_watch": flips_watch,
+               "ai_alerts": [{"chain": c, "market": m, "sig": s, "code": code, "name": name}
+                              for c, m, s, code, name, ol, reason in alerts]},
+              open("state/st_flips_today.json", "w", encoding="utf-8"), ensure_ascii=False, indent=0)
     print(f"✅ 投資晨報推送完成：AI {len(alerts)}、持股翻面 {len(flips_hold)}、守備翻面 {len(flips_watch)}")
 
 
