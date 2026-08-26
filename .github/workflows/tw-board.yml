@@ -2,9 +2,14 @@ name: 美股晨會看板（HTML + 反轉警示 Telegram）
 
 on:
   schedule:
-    # UTC 01:00 = 台灣 09:00。本機排程 08:30 先跑判讀層並 push，這裡 09:00 才讀報告出 HTML。
+    # UTC 00:15 = 台灣 08:15。本機排程 BoardAnalyzeDaily 07:00 先跑判讀層並 push，
+    # 這裡才讀報告出 HTML——查過本機那批近10天穩定在07:44~07:54結束（最慢07:54），
+    # 08:15留20分鐘緩衝夠安全。
     # 2026-07-31：LLM 判讀搬本機（Max plan），本 workflow 已不呼叫任何 LLM。
-    - cron: '0 1 * * 2-6'
+    # 2026-08-26：原本09:00，提前到08:15——不是為了這個workflow本身，是為了讓
+    # researcher_stock.py（本機另一個排程08:45跑）能拿到「今天」的SuperTrend翻面
+    # 結果，不用等到明天。見 state/st_flips_today.json 那段說明。
+    - cron: '15 0 * * 2-6'
   workflow_dispatch:          # 可手動觸發
 
 permissions:
