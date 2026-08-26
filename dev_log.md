@@ -1479,3 +1479,61 @@ hover只顯示象限文字。補：`_frames_data()` 的 pt 補回 `size`（原�
 動畫播放中 hover 也會即時顯示當下補間幀的真實數值,不只有靜態畫面才有。
 
 ⚠️ 這次改動還沒 commit/push（等 Leo 看過畫面確認）。
+
+## 2026-08-26（續十二）· 研究員Agent總體層落地：researcher_macro.py
+
+接續上面投顧報告/advisor.db討論，開始動手寫研究員第一塊——總體層（固定時間跑，
+不像產業/個股層有規則可觸發）。
+
+**技術驗證**：`claude -p` CLI 有 `--json-schema` 參數（`claude --help` 查到，不是猜的），
+比現有 `llm_board.ask_json()` 的「拜託只回JSON+正則剝圍籬+失敗重試」硬——直接在CLI層級
+驗證 schema，回傳的 JSON 帶 `structured_output` 欄位，不用自己 parse。
+
+**成本查證**：Leo 問「不能用免費的嗎」。實測發現：連完全不用 WebSearch 工具、純靠模型
+知識回答的測試，`total_cost_usd` 都不是 0（$0.14）——代表這個數字是 CLI 每次都會印的
+「等值API成本」參考值，不是「這次真的扣了多少錢」，跟 `llm_board.py`/`earnings_call.py`
+已經穩定跑好幾個月、記憶裡明確寫「Max plan零API費用」是同一套 `claude -p
+--dangerously-skip-permissions` 機制。這不是100%官方證實的結論，先跑幾天回頭查
+Anthropic Console 用量核對（比照 [[gemini_cost_estimate_reconciliation]] 的做法）。
+
+**實測3次真實跑**：帶WebSearch真的查7天內總經事件，cost分別是 $0.686/$0.743/$0.706，
+平均約$0.71/次。內容品質不錯——有把「已公布」跟「預期」分開講、主動標注資料缺口
+（GDP第二次估計實際數字沒查到就老實說沒查到不瞎編）、還自己抓到一個背景異動主動提醒
+（新任Fed主席人事變動），符合「事實/推論/假設分開」的鐵律要求。
+
+**排程**：原本以為要接09:00那個時間點，後來查 `BoardAnalyzeDaily` 這個 Windows 排程
+任務實際設定，發現真正做本機LLM判讀的是07:00台灣時間（週一到五，DaysOfWeek=62
+bitmask），09:00是GitHub Actions讀取已推送結果產生網頁的時間，兩個不是同一件事。
+直接加進 `board_analyze_daily.cmd` 既有批次（valuation_alert.py之後），沿用同一套
+git add/push/失敗通知機制，不用另開排程。
+
+**踩坑**：console print 遇到 cost 那行的中文字元，cp950 codepage 炸掉
+（UnicodeEncodeError）——已知坑，套用 `industry_rotation.py` 同一招
+`sys.stdout.reconfigure(encoding="utf-8")`修掉。
+
+輸出先存本機 `state/research_notes.jsonl`（不進 advisor.db，schema設計好了但還沒建表，
+先跑幾天驗證品質/成本穩不穩再收斂）。這次改動還沒 commit/push（等Leo確認）。
+
+## 2026-08-26（續十三）· 研究員總體層降成本：拆出零成本行事曆表
+
+Leo 問「可以降到0嗎」（原本平均$0.71/次、每天跑）。分析後發現真正該花錢查的只有
+「有沒有意外消息」，FOMC/CPI/非農/台灣央行「哪天開會」是官方早就公布好的排定行程，
+不需要每天叫AI重查一次。
+
+**新增 `macro_calendar.py`**：FOMC（federalreserve.gov 2026暫定時程）、CPI（BLS時程，
+usinflationcalculator.com轉引）、非農（BLS Employment Situation，MA州政府文件轉引，
+11-12月官方未公布用「每月第一個週五」規則推算並標記confidence=low）、台灣央行
+（cbc.gov.tw 115年理監事會日期公告）四份行事曆，這次用WebSearch/WebFetch查證一次，
+之後純查表零成本零AI呼叫，每季手動核對更新即可。
+
+**`researcher_macro.py` 重構**：先查 `macro_calendar.needs_verification()`——今天前後1天
+內有沒有排定事件。沒有 → 直接存一筆零成本筆記（列出未來25天已知行事曆，source=calendar，
+cost_usd=0）。有 → 才叫 claude -p + WebSearch，而且把「已知事件清單」餵給它當context，
+不用重新查「有哪些事件」，只查「這些事件的細節/結果/意外消息」——範圍變窄，實測單次成本
+從$0.71降到$0.33（近腰斬），而且平均一週大概只有1-2天真的有事件觸發，其餘完全零成本。
+
+預估：原本 $0.71×5天/週 = $3.55/週 → 改完大概 $0.33×1.5天/週 ≈ $0.5/週，降幅約85%。
+
+已測試兩種分支都正常運作（零成本查表分支用真實今天日期跑；AI查證分支用模擬日期
+2026-09-04單獨測函式驗證，測試產生的假資料已從 state/research_notes.jsonl 清掉，
+沒有混進正式紀錄）。這次改動還沒 commit/push（等Leo確認）。
