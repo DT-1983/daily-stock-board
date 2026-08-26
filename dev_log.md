@@ -1537,3 +1537,32 @@ cost_usd=0）。有 → 才叫 claude -p + WebSearch，而且把「已知事件�
 已測試兩種分支都正常運作（零成本查表分支用真實今天日期跑；AI查證分支用模擬日期
 2026-09-04單獨測函式驗證，測試產生的假資料已從 state/research_notes.jsonl 清掉，
 沒有混進正式紀錄）。這次改動還沒 commit/push（等Leo確認）。
+
+## 2026-08-26（續十四）· 研究員接個股層 + 總體層補免費新聞
+
+**個股層落地**（新增 `researcher_stock.py`）：不重寫訊號偵測，直接讀既有兩支腳本
+的翻面結果轉存成跟總體層同格式的 research_notes.jsonl：
+- `valuation_alert.py`（貴俗價翻貴，本機07:00跑，同一批次，資料即時）——小改：多存一份
+  `state/valuation_flips_today.json` 給研究員讀，不影響原本Telegram推播邏輯
+- `st_alert.py`（SuperTrend翻面，透過`alert_telegram.py`在GitHub Actions台灣09:00跑）——
+  發現這個**跑在跟本機07:00不同的執行環境**，本機讀到的會是「昨天09:00那次」結果，
+  落後一天，是老實標注的已知限制，不是bug。小改`alert_telegram.py`多存
+  `state/st_flips_today.json`，`tw-board.yml`補上這個新檔案的git add，不然只活在
+  GH Actions那次執行裡本機讀不到。
+
+零成本優先（比照新加的全域規則）：翻面本身是既有決定論訊號不用AI；額外查
+`yfinance upgrades_downgrades`（免費非LLM）當佐證，confidence固定medium（已知
+漏抓風險，不能單獨支撐判斷）。用假資料(AAPL/NVDA)測過兩個分支都正常運作，
+測試資料已從正式紀錄清掉；`valuation_alert.py`本身也真的重跑一次驗證（66/77檔算出，
+今天無新翻貴，正確回空清單）。
+
+**總體層補免費新聞**：Leo問「總體層還有新聞？」——查證後發現不用另外花錢，
+鉅亨網除了 market_fetch.py 已經在用的 tw_stock/wd_stock，還有 **tw_macro/wd_macro**
+這兩個總經導向分類，一樣公開免key。加進 `macro_calendar.macro_headlines()`，
+兩個分支（零成本查表/AI查證）都附上最新5+5條標題，researcher_macro.py 平常
+零成本的日子現在也會帶真實新聞，不用等有排定事件才有東西看。
+
+這是這次順手驗證「先查零成本三次再用付費」新規則的實例——一開始以為「一般新聞
+掃描一定要花錢查」，查了才發現既有的鉅亨網API本來就有總經分類，不用另外接AI。
+
+還沒commit/push（等Leo確認）。

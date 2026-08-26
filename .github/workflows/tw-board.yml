@@ -107,7 +107,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add state/signals.json state/st_state.json docs/index.html docs/board.html \
+          git add state/signals.json state/st_state.json state/st_flips_today.json docs/index.html docs/board.html \
                   docs/gdp.html gdp_data.json market_data.json \
                   portfolios.json docs/portfolios.html docs/buffett.html
           git commit -m "chore: update 首頁+看板+GDP+signals+巴菲特頁 [skip ci]" || echo "無變化"

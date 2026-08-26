@@ -26,7 +26,7 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from llm_board import _claude_bin  # 共用同一套 CLAUDE_BIN 尋找邏輯，不重複寫
-from macro_calendar import upcoming_events, needs_verification
+from macro_calendar import upcoming_events, needs_verification, macro_headlines
 
 NOTES_PATH = "state/research_notes.jsonl"
 
@@ -112,22 +112,25 @@ def _ask_claude(events, date):
 def run():
     date = time.strftime("%Y-%m-%d")
     near_term = needs_verification(date, window_days=1)   # 今天前後1天內有事才花錢查
+    headlines = macro_headlines(5)   # 免費、非LLM，鉅亨網總經新聞，兩個分支都附
 
     if not near_term:
         note = {
-            "layer": "macro", "scope": "global", "source": "calendar",
+            "layer": "macro", "scope": "global", "source": "calendar+headlines",
             "confidence": "high",
             "summary": "近期（前後1天）無排定總經事件，跳過AI查證，零成本。"
                        "近期已知行事曆（未來25天內）：" +
                        ("；".join(f"{e['date']} {e['market']} {e['event']}"
                                   for e in upcoming_events(date, days_before=0, days_after=25)) or "無"),
             "events": upcoming_events(date, days_before=0, days_after=25),
+            "headlines": headlines,
             "ts": date, "cost_usd": 0.0,
         }
         _save(note)
         return note
 
     note = _ask_claude(near_term, date)
+    note["headlines"] = headlines
     _save(note)
     return note
 
