@@ -934,8 +934,8 @@ var playTimer = null, playRAF = null, playIdx = 0;
 // 「新元素從哪裡長出來」規則干擾。rAF 而不是 setInterval，是因為 rAF 綁瀏覽器
 // 實際繪圖節奏，畫面忙不過來時會自動跳格而不是硬擠，比固定間隔更不容易卡頓。
 var ANIM_MS = 300;     // 一個真實週的補間時長（2026-08-26 加快一倍：600→300）
-var PAUSE_MS = 60;     // 補間完成後，接下一週之前留一點點停頓感（120→60，同倍率）
-function _easeInOutQuad(t) { return t < 0.5 ? 2*t*t : 1 - Math.pow(-2*t+2, 2)/2; }
+// PAUSE_MS 已移除（2026-08-27）：段間停頓＝逐格卡頓感的主因，連續時間軸不需要它。
+// _easeInOutQuad 同時移除：每段 ease-in-out 讓速度週期性脈動（呼吸感），等速更絲滑。
 function _lerp(a, b, t) { return a + (b - a) * t; }
 
 function rrgGet(kind) {
@@ -1138,7 +1138,28 @@ function updateChartPoints(pts, trailDs) {
   window._rrgCurPts = pts;
 }
 
-// 播放中不處理 hover（會跟 tweenWeek 每格都在 updateChartPoints 打架），
+// 2026-08-27 播放中的快速路徑：只原地改主泡泡 dataset 的 x/y/r 數值，不重建 datasets
+// 陣列——每幀重建會讓 Chart.js 重新解析全部資料，是「一張一張卡頓感」的主因之一。
+// 泡泡數量/順序在播放中固定（Python 端 _frames_data 保證每幀同一組籃子同一順序，
+// 見該函式 2026-08-25 的補注），原地改是安全的；數量對不上（理論上不會發生）
+// 就退回完整路徑重建，寧可慢一幀也不要畫錯。
+function fastUpdateBubbles(pts, trailDs) {
+  if (!rrgChart || !rrgChart.data.datasets.length ||
+      rrgChart.data.datasets[0].data.length !== pts.length) {
+    updateChartPoints(pts, trailDs);
+    return;
+  }
+  var d = rrgChart.data.datasets[0].data;
+  for (var i = 0; i < pts.length; i++) {
+    d[i].x = pts[i].ratio;
+    d[i].y = pts[i].momentum;
+    d[i].r = pts[i].radius || 10;
+  }
+  window._rrgCurPts = pts;   // tooltip/名字標籤讀這個，要跟畫面同步
+  rrgChart.update('none');
+}
+
+// 播放中不處理 hover（會跟播放迴圈每幀更新打架），
 // 只有靜態畫面時 hover 才會重算一次軌跡（成本很低，只是重畫 trail 那幾個 dataset）。
 // 只留勾選的產業（排行榜可複選）。空集合＝沒勾＝顯示全部，不是「選了但沒東西」。
 function filteredPts(pts) {
@@ -1291,44 +1312,50 @@ document.getElementById('playBtn').addEventListener('click', function() {
   var lbl = document.getElementById('rrgFrameLabel');
   lbl.style.display = 'block';
 
-  // 走「真實一週 → 真實下一週」，中間用 rAF 自己逐格算補間座標餵給 Chart.js
-  // （不讓 Chart.js 自己補間，見上面 animation:false 的說明）。
-  function tweenWeek(fromPts, toPts, trailDs, onDone) {
-    var t0 = performance.now();
-    function frame(now) {
-      if (!isPlaying) return;                 // 使用者按了停止，中途放棄這段補間
-      var t = Math.min(1, (now - t0) / ANIM_MS);
-      var e = _easeInOutQuad(t);
-      var pts = toPts.map(function(pb, idx) {
-        var pa = fromPts[idx] || pb;
-        return {key: pb.key, name: pb.name,
-                ratio: _lerp(pa.ratio, pb.ratio, e),
-                momentum: _lerp(pa.momentum, pb.momentum, e),
-                radius: _lerp(pa.radius || 10, pb.radius || 10, e),
-                size: _lerp(pa.size || 0, pb.size || 0, e),
-                quadrant: e < 0.5 ? pa.quadrant : pb.quadrant};
-      });
-      updateChartPoints(filteredPts(pts), trailDs);
-      if (t < 1) { playRAF = requestAnimationFrame(frame); } else { playRAF = null; onDone(); }
-    }
-    playRAF = requestAnimationFrame(frame);
-  }
-
-  function stepPlay() {
-    if (!isPlaying) return;
-    if (playIdx >= playFrames.length - 1) { isPlaying = false; stopPlay(); draw(); return; }
-    var a = playFrames[playIdx].points, b = playFrames[playIdx + 1].points;
-    var realIdx = startOffset + playIdx + 1;
-    var trailDs = buildTrailDs(fullFrames, realIdx, tailWeeks, null, selectedKeys);
-    lbl.textContent = playFrames[playIdx + 1].date;
-    tweenWeek(a, b, trailDs, function() {
-      playIdx++;
-      playTimer = setTimeout(stepPlay, PAUSE_MS);
+  // 2026-08-27 連續時間軸重寫（Leo 反饋「一張一張的卡頓感」，問要不要換繪圖工具）。
+  // 不用換工具——20 顆泡泡對 canvas 是小菜，卡頓是舊動畫結構自己造成的，兩個源頭：
+  // ① 舊做法「一週一段補間、段間 setTimeout(PAUSE_MS) 停頓」——動300ms→停60ms 的
+  //    節奏本身就是逐格感；而且每段用 ease-in-out，速度週期性脈動（呼吸感）加重逐格感。
+  // ② 每一幀都整組換掉 datasets 陣列（updateChartPoints），Chart.js 每幀重新解析
+  //    全部資料——改成播放中泡泡座標「原地改值」（fastUpdateBubbles），
+  //    軌跡 datasets 只在跨週邊界重算（它本來就一週才變一次，不用每幀重建）。
+  // 改後：一條連續時間軸等速跨週插值，段間不停、不加每段 easing，rAF 每幀只改數字。
+  var segIdx = -1, curTrailDs = null;
+  var t0 = performance.now();
+  var total = (playFrames.length - 1) * ANIM_MS;
+  function interp(a, b, e) {
+    return b.map(function(pb, idx) {
+      var pa = a[idx] || pb;
+      return {key: pb.key, name: pb.name,
+              ratio: _lerp(pa.ratio, pb.ratio, e),
+              momentum: _lerp(pa.momentum, pb.momentum, e),
+              radius: _lerp(pa.radius || 10, pb.radius || 10, e),
+              size: _lerp(pa.size || 0, pb.size || 0, e),
+              quadrant: e < 0.5 ? pa.quadrant : pb.quadrant};
     });
+  }
+  function frame(now) {
+    if (!isPlaying) return;                 // 使用者按了停止，中途放棄
+    var t = Math.min(now - t0, total);
+    var f = t / ANIM_MS;                    // 連續週位置（例：3.42 = 第3→4週走到42%）
+    var i = Math.min(Math.floor(f), playFrames.length - 2);
+    var frac = Math.min(1, f - i);
+    var pts = filteredPts(interp(playFrames[i].points, playFrames[i + 1].points, frac));
+    if (i !== segIdx) {
+      // 跨週邊界：重算軌跡+日期標籤（一週一次），走完整 update 路徑
+      segIdx = i;
+      curTrailDs = buildTrailDs(fullFrames, startOffset + i + 1, tailWeeks, null, selectedKeys);
+      lbl.textContent = playFrames[i + 1].date;
+      updateChartPoints(pts, curTrailDs);
+    } else {
+      fastUpdateBubbles(pts, curTrailDs);   // 週內：只原地改座標，不重建 datasets
+    }
+    if (t < total) { playRAF = requestAnimationFrame(frame); }
+    else { playRAF = null; isPlaying = false; stopPlay(); draw(); }
   }
   lbl.textContent = playFrames[0].date;
   updateChartPoints(filteredPts(playFrames[0].points), buildTrailDs(fullFrames, startOffset, tailWeeks, null, selectedKeys));
-  playTimer = setTimeout(stepPlay, PAUSE_MS);
+  playRAF = requestAnimationFrame(frame);
 });
 
 document.getElementById('mktSeg').addEventListener('click', function(e) {
@@ -1356,7 +1383,7 @@ document.getElementById('rangeSeg').addEventListener('click', function(e) {
 document.getElementById('tailSlider').addEventListener('input', function(e) {
   tailWeeks = parseInt(e.target.value, 10);
   document.getElementById('tailVal').textContent = tailWeeks + ' 週';
-  if (!playTimer) draw();   // 播放中先不重畫，讓下一個真實週的格子自然套用新尾巴長度
+  if (!isPlaying) draw();   // 播放中先不重畫，跨週邊界會自然套用新尾巴長度
 });
 // 排行榜某一列 hover 也能高亮該籃子的軌跡（跟直接 hover 泡泡同一套邏輯），
 // 事件委派在容器上，因為每次 draw() 都會整個重畫 #rrgRank 的 innerHTML。
