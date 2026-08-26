@@ -26,7 +26,8 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from llm_board import _claude_bin  # 共用同一套 CLAUDE_BIN 尋找邏輯，不重複寫
-from macro_calendar import upcoming_events, needs_verification, macro_headlines
+from macro_calendar import (upcoming_events, needs_verification, macro_headlines,
+                            market_anomaly, keyword_hits)
 
 NOTES_PATH = "state/research_notes.jsonl"
 
@@ -65,12 +66,16 @@ PROMPT = """你是總體經濟研究員，任務是幫投資長整理研究筆�
 今天是 {date}。下面是已經確認的行事曆事件（不用重查，這是已知事實）：
 {known_events}
 
-任務：針對上面這些事件，查證：
-1. 已經發生的（status=released）：實際公布的數字是多少？跟市場預期比如何？
-2. 還沒發生的（status=scheduled）：市場預期是什麼？有沒有行事曆上沒有但相關的意外消息
-   （例如人事異動、政策風向轉變）？
-不要重新查一次「有哪些事件」，上面已知事件清單就是全部，只需要查「這些事件的細節/結果」。
-events 陣列照原樣列出上面每個事件，可以在 event 欄位裡補充查到的細節。
+任務：
+1. 行事曆事件——已經發生的（released）查實際公布數字跟市場預期差多少；
+   還沒發生的（scheduled）查市場預期，以及有沒有行事曆上沒有但相關的意外消息。
+   不要重新查一次「有哪些事件」，上面清單就是全部。
+2. 如果下面有附「市場異常波動」或「警示關鍵字新聞」——那代表發生了行事曆上沒有的事，
+   要查清楚：發生了什麼、影響範圍多大、是短期噪音還是結構性變化。
+   這類事件本來就不在行事曆上（關稅戰、戰爭、制裁、信用事件），是這次要觀測的重點。
+   **市場異常但查不出原因時要直接說「查不到對應事件」**，不要硬找一個新聞來配。
+
+events 陣列列出所有事件（行事曆的照原樣列、意外事件也新增進去，用當天日期）。
 scope 填 "global"；source 填 "websearch"；confidence 依資料確定性填 high/medium/low
 （已公布的數字=high，尚未發生但已排定時程=medium，不確定的傳言=low）。"""
 
@@ -84,12 +89,23 @@ def _save(note):
     print(json.dumps(note, ensure_ascii=False, indent=2))
 
 
-def _ask_claude(events, date):
+def _ask_claude(events, date, anomalies=None, kw_hits=None, headlines=None):
     exe = _claude_bin()
     if not exe:
         raise RuntimeError("找不到 claude CLI")
-    known = "\n".join(f"- {e['date']} {e['market']} {e['event']}（{e['status']}）" for e in events)
-    prompt = PROMPT.format(date=date, known_events=known)
+    known = "\n".join(f"- {e['date']} {e['market']} {e['event']}（{e['status']}）"
+                      for e in events) or "（無排定事件）"
+    extra = ""
+    if anomalies:
+        extra += "\n\n市場異常波動（已偵測到，這是事實不用查證）：\n" + \
+                 "\n".join(f"- {a}" for a in anomalies)
+    if kw_hits:
+        extra += "\n\n今日新聞命中警示關鍵字（已附上，不用再查）：\n" + \
+                 "\n".join(f"- [{k}] {t}" for k, t in kw_hits[:8])
+    if headlines and not kw_hits:
+        extra += "\n\n今日總經新聞標題（已附上，不用再查）：\n" + \
+                 "\n".join(f"- {h['ts']} {h['title']}" for h in headlines[:8])
+    prompt = PROMPT.format(date=date, known_events=known) + extra
     r = subprocess.run(
         [exe, "-p", "--dangerously-skip-permissions", "--output-format", "json",
          "--json-schema", json.dumps(SCHEMA, ensure_ascii=False)],
@@ -111,15 +127,19 @@ def _ask_claude(events, date):
 
 def run():
     date = time.strftime("%Y-%m-%d")
-    near_term = needs_verification(date, window_days=1)   # 今天前後1天內有事才花錢查
-    headlines = macro_headlines(5)   # 免費、非LLM，鉅亨網總經新聞，兩個分支都附
+    near_term = needs_verification(date, window_days=1)   # 今天前後1天內有排定事件
+    headlines = macro_headlines(5)   # 免費、非LLM，鉅亨網總經新聞，所有分支都附
+    # 2026-08-26 加：沒排定的重大事件觸發器（關稅戰/戰爭/制裁這種不會出現在行事曆上，
+    # 但一樣撼動大盤）。兩個都零成本：市場異常讀既有 market_data.json，關鍵字純字串比對。
+    anomalies = market_anomaly()
+    kw_hits = keyword_hits(headlines)
 
-    if not near_term:
+    if not (near_term or anomalies or kw_hits):
         note = {
             "layer": "macro", "scope": "global", "source": "calendar+headlines",
             "confidence": "high",
-            "summary": "近期（前後1天）無排定總經事件，跳過AI查證，零成本。"
-                       "近期已知行事曆（未來25天內）：" +
+            "summary": "近期（前後1天）無排定總經事件、市場無異常波動、新聞無警示關鍵字命中，"
+                       "跳過AI查證，零成本。近期已知行事曆（未來25天內）：" +
                        ("；".join(f"{e['date']} {e['market']} {e['event']}"
                                   for e in upcoming_events(date, days_before=0, days_after=25)) or "無"),
             "events": upcoming_events(date, days_before=0, days_after=25),
@@ -129,8 +149,18 @@ def run():
         _save(note)
         return note
 
-    note = _ask_claude(near_term, date)
+    why = []
+    if near_term:
+        why.append(f"行事曆有排定事件（{len(near_term)}項）")
+    if anomalies:
+        why.append("市場異常波動：" + "；".join(anomalies))
+    if kw_hits:
+        why.append("新聞命中警示關鍵字：" + "；".join(f"[{k}]{t[:30]}" for k, t in kw_hits[:5]))
+    print("觸發AI查證，原因：" + " ｜ ".join(why))
+
+    note = _ask_claude(near_term, date, anomalies, kw_hits, headlines)
     note["headlines"] = headlines
+    note["trigger"] = why
     _save(note)
     return note
 

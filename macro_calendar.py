@@ -5,7 +5,9 @@
 跟 researcher_macro.py 的分工：這裡只回答「哪天有事」，不回答「發布的數字是多少／
 有沒有意外」——後者才需要真的花錢叫 AI 查證，且只在這裡判斷「最近有事」時才觸發。
 """
+import os
 import sys
+import json
 from datetime import date, timedelta, datetime, timezone
 
 if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
@@ -121,6 +123,58 @@ def needs_verification(today_str=None, window_days=1):
     平常查表就好，不用每天都花$0.7。"""
     events = upcoming_events(today_str, days_before=window_days, days_after=window_days)
     return events
+
+
+# ── 沒排定的重大事件觀測（2026-08-26 加）─────────────────────────────
+# 行事曆只涵蓋「排定好的」事件（FOMC/CPI/非農/央行）。關稅戰、戰爭、制裁、信用事件
+# 這類沒排定的東西不會出現在行事曆上，但一樣會撼動大盤——原本這些新聞有抓回來
+# 存進 research_notes.jsonl，卻沒有任何人讀它（行事曆說沒事，AI 根本沒被呼叫），
+# 等於抓了等於沒抓。這裡補兩個零成本觸發器。
+
+INDEX_MOVE_PCT = 2.0     # 主要指數單日漲跌超過這個幅度就算異常
+YIELD_MOVE_BP = 15       # 10年期公債殖利率單日變動超過這麼多bp就算異常
+
+# 精簡的關鍵字清單：抓「市場還沒反應、但明顯要出事」的情況。刻意不寫長——
+# 清單再長也一定會漏掉沒想到的詞（2020年沒人會事先把「疫情」放進來），
+# 真正的防線是上面的市場異常偵測（重大事件市場一定會反應），這裡只是輔助。
+ALERT_KEYWORDS = [
+    "關稅", "制裁", "禁運", "出口管制", "戰爭", "停火", "衝突",
+    "違約", "倒閉", "破產", "崩盤", "熔斷", "股災",
+    "升息", "降息", "緊急會議", "政變", "封鎖",
+]
+
+
+def market_anomaly(market_data_path="market_data.json"):
+    """零成本：讀既有的 market_data.json（market_fetch.py 每天已經在抓），
+    判斷主要指數/殖利率有沒有異常波動。回傳觸發原因清單，空list=正常。
+    讀不到檔案就回空——沒資料時不該假裝偵測過（寧可漏報也不要謊報）。"""
+    if not os.path.exists(market_data_path):
+        return []
+    try:
+        data = json.load(open(market_data_path, encoding="utf-8"))
+    except Exception:
+        return []
+    hits = []
+    for idx in data.get("indices", []):
+        pct, bp = idx.get("chg_pct"), idx.get("chg_bp")
+        nm = idx.get("name", idx.get("sym", ""))
+        if pct is not None and abs(pct) >= INDEX_MOVE_PCT:
+            hits.append(f"{nm} 單日{'漲' if pct > 0 else '跌'} {abs(pct):.2f}%")
+        if bp is not None and abs(bp) >= YIELD_MOVE_BP:
+            hits.append(f"{nm} 單日變動 {bp:+.1f}bp")
+    return hits
+
+
+def keyword_hits(headlines):
+    """零成本：關鍵字命中檢查。回 [(關鍵字, 標題), ...]。"""
+    hits = []
+    for h in headlines or []:
+        title = h.get("title", "")
+        for kw in ALERT_KEYWORDS:
+            if kw in title:
+                hits.append((kw, title))
+                break        # 一則新聞算一次就好，不重複計數
+    return hits
 
 
 if __name__ == "__main__":
