@@ -1403,3 +1403,79 @@ AUM/市值回貼過去，RS-Ratio/Momentum 本身才是當時真實價格算的�
 跟這次的直接編輯+regenerate 工作方式一致，沒有衝突。但這是這個 session 第一次
 發現這套新架構存在，值得讓 Leo 知道——如果之後有計畫把這批 flat script 併進
 新架構，會是完全不同量級的工程。
+
+## 2026-08-26（續九）· trade_plan.py 補齊目標價/風險報酬比/失效條件
+
+Leo 拍板：只給有依據的策略補這三個欄位，不是全部策略一律套用同一個模板
+（PDF那篇文章的通用checklist跟現有4個策略的出場哲學不完全相容，見前幾輪討論）。
+
+**巴菲特價值**（`buffett_targets()`）：
+- 目標價 = 貴價（`evaluate()`的`exp_price`，已經是既有邏輯，不是新算的）
+- 失效條件 = `quality_ok` 翻 False（品質關沒過，`signal`變SKIP）——「公司變壞就該賣，
+  跟股價無關」這個判斷本來就存在於 `buffett_screener.evaluate()`，這裡只是抽出來用
+- 風險報酬比 = (目標價−進場價)÷(進場價−保險絲價)，保險絲價複用既有的
+  `fuse_line()`（−30%），不是另外定義一個停損價
+
+**三指標合流／產業鏈+趨勢**（`supertrend_invalidation()`）：
+- 只補失效條件現況，不補目標價/風險報酬比——`EXIT_RULES`白紙黑字寫著
+  「不設固定停利」，這是趨勢跟隨策略的既有決定，補目標價會推翻它
+- 複用 `paper_portfolio.py::combo_signal_events()` 已經回測驗證過的規則
+  （Leo 2026-08-11：「ST反轉賣一半、RS跌破60MA全出」是他自己回測出來最優的
+  進出法，見 `backtest_position_sim.py`）——不是重新設計規則，是把「現在這檔
+  觸發到哪一階段」講清楚
+- `board_html.supertrend()` + `technical_indicators.mansfield_rs_series(closes,
+  bench_closes, 60)` 兩個既有函式直接重用，範圍只涵蓋 Firstrade(美股)，
+  跟 `ACTIVE_ACCOUNTS` 一致，沒處理台股後綴（那本來就不在這兩個策略的範圍內）
+
+**產業鏈全**：三個欄位都跳過，維持原樣——出場依據是「每週重篩掉出守備清單」，
+相對排名邏輯，本來就沒有目標價/停損/失效條件這種東西。
+
+驗證：實跑 `build_plan()` 兩個真實案例——AAPL(巴菲特價值) 目標價$286.16
+（跟這個月稍早俗貴價功能驗證過的數字完全一致）、風險報酬比1.44、失效條件正確顯示
+已觸發(🔴高於貴價)；NVDA(三指標合流) 正確顯示「尚未觸發失效條件」（現況確實還在
+多頭趨勢中）。無錯誤。
+
+⚠️ 這次改動還沒 commit/push（跟產業輪動是不同功能，Leo 只要求先推產業輪動）。
+
+## 2026-08-26（續十）· 投資晨報拿掉不能點的HTML附檔
+
+Leo：「這個bb9e會推一份html給我，但都不能點，直接停止寄送吧」——比對訊息文字
+「2026-08-26 產業鏈看板（美股+台股，7 鏈）」直接定位到 `alert_telegram.py:141`
+的 `send_doc(html_path, ...)`。
+
+**根因**：用 Telegram 傳原始 HTML 檔（`send_doc`）只會顯示成可下載的檔案，
+不會渲染成網頁，裡面的連結自然點不了——這不是bug，是這個做法本來就不會有
+「可點」的效果。
+
+**修法**：拿掉 `send_doc()` 那行，改成跟「無訊號」分支一樣附 `PAGES_URL`
+（GitHub Pages正式看板連結）。順手發現「有訊號」分支原本完全沒有連結替代方案
+（連結只在「無訊號」分支才有）——單純刪掉附檔會讓看板入口直接消失，一併補上。
+
+觸發源：`.github/workflows/tw-board.yml`，`cron: '0 1 * * 2-6'`（週二~六 UTC 01:00
+=台灣09:00）。已 commit+push，明天(工作日)09:00 那次排程就會是新行為。
+
+## 2026-08-26（續十一）· 產業輪動：動畫加速+修市值不變bug+hover顯示數值
+
+Leo 反饋兩點：「播的速度加快一倍」「圈圈大小隨著每週市值改變...不然還是看不出市值的變化」。
+
+**播放速度**：`ANIM_MS` 600→300、`PAUSE_MS` 120→60（同倍率），單週補間+停頓時長減半。
+
+**市值「看起來沒變」根因排查**（實際查 `industry_rotation_history.json`才找到，不是猜）：
+美股 8/26 從 SPDR ETF 換成 TradingView 產業分類後，舊的 XLB/XLC/XLE...（SPDR）跟新的
+Commercial Services/Communications...（TV分類）用不同日期交錯留在同一份歷史檔裡，從沒
+清掉——`_frames_data()` 用「現在」的籃子清單去對每一幀，對到只有舊SPDR key的那些日期
+時找不到新分類、只能沿用上一幀的位置，結果變成每兩格有一格是複製貼上，圈圈大小/位置
+看起來卡住不動。
+
+**修法**：`main()` 疊歷史前先清掉「跟現在籃子完全對不上」的舊列
+（`set(snapshot.keys()) & set(現在籃子keys)` 空的就丟），重跑後美股清掉 26 筆舊列，
+52週歷史全部變成20個籃子、size逐週真實變化（驗證：Commercial Services 從 5月的
+$543B 連續漲到 8/26 的 $686B，不再有 None/跳格）。
+
+**hover顯示數值**：之前只有排行榜看得到 RS-Ratio/RS-Momentum/資金規模數字，圖表本身
+hover只顯示象限文字。補：`_frames_data()` 的 pt 補回 `size`（原本只算了 radius 沒留原始
+數值）、前端 `tweenWeek()` 補間時一併 lerp `size`、tooltip callback 改成三行
+（產業名+象限／RS-Ratio+RS-Momentum／資金規模，用既有 `fmtSize()` 格式化），
+動畫播放中 hover 也會即時顯示當下補間幀的真實數值,不只有靜態畫面才有。
+
+⚠️ 這次改動還沒 commit/push（等 Leo 看過畫面確認）。
