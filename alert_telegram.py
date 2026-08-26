@@ -134,11 +134,16 @@ def main():
 
     if has:
         lines.append("<i>💼 持股看風險（翻空/賣訊）｜🎯 守備清單看機會（買進/翻多）</i>")
+        lines.append(f'📊 <a href="{PAGES_URL}">完整看板</a>')
     else:
         lines = [f"✅ <b>投資晨報 {date}</b> 今日無訊號（持股趨勢無變化、守備清單無買賣/翻面）。",
                  f'📊 <a href="{PAGES_URL}">完整看板</a>。']
     send_text("\n".join(lines))
-    send_doc(html_path, f"{date} 產業鏈看板（美股+台股，7 鏈）")
+    # 2026-08-26：拿掉 send_doc() 附檔——Leo反饋「這個會推一份html給我，但都不能點」，
+    # 用 Telegram 傳原始 HTML 檔本來就只會顯示成可下載的檔案，不會渲染成網頁、
+    # 裡面的連結當然點不了。上面已經改成一律附 PAGES_URL 這個可點的看板連結
+    # （原本只有「無訊號」那個分支有連結，「有訊號」分支完全沒有替代方案，
+    # 拿掉附檔後要是沒補這個會直接失去看板入口，不是單純刪掉就好）。
 
     os.makedirs("state", exist_ok=True)
     json.dump(cur, open(STATE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
