@@ -1126,8 +1126,8 @@ function renderRankList() {
         '<span class="dot" style="background:'+col+'"></span>'+
         '<span class="nmtext">'+_escHtml(p.name)+'</span></span>'+
       '<span class="qv">'+QLABEL[p.quadrant]+'</span>'+
-      '<span class="num">'+p.ratio.toFixed(1)+'</span>'+
-      '<span class="num">'+p.momentum.toFixed(1)+'</span>'+
+      '<span class="num ratioval">'+p.ratio.toFixed(1)+'</span>'+
+      '<span class="num momval">'+p.momentum.toFixed(1)+'</span>'+
       '<span class="sz">'+fmtSize(p.size)+'</span>'+
       '<span class="mp">'+mpDots(p.key)+'</span>'+
       '<span class="posbar"><span class="posbartrack">'+
@@ -1349,12 +1349,40 @@ CSS_EXTRA = """
  「太擠了」——欄距 gap 從 8px 加大到 18px，加上 RS-Momentum 欄變寬（68→86px，
  原本這個字本身在欄內還是會換行，兩行更擠）、象限欄變寬（40→52px），
  讓中間這一段跟兩側（產業／強弱位置）比起來不會顯得特別擁擠。 */
+/* 2026-08-26（手機版）：桌面版7欄固定寬度加總超過600px，手機螢幕(~390px)完全塞不下——
+ 反饋「產業消失了」「表格內容超出框框」，根因就是這個，不是換算法能修的，是版面
+ 本身沒做手機版。改用具名 grid-area：桌面版維持一列橫排，<700px 改成「卡片」——
+ 每個籃子一張卡，欄位改上下堆疊＋文字標籤（用 ::before 加標籤，不用另外寫HTML），
+ 不用橫向捲動就能看完整資訊。表頭列(.rrgrankhd)手機版直接隱藏——卡片自己帶標籤，
+ 不需要對齊的表頭了。 */
 .rrgrankhd{display:grid;grid-template-columns:1fr 52px 64px 86px 72px 130px 180px;gap:18px;
+ grid-template-areas:"name qv ratio mom size mp pos";
  padding:2px 4px 8px;border-bottom:1px solid #2a3550;font-size:10.5px;color:#5f80a6}
 .rrgrankhd span:nth-child(2){text-align:center}
 .rrgrankhd span:nth-child(3),.rrgrankhd span:nth-child(4){text-align:right}
+.rrgrankhd span:nth-child(1){grid-area:name}.rrgrankhd span:nth-child(2){grid-area:qv}
+.rrgrankhd span:nth-child(3){grid-area:ratio}.rrgrankhd span:nth-child(4){grid-area:mom}
+.rrgrankhd span:nth-child(5){grid-area:size}.rrgrankhd span:nth-child(6){grid-area:mp}
+.rrgrankhd span:nth-child(7){grid-area:pos}
 .rrgrow{display:grid;grid-template-columns:1fr 52px 64px 86px 72px 130px 180px;gap:18px;align-items:center;
+ grid-template-areas:"name qv ratio mom size mp pos";
  padding:7px 4px;border-bottom:1px solid #131c30;font-size:12.5px;cursor:pointer;transition:background .15s}
+.rrgrow .nm{grid-area:name}.rrgrow .qv{grid-area:qv}.rrgrow .ratioval{grid-area:ratio}
+.rrgrow .momval{grid-area:mom}.rrgrow .sz{grid-area:size}.rrgrow .mp{grid-area:mp}
+.rrgrow .posbar{grid-area:pos}
+@media (max-width:700px){
+  .rrgrankhd{display:none}
+  .rrgrow{grid-template-columns:1fr auto;row-gap:7px;column-gap:12px;padding:13px 10px;
+   grid-template-areas:"name qv" "ratio mom" "size mp" "pos pos"}
+  .rrgrow .qv{grid-area:qv;font-size:12px;font-weight:600;align-self:start}
+  .rrgrow .ratioval,.rrgrow .momval,.rrgrow .sz{text-align:left;display:flex;flex-direction:column;gap:2px}
+  .rrgrow .ratioval::before{content:"RS-Ratio";font-size:9.5px;color:#5f80a6;font-weight:400}
+  .rrgrow .momval::before{content:"RS-Momentum";font-size:9.5px;color:#5f80a6;font-weight:400}
+  .rrgrow .sz::before{content:"資金規模";font-size:9.5px;color:#5f80a6;font-weight:400}
+  .rrgrow .mp{grid-area:mp;align-self:end;justify-self:end}
+  .rrgexprow{grid-template-columns:56px 1fr 40px;column-gap:8px}
+  .rrgexprow .expbar{display:none}   /* 手機版寬度不夠放權重條，數字本身已經夠用 */
+}
 .rrgrow:hover{background:#101b30}
 /* 2026-08-26：勾選狀態——左邊一條實色邊線＋淡底色，跟純 hover 的灰底區分開來。 */
 .rrgrow.sel{background:#132038;border-left:3px solid #25e6ff;padding-left:1px}
