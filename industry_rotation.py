@@ -1128,7 +1128,8 @@ function _escHtml(s) {
 // 排行榜圓點卻是象限色，兩套不同編碼當然對不起來。象限資訊本來就有文字欄
 // （「象限」那一欄）顯示，改用分類色不會少掉任何資訊。
 function renderRankList() {
-  var rank = _lastAllPts.slice().sort(function(a,b){ return (b.ratio+b.momentum)-(a.ratio+a.momentum); });
+  // 2026-08-26：改用資金規模（市值）由大到小排，原本是RS-Ratio+RS-Momentum強弱排序。
+  var rank = _lastAllPts.slice().sort(function(a,b){ return (b.size||0)-(a.size||0); });
   document.getElementById('rrgRank').innerHTML = rank.map(function(p) {
     var pct = Math.max(0, Math.min(100, (p.ratio - AXIS_MIN) / (AXIS_MAX - AXIS_MIN) * 100));
     var col = keyColor(p.key);
