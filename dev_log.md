@@ -1670,3 +1670,30 @@ researcher_industry.py 需要本機 claude CLI（GitHub Actions 沒有），所�
 
 **三支都已接進 board_analyze_daily.cmd**（每天07:00週一到五）。
 researcher_holdings.py 掃61檔約10分鐘（yfinance 速率限制），排在較快的步驟之後。
+
+## 2026-08-26（續十八）· SuperTrend即時同步
+
+Leo：「即時同步先做」——照之前討論的方案做了：
+
+1. `tw-board.yml` 排程從台灣09:00提前到08:15（本機07:00那批查過近10天穩定在
+   07:44~07:54結束，20分鐘緩衝夠安全），**Telegram推播完全沒動，還在雲端**，
+   可靠度不變，只是提前45分鐘。
+2. 新增 `C:\Users\Mophy\AI\researcher_stock_sync.cmd`（repo外，本機專用）：
+   git pull拉08:15那次GH Actions的push → 重跑 researcher_stock.py → commit+push。
+   註冊成Windows排程「ResearcherStockSync」，週一到五08:45（跟BoardAnalyzeDaily
+   同樣DaysOfWeek=62 bitmask）。
+3. `researcher_stock.py` 補防重複機制（`state/stock_notes_reported.json`，記今天
+   已經報過的 ticker|source|event）——一天內現在會跑兩次（07:00本批+08:45同步），
+   07:00已經處理過的（例如貴俗價，一天只有一份資料）不該在08:45又寫一次。
+
+**踩到一個坑，測出來才發現**：`git add -f a b` 如果 b 不存在，**整個指令失敗、
+a 也不會被加進去**（實測確認，exit 128）——`researcher_stock_sync.cmd` 原本一次
+`git add` 兩個路徑，第一天 `stock_notes_reported.json` 還沒建立時會讓
+`research_notes.jsonl` 的更新也一起靜默漏掉。改成分開兩次 `git add`，
+第二個用 `if exist` 保護。這正是這個 codebase 之前踩過的「靜默失敗」坑
+（8/1 reports/被gitignore那次），這次先測出來而不是等它真的漏跑兩天才發現。
+
+效果：SuperTrend資料從「落後一天」縮短到「當天08:45前就有」。三個部分都已驗證
+（tw-board.yml改的cron語法對；researcher_stock.py去重機制用假資料測過兩輪確認
+不重複；researcher_stock_sync.cmd手動跑過一次，log正常，git add bug修好後
+沒再重現）。已commit+push（repo部分），Windows排程本機直接生效不用push。

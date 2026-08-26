@@ -5,8 +5,13 @@
 1. 貴俗價翻黃（valuation_alert.py 寫的 state/valuation_flips_today.json，同一批本機
    07:00排程、同一次執行，資料是「今天」的）。
 2. SuperTrend/AI訊號翻面（alert_telegram.py 寫的 state/st_flips_today.json，這支跑在
-   GitHub Actions台灣09:00，比本機07:00晚2小時——本機讀到的會是「昨天09:00那次」的
-   結果，落後一天，是已知限制，不是bug，見 alert_telegram.py 裡的說明）。
+   GitHub Actions台灣08:15，比本機07:00晚——本機07:00這批讀到的還是「昨天」的資料；
+   另外排了一個08:45的本機排程（ResearcherStockSync）在GH Actions跑完之後拉一次，
+   那次讀到的才是「今天」的，見 board_analyze_daily.cmd 之外的排程設定）。
+
+2026-08-26 加防重複：一天內可能跑兩次（07:00 本批 + 08:45 SuperTrend同步那次），
+07:00那次已經處理過的（例如貴俗價，一天只會有一份資料）不該在08:45又寫一次——
+用 state/stock_notes_reported.json 記錄「今天已經報過的 ticker|source」跳過重複。
 
 零成本優先（比照全域規則）：翻面本身是既有決定論訊號，不用AI。額外查
 yfinance upgrades_downgrades（免費，非LLM）看有沒有相關分析師評等異動，
@@ -70,30 +75,58 @@ def _note(ticker, name, source, event, extra_confidence="high"):
     }
 
 
+REPORTED_PATH = "state/stock_notes_reported.json"
+
+
+def _load_reported():
+    today = time.strftime("%Y-%m-%d")
+    d = _load(REPORTED_PATH) or {}
+    return set(d.get(today, []))
+
+
+def _save_reported(today_keys):
+    today = time.strftime("%Y-%m-%d")
+    d = _load(REPORTED_PATH) or {}
+    d[today] = sorted(today_keys)
+    # 只留最近7天，不無限長大
+    for k in sorted(d)[:-7]:
+        del d[k]
+    os.makedirs("state", exist_ok=True)
+    json.dump(d, open(REPORTED_PATH, "w", encoding="utf-8"), ensure_ascii=False)
+
+
 def run():
-    notes = []
+    reported = _load_reported()
+    notes, new_keys = [], set(reported)
+
+    def add(ticker, source, event, extra_confidence="high"):
+        key = f"{ticker}|{source}|{event}"
+        if key in reported:
+            return
+        new_keys.add(key)
+        notes.append(_note(ticker, ticker, source, event, extra_confidence))
 
     val_flips = _load("state/valuation_flips_today.json") or []
     for f in val_flips:
-        event = f"貴俗價翻貴：現價 ${f['price']:,.2f} ≥ 貴價 ${f['expensive']:,.2f}"
-        notes.append(_note(f["ticker"], f["ticker"], "valuation_alert", event))
+        add(f["ticker"], "valuation_alert",
+            f"貴俗價翻貴：現價 ${f['price']:,.2f} ≥ 貴價 ${f['expensive']:,.2f}")
 
     st = _load("state/st_flips_today.json") or {}
     for f in st.get("flips_hold", []) + st.get("flips_watch", []):
-        event = f"SuperTrend{f['word']}"
-        notes.append(_note(f["code"], f.get("name", ""), "st_alert", event))
+        add(f["code"], "st_alert", f"SuperTrend{f['word']}")
     for a in st.get("ai_alerts", []):
-        event = f"AI訊號變化：{a['sig']}（{a['chain']}）"
-        notes.append(_note(a["code"], a.get("name", ""), "board_ai_signal", event, extra_confidence="medium"))
+        add(a["code"], "board_ai_signal", f"AI訊號變化：{a['sig']}（{a['chain']}）",
+            extra_confidence="medium")
 
     if not notes:
-        print("今天沒有個股層翻面，不寫入 research_notes.jsonl（沒訊號不用硬湊一筆）")
+        print("今天沒有新的個股層翻面，不寫入（沒訊號或已經報過就不用硬湊一筆）")
         return []
 
     os.makedirs("state", exist_ok=True)
     with open(NOTES_PATH, "a", encoding="utf-8") as f:
         for n in notes:
             f.write(json.dumps(n, ensure_ascii=False) + "\n")
+    _save_reported(new_keys)
     print(f"已存 {len(notes)} 筆個股層研究筆記（零成本）：{[n['scope'] for n in notes]}")
     return notes
 
