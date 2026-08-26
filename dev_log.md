@@ -1697,3 +1697,41 @@ a 也不會被加進去**（實測確認，exit 128）——`researcher_stock_sy
 （tw-board.yml改的cron語法對；researcher_stock.py去重機制用假資料測過兩輪確認
 不重複；researcher_stock_sync.cmd手動跑過一次，log正常，git add bug修好後
 沒再重現）。已commit+push（repo部分），Windows排程本機直接生效不用push。
+
+## 2026-08-26（續十九）· 投資長 Agent 上線
+
+跟 Leo 討論定案的設計：**兩個獨立角度，各自給進出場判斷，不合併成一個結論**——
+長期價值角度（洪瑞泰，看估值年為單位）+ 中短期趨勢角度（SuperTrend+RS+產業輪動整合，
+這三個本質上是同一種順勢哲學，整合不算違反「不同哲學不能混」的硬規則）。
+
+期間有個規則衝突要澄清：Leo 提「整合過的資訊，做出進場出場建議」，一開始聽起來像
+之前被否決的「3鏡頭投票」，先攤開來問清楚才確認是「AI讀完給質化判斷」不是「機械
+合併算分數」——沒有自己默默套用，先確認過一次。
+
+**新增 `investment_chief.py`**：
+1. 觸發範圍：掃今天新增的 research_notes，收集「今天有新事件」的持股代號
+   （stock層直接取scope；industry層反查RRG籃子裡有沒有Leo的持股，僅前5大成分股
+   資料可查，已知限制）——不是每天全部66+41檔重跑。
+2. 材料來源全部讀原始檔案（Leo明確要求「直接讀原始檔」不解析Telegram文字）：
+   `state/signals.json`（AI綜合訊號）、`state/valuation_state.json`+
+   `trade_plan.buffett_targets()`（長期價值角度）、
+   `trade_plan.supertrend_invalidation()`（趨勢角度，美股適用）、
+   `industry_rotation_history.json`（所屬籃子最新象限）、今天的research_notes（敘事）。
+3. AI只做「讀材料寫判斷」，`--tools ""` 關掉所有工具（跟researcher_industry.py同一套
+   已驗證模式），輸出強制schema：兩個角度各自status/judgment/reasoning，趨勢角度
+   額外5個強化維度（失效價位/支撐壓力/量價背離/事件風險/多空辯論）。
+
+**首測驗證（JPM，真實資料）**：兩角度確實給出不同讀法——**價值角度judgment=觀望**
+（抓到「品質關未過(失效)」，正確推論出這代表貴價$750.21這個目標價的可信度存疑，
+沒有因為現價遠低於貴價就無腦說便宜）；**趨勢角度judgment=續抱/可買**（SuperTrend
+多頭、RS未跌破、所屬金融籃子領先象限）。兩者沒有互相干擾、沒有被強迫湊成一致結論，
+正是設計要的行為。5個強化維度裡沒資料的誠實寫「材料不足無法判斷」（例如成交量、
+具體支撐價位），沒硬掰。單檔等值標價 $0.20。
+
+**排程**：加進 `researcher_stock_sync.cmd`（08:45那個，本來就是「研究員資料到這時候
+最齊」的時間點），研究員四支+SuperTrend同步+投資長，一次跑完。投資長失敗不擋
+researcher_stock的push（用WARN log不用FAILED累加，因為推播/資料同步比投資長判斷
+更關鍵，不該互相卡住）。
+
+輸出寫進新檔案 `state/advisor_verdicts.jsonl`（跟research_notes分開存，判斷跟原始
+研究資料是不同性質的東西）。尚未commit/push，等Leo確認。
