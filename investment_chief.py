@@ -28,12 +28,22 @@ import sys
 import json
 import time
 import subprocess
+from pathlib import Path
+
+import requests
+from dotenv import dotenv_values
 
 if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
     sys.stdout.reconfigure(encoding="utf-8")
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from llm_board import _claude_bin
+
+# 跟 valuation_alert.py 同模式：本機排程（researcher_stock_sync.cmd）不會預先
+# export 環境變數，直接讀本機 .env（GitHub Actions 那邊吃 Actions Secrets，不同環境）。
+_env = {**dotenv_values(Path(__file__).parent / ".env"), **os.environ}
+TG_TOKEN = _env.get("TELEGRAM_BOT_TOKEN", "")
+TG_CHAT = _env.get("TELEGRAM_CHAT_ID", "")
 
 NOTES_PATH = "state/research_notes.jsonl"
 VERDICTS_PATH = "state/advisor_verdicts.jsonl"
@@ -264,6 +274,32 @@ def ask_claude(ticker, name, ai_sig, value_material, trend_material, today_event
     return verdict
 
 
+def _send_telegram(verdicts):
+    """2026-08-26 加：Leo問「投資長的結論會推給我嗎」——原本只寫檔案不推播。
+    定案另開一則獨立訊息（不跟08:15投資晨報合併），08:45投資長跑完才推，
+    時間點本來就跟晨報那則不一樣。"""
+    if not (TG_TOKEN and TG_CHAT):
+        print("缺 TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID，跳過推播")
+        return
+    date = time.strftime("%Y-%m-%d")
+    lines = [f"📊 <b>投資長判斷 {date}</b>",
+             "<i>兩角度各自獨立，不合併結論——最終決策是你的</i>\n"]
+    for v in verdicts:
+        va, ta = v["value_angle"], v["trend_angle"]
+        lines.append(f"<b>【{v['ticker']}】</b>")
+        lines.append(f"　長期價值：{va['judgment']} — {va['reasoning'][:80]}")
+        lines.append(f"　中短期趨勢：{ta['judgment']} — {ta['reasoning'][:80]}")
+        lines.append("")
+    text = "\n".join(lines).strip()
+    r = requests.post(f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage",
+                      json={"chat_id": TG_CHAT, "text": text, "parse_mode": "HTML",
+                            "disable_web_page_preview": True}, timeout=30)
+    if r.status_code != 200:
+        print(f"telegram推播失敗: {r.status_code} {r.text[:200]}")
+    else:
+        print("已推播投資長判斷")
+
+
 def run():
     tickers, notes = today_tickers()
     if not tickers:
@@ -290,6 +326,7 @@ def run():
             f.write(json.dumps(v, ensure_ascii=False) + "\n")
     total = sum(v.get("cost_usd") or 0 for v in verdicts)
     print(f"已存 {len(verdicts)} 筆投資長判斷（等值標價合計約 ${total:.2f}，Max plan走訂閱額度）")
+    _send_telegram(verdicts)
     return verdicts
 
 
