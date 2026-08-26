@@ -1320,18 +1320,35 @@ document.getElementById('playBtn').addEventListener('click', function() {
   //    全部資料——改成播放中泡泡座標「原地改值」（fastUpdateBubbles），
   //    軌跡 datasets 只在跨週邊界重算（它本來就一週才變一次，不用每幀重建）。
   // 改後：一條連續時間軸等速跨週插值，段間不停、不加每段 easing，rAF 每幀只改數字。
+  // 2026-08-27（第二輪）：直線插值 → Catmull-Rom 樣條曲線（Leo 反饋改完還是
+  // 「一週一張」，要「像棒球拋物線的絲滑移動」）。這輪的卡頓感來源不是速度也不是
+  // 停頓，是**折線角**：泡泡在週點之間走直線，到了每個週點瞬間轉向，每 ANIM_MS
+  // 一個拐角＝視覺上的逐格感。Catmull-Rom 是動畫業界的標準過點平滑法：曲線
+  // **精確通過每個真實週點**（不扭曲資料，只把「拐角」變成連續轉向的弧線），
+  // 用前後各一個週點（P0,P3）決定進出方向。半徑/資金規模仍線性插值（視覺無感差異）。
   var segIdx = -1, curTrailDs = null;
   var t0 = performance.now();
   var total = (playFrames.length - 1) * ANIM_MS;
-  function interp(a, b, e) {
-    return b.map(function(pb, idx) {
-      var pa = a[idx] || pb;
-      return {key: pb.key, name: pb.name,
-              ratio: _lerp(pa.ratio, pb.ratio, e),
-              momentum: _lerp(pa.momentum, pb.momentum, e),
-              radius: _lerp(pa.radius || 10, pb.radius || 10, e),
-              size: _lerp(pa.size || 0, pb.size || 0, e),
-              quadrant: e < 0.5 ? pa.quadrant : pb.quadrant};
+  function _catmull(p0, p1, p2, p3, u) {
+    var u2 = u * u, u3 = u2 * u;
+    return 0.5 * ((2 * p1) + (-p0 + p2) * u +
+                  (2 * p0 - 5 * p1 + 4 * p2 - p3) * u2 +
+                  (-p0 + 3 * p1 - 3 * p2 + p3) * u3);
+  }
+  function interpSpline(i, e) {
+    // 取 i-1,i,i+1,i+2 四個週點；頭尾越界就重複端點（端點段退化成接近直線，正常）
+    var A = playFrames[Math.max(0, i - 1)].points,
+        B = playFrames[i].points,
+        C = playFrames[i + 1].points,
+        D = playFrames[Math.min(playFrames.length - 1, i + 2)].points;
+    return C.map(function(pc, idx) {
+      var pa = A[idx] || B[idx] || pc, pb = B[idx] || pc, pd = D[idx] || pc;
+      return {key: pc.key, name: pc.name,
+              ratio: _catmull(pa.ratio, pb.ratio, pc.ratio, pd.ratio, e),
+              momentum: _catmull(pa.momentum, pb.momentum, pc.momentum, pd.momentum, e),
+              radius: _lerp(pb.radius || 10, pc.radius || 10, e),
+              size: _lerp(pb.size || 0, pc.size || 0, e),
+              quadrant: e < 0.5 ? pb.quadrant : pc.quadrant};
     });
   }
   function frame(now) {
@@ -1340,7 +1357,7 @@ document.getElementById('playBtn').addEventListener('click', function() {
     var f = t / ANIM_MS;                    // 連續週位置（例：3.42 = 第3→4週走到42%）
     var i = Math.min(Math.floor(f), playFrames.length - 2);
     var frac = Math.min(1, f - i);
-    var pts = filteredPts(interp(playFrames[i].points, playFrames[i + 1].points, frac));
+    var pts = filteredPts(interpSpline(i, frac));
     if (i !== segIdx) {
       // 跨週邊界：重算軌跡+日期標籤（一週一次），走完整 update 路徑
       segIdx = i;
