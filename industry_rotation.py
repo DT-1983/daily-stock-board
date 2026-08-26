@@ -842,19 +842,23 @@ function quadrantBgPlugin() {
       var ctx = chart.ctx, area = chart.chartArea;
       var xScale = chart.scales.x, yScale = chart.scales.y;
       var midX = xScale.getPixelForValue(100), midY = yScale.getPixelForValue(100);
+      // 2026-08-27 Leo反饋「四個象限可以明顯一些」：底色 5-6% → 12-14%、
+      // 十字分隔線加亮加粗、象限標籤改大改粗並用各象限自己的顏色（原本是11px小灰字）。
+      // 底色透明度不再往上加的理由：泡泡填色也是半透明，象限底色太濃會跟泡泡顏色
+      // 疊出混色，反而讓兩個編碼軸互相干擾（8/25配色重整那輪的教訓）。
       ctx.save();
-      ctx.fillStyle = 'rgba(57,135,229,.05)'; ctx.fillRect(area.left, area.top, midX-area.left, midY-area.top);
-      ctx.fillStyle = 'rgba(229,72,77,.06)'; ctx.fillRect(midX, area.top, area.right-midX, midY-area.top);
-      ctx.fillStyle = 'rgba(125,133,144,.05)'; ctx.fillRect(area.left, midY, midX-area.left, area.bottom-midY);
-      ctx.fillStyle = 'rgba(237,161,0,.06)'; ctx.fillRect(midX, midY, area.right-midX, area.bottom-midY);
-      ctx.strokeStyle = '#2a3550'; ctx.lineWidth = 1;
+      ctx.fillStyle = 'rgba(57,135,229,.12)'; ctx.fillRect(area.left, area.top, midX-area.left, midY-area.top);
+      ctx.fillStyle = 'rgba(229,72,77,.14)'; ctx.fillRect(midX, area.top, area.right-midX, midY-area.top);
+      ctx.fillStyle = 'rgba(125,133,144,.10)'; ctx.fillRect(area.left, midY, midX-area.left, area.bottom-midY);
+      ctx.fillStyle = 'rgba(237,161,0,.12)'; ctx.fillRect(midX, midY, area.right-midX, area.bottom-midY);
+      ctx.strokeStyle = 'rgba(143,176,214,.55)'; ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.moveTo(midX, area.top); ctx.lineTo(midX, area.bottom);
       ctx.moveTo(area.left, midY); ctx.lineTo(area.right, midY); ctx.stroke();
-      ctx.font = '11px sans-serif'; ctx.fillStyle = '#5f80a6';
-      ctx.fillText('改善 ▲', area.left+6, area.top+14);
-      ctx.fillText('領先 ▲', midX+6, area.top+14);
-      ctx.fillText('落後 ▼', area.left+6, area.bottom-6);
-      ctx.fillText('弱化 ▼', midX+6, area.bottom-6);
+      ctx.font = 'bold 14px sans-serif';
+      ctx.fillStyle = 'rgba(57,135,229,.9)';  ctx.fillText('改善 ▲', area.left+8, area.top+20);
+      ctx.fillStyle = 'rgba(229,72,77,.9)';   ctx.fillText('領先 ▲', midX+8, area.top+20);
+      ctx.fillStyle = 'rgba(160,170,185,.9)'; ctx.fillText('落後 ▼', area.left+8, area.bottom-10);
+      ctx.fillStyle = 'rgba(237,161,0,.9)';   ctx.fillText('弱化 ▼', midX+8, area.bottom-10);
       ctx.restore();
     }
   };
@@ -933,7 +937,9 @@ var playTimer = null, playRAF = null, playIdx = 0;
 // Chart.js 純粹畫「這一格算好的靜態座標」，绝对照真實軌跡走，不會被它自己的
 // 「新元素從哪裡長出來」規則干擾。rAF 而不是 setInterval，是因為 rAF 綁瀏覽器
 // 實際繪圖節奏，畫面忙不過來時會自動跳格而不是硬擠，比固定間隔更不容易卡頓。
-var ANIM_MS = 300;     // 一個真實週的補間時長（2026-08-26 加快一倍：600→300）
+var ANIM_MS = 500;     // 一個真實週的補間時長（2026-08-27 Leo反饋樣條版太快，300→500；
+                       // 更早的歷史：600→300 是舊的逐段停頓版時代調的，跟現在連續
+                       // 時間軸的體感不同基準，不是改回頭）
 // PAUSE_MS 已移除（2026-08-27）：段間停頓＝逐格卡頓感的主因，連續時間軸不需要它。
 // _easeInOutQuad 同時移除：每段 ease-in-out 讓速度週期性脈動（呼吸感），等速更絲滑。
 function _lerp(a, b, t) { return a + (b - a) * t; }
