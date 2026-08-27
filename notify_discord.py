@@ -34,13 +34,15 @@ CHANNELS = {
     "private": _env.get("DISCORD_WH_PRIVATE", ""),
 }
 
-# 三國軍師團（2026-08-27 Leo 定案）：伺服器=隆中對
+# 三國軍師團（2026-08-27 Leo 定案）：伺服器=隆中對。
+# 顯示名帶職稱（Leo：「名稱可以改 龐統-研究員 嗎？比較好懂」）——
+# 呼叫端仍用短名（persona="孔明"），這裡自動轉顯示名。
 PERSONAS = {
-    "龐統": "研究員（情報/獻策）",
-    "孔明": "投資長（綜觀全局定策）",
-    "仲達": "風險官（謹守不敗）",
-    "陳壽": "復盤官（修史復盤）",
-    "戰情室": "系統訊息",
+    "龐統": "龐統-研究員",
+    "孔明": "孔明-投資長",
+    "仲達": "仲達-風險官",
+    "陳壽": "陳壽-復盤官",
+    "戰情室": "戰情室",
 }
 
 
@@ -75,10 +77,11 @@ def send_discord(channel: str, text: str, persona: str = "戰情室") -> bool:
     if not url:
         print(f"[discord] 頻道 {channel} 沒設 webhook，跳過")
         return False
+    display = PERSONAS.get(persona, persona)
     ok = True
     for i, chunk in enumerate(_split(text)):
         try:
-            r = requests.post(url, json={"content": chunk, "username": persona},
+            r = requests.post(url, json={"content": chunk, "username": display},
                               timeout=15)
             if r.status_code not in (200, 204):
                 print(f"[discord] 發送失敗 {r.status_code}: {r.text[:150]}")
