@@ -313,6 +313,12 @@ def _tw_chinese_names():
     if _TW_NAME_CACHE is not None:
         return _TW_NAME_CACHE
     import requests
+    # 2026-08-28 補磁碟快取+重試：櫃買中心部分伺服器的憑證缺 Subject Key Identifier，
+    # Python 3.13 嚴格驗證會拒收——但不是每次都失敗（LB 後面節點有好有壞，同一天
+    # 測試成功、正式跑失敗都發生過）。修法：多試幾次撞好節點，成功就存磁碟快取；
+    # 全失敗用上次快取的（公司簡稱幾乎不變，舊快取完全堪用）。
+    # 絕不用 verify=False 繞過（資安規則）。順手把簡稱裡的「*」記號拿掉。
+    cache_path = "state/tw_names_cache.json"
     out = {}
     try:
         r = requests.get("https://openapi.twse.com.tw/v1/opendata/t187ap03_L", timeout=15)
@@ -320,18 +326,51 @@ def _tw_chinese_names():
         for row in r.json():
             code, name = row.get("公司代號"), row.get("公司簡稱")
             if code and name:
-                out[code] = name
+                out[code] = name.replace("*", "")
     except Exception as e:
         print(f"  證交所中文名查詢失敗（不影響其他資料）：{e}")
+    tpex_ok = False
+    for attempt in range(3):
+        try:
+            r = requests.get("https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O", timeout=15)
+            r.raise_for_status()
+            for row in r.json():
+                code, name = row.get("SecuritiesCompanyCode"), row.get("CompanyAbbreviation")
+                if code and name:
+                    out[code] = name.replace("*", "")
+            tpex_ok = True
+            break
+        except Exception as e:
+            if attempt == 2:
+                print(f"  櫃買中心中文名 requests 失敗3次：{e}")
+    if not tpex_ok:
+        # curl 備援：實測 curl 的憑證驗證接受這張缺SKI的憑證而 Python 3.13 拒收
+        # （2026-08-28，requests 連續10次失敗、curl 一次就過）。一樣是完整 HTTPS
+        # 驗證，不是繞過——只是驗證器實作寬嚴不同。
+        try:
+            import subprocess, tempfile
+            tf = os.path.join(tempfile.gettempdir(), "tpex_names.json")
+            r = subprocess.run(["curl", "-sS", "--max-time", "20",
+                                "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O",
+                                "-o", tf], capture_output=True, timeout=30)
+            if r.returncode == 0:
+                for row in json.load(open(tf, encoding="utf-8")):
+                    code, name = row.get("SecuritiesCompanyCode"), row.get("CompanyAbbreviation")
+                    if code and name:
+                        out[code] = name.replace("*", "")
+                tpex_ok = True
+                print("  櫃買中心中文名改用 curl 備援成功")
+        except Exception as e:
+            print(f"  curl 備援也失敗（改用磁碟快取補）：{e}")
     try:
-        r = requests.get("https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O", timeout=15)
-        r.raise_for_status()
-        for row in r.json():
-            code, name = row.get("SecuritiesCompanyCode"), row.get("CompanyAbbreviation")
-            if code and name:
-                out[code] = name
-    except Exception as e:
-        print(f"  櫃買中心中文名查詢失敗（不影響其他資料）：{e}")
+        if out and tpex_ok:
+            os.makedirs("state", exist_ok=True)
+            json.dump(out, open(cache_path, "w", encoding="utf-8"), ensure_ascii=False)
+        elif os.path.exists(cache_path):
+            for k, v in json.load(open(cache_path, encoding="utf-8")).items():
+                out.setdefault(k, v)     # 這次抓到的優先，缺的用快取補
+    except Exception:
+        pass
     _TW_NAME_CACHE = out
     return out
 

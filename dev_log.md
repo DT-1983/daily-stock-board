@@ -1950,3 +1950,15 @@ Leo看到晨報一排「⚪️買進解除→觀望」（MSFT/NVDA/AVGO同天解
 轉買進、賣出的就好」。alert_telegram.py拿掉「解除→觀望」分支——降級不推，
 只推轉成🟢買進/🔴賣出的；訊號現況看板頁本來就有。連帶st_flips_today.json的
 ai_alerts也不會再收到解除事件（researcher_stock跟著少一種雜訊，一致）。
+
+## 2026-08-28（續）· buy_digest中文名+櫃買SSL自癒+投資長總覽加大盤/重大新聞
+
+1. buy_digest 台股加中文名（Leo反饋）：重用 industry_rotation._tw_chinese_names()。
+2. 櫃買中心 SSL 問題定性更新：**不是間歇是 Python 3.13 對缺SKI憑證的嚴格驗證**
+   （requests連續10次失敗；curl一次就過=驗證器寬嚴不同，不是繞過驗證）。修法三層：
+   requests重試3次→curl備援→磁碟快取 state/tw_names_cache.json（簡稱幾乎不變，
+   舊快取堪用）。絕不用 verify=False。實測1985檔全通（含上櫃新麥/力泰）。
+3. 投資長推播總覽加兩行（Leo指定）：📈大盤=market_data.json七大指數漲跌
+   （S&P/納指/道瓊/費半/台股/美元台幣/美10年債）；📰重大新聞=警示關鍵字
+   （打仗/升息/CPI類）命中的頭條才列，非全部頭條。零成本零AI呼叫。
+4. 晨報訊號減噪（見上則）；miss 5檔卡片已補產推送（27份）。
