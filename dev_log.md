@@ -2039,3 +2039,18 @@ commit撞掉且`|| echo`靜默吞掉；②巴菲特頁還是舊線=weekly-screen
 ③GitHub排程連兩天整批沒觸發（00:15/07:10都沒跑）——已手動補跑並確認資料上線
 （首頁行情2026-08-27 16:44），排程可靠性問題持續觀察，若再犯考慮本機看門狗。
 ④財報分析27檔=歷史產卡存檔非選股清單（跟Leo說明）。
+
+## 2026-08-27（續十六）· GitHub排程看門狗（明天保證晨報會到）
+
+GitHub schedule 連兩天整批沒觸發（00:15/00:19/07:10全沒跑），不能再賭第三天。
+新增 `actions_watchdog.py`：檢查「今天(UTC日)該workflow有沒有任何非failure執行」
+（schedule或dispatch都算，避免重複觸發），沒有就 gh workflow dispatch 補，
+--wait 模式會等完成（最多12分鐘）。兩個守望點：
+1. researcher_stock_sync.cmd（08:45）開頭：`actions_watchdog.py tw-board.yml --wait`
+   ——它下游要拉 st_flips_today.json，必須等補跑完成才 git pull
+2. 新Windows排程「MarketHomeWatchdog」（15:40週一~五）：market-home.yml 不等待版
+   ——首頁台股收盤行情的保險
+
+實測兩個workflow都正確回報「今天已執行過，不用補」（今天手動補跑過）。
+另：財報分析頁=歷史產卡檔案櫃的機制原因已跟Leo說明（index只掃檔案不篩選+卡片
+只增不減+三個時代來源混疊），改善方案（來源分頁籤）記為待辦不急。
