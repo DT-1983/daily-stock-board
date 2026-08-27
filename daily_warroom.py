@@ -372,9 +372,10 @@ def compose(date=None, scope="public", part="all"):
 
     if part != "all" and all(_empty(s) for s in secs):
         return None
-    parts = [title + suffix]
-    for sec in secs:
-        parts.append("\n".join(sec))
+    # 空的段落要整段跳過，不能 append 空字串——"\n\n".join 會把它變成訊息裡的空洞。
+    # 2026-08-28 加第⑥段（週跑，週二~週五本來就是空的）時才踩到，但這是通用問題：
+    # 任何一段沒內容都會留下空行。
+    parts = [title + suffix] + ["\n".join(sec) for sec in secs if sec]
     return "\n\n".join(parts)
 
 
