@@ -67,6 +67,7 @@ jobs:
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          DISCORD_WH_DAILY: ${{ secrets.DISCORD_WH_DAILY }}   # 2026-08-28 Discord雙發（隆中對）
         run: |
           mkdir -p docs
           f=$(ls reports/report_*.md | sort | tail -1)

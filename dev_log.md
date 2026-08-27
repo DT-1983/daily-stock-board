@@ -1962,3 +1962,21 @@ ai_alerts也不會再收到解除事件（researcher_stock跟著少一種雜訊�
    （S&P/納指/道瓊/費半/台股/美元台幣/美10年債）；📰重大新聞=警示關鍵字
    （打仗/升息/CPI類）命中的頭條才列，非全部頭條。零成本零AI呼叫。
 4. 晨報訊號減噪（見上則）；miss 5檔卡片已補產推送（27份）。
+
+## 2026-08-28（續二）· Discord「隆中對」Phase 1 雙發上線
+
+伺服器=隆中對（Leo建），頻道：#每日戰情/#財報（webhook）+#軍議（文字頻道，
+留給P4b互動bot，不走webhook）。**三國軍師團命名定案**：龐統=研究員（情報/獻策）、
+孔明=投資長、仲達=風險官、陳壽=復盤官。
+
+技術：`notify_discord.py`——webhook 單向推播，**per-message username** 讓各agent
+在同一頻道用自己名字發言（不用一agent一頻道）；>2000字自動切多則（切換行處）；
+`tg_html_to_md()` 轉換Telegram HTML；失敗吞錯不擋主流程（雙發過渡原則）。
+
+六個發送點接好：alert_telegram(晨報→龐統/daily)、investment_chief(判斷→孔明/daily)、
+valuation_alert(翻貴警示→仲達/daily)、buy_digest(週六買進機會→龐統/daily)、
+earnings_watch push()一點接全通(預告+快訊→龐統/earnings)。
+
+部署：本機走.env；**GitHub Actions 走 secrets**（DISCORD_WH_DAILY/EARNINGS 已用
+gh secret set 設好，tw-board/weekly-screen 對應步驟 env 已加）。端到端已驗證
+（孔明真實格式訊息發抵#每日戰情）。Telegram照舊雙發，Leo用幾天再決定TG留什麼。

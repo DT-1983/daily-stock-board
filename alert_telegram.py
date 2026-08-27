@@ -139,7 +139,15 @@ def main():
     else:
         lines = [f"✅ <b>投資晨報 {date}</b> 今日無訊號（持股趨勢無變化、守備清單無買賣/翻面）。",
                  f'📊 <a href="{PAGES_URL}">完整看板</a>。']
-    send_text("\n".join(lines))
+    msg = "\n".join(lines)
+    send_text(msg)
+    # 2026-08-28 Discord 雙發（隆中對 #每日戰情，龐統=情報官）。過渡期 Telegram 照舊，
+    # Discord 失敗不擋主流程（notify_discord 內部吞錯只印警告）。
+    try:
+        from notify_discord import send_discord, tg_html_to_md
+        send_discord("daily", tg_html_to_md(msg), persona="龐統")
+    except Exception as e:
+        print(f"discord 雙發失敗（不影響 Telegram）：{e}")
     # 2026-08-26：拿掉 send_doc() 附檔——Leo反饋「這個會推一份html給我，但都不能點」，
     # 用 Telegram 傳原始 HTML 檔本來就只會顯示成可下載的檔案，不會渲染成網頁、
     # 裡面的連結當然點不了。上面已經改成一律附 PAGES_URL 這個可點的看板連結

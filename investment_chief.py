@@ -499,6 +499,12 @@ def _send_telegram(verdicts, notes=None):
             print(f"telegram推播失敗: {r.status_code} {r.text[:200]}")
     if ok:
         print(f"已推播投資長判斷（{len(chunks)} 則）")
+    # 2026-08-28 Discord 雙發（隆中對 #每日戰情，孔明=投資長本尊）
+    try:
+        from notify_discord import send_discord, tg_html_to_md
+        send_discord("daily", tg_html_to_md("\n".join(lines)), persona="孔明")
+    except Exception as e:
+        print(f"discord 雙發失敗（不影響 Telegram）：{e}")
 
 
 def run():

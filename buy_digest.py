@@ -112,7 +112,14 @@ def main():
         lines.append("")
     lines.append("<i>💎=同時在守備清單(趨勢好)，最強｜⚠️=價值陷阱嫌疑(便宜有理由)，別追</i>")
     lines.append(f'🏛️ <a href="{PAGES_URL}buffett.html">完整巴菲特清單</a>（{len(tickers)} 檔含龍頭排名）｜📊 <a href="{PAGES_URL}">產業鏈看板</a>')
-    send("\n".join(lines))
+    msg = "\n".join(lines)
+    send(msg)
+    # 2026-08-28 Discord 雙發（隆中對 #每日戰情週六版，龐統獻策）
+    try:
+        from notify_discord import send_discord, tg_html_to_md
+        send_discord("daily", tg_html_to_md(msg), persona="龐統")
+    except Exception as e:
+        print(f"discord 雙發失敗（不影響 Telegram）：{e}")
     print(f"✅ 到俗價 {len(cand)}：體質過關 {len(clean)}、疑似陷阱 {len(traps)}、雙確認 {len(double)}")
 
 

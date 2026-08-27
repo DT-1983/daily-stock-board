@@ -82,7 +82,14 @@ def main():
                  "<i>洪瑞泰出場依據：現價 ≥ 貴價（EPS×30）才考慮賣，不是自動賣出、也不看短線波動</i>\n"]
         for tk, price, exp in flips:
             lines.append(f"· <b>{tk}</b>　現價 ${price:,.2f} ≥ 貴價 ${exp:,.2f}")
-        send("\n".join(lines))
+        msg = "\n".join(lines)
+        send(msg)
+        # 2026-08-28 Discord 雙發（隆中對 #每日戰情，仲達=風險官——賣出線警示歸他管）
+        try:
+            from notify_discord import send_discord, tg_html_to_md
+            send_discord("daily", tg_html_to_md(msg), persona="仲達")
+        except Exception as e:
+            print(f"discord 雙發失敗（不影響 Telegram）：{e}")
         print(f"推播 {len(flips)} 檔翻貴：{[f[0] for f in flips]}")
     elif first_run:
         print(f"首次執行，只記狀態不推播（{len(valuation)} 檔）")
