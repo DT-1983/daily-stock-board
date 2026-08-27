@@ -115,6 +115,9 @@ jobs:
         run: python buffett_html.py -o docs/buffett.html || echo "巴菲特頁失敗，跳過"
 
       - name: 回存狀態 + 發佈 HTML 到 Pages
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -122,4 +125,19 @@ jobs:
                   docs/gdp.html gdp_data.json market_data.json \
                   portfolios.json docs/portfolios.html docs/buffett.html
           git commit -m "chore: update 首頁+看板+GDP+signals+巴菲特頁 [skip ci]" || echo "無變化"
-          git push || echo "push 略過"
+          # 2026-08-27 修：原本 `git push || echo 略過` ——跟本機同時段的 commit 撞車被
+          # rejected 就靜默丟整批更新（首頁行情/巴菲特新線都這樣默默消失過）。
+          # 改成 rebase 重試 3 次，仍失敗就推 Telegram 讓人知道，不再無聲。
+          ok=""
+          for i in 1 2 3; do
+            if git push; then ok=1; break; fi
+            echo "push 被拒（第 $i 次），rebase 遠端後重試"
+            git pull --rebase || break
+          done
+          if [ -z "$ok" ]; then
+            echo "::error::push 失敗 3 次，這次更新沒有上線"
+            curl -sS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+              -d chat_id="${TELEGRAM_CHAT_ID}" -d parse_mode=HTML \
+              -d text="🔴 <b>tw-board push 失敗</b>%0A看板/首頁算好了但沒推上線。" >/dev/null || true
+            exit 1
+          fi
