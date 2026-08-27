@@ -1943,3 +1943,10 @@ investment_chief閘門拿掉。實測2330.TW/5287.TWO/2412都算出真實資料�
 **其他**：miss 5檔（AGO/PAA/CPA/AES/HSBC）卡片背景補產中；weekly-screen手動觸發
 （buffett_watch提前換常利新線，不等週六）；**Leo決定Discord提前到P1/P2/P3之前**
 （「現在資料量有點多telegram很難讀」）。
+
+## 2026-08-28 · 晨報AI訊號只推轉買/轉賣
+
+Leo看到晨報一排「⚪️買進解除→觀望」（MSFT/NVDA/AVGO同天解除）：「可以顯示
+轉買進、賣出的就好」。alert_telegram.py拿掉「解除→觀望」分支——降級不推，
+只推轉成🟢買進/🔴賣出的；訊號現況看板頁本來就有。連帶st_flips_today.json的
+ai_alerts也不會再收到解除事件（researcher_stock跟著少一種雜訊，一致）。
