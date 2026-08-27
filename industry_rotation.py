@@ -79,7 +79,9 @@ def _fetch_closes(ticker, period="3y"):
         return None, None
 
 
-TOP_HOLDINGS_N = 5   # 排行榜「展開看前N大成分股」用（2026-08-26 新功能）
+TOP_HOLDINGS_N = 10  # 排行榜「展開看前N大成分股」＋投資長「產業轉強」觸發範圍。
+                     # 2026-08-27 由 5 → 10（Leo：七鏈以外的產業訊號變好想看前10）——
+                     # 七鏈以外的類股沒有守備清單在追，前5太淺會漏掉不少中大型股。
 
 
 def _sector_members(market, min_market_cap=3e9):

@@ -343,6 +343,20 @@ def gather_material(ticker, notes):
         value_material += f"\n（buffett_targets查詢失敗：{e}）"
 
     trend_material = ""
+    # 2026-08-27：所屬七鏈的技術面（chain_technicals.py 每日算）——**當參考不當門檻**，
+    # 只是多一份背景材料給投資長，不擋任何個股訊號（Leo 明確決定，維持多鏡頭獨立原則）。
+    # 定位：七鏈看「長期趨勢還健不健康」，個股訊號看「買點到了沒」。
+    ct = _load_json("state/chain_technicals.json", {}) or {}
+    if ct.get("chains"):
+        scr = _load_json("screen_result.json", {}) or {}
+        for mkt in ("us", "tw"):
+            for chain, rows in (scr.get(mkt) or {}).items():
+                if any(str(r.get("code")) == str(ticker).split(".")[0] for r in rows):
+                    d = ct["chains"].get(f"{mkt}:{chain}")
+                    if d and d.get("summary"):
+                        trend_material += (f"所屬產業鏈「{chain}」技術面（{ct.get('date','')}）："
+                                           f"{d['summary']}\n")
+                    break
     rev = _ticker_rrg_basket()
     if ticker in rev:
         mkt, basket = rev[ticker]
