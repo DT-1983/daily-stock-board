@@ -1,0 +1,1952 @@
+{
+ "date": "2026-08-27",
+ "checks": [
+  {
+   "ticker": "1476.TW",
+   "requirement": {
+    "kind": "tw_monthly",
+    "tier": "normal",
+    "fy": 40586562890.0,
+    "year": 2026,
+    "analysts": 14,
+    "ytd": 23459298000.0,
+    "months_done": 7,
+    "months_left": 5,
+    "need_avg": 3425452978.0,
+    "hist_n": 260,
+    "prev_avg": 3170638000.0,
+    "need_yoy": 0.0803670989876486,
+    "yoy_max": 0.3784638724119298,
+    "yoy_med": 0.06734491537327658,
+    "yoy_n": 20,
+    "excess": -0.2980967734242812
+   },
+   "track_record": {
+    "n": 25,
+    "beats": 17,
+    "median_surprise": 7.0,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "1477.TW",
+   "requirement": {
+    "kind": "tw_monthly",
+    "tier": "normal",
+    "fy": 35336421080.0,
+    "year": 2026,
+    "analysts": 10,
+    "ytd": 20062161000.0,
+    "months_done": 7,
+    "months_left": 5,
+    "need_avg": 3054852016.0,
+    "hist_n": 260,
+    "prev_avg": 2806849200.0,
+    "need_yoy": 0.08835630214833068,
+    "yoy_max": 0.21886393601782617,
+    "yoy_med": 0.082962079849066,
+    "yoy_n": 20,
+    "excess": -0.1305076338694955
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 17,
+    "median_surprise": 2.4,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "1580.TWO",
+   "requirement": null,
+   "track_record": {
+    "n": 25,
+    "beats": 9,
+    "median_surprise": -5.9,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "2385.TW",
+   "requirement": {
+    "kind": "tw_monthly",
+    "tier": "normal",
+    "fy": 90872666670.0,
+    "year": 2026,
+    "analysts": 3,
+    "ytd": 52316431000.0,
+    "months_done": 7,
+    "months_left": 5,
+    "need_avg": 7711247134.0,
+    "hist_n": 260,
+    "prev_avg": 7968767400.0,
+    "need_yoy": -0.032316198111140726,
+    "yoy_max": 1.6636127443738613,
+    "yoy_med": 0.04751620942357304,
+    "yoy_n": 20,
+    "excess": -1.695928942485002
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 17,
+    "median_surprise": 7.9,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "2597.TW",
+   "requirement": null,
+   "track_record": null
+  },
+  {
+   "ticker": "2618.TW",
+   "requirement": {
+    "kind": "tw_monthly",
+    "tier": "normal",
+    "fy": 257301449390.0,
+    "year": 2026,
+    "analysts": 3,
+    "ytd": 150739178000.0,
+    "months_done": 7,
+    "months_left": 5,
+    "need_avg": 21312454278.0,
+    "hist_n": 260,
+    "prev_avg": 18317814400.0,
+    "need_yoy": 0.1634823790986768,
+    "yoy_max": 0.551284154262784,
+    "yoy_med": 0.05863482989519997,
+    "yoy_n": 20,
+    "excess": -0.3878017751641072
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 14,
+    "median_surprise": 11.9,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "2731.TW",
+   "requirement": {
+    "kind": "tw_monthly",
+    "tier": "low_coverage",
+    "fy": 32687000000.0,
+    "year": 2026,
+    "analysts": 1,
+    "ytd": 19425403000.0,
+    "months_done": 7,
+    "months_left": 5,
+    "need_avg": 2652319400.0,
+    "hist_n": 167,
+    "prev_avg": 2484100400.0,
+    "need_yoy": 0.0677182774093994,
+    "yoy_max": 3.9580897768865926,
+    "yoy_med": 0.10630570712864218,
+    "yoy_n": 12,
+    "excess": -3.890371499477193
+   },
+   "track_record": {
+    "n": 23,
+    "beats": 14,
+    "median_surprise": 4.9,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "2850.TW",
+   "requirement": null,
+   "track_record": {
+    "n": 11,
+    "beats": 7,
+    "median_surprise": 15.2,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "3005.TW",
+   "requirement": {
+    "kind": "tw_monthly",
+    "tier": "normal",
+    "fy": 43514074380.0,
+    "year": 2026,
+    "analysts": 4,
+    "ytd": 24444279000.0,
+    "months_done": 7,
+    "months_left": 5,
+    "need_avg": 3813959076.0,
+    "hist_n": 260,
+    "prev_avg": 3393394400.0,
+    "need_yoy": 0.12393627926067174,
+    "yoy_max": 2.504522204151036,
+    "yoy_med": 0.03916518908997113,
+    "yoy_n": 20,
+    "excess": -2.3805859248903642
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 15,
+    "median_surprise": 10.1,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "3014.TW",
+   "requirement": null,
+   "track_record": {
+    "n": 25,
+    "beats": 16,
+    "median_surprise": 9.9,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "3130.TW",
+   "requirement": null,
+   "track_record": {
+    "n": 20,
+    "beats": 7,
+    "median_surprise": -5.1,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "3596.TW",
+   "requirement": {
+    "kind": "tw_monthly",
+    "tier": "normal",
+    "fy": 55657750000.0,
+    "year": 2026,
+    "analysts": 4,
+    "ytd": 31513132000.0,
+    "months_done": 7,
+    "months_left": 5,
+    "need_avg": 4828923600.0,
+    "hist_n": 226,
+    "prev_avg": 4462420200.0,
+    "need_yoy": 0.08213108214237641,
+    "yoy_max": 0.5039866858773159,
+    "yoy_med": 0.10652852843976701,
+    "yoy_n": 17,
+    "excess": -0.42185560373493947
+   },
+   "track_record": {
+    "n": 25,
+    "beats": 16,
+    "median_surprise": 2.4,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "4105.TWO",
+   "requirement": {
+    "kind": "tw_monthly",
+    "tier": "low_coverage",
+    "fy": 7046000000.0,
+    "year": 2026,
+    "analysts": 1,
+    "ytd": 3711162000.0,
+    "months_done": 7,
+    "months_left": 5,
+    "need_avg": 666967600.0,
+    "hist_n": 260,
+    "prev_avg": 599890000.0,
+    "need_yoy": 0.11181649969161023,
+    "yoy_max": 0.3725678602399347,
+    "yoy_med": 0.07140089157417151,
+    "yoy_n": 20,
+    "excess": -0.2607513605483245
+   },
+   "track_record": {
+    "n": 25,
+    "beats": 13,
+    "median_surprise": 2.5,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "4441.TW",
+   "requirement": null,
+   "track_record": null
+  },
+  {
+   "ticker": "4763.TW",
+   "requirement": null,
+   "track_record": {
+    "n": 18,
+    "beats": 9,
+    "median_surprise": 7.9,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "4766.TW",
+   "requirement": {
+    "kind": "tw_monthly",
+    "tier": "normal",
+    "fy": 25601000000.0,
+    "year": 2026,
+    "analysts": 3,
+    "ytd": 14816198000.0,
+    "months_done": 7,
+    "months_left": 5,
+    "need_avg": 2156960400.0,
+    "hist_n": 111,
+    "prev_avg": 1971133200.0,
+    "need_yoy": 0.09427429866231263,
+    "yoy_max": 0.26547612919072305,
+    "yoy_med": 0.069726253265469,
+    "yoy_n": 8,
+    "excess": -0.17120183052841043
+   },
+   "track_record": {
+    "n": 16,
+    "beats": 10,
+    "median_surprise": 7.2,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "5236.TW",
+   "requirement": null,
+   "track_record": null
+  },
+  {
+   "ticker": "5287.TWO",
+   "requirement": {
+    "kind": "tw_monthly",
+    "tier": "low_coverage",
+    "fy": 2433000000.0,
+    "year": 2026,
+    "analysts": 1,
+    "ytd": 1335332000.0,
+    "months_done": 7,
+    "months_left": 5,
+    "need_avg": 219533600.0,
+    "hist_n": 175,
+    "prev_avg": 191663000.0,
+    "need_yoy": 0.14541460793163008,
+    "yoy_max": 0.32812424941912943,
+    "yoy_med": 0.07230791781599022,
+    "yoy_n": 13,
+    "excess": -0.18270964148749935
+   },
+   "track_record": {
+    "n": 25,
+    "beats": 12,
+    "median_surprise": -0.2,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "5288.TW",
+   "requirement": {
+    "kind": "tw_monthly",
+    "tier": "low_coverage",
+    "fy": 9365000000.0,
+    "year": 2026,
+    "analysts": 1,
+    "ytd": 5322003000.0,
+    "months_done": 7,
+    "months_left": 5,
+    "need_avg": 808599400.0,
+    "hist_n": 145,
+    "prev_avg": 556289000.0,
+    "need_yoy": 0.45355993018017604,
+    "yoy_max": 0.5176229410522319,
+    "yoy_med": -0.005756577521313311,
+    "yoy_n": 11,
+    "excess": -0.0640630108720559
+   },
+   "track_record": {
+    "n": 25,
+    "beats": 15,
+    "median_surprise": 3.0,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "5520.TWO",
+   "requirement": null,
+   "track_record": null
+  },
+  {
+   "ticker": "5609.TWO",
+   "requirement": null,
+   "track_record": {
+    "n": 21,
+    "beats": 9,
+    "median_surprise": -15.4,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "6412.TW",
+   "requirement": {
+    "kind": "tw_monthly",
+    "tier": "low_coverage",
+    "fy": 33962578000.0,
+    "year": 2026,
+    "analysts": 2,
+    "ytd": 18758560000.0,
+    "months_done": 7,
+    "months_left": 5,
+    "need_avg": 3040803600.0,
+    "hist_n": 166,
+    "prev_avg": 2794080000.0,
+    "need_yoy": 0.08830226765160631,
+    "yoy_max": 0.14794332155233447,
+    "yoy_med": 0.029249948498336398,
+    "yoy_n": 12,
+    "excess": -0.05964105390072816
+   },
+   "track_record": {
+    "n": 25,
+    "beats": 15,
+    "median_surprise": 2.1,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "6670.TW",
+   "requirement": {
+    "kind": "tw_monthly",
+    "tier": "low_coverage",
+    "fy": 32840000000.0,
+    "year": 2026,
+    "analysts": 2,
+    "ytd": 18909030000.0,
+    "months_done": 7,
+    "months_left": 5,
+    "need_avg": 2786194000.0,
+    "hist_n": 106,
+    "prev_avg": 2580226400.0,
+    "need_yoy": 0.07982539826737689,
+    "yoy_max": 0.5686153609414089,
+    "yoy_med": 0.17954845779081974,
+    "yoy_n": 7,
+    "excess": -0.48878996267403196
+   },
+   "track_record": {
+    "n": 25,
+    "beats": 14,
+    "median_surprise": 4.6,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "6803.TWO",
+   "requirement": {
+    "kind": "tw_monthly",
+    "tier": "low_coverage",
+    "fy": 10931000000.0,
+    "year": 2026,
+    "analysts": 1,
+    "ytd": 5567476000.0,
+    "months_done": 7,
+    "months_left": 5,
+    "need_avg": 1072704800.0,
+    "hist_n": 225,
+    "prev_avg": 822229800.0,
+    "need_yoy": 0.304628949230495,
+    "yoy_max": 4.628103841456096,
+    "yoy_med": 0.07307867916272492,
+    "yoy_n": 17,
+    "excess": -4.323474892225601
+   },
+   "track_record": {
+    "n": 25,
+    "beats": 12,
+    "median_surprise": -0.8,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "6826.TWO",
+   "requirement": null,
+   "track_record": null
+  },
+  {
+   "ticker": "6996.TWO",
+   "requirement": null,
+   "track_record": null
+  },
+  {
+   "ticker": "8081.TW",
+   "requirement": {
+    "kind": "tw_monthly",
+    "tier": "low_coverage",
+    "fy": 9224000000.0,
+    "year": 2026,
+    "analysts": 1,
+    "ytd": 5187490000.0,
+    "months_done": 7,
+    "months_left": 5,
+    "need_avg": 807302000.0,
+    "hist_n": 260,
+    "prev_avg": 699486400.0,
+    "need_yoy": 0.1541353770423557,
+    "yoy_max": 0.3693382898086366,
+    "yoy_med": 0.12715063420565387,
+    "yoy_n": 20,
+    "excess": -0.2152029127662809
+   },
+   "track_record": {
+    "n": 25,
+    "beats": 17,
+    "median_surprise": 5.8,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "9910.TW",
+   "requirement": {
+    "kind": "tw_monthly",
+    "tier": "low_coverage",
+    "fy": 81191736000.0,
+    "year": 2026,
+    "analysts": 1,
+    "ytd": 47008941000.0,
+    "months_done": 7,
+    "months_left": 5,
+    "need_avg": 6836559000.0,
+    "hist_n": 260,
+    "prev_avg": 7013692200.0,
+    "need_yoy": -0.0252553426852693,
+    "yoy_max": 2.0456451267358142,
+    "yoy_med": 0.06664694322414566,
+    "yoy_n": 20,
+    "excess": -2.0709004694210833
+   },
+   "track_record": {
+    "n": 25,
+    "beats": 12,
+    "median_surprise": -3.7,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "9911.TW",
+   "requirement": {
+    "kind": "tw_monthly",
+    "tier": "low_coverage",
+    "fy": 10851000000.0,
+    "year": 2026,
+    "analysts": 1,
+    "ytd": 6407458000.0,
+    "months_done": 7,
+    "months_left": 5,
+    "need_avg": 888708400.0,
+    "hist_n": 260,
+    "prev_avg": 854628200.0,
+    "need_yoy": 0.03987722380328673,
+    "yoy_max": 0.25919695724206515,
+    "yoy_med": 0.07251571173754323,
+    "yoy_n": 20,
+    "excess": -0.21931973343877842
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 13,
+    "median_surprise": 2.3,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "9942.TW",
+   "requirement": null,
+   "track_record": {
+    "n": 25,
+    "beats": 12,
+    "median_surprise": -4.1,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "AAOI",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "unprecedented",
+    "fy": 1038425600.0,
+    "analysts": 5,
+    "ytd": 343066000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 347679800.0,
+    "hist_n": 5,
+    "last_q": 191922000.0,
+    "need_qoq": 0.8115682412646805,
+    "qoq_max": 0.26979569152596206,
+    "qoq_med": 0.1522845597948559,
+    "qoq_n": 4,
+    "excess": 0.5417725497387185
+   },
+   "track_record": {
+    "n": 22,
+    "beats": 15,
+    "median_surprise": 9.6,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "AAPL",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 477683718840.0,
+    "analysts": 36,
+    "ytd": 364357000000.0,
+    "q_done": 3,
+    "q_left": 1,
+    "need_avg": 113326718840.0,
+    "hist_n": 5,
+    "last_q": 109417000000.0,
+    "need_qoq": 0.03573227962748016,
+    "qoq_max": 0.40296293404641537,
+    "qoq_med": 0.08964651835467263,
+    "qoq_n": 4,
+    "excess": -0.3672306544189352
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 23,
+    "median_surprise": 4.5,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "ACGL",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 15801423830.0,
+    "analysts": 6,
+    "ytd": 8860000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 3470711915.0,
+    "hist_n": 5,
+    "last_q": 4489000000.0,
+    "need_qoq": -0.22684074069948768,
+    "qoq_max": 0.026996110729810008,
+    "qoq_med": 0.0,
+    "qoq_n": 4,
+    "excess": -0.2538368514292977
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 24,
+    "median_surprise": 23.9,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "AER",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 8577425219.0,
+    "analysts": 8,
+    "ytd": 4408940000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 2084242609.5,
+    "hist_n": 5,
+    "last_q": 2167213000.0,
+    "need_qoq": -0.038284372832757985,
+    "qoq_max": 0.22356886331642944,
+    "qoq_med": -0.0011522456983495966,
+    "qoq_n": 4,
+    "excess": -0.26185323614918743
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 22,
+    "median_surprise": 28.7,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "AES",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "low_coverage",
+    "fy": 14332000000.0,
+    "analysts": 1,
+    "ytd": 6602000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 3865000000.0,
+    "hist_n": 5,
+    "last_q": 3422000000.0,
+    "need_qoq": 0.12945645821157226,
+    "qoq_max": 0.1737302977232924,
+    "qoq_med": 0.0761006289308177,
+    "qoq_n": 4,
+    "excess": -0.04427383951172015
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 16,
+    "median_surprise": 8.5,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "AGO",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "low_coverage",
+    "fy": 851600000.0,
+    "analysts": 2,
+    "ytd": 459000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 196300000.0,
+    "hist_n": 5,
+    "last_q": 202000000.0,
+    "need_qoq": -0.028217821782178243,
+    "qoq_max": 0.20657276995305174,
+    "qoq_med": 0.07035175879396993,
+    "qoq_n": 4,
+    "excess": -0.23479059173522998
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 15,
+    "median_surprise": 22.1,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "ALL",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 70222721480.0,
+    "analysts": 9,
+    "ytd": 35087000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 17567860740.0,
+    "hist_n": 5,
+    "last_q": 18336000000.0,
+    "need_qoq": -0.041892411649214645,
+    "qoq_max": 0.09462121664378254,
+    "qoq_med": 0.031125347516016033,
+    "qoq_n": 4,
+    "excess": -0.13651362829299718
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 19,
+    "median_surprise": 40.7,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "AMD",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "unprecedented",
+    "fy": 50813933620.0,
+    "analysts": 46,
+    "ytd": 21789000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 14512466810.0,
+    "hist_n": 5,
+    "last_q": 11536000000.0,
+    "need_qoq": 0.2580155001733704,
+    "qoq_max": 0.20312296681847752,
+    "qoq_med": 0.12513410709060757,
+    "qoq_n": 4,
+    "excess": 0.05489253335489286
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 21,
+    "median_surprise": 3.2,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "API",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "low_coverage",
+    "fy": 160974720.0,
+    "analysts": 2,
+    "ytd": 37745000.0,
+    "q_done": 1,
+    "q_left": 3,
+    "need_avg": 41076573.333333336,
+    "hist_n": 5,
+    "last_q": 37745000.0,
+    "need_qoq": 0.0882652890007507,
+    "qoq_max": 0.0786170633798835,
+    "qoq_med": 0.03254619224145472,
+    "qoq_n": 4,
+    "excess": 0.009648225620867201
+   },
+   "track_record": {
+    "n": 15,
+    "beats": 6,
+    "median_surprise": -8.8,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "BA",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 98022424360.0,
+    "analysts": 26,
+    "ytd": 22217000000.0,
+    "q_done": 1,
+    "q_left": 3,
+    "need_avg": 25268474786.666668,
+    "hist_n": 5,
+    "last_q": 22217000000.0,
+    "need_qoq": 0.1373486423309478,
+    "qoq_max": 0.16685473943373008,
+    "qoq_med": 0.029136226901590012,
+    "qoq_n": 4,
+    "excess": -0.02950609710278229
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 9,
+    "median_surprise": -25.0,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "BAC",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 124071805030.0,
+    "analysts": 12,
+    "ytd": 30272000000.0,
+    "q_done": 1,
+    "q_left": 3,
+    "need_avg": 31266601676.666668,
+    "hist_n": 5,
+    "last_q": 30272000000.0,
+    "need_qoq": 0.03285549936134613,
+    "qoq_max": 0.1100825975505555,
+    "qoq_med": 0.06140649208328619,
+    "qoq_n": 4,
+    "excess": -0.07722709818920936
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 21,
+    "median_surprise": 7.7,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "BAYRY",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 45773152330.0,
+    "analysts": 17,
+    "ytd": 24277000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 10748076165.0,
+    "hist_n": 5,
+    "last_q": 10872000000.0,
+    "need_qoq": -0.011398439569536456,
+    "qoq_max": 0.18405797101449273,
+    "qoq_med": 0.1719706242350061,
+    "qoq_n": 4,
+    "excess": -0.19545641058402918
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 20,
+    "median_surprise": 7.2,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "BCS",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 31502024910.0,
+    "analysts": 15,
+    "ytd": 16501000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 7500512455.0,
+    "hist_n": 5,
+    "last_q": 8338000000.0,
+    "need_qoq": -0.10044225773566806,
+    "qoq_max": 0.15345485375158963,
+    "qoq_med": 0.021438196741394133,
+    "qoq_n": 4,
+    "excess": -0.2538971114872577
+   },
+   "track_record": {
+    "n": 14,
+    "beats": 9,
+    "median_surprise": 2.9,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "BEN",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "low_coverage",
+    "fy": 9386358860.0,
+    "analysts": 2,
+    "ytd": 4622000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 2382179430.0,
+    "hist_n": 5,
+    "last_q": 2294900000.0,
+    "need_qoq": 0.03803190988714111,
+    "qoq_max": 0.1355135658914728,
+    "qoq_med": -0.007082817766778993,
+    "qoq_n": 4,
+    "excess": -0.09748165600433167
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 18,
+    "median_surprise": 11.4,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "BNY",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 22268145790.0,
+    "analysts": 11,
+    "ytd": 5336000000.0,
+    "q_done": 1,
+    "q_left": 3,
+    "need_avg": 5644048596.666667,
+    "hist_n": 5,
+    "last_q": 5336000000.0,
+    "need_qoq": 0.0577302467516243,
+    "qoq_max": 0.05931299338596108,
+    "qoq_med": 0.04504504504504503,
+    "qoq_n": 4,
+    "excess": -0.0015827466343367735
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 24,
+    "median_surprise": 8.5,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "BRK.B",
+   "requirement": null,
+   "track_record": null
+  },
+  {
+   "ticker": "BWA",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 14206939770.0,
+    "analysts": 14,
+    "ytd": 7181000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 3512969885.0,
+    "hist_n": 5,
+    "last_q": 3648000000.0,
+    "need_qoq": -0.037014834155701726,
+    "qoq_max": 0.03255024058873479,
+    "qoq_med": -0.005291005291005346,
+    "qoq_n": 4,
+    "excess": -0.06956507474443652
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 22,
+    "median_surprise": 14.3,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "C",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 95791331330.0,
+    "analysts": 16,
+    "ytd": 49428000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 23181665665.0,
+    "hist_n": 5,
+    "last_q": 24765000000.0,
+    "need_qoq": -0.06393435634968703,
+    "qoq_max": 0.2538383324860194,
+    "qoq_med": 0.020036009417847778,
+    "qoq_n": 4,
+    "excess": -0.3177726888357064
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 20,
+    "median_surprise": 17.9,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "CCL",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 27635166980.0,
+    "analysts": 25,
+    "ytd": 12828000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 7403583490.0,
+    "hist_n": 5,
+    "last_q": 6663000000.0,
+    "need_qoq": 0.1111486552603933,
+    "qoq_max": 0.288400758533502,
+    "qoq_med": 0.08077858880778588,
+    "qoq_n": 4,
+    "excess": -0.1772521032731087
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 15,
+    "median_surprise": 8.8,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "CI",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 286620034750.0,
+    "analysts": 15,
+    "ytd": 139688000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 73466017375.0,
+    "hist_n": 5,
+    "last_q": 71396000000.0,
+    "need_qoq": 0.028993464269706948,
+    "qoq_max": 0.04545188309025949,
+    "qoq_med": 0.03843625825341346,
+    "qoq_n": 4,
+    "excess": -0.016458418820552545
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 22,
+    "median_surprise": 3.5,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "CICHY",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 789762268430.0,
+    "analysts": 11,
+    "ytd": 211004000000.0,
+    "q_done": 1,
+    "q_left": 3,
+    "need_avg": 192919422810.0,
+    "hist_n": 5,
+    "last_q": 211004000000.0,
+    "need_qoq": -0.08570727185266624,
+    "qoq_max": 0.1269534379439632,
+    "qoq_med": 0.07597360916734197,
+    "qoq_n": 4,
+    "excess": -0.21266070979662943
+   },
+   "track_record": null
+  },
+  {
+   "ticker": "CLS",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "unprecedented",
+    "fy": 20579781320.0,
+    "analysts": 15,
+    "ytd": 8745600000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 5917090660.0,
+    "hist_n": 5,
+    "last_q": 4698600000.0,
+    "need_qoq": 0.25933057932149994,
+    "qoq_max": 0.1610081541882875,
+    "qoq_med": 0.1443018159048215,
+    "qoq_n": 4,
+    "excess": 0.09832242513321243
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 24,
+    "median_surprise": 10.0,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "CNH",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 18250445930.0,
+    "analysts": 9,
+    "ytd": 8629000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 4810722965.0,
+    "hist_n": 5,
+    "last_q": 4803000000.0,
+    "need_qoq": 0.0016079460753695152,
+    "qoq_max": 0.25535807631991636,
+    "qoq_med": 0.17231188906569672,
+    "qoq_n": 4,
+    "excess": -0.25375013024454685
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 19,
+    "median_surprise": 19.5,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "COHR",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "unprecedented",
+    "fy": 10611692610.0,
+    "analysts": 19,
+    "ytd": 0,
+    "q_done": 0,
+    "q_left": 4,
+    "need_avg": 2652923152.5,
+    "hist_n": 5,
+    "last_q": 1805641000.0,
+    "need_qoq": 0.46924175542092805,
+    "qoq_max": 0.07119716141570898,
+    "qoq_med": 0.06592414969728932,
+    "qoq_n": 4,
+    "excess": 0.3980445940052191
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 23,
+    "median_surprise": 9.2,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "CPA",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 4406898340.0,
+    "analysts": 15,
+    "ytd": 2111756000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 1147571170.0,
+    "hist_n": 5,
+    "last_q": 1059333000.0,
+    "need_qoq": 0.08329597020011659,
+    "qoq_max": 0.09298589244024225,
+    "qoq_med": 0.08372260278849852,
+    "qoq_n": 4,
+    "excess": -0.009689922240125659
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 21,
+    "median_surprise": 11.4,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "DNKEY",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 59643155560.0,
+    "analysts": 13,
+    "ytd": 28899000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 15372077780.0,
+    "hist_n": 5,
+    "last_q": 14925000000.0,
+    "need_qoq": 0.02995496013400345,
+    "qoq_max": 0.11646586345381515,
+    "qoq_med": 0.0680549592099613,
+    "qoq_n": 4,
+    "excess": -0.0865109033198117
+   },
+   "track_record": null
+  },
+  {
+   "ticker": "FNF",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 14885177800.0,
+    "analysts": 3,
+    "ytd": 7093000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 3896088900.0,
+    "hist_n": 5,
+    "last_q": 3968000000.0,
+    "need_qoq": -0.01812275705645161,
+    "qoq_max": 0.26976,
+    "qoq_med": 0.10181818181818181,
+    "qoq_n": 4,
+    "excess": -0.2878827570564516
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 12,
+    "median_surprise": 5.4,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "GLW",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "unprecedented",
+    "fy": 19217109460.0,
+    "analysts": 11,
+    "ytd": 8649000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 5284054730.0,
+    "hist_n": 5,
+    "last_q": 4505000000.0,
+    "need_qoq": 0.17293112763595997,
+    "qoq_max": 0.08711389961389959,
+    "qoq_med": 0.06162610046607986,
+    "qoq_n": 4,
+    "excess": 0.08581722802206038
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 18,
+    "median_surprise": 3.5,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "GOOG",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "rare",
+    "fy": 497864285580.0,
+    "analysts": 51,
+    "ytd": 229692000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 134086142790.0,
+    "hist_n": 5,
+    "last_q": 119796000000.0,
+    "need_qoq": 0.11928731167985585,
+    "qoq_max": 0.11219783870400413,
+    "qoq_med": 0.09008517143481098,
+    "qoq_n": 4,
+    "excess": 0.007089472975851718
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 20,
+    "median_surprise": 12.5,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "GSK",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 33936063240.0,
+    "analysts": 18,
+    "ytd": 16038000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 8949031620.0,
+    "hist_n": 5,
+    "last_q": 8409000000.0,
+    "need_qoq": 0.06422067070995352,
+    "qoq_max": 0.10224144710971284,
+    "qoq_med": 0.07024793388429762,
+    "qoq_n": 4,
+    "excess": -0.038020776399759315
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 22,
+    "median_surprise": 13.2,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "HENKY",
+   "requirement": null,
+   "track_record": null
+  },
+  {
+   "ticker": "HIG",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 28878513530.0,
+    "analysts": 6,
+    "ytd": 14300000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 7289256765.0,
+    "hist_n": 5,
+    "last_q": 7149000000.0,
+    "need_qoq": 0.01961907469576163,
+    "qoq_max": 0.06607995226730301,
+    "qoq_med": 0.004477403106198485,
+    "qoq_n": 4,
+    "excess": -0.04646087757154138
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 19,
+    "median_surprise": 17.6,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "HPE",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 45039379180.0,
+    "analysts": 18,
+    "ytd": 19979000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 12530189590.0,
+    "hist_n": 5,
+    "last_q": 10678000000.0,
+    "need_qoq": 0.17345847443341444,
+    "qoq_max": 0.19784974432935631,
+    "qoq_med": 0.14804859692506178,
+    "qoq_n": 4,
+    "excess": -0.02439126989594187
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 22,
+    "median_surprise": 7.4,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "HSBC",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 75702058230.0,
+    "analysts": 11,
+    "ytd": 19125000000.0,
+    "q_done": 1,
+    "q_left": 3,
+    "need_avg": 18859019410.0,
+    "hist_n": 5,
+    "last_q": 19125000000.0,
+    "need_qoq": -0.013907481830065405,
+    "qoq_max": 0.07910624612085981,
+    "qoq_med": 0.01376224726737263,
+    "qoq_n": 4,
+    "excess": -0.09301372795092522
+   },
+   "track_record": null
+  },
+  {
+   "ticker": "ITOCY",
+   "requirement": null,
+   "track_record": null
+  },
+  {
+   "ticker": "IX",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "unprecedented",
+    "fy": 3426133333330.0,
+    "analysts": 3,
+    "ytd": 676024000000.0,
+    "q_done": 1,
+    "q_left": 3,
+    "need_avg": 916703111110.0,
+    "hist_n": 5,
+    "last_q": 676024000000.0,
+    "need_qoq": 0.35602154821426457,
+    "qoq_max": 0.2678213560139113,
+    "qoq_med": 0.1144808121573011,
+    "qoq_n": 4,
+    "excess": 0.08820019220035324
+   },
+   "track_record": null
+  },
+  {
+   "ticker": "JPM",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 207979301910.0,
+    "analysts": 11,
+    "ytd": 102685000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 52647150955.0,
+    "hist_n": 5,
+    "last_q": 52852000000.0,
+    "need_qoq": -0.0038758995875274316,
+    "qoq_max": 0.08815180365097386,
+    "qoq_med": 0.060582345032408336,
+    "qoq_n": 4,
+    "excess": -0.09202770323850129
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 20,
+    "median_surprise": 9.7,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "KNBWY",
+   "requirement": null,
+   "track_record": {
+    "n": 9,
+    "beats": 3,
+    "median_surprise": -13.4,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "KR",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 151125752260.0,
+    "analysts": 21,
+    "ytd": 46121000000.0,
+    "q_done": 1,
+    "q_left": 3,
+    "need_avg": 35001584086.666664,
+    "hist_n": 5,
+    "last_q": 46121000000.0,
+    "need_qoq": -0.24109225544401325,
+    "qoq_max": 0.32817854571634264,
+    "qoq_med": 0.025576656132785924,
+    "qoq_n": 4,
+    "excess": -0.5692708011603559
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 23,
+    "median_surprise": 7.3,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "LH",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 14749241680.0,
+    "analysts": 16,
+    "ytd": 7268700000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 3740270840.0,
+    "hist_n": 5,
+    "last_q": 3731100000.0,
+    "need_qoq": 0.002457945378038673,
+    "qoq_max": 0.054698100407055694,
+    "qoq_med": 0.01026280724633577,
+    "qoq_n": 4,
+    "excess": -0.05224015502901702
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 22,
+    "median_surprise": 3.3,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "LITE",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 2993255270.0,
+    "analysts": 21,
+    "ytd": 0,
+    "q_done": 0,
+    "q_left": 4,
+    "need_avg": 748313817.5,
+    "hist_n": 5,
+    "last_q": 808400000.0,
+    "need_qoq": -0.07432729156358242,
+    "qoq_max": 0.2467216185837393,
+    "qoq_med": 0.21472577009767102,
+    "qoq_n": 4,
+    "excess": -0.32104891014732173
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 23,
+    "median_surprise": 9.0,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "MCK",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 431909859090.0,
+    "analysts": 16,
+    "ytd": 105380000000.0,
+    "q_done": 1,
+    "q_left": 3,
+    "need_avg": 108843286363.33333,
+    "hist_n": 5,
+    "last_q": 105380000000.0,
+    "need_qoq": 0.032864740589612085,
+    "qoq_max": 0.09434550080481863,
+    "qoq_med": 0.054412381039999236,
+    "qoq_n": 4,
+    "excess": -0.06148076021520654
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 21,
+    "median_surprise": 4.1,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "MSFT",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "rare",
+    "fy": 391082615630.0,
+    "analysts": 49,
+    "ytd": 0,
+    "q_done": 0,
+    "q_left": 4,
+    "need_avg": 97770653907.5,
+    "hist_n": 5,
+    "last_q": 90007000000.0,
+    "need_qoq": 0.0862561123857033,
+    "qoq_max": 0.08591318196076547,
+    "qoq_med": 0.04634815186744423,
+    "qoq_n": 4,
+    "excess": 0.0003429304249378262
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 23,
+    "median_surprise": 7.0,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "MU",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 129715361400.0,
+    "analysts": 40,
+    "ytd": 78959000000.0,
+    "q_done": 3,
+    "q_left": 1,
+    "need_avg": 50756361400.0,
+    "hist_n": 5,
+    "last_q": 41456000000.0,
+    "need_qoq": 0.22434295156310302,
+    "qoq_max": 0.74888221065748,
+    "qoq_med": 0.737468566638726,
+    "qoq_n": 4,
+    "excess": -0.5245392590943769
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 22,
+    "median_surprise": 8.7,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "NVDA",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "unprecedented",
+    "fy": 397012036470.0,
+    "analysts": 27,
+    "ytd": 81615000000.0,
+    "q_done": 1,
+    "q_left": 3,
+    "need_avg": 105132345490.0,
+    "hist_n": 5,
+    "last_q": 81615000000.0,
+    "need_qoq": 0.2881497946455922,
+    "qoq_max": 0.2195622874013221,
+    "qoq_med": 0.1979831784754944,
+    "qoq_n": 4,
+    "excess": 0.0685875072442701
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 22,
+    "median_surprise": 8.0,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "ON",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "rare",
+    "fy": 6560421810.0,
+    "analysts": 29,
+    "ytd": 3116800000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 1721810905.0,
+    "hist_n": 5,
+    "last_q": 1603500000.0,
+    "need_qoq": 0.0737829154973495,
+    "qoq_max": 0.05960483711094966,
+    "qoq_med": 0.055967862735752716,
+    "qoq_n": 4,
+    "excess": 0.01417807838639984
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 22,
+    "median_surprise": 6.3,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "PAA",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 59193260870.0,
+    "analysts": 8,
+    "ytd": 30163000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 14515130435.0,
+    "hist_n": 5,
+    "last_q": 17693000000.0,
+    "need_qoq": -0.17961168626010282,
+    "qoq_max": 0.41884522854851647,
+    "qoq_med": 0.18042408178720182,
+    "qoq_n": 4,
+    "excess": -0.5984569148086193
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 12,
+    "median_surprise": 1.5,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "PHIN",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 3644141500.0,
+    "analysts": 5,
+    "ytd": 1818000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 913070750.0,
+    "hist_n": 5,
+    "last_q": 940000000.0,
+    "need_qoq": -0.028648138297872383,
+    "qoq_max": 0.07061503416856496,
+    "qoq_med": 0.020224719101123556,
+    "qoq_n": 4,
+    "excess": -0.09926317246643734
+   },
+   "track_record": {
+    "n": 12,
+    "beats": 7,
+    "median_surprise": 9.2,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "PHM",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 16403350719.0,
+    "analysts": 12,
+    "ytd": 7391529000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 4505910859.5,
+    "hist_n": 5,
+    "last_q": 3982957000.0,
+    "need_qoq": 0.13129789236991507,
+    "qoq_max": 0.16851191642717245,
+    "qoq_med": 0.046755595431255736,
+    "qoq_n": 4,
+    "excess": -0.03721402405725738
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 19,
+    "median_surprise": 5.6,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "SSUMY",
+   "requirement": null,
+   "track_record": null
+  },
+  {
+   "ticker": "TFC",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "rare",
+    "fy": 21280751440.0,
+    "analysts": 10,
+    "ytd": 5152000000.0,
+    "q_done": 1,
+    "q_left": 3,
+    "need_avg": 5376250480.0,
+    "hist_n": 5,
+    "last_q": 5152000000.0,
+    "need_qoq": 0.043526878881987585,
+    "qoq_max": 0.04010427110487269,
+    "qoq_med": 0.01796284956113503,
+    "qoq_n": 4,
+    "excess": 0.0034226077771148944
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 19,
+    "median_surprise": 7.5,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "THC",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 22426890740.0,
+    "analysts": 19,
+    "ytd": 11822000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 5302445370.0,
+    "hist_n": 5,
+    "last_q": 6041000000.0,
+    "need_qoq": -0.12225701539480216,
+    "qoq_max": 0.045956214944816276,
+    "qoq_med": 0.04499905464170917,
+    "qoq_n": 4,
+    "excess": -0.16821323033961844
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 24,
+    "median_surprise": 43.5,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "TM",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 53890748619140.0,
+    "analysts": 15,
+    "ytd": 13525400000000.0,
+    "q_done": 1,
+    "q_left": 3,
+    "need_avg": 13455116206380.0,
+    "hist_n": 5,
+    "last_q": 13525400000000.0,
+    "need_qoq": -0.005196429948097658,
+    "qoq_max": 0.0872091590602797,
+    "qoq_med": 0.07367051173552652,
+    "qoq_n": 4,
+    "excess": -0.09240558900837736
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 17,
+    "median_surprise": 21.2,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "TSLA",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 106034594570.0,
+    "analysts": 45,
+    "ytd": 50623000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 27705797285.0,
+    "hist_n": 5,
+    "last_q": 28236000000.0,
+    "need_qoq": -0.01877754338433202,
+    "qoq_max": 0.261267700004467,
+    "qoq_med": 0.2488886913229018,
+    "qoq_n": 4,
+    "excess": -0.280045243388799
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 13,
+    "median_surprise": 6.9,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "TSM",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "unprecedented",
+    "fy": 5435176569510.0,
+    "analysts": 39,
+    "ytd": 2404484440000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 1515346064755.0,
+    "hist_n": 5,
+    "last_q": 1270381000000.0,
+    "need_qoq": 0.19282802935103716,
+    "qoq_max": 0.12016325424425123,
+    "qoq_med": 0.0841351635359402,
+    "qoq_n": 4,
+    "excess": 0.07266477510678593
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 24,
+    "median_surprise": 5.1,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "UHS",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 18607790580.0,
+    "analysts": 17,
+    "ytd": 9133194000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 4737298290.0,
+    "hist_n": 5,
+    "last_q": 4638012000.0,
+    "need_qoq": 0.02140707915374085,
+    "qoq_max": 0.049355294438416575,
+    "qoq_med": 0.03177401938341995,
+    "qoq_n": 4,
+    "excess": -0.027948215284675726
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 20,
+    "median_surprise": 7.6,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "UNM",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 12157690560.0,
+    "analysts": 5,
+    "ytd": 6681400000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 2738145280.0,
+    "hist_n": 5,
+    "last_q": 3350000000.0,
+    "need_qoq": -0.1826432,
+    "qoq_max": 0.039081750413274774,
+    "qoq_med": 0.005583238278201286,
+    "qoq_n": 4,
+    "excess": -0.22172495041327478
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 14,
+    "median_surprise": 1.5,
+    "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "XYZ",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 26059868450.0,
+    "analysts": 33,
+    "ytd": 12674534000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 6692667225.0,
+    "hist_n": 5,
+    "last_q": 6617687000.0,
+    "need_qoq": 0.011330276726596367,
+    "qoq_max": 0.09259603222600798,
+    "qoq_med": 0.022490119301018296,
+    "qoq_n": 4,
+    "excess": -0.08126575549941162
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 15,
+    "median_surprise": 12.2,
+    "bias": "共識大致中性"
+   }
+  }
+ ]
+}
