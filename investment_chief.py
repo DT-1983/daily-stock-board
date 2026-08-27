@@ -383,18 +383,29 @@ def _overview_lines(notes):
     重大新聞用 macro_calendar 的警示關鍵字掃當天總經筆記附的新聞標題，全部零成本。"""
     lines = []
 
-    # ① 昨日大指數（market_data.json，tw-board/market-home 排程維護）
+    # ① 昨日大指數（market_data.json，tw-board/market-home 排程維護）。
+    # 2026-08-28 Leo反饋「排版有點亂可以分二行嗎」：一行塞7個指數在手機上會折行
+    # 折得亂七八糟——拆成美股一行、台股+匯債一行，各自對齊好讀。
     md = _load_json("market_data.json", {}) or {}
-    idx_parts = []
+    us_parts, tw_parts = [], []
     for it in md.get("indices", []):
         nm, pct, bp = it.get("name", it.get("sym", "")), it.get("chg_pct"), it.get("chg_bp")
+        grp = it.get("grp", "")
         if pct is not None:
-            arrow = "🔺" if pct > 0 else ("🔻" if pct < 0 else "")
-            idx_parts.append(f"{nm} {arrow}{pct:+.2f}%")
+            arrow = "🔺" if pct > 0 else ("🔻" if pct < 0 else "▪️")
+            part = f"{nm} {arrow}{pct:+.2f}%"
         elif bp is not None:
-            idx_parts.append(f"{nm} {bp:+.1f}bp")
-    if idx_parts:
-        lines.append(f"📈 <b>大盤</b>（{md.get('updated','')[:10]}）：" + "｜".join(idx_parts[:7]))
+            part = f"{nm} {bp:+.1f}bp"
+        else:
+            continue
+        # 美股四大指數一行；台股/匯率/美債（bp計價的）歸第二行——不然美股行塞5個又爆
+        (us_parts if (grp == "US" and pct is not None) else tw_parts).append(part)
+    if us_parts or tw_parts:
+        lines.append(f"📈 <b>大盤</b>（{md.get('updated','')[:10]}）")
+        if us_parts:
+            lines.append("　🇺🇸 " + "｜".join(us_parts[:4]))
+        if tw_parts:
+            lines.append("　🇹🇼 " + "｜".join(tw_parts[:4]))
 
     # ② 重大財經新聞（警示關鍵字命中的才列——打仗/升息/關稅這類，不是全部頭條）
     macro = [n for n in notes if n.get("layer") == "macro"]
