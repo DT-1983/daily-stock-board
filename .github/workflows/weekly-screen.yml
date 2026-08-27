@@ -161,4 +161,11 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add screen_result.json chain_themes.json buffett_watch.json docs/buffett.html portfolios.json docs/portfolios.html docs/rotation.html industry_rotation_history.json
           git commit -m "chore: weekly re-screen(美台分開) + 巴菲特掃描 + 頁 + 模擬倉 [skip ci]" || echo "無變化"
-          git push || echo "push 略過"
+          # 2026-08-27 修：push 被拒不再靜默丟更新（8/27 巴菲特新常利線就這樣默默消失過），
+          # rebase 重試 3 次（見 tw-board.yml 同款說明）
+          for i in 1 2 3; do
+            if git push; then break; fi
+            echo "push 被拒（第 $i 次），rebase 後重試"
+            git pull --rebase || break
+            [ "$i" = "3" ] && { echo "::error::push 失敗 3 次"; exit 1; }
+          done
