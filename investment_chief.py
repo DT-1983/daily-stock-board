@@ -70,6 +70,21 @@ SCHEMA = {
             },
             "required": ["status", "judgment", "brief", "reasoning"],
         },
+        # 2026-08-27 P1（老墨「報告死亡條件」）：這個判斷的可證偽失效條件。
+        # price 類日檢零成本；metric 類（財報數字門檻）等該檔財報時由 AI 查證。
+        "conditions": {
+            "type": "array",
+            "maxItems": 3,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "type": {"type": "string", "enum": ["price_below", "price_above", "metric"]},
+                    "value": {"type": ["number", "null"]},
+                    "desc": {"type": "string", "maxLength": 50},
+                },
+                "required": ["type", "desc"],
+            },
+        },
         "value_angle": {
             "type": "object",
             "properties": {
@@ -123,7 +138,14 @@ PROMPT = """你是投資長，讀研究員整理好的材料，給這檔股票�
 兩個角度各要填：
 - brief：**一句完整的話（≤60字）講清楚判斷跟最關鍵的一個理由**，會直接顯示在
   Telegram 推播裡——必須是完整句子，不能只寫半句，不用「事實/推論」標籤。
-- reasoning：完整詳細版（事實/推論分開標註），存檔供深讀。"""
+- reasoning：完整詳細版（事實/推論分開標註），存檔供深讀。
+
+另外填 conditions（頂層欄位，1-3條）：**這個判斷的可證偽失效條件（死亡條件）**——
+「出現什麼情況代表這個判斷錯了/該重新評估」。規則：
+- price_below/price_above：價格失效線，value 必須給具體數字（系統每天自動對照）
+- metric：財報/基本面門檻，desc 必須含具體數字（例「毛利率跌破70%」「單季營收年增轉負」），
+  這類會在該公司下次財報公布時被查證
+- 只寫真的可證偽的條件，不要寫「市場情緒轉差」這種驗證不了的。"""
 
 
 def _load_json(path, default=None):
@@ -554,8 +576,32 @@ def run():
             f.write(json.dumps(v, ensure_ascii=False) + "\n")
     total = sum(v.get("cost_usd") or 0 for v in verdicts)
     print(f"已存 {len(verdicts)} 筆投資長判斷（等值標價合計約 ${total:.2f}，Max plan走訂閱額度）")
+    _register_conditions(verdicts)
     _send_telegram(verdicts, notes)
     return verdicts
+
+
+def _register_conditions(verdicts):
+    """P1（2026-08-27）：把投資長給的失效條件登錄進 state/thesis_conditions.json。
+    同一檔新判斷=新論點=覆蓋舊條件（狀態重置 active）；thesis_check.py 每天對照。"""
+    path = "state/thesis_conditions.json"
+    reg = _load_json(path, {}) or {}
+    n = 0
+    for v in verdicts:
+        conds = v.get("conditions") or []
+        if not conds:
+            continue
+        reg[v["ticker"]] = {
+            "source_date": v.get("ts"),
+            "held": v.get("held", True),
+            "conditions": [{"type": c.get("type"), "value": c.get("value"),
+                            "desc": c.get("desc"), "status": "active"} for c in conds],
+        }
+        n += len(conds)
+    if n:
+        os.makedirs("state", exist_ok=True)
+        json.dump(reg, open(path, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+        print(f"已登錄 {n} 條失效條件（{sum(1 for v in verdicts if v.get('conditions'))} 檔）")
 
 
 if __name__ == "__main__":

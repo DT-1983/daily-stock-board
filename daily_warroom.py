@@ -267,6 +267,25 @@ def sec5_watch(date):
     return lines
 
 
+def sec_thesis(date):
+    """⑤ 失效條件日檢（P1，2026-08-27）——讀 thesis_check.py 的當日結果。
+    老墨式三態：🚫觸發/⚠️逼近/✅健康＋📋待財報檢。"""
+    lines = ["**⑤ 失效條件日檢**"]
+    d = _load("state/thesis_check_today.json", {}) or {}
+    if not d:
+        lines.append("尚無登錄的失效條件（投資長判斷產出後自動登錄）。")
+        return lines
+    tag = "" if d.get("date") == date else "（⚠️非今日資料）"
+    for tk, msg in d.get("triggered", []):
+        lines.append(f"・🚫 **{tkname(tk)}** {msg}{tag}")
+    for tk, msg in d.get("near", []):
+        lines.append(f"・⚠️ {tkname(tk)} {msg}{tag}")
+    pm = d.get("pending_metric", [])
+    lines.append(f"・✅ 健康 {d.get('healthy', 0)} 條"
+                 + (f"｜📋 待財報檢 {len(pm)} 條" if pm else ""))
+    return lines
+
+
 def compose(date=None, scope="public"):
     """scope: public（#每日戰情，之後可能開放家人看，不含任何持股資訊）
              private（私人頻道，持股訊號/判斷/新聞）"""
@@ -276,7 +295,7 @@ def compose(date=None, scope="public"):
     if scope == "private":
         parts = [f"# 🔒 持股密報 · {date}（{wd}）"]
         secs = (sec2_signals(date, "private"), sec3_chief(date, "private"),
-                sec4_research(notes, "private"))
+                sec4_research(notes, "private"), sec_thesis(date))
     else:
         parts = [f"# 📋 每日戰情 · {date}（{wd}）"]
         secs = (sec1_market(notes), sec2_signals(date, "public"),
