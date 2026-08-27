@@ -264,17 +264,24 @@ def make_infographic(ticker: str) -> str | None:
 def push(msg: str) -> bool:
     tok = os.environ.get("TELEGRAM_BOT_TOKEN", "")
     chat = os.environ.get("TELEGRAM_CHAT_ID", "")
+    ok = False
     if not tok or not chat:
         print("  ⚠️ 無 TELEGRAM_BOT_TOKEN / CHAT_ID，跳過推播")
-        return False
+    else:
+        try:
+            r = requests.post(f"https://api.telegram.org/bot{tok}/sendMessage",
+                              data={"chat_id": chat, "text": msg, "parse_mode": "HTML",
+                                    "disable_web_page_preview": "true"}, timeout=20)
+            ok = r.ok
+        except Exception as e:
+            print(f"  ⚠️ 推播失敗：{e}")
+    # 2026-08-28 Discord 雙發（隆中對 #財報，龐統）——財報預告+快訊都走這個函式，一點接全通
     try:
-        r = requests.post(f"https://api.telegram.org/bot{tok}/sendMessage",
-                          data={"chat_id": chat, "text": msg, "parse_mode": "HTML",
-                                "disable_web_page_preview": "true"}, timeout=20)
-        return r.ok
+        from notify_discord import send_discord, tg_html_to_md
+        send_discord("earnings", tg_html_to_md(msg), persona="龐統")
     except Exception as e:
-        print(f"  ⚠️ 推播失敗：{e}")
-        return False
+        print(f"  discord 雙發失敗（不影響 Telegram）：{e}")
+    return ok
 
 
 # ────────────────────────────── main ──────────────────────────────
