@@ -1,17 +1,21 @@
-"""SuperTrend 翻面警示：監控 持股 + 守備清單，翻面（綠↔紅）才推 Telegram。
+"""SuperTrend 翻面偵測：持股 + 守備清單，翻面（綠↔紅）就回報。
 
 翻面 = SuperTrend 方向 vs 上次不同（state/st_state.json）。
 持股翻面優先（你的部位）；守備清單翻面次之（進場機會）。
-用法:python st_alert.py
+
+⚠️ 這支不是獨立排程，是被 `alert_telegram.py` 當函式庫 import 呼叫
+（`import st_alert; st_alert.detect_flips()`）——SuperTrend 翻面偵測的核心邏輯，
+投資長與 Discord 日報的訊號都源自這裡。2026-08-28 檢查：docstring 原本寫「推
+Telegram」，但那是舊設計，實際上 TG 推播一直是 alert_telegram.py 在做，這支
+本身從沒真的送過訊息（`__main__` 只印文字）——已清掉沒用到的 TOKEN/CHAT/PAGES_URL。
+
+用法:python -c "import st_alert; st_alert.detect_flips()"　（或直接跑本檔看偵測結果）
 """
 import os
 import json
 import yfinance as yf
 from board_html import supertrend, TW_NAME
 
-TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
-CHAT = os.environ.get("TELEGRAM_CHAT_ID", "")
-PAGES_URL = "https://dt-1983.github.io/daily-stock-board/"
 ST_STATE = "state/st_state.json"
 
 
