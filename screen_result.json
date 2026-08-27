@@ -555,7 +555,7 @@
     "name": "ASIA VITAL COMPONENTS CO LTD",
     "mktcap": 1311093686272,
     "growth": 0.5739113833331853,
-    "inflow": 0.13971375200402758,
+    "inflow": 0.13960925104571612,
     "score": 2.0
    },
    {
@@ -563,24 +563,8 @@
     "name": "QUANTA COMPUTER",
     "mktcap": 1367189356544,
     "growth": 1.3131830412017855,
-    "inflow": -0.03734377055833117,
+    "inflow": -0.03731504643208127,
     "score": 1.85
-   },
-   {
-    "code": "3037",
-    "name": "UNIMICRON TECHNOLOGY",
-    "mktcap": 1879586897920,
-    "growth": 0.4369159138764762,
-    "inflow": 0.1466610375802942,
-    "score": 1.85
-   },
-   {
-    "code": "2317",
-    "name": "HON HAI PRECISION INDUSTRY",
-    "mktcap": 3534472085504,
-    "growth": 0.5418913901503828,
-    "inflow": 0.02244086885382993,
-    "score": 1.77
    },
    {
     "code": "2356",
@@ -588,6 +572,22 @@
     "mktcap": 235338350592,
     "growth": 0.657284615063187,
     "inflow": 0.12872516512096752,
+    "score": 1.85
+   },
+   {
+    "code": "3037",
+    "name": "UNIMICRON TECHNOLOGY",
+    "mktcap": 1879586897920,
+    "growth": 0.4369159138764762,
+    "inflow": 0.1466560420610525,
+    "score": 1.85
+   },
+   {
+    "code": "2317",
+    "name": "HON HAI PRECISION INDUSTRY",
+    "mktcap": 3534472085504,
+    "growth": 0.5418913901503828,
+    "inflow": 0.02243247016710724,
     "score": 1.77
    },
    {
@@ -595,7 +595,7 @@
     "name": "TAIWAN SEMICONDUCTOR MANUFACTUR",
     "mktcap": 62497012842496,
     "growth": 0.4468755126916979,
-    "inflow": -0.010583413447741852,
+    "inflow": -0.010549001853656545,
     "score": 1.69
    },
    {
@@ -769,7 +769,7 @@
     "name": "MEDIATEK INC",
     "mktcap": 6173051846656,
     "growth": 0.12158135262975867,
-    "inflow": -0.007505199006600701,
+    "inflow": -0.007502020276742464,
     "score": 1.8
    },
    {
@@ -869,7 +869,7 @@
     "name": "FORTUNE ELECTRIC CO LTD",
     "mktcap": 267551195136,
     "growth": -0.08315990648591809,
-    "inflow": -0.046718348068904174,
+    "inflow": -0.046506334125398396,
     "score": 1.0
    }
   ],
@@ -879,7 +879,7 @@
     "name": "UNIMICRON TECHNOLOGY",
     "mktcap": 1879586897920,
     "growth": 0.4369159138764762,
-    "inflow": 0.1466610375802942,
+    "inflow": 0.1466560420610525,
     "score": 2.55
    },
    {
