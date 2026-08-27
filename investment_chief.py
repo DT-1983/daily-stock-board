@@ -315,17 +315,19 @@ def gather_material(ticker, notes):
             trend_material += (f"所屬產業籃子「{bq['basket']}」目前象限：{bq['quadrant']}"
                                f"（RS-Ratio {bq['ratio']}／RS-Momentum {bq['momentum']}，"
                                f"資料日期{bq['date']}）\n")
-    if not is_tw:
-        try:
-            from trade_plan import supertrend_invalidation
-            sti = supertrend_invalidation(ticker)
-            if sti:
-                trend_material += (f"SuperTrend：{'已翻空' if sti['st_bearish'] else '多頭'}／"
-                                   f"RS(60日)：{'已跌破' if sti['rs60_broken'] else '未跌破'}／"
-                                   f"{sti['note']}\n")
-        except Exception as e:
-            trend_material += f"（supertrend_invalidation查詢失敗：{e}）\n"
-    trend_material = trend_material or "查無趨勢面資料（可能是台股，目前SuperTrend僅涵蓋美股持股）"
+    # 2026-08-28 拿掉 `if not is_tw` 的閘門——Leo抓到矛盾：「台股怎麼會跑不到資料，
+    # 那財報卡怎麼跑出來的」。supertrend_invalidation 已擴充台股（RS基準自動切^TWII），
+    # 台美股都跑，台股非持股的進場評估不再只有價值單角度。
+    try:
+        from trade_plan import supertrend_invalidation
+        sti = supertrend_invalidation(ticker)
+        if sti:
+            trend_material += (f"SuperTrend：{'已翻空' if sti['st_bearish'] else '多頭'}／"
+                               f"RS(60日)：{'已跌破' if sti['rs60_broken'] else '未跌破'}／"
+                               f"{sti['note']}\n")
+    except Exception as e:
+        trend_material += f"（supertrend_invalidation查詢失敗：{e}）\n"
+    trend_material = trend_material or "查無趨勢面資料"
 
     today_events = "\n".join(f"- [{n['layer']}/{n['source']}] {n['summary'][:300]}" for n in notes
                              if ticker in n.get("scope", "")) or "（今天沒有直接提到這檔的研究員筆記）"
