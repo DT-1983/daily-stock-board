@@ -377,9 +377,35 @@ _J_ICON = {"續抱/可買": "🟢", "觀望": "🟡", "考慮出場": "🔴", "�
 def _overview_lines(notes):
     """總經/產業總覽（Python 端從當天 research_notes 確定性組出來，不叫 AI）。
     2026-08-27 Leo 反饋首日推播「可以說明一下現在整體狀況（總經、產業）」——
-    原本推播只有逐檔判斷，沒有大盤脈絡。"""
+    原本推播只有逐檔判斷，沒有大盤脈絡。
+    2026-08-28 Leo 再加兩個：①昨日大指數摘要（像dashboard）②對股市有重大影響的
+    財經新聞（打仗/升息/CPI類）——指數讀 market_data.json（market_fetch每天在抓），
+    重大新聞用 macro_calendar 的警示關鍵字掃當天總經筆記附的新聞標題，全部零成本。"""
     lines = []
+
+    # ① 昨日大指數（market_data.json，tw-board/market-home 排程維護）
+    md = _load_json("market_data.json", {}) or {}
+    idx_parts = []
+    for it in md.get("indices", []):
+        nm, pct, bp = it.get("name", it.get("sym", "")), it.get("chg_pct"), it.get("chg_bp")
+        if pct is not None:
+            arrow = "🔺" if pct > 0 else ("🔻" if pct < 0 else "")
+            idx_parts.append(f"{nm} {arrow}{pct:+.2f}%")
+        elif bp is not None:
+            idx_parts.append(f"{nm} {bp:+.1f}bp")
+    if idx_parts:
+        lines.append(f"📈 <b>大盤</b>（{md.get('updated','')[:10]}）：" + "｜".join(idx_parts[:7]))
+
+    # ② 重大財經新聞（警示關鍵字命中的才列——打仗/升息/關稅這類，不是全部頭條）
     macro = [n for n in notes if n.get("layer") == "macro"]
+    try:
+        from macro_calendar import keyword_hits
+        heads = (macro[-1].get("headlines") if macro else None) or []
+        hits = keyword_hits(heads)
+        for kw, title in hits[:3]:
+            lines.append(f"📰 <b>[{kw}]</b> {title[:48]}")
+    except Exception:
+        pass
     if macro:
         m = macro[-1]
         trig = m.get("trigger")

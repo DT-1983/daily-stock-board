@@ -72,17 +72,30 @@ def main():
 
     double = [r for r in clean if r[4]]   # 雙確認只取「體質過關」的
 
+    # 2026-08-28 Leo：「台股可以給中文名稱嗎」——重用 industry_rotation 的
+    # 證交所+櫃買官方開放資料（約2000檔中文簡稱），查不到就只顯示代號不硬湊。
+    try:
+        from industry_rotation import _tw_chinese_names
+        tw_names = _tw_chinese_names()
+    except Exception:
+        tw_names = {}
+
+    def disp(tk):
+        code = tk.split(".")[0]
+        nm = tw_names.get(code)
+        return f"{tk} {nm}" if nm else tk
+
     lines = ["💰 <b>本週買進機會（巴菲特價值法）</b>", ""]
     if double:
         lines.append("💎 <b>雙確認（題材趨勢＋價值便宜＋體質過關）</b>")
         for tk, cur, cheap, dis, _, _ in double:
-            lines.append(f"　<b>{tk}</b>　現價 {cur:.1f} ≤ 俗價 {cheap:.1f}（折 {dis:.0f}%）")
+            lines.append(f"　<b>{disp(tk)}</b>　現價 {cur:.1f} ≤ 俗價 {cheap:.1f}（折 {dis:.0f}%）")
         lines.append("")
     if clean:
         lines.append(f"✅ <b>體質過關到俗價清單</b>（{len(clean)} 檔，EPS 不衰退＋負債合理）")
         for tk, cur, cheap, dis, dbl, _ in clean[:15]:
             star = "💎 " if dbl else ""
-            lines.append(f"　{star}<b>{tk}</b>　{cur:.1f} / 俗 {cheap:.1f}（折 {dis:.0f}%）")
+            lines.append(f"　{star}<b>{disp(tk)}</b>　{cur:.1f} / 俗 {cheap:.1f}（折 {dis:.0f}%）")
         if len(clean) > 15:
             lines.append(f"　…還有 {len(clean)-15} 檔")
         lines.append("")
@@ -93,7 +106,7 @@ def main():
         lines.append(f"⚠️ <b>便宜但有疑慮</b>（{len(traps)} 檔 · 俗價是用過去 EPS 算，未來恐縮水）")
         for tk, cur, cheap, dis, _, tags in traps[:10]:
             tag = "、".join(tags)
-            lines.append(f"　<b>{tk}</b>　{cur:.1f} / 俗 {cheap:.1f}（折 {dis:.0f}%）<i>{tag}</i>")
+            lines.append(f"　<b>{disp(tk)}</b>　{cur:.1f} / 俗 {cheap:.1f}（折 {dis:.0f}%）<i>{tag}</i>")
         if len(traps) > 10:
             lines.append(f"　…還有 {len(traps)-10} 檔")
         lines.append("")
