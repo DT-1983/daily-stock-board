@@ -79,10 +79,11 @@ def main():
             continue                       # 無前狀態 或 無變化 → 不推
         if sig in ALERT_SIGS:              # 轉成 買進/賣出（新訊號）
             reason = f"{SIG_WORD.get(old,'觀望')}→{SIG_WORD.get(sig,'')}"
-        elif old in ALERT_SIGS:            # 買/賣 訊號解除 → 轉觀望
-            reason = f"{SIG_WORD.get(old,'')}解除→觀望"
         else:
-            continue                       # 觀望↔其它非買賣 → 不推
+            # 2026-08-28 Leo：「可以顯示 轉買進、賣出的就好」——原本「買進解除→觀望」
+            # 這類降級也推，一次出一排⚪️解除訊息變成雜訊。解除不推了；
+            # 訊號現況在看板頁本來就看得到，不差這一則。
+            continue
         alerts.append((chain, mkt, sig, code, name, ol, reason))
 
     # SuperTrend 翻面（持股 + 守備清單）
