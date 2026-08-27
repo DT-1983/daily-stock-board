@@ -141,13 +141,9 @@ def main():
                  f'📊 <a href="{PAGES_URL}">完整看板</a>。']
     msg = "\n".join(lines)
     send_text(msg)
-    # 2026-08-28 Discord 雙發（隆中對 #每日戰情，龐統=情報官）。過渡期 Telegram 照舊，
-    # Discord 失敗不擋主流程（notify_discord 內部吞錯只印警告）。
-    try:
-        from notify_discord import send_discord, tg_html_to_md
-        send_discord("daily", tg_html_to_md(msg), persona="龐統")
-    except Exception as e:
-        print(f"discord 雙發失敗（不影響 Telegram）：{e}")
+    # Discord 不在這裡發（2026-08-28 Phase 2 定案）：#每日戰情 收的是 daily_warroom
+    # 08:45 的合成日報（本訊息內容經由 state/st_flips_today.json 進日報②段），
+    # 這裡再發會同內容出現兩次。Telegram 維持逐則即時推播。
     # 2026-08-26：拿掉 send_doc() 附檔——Leo反饋「這個會推一份html給我，但都不能點」，
     # 用 Telegram 傳原始 HTML 檔本來就只會顯示成可下載的檔案，不會渲染成網頁、
     # 裡面的連結當然點不了。上面已經改成一律附 PAGES_URL 這個可點的看板連結
@@ -160,8 +156,10 @@ def main():
     # 落後一天，是刻意的已知限制，不是bug（兩邊執行環境不同，要即時對齊需要更大改動）。
     os.makedirs("state", exist_ok=True)
     json.dump(cur, open(STATE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
-    json.dump({"flips_hold": flips_hold, "flips_watch": flips_watch,
-               "ai_alerts": [{"chain": c, "market": m, "sig": s, "code": code, "name": name}
+    json.dump({"date": date,   # 2026-08-28 加：讓 daily_warroom 組報時能判斷資料是不是今天的
+               "flips_hold": flips_hold, "flips_watch": flips_watch,
+               "ai_alerts": [{"chain": c, "market": m, "sig": s, "code": code, "name": name,
+                              "reason": reason}
                               for c, m, s, code, name, ol, reason in alerts]},
               open("state/st_flips_today.json", "w", encoding="utf-8"), ensure_ascii=False, indent=0)
     print(f"✅ 投資晨報推送完成：AI {len(alerts)}、持股翻面 {len(flips_hold)}、守備翻面 {len(flips_watch)}")
