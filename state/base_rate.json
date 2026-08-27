@@ -1,5 +1,5 @@
 {
- "date": "2026-08-27",
+ "date": "2026-08-28",
  "checks": [
   {
    "ticker": "1476.TW",
@@ -639,6 +639,32 @@
    }
   },
   {
+   "ticker": "ACN",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 73587678730.0,
+    "analysts": 26,
+    "ytd": 55504335000.0,
+    "q_done": 3,
+    "q_left": 1,
+    "need_avg": 18083343730.0,
+    "hist_n": 5,
+    "last_q": 18718144000.0,
+    "need_qoq": -0.03391363321064311,
+    "qoq_max": 0.06511980386741278,
+    "qoq_med": 0.03735732290050375,
+    "qoq_n": 4,
+    "excess": -0.0990334370780559
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 21,
+    "median_surprise": 4.0,
+    "bias": "共識偏保守"
+   }
+  },
+  {
    "ticker": "AER",
    "requirement": {
     "kind": "us_quarterly",
@@ -921,6 +947,32 @@
     "n": 24,
     "beats": 18,
     "median_surprise": 11.4,
+    "bias": "共識偏保守"
+   }
+  },
+  {
+   "ticker": "BMY",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 49847617680.0,
+    "analysts": 23,
+    "ytd": 24462000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 12692808840.0,
+    "hist_n": 5,
+    "last_q": 12973000000.0,
+    "need_qoq": -0.021598023587450887,
+    "qoq_max": 0.12916702933240498,
+    "qoq_med": 0.022991327115038374,
+    "qoq_n": 4,
+    "excess": -0.15076505291985587
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 22,
+    "median_surprise": 7.5,
     "bias": "共識偏保守"
    }
   },
@@ -1684,6 +1736,32 @@
    }
   },
   {
+   "ticker": "PGR",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 87173812500.0,
+    "analysts": 8,
+    "ytd": 45779000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 20697406250.0,
+    "hist_n": 5,
+    "last_q": 23599000000.0,
+    "need_qoq": -0.12295409763125553,
+    "qoq_max": 0.06397655545536529,
+    "qoq_med": 0.023050693339395245,
+    "qoq_n": 4,
+    "excess": -0.18693065308662082
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 14,
+    "median_surprise": 1.6,
+    "bias": "共識大致中性"
+   }
+  },
+  {
    "ticker": "PHIN",
    "requirement": {
     "kind": "us_quarterly",
@@ -1819,6 +1897,32 @@
    }
   },
   {
+   "ticker": "TROW",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 7752020360.0,
+    "analysts": 4,
+    "ytd": 3764400000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 1993810180.0,
+    "hist_n": 5,
+    "last_q": 1907400000.0,
+    "need_qoq": 0.045302600398448245,
+    "qoq_max": 0.09876399930366153,
+    "qoq_med": 0.02714054927302101,
+    "qoq_n": 4,
+    "excess": -0.053461398905213287
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 18,
+    "median_surprise": 3.2,
+    "bias": "共識偏保守"
+   }
+  },
+  {
    "ticker": "TSLA",
    "requirement": {
     "kind": "us_quarterly",
@@ -1920,6 +2024,32 @@
     "beats": 14,
     "median_surprise": 1.5,
     "bias": "共識大致中性"
+   }
+  },
+  {
+   "ticker": "VZ",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 140910841660.0,
+    "analysts": 21,
+    "ytd": 68693000000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 36108920830.0,
+    "hist_n": 5,
+    "last_q": 34253000000.0,
+    "need_qoq": 0.054182723557060664,
+    "qoq_max": 0.07569261701309826,
+    "qoq_med": -0.005429732868757253,
+    "qoq_n": 4,
+    "excess": -0.0215098934560376
+   },
+   "track_record": {
+    "n": 23,
+    "beats": 21,
+    "median_surprise": 2.6,
+    "bias": "共識偏保守"
    }
   },
   {
