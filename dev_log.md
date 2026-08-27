@@ -2167,3 +2167,23 @@ AI寫的、數字本來就是真實財報，這裡只換個地方呈現+給連�
 營收/淨利/自由現金流+YoY、分析師共識、一句話結論、利多2條、風險2條、連結。
 Discord #財報 發這份；Telegram 維持原本簡短快訊（即時通知不需長摘要）。
 實測 NVDA 摘要正確（含「現價209.66已超過貴價193.2」這種洪瑞泰判定）。
+
+## 2026-08-27（續二十四）· 巴菲特掃描搬回本機（EDGAR方向已否決）
+
+Leo 同意開工 EDGAR 備援後問「官方有說明是用什麼資料嗎？」——**這個問題救了我們一次**。
+查證結果 EDGAR 是錯方向：
+1. **官方盈再表用的就是 Yahoo Finance**（stocks.ddns.net 明列資料來源：各證券商、
+   MoneyDJ、Yahoo Finance、Morningstar、TradingView、Stockanalysis）。換 EDGAR 會讓
+   常利/俗貴價**重新偏離官方**——EDGAR 只有 as-filed GAAP、沒有 Normalized Income，
+   而剔除一次性損益正是常利的核心。等於自毀今天才對齊好的東西。
+2. **真兇是 IP 不是資料源**：實測同一批在 Actions 全滅的 10 檔
+   （PSX/TROW/DAL/GDDY/ZTS/AMP/HON/MPC/ALL/PGR）→ **本機 10/10 全成功**，
+   平均 4.6 秒/檔。Yahoo 擋的是 Actions 雲端 IP 段。
+
+**修法**：掃描搬回本機——新增 `buffett_scan_weekly.cmd` + Windows 排程
+「BuffettScanWeekly」（週六 08:30，236檔約20分鐘），跑完產頁+push；
+weekly-screen.yml 那步移除（註解寫清楚為什麼，含「舊標題說Actions不限流」的時空背景）。
+代價：電腦沒開機那週不更新——但完整性防線會沿用上週清單+推TG，比殘缺上線安全。
+
+**教訓**：Leo 問「官方用什麼資料」＝ [[feedback_verify_before_hardcoding]] 的實踐，
+我當時已經要動工 EDGAR 了。動大工程前先確認「我們要對齊的那個東西自己用什麼」。

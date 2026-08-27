@@ -103,15 +103,15 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python chain_themes.py || echo "題材層失敗，跳過（保留舊 json）"
 
-      - name: 全市場巴菲特掃描（美+台）→ buffett_watch.json（取代 Zeabur /bsp500，Actions IP 不限流）
-        env:
-          FINMIND_TOKEN: ${{ secrets.FINMIND_TOKEN }}
-        # 2026-08-25：拿掉 --max-candidates 200（改吃預設 0 = 過篩的全部評估）。
-        # 原本只算最便宜的 200 檔，美股 585 檔中有 385 檔連算都沒算。
-        # 也拿掉 `|| echo`：那會讓掃描失敗變成 exit 0、workflow 綠燈、頁面照舊，
-        # 完全看不出來資料沒更新（記憶庫 silent_failure_pattern）。
-        # 失敗就讓這步紅燈，舊 json 本來就還在，不會有資料損失。
-        run: python buffett_scan.py
+      # ⛔ 2026-08-27：巴菲特掃描已搬回本機（Windows 排程 BuffettScanWeekly，週六 08:30）。
+      # 原因：Yahoo Finance 擋 GitHub Actions 的雲端 IP 段——同一批股票（PSX/TROW/DAL/
+      # GDDY/ZTS/AMP/HON/MPC/ALL/PGR）在 Actions 10/10 全失敗、在 Leo 本機 10/10 全成功。
+      # 8/27 連跑四次，清單都只剩 22 檔（正常 40+），PSX/TROW/DAL 全掉出。
+      # 註：這步的舊標題寫「Actions IP 不限流」，那是 2026-08 從 Zeabur 搬來時的情況，
+      # 現在反過來了——Yahoo 的限流政策變嚴，雲端 IP 已經不通。
+      # 也查證過官方盈再表用的就是 Yahoo Finance（stocks.ddns.net 明列資料來源），
+      # 所以不能換 EDGAR：那會讓常利/俗貴價重新偏離官方數字。
+      # buffett_watch.json 由本機排程產生後 push，這裡不再重算。
 
       - name: 推播「本週守備清單已更新」
         env:
