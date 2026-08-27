@@ -286,20 +286,49 @@ def sec_thesis(date):
     return lines
 
 
-def compose(date=None, scope="public"):
-    """scope: public（#每日戰情，之後可能開放家人看，不含任何持股資訊）
-             private（私人頻道，持股訊號/判斷/新聞）"""
+def _empty(sec_lines):
+    """這一段是不是「沒東西」——只有標題、或內容全是那幾句佔位語。
+    2026-08-27 拆兩則後需要：某一則整份沒內容就不發，不要推空訊息。"""
+    body = [x for x in sec_lines[1:] if x.strip()]
+    if not body:
+        return True
+    placeholders = ("今日無新訊號", "今日無觸發標的", "今日無進場機會觸發",
+                    "今日持股無觸發", "今日無產業象限翻轉", "今日持股無事件型新聞")
+    return all(any(p in b for p in placeholders) for b in body)
+
+
+def compose(date=None, scope="public", part="all"):
+    """scope: public（#每日戰情，可給家人看，不含持股資訊）／private（私人頻道）
+    part（2026-08-27 Leo 要求拆兩則，讓分工看得見）：
+        research＝龐統的情報彙整（大盤/訊號/產業筆記/近日要看）
+        chief   ＝孔明的判斷
+        all     ＝合併成一則（--dry-run 預覽與日後想改回去用）
+    回 None＝這一則沒有實質內容 → 呼叫端別發（避免空訊息洗版）。"""
     date = date or time.strftime("%Y-%m-%d")
     notes = _today_notes(date)
     wd = "一二三四五六日"[datetime.date.fromisoformat(date).weekday()]
-    if scope == "private":
-        parts = [f"# 🔒 持股密報 · {date}（{wd}）"]
-        secs = (sec2_signals(date, "private"), sec3_chief(date, "private"),
-                sec4_research(notes, "private"), sec_thesis(date))
+    priv = scope == "private"
+    title = f"# {'🔒 持股密報' if priv else '📋 每日戰情'} · {date}（{wd}）"
+
+    if priv:
+        research = [sec2_signals(date, "private"), sec4_research(notes, "private"),
+                    sec_thesis(date)]
+        chief = [sec3_chief(date, "private")]
     else:
-        parts = [f"# 📋 每日戰情 · {date}（{wd}）"]
-        secs = (sec1_market(notes), sec2_signals(date, "public"),
-                sec3_chief(date, "public"), sec4_research(notes, "public"), sec5_watch(date))
+        research = [sec1_market(notes), sec2_signals(date, "public"),
+                    sec4_research(notes, "public"), sec5_watch(date)]
+        chief = [sec3_chief(date, "public")]
+
+    if part == "research":
+        secs, suffix = research, ""
+    elif part == "chief":
+        secs, suffix = chief, "・判斷"
+    else:
+        secs, suffix = research[:2] + chief + research[2:], ""
+
+    if part != "all" and all(_empty(s) for s in secs):
+        return None
+    parts = [title + suffix]
     for sec in secs:
         parts.append("\n".join(sec))
     return "\n\n".join(parts)
@@ -310,23 +339,24 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
-    pub = compose(scope="public")
-    prv = compose(scope="private")
-    print(pub)
-    print("\n" + "═" * 40 + "\n")
-    print(prv)
+    # 2026-08-27：每個頻道拆兩則——龐統發情報、孔明發判斷（分工看得見、各則更短，
+    # 也不容易撞到 Discord 2000 字上限被切成好幾則）。沒實質內容的那則不發。
+    from notify_discord import send_discord, CHANNELS
+    for ch, scope in (("daily", "public"), ("private", "private")):
+        if ch == "private" and not CHANNELS.get("private") and not args.dry_run:
+            print("⚠️ DISCORD_WH_PRIVATE 未設定，持股密報跳過（Telegram 照舊有）")
+            continue
+        for part, persona in (("research", "龐統"), ("chief", "孔明")):
+            msg = compose(scope=scope, part=part)
+            if not msg:
+                print(f"[{ch}/{part}] 今天沒有實質內容，不發")
+                continue
+            if args.dry_run:
+                print(f"\n───── {ch} / {persona} ─────\n{msg}")
+            else:
+                print(f"[{ch}/{part}→{persona}]", send_discord(ch, msg, persona=persona))
     if args.dry_run:
         print("\n(dry-run：沒發 Discord)")
-        return
-    from notify_discord import send_discord, CHANNELS
-    ok1 = send_discord("daily", pub, persona="孔明")
-    if CHANNELS.get("private"):
-        ok2 = send_discord("private", prv, persona="孔明")
-    else:
-        ok2 = False
-        print("⚠️ DISCORD_WH_PRIVATE 未設定——持股密報這次沒發 Discord（Telegram 照舊有）。"
-              "建私人頻道拉 webhook 後把 URL 加進 .env 即可。")
-    print(f"\npublic: {ok1} | private: {ok2}")
 
 
 if __name__ == "__main__":
