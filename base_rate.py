@@ -82,10 +82,16 @@ def _tier(need, hist, n_analysts):
       TFC +4.4%(+4.0%)⚠️、MU +22%(最高+75%,中位+48%)✅、CI +2.9%(+4.5%)✅
     """
     if n_analysts < MIN_ANALYSTS:
-        return "low_coverage"
+        return "unknown" if not hist else "low_coverage"
     if not hist or len(hist) < 3:
         return "unknown"
-    mx = max(hist)
+    mx, mn = max(hist), min(hist)
+    # 歷史分布完全沒有變異 → 沒有東西可以校準，任何要求都會被判成破紀錄。
+    # 實測 AUR：連續四季營收都恰好 $1,000,000（Yahoo 對前營收期公司的四捨五入佔位值），
+    # 於是季增歷史全是 0.0%，算出「要求季增 +367%」→ 技術上沒錯但毫無意義。
+    # 這種資料要誠實回「算不出來」，不能給一個看起來很篤定的 🚫。
+    if mx == mn:
+        return "unknown"
     med = sorted(hist)[len(hist) // 2]
     if need <= mx:
         return "normal"
