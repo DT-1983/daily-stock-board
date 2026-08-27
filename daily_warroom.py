@@ -327,6 +327,19 @@ def _empty(sec_lines):
     return all(any(p in b for p in placeholders) for b in body)
 
 
+def sec_baserate(scope):
+    """P3 預估值 base-rate 檢查——只在跑的那天出現（週跑，見 base_rate.summary_lines）。
+    非持股/持股按日報既有的公私分流走。"""
+    try:
+        from base_rate import summary_lines
+        ls = summary_lines(scope=scope)
+    except Exception:
+        return []
+    if not ls:
+        return []
+    return ["**⑥ 預估前提檢查**（分析師共識隱含的要求 vs 這家公司自己的歷史）"] + ls
+
+
 def compose(date=None, scope="public", part="all"):
     """scope: public（#每日戰情，可給家人看，不含持股資訊）／private（私人頻道）
     part（2026-08-27 Leo 要求拆兩則，讓分工看得見）：
@@ -342,11 +355,12 @@ def compose(date=None, scope="public", part="all"):
 
     if priv:
         research = [sec2_signals(date, "private"), sec4_research(notes, "private"),
-                    sec_thesis(date)]
+                    sec_thesis(date), sec_baserate("private")]
         chief = [sec3_chief(date, "private")]
     else:
         research = [sec1_market(notes), sec2_signals(date, "public"),
-                    sec4_research(notes, "public"), sec5_watch(date)]
+                    sec4_research(notes, "public"), sec5_watch(date),
+                    sec_baserate("public")]
         chief = [sec3_chief(date, "public")]
 
     if part == "research":
