@@ -3,6 +3,21 @@
 警示 = 🔴 賣出 / 🟢 買進；反轉 = 訊號 vs 上次不同（state/signals.json）
 其餘（⚪觀望）不推，完整資料看 HTML 附件。
 
+🔴🔴 **這支不只是通知程式，它是訊號狀態的唯一寫入者。要精簡 Telegram 時千萬別停掉它。**
+
+    本檔結尾會寫兩個檔（見 main 最後幾行）：
+        state/signals.json         ← investment_chief 的「AI綜合訊號」材料
+        state/st_flips_today.json  ← researcher_stock 的 SuperTrend 翻面來源
+
+    也就是說 08:45 那整批（研究員、投資長、失效條件日檢、Discord 日報）的訊號輸入，
+    全部來自這支在 08:19 寫下的檔案。**停掉它 = 切斷投資長的輸入，而畫面上只會看到
+    「今天沒訊號」，不會報錯。**（2026-08-27 GitHub 排程被丟掉兩天就是這樣：
+    不只沒收到晨報，08:45 整批都在用前一天的訊號——所以才加了 actions_watchdog。）
+
+    真的要停 Telegram 推播，改法是**只拿掉 send_text 那幾行**，寫檔的部分留著；
+    或把寫檔搬到獨立模組再讓兩邊各自呼叫。不要整支刪掉。
+    （2026-08-28 Leo：「TG 應該會被拿掉或只推更重要的」→ 補上這段警告。）
+
 用法:python alert_telegram.py reports/report_YYYYMMDD.md board.html
 """
 import sys
