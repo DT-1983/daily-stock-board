@@ -30,6 +30,7 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+NL = chr(10)
 J_ICON = {"續抱/可買": "🟢", "觀望": "🟡", "考慮出場": "🔴", "資料不足": "⚪"}
 
 _NAMES = None
@@ -327,17 +328,49 @@ def _empty(sec_lines):
     return all(any(p in b for p in placeholders) for b in body)
 
 
-def sec_baserate(scope):
-    """P3 預估值 base-rate 檢查——只在跑的那天出現（週跑，見 base_rate.summary_lines）。
-    非持股/持股按日報既有的公私分流走。"""
+def baserate_message(scope):
+    """P3 預估前提檢查——**獨立一則**，不併進日報（Leo 2026-08-28：「多一則」）。
+    週跑，只在產出當天有內容；持股→持股密報、非持股→#財報。
+    回 None 表示今天沒有內容，呼叫端不要發。"""
     try:
-        from base_rate import summary_lines
-        ls = summary_lines(scope=scope)
+        import base_rate as BR
+        d = BR._load() or {}
+        if d.get("date") != datetime.date.today().isoformat():
+            return None
+        held = BR._held_set()
+        hot = [c for c in d.get("checks", [])
+               if (c.get("requirement") or {}).get("tier") in ("unprecedented", "rare")
+               and ((c["ticker"] in held) if scope == "private" else (c["ticker"] not in held))]
+        if not hot:
+            return None
+        hot.sort(key=lambda c: (0 if c["requirement"]["tier"] == "unprecedented" else 1,
+                                -(c["requirement"].get("excess") or 0)))
+        head = ("# 📐 預估前提檢查・持股" if scope == "private"
+                else "# 📐 預估前提檢查・觀察名單")
+        out = [head, "分析師預估要求的成長，這家公司自己做過嗎？"
+                     "（🚫要破自己的紀錄　⚠️剛好貼在紀錄上）", ""]
+        for c in hot[:3]:                       # 前三名完整展開
+            out += BR.card(c) + [""]
+        rest = hot[3:]
+        if rest:
+            out.append("**同樣要破紀錄，數字較小的**")
+            bits = []
+            for c in rest[:12]:
+                r = c["requirement"]
+                need = r.get("need_qoq") if r["kind"] == "us_quarterly" else r.get("need_yoy")
+                mx = r.get("qoq_max") if r["kind"] == "us_quarterly" else r.get("yoy_max")
+                bits.append(f"{BR.TIER[r['tier']]}{c['ticker']}"
+                            f"（要求{need*100:+.0f}%／最好{mx*100:+.0f}%）")
+            out.append("　".join(bits))
+            if len(rest) > 12:
+                out.append(f"-# 還有 {len(rest)-12} 檔")
+        ok = sum(1 for c in d["checks"]
+                 if (c.get("requirement") or {}).get("tier") == "normal")
+        out.append(f"-# 另有 {ok} 檔的預估落在它們過去做得到的範圍內。"
+                   f"共檢查 {len(d['checks'])} 檔，每週一更新。")
+        return NL.join(out)
     except Exception:
-        return []
-    if not ls:
-        return []
-    return ["**⑥ 預估前提檢查**（分析師共識隱含的要求 vs 這家公司自己的歷史）"] + ls
+        return None
 
 
 def compose(date=None, scope="public", part="all"):
@@ -355,12 +388,11 @@ def compose(date=None, scope="public", part="all"):
 
     if priv:
         research = [sec2_signals(date, "private"), sec4_research(notes, "private"),
-                    sec_thesis(date), sec_baserate("private")]
+                    sec_thesis(date)]
         chief = [sec3_chief(date, "private")]
     else:
         research = [sec1_market(notes), sec2_signals(date, "public"),
-                    sec4_research(notes, "public"), sec5_watch(date),
-                    sec_baserate("public")]
+                    sec4_research(notes, "public"), sec5_watch(date)]
         chief = [sec3_chief(date, "public")]
 
     if part == "research":
@@ -400,6 +432,22 @@ def main():
                 print(f"\n───── {ch} / {persona} ─────\n{msg}")
             else:
                 print(f"[{ch}/{part}→{persona}]", send_discord(ch, msg, persona=persona))
+
+    # P3 預估前提檢查——**獨立一則**（Leo 2026-08-28：「多一則」），一週一次（週一）。
+    # 持股→持股密報、非持股→#財報（不是#每日戰情：這是估值前提不是當日戰況，
+    # 跟財報四段快訊同一個性質，放一起 Leo 才找得到）。沒內容就不發。
+    for scope, ch in (("private", "private"), ("public", "earnings")):
+        if ch == "private" and not CHANNELS.get("private") and not args.dry_run:
+            continue
+        msg = baserate_message(scope)
+        if not msg:
+            print(f"[baserate/{scope}] 今天沒有內容，不發")
+            continue
+        if args.dry_run:
+            print(f"\n───── baserate / {ch} ─────\n{msg}")
+        else:
+            print(f"[baserate/{scope}→{ch}]", send_discord(ch, msg, persona="龐統"))
+
     if args.dry_run:
         print("\n(dry-run：沒發 Discord)")
 
