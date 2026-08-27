@@ -1,0 +1,246 @@
+{
+ "date": "2026-08-27",
+ "period": 60,
+ "chains": {
+  "us:AI 伺服器": {
+   "members_used": 8,
+   "rrg": {
+    "ratio": 100.43,
+    "momentum": 98.59,
+    "quadrant": "弱化"
+   },
+   "supertrend": "多頭",
+   "squeeze": {
+    "on": true,
+    "level": "微壓",
+    "momentum_up": true
+   },
+   "summary": "弱化象限(RS 100.43/動能 98.59)｜SuperTrend多頭｜微壓蓄力中，動能偏多"
+  },
+  "us:矽光子/光通訊": {
+   "members_used": 8,
+   "rrg": {
+    "ratio": 98.33,
+    "momentum": 98.56,
+    "quadrant": "落後"
+   },
+   "supertrend": "空頭",
+   "squeeze": {
+    "on": true,
+    "level": "中壓",
+    "momentum_up": false
+   },
+   "summary": "落後象限(RS 98.33/動能 98.56)｜SuperTrend空頭｜中壓蓄力中，動能偏空"
+  },
+  "us:低軌衛星": {
+   "members_used": 7,
+   "rrg": {
+    "ratio": 98.85,
+    "momentum": 98.65,
+    "quadrant": "落後"
+   },
+   "supertrend": "多頭",
+   "squeeze": {
+    "on": false,
+    "level": null,
+    "momentum_up": true
+   },
+   "summary": "落後象限(RS 98.85/動能 98.65)｜SuperTrend多頭｜未擠壓"
+  },
+  "us:太陽能": {
+   "members_used": 8,
+   "rrg": {
+    "ratio": 98.9,
+    "momentum": 98.46,
+    "quadrant": "落後"
+   },
+   "supertrend": "空頭",
+   "squeeze": {
+    "on": true,
+    "level": "極壓",
+    "momentum_up": true
+   },
+   "summary": "落後象限(RS 98.9/動能 98.46)｜SuperTrend空頭｜極壓蓄力中，動能偏多"
+  },
+  "us:Bitcoin→AI 機房": {
+   "members_used": 8,
+   "rrg": {
+    "ratio": 99.01,
+    "momentum": 98.61,
+    "quadrant": "落後"
+   },
+   "supertrend": "空頭",
+   "squeeze": {
+    "on": true,
+    "level": "微壓",
+    "momentum_up": false
+   },
+   "summary": "落後象限(RS 99.01/動能 98.61)｜SuperTrend空頭｜微壓蓄力中，動能偏空"
+  },
+  "us:AI 電力/核能": {
+   "members_used": 8,
+   "rrg": {
+    "ratio": 99.45,
+    "momentum": 101.05,
+    "quadrant": "改善"
+   },
+   "supertrend": "多頭",
+   "squeeze": {
+    "on": true,
+    "level": "極壓",
+    "momentum_up": true
+   },
+   "summary": "改善象限(RS 99.45/動能 101.05)｜SuperTrend多頭｜極壓蓄力中，動能偏多"
+  },
+  "us:機器人": {
+   "members_used": 8,
+   "rrg": {
+    "ratio": 99.8,
+    "momentum": 98.98,
+    "quadrant": "落後"
+   },
+   "supertrend": "多頭",
+   "squeeze": {
+    "on": true,
+    "level": "極壓",
+    "momentum_up": true
+   },
+   "summary": "落後象限(RS 99.8/動能 98.98)｜SuperTrend多頭｜極壓蓄力中，動能偏多"
+  },
+  "us:玻璃基板/TGV": {
+   "members_used": 6,
+   "rrg": {
+    "ratio": 98.8,
+    "momentum": 99.01,
+    "quadrant": "落後"
+   },
+   "supertrend": "多頭",
+   "squeeze": {
+    "on": false,
+    "level": null,
+    "momentum_up": true
+   },
+   "summary": "落後象限(RS 98.8/動能 99.01)｜SuperTrend多頭｜未擠壓"
+  },
+  "us:關鍵金屬/原物料": {
+   "members_used": 4,
+   "rrg": {
+    "ratio": 102.11,
+    "momentum": 101.79,
+    "quadrant": "領先"
+   },
+   "supertrend": "多頭",
+   "squeeze": {
+    "on": false,
+    "level": null,
+    "momentum_up": true
+   },
+   "summary": "領先象限(RS 102.11/動能 101.79)｜SuperTrend多頭｜未擠壓"
+  },
+  "tw:AI 伺服器": {
+   "members_used": 8,
+   "rrg": {
+    "ratio": 101.54,
+    "momentum": 99.65,
+    "quadrant": "弱化"
+   },
+   "supertrend": "多頭",
+   "squeeze": {
+    "on": false,
+    "level": null,
+    "momentum_up": true
+   },
+   "summary": "弱化象限(RS 101.54/動能 99.65)｜SuperTrend多頭｜未擠壓"
+  },
+  "tw:矽光子/光通訊": {
+   "members_used": 8,
+   "rrg": {
+    "ratio": 101.66,
+    "momentum": 100.49,
+    "quadrant": "領先"
+   },
+   "supertrend": "多頭",
+   "squeeze": {
+    "on": false,
+    "level": null,
+    "momentum_up": true
+   },
+   "summary": "領先象限(RS 101.66/動能 100.49)｜SuperTrend多頭｜未擠壓"
+  },
+  "tw:機器人": {
+   "members_used": 8,
+   "rrg": {
+    "ratio": 100.89,
+    "momentum": 100.15,
+    "quadrant": "領先"
+   },
+   "supertrend": "多頭",
+   "squeeze": {
+    "on": false,
+    "level": null,
+    "momentum_up": true
+   },
+   "summary": "領先象限(RS 100.89/動能 100.15)｜SuperTrend多頭｜未擠壓"
+  },
+  "tw:低軌衛星": {
+   "members_used": 6,
+   "rrg": {
+    "ratio": 99.82,
+    "momentum": 99.11,
+    "quadrant": "落後"
+   },
+   "supertrend": "多頭",
+   "squeeze": {
+    "on": false,
+    "level": null,
+    "momentum_up": true
+   },
+   "summary": "落後象限(RS 99.82/動能 99.11)｜SuperTrend多頭｜未擠壓"
+  },
+  "tw:太陽能": {
+   "members_used": 4,
+   "rrg": {
+    "ratio": 99.18,
+    "momentum": 99.15,
+    "quadrant": "落後"
+   },
+   "supertrend": "空頭",
+   "squeeze": {
+    "on": false,
+    "level": null,
+    "momentum_up": true
+   },
+   "summary": "落後象限(RS 99.18/動能 99.15)｜SuperTrend空頭｜未擠壓"
+  },
+  "tw:AI 電力/核能": {
+   "members_used": 5,
+   "rrg": {
+    "ratio": 101.01,
+    "momentum": 101.76,
+    "quadrant": "領先"
+   },
+   "supertrend": "多頭",
+   "squeeze": {
+    "on": false,
+    "level": null,
+    "momentum_up": true
+   },
+   "summary": "領先象限(RS 101.01/動能 101.76)｜SuperTrend多頭｜未擠壓"
+  },
+  "tw:玻璃基板/TGV": {
+   "members_used": 8,
+   "rrg": {
+    "ratio": 100.52,
+    "momentum": 99.01,
+    "quadrant": "弱化"
+   },
+   "supertrend": "多頭",
+   "squeeze": {
+    "on": false,
+    "level": null,
+    "momentum_up": true
+   },
+   "summary": "弱化象限(RS 100.52/動能 99.01)｜SuperTrend多頭｜未擠壓"
+  }
+ }
+}

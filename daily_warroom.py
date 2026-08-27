@@ -120,6 +120,17 @@ def sec1_market(notes):
     if tw:
         lines.append("🇹🇼 " + "｜".join(tw[:4]))
 
+    # 🌡️ 大盤體溫計（P2，2026-08-27）：電金比 vs 100MA。只報狀態不下行動指令——
+    # 老墨的「連N日轉弱→清倉」門檻是他自己系統的規則，我們沒有對應回測依據
+    # （Leo 硬規則：不自行發明投資判定門檻）。資料累積中會顯示進度。
+    try:
+        from market_thermometer import summary_line as _therm
+        t = _therm()
+        if t:
+            lines.append(t)
+    except Exception:
+        pass
+
     macro = [n for n in notes if n.get("layer") == "macro"]
     if macro:
         m = macro[-1]
