@@ -55,7 +55,7 @@
  },
  "6826.TWO": {
   "market": "TW",
-  "name": "和淞",
+  "name": "Taiwan Puritic Corp.",
   "sector": "Technology",
   "rank": null,
   "eps": 30.77,
@@ -65,15 +65,15 @@
   "reinvest_method": "official_tw",
   "reinvest_grade": "ideal",
   "reinvest_note": "",
-  "cheap": 215.15,
+  "cheap": 258.61,
   "roe_years": 4,
-  "expensive": 658.16,
+  "expensive": 791.08,
   "trap_flags": null,
   "updated": "2026-08-27"
  },
  "5287.TWO": {
   "market": "TW",
-  "name": "數字",
+  "name": "ADDCN Technology Co., Ltd",
   "sector": "Communication Services",
   "rank": 1,
   "eps": 13.96,
@@ -91,7 +91,7 @@
  },
  "3130.TW": {
   "market": "TW",
-  "name": "一零四",
+  "name": "104 Corporation",
   "sector": "Industrials",
   "rank": null,
   "eps": 16.45,
@@ -109,7 +109,7 @@
  },
  "2731.TW": {
   "market": "TW",
-  "name": "雄獅",
+  "name": "Lion Travel Service Co., Ltd.",
   "sector": "Consumer Cyclical",
   "rank": null,
   "eps": 16.14,
@@ -127,7 +127,7 @@
  },
  "1477.TW": {
   "market": "TW",
-  "name": "聚陽",
+  "name": "Makalot Industrial Co., Ltd.",
   "sector": "Consumer Cyclical",
   "rank": null,
   "eps": 14.6,
@@ -145,7 +145,7 @@
  },
  "5236.TW": {
   "market": "TW",
-  "name": "凌陽創新",
+  "name": "Sunplus Innovation Technology Inc.",
   "sector": "Technology",
   "rank": null,
   "eps": 10.26,
@@ -163,7 +163,7 @@
  },
  "6996.TWO": {
   "market": "TW",
-  "name": "力領科技",
+  "name": "Forcelead Technology Corp.",
   "sector": "Technology",
   "rank": null,
   "eps": 15.02,
@@ -181,7 +181,7 @@
  },
  "3014.TW": {
   "market": "TW",
-  "name": "聯陽",
+  "name": "ITE Tech. Inc",
   "sector": "Technology",
   "rank": null,
   "eps": 9.94,
@@ -199,7 +199,7 @@
  },
  "6670.TW": {
   "market": "TW",
-  "name": "復盛應用",
+  "name": "FuSheng Precision Co., Ltd.",
   "sector": "Consumer Cyclical",
   "rank": null,
   "eps": 24.25,
@@ -217,7 +217,7 @@
  },
  "4766.TW": {
   "market": "TW",
-  "name": "南寶",
+  "name": "Nan Pao Resins Chemical Co., Ltd.",
   "sector": "Basic Materials",
   "rank": 3,
   "eps": 23.39,
@@ -235,7 +235,7 @@
  },
  "4441.TW": {
   "market": "TW",
-  "name": "振大環球",
+  "name": "Great Giant Fibre Garment Co., Ltd.",
   "sector": "Consumer Cyclical",
   "rank": null,
   "eps": 18.36,
@@ -253,7 +253,7 @@
  },
  "2850.TW": {
   "market": "TW",
-  "name": "新產",
+  "name": "Shinkong Insurance Co., Ltd.",
   "sector": "Financial Services",
   "rank": null,
   "eps": 12.28,
@@ -271,7 +271,7 @@
  },
  "8081.TW": {
   "market": "TW",
-  "name": "致新",
+  "name": "Global Mixed-Mode Technology Inc.",
   "sector": "Technology",
   "rank": null,
   "eps": 18.37,
@@ -289,7 +289,7 @@
  },
  "6803.TWO": {
   "market": "TW",
-  "name": "崑鼎",
+  "name": "ECOVE Environment Corp.",
   "sector": "Industrials",
   "rank": null,
   "eps": 18.53,
@@ -307,7 +307,7 @@
  },
  "1580.TWO": {
   "market": "TW",
-  "name": "新麥",
+  "name": "Sinmag Equipment Corporation",
   "sector": "Industrials",
   "rank": null,
   "eps": 11.36,
@@ -325,7 +325,7 @@
  },
  "2618.TW": {
   "market": "TW",
-  "name": "長榮航",
+  "name": "EVA Airways Corp.",
   "sector": "Industrials",
   "rank": 2,
   "eps": 4.71,
@@ -343,7 +343,7 @@
  },
  "9942.TW": {
   "market": "TW",
-  "name": "茂順",
+  "name": "NAK Sealing Technologies Corporation",
   "sector": "Consumer Cyclical",
   "rank": null,
   "eps": 9.08,
@@ -361,7 +361,7 @@
  },
  "5609.TWO": {
   "market": "TW",
-  "name": "中菲行",
+  "name": "Dimerco Express Corporation",
   "sector": "Industrials",
   "rank": null,
   "eps": 7.71,
@@ -379,16 +379,16 @@
  },
  "6412.TW": {
   "market": "TW",
-  "name": "群電",
+  "name": "Chicony Power Technology Co., Ltd.",
   "sector": "Industrials",
   "rank": null,
   "eps": 6.03,
   "roe": 0.17185,
   "payout": 0.6135,
-  "reinvest": 0.3943,
-  "reinvest_method": "official_tw",
-  "reinvest_grade": "ideal",
-  "reinvest_note": "",
+  "reinvest": 0.4339,
+  "reinvest_method": "capex_fallback",
+  "reinvest_grade": "acceptable",
+  "reinvest_note": "僅供參考：用 CapEx÷淨利 的替代算法（缺 4 年前資產負債表）。與官方公式偏差方向不定（實測高估、低估都出現過，最大差距達 115pp），不可視為近似值",
   "cheap": 59.86,
   "roe_years": 3,
   "expensive": 183.1,

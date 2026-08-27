@@ -11,20 +11,12 @@
     "score": 2.5
    },
    {
-    "code": "MU",
-    "name": "Micron Technology Inc",
-    "mktcap": 1059822567424,
-    "growth": 3.457,
-    "inflow": 0.20204197245976713,
-    "score": 2.46
-   },
-   {
     "code": "AMD",
     "name": "Advanced Micro Devices Inc",
     "mktcap": 785106206720,
     "growth": 0.501,
     "inflow": 0.15850567914126995,
-    "score": 2.31
+    "score": 2.35
    },
    {
     "code": "ANET",
@@ -32,7 +24,7 @@
     "mktcap": 255082692608,
     "growth": 0.377,
     "inflow": 0.3439011199080893,
-    "score": 2.19
+    "score": 2.23
    },
    {
     "code": "MSFT",
@@ -56,7 +48,15 @@
     "mktcap": 220281487360,
     "growth": 0.276,
     "inflow": 0.3981144169268249,
-    "score": 1.92
+    "score": 1.96
+   },
+   {
+    "code": "ASML",
+    "name": "ASML Holding NV ADR",
+    "mktcap": 670500323328,
+    "growth": 0.213,
+    "inflow": 0.21685804276074083,
+    "score": 1.88
    },
    {
     "code": "AVGO",
@@ -137,7 +137,7 @@
    {
     "code": "SPCX",
     "name": "Space Exploration Technologies Corp Class A",
-    "mktcap": 1839511764992,
+    "mktcap": 1840572006400,
     "growth": 0.919,
     "inflow": 0.15686015852481125,
     "score": 2.65
@@ -151,6 +151,14 @@
     "score": 2.58
    },
    {
+    "code": "KTOS",
+    "name": "Kratos Defense & Security Solutions Inc",
+    "mktcap": 9936090112,
+    "growth": 0.305,
+    "inflow": 0.4370291627710396,
+    "score": 2.12
+   },
+   {
     "code": "LMT",
     "name": "Lockheed Martin Corp",
     "mktcap": 130539864064,
@@ -159,20 +167,12 @@
     "score": 2.08
    },
    {
-    "code": "KTOS",
-    "name": "Kratos Defense & Security Solutions Inc",
-    "mktcap": 9925432320,
-    "growth": 0.305,
-    "inflow": 0.4370291627710396,
-    "score": 2.08
-   },
-   {
     "code": "ASTS",
     "name": "AST SpaceMobile Inc Ordinary Shares - Class A",
     "mktcap": 23303350272,
     "growth": 26.266,
     "inflow": 0.02534247572590647,
-    "score": 2.04
+    "score": 2.08
    },
    {
     "code": "AMZN",
@@ -196,7 +196,7 @@
     "mktcap": 7464825856,
     "growth": 1.333,
     "inflow": 0.08084503717691491,
-    "score": 1.81
+    "score": 1.85
    }
   ],
   "太陽能": [
@@ -243,7 +243,7 @@
    {
     "code": "ENPH",
     "name": "Enphase Energy Inc",
-    "mktcap": 5063028736,
+    "mktcap": 5076336640,
     "growth": -0.196,
     "inflow": 0.3086996788588061,
     "score": 1.38
@@ -251,7 +251,7 @@
    {
     "code": "RUN",
     "name": "Sunrun Inc",
-    "mktcap": 2198932992,
+    "mktcap": 2177955072,
     "growth": 0.528,
     "inflow": -0.041560679526594174,
     "score": 1.12
@@ -335,7 +335,7 @@
    {
     "code": "ETN",
     "name": "Eaton Corp PLC",
-    "mktcap": 162868559872,
+    "mktcap": 162910502912,
     "growth": 0.214,
     "inflow": 0.45845050005539145,
     "score": 2.73
@@ -373,19 +373,19 @@
     "score": 1.36
    },
    {
-    "code": "UEC",
-    "name": "Uranium Energy Corp",
-    "mktcap": 6436598784,
-    "growth": 0,
-    "inflow": 0.26129451556214756,
-    "score": 1.27
-   },
-   {
     "code": "HUBB",
     "name": "Hubbell Inc",
-    "mktcap": 24965625856,
+    "mktcap": 24961275904,
     "growth": 0.153,
     "inflow": -0.036815125102014845,
+    "score": 1.18
+   },
+   {
+    "code": "UEC",
+    "name": "Uranium Energy Corp",
+    "mktcap": 0,
+    "growth": 0,
+    "inflow": 0.26129451556214756,
     "score": 1.18
    },
    {
@@ -441,7 +441,7 @@
    {
     "code": "EMR",
     "name": "Emerson Electric Co",
-    "mktcap": 88658223104,
+    "mktcap": 88294154240,
     "growth": 0.07,
     "inflow": 0.33280574131918966,
     "score": 1.94
@@ -467,7 +467,7 @@
    {
     "code": "GLW",
     "name": "Corning Incorporated",
-    "mktcap": 131335462912,
+    "mktcap": 131602915328,
     "growth": 0.166,
     "inflow": 0.3018886549868908,
     "score": 1.8
