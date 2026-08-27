@@ -368,15 +368,25 @@ def default_tickers():
         ts += [h["ticker"] for h in active if isinstance(h, dict) and h.get("ticker")]
     except Exception:
         pass
-    try:                                    # 台股觀察名單（持股目前全是美股）
+    try:
+        # 巴菲特清單**全部**納入，不只台股。納入標準是「在評估中的標的」而不是
+        # 「補足另一個市場」——清單上的美股是已到俗價的非持股，正是投資長 P0 在看的
+        # 進場候選，也最需要知道「分析師的預估是不是已經很兇了」。
+        # （原本寫 `if _tw_id(k)`，漏掉 BMY/PGR/ACN/TROW/VZ 五檔。）
         w = json.load(open("buffett_watch.json", encoding="utf-8"))
-        ts += [k for k in w if _tw_id(k)]
+        ts += list(w)
     except Exception:
         pass
     return sorted(set(ts) - SKIP)
 
 
-def run(tickers=None):
+def run(tickers=None, write=True):
+    """write=False：只印不寫檔。
+
+    ⚠️ `--tickers` 的診斷跑**一律不寫檔**。原本會寫，結果 2026-08-27 用
+    `--tickers BMY,PGR,...` 查五檔時，把跑了 8 分鐘的 88 檔結果覆寫成 5 檔
+    （同一個錯誤模式：前幾天用 `--markets us` 診斷洗掉了 buffett_watch.json）。
+    診斷用的子集合永遠不該蓋掉正式產出。"""
     tickers = tickers or default_tickers()
     checks, tiers = [], {}
     for i, tk in enumerate(tickers, 1):
@@ -391,9 +401,12 @@ def run(tickers=None):
         if i % 20 == 0:
             print(f"  已檢查 {i}/{len(tickers)}…")
         time.sleep(0.2)
-    os.makedirs("state", exist_ok=True)
-    json.dump({"date": dt.date.today().isoformat(), "checks": checks},
-              open(OUT_PATH, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    if write:
+        os.makedirs("state", exist_ok=True)
+        json.dump({"date": dt.date.today().isoformat(), "checks": checks},
+                  open(OUT_PATH, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    else:
+        print("（診斷模式，未寫入 state/base_rate.json）")
     # 一定要印分布——「全部正常」有可能是資料沒抓到而不是真的正常
     print(f"✅ 檢查 {len(checks)}/{len(tickers)} 檔｜"
           + "、".join(f"{TIER.get(k,k)}{k} {v}" for k, v in sorted(tiers.items())))
@@ -428,4 +441,5 @@ if __name__ == "__main__":
     for ln in open(".env", encoding="utf-8") if os.path.exists(".env") else []:
         if ln.startswith("FINMIND_TOKEN"):
             os.environ.setdefault("FINMIND_TOKEN", ln.split("=", 1)[1].strip())
-    run([t.strip() for t in a.tickers.split(",") if t.strip()] or None)
+    sel = [t.strip() for t in a.tickers.split(",") if t.strip()]
+    run(sel or None, write=not sel)
