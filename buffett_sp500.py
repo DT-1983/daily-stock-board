@@ -188,19 +188,27 @@ def stage2_yfinance(tickers: list) -> list:
     print(f"  {len(tickers)} 檔，每檔 3-5 秒，預估 {len(tickers)*4/60:.1f} 分鐘")
     print("=" * 70)
 
+    # 2026-08-27 第二輪真相：fetch_fundamentals 被限流時**不回 None、回空殼 dict**
+    # （price/roe 全 None）→ 空殼進 evaluate → 品質關全掛 → signal="SKIP" → 股票
+    # 靜默消失。第一版 retry 判斷 `if data:` 永遠不觸發、完整性防線也看不到
+    # （空殼算「評估成功」）。改判「空殼」＝連 price 都沒有（正常股票再爛都有價格），
+    # 空殼走失敗重試路徑、log 印 FETCH_FAIL 跟品質淘汰的 SKIP 區分開。
+    def _hollow(d):
+        return (not d) or not d.get("price")
+
     results = []
     total = len(tickers)
     skipped = []
     for i, t in enumerate(tickers, 1):
         print(f"  [{i}/{total}] {t} ...", end=" ", flush=True)
         data = fetch_fundamentals(t)
-        if data:
+        if not _hollow(data):
             data['universe'] = 'TV_Prefilter'
             ev = evaluate(data)
             results.append(ev)
             print(ev.get('signal', '?'))
         else:
-            print("SKIP")
+            print("FETCH_FAIL")
             skipped.append(t)
         time.sleep(1.2)   # 2026-08-27 0.8→1.2：Actions全掃被429打爆一次後加大間隔
 
@@ -214,14 +222,14 @@ def stage2_yfinance(tickers: list) -> list:
         for i, t in enumerate(skipped, 1):
             print(f"  [retry {i}/{len(skipped)}] {t} ...", end=" ", flush=True)
             data = fetch_fundamentals(t)
-            if data:
+            if not _hollow(data):
                 data['universe'] = 'TV_Prefilter'
                 ev = evaluate(data)
                 results.append(ev)
                 rescued += 1
                 print(ev.get('signal', '?'))
             else:
-                print("SKIP")
+                print("FETCH_FAIL")
             time.sleep(2.0)
         print(f"  ↻ 重試撿回 {rescued}/{len(skipped)} 檔"
               + ("" if rescued == len(skipped) else "（其餘可能真的缺資料或仍被限流）"))
