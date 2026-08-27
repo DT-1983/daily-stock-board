@@ -55,6 +55,7 @@ PAGES = "https://dt-1983.github.io/daily-stock-board"
 HOLDINGS = r"C:\Users\Mophy\AI\assets-dashboard\data\holdings.json"
 
 AHEAD_DAYS = 7      # 提前幾天預告
+NL2 = chr(10) * 2
 AFTER_DAYS = 7      # 公布後幾天內仍算「剛公布」（2026-08-27 從3放寬到7：窗口太窄+
                     # 季度閘門的組合讓8月25檔裡24檔的「公布後更新」全漏掉，見 daily_followup）
 
@@ -261,7 +262,13 @@ def make_infographic(ticker: str) -> str | None:
 
 # ────────────────────────────── Telegram ──────────────────────────────
 
-def push(msg: str) -> bool:
+def push(msg: str, discord_msg: str = None) -> bool:
+    """推 Telegram（＋Discord #財報）。
+
+    2026-08-28：加 discord_msg 參數。原本 Telegram 跟 Discord 發同一段短快訊，
+    而 card_digest() 產出的財報卡片摘要**組好之後沒有任何地方發送**——功能做了
+    但掉在地上（8/27 那次的原意是「Discord 發摘要、Telegram 發短訊」，只做了一半）。
+    現在 discord_msg 有值就發它，沒有才退回發 msg。"""
     tok = os.environ.get("TELEGRAM_BOT_TOKEN", "")
     chat = os.environ.get("TELEGRAM_CHAT_ID", "")
     ok = False
@@ -281,9 +288,12 @@ def push(msg: str) -> bool:
     try:
         import re as _re
         from notify_discord import send_discord, tg_html_to_md
-        msg_d = msg.replace("⭐", "").replace("👦", "")
-        msg_d = _re.sub(r"<i>.*?持股才會自動產懶人包</i>", "", msg_d)
-        send_discord("earnings", tg_html_to_md(msg_d), persona="龐統")
+        if discord_msg:
+            send_discord("earnings", discord_msg, persona="龐統")
+        else:
+            msg_d = msg.replace("⭐", "").replace("👦", "")
+            msg_d = _re.sub(r"<i>.*?持股才會自動產懶人包</i>", "", msg_d)
+            send_discord("earnings", tg_html_to_md(msg_d), persona="龐統")
     except Exception as e:
         print(f"  discord 雙發失敗（不影響 Telegram）：{e}")
     return ok
@@ -479,8 +489,17 @@ def daily_followup(args):
     if args.dry_run:
         print("(dry-run：沒推播、沒寫state)")
         return
-    if push(msg):
+    # Discord #財報 收「財報卡片摘要」（含數字表、分析師共識、優缺點、懶人包連結），
+    # Telegram 維持短快訊——這是 8/27 定的分工，之前 digests 組好卻沒發出去。
+    # 沒有懶人包可摘要時（非持股、或超過 max-infographics）就退回發短快訊。
+    d_msg = None
+    if discord_digests:
+        d_msg = "# 📊 財報快訊" + NL2 + NL2.join(discord_digests)
+        if len(blocks) > len(discord_digests):
+            d_msg += NL2 + f"-# 另有 {len(blocks)-len(discord_digests)} 檔已公布但沒有懶人包（非持股或超過本次產出上限）"
+    if push(msg, discord_msg=d_msg):
         print("✅ 已推 Telegram")
+    print(f"　Discord #財報：{'卡片摘要 %d 檔' % len(discord_digests) if d_msg else '短快訊（無懶人包可摘要）'}")
     save_state(st)
 
 
