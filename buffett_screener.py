@@ -51,6 +51,39 @@ REINVEST_ABSURD  = 3.00   # |盈再率| > 300% 視為「structural change」不�
                           #   洪瑞泰官方表用「常利」平滑掉這種情況，我們沒有那個欄位，
                           #   所以改成明講「無法判斷」並附異常原因。
 PAYOUT_MIN       = 0.40   # 配息率下限（洪瑞泰：配息 < 40% 代表盈餘可能是假的）
+
+# ── 配息率快取（2026-08-27）：yfinance 的 payoutRatio 時有時無，缺值時回退上次的值 ──
+_PAYOUT_CACHE_PATH = "state/payout_cache.json"
+_PAYOUT_CACHE = None
+
+
+def _payout_cache():
+    global _PAYOUT_CACHE
+    if _PAYOUT_CACHE is None:
+        try:
+            with open(_PAYOUT_CACHE_PATH, encoding="utf-8") as f:
+                _PAYOUT_CACHE = json.load(f)
+        except Exception:
+            _PAYOUT_CACHE = {}
+    return _PAYOUT_CACHE
+
+
+def _payout_cache_put(ticker, value):
+    """只存「真的抓到」的值——失敗的空結果不寫進快取
+    （記憶庫 cache_negative_result_bug：一次逾時會被永久記成「沒資料」）。"""
+    c = _payout_cache()
+    prev = c.get(ticker) or {}
+    if prev.get("value") == value:
+        return
+    c[ticker] = {"value": value, "date": datetime.now().strftime("%Y-%m-%d")}
+    try:
+        os.makedirs("state", exist_ok=True)
+        with open(_PAYOUT_CACHE_PATH, "w", encoding="utf-8") as f:
+            json.dump(c, f, ensure_ascii=False, indent=0)
+    except Exception:
+        pass
+
+
 LEADER_TOP_N     = 3      # 產業龍頭顯示前幾名
 
 OUTPUT_DIR       = "screener_output"
@@ -483,6 +516,20 @@ def fetch_fundamentals(ticker: str) -> dict:
         debt_to_equity = info.get("debtToEquity")           # yfinance 單位是 %（例如 150 = 1.5x）
         dividend_yield = info.get("dividendYield")          # 小數
         payout_ratio   = info.get("payoutRatio")
+        # 2026-08-27 Leo 拍板「漏資料就用上次的資料（但要說明是上次的）」：
+        # 實測同一檔 PSX 兩次呼叫，一次回 payoutRatio=None、一次回 0.282——
+        # 缺值時舊邏輯「放行」等於讓它矇混過關，同一檔股票因此在清單裡飄進飄出。
+        # 改成回退上次成功抓到的值（state/payout_cache.json），並標記 payout_stale
+        # 讓下游/頁面能標示「此配息率為前次資料」。
+        payout_from_cache = False
+        _pc = _payout_cache()
+        if payout_ratio is None:
+            cached = _pc.get(ticker)
+            if cached and cached.get("value") is not None:
+                payout_ratio = cached["value"]
+                payout_from_cache = True
+        elif payout_ratio is not None:
+            _payout_cache_put(ticker, payout_ratio)
 
         # 歷史 EPS（從年度財務報表）
         eps_history = []
@@ -684,6 +731,7 @@ def fetch_fundamentals(ticker: str) -> dict:
             "debt_to_equity": debt_to_equity,  # yfinance 單位：% (150 = 150%)
             "dividend_yield": dividend_yield,
             "payout_ratio":  payout_ratio,
+            "payout_stale":  payout_from_cache,   # True＝此配息率取自前次快取，非本次抓到
             "reinvest_ratio": reinvest_ratio,  # 洪瑞泰盈再率
             "reinvest_method": reinvest_method,  # official_tw=FinMind正式 / official_us=EDGAR正式
             # official_us_nolti=EDGAR但該公司無長投科目 / capex_fallback=資料不足退回
@@ -800,6 +848,7 @@ def evaluate(data: dict) -> dict:
     else:
         payout_ok = div_yield > 0                # 沒數字但有配息 → 資料缺，放行；完全不配息 → 擋
     result["payout_pass"] = payout_ok
+    result["payout_stale"] = bool(data.get("payout_stale"))
 
     # ── 6. 綜合訊號 ──────────────────────────────────────
     # 訊號邏輯（洪瑞泰，2026-07-31 校正：拿掉合理價、補 ROE 穩定與配息率）：

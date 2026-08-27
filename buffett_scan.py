@@ -47,6 +47,8 @@ def _collect(results, market, today, out):
             "sector": r.get("sector"), "rank": r.get("leader_rank"),
             "eps": r.get("eps_ttm"), "roe": r.get("roe_current"),
             "payout": r.get("payout_ratio"), "reinvest": r.get("reinvest_ratio"),
+            # 2026-08-27：True＝配息率取自前次快取（Yahoo 這次沒給），頁面會標「前次」
+            "payout_stale": bool(r.get("payout_stale")),
             # official_tw=FinMind / official_us(_ifrs)(_nolti)=SEC EDGAR
             # capex_fallback=資料不足退回舊算法，僅供參考
             "reinvest_method": r.get("reinvest_method"),

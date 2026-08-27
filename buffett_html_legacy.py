@@ -150,6 +150,9 @@ def _market_html(mkt, rows, show):
                 roe += f'<span class="sub"> {int(r["roe_years"])}/4</span>'
             po = r.get("payout")
             payout = f'{po*100:.0f}%' if po is not None else "—"
+            # 配息率若是回退前次快取的值，明確標出來（Leo：「但說明是上次的資料」）
+            if po is not None and r.get("payout_stale"):
+                payout += '<span title="Yahoo 本次未提供配息率，沿用前次抓到的值">*</span>'
             eps = f'{r["eps"]:.2f}' if r.get("eps") is not None else "—"
             dis = f'<span class="dis">{r["dis"]:.0f}%</span>' if r.get("dis") else "—"
             px = f'{r["price"]:.1f}' if r.get("price") else "—"
@@ -218,6 +221,7 @@ def build(watch):
 <b>品質關（全過才進 🟢🟡）</b>：ROE≥15% 且 <b>近4年至少3年達標</b>（ROE 欄後方 n/4）｜ 盈再率&lt;80% ｜ <b>配息率≥40%</b><span class="sub">　只賺錢不配息＝盈餘可能是帳面的</span><br>
 <span class="lead">龍頭#N</span> = 同 sector 市值前 3（補充參考）
 <span class="trap">⚠️照妖鏡</span> = forward EPS 衰退 / 負債&gt;{DE_HIGH}%（俗價用過去 EPS 算，未來恐縮水 → 便宜有理由，別追）<br>
+<b>配息率帶 *</b> = Yahoo 本次未提供該欄位，沿用前次抓到的數字（2026-08-27 起；不這樣做的話同一檔會因資料時有時無而在清單裡飄進飄出）<br>
 <i>排序：<b>✅體質過關優先浮上</b>，⚠️EPS 估降者殿後（EPS 變差＝俗價是假便宜，洪瑞泰不追）。🟢🟡才跑照妖鏡。台股價格為 TWD。</i>
 </div>"""]
 
