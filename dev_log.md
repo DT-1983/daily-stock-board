@@ -2120,3 +2120,19 @@ evaluate→品質關全掛→signal=SKIP→股票靜默消失。所以：
 **教訓（verification_self_check_limits家族）**：修完第一版時只驗了「程式碼有進
 commit、checkout有拿到」，沒驗「行為真的改變」——run#3的log零retry輸出就是行為
 沒變的鐵證，早一步對照就不用三輪。
+
+## 2026-08-27（續二十一）· 產業轉強觸發從沒真的執行過（靜默失效）
+
+Leo 問「七鏈以外的產業轉強會不會漏掉」→ 查證時發現更嚴重的事：**「產業轉強」
+這個觸發源從 P0 上線到現在一次都沒真的觸發過**。
+根因：researcher_industry 存的 scope 是**中文**產業名（「非能源礦業」），
+RRG_HOLDINGS 的 key 是**英文** sector（Non-Energy Minerals），basket_matches_scope
+比對永遠 False。整個路徑在跑、log 正常、沒有任何錯誤——典型的
+[[unexecuted_code_paths]]（程式在跑≠那條路徑執行過）。
+
+修法：basket_matches_scope 用 industry_rotation.SECTOR_TW_LABEL 做中英對照。
+驗證（今天兩筆真實翻象限）：通訊→SPCX/VZ/TMUS/T/AMX/2412/4904/3045/6561/6170；
+非能源礦業→BHP/SCCO/RIO/NEM/FCX/2002/1101/2027/1102。修好後明天起真的會觸發。
+
+**教訓**：P0 當時「實測24檔」看起來全綠，但那24檔全是巴菲特到俗價觸發的——
+產業轉強那條路徑一檔都沒有，我沒察覺「某個觸發源零產出」本身就是要查的訊號。
