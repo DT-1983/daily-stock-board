@@ -377,6 +377,13 @@ def default_tickers():
         ts += list(w)
     except Exception:
         pass
+    try:
+        # 2026-08-28 Leo：補七鏈守備清單（原本 93 檔漏掉 94 檔，2317/2330/2454 這些
+        # 研究員每天在盯的成分股都不在範圍內）。同樣的納入標準：在評估中的標的。
+        from paper_portfolio import chain_holdings
+        ts += [t for v in chain_holdings().values() for t in v]
+    except Exception:
+        pass
     return sorted(set(ts) - SKIP)
 
 

@@ -134,6 +134,14 @@ PROMPT = """你是投資長，讀研究員整理好的材料，給這檔股票�
    事件風險（event_risk，今天的新聞算不算風險）、多空辯論（bull_bear_debate，
    一句話講多方觀點、一句話講空方觀點）。
 2. value_angle：根據估值材料判斷續抱/觀望/考慮出場，說明理由。不看趨勢材料。
+   材料裡若有「預估前提檢查」，它量的是**市場對這檔的期待被堆到多高**，怎麼讀：
+   - 它不是「公司好壞」的評價，是「容錯空間大小」的刻度。要求超出自身歷史紀錄
+     ＝好消息已被寫進預估、預估已被寫進股價，做得不錯但沒到就會被修正。
+   - **不要**把它讀成「分析師在亂喊」——同一段裡的「分析師準頭」多半顯示這些公司
+     的共識長期偏保守，是公司一直超乎預期才把期待越堆越高。
+   - 它跟貴俗價是兩件事：貴俗價講價格貴不貴，這個講期待高不高。兩個都要提到，
+     不要用其中一個取代另一個。若兩者同向（已到貴價＋要求破紀錄），明講容錯空間最小。
+   - 樣本數 n 有標出來，n 小的時候要在 reasoning 裡說明這點，不要當統計結論。
 
 兩個角度各要填：
 - brief：**一句完整的話（≤35字）講清楚判斷跟最關鍵的一個理由**，會顯示在手機推播上——
@@ -342,6 +350,27 @@ def gather_material(ticker, notes):
                                if bt.get("target_price") else "")
     except Exception as e:
         value_material += f"\n（buffett_targets查詢失敗：{e}）"
+
+    # 2026-08-28 P3：預估前提檢查併入**價值角度**的材料。理由：它量的是「市場對這檔的
+    # 期待被堆到多高」，而股價正是照那個期待訂的——本質是估值前提不是趨勢。
+    # 放進來是給孔明多一份材料（維持多鏡頭獨立原則），**不是門檻**，不擋任何判斷。
+    # ⚠️ 一定要同時給「分析師歷史準頭」：被標記的幾檔（CLS/TSM 24季全部低估）分析師
+    # 其實是長期猜太保守，沒有這個脈絡會被誤讀成「分析師在亂喊」。
+    try:
+        from base_rate import _load as _br_load, line as _br_line
+        _br = _br_load() or {}
+        _c = next((c for c in _br.get("checks", []) if c.get("ticker") == ticker), None)
+        if _c and _c.get("requirement"):
+            _t = _c["requirement"]["tier"]
+            _tag = {"unprecedented": "要求超出這檔自身歷史紀錄一大截",
+                    "rare": "要求剛好貼在自身歷史紀錄上",
+                    "normal": "要求落在這檔過去做得到的範圍內",
+                    "low_coverage": "分析師覆蓋太少，不列入判斷"}.get(_t, "")
+            value_material += (f"\n預估前提檢查（{_br.get('date','')}，"
+                               f"分析師共識隱含的要求 vs 這檔自己的歷史）：{_tag}\n"
+                               f"  {_br_line(_c)}")
+    except Exception as e:
+        value_material += f"\n（預估前提檢查查詢失敗：{e}）"
 
     trend_material = ""
     # 2026-08-27：所屬七鏈的技術面（chain_technicals.py 每日算）——**當參考不當門檻**，
