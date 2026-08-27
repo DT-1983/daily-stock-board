@@ -34,7 +34,8 @@ logging.getLogger("yfinance").setLevel(logging.CRITICAL)
 
 def _load_env(path=".env"):
     """讀 .env 補進 os.environ（不覆蓋已存在的）。排程執行時沒有 shell 的環境變數，
-    TELEGRAM_BOT_TOKEN / CHAT_ID 要從這裡拿。.env 已在 .gitignore，不會進版控。"""
+    DISCORD_WH_EARNINGS 要從這裡拿（2026-08-28 TG 精簡後這支只發 Discord）。
+    .env 已在 .gitignore，不會進版控。"""
     try:
         for ln in open(path, encoding="utf-8"):
             ln = ln.strip()
