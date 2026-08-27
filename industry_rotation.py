@@ -254,8 +254,9 @@ QUADRANT_LABEL = {"leading": "領先", "improving": "改善", "lagging": "落後
 # 2026-08-25 配色重挑：跑過 dataviz skill 的 validate_palette.js（surface #0a1222,
 # dark mode）——這 4 色不強求跟下面 8 色籃子色盤有 CVD 級距（那是不同的編碼軸，
 # 象限一律搭文字標籤顯示，不單靠顏色分辨，符合 skill 的 status-color 用法）。
-# 保留台股慣例：紅＝強／領先（不是西方常見的「紅=差」)。
-QUADRANT_COLOR = {"leading": "#e5484d", "improving": "#3987e5", "lagging": "#7d8590", "weakening": "#eda100"}
+# 2026-08-27 Leo 指定換色：「領先用藍色、落後紅色」——推翻 8/25「保留台股慣例紅=強」
+# 的決定（用戶明示優先）。改善補綠色（往領先移動=轉好）、弱化維持琥珀（警示感）。
+QUADRANT_COLOR = {"leading": "#3987e5", "improving": "#2fbf71", "lagging": "#e5484d", "weakening": "#eda100"}
 
 
 # ── 快照組裝：算出每個籃子在 4 個週期下的最新座標 ─────────────────────────
@@ -846,19 +847,21 @@ function quadrantBgPlugin() {
       // 十字分隔線加亮加粗、象限標籤改大改粗並用各象限自己的顏色（原本是11px小灰字）。
       // 底色透明度不再往上加的理由：泡泡填色也是半透明，象限底色太濃會跟泡泡顏色
       // 疊出混色，反而讓兩個編碼軸互相干擾（8/25配色重整那輪的教訓）。
+      // 2026-08-27 Leo 指定：領先=藍、落後=紅（推翻台股慣例紅=強）；改善=綠、弱化=琥珀。
+      // 底色/標籤顏色要跟 QUADRANT_COLOR（排行榜象限字的顏色）同一套，兩邊對得上。
       ctx.save();
-      ctx.fillStyle = 'rgba(57,135,229,.12)'; ctx.fillRect(area.left, area.top, midX-area.left, midY-area.top);
-      ctx.fillStyle = 'rgba(229,72,77,.14)'; ctx.fillRect(midX, area.top, area.right-midX, midY-area.top);
-      ctx.fillStyle = 'rgba(125,133,144,.10)'; ctx.fillRect(area.left, midY, midX-area.left, area.bottom-midY);
+      ctx.fillStyle = 'rgba(47,191,113,.11)'; ctx.fillRect(area.left, area.top, midX-area.left, midY-area.top);
+      ctx.fillStyle = 'rgba(57,135,229,.13)'; ctx.fillRect(midX, area.top, area.right-midX, midY-area.top);
+      ctx.fillStyle = 'rgba(229,72,77,.11)'; ctx.fillRect(area.left, midY, midX-area.left, area.bottom-midY);
       ctx.fillStyle = 'rgba(237,161,0,.12)'; ctx.fillRect(midX, midY, area.right-midX, area.bottom-midY);
       ctx.strokeStyle = 'rgba(143,176,214,.55)'; ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.moveTo(midX, area.top); ctx.lineTo(midX, area.bottom);
       ctx.moveTo(area.left, midY); ctx.lineTo(area.right, midY); ctx.stroke();
       ctx.font = 'bold 14px sans-serif';
-      ctx.fillStyle = 'rgba(57,135,229,.9)';  ctx.fillText('改善 ▲', area.left+8, area.top+20);
-      ctx.fillStyle = 'rgba(229,72,77,.9)';   ctx.fillText('領先 ▲', midX+8, area.top+20);
-      ctx.fillStyle = 'rgba(160,170,185,.9)'; ctx.fillText('落後 ▼', area.left+8, area.bottom-10);
-      ctx.fillStyle = 'rgba(237,161,0,.9)';   ctx.fillText('弱化 ▼', midX+8, area.bottom-10);
+      ctx.fillStyle = 'rgba(47,191,113,.95)'; ctx.fillText('改善 ▲', area.left+8, area.top+20);
+      ctx.fillStyle = 'rgba(57,135,229,.95)'; ctx.fillText('領先 ▲', midX+8, area.top+20);
+      ctx.fillStyle = 'rgba(229,72,77,.95)';  ctx.fillText('落後 ▼', area.left+8, area.bottom-10);
+      ctx.fillStyle = 'rgba(237,161,0,.95)';  ctx.fillText('弱化 ▼', midX+8, area.bottom-10);
       ctx.restore();
     }
   };
