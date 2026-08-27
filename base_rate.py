@@ -269,9 +269,37 @@ def implied_requirement_us(tk):
             "qoq_n": len(qoq), "excess": need_qoq - max(qoq)}
 
 
+def pe_snapshot(tk):
+    """本益比快照＋「股價押注了多少還沒發生的獲利成長」。
+
+    押注幅度 = 現在本益比 ÷ 預估本益比 − 1。預估本益比的分母是分析師預估獲利，
+    所以這個數字就是「市場把多少未實現的獲利算進股價了」。
+
+    ⚠️ 預估本益比**單獨看會騙人**：獲利在景氣循環高點時最高，於是預估本益比在
+    風險最大的時候看起來最便宜——而這份清單上幾乎全是半導體。洪瑞泰的「常利」
+    正是為了修這個毛病而存在。所以報告一定要同時列俗貴價（常利基準）：
+    兩者的失效方向相反，俗貴價會把獲利跳級的公司一律說成「貴」，
+    預估本益比會在循環高點說「便宜」。缺一個都會被騙。
+    """
+    import yfinance as yf
+    try:
+        i = yf.Ticker(tk).info
+    except Exception:
+        return None
+    fwd, ttm = i.get("forwardPE"), i.get("trailingPE")
+    ps = i.get("priceToSalesTrailing12Months")
+    out = {"forward_pe": fwd if (fwd and fwd > 0) else None,
+           "trailing_pe": ttm if (ttm and ttm > 0) else None,
+           "ps": ps, "price": i.get("currentPrice")}
+    if out["forward_pe"] and out["trailing_pe"]:
+        out["implied_growth"] = out["trailing_pe"] / out["forward_pe"] - 1
+    return out
+
+
 def check(tk):
     req = implied_requirement_tw(tk) if _tw_id(tk) else implied_requirement_us(tk)
-    return {"ticker": tk, "requirement": req, "track_record": analyst_track_record(tk)}
+    return {"ticker": tk, "requirement": req, "track_record": analyst_track_record(tk),
+            "pe": pe_snapshot(tk)}
 
 
 # ---------------------------------------------------------------- 輸出
@@ -437,6 +465,8 @@ if __name__ == "__main__":
     ap.add_argument("--tickers", default="", help="逗號分隔；預設全持股+台股觀察名單")
     ap.add_argument("--if-stale-days", type=int, default=0,
                     help="既有結果比這個天數新就跳過（給排程自我節流用）")
+    ap.add_argument("--weekday", type=int, default=None,
+                    help="釘在星期幾跑（0=一…4=五）。超過 if-stale-days 仍會補跑")
     a = ap.parse_args()
     # 自我節流：這份檢查的輸入（分析師共識、台股月營收）都是月頻，天天跑沒有新資訊，
     # 而且 70 檔 × 4 個 yfinance 呼叫會逼近限流。放在平日排程裡但一週只真的跑一次。
@@ -448,6 +478,11 @@ if __name__ == "__main__":
         d = _load()
         if d and d.get("date"):
             age = (dt.date.today() - dt.date.fromisoformat(d["date"])).days
+            # 釘星期幾：不然「滿7天就跑」會漂移——哪個週一電腦沒開，之後就永遠變成週二。
+            # 但超過門檻仍要補跑，否則漏一次就要等下週（漏跑比晚跑嚴重）。
+            if a.weekday is not None and dt.date.today().weekday() != a.weekday and age < a.if_stale_days + 3:
+                print(f"今天不是排定的星期{'一二三四五六日'[a.weekday]}，跳過（上次 {d['date']}）")
+                sys.exit(0)
             if age < a.if_stale_days:
                 print(f"上次檢查 {d['date']}（{age} 天前），未達 {a.if_stale_days} 天門檻，跳過")
                 sys.exit(0)
@@ -456,3 +491,78 @@ if __name__ == "__main__":
             os.environ.setdefault("FINMIND_TOKEN", ln.split("=", 1)[1].strip())
     sel = [t.strip() for t in a.tickers.split(",") if t.strip()]
     run(sel or None, write=not sel)
+
+
+# ---------------------------------------------------------------- 卡片（2026-08-28）
+# 一檔三行：俗貴價（價格）／預估本益比（價格，配分析師預估成長當註腳）／預估門檻（預估）。
+#
+# ⚠️ **只有「預估門檻」有燈號**，另外兩行只給數字。原因：
+#  ① 我一度把「現PE ÷ 預估PE」當成「市場押注」並想給燈號——那是錯的。
+#     現PE÷預估PE =(P/現EPS)/(P/預估EPS)= 預估EPS/現EPS，**股價完全被約掉**，
+#     實測 NVDA 兩種算法到小數點都一樣(+122.8%)。它只是分析師的 EPS 成長預估，
+#     不是市場的判斷，也不構成獨立的第二軸。已改標為「分析師預估獲利成長」。
+#  ② 想給股價燈號就得有校準基準。「本益比 vs 自身歷史」做不到——季EPS只有5季，
+#     疊TTM只剩2個點，TSM還算出 0.9 倍（ADR 的 EPS 與股價單位對不上）。
+#  ③ 剩下的兩個選項都不能用：絕對門檻（「預估PE>30算貴」）是我自己發明的判定門檻；
+#     用這 186 檔的相對百分位則**保證永遠有 40% 是紅燈**——組合再便宜也會有人被標紅，
+#     燈號會退化成排名而不是警訊，比沒有燈號更糟（它看起來像在示警）。
+#
+# 「預估門檻」的燈號則站得住：它是拿要求值對照**這檔自己的歷史分布**校準出來的，
+# 沒有用到任何我發明的跨股門檻。
+
+
+def _load_json_safe(p):
+    try:
+        return json.load(open(p, encoding="utf-8"))
+    except Exception:
+        return None
+
+
+def _val_line(tk):
+    """俗貴價。持股讀 valuation_state（每日），非持股讀 buffett_watch（週六）。"""
+    v = (_load_json_safe("state/valuation_state.json") or {}).get(tk)
+    if v:
+        return (f"{v.get('icon','⚪')} 俗貴價（用正常化獲利算）：現價 ${v['price']:,.2f}"
+                f"／俗價 ${v['cheap']:,.2f}／貴價 ${v['expensive']:,.2f}")
+    w = (_load_json_safe("buffett_watch.json") or {}).get(tk)
+    if w and w.get("cheap"):
+        return (f"⚪ 俗貴價（用正常化獲利算）：俗價 ${w['cheap']:,.2f}／貴價 ${w['expensive']:,.2f}"
+                f"（巴菲特清單，週六更新）")
+    return None
+
+
+def card(c):
+    """一檔的卡片。回 list[str]。"""
+    tk, r = c["ticker"], c.get("requirement")
+    pe, tr = c.get("pe") or {}, c.get("track_record") or {}
+    out = [f"**{tk}**"]
+    vl = _val_line(tk)
+    if vl:
+        out.append(vl)
+
+    if pe.get("forward_pe"):
+        t = f"　現在本益比 {pe['trailing_pe']:,.0f} 倍" if pe.get("trailing_pe") else ""
+        g = (f"　分析師預估獲利成長 {pe['implied_growth']*100:+,.0f}%"
+             if pe.get("implied_growth") is not None else "")
+        out.append(f"　預估本益比 {pe['forward_pe']:,.0f} 倍{t}{g}")
+    elif pe.get("ps"):
+        out.append(f"　股價營收比 {pe['ps']:,.1f} 倍（虧損中，沒有本益比）")
+
+    if r:
+        need = r.get("need_qoq") if r["kind"] == "us_quarterly" else r.get("need_yoy")
+        mx = r.get("qoq_max") if r["kind"] == "us_quarterly" else r.get("yoy_max")
+        unit = "季" if r["kind"] == "us_quarterly" else "年"
+        if need is not None and mx is not None:
+            out.append(f"{TIER[r['tier']]} 預估門檻：分析師要求每{unit}成長 {need*100:+,.0f}%，"
+                       f"它史上最好的一{unit}是 {mx*100:+,.0f}%")
+    if tr:
+        # 措辭要看門檻高不高——✅ 的檔案沒有高門檻，不能寫「這個高門檻是它自己打出來的」
+        hot = (r or {}).get("tier") in ("unprecedented", "rare")
+        if tr["beats"] >= tr["n"] * 0.75:
+            w = "這個高門檻是它自己打出來的" if hot else "分析師對它一向偏保守"
+        elif tr["beats"] <= tr["n"] * 0.25:
+            w = "**而且分析師對它一向偏樂觀，這個門檻要打折看**" if hot else "分析師對它一向偏樂觀"
+        else:
+            w = "分析師準頭中性"
+        out.append(f"-# 過去 {tr['n']} 季分析師有 {tr['beats']} 季猜太低，{w}")
+    return out
