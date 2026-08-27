@@ -443,9 +443,24 @@ def run(tickers=None, write=True):
             print(f"  已檢查 {i}/{len(tickers)}…")
         time.sleep(0.2)
     if write:
+        # 記錄「這次跟上次比，燈號有沒有變」——週更只推有變的，不然同一份清單每週貼一次，
+        # Leo 第二週就不會看了（2026-08-28 Leo 指定，沿用系統裡既有的「變化才推」模式）。
+        prev = _load() or {}
+        pt = {c["ticker"]: (c.get("requirement") or {}).get("tier")
+              for c in prev.get("checks", [])}
+        for c in checks:
+            t = (c.get("requirement") or {}).get("tier")
+            was = pt.get(c["ticker"])
+            c["prev_tier"] = was
+            # 第一次看到這檔（was is None 且不在舊清單裡）不算「變化」，否則擴範圍那天
+            # 會一次噴出上百檔「新出現」。只有真的從一級跳到另一級才算。
+            c["changed"] = bool(was and t and was != t)
         os.makedirs("state", exist_ok=True)
-        json.dump({"date": dt.date.today().isoformat(), "checks": checks},
+        json.dump({"date": dt.date.today().isoformat(),
+                   "prev_date": prev.get("date"), "checks": checks},
                   open(OUT_PATH, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+        nch = sum(1 for c in checks if c.get("changed"))
+        print(f"　燈號有變動的：{nch} 檔" + (f"（對比 {prev.get('date')}）" if prev.get("date") else ""))
     else:
         print("（診斷模式，未寫入 state/base_rate.json）")
     # 一定要印分布——「全部正常」有可能是資料沒抓到而不是真的正常
