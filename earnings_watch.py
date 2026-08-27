@@ -360,6 +360,53 @@ def _ai_flash(tk, nm, info, consensus):
         return None
 
 
+def card_digest(path, url):
+    """把已產生的財報懶人包 HTML 摘要成一則 Discord 貼文（2026-08-27 Leo 指定：
+    「摘要網站裡的財報分析就可以了，然後附上連結」）。
+
+    純解析已產生的卡片，**不重跑 yfinance、不再叫一次 AI**——卡片裡的敘事本來就是
+    AI 寫的、數字本來就是 yfinance 真實財報，這裡只是換個地方呈現＋給連結。
+    抓不到就回 None（呼叫端退回原本的簡短快訊，不硬湊）。"""
+    import re as _re
+    try:
+        h = io.open(path, encoding="utf-8").read()
+    except Exception:
+        return None
+
+    def one(pat, d=""):
+        m = _re.search(pat, h, _re.S)
+        return m.group(1).strip() if m else d
+
+    name = one(r"<h1>([^<]*)</h1>")
+    quarter = one(r'<div class="sub">([^·]*?)財報懶人包')
+    bottom = _re.sub(r"<[^>]+>", "", one(r'<div class="c">(.*?)</div>'))
+    consensus = one(r'class="bg" style="color:[^"]*">([^<]*)</div>')
+
+    # 財務數據表：項目/本季/YoY
+    rows = _re.findall(r"<tr><td>([^<]+)</td><td>([^<]+)</td>"
+                       r'<td class="(up|down)">([^<]+)</td></tr>', h)
+    want = {"營收", "淨利", "自由現金流"}
+    fin = [f"{k} {v}（{'🔺' if d == 'up' else '🔻'}{y}）"
+           for k, v, d, y in rows if k in want]
+
+    pos = _re.findall(r'<span class="m">✓</span><span>([^<]+)</span>', h)[:2]
+    neg = _re.findall(r'<span class="m">✕</span><span>([^<]+)</span>', h)[:2]
+
+    lines = [f"📊 **{name}** {quarter} 財報分析"]
+    if fin:
+        lines.append("　" + "｜".join(fin))
+    if consensus:
+        lines.append(f"　分析師共識：**{consensus}**")
+    if bottom:
+        lines.append(f"　💡 {bottom}")
+    for p in pos:
+        lines.append(f"　✓ {p}")
+    for n_ in neg:
+        lines.append(f"　✕ {n_}")
+    lines.append(f"　🔗 [完整財報分析]({url})")
+    return "\n".join(lines)
+
+
 def daily_followup(args):
     """每日輕量跟催。只看 state.upcoming 已發過預告的（tk, 財報日），
     財報日在 [today-AFTER_DAYS, today] 且 reported 沒記過 → 確認真的公布了
@@ -384,7 +431,7 @@ def daily_followup(args):
         return
 
     print(f"每日跟催：{len(cands)} 檔候選 {[c[0] for c in cands]}")
-    blocks, made = [], 0
+    blocks, made, discord_digests = [], 0, []
     for tk, ed, key in cands:
         info = earnings_info(tk)
         time.sleep(0.35)
@@ -408,7 +455,14 @@ def daily_followup(args):
             p = make_infographic(tk)
             if p:
                 made += 1
-                b.append(f'　📄 <a href="{PAGES}/{os.path.basename(p)}">財報懶人包（已更新）</a>')
+                url = f"{PAGES}/{os.path.basename(p)}"
+                b.append(f'　📄 <a href="{url}">財報懶人包（已更新）</a>')
+                # 2026-08-27 Leo：「摘要網站裡的財報分析就可以了，然後附上連結」——
+                # Discord #財報 改發卡片摘要（純解析已產生的卡片，不再叫一次AI）。
+                # Telegram 維持原本的簡短快訊（即時通知不需要長摘要）。
+                dg = card_digest(p, url)
+                if dg:
+                    discord_digests.append(dg)
             flash = _ai_flash(tk, nm, info, consensus)
             if flash:
                 b.append(f"　③ 指引vs共識：{flash['guidance_vs_consensus']}")
