@@ -190,6 +190,7 @@ def stage2_yfinance(tickers: list) -> list:
 
     results = []
     total = len(tickers)
+    skipped = []
     for i, t in enumerate(tickers, 1):
         print(f"  [{i}/{total}] {t} ...", end=" ", flush=True)
         data = fetch_fundamentals(t)
@@ -200,7 +201,30 @@ def stage2_yfinance(tickers: list) -> list:
             print(ev.get('signal', '?'))
         else:
             print("SKIP")
-        time.sleep(0.8)   # 拉長間隔降低 yfinance 429 限流（Zeabur 共用 IP）
+            skipped.append(t)
+        time.sleep(1.2)   # 2026-08-27 0.8→1.2：Actions全掃被429打爆一次後加大間隔
+
+    # 2026-08-27 失敗重試一輪：429 限流是暫時性的，冷卻 60 秒後再撿一次。
+    # 那次全掃 236 檔有 201 檔 SKIP（85%），清單 41→22 幾乎全滅——SKIP 是
+    # 「抓不到資料」不是「品質淘汰」，不重試等於把限流當成篩選結果。
+    if skipped:
+        print(f"\n  ↻ {len(skipped)} 檔抓取失敗，冷卻 60 秒後重試一輪…")
+        time.sleep(60)
+        rescued = 0
+        for i, t in enumerate(skipped, 1):
+            print(f"  [retry {i}/{len(skipped)}] {t} ...", end=" ", flush=True)
+            data = fetch_fundamentals(t)
+            if data:
+                data['universe'] = 'TV_Prefilter'
+                ev = evaluate(data)
+                results.append(ev)
+                rescued += 1
+                print(ev.get('signal', '?'))
+            else:
+                print("SKIP")
+            time.sleep(2.0)
+        print(f"  ↻ 重試撿回 {rescued}/{len(skipped)} 檔"
+              + ("" if rescued == len(skipped) else "（其餘可能真的缺資料或仍被限流）"))
     return results
 
 

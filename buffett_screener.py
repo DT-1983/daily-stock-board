@@ -517,6 +517,11 @@ def fetch_fundamentals(ticker: str) -> dict:
                     "Net Income" if "Net Income" in inc.index else None)
                 if fld:
                     ann = [float(x) for x in inc.loc[fld].dropna().iloc[:4]]
+                    # TTM 淨利：quarterly Normalized 為主（準——會剔除一次性損益，
+                    # PSX 用 GAAP TTM 會把煉油暴利算回來、俗價偏高16%）；
+                    # 抓不到才退 eps_ttm×股數（info 裡現成，零額外呼叫，GAAP 近似）。
+                    # 429 限流問題不在這裡犧牲準確度解，改由 stage2 加大間隔+重試處理
+                    # （2026-08-27 Actions 全掃被打爆 201/236 檔的教訓）。
                     ttm_ni = None
                     try:
                         q = stock.quarterly_income_stmt
@@ -530,6 +535,8 @@ def fetch_fundamentals(ticker: str) -> dict:
                                 ttm_ni = float(qs.iloc[:4].sum())
                     except Exception:
                         pass
+                    if ttm_ni is None and info.get("trailingEps"):
+                        ttm_ni = float(info["trailingEps"]) * float(shares)
                     vals = ([ttm_ni] + ann)[:5] if ttm_ni is not None else ann[:5]
                     if len(vals) >= 3:   # 至少要3期才算得出有意義的中位數，太少不硬算
                         changli = float(np.mean(vals[:2]) * 0.7 + np.median(vals) * 0.3)
