@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Discord 推播共用模組（隆中對伺服器，2026-08-28 建）。
+"""Discord 推播共用模組（隆中對伺服器，2026-08-27 建）。
 
 用 Webhook（單向發送，不是 bot）：每則訊息可指定發言者名字——同一頻道裡
 不同 agent 用自己的三國名字發言（龐統/孔明/仲達/陳壽），不用開一堆頻道。
@@ -29,12 +29,12 @@ _env = {**dotenv_values(Path(__file__).parent / ".env"), **os.environ}
 CHANNELS = {
     "daily": _env.get("DISCORD_WH_DAILY", ""),
     "earnings": _env.get("DISCORD_WH_EARNINGS", ""),
-    # 2026-08-28：私人頻道（只有 Leo 看得到）——持股相關內容專用。
+    # 2026-08-27：私人頻道（只有 Leo 看得到）——持股相關內容專用。
     # 背景：#每日戰情/#財報 之後可能開放家人看，持股明細不該出現在公開頻道。
     "private": _env.get("DISCORD_WH_PRIVATE", ""),
 }
 
-# 三國軍師團（2026-08-28 Leo 定案）：伺服器=隆中對
+# 三國軍師團（2026-08-27 Leo 定案）：伺服器=隆中對
 PERSONAS = {
     "龐統": "研究員（情報/獻策）",
     "孔明": "投資長（綜觀全局定策）",

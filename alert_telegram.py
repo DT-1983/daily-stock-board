@@ -80,7 +80,7 @@ def main():
         if sig in ALERT_SIGS:              # 轉成 買進/賣出（新訊號）
             reason = f"{SIG_WORD.get(old,'觀望')}→{SIG_WORD.get(sig,'')}"
         else:
-            # 2026-08-28 Leo：「可以顯示 轉買進、賣出的就好」——原本「買進解除→觀望」
+            # 2026-08-27 Leo：「可以顯示 轉買進、賣出的就好」——原本「買進解除→觀望」
             # 這類降級也推，一次出一排⚪️解除訊息變成雜訊。解除不推了；
             # 訊號現況在看板頁本來就看得到，不差這一則。
             continue
@@ -141,7 +141,7 @@ def main():
                  f'📊 <a href="{PAGES_URL}">完整看板</a>。']
     msg = "\n".join(lines)
     send_text(msg)
-    # Discord 不在這裡發（2026-08-28 Phase 2 定案）：#每日戰情 收的是 daily_warroom
+    # Discord 不在這裡發（2026-08-27 Phase 2 定案）：#每日戰情 收的是 daily_warroom
     # 08:45 的合成日報（本訊息內容經由 state/st_flips_today.json 進日報②段），
     # 這裡再發會同內容出現兩次。Telegram 維持逐則即時推播。
     # 2026-08-26：拿掉 send_doc() 附檔——Leo反饋「這個會推一份html給我，但都不能點」，
@@ -156,7 +156,7 @@ def main():
     # 落後一天，是刻意的已知限制，不是bug（兩邊執行環境不同，要即時對齊需要更大改動）。
     os.makedirs("state", exist_ok=True)
     json.dump(cur, open(STATE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
-    json.dump({"date": date,   # 2026-08-28 加：讓 daily_warroom 組報時能判斷資料是不是今天的
+    json.dump({"date": date,   # 2026-08-27 加：讓 daily_warroom 組報時能判斷資料是不是今天的
                "flips_hold": flips_hold, "flips_watch": flips_watch,
                "ai_alerts": [{"chain": c, "market": m, "sig": s, "code": code, "name": name,
                               "reason": reason}

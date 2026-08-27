@@ -72,7 +72,7 @@ def main():
 
     double = [r for r in clean if r[4]]   # 雙確認只取「體質過關」的
 
-    # 2026-08-28 Leo：「台股可以給中文名稱嗎」——重用 industry_rotation 的
+    # 2026-08-27 Leo：「台股可以給中文名稱嗎」——重用 industry_rotation 的
     # 證交所+櫃買官方開放資料（約2000檔中文簡稱），查不到就只顯示代號不硬湊。
     try:
         from industry_rotation import _tw_chinese_names
@@ -114,7 +114,7 @@ def main():
     lines.append(f'🏛️ <a href="{PAGES_URL}buffett.html">完整巴菲特清單</a>（{len(tickers)} 檔含龍頭排名）｜📊 <a href="{PAGES_URL}">產業鏈看板</a>')
     msg = "\n".join(lines)
     send(msg)
-    # 2026-08-28 Discord 雙發（隆中對 #每日戰情週六版，龐統獻策）
+    # 2026-08-27 Discord 雙發（隆中對 #每日戰情週六版，龐統獻策）
     try:
         from notify_discord import send_discord, tg_html_to_md
         send_discord("daily", tg_html_to_md(msg), persona="龐統")

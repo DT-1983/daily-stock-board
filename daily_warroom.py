@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-"""每日戰情組報器（Phase 2，2026-08-28）——把當天各流的產出合成一則五段式日報，
-發到 Discord 隆中對 #每日戰情。設計對談定案（Leo 2026-08-28）：
+"""每日戰情組報器（Phase 2，2026-08-27）——把當天各流的產出合成一則五段式日報，
+發到 Discord 隆中對 #每日戰情。設計對談定案（Leo 2026-08-27）：
 
     分工：Telegram 維持逐則即時推播（07:00/08:19/08:45 各自發）；
          Discord 收「一則合成日報」＝好讀版。所以本組報器只發 Discord 不發 TG，
@@ -36,7 +36,7 @@ _NAMES = None
 
 
 def tkname(tk):
-    """代號＋台股中文名（2026-08-28 Leo：「台股可以加中文嗎」）。
+    """代號＋台股中文名（2026-08-27 Leo：「台股可以加中文嗎」）。
     美股維持代號；台股查證交所/櫃買官方簡稱（industry_rotation 那套，含快取自癒）。"""
     global _NAMES
     if _NAMES is None:
@@ -140,7 +140,7 @@ def sec1_market(notes):
 
 
 def sec2_signals(date, scope="public"):
-    """② 今日訊號異動——有變的才列。2026-08-28 拆 public/private：
+    """② 今日訊號異動——有變的才列。2026-08-27 拆 public/private：
     public=守備清單訊號（不透露持股）；private=持股翻面+翻貴。"""
     lines = ["**② 今日訊號異動**" if scope == "public" else "**② 持股訊號**"]
     items = []
@@ -171,7 +171,7 @@ def _urg(v):
 
 
 def _vblock(v, entry=False):
-    """單檔判斷區塊。結尾帶空行（2026-08-28 Leo：「進場機會可以分段嗎」——
+    """單檔判斷區塊。結尾帶空行（2026-08-27 Leo：「進場機會可以分段嗎」——
     原本各檔擠在一起沒有間隔）。"""
     ta, va = v["trend_angle"], v["value_angle"]
     head = f"**【{tkname(v['ticker'])}】**" + ("　‼️ 兩角度同喊出場" if (_urg(v) == 0 and not entry) else "")
@@ -202,7 +202,7 @@ def sec3_chief(date, scope="public"):
     if not new:
         lines.append("今日無進場機會觸發。")
         return lines
-    # 2026-08-28 Leo：「進場機會可以分段嗎」——美股/台股分小節，各檔之間留空行
+    # 2026-08-27 Leo：「進場機會可以分段嗎」——美股/台股分小節，各檔之間留空行
     us = [v for v in new if not _is_tw(v["ticker"])]
     tw = [v for v in new if _is_tw(v["ticker"])]
     if us:
