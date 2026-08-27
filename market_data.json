@@ -1,130 +1,130 @@
 {
- "updated": "2026-08-27 16:44",
+ "updated": "2026-08-28 02:14",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "08/26",
-   "close": 7675.7,
-   "chg_pct": -0.02
+   "date": "08/27",
+   "close": 7720.74,
+   "chg_pct": 0.59
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "08/26",
-   "close": 26130.2,
-   "chg_pct": -0.08
+   "date": "08/27",
+   "close": 26453.89,
+   "chg_pct": 1.24
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "08/26",
-   "close": 53463.88,
-   "chg_pct": -0.21
+   "date": "08/27",
+   "close": 53548.76,
+   "chg_pct": 0.16
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "08/26",
-   "close": 11611.24,
-   "chg_pct": 0.2
+   "date": "08/27",
+   "close": 11782.44,
+   "chg_pct": 1.47
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "08/27",
-   "close": 45975.22,
-   "chg_pct": 0.31
+   "date": "08/26",
+   "close": 45832.62,
+   "chg_pct": 1.47
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "08/27",
-   "close": 31.71,
-   "chg_pct": -0.43
+   "close": 31.68,
+   "chg_pct": -0.51
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "08/26",
-   "close": 4.66,
+   "date": "08/27",
+   "close": 4.68,
    "fmt": "yield",
-   "chg_bp": 2.5
+   "chg_bp": 1.2
   }
  ],
  "news": [
   {
-   "title": "SUMCO減持台勝科至38%仍列重要生產銷售基地、後續持股動向受關注",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6589085",
-   "ts": "08/27 16:30"
-  },
-  {
-   "title": "南俊國際通用伺服器缺料緩解 Q2將是今年最低點 VR、ASIC滑軌Q3放量",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6422728",
-   "ts": "08/27 16:24"
-  },
-  {
-   "title": "〈景氣燈號〉連亮8紅！41分持平、製造業回溫 經濟動能穩健但要留意4大不確定",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6589079",
-   "ts": "08/27 16:21"
-  },
-  {
-   "title": "法國拋註銷18%公債訴求！全球恐走向「憑空抹債」加劇通膨",
+   "title": "盤中速報 - 防特網(FTNT-US)大漲8.67%，報171.15美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6588929",
-   "ts": "08/27 16:20"
+   "url": "https://news.cnyes.com/news/id/6589811",
+   "ts": "08/28 02:11"
   },
   {
-   "title": "金管會普渡 彭金隆許下三安之願 銀行局回應公民併",
+   "title": "盤中速報 - Zscaler公司(ZS-US)大漲10.18%，報187.5美元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6589810",
+   "ts": "08/28 02:11"
+  },
+  {
+   "title": "盤中速報 - 新思科技(SNPS-US)大漲10.82%，報454.57美元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6589809",
+   "ts": "08/28 02:11"
+  },
+  {
+   "title": "盤中速報 - 安可(AMKR-US)大漲5.89%，報51.22美元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6589808",
+   "ts": "08/28 02:11"
+  },
+  {
+   "title": "盤中速報 - 賽富時(CRM-US)大漲22.05%，報250.87美元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6589807",
+   "ts": "08/28 02:11"
+  },
+  {
+   "title": "新創大利多！產創條例三讀：股票緩課稅上限衝千萬、天使輪與創投認列年限放寬至8年",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6589058",
-   "ts": "08/27 16:19"
+   "url": "https://news.cnyes.com/news/id/6589492",
+   "ts": "08/28 00:16"
   },
   {
-   "title": "AI需求推升銅箔基板景氣建滔積層板迎量價齊升、目標價升至42.43港元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6589073",
-   "ts": "08/27 16:00"
-  },
-  {
-   "title": "輝達拋驚人長期財測！科技巨頭營收排名大洗牌 將超車蘋果Alphabet躍居第二",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6589015",
-   "ts": "08/27 15:54"
-  },
-  {
-   "title": "溢價買下AI開發者天堂！輝達傳以129億美元收購Hugging Face 看好開源AI成下一成長引擎",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6588302",
-   "ts": "08/27 15:50"
-  },
-  {
-   "title": "AIDC吃電怎「選址」？龔明鑫釋解方：北部電網受限 中南部成設置首選",
+   "title": "鉅亨速報 - Factset 最新調查：聯茂(6213-TW)目標價調升至600元，幅度約5.26%",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6589011",
-   "ts": "08/27 15:43"
+   "url": "https://news.cnyes.com/news/id/6589524",
+   "ts": "08/27 22:10"
   },
   {
-   "title": "AI浪潮遇現實難題 美半數擬建資料中心被迫延期或取消",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6588968",
-   "ts": "08/27 15:40"
+   "title": "〈第一金法說〉聯貸案「吸金」！搶攻供應鏈跨境商機 調高外幣放款年增目標至20%",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6589398",
+   "ts": "08/27 20:27"
+  },
+  {
+   "title": "〈第一金法說〉估央行續凍息、房市量縮價平靠自住剛需撐盤 今年房貸業務將成長5%",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6589353",
+   "ts": "08/27 20:25"
+  },
+  {
+   "title": "BenQ衝刺智慧照明應用銷售增近3成 推三款新品",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6589384",
+   "ts": "08/27 20:20"
   }
  ],
  "inst": {
   "date": "08/27",
-  "total_yi": 643.1,
+  "total_yi": 626.8,
   "foreign_yi": 490.9,
-  "trust_yi": 1.8
+  "trust_yi": -14.5
  }
 }
