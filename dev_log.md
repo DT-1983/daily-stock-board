@@ -1930,3 +1930,16 @@ AI+WebSearch呼叫，researcher_macro同款模式）+卡片自動重產。
 盡力而為、高負載時段會丟棄，整點/一刻鐘熱門分鐘容易中獎。連鎖：今天晨報沒發、
 首頁新聞停昨天、08:45本機sync拉到舊資料。已手動補跑（workflow_dispatch）+
 cron挪到冷門分鐘 00:19。
+
+## 2026-08-27（續八）· 台股趨勢資料放開 + 補卡片 + 巴菲特提前重跑 + Discord提前
+
+**台股趨勢「資料不足」真相**：Leo抓到矛盾「台股怎麼會跑不到資料，那財報卡怎麼跑
+出來的」——查證後確認是**人為限制不是資料限制**：supertrend()/mansfield_rs_series()
+對任何yfinance代號都能算（財報卡技術面就是同一套在跑台股），只是
+supertrend_invalidation寫死^GSPC基準+investment_chief有一行`if not is_tw`跳過。
+修法：台股RS基準自動切^TWII（跟錯大盤RS就沒意義）、純數字代號補.TW後綴、
+investment_chief閘門拿掉。實測2330.TW/5287.TWO/2412都算出真實資料。
+
+**其他**：miss 5檔（AGO/PAA/CPA/AES/HSBC）卡片背景補產中；weekly-screen手動觸發
+（buffett_watch提前換常利新線，不等週六）；**Leo決定Discord提前到P1/P2/P3之前**
+（「現在資料量有點多telegram很難讀」）。
