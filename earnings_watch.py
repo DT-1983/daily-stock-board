@@ -25,7 +25,6 @@ from datetime import datetime, timezone, timedelta
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
 import logging
-import requests
 import yfinance as yf
 
 # ETF 沒有財報，yfinance 每檔都會 log 一行 "No earnings dates found"，
@@ -260,42 +259,31 @@ def make_infographic(ticker: str) -> str | None:
         return None
 
 
-# ────────────────────────────── Telegram ──────────────────────────────
+# ────────────────────────────── Discord ──────────────────────────────
 
 def push(msg: str, discord_msg: str = None) -> bool:
-    """推 Telegram（＋Discord #財報）。
+    """發 Discord #財報。
 
-    2026-08-28：加 discord_msg 參數。原本 Telegram 跟 Discord 發同一段短快訊，
-    而 card_digest() 產出的財報卡片摘要**組好之後沒有任何地方發送**——功能做了
-    但掉在地上（8/27 那次的原意是「Discord 發摘要、Telegram 發短訊」，只做了一半）。
-    現在 discord_msg 有值就發它，沒有才退回發 msg。"""
-    tok = os.environ.get("TELEGRAM_BOT_TOKEN", "")
-    chat = os.environ.get("TELEGRAM_CHAT_ID", "")
+    2026-08-28 Leo：TG 精簡，財報這條只留 Discord——原本 TG+Discord 雙發同一段短
+    快訊，內容重複；而且 #財報 現在有卡片摘要（card_digest），比 TG 短訊資訊量更完整，
+    沒有理由兩邊都留。TELEGRAM_BOT_TOKEN 相關程式碼整段拿掉（不是保留但不呼叫——
+    半死不活的分支比直接刪掉更容易誤導後人）。
+
+    discord_msg 有值（財報卡片摘要）就發它，沒有才退回發 msg（原本給 TG 的短快訊格式，
+    轉成 markdown）。#財報 之後可能開放家人看：把 ⭐(你的持股)/👦(小孩持股) 標記拿掉，
+    不然從星號就能反推 Leo 的持倉。"""
+    import re as _re
+    from notify_discord import send_discord, tg_html_to_md
     ok = False
-    if not tok or not chat:
-        print("  ⚠️ 無 TELEGRAM_BOT_TOKEN / CHAT_ID，跳過推播")
-    else:
-        try:
-            r = requests.post(f"https://api.telegram.org/bot{tok}/sendMessage",
-                              data={"chat_id": chat, "text": msg, "parse_mode": "HTML",
-                                    "disable_web_page_preview": "true"}, timeout=20)
-            ok = r.ok
-        except Exception as e:
-            print(f"  ⚠️ 推播失敗：{e}")
-    # 2026-08-27 Discord 雙發（隆中對 #財報，龐統）——財報預告+快訊都走這個函式，一點接全通。
-    # #財報 之後可能開放家人看：把 ⭐(你的持股)/👦(小孩持股) 標記與註腳拿掉，
-    # 不然從星號就能反推 Leo 的持倉（Telegram 那份保留標記不動）。
     try:
-        import re as _re
-        from notify_discord import send_discord, tg_html_to_md
         if discord_msg:
-            send_discord("earnings", discord_msg, persona="龐統")
+            ok = send_discord("earnings", discord_msg, persona="龐統")
         else:
             msg_d = msg.replace("⭐", "").replace("👦", "")
             msg_d = _re.sub(r"<i>.*?持股才會自動產懶人包</i>", "", msg_d)
-            send_discord("earnings", tg_html_to_md(msg_d), persona="龐統")
+            ok = send_discord("earnings", tg_html_to_md(msg_d), persona="龐統")
     except Exception as e:
-        print(f"  discord 雙發失敗（不影響 Telegram）：{e}")
+        print(f"  discord 發送失敗：{e}")
     return ok
 
 
@@ -498,7 +486,7 @@ def daily_followup(args):
         if len(blocks) > len(discord_digests):
             d_msg += NL2 + f"-# 另有 {len(blocks)-len(discord_digests)} 檔已公布但沒有懶人包（非持股或超過本次產出上限）"
     if push(msg, discord_msg=d_msg):
-        print("✅ 已推 Telegram")
+        print("✅ 已發 Discord")
     print(f"　Discord #財報：{'卡片摘要 %d 檔' % len(discord_digests) if d_msg else '短快訊（無懶人包可摘要）'}")
     save_state(st)
 
@@ -604,7 +592,7 @@ def main():
         print("\n(dry-run：沒有推播，也沒有寫入 state)")
         return
     if push(msg):
-        print("✅ 已推 Telegram")
+        print("✅ 已發 Discord")
     st["last_quarter_run"] = f"{datetime.now(TW):%Y-%m}"
     save_state(st)
 

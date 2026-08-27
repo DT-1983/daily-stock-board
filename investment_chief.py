@@ -30,20 +30,11 @@ import time
 import subprocess
 from pathlib import Path
 
-import requests
-from dotenv import dotenv_values
-
 if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
     sys.stdout.reconfigure(encoding="utf-8")
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from llm_board import _claude_bin
-
-# 跟 valuation_alert.py 同模式：本機排程（researcher_stock_sync.cmd）不會預先
-# export 環境變數，直接讀本機 .env（GitHub Actions 那邊吃 Actions Secrets，不同環境）。
-_env = {**dotenv_values(Path(__file__).parent / ".env"), **os.environ}
-TG_TOKEN = _env.get("TELEGRAM_BOT_TOKEN", "")
-TG_CHAT = _env.get("TELEGRAM_CHAT_ID", "")
 
 NOTES_PATH = "state/research_notes.jsonl"
 VERDICTS_PATH = "state/advisor_verdicts.jsonl"
@@ -521,90 +512,7 @@ def _overview_lines(notes):
     return lines
 
 
-def _send_telegram(verdicts, notes=None):
-    """2026-08-26 加推播；2026-08-27 首日真實推播後照 Leo 反饋全面改版：
-    ① 開頭加總經/產業總覽（原本只有逐檔、沒有整體狀況）
-    ② 先中短期趨勢、再長期價值（Leo 指定順序）
-    ③ 每檔統一結構：兩行狀態（judgment icon + AI 的 brief 一句話完整結論），
-       不再硬截長篇 reasoning 造成斷句與各檔格式不一致
-    ④ 排序：兩角度都喊出場的排最前（最需要看的先看到）
-    完整 reasoning 仍存 state/advisor_verdicts.jsonl 供深讀。"""
-    if not (TG_TOKEN and TG_CHAT):
-        print("缺 TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID，跳過推播")
-        return
-    date = time.strftime("%Y-%m-%d")
-
-    def _urgency(v):
-        both_exit = (v["trend_angle"]["judgment"] == "考慮出場" and
-                     v["value_angle"]["judgment"] == "考慮出場")
-        one_exit = (v["trend_angle"]["judgment"] == "考慮出場" or
-                    v["value_angle"]["judgment"] == "考慮出場")
-        return 0 if both_exit else (1 if one_exit else 2)
-
-    held_vs = sorted([v for v in verdicts if v.get("held", True)], key=_urgency)
-    new_vs = sorted([v for v in verdicts if not v.get("held", True)],
-                    key=lambda v: 0 if v["trend_angle"]["judgment"] == "續抱/可買" else 1)
-
-    lines = [f"📊 <b>投資長判斷 {date}</b>"]
-    if notes:
-        lines += _overview_lines(notes)
-    lines.append("<i>兩角度各自獨立不合併；🔴出場 🟡觀望 🟢續抱；最終決策是你的</i>")
-    lines.append("")
-
-    def _tkname(tk):
-        # 台股補中文名（2026-08-27）；美股維持代號。
-        # 有中文名時顯示「1580 新麥」去掉 .TW/.TWO 後綴——.TW 是真實頂級網域，
-        # Telegram 會把 4763.TW 誤判成網址變成誤導連結（見 buy_digest.disp 說明）。
-        try:
-            from industry_rotation import _tw_chinese_names
-            code = str(tk).split(".")[0]
-            nm = _tw_chinese_names().get(code)
-            return f"{code} {nm}" if nm else str(tk)
-        except Exception:
-            return str(tk)
-
-    def _block(v, entry=False):
-        ta, va = v["trend_angle"], v["value_angle"]
-        both_exit = _urgency(v) == 0 and not entry
-        head = f"<b>【{_tkname(v['ticker'])}】</b>" + ("　‼️ 兩角度同喊出場" if both_exit else "")
-        if entry and v.get("triggers"):
-            head += f"　<i>{v['triggers'][0]}</i>"
-        out = [head,
-               f"　趨勢 {_J_ICON.get(ta['judgment'],'')}｜{ta.get('brief') or ta['judgment']}",
-               f"　價值 {_J_ICON.get(va['judgment'],'')}｜{va.get('brief') or va['judgment']}", ""]
-        return out
-
-    if held_vs:
-        lines.append("💼 <b>持股</b>")
-        for v in held_vs:
-            lines += _block(v)
-    if new_vs:
-        lines.append("🆕 <b>進場機會（非持股）</b>——<i>🟢可考慮進場 🟡先不進 🔴避開</i>")
-        for v in new_vs:
-            lines += _block(v, entry=True)
-
-    # Telegram 單則上限 4096 字元——超過就按檔切多則，不讓訊息被硬砍
-    chunks, cur = [], []
-    for ln in lines:
-        if sum(len(x) + 1 for x in cur) + len(ln) > 3800:
-            chunks.append("\n".join(cur))
-            cur = [f"📊 <b>投資長判斷 {date}</b>（續）", ""]
-        cur.append(ln)
-    chunks.append("\n".join(cur).strip())
-
-    ok = True
-    for text in chunks:
-        r = requests.post(f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage",
-                          json={"chat_id": TG_CHAT, "text": text, "parse_mode": "HTML",
-                                "disable_web_page_preview": True}, timeout=30)
-        if r.status_code != 200:
-            ok = False
-            print(f"telegram推播失敗: {r.status_code} {r.text[:200]}")
-    if ok:
-        print(f"已推播投資長判斷（{len(chunks)} 則）")
-    # Discord 不在這裡發（Phase 2）：判斷內容經 state/advisor_verdicts.jsonl 進
-    # daily_warroom 合成日報③段（researcher_stock_sync.cmd 在本腳本之後跑組報器）。
-
+# 2026-08-28 Leo：TG 精簡，投資長判斷這則已拿掉——內容跟 Discord 日報③段完全重複（同一份 state/advisor_verdicts.jsonl，daily_warroom 讀出來合成日報）。原本的 _send_telegram()（含格式化+分段+推播邏輯）整段刪除，不留半死不活的函式。
 
 def run():
     targets, notes = today_tickers()
@@ -638,7 +546,6 @@ def run():
     total = sum(v.get("cost_usd") or 0 for v in verdicts)
     print(f"已存 {len(verdicts)} 筆投資長判斷（等值標價合計約 ${total:.2f}，Max plan走訂閱額度）")
     _register_conditions(verdicts)
-    _send_telegram(verdicts, notes)
     return verdicts
 
 
