@@ -60,7 +60,7 @@ SCHEMA = {
             "properties": {
                 "status": {"type": "string"},
                 "judgment": {"type": "string", "enum": ["續抱/可買", "觀望", "考慮出場", "資料不足"]},
-                "brief": {"type": "string", "maxLength": 60},
+                "brief": {"type": "string", "maxLength": 38},
                 "reasoning": {"type": "string"},
                 "invalidation_price": {"type": "string"},
                 "support_resistance": {"type": "string"},
@@ -90,7 +90,7 @@ SCHEMA = {
             "properties": {
                 "status": {"type": "string"},
                 "judgment": {"type": "string", "enum": ["續抱/可買", "觀望", "考慮出場", "資料不足"]},
-                "brief": {"type": "string", "maxLength": 60},
+                "brief": {"type": "string", "maxLength": 38},
                 "reasoning": {"type": "string"},
             },
             "required": ["status", "judgment", "brief", "reasoning"],
@@ -136,8 +136,9 @@ PROMPT = """你是投資長，讀研究員整理好的材料，給這檔股票�
 2. value_angle：根據估值材料判斷續抱/觀望/考慮出場，說明理由。不看趨勢材料。
 
 兩個角度各要填：
-- brief：**一句完整的話（≤60字）講清楚判斷跟最關鍵的一個理由**，會直接顯示在
-  Telegram 推播裡——必須是完整句子，不能只寫半句，不用「事實/推論」標籤。
+- brief：**一句完整的話（≤35字）講清楚判斷跟最關鍵的一個理由**，會顯示在手機推播上——
+  必須是完整句子、不能只寫半句、不用「事實/推論」標籤。**寧可只講最關鍵那一個理由，
+  也不要塞兩三個理由把句子拉長**（手機一行只放得下約20字，太長會折成好幾行很難讀）。
 - reasoning：完整詳細版（事實/推論分開標註），存檔供深讀。
 
 另外填 conditions（頂層欄位，1-3條）：**這個判斷的可證偽失效條件（死亡條件）**——

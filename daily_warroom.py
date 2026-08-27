@@ -171,16 +171,23 @@ def _urg(v):
 
 
 def _vblock(v, entry=False):
-    """單檔判斷區塊。結尾帶空行（2026-08-27 Leo：「進場機會可以分段嗎」——
-    原本各檔擠在一起沒有間隔）。"""
+    """單檔判斷區塊。2026-08-27 手機版面重排（Leo：「手機上排版不是很好閱讀」）：
+    ① 燈號 emoji 移到**行首**——手機掃視時一眼看到紅綠，不用讀到句中才知道
+    ② 拿掉全形空白縮排——手機上縮排效果微弱，反而讓折行更亂
+    ③ 觸發原因另起一行並縮短（原本接在標題後面，把標題那行擠爆）
+    搭配 brief 從 60 字縮到 35 字（investment_chief schema），每檔從 6-8 行壓到 3-4 行。"""
     ta, va = v["trend_angle"], v["value_angle"]
-    head = f"**【{tkname(v['ticker'])}】**" + ("　‼️ 兩角度同喊出場" if (_urg(v) == 0 and not entry) else "")
+    head = f"**{tkname(v['ticker'])}**"
+    if _urg(v) == 0 and not entry:
+        head += "　‼️ 兩角度同喊出場"
+    out = [head]
     if entry and v.get("triggers"):
-        head += f"　*{v['triggers'][0]}*"
-    return [head,
-            f"　趨勢 {J_ICON.get(ta['judgment'],'')}｜{ta.get('brief') or ta['judgment']}",
-            f"　價值 {J_ICON.get(va['judgment'],'')}｜{va.get('brief') or va['judgment']}",
+        t = v["triggers"][0].replace("巴菲特到俗價", "到俗價").replace("產業轉強", "產業轉強")
+        out.append(f"-# {t}")          # Discord 小字體，不搶主要內容的視線
+    out += [f"{J_ICON.get(ta['judgment'],'')} 趨勢｜{ta.get('brief') or ta['judgment']}",
+            f"{J_ICON.get(va['judgment'],'')} 價值｜{va.get('brief') or va['judgment']}",
             ""]
+    return out
 
 
 def sec3_chief(date, scope="public"):
@@ -196,12 +203,24 @@ def sec3_chief(date, scope="public"):
             lines += _vblock(v)
         return lines
 
-    lines = ["**③ 進場機會**（非持股評估：🟢可考慮進場 🟡先不進 🔴避開）"]
+    lines = ["**③ 進場機會**（非持股評估：🟢可考慮進場 🔴便宜但別碰）"]
     new = sorted([v for v in vs if not v.get("held", True)],
                  key=lambda v: 0 if v["trend_angle"]["judgment"] == "續抱/可買" else 1)
+    # 2026-08-27 Leo：「都是黃燈或白燈就不要呈現，除非是持股」——非持股兩個角度
+    # 都是🟡觀望/⚪資料不足＝沒有任何可行動資訊，只是佔版面。留🟢（可考慮進場）
+    # 與🔴（便宜但別碰＝價值陷阱警示，那是有用的反向資訊）。持股不套這個篩選。
+    def _actionable(v):
+        js = {v["trend_angle"]["judgment"], v["value_angle"]["judgment"]}
+        return bool(js & {"續抱/可買", "考慮出場"})
+    total_new = len(new)
+    new = [v for v in new if _actionable(v)]
+    hidden = total_new - len(new)
     if not new:
-        lines.append("今日無進場機會觸發。")
+        lines.append(f"今日無進場機會觸發。" if not hidden
+                     else f"今日 {total_new} 檔觸發但全數為觀望/資料不足，不列出。")
         return lines
+    if hidden:
+        lines[0] += f"　*（另有 {hidden} 檔觀望/資料不足未列）*"
     # 2026-08-27 Leo：「進場機會可以分段嗎」——美股/台股分小節，各檔之間留空行
     us = [v for v in new if not _is_tw(v["ticker"])]
     tw = [v for v in new if _is_tw(v["ticker"])]

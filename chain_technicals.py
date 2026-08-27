@@ -39,6 +39,39 @@ QUAD_LABEL = {"leading": "領先", "improving": "改善",
               "lagging": "落後", "weakening": "弱化"}
 
 
+_HIST_CACHE = {}
+
+
+def prefetch(scr):
+    """一次批次抓完所有鏈的成分股（2026-08-27 加）：原本逐檔 Ticker().history()
+    要 120 次連線＋sleep，改用 yf.download 批次拉，這才是 12 分鐘的真正省時點
+    （RRG 沿用只省下 2 次大盤抓取，見 compute_chain docstring）。
+    台股後綴用 .TW 批次抓，抓不到的（上櫃）再逐檔試 .TWO fallback。"""
+    import yfinance as yf
+    for market in ("us", "tw"):
+        codes = sorted({r["code"] for rows in (scr.get(market) or {}).values() for r in rows})
+        if not codes:
+            continue
+        syms = [c if (market != "tw" or "." in str(c)) else f"{c}.TW" for c in codes]
+        try:
+            data = yf.download(syms, period="1y", progress=False, threads=False,
+                               auto_adjust=True, group_by="ticker")
+        except Exception as e:
+            print(f"  [{market}] 批次抓取失敗，改逐檔：{e}")
+            continue
+        got = 0
+        for code, sym in zip(codes, syms):
+            try:
+                df = data[sym] if len(syms) > 1 else data
+                df = df.dropna(subset=["Close"])
+                if len(df) >= 120:
+                    _HIST_CACHE[(market, code)] = df
+                    got += 1
+            except Exception:
+                pass
+        print(f"  [{market}] 批次取得 {got}/{len(codes)} 檔歷史價")
+
+
 def _fetch_hist(code, market):
     """台股上市.TW／上櫃.TWO 兩種後綴都試（yfinance 常見坑，見 memory
     hongruitai_rules_coverage：曾有257檔上櫃股全404被當成「基本面不合格」）。"""
@@ -57,21 +90,24 @@ def _fetch_hist(code, market):
     return None
 
 
-def compute_chain(members, market, bench_closes):
+def compute_chain(members, market, bench_closes, with_rrg=True, prev=None):
     """單一鏈：成員 OHLC → 籃子指數(含合成高低價) → RRG + SuperTrend + 擠壓。
+
+    2026-08-27 Leo：「每日只算 SuperTrend+擠壓、RRG 沿用週六的」——
+    with_rrg=False 時跳過 RRG 計算、直接沿用 prev（上次的結果）裡的 rrg 欄位並標
+    rrg_from（哪天算的）。誠實說明：**這樣省不了多少時間**，因為 12 分鐘幾乎都花在
+    抓 120 檔成分股歷史價，而 SuperTrend/擠壓要用同一批資料；真正的省時來自
+    批次抓取（_fetch_batch）。RRG 沿用的真正好處是「跟週六的產業輪動頁數字一致」，
+    不會出現頁面說領先、日報說改善的錯亂。
+
     回 dict 或 None（資料不足）。"""
     from industry_rotation import _basket_index, rs_ratio_momentum, quadrant
     import board_html as _L
     from technical_indicators import squeeze_momentum, squeeze_intensity
 
-    closes_list, hist_list = [], []
-    for code in members:
-        h = _fetch_hist(code, market)
-        if h is None:
-            continue
-        closes_list.append(h["Close"])
-        hist_list.append(h)
-        time.sleep(0.15)
+    hist_list = [h for h in (_HIST_CACHE.get((market, c)) or _fetch_hist(c, market)
+                             for c in members) if h is not None]
+    closes_list = [h["Close"] for h in hist_list]
     if len(closes_list) < MIN_MEMBERS:
         return None
 
@@ -95,20 +131,24 @@ def compute_chain(members, market, bench_closes):
 
     out = {"members_used": len(closes_list)}
 
-    # ① RRG：籃子 vs 大盤
-    try:
-        import pandas as pd
-        bench = pd.Series(bench_closes["close"], index=bench_closes["index"])
-        rm = rs_ratio_momentum(idx, bench, periods=[PERIOD])
-        if rm:
-            r = rm[PERIOD]["ratio"].dropna()
-            m = rm[PERIOD]["momentum"].dropna()
-            if len(r) and len(m):
-                rr, mm = float(r.iloc[-1]), float(m.iloc[-1])
-                out["rrg"] = {"ratio": round(rr, 2), "momentum": round(mm, 2),
-                              "quadrant": QUAD_LABEL.get(quadrant(rr, mm), "?")}
-    except Exception as e:
-        out["rrg_err"] = str(e)[:80]
+    # ① RRG：籃子 vs 大盤（每日模式沿用上次算的，見 docstring）
+    if not with_rrg and prev and prev.get("rrg"):
+        out["rrg"] = prev["rrg"]
+        out["rrg_from"] = prev.get("rrg_from") or prev.get("_date")
+    else:
+        try:
+            import pandas as pd
+            bench = pd.Series(bench_closes["close"], index=bench_closes["index"])
+            rm = rs_ratio_momentum(idx, bench, periods=[PERIOD])
+            if rm:
+                r = rm[PERIOD]["ratio"].dropna()
+                m = rm[PERIOD]["momentum"].dropna()
+                if len(r) and len(m):
+                    rr, mm = float(r.iloc[-1]), float(m.iloc[-1])
+                    out["rrg"] = {"ratio": round(rr, 2), "momentum": round(mm, 2),
+                                  "quadrant": QUAD_LABEL.get(quadrant(rr, mm), "?")}
+        except Exception as e:
+            out["rrg_err"] = str(e)[:80]
 
     c = [float(x) for x in idx.tolist()]
     hi = [float(x) for x in highs] if highs else c
@@ -160,14 +200,25 @@ def summary_line(d):
     return "｜".join(parts) if parts else None
 
 
-def run():
+def run(with_rrg=True):
     if not os.path.exists("screen_result.json"):
         print("找不到 screen_result.json（守備清單），跳過")
         return None
     scr = json.load(open("screen_result.json", encoding="utf-8"))
+    prev_all = {}
+    if not with_rrg:
+        try:
+            prev_all = (json.load(open(OUT_PATH, encoding="utf-8")) or {}).get("chains", {})
+        except Exception:
+            prev_all = {}
+        if not prev_all:
+            print("  沒有上次的結果可沿用 RRG，這次改算完整版")
+            with_rrg = True
 
     import yfinance as yf
-    out = {"date": time.strftime("%Y-%m-%d"), "period": PERIOD, "chains": {}}
+    prefetch(scr)
+    out = {"date": time.strftime("%Y-%m-%d"), "period": PERIOD,
+           "mode": "full" if with_rrg else "daily", "chains": {}}
     for market in ("us", "tw"):
         chains = scr.get(market) or {}
         if not chains:
@@ -180,8 +231,9 @@ def run():
             continue
         for chain, rows in chains.items():
             members = [r["code"] for r in rows]
-            d = compute_chain(members, market, bench_closes)
             key = f"{market}:{chain}"
+            d = compute_chain(members, market, bench_closes,
+                              with_rrg=with_rrg, prev=prev_all.get(key))
             if not d:
                 print(f"  {key}：資料不足，跳過")
                 continue
@@ -199,4 +251,8 @@ def run():
 
 
 if __name__ == "__main__":
-    run()
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--daily", action="store_true",
+                    help="每日模式：只算 SuperTrend+擠壓，RRG 沿用上次（週六）的值")
+    run(with_rrg=not ap.parse_args().daily)
