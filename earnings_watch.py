@@ -55,7 +55,8 @@ PAGES = "https://dt-1983.github.io/daily-stock-board"
 HOLDINGS = r"C:\Users\Mophy\AI\assets-dashboard\data\holdings.json"
 
 AHEAD_DAYS = 7      # 提前幾天預告
-AFTER_DAYS = 3      # 公布後幾天內仍算「剛公布」
+AFTER_DAYS = 7      # 公布後幾天內仍算「剛公布」（2026-08-27 從3放寬到7：窗口太窄+
+                    # 季度閘門的組合讓8月25檔裡24檔的「公布後更新」全漏掉，見 daily_followup）
 
 # ── 執行節奏：每季一次，不是每天 ──────────────────────────────────
 # 2026-08-03 用戶指示「財報不用每天跑、每季做一次就可以」。
@@ -278,6 +279,145 @@ def push(msg: str) -> bool:
 
 # ────────────────────────────── main ──────────────────────────────
 
+# ──────────────── 每日跟催：發過預告的財報，公布後補做（2026-08-27）────────────────
+# 背景：8/3 用戶指示「財報不用每天跑、每季一次就可以」→ 加了季度閘門。副作用：
+# 「剛公布」分支幾乎永遠等不到執行（本季 8/19 掃過就鎖，NVDA 8/26 公布直接漏掉；
+# 盤點 25 檔發過預告的有 24 檔公布後沒更新）。8/27 Leo：「我以為提醒完之後就會做了」
+# ——預期是公布後會自動補做。兩邊都保留：季度重掃（預告的份量感）照舊；這裡加一條
+# 每日輕量跟催——**只檢查 state.upcoming 裡「已發過預告、財報日落在近 AFTER_DAYS 天內、
+# 還沒處理過」的那幾檔**（平常 0~3 檔），不是天天重掃全清單，不違背 8/3 的本意。
+
+def _next_q_consensus(tk):
+    """下季分析師共識（免費，yfinance）。財報公布後 0q 會滾動成「下一季」。
+    抓不到回 None——美股大多有、台股常缺，呼叫端要處理。"""
+    try:
+        t = yf.Ticker(tk)
+        ee, re_ = t.earnings_estimate, t.revenue_estimate
+        eps = float(ee.loc["0q", "avg"]) if ee is not None and "0q" in ee.index else None
+        rev = float(re_.loc["0q", "avg"]) if re_ is not None and "0q" in re_.index else None
+        n = int(ee.loc["0q", "numberOfAnalysts"]) if eps is not None else 0
+        if eps is None and rev is None:
+            return None
+        return {"eps": eps, "revenue": rev, "analysts": n}
+    except Exception:
+        return None
+
+
+def _ai_flash(tk, nm, info, consensus):
+    """老墨式財報即時解讀（一次 AI+WebSearch 呼叫，跟 researcher_macro 查證模式同款）：
+    ②公司下季指引 vs 共識（指引數字要查新聞稿，yfinance沒有）③盤後股價反應解讀
+    ④一句白話+供應鏈連動。已知的結構化數字餵進去當事實，AI 只補查+解讀，
+    查不到就要老實說。失敗回 None，不擋主要推播。"""
+    import subprocess
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    try:
+        from llm_board import _claude_bin
+        exe = _claude_bin()
+        if not exe:
+            return None
+        schema = {"type": "object", "properties": {
+            "guidance_vs_consensus": {"type": "string", "maxLength": 200},
+            "market_reaction": {"type": "string", "maxLength": 150},
+            "takeaway": {"type": "string", "maxLength": 200},
+        }, "required": ["guidance_vs_consensus", "market_reaction", "takeaway"]}
+        cons_txt = ""
+        if consensus:
+            rev_s = f"{consensus['revenue']/1e9:.1f}B" if consensus.get("revenue") else "—"
+            cons_txt = f"下季分析師共識：EPS {consensus['eps']}、營收 {rev_s}（{consensus['analysts']}位分析師）"
+        prompt = f"""你是財報快訊研究員。{tk}（{nm}）在 {info['last_date']} 公布財報。
+已知事實（yfinance結構化資料，不用重查）：實際EPS {info['last_eps']}，
+意外幅度 {info['surprise']:+.1f}%。{cons_txt}
+
+任務（用WebSearch查證，多源交叉確認，查不到就老實說查不到，不要編數字）：
+1. guidance_vs_consensus：公司這次給的下季營收/EPS指引是多少？跟上面的分析師共識比
+   高還是低？有什麼含金量細節（例如排除某地區收入）？
+2. market_reaction：盤後/隔日股價怎麼反應？是慶祝行情還是賣事實？
+3. takeaway：一句白話總結，包含對台股供應鏈（若相關）的連動意義。
+每段都是完整的中文句子，重要數字附上。"""
+        r = subprocess.run(
+            [exe, "-p", "--dangerously-skip-permissions",
+             "--output-format", "json", "--json-schema", json.dumps(schema, ensure_ascii=False)],
+            input=prompt, capture_output=True, text=True,
+            encoding="utf-8", errors="replace", timeout=300)
+        if r.returncode != 0:
+            return None
+        out = json.loads(r.stdout)
+        return out.get("structured_output")
+    except Exception as e:
+        print(f"  [{tk}] AI快訊失敗（不擋主要推播）：{e}")
+        return None
+
+
+def daily_followup(args):
+    """每日輕量跟催。只看 state.upcoming 已發過預告的（tk, 財報日），
+    財報日在 [today-AFTER_DAYS, today] 且 reported 沒記過 → 確認真的公布了
+    （Reported EPS 有值）→ 產懶人包 + 老墨式四段推播。"""
+    st = load_state()
+    today = datetime.now(TW).date()
+    personal = set(_personal())
+    kids = {k for k, v in _holdings().items() if v[1] != "Leo"} - personal
+    held = personal | kids
+
+    cands = []
+    for key in st.get("upcoming", {}):
+        tk, ds = key.rsplit("@", 1)
+        try:
+            ed = datetime.strptime(ds, "%Y-%m-%d").date()
+        except ValueError:
+            continue
+        if 0 <= (today - ed).days <= AFTER_DAYS and st["reported"].get(key) != "sent":
+            cands.append((tk, ed, key))
+    if not cands:
+        print("每日跟催：沒有「已預告、近日公布、還沒處理」的財報")
+        return
+
+    print(f"每日跟催：{len(cands)} 檔候選 {[c[0] for c in cands]}")
+    blocks, made = [], 0
+    for tk, ed, key in cands:
+        info = earnings_info(tk)
+        time.sleep(0.35)
+        if not info or not info.get("last_date") or info["last_date"] < ed:
+            print(f"  {tk} 財報數字還沒出現在 yfinance（可能剛公布資料未更新），明天再試")
+            continue                        # 不寫 state，明天重試
+        nm = _holdings().get(tk, (tk,))[0] if tk in _holdings() else US_WATCH.get(tk, tk)
+        mk = _mark(tk, personal, kids)
+        eps = f"{info['last_eps']:.2f}" if info["last_eps"] is not None else "—"
+        sp = f"{info['surprise']:+.1f}%" if info["surprise"] is not None else "—"
+        ic = "🟢" if (info["surprise"] or 0) >= 0 else "🔴"
+        b = [f"{mk}<b>{tk}</b> {nm}　{info['last_date']} 已公布",
+             f"　① EPS 實際 {eps}｜意外 {ic}{sp}"]
+        consensus = _next_q_consensus(tk)
+        if consensus:
+            rev_t = f"營收 {consensus['revenue']/1e9:.1f}B" if consensus.get("revenue") else ""
+            eps_t = f"EPS {consensus['eps']:.2f}" if consensus.get("eps") is not None else ""
+            b.append(f"　② 下季共識：{'、'.join(x for x in (eps_t, rev_t) if x)}（{consensus['analysts']}位分析師）")
+        if tk in held and made < args.max_infographics and not args.dry_run:
+            print(f"  產懶人包 {tk} …")
+            p = make_infographic(tk)
+            if p:
+                made += 1
+                b.append(f'　📄 <a href="{PAGES}/{os.path.basename(p)}">財報懶人包（已更新）</a>')
+            flash = _ai_flash(tk, nm, info, consensus)
+            if flash:
+                b.append(f"　③ 指引vs共識：{flash['guidance_vs_consensus']}")
+                b.append(f"　④ 盤後反應：{flash['market_reaction']}")
+                b.append(f"　💡 {flash['takeaway']}")
+        blocks.append("\n".join(b))
+        if not args.dry_run:
+            st["reported"][key] = "sent"
+
+    if not blocks:
+        return
+    msg = "📊 <b>財報快訊（公布後跟催）</b>\n\n" + "\n\n".join(blocks)
+    print("\n" + msg.replace("<b>", "").replace("</b>", ""))
+    if args.dry_run:
+        print("(dry-run：沒推播、沒寫state)")
+        return
+    if push(msg):
+        print("✅ 已推 Telegram")
+    save_state(st)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--universe", default="holdings",
@@ -292,7 +432,8 @@ def main():
     st_pre = load_state()
     ok, why = due_today(st_pre)
     if not ok and not args.force:
-        print(f"⏭️ 跳過：{why}　（要立刻跑加 --force）")
+        print(f"⏭️ 季度掃描跳過：{why}　→ 改跑每日跟催")
+        daily_followup(args)
         return
 
     uni = build_universe(args.universe)
