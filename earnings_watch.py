@@ -275,10 +275,15 @@ def push(msg: str) -> bool:
             ok = r.ok
         except Exception as e:
             print(f"  ⚠️ 推播失敗：{e}")
-    # 2026-08-28 Discord 雙發（隆中對 #財報，龐統）——財報預告+快訊都走這個函式，一點接全通
+    # 2026-08-28 Discord 雙發（隆中對 #財報，龐統）——財報預告+快訊都走這個函式，一點接全通。
+    # #財報 之後可能開放家人看：把 ⭐(你的持股)/👦(小孩持股) 標記與註腳拿掉，
+    # 不然從星號就能反推 Leo 的持倉（Telegram 那份保留標記不動）。
     try:
+        import re as _re
         from notify_discord import send_discord, tg_html_to_md
-        send_discord("earnings", tg_html_to_md(msg), persona="龐統")
+        msg_d = msg.replace("⭐", "").replace("👦", "")
+        msg_d = _re.sub(r"<i>.*?持股才會自動產懶人包</i>", "", msg_d)
+        send_discord("earnings", tg_html_to_md(msg_d), persona="龐統")
     except Exception as e:
         print(f"  discord 雙發失敗（不影響 Telegram）：{e}")
     return ok

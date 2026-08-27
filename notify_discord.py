@@ -29,6 +29,9 @@ _env = {**dotenv_values(Path(__file__).parent / ".env"), **os.environ}
 CHANNELS = {
     "daily": _env.get("DISCORD_WH_DAILY", ""),
     "earnings": _env.get("DISCORD_WH_EARNINGS", ""),
+    # 2026-08-28：私人頻道（只有 Leo 看得到）——持股相關內容專用。
+    # 背景：#每日戰情/#財報 之後可能開放家人看，持股明細不該出現在公開頻道。
+    "private": _env.get("DISCORD_WH_PRIVATE", ""),
 }
 
 # 三國軍師團（2026-08-28 Leo 定案）：伺服器=隆中對

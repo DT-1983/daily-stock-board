@@ -471,10 +471,19 @@ def _send_telegram(verdicts, notes=None):
     lines.append("<i>兩角度各自獨立不合併；🔴出場 🟡觀望 🟢續抱；最終決策是你的</i>")
     lines.append("")
 
+    def _tkname(tk):
+        # 台股補中文名（2026-08-28）；美股維持代號
+        try:
+            from industry_rotation import _tw_chinese_names
+            nm = _tw_chinese_names().get(str(tk).split(".")[0])
+            return f"{tk} {nm}" if nm else str(tk)
+        except Exception:
+            return str(tk)
+
     def _block(v, entry=False):
         ta, va = v["trend_angle"], v["value_angle"]
         both_exit = _urgency(v) == 0 and not entry
-        head = f"<b>【{v['ticker']}】</b>" + ("　‼️ 兩角度同喊出場" if both_exit else "")
+        head = f"<b>【{_tkname(v['ticker'])}】</b>" + ("　‼️ 兩角度同喊出場" if both_exit else "")
         if entry and v.get("triggers"):
             head += f"　<i>{v['triggers'][0]}</i>"
         out = [head,
