@@ -2101,3 +2101,22 @@ Leo：「限流的話有其它來源嗎？不然跑出來是錯的比沒跑出�
 限流寬鬆）+台股 FinMind（已在用）都是現成候選——但 EDGAR 只有 GAAP 沒有
 Normalized（剔除一次性損益要自己調整，工程大），列為後續工程不是今天能上。
 今天的組合：重試一輪+完整性防線，已涵蓋「不會產出殘缺清單」這個底線。
+
+## 2026-08-27（續二十）· 巴菲特掃描診斷翻案——空殼dict才是真兇
+
+**修正我自己的錯誤診斷**（續十八寫的「SKIP=fetch失敗」機制錯了）：log裡的SKIP
+其實是 evaluate() 的訊號名稱（品質關沒過），跟抓取失敗無關。真兇更隱蔽：
+`fetch_fundamentals` 被限流時**不回None、回空殼dict**（price/roe全None）→空殼進
+evaluate→品質關全掛→signal=SKIP→股票靜默消失。所以：
+- 第一版retry（判斷 `if data:`）**永遠不會觸發**——run#3用了帶retry的15a33fe
+  卻完全沒跑retry，追checkout SHA/時間戳/本機模擬才發現這層
+- 完整性防線第一版**也看不到問題**——空殼算「評估成功」，成功率永遠~100%
+
+**真修法**：stage2 加 `_hollow()`（連price都沒有=空殼，正常股票再爛都有價格），
+空殼走FETCH_FAIL+重試路徑（跟品質淘汰的SKIP在log裡區分開）；重試同判準。
+完整性防線現在數的是非空殼數，終於有效。本機模擬驗證：FAKEAAA→FETCH_FAIL→
+重試→仍失敗→排除，全鏈正確。
+
+**教訓（verification_self_check_limits家族）**：修完第一版時只驗了「程式碼有進
+commit、checkout有拿到」，沒驗「行為真的改變」——run#3的log零retry輸出就是行為
+沒變的鐵證，早一步對照就不用三輪。
