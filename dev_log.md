@@ -1944,14 +1944,14 @@ investment_chief閘門拿掉。實測2330.TW/5287.TWO/2412都算出真實資料�
 （buffett_watch提前換常利新線，不等週六）；**Leo決定Discord提前到P1/P2/P3之前**
 （「現在資料量有點多telegram很難讀」）。
 
-## 2026-08-28 · 晨報AI訊號只推轉買/轉賣
+## 2026-08-27（續九）· 晨報AI訊號只推轉買/轉賣
 
 Leo看到晨報一排「⚪️買進解除→觀望」（MSFT/NVDA/AVGO同天解除）：「可以顯示
 轉買進、賣出的就好」。alert_telegram.py拿掉「解除→觀望」分支——降級不推，
 只推轉成🟢買進/🔴賣出的；訊號現況看板頁本來就有。連帶st_flips_today.json的
 ai_alerts也不會再收到解除事件（researcher_stock跟著少一種雜訊，一致）。
 
-## 2026-08-28（續）· buy_digest中文名+櫃買SSL自癒+投資長總覽加大盤/重大新聞
+## 2026-08-27（續十四）· buy_digest中文名+櫃買SSL自癒+投資長總覽加大盤/重大新聞
 
 1. buy_digest 台股加中文名（Leo反饋）：重用 industry_rotation._tw_chinese_names()。
 2. 櫃買中心 SSL 問題定性更新：**不是間歇是 Python 3.13 對缺SKI憑證的嚴格驗證**
@@ -1963,7 +1963,7 @@ ai_alerts也不會再收到解除事件（researcher_stock跟著少一種雜訊�
    （打仗/升息/CPI類）命中的頭條才列，非全部頭條。零成本零AI呼叫。
 4. 晨報訊號減噪（見上則）；miss 5檔卡片已補產推送（27份）。
 
-## 2026-08-28（續二）· Discord「隆中對」Phase 1 雙發上線
+## 2026-08-27（續二）· Discord「隆中對」Phase 1 雙發上線
 
 伺服器=隆中對（Leo建），頻道：#每日戰情/#財報（webhook）+#軍議（文字頻道，
 留給P4b互動bot，不走webhook）。**三國軍師團命名定案**：龐統=研究員（情報/獻策）、
@@ -1981,7 +1981,7 @@ earnings_watch push()一點接全通(預告+快訊→龐統/earnings)。
 gh secret set 設好，tw-board/weekly-screen 對應步驟 env 已加）。端到端已驗證
 （孔明真實格式訊息發抵#每日戰情）。Telegram照舊雙發，Leo用幾天再決定TG留什麼。
 
-## 2026-08-28（續三）· Phase 2 統一組報器 daily_warroom.py 上線
+## 2026-08-27（續三）· Phase 2 統一組報器 daily_warroom.py 上線
 
 分工定案：**Telegram 維持逐則即時推播；Discord #每日戰情 收「一則五段式合成日報」**
 （好讀版）——呼應 Leo「telegram 很難讀」的原始動機。
@@ -2001,7 +2001,7 @@ AI轉買賣/翻貴，有變才列；st_flips_today.json 加date欄位供資料�
 實測今天真實資料組報成功並發抵Discord：五段全populated（②8檔翻貴③24檔判斷
 ④2個產業翻象限⑤非農行事曆）。
 
-## 2026-08-28（續四）· 日報拆公開/私人版＋台股中文名＋進場分段
+## 2026-08-27（續四）· 日報拆公開/私人版＋台股中文名＋進場分段
 
 Leo 三個反饋一次改：
 1. **台股中文名**：daily_warroom/investment_chief TG推播的代號都補官方簡稱

@@ -175,7 +175,7 @@ def _basket_quadrant(market, basket, period="60"):
 def today_tickers():
     """掃今天新增的 research_notes + 買進機會來源，收集「值得投資長看一眼」的股票。
 
-    2026-08-28 P0 擴充（Leo：「投資長不應該只看我手上持有的股票」）——原本觸發範圍
+    2026-08-27 P0 擴充（Leo：「投資長不應該只看我手上持有的股票」）——原本觸發範圍
     偏持股管理（出場側），進場機會半邊缺席。現在回傳 {ticker: {"held": bool,
     "triggers": [...]}}，涵蓋：
     1. stock 層筆記（持股翻面＋守備清單翻面本來就都有寫，不用改）
@@ -200,7 +200,7 @@ def today_tickers():
             if n.get("ts") == date:
                 notes.append(n)
 
-    # 2026-08-28 修：held 判斷不能只看 holdings.json（61檔）——跟 trade_plan.load_holdings()
+    # 2026-08-27 修：held 判斷不能只看 holdings.json（61檔）——跟 trade_plan.load_holdings()
     # 的 Firstrade 實際持股（66檔）是兩個不同來源，首測 MU/LITE 明明持有卻被標非持股。
     # 兩個來源聯集，任一來源說有就算持有（寧可多算持股，也不要把持股當進場機會評）。
     holdings = set(_load_json("holdings.json", []) or [])
@@ -315,7 +315,7 @@ def gather_material(ticker, notes):
             trend_material += (f"所屬產業籃子「{bq['basket']}」目前象限：{bq['quadrant']}"
                                f"（RS-Ratio {bq['ratio']}／RS-Momentum {bq['momentum']}，"
                                f"資料日期{bq['date']}）\n")
-    # 2026-08-28 拿掉 `if not is_tw` 的閘門——Leo抓到矛盾：「台股怎麼會跑不到資料，
+    # 2026-08-27 拿掉 `if not is_tw` 的閘門——Leo抓到矛盾：「台股怎麼會跑不到資料，
     # 那財報卡怎麼跑出來的」。supertrend_invalidation 已擴充台股（RS基準自動切^TWII），
     # 台美股都跑，台股非持股的進場評估不再只有價值單角度。
     try:
@@ -340,7 +340,7 @@ def ask_claude(ticker, name, ai_sig, value_material, trend_material, today_event
     exe = _claude_bin()
     if not exe:
         raise RuntimeError("找不到 claude CLI")
-    # 2026-08-28 P0：非持股的判斷語意不一樣——沒有「出場」可言，judgment 枚舉不變
+    # 2026-08-27 P0：非持股的判斷語意不一樣——沒有「出場」可言，judgment 枚舉不變
     # 但要告訴 AI 怎麼解讀（續抱/可買=可考慮進場、考慮出場=不適合進場/避開）
     if held:
         held_line = "Leo 目前【持有】這檔——判斷語意是「要不要繼續持有」。"
@@ -378,13 +378,13 @@ def _overview_lines(notes):
     """總經/產業總覽（Python 端從當天 research_notes 確定性組出來，不叫 AI）。
     2026-08-27 Leo 反饋首日推播「可以說明一下現在整體狀況（總經、產業）」——
     原本推播只有逐檔判斷，沒有大盤脈絡。
-    2026-08-28 Leo 再加兩個：①昨日大指數摘要（像dashboard）②對股市有重大影響的
+    2026-08-27 Leo 再加兩個：①昨日大指數摘要（像dashboard）②對股市有重大影響的
     財經新聞（打仗/升息/CPI類）——指數讀 market_data.json（market_fetch每天在抓），
     重大新聞用 macro_calendar 的警示關鍵字掃當天總經筆記附的新聞標題，全部零成本。"""
     lines = []
 
     # ① 昨日大指數（market_data.json，tw-board/market-home 排程維護）。
-    # 2026-08-28 Leo反饋「排版有點亂可以分二行嗎」：一行塞7個指數在手機上會折行
+    # 2026-08-27 Leo反饋「排版有點亂可以分二行嗎」：一行塞7個指數在手機上會折行
     # 折得亂七八糟——拆成美股一行、台股+匯債一行，各自對齊好讀。
     md = _load_json("market_data.json", {}) or {}
     us_parts, tw_parts = [], []
@@ -472,7 +472,7 @@ def _send_telegram(verdicts, notes=None):
     lines.append("")
 
     def _tkname(tk):
-        # 台股補中文名（2026-08-28）；美股維持代號
+        # 台股補中文名（2026-08-27）；美股維持代號
         try:
             from industry_rotation import _tw_chinese_names
             nm = _tw_chinese_names().get(str(tk).split(".")[0])

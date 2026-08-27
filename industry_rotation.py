@@ -313,7 +313,7 @@ def _tw_chinese_names():
     if _TW_NAME_CACHE is not None:
         return _TW_NAME_CACHE
     import requests
-    # 2026-08-28 補磁碟快取+重試：櫃買中心部分伺服器的憑證缺 Subject Key Identifier，
+    # 2026-08-27 補磁碟快取+重試：櫃買中心部分伺服器的憑證缺 Subject Key Identifier，
     # Python 3.13 嚴格驗證會拒收——但不是每次都失敗（LB 後面節點有好有壞，同一天
     # 測試成功、正式跑失敗都發生過）。修法：多試幾次撞好節點，成功就存磁碟快取；
     # 全失敗用上次快取的（公司簡稱幾乎不變，舊快取完全堪用）。
@@ -345,7 +345,7 @@ def _tw_chinese_names():
                 print(f"  櫃買中心中文名 requests 失敗3次：{e}")
     if not tpex_ok:
         # curl 備援：實測 curl 的憑證驗證接受這張缺SKI的憑證而 Python 3.13 拒收
-        # （2026-08-28，requests 連續10次失敗、curl 一次就過）。一樣是完整 HTTPS
+        # （2026-08-27，requests 連續10次失敗、curl 一次就過）。一樣是完整 HTTPS
         # 驗證，不是繞過——只是驗證器實作寬嚴不同。
         try:
             import subprocess, tempfile
