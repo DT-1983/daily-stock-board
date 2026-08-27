@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-14 03:25",
+ "updated": "2026-08-28 06:11",
  "us": {
   "actual": [
    {
@@ -48,43 +48,39 @@
    },
    {
     "period": "2026-Q2",
-    "value": 1.5
+    "value": 1.48
    }
   ],
   "forecast": [
    {
-    "period": "2026-Q2",
-    "value": 2.1,
-    "source": "Philly Fed SPF"
-   },
-   {
     "period": "2026-Q3",
-    "value": 2.22,
+    "value": 2.46,
     "source": "Philly Fed SPF"
    },
    {
     "period": "2026-Q4",
-    "value": 1.58,
+    "value": 2.27,
     "source": "Philly Fed SPF"
    },
    {
     "period": "2027-Q1",
-    "value": 1.93,
+    "value": 2.12,
     "source": "Philly Fed SPF"
    },
    {
     "period": "2027-Q2",
-    "value": 1.91,
+    "value": 2.12,
+    "source": "Philly Fed SPF"
+   },
+   {
+    "period": "2027-Q3",
+    "value": 2.24,
     "source": "Philly Fed SPF"
    }
   ]
  },
  "tw": {
   "actual": [
-   {
-    "period": "2023-Q2",
-    "value": 1.42
-   },
    {
     "period": "2023-Q3",
     "value": 1.56
@@ -127,12 +123,11 @@
    },
    {
     "period": "2026-Q1",
-    "value": 14.55
+    "value": 15.43
    },
    {
     "period": "2026-Q2",
-    "value": 12.92,
-    "est": true
+    "value": 12.93
    }
   ],
   "forecast": [

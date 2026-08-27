@@ -6,12 +6,13 @@
   （抓取邏輯移植自 TradingBot/gdp.py，含 openpyxl 炸 datetime 的 zipfile 繞法）
 - 台灣實際：主計總處 nstatdb A018101010「經濟成長率(%)」（YoY，台灣慣例）
 - 台灣預測：gdp_manual.json 手動維護——主計總處每季新聞稿（2/5/8/11 月）只有
-  PDF 沒有 API，asof 超過 STALE_DAYS 天會推 Telegram 提醒去更新
+  PDF 沒有 API，是否過期要人工看 gdp.html 或 gdp_manual.json 的 asof（2026-08-28
+  拿掉自動提醒，低頻不影響交易決策）
 
 口徑注意：美國「實際+預測」都是 SAAR、台灣「實際+預測」都是 YoY，
 各自內部一致可以畫同一條線，但美台兩張圖的數字不能互比。
 
-用法：python gdp_fetch.py [--force-notify]
+用法：python gdp_fetch.py
 """
 import io
 import sys
@@ -31,7 +32,6 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "gdp_data.json")
 MANUAL = os.path.join(HERE, "gdp_manual.json")
-STALE_DAYS = 120  # 主計總處每季發布，一季 92 天 + 緩衝
 
 UA = {"User-Agent": "Mozilla/5.0"}
 SPF_URL = ("https://www.philadelphiafed.org/-/media/frbp/assets/surveys-and-data/"
@@ -180,30 +180,10 @@ def find_peak(actual, forecast):
 
 # ── Telegram 提醒 ───────────────────────────────────────────────────
 
-def notify_stale(asof, force=False):
-    """台灣預測 asof 過期 → 推 Telegram。回傳是否有推。"""
-    if asof:
-        days = (date.today() - datetime.strptime(asof, "%Y-%m-%d").date()).days
-        if days < STALE_DAYS and not force:
-            return False
-        msg = (f"📊 <b>GDP 觀察頁：台灣預測該更新了</b>\n\n"
-               f"gdp_manual.json 的主計總處預測是 {asof}（{days} 天前）。\n"
-               f"主計總處每年 2/5/8/11 月發布新聞稿，請把最新季度預測填進去。")
-    else:
-        msg = ("📊 <b>GDP 觀察頁：台灣預測尚未建檔</b>\n\n"
-               "gdp_manual.json 還沒有主計總處預測資料，請填入最新新聞稿數字。")
-    tok, chat = os.environ.get("TELEGRAM_BOT_TOKEN"), os.environ.get("TELEGRAM_CHAT_ID")
-    if not (tok and chat):
-        print("⚠️ 無 TELEGRAM_BOT_TOKEN/CHAT_ID，提醒略過")
-        return False
-    requests.post(f"https://api.telegram.org/bot{tok}/sendMessage",
-                  data={"chat_id": chat, "parse_mode": "HTML", "text": msg}, timeout=15)
-    return True
-
+# 2026-08-28 Leo：TG 精簡，GDP 觀察頁過期提醒拿掉自動推播——低頻(每年4次新聞稿)、不影響任何交易決策。改成人工查：有需要直接看 gdp.html 或翻gdp_manual.json 的 asof 日期，不用系統自動盯。原本的 notify_stale() 整段刪除。
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--force-notify", action="store_true")
     args = ap.parse_args()
     _load_env()
 
@@ -253,9 +233,6 @@ def main():
           f" → {data['peak']['us']['status']}（高點 {data['peak']['us']['peak_period']}）")
     print(f"   台灣：實際 {len(data['tw']['actual'])} 季 / 預測 {len(data['tw']['forecast'])} 季"
           f" → {data['peak']['tw']['status']}（高點 {data['peak']['tw']['peak_period']}）")
-
-    if notify_stale(twf.get("asof"), args.force_notify):
-        print("📨 已推台灣預測更新提醒")
 
 
 if __name__ == "__main__":

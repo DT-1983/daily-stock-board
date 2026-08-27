@@ -113,30 +113,12 @@ jobs:
       # 所以不能換 EDGAR：那會讓常利/俗貴價重新偏離官方數字。
       # buffett_watch.json 由本機排程產生後 push，這裡不再重算。
 
-      - name: 推播「本週守備清單已更新」
-        env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: |
-          python - <<'PY'
-          import json, os, requests
-          d = json.load(open("screen_result.json", encoding="utf-8"))
-          us = sorted({x["code"] for l in d["us"].values() for x in l})
-          tw = sorted({x["code"] for l in d["tw"].values() for x in l})
-          lines = [f"📋 <b>本週守備清單已重篩</b>（每週六）",
-                   f"美股 {len(us)} 檔、台股 {len(tw)} 檔",
-                   f"<i>依 市值＋成長＋籌碼 三因子，每鏈取最強。週二起的盤後警示將用新清單。</i>"]
-          requests.post(f"https://api.telegram.org/bot{os.environ['TELEGRAM_BOT_TOKEN']}/sendMessage",
-                        json={"chat_id": os.environ["TELEGRAM_CHAT_ID"], "text": "\n".join(lines),
-                              "parse_mode": "HTML"}, timeout=30)
-          print("notified", len(us), len(tw))
-          PY
+      # 2026-08-28 Leo：TG 精簡，「本週守備清單已重篩」這則拿掉——純狀態通知，
+      # 不會讓 Leo 做任何動作，有需要直接看 board.html 或 rotation.html。
 
       - name: 買進機會週報（巴菲特到價 + 雙確認）
         env:
-          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          DISCORD_WH_DAILY: ${{ secrets.DISCORD_WH_DAILY }}   # 2026-08-28 Discord雙發（隆中對）
+          DISCORD_WH_DAILY: ${{ secrets.DISCORD_WH_DAILY }}   # 只發 Discord，TG 已拿掉（2026-08-28）
         run: python buy_digest.py || echo "買進機會週報失敗，跳過"
 
       - name: 產巴菲特價值清單頁（docs/buffett.html）

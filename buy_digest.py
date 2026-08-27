@@ -1,23 +1,15 @@
 """每週買進機會週報：巴菲特價值到價 + 雙確認（守備清單∩到價）。
 
 雙確認 = 既在產業鏈守備清單(題材趨勢+籌碼好)、現價又 ≤ 巴菲特俗價(價值便宜) = 稀有寶石。
-用法:python buy_digest.py　需 TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID
+用法:python buy_digest.py　只發 Discord（隆中對 #每日戰情），需 DISCORD_WH_DAILY。
+2026-08-28 Leo：TG 精簡，這則拿掉 Telegram（跟 Discord 內容重複），原本的
+send()/TOKEN/CHAT 整段刪除。
 """
 import os
 import json
-import requests
 import yfinance as yf
 
-TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
-CHAT = os.environ.get("TELEGRAM_CHAT_ID", "")
 PAGES_URL = "https://dt-1983.github.io/daily-stock-board/"
-
-
-def send(text):
-    r = requests.post(f"https://api.telegram.org/bot{TOKEN}/sendMessage",
-                      json={"chat_id": CHAT, "text": text, "parse_mode": "HTML",
-                            "disable_web_page_preview": True}, timeout=30)
-    print("send:", r.status_code, "" if r.ok else r.text[:200])
 
 
 DECLINE_RATIO = 0.90   # forward/trailing < 0.9 → EPS 衰退（俗價是用過去算的，未來會掉）
@@ -122,13 +114,13 @@ def main():
     lines.append("<i>💎=同時在守備清單(趨勢好)，最強｜⚠️=價值陷阱嫌疑(便宜有理由)，別追</i>")
     lines.append(f'🏛️ <a href="{PAGES_URL}buffett.html">完整巴菲特清單</a>（{len(tickers)} 檔含龍頭排名）｜📊 <a href="{PAGES_URL}">產業鏈看板</a>')
     msg = "\n".join(lines)
-    send(msg)
-    # 2026-08-27 Discord 雙發（隆中對 #每日戰情週六版，龐統獻策）
+    # 2026-08-28 Leo：TG 精簡，這則只留 Discord（隆中對 #每日戰情週六版，龐統獻策）。
+    # 原本 TG+Discord 雙發，內容完全一樣——雙發只是多一份噪音。
     try:
         from notify_discord import send_discord, tg_html_to_md
         send_discord("daily", tg_html_to_md(msg), persona="龐統")
     except Exception as e:
-        print(f"discord 雙發失敗（不影響 Telegram）：{e}")
+        print(f"discord 發送失敗：{e}")
     print(f"✅ 到俗價 {len(cand)}：體質過關 {len(clean)}、疑似陷阱 {len(traps)}、雙確認 {len(double)}")
 
 
