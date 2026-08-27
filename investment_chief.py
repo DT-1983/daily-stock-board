@@ -292,7 +292,21 @@ def today_tickers():
 
 
 def basket_matches_scope(note, basket_key):
-    return note.get("scope") in (basket_key,) or basket_key in note.get("summary", "")
+    """研究筆記的 scope 是**中文**產業名（researcher_industry 存的是 flip["name"]），
+    RRG_HOLDINGS 的 key 是**英文** sector（Non-Energy Minerals）——2026-08-27 查出
+    這兩個永遠比對不成立，**「產業轉強」從上線到現在一次都沒真的觸發過**
+    （靜默失效，屬 unexecuted_code_paths 那類：程式在跑、路徑從沒執行）。
+    修法：用 industry_rotation.SECTOR_TW_LABEL 做中英對照（英→中），兩邊都認。"""
+    scope = (note.get("scope") or "").strip()
+    if not scope:
+        return False
+    if scope == basket_key or basket_key in (note.get("summary") or ""):
+        return True
+    try:
+        from industry_rotation import SECTOR_TW_LABEL
+        return SECTOR_TW_LABEL.get(basket_key) == scope
+    except Exception:
+        return False
 
 
 def gather_material(ticker, notes):
