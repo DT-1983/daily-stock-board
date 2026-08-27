@@ -48,24 +48,19 @@ TG_CHAT = _env.get("TELEGRAM_CHAT_ID", "")
 NOTES_PATH = "state/research_notes.jsonl"
 VERDICTS_PATH = "state/advisor_verdicts.jsonl"
 
+# 2026-08-27 首日真實推播後 Leo 反饋改版：每個角度加 `brief`（一句話完整結論，
+# 專門給 Telegram 推播用）——原本推播是把長篇 reasoning 硬截 80 字，句子斷在半空
+# 且各檔結構不一致。reasoning 保留完整版存 jsonl 供深讀，推播只用 brief。
 SCHEMA = {
     "type": "object",
     "properties": {
         "ticker": {"type": "string"},
-        "value_angle": {
-            "type": "object",
-            "properties": {
-                "status": {"type": "string"},
-                "judgment": {"type": "string", "enum": ["續抱/可買", "觀望", "考慮出場", "資料不足"]},
-                "reasoning": {"type": "string"},
-            },
-            "required": ["status", "judgment", "reasoning"],
-        },
         "trend_angle": {
             "type": "object",
             "properties": {
                 "status": {"type": "string"},
                 "judgment": {"type": "string", "enum": ["續抱/可買", "觀望", "考慮出場", "資料不足"]},
+                "brief": {"type": "string", "maxLength": 60},
                 "reasoning": {"type": "string"},
                 "invalidation_price": {"type": "string"},
                 "support_resistance": {"type": "string"},
@@ -73,10 +68,20 @@ SCHEMA = {
                 "event_risk": {"type": "string"},
                 "bull_bear_debate": {"type": "string"},
             },
-            "required": ["status", "judgment", "reasoning"],
+            "required": ["status", "judgment", "brief", "reasoning"],
+        },
+        "value_angle": {
+            "type": "object",
+            "properties": {
+                "status": {"type": "string"},
+                "judgment": {"type": "string", "enum": ["續抱/可買", "觀望", "考慮出場", "資料不足"]},
+                "brief": {"type": "string", "maxLength": 60},
+                "reasoning": {"type": "string"},
+            },
+            "required": ["status", "judgment", "brief", "reasoning"],
         },
     },
-    "required": ["ticker", "value_angle", "trend_angle"],
+    "required": ["ticker", "trend_angle", "value_angle"],
 }
 
 PROMPT = """你是投資長，讀研究員整理好的材料，給這檔股票兩個獨立角度的進出場判斷。
@@ -106,13 +111,18 @@ PROMPT = """你是投資長，讀研究員整理好的材料，給這檔股票�
 【今天研究員產出的新聞/事件】
 {today_events}
 
-任務：
-1. value_angle：根據估值材料判斷續抱/觀望/考慮出場，說明理由。不看趨勢材料。
-2. trend_angle：根據趨勢+新聞材料判斷續抱/觀望/考慮出場，並補充5個強化維度：
+任務（先趨勢、後價值）：
+1. trend_angle：根據趨勢+新聞材料判斷續抱/觀望/考慮出場，並補充5個強化維度：
    失效價位（invalidation_price）、支撐壓力區間（support_resistance）、
    量價背離（volume_price_divergence，材料不夠判斷就寫「材料不足無法判斷」）、
    事件風險（event_risk，今天的新聞算不算風險）、多空辯論（bull_bear_debate，
-   一句話講多方觀點、一句話講空方觀點）。"""
+   一句話講多方觀點、一句話講空方觀點）。
+2. value_angle：根據估值材料判斷續抱/觀望/考慮出場，說明理由。不看趨勢材料。
+
+兩個角度各要填：
+- brief：**一句完整的話（≤60字）講清楚判斷跟最關鍵的一個理由**，會直接顯示在
+  Telegram 推播裡——必須是完整句子，不能只寫半句，不用「事實/推論」標籤。
+- reasoning：完整詳細版（事實/推論分開標註），存檔供深讀。"""
 
 
 def _load_json(path, default=None):
@@ -274,30 +284,94 @@ def ask_claude(ticker, name, ai_sig, value_material, trend_material, today_event
     return verdict
 
 
-def _send_telegram(verdicts):
-    """2026-08-26 加：Leo問「投資長的結論會推給我嗎」——原本只寫檔案不推播。
-    定案另開一則獨立訊息（不跟08:15投資晨報合併），08:45投資長跑完才推，
-    時間點本來就跟晨報那則不一樣。"""
+_J_ICON = {"續抱/可買": "🟢", "觀望": "🟡", "考慮出場": "🔴", "資料不足": "⚪"}
+
+
+def _overview_lines(notes):
+    """總經/產業總覽（Python 端從當天 research_notes 確定性組出來，不叫 AI）。
+    2026-08-27 Leo 反饋首日推播「可以說明一下現在整體狀況（總經、產業）」——
+    原本推播只有逐檔判斷，沒有大盤脈絡。"""
+    lines = []
+    macro = [n for n in notes if n.get("layer") == "macro"]
+    if macro:
+        m = macro[-1]
+        trig = m.get("trigger")
+        if trig:
+            lines.append("🌏 <b>總經</b>：今日有觸發事件——" + "；".join(trig)[:180])
+        else:
+            ev = [e for e in m.get("events", []) if e.get("status") == "scheduled"][:3]
+            if ev:
+                lines.append("🌏 <b>總經</b>：近期無突發，已排定：" +
+                             "、".join(f"{e['date'][5:]} {e['event'].split('（')[0]}" for e in ev))
+            else:
+                lines.append("🌏 <b>總經</b>：無排定事件、無異常。")
+    industry = [n for n in notes if n.get("layer") == "industry"]
+    if industry:
+        flips = []
+        for n in industry:
+            ev = (n.get("events") or [{}])[0].get("event", "")
+            flips.append(f"{n.get('scope','')}（{ev.replace('RRG象限','')}）")
+        lines.append("🔄 <b>產業輪動</b>：" + "、".join(flips[:6]))
+    else:
+        lines.append("🔄 <b>產業輪動</b>：本週無象限翻轉。")
+    return lines
+
+
+def _send_telegram(verdicts, notes=None):
+    """2026-08-26 加推播；2026-08-27 首日真實推播後照 Leo 反饋全面改版：
+    ① 開頭加總經/產業總覽（原本只有逐檔、沒有整體狀況）
+    ② 先中短期趨勢、再長期價值（Leo 指定順序）
+    ③ 每檔統一結構：兩行狀態（judgment icon + AI 的 brief 一句話完整結論），
+       不再硬截長篇 reasoning 造成斷句與各檔格式不一致
+    ④ 排序：兩角度都喊出場的排最前（最需要看的先看到）
+    完整 reasoning 仍存 state/advisor_verdicts.jsonl 供深讀。"""
     if not (TG_TOKEN and TG_CHAT):
         print("缺 TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID，跳過推播")
         return
     date = time.strftime("%Y-%m-%d")
-    lines = [f"📊 <b>投資長判斷 {date}</b>",
-             "<i>兩角度各自獨立，不合併結論——最終決策是你的</i>\n"]
-    for v in verdicts:
-        va, ta = v["value_angle"], v["trend_angle"]
-        lines.append(f"<b>【{v['ticker']}】</b>")
-        lines.append(f"　長期價值：{va['judgment']} — {va['reasoning'][:80]}")
-        lines.append(f"　中短期趨勢：{ta['judgment']} — {ta['reasoning'][:80]}")
+
+    def _urgency(v):
+        both_exit = (v["trend_angle"]["judgment"] == "考慮出場" and
+                     v["value_angle"]["judgment"] == "考慮出場")
+        one_exit = (v["trend_angle"]["judgment"] == "考慮出場" or
+                    v["value_angle"]["judgment"] == "考慮出場")
+        return 0 if both_exit else (1 if one_exit else 2)
+
+    ordered = sorted(verdicts, key=_urgency)
+
+    lines = [f"📊 <b>投資長判斷 {date}</b>"]
+    if notes:
+        lines += _overview_lines(notes)
+    lines.append("<i>兩角度各自獨立不合併；🔴出場 🟡觀望 🟢續抱；最終決策是你的</i>")
+    lines.append("")
+    for v in ordered:
+        ta, va = v["trend_angle"], v["value_angle"]
+        both_exit = _urgency(v) == 0
+        head = f"<b>【{v['ticker']}】</b>" + ("　‼️ 兩角度同喊出場" if both_exit else "")
+        lines.append(head)
+        lines.append(f"　趨勢 {_J_ICON.get(ta['judgment'],'')}｜{ta.get('brief') or ta['judgment']}")
+        lines.append(f"　價值 {_J_ICON.get(va['judgment'],'')}｜{va.get('brief') or va['judgment']}")
         lines.append("")
-    text = "\n".join(lines).strip()
-    r = requests.post(f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage",
-                      json={"chat_id": TG_CHAT, "text": text, "parse_mode": "HTML",
-                            "disable_web_page_preview": True}, timeout=30)
-    if r.status_code != 200:
-        print(f"telegram推播失敗: {r.status_code} {r.text[:200]}")
-    else:
-        print("已推播投資長判斷")
+
+    # Telegram 單則上限 4096 字元——超過就按檔切多則，不讓訊息被硬砍
+    chunks, cur = [], []
+    for ln in lines:
+        if sum(len(x) + 1 for x in cur) + len(ln) > 3800:
+            chunks.append("\n".join(cur))
+            cur = [f"📊 <b>投資長判斷 {date}</b>（續）", ""]
+        cur.append(ln)
+    chunks.append("\n".join(cur).strip())
+
+    ok = True
+    for text in chunks:
+        r = requests.post(f"https://api.telegram.org/bot{TG_TOKEN}/sendMessage",
+                          json={"chat_id": TG_CHAT, "text": text, "parse_mode": "HTML",
+                                "disable_web_page_preview": True}, timeout=30)
+        if r.status_code != 200:
+            ok = False
+            print(f"telegram推播失敗: {r.status_code} {r.text[:200]}")
+    if ok:
+        print(f"已推播投資長判斷（{len(chunks)} 則）")
 
 
 def run():
@@ -326,7 +400,7 @@ def run():
             f.write(json.dumps(v, ensure_ascii=False) + "\n")
     total = sum(v.get("cost_usd") or 0 for v in verdicts)
     print(f"已存 {len(verdicts)} 筆投資長判斷（等值標價合計約 ${total:.2f}，Max plan走訂閱額度）")
-    _send_telegram(verdicts)
+    _send_telegram(verdicts, notes)
     return verdicts
 
 
