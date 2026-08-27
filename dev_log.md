@@ -1875,3 +1875,29 @@ canvas.toDataURL 抽圖驗證過四象限顏色正確。
 驗證：NVDA 真跑一次新 schema（brief品質正確：「產業籃子轉入落後象限且RS跌破60日
 均線，趨勢材料明確建議剩餘部位全數出場。」）；完整版面用 mock+真實總覽渲染確認。
 明天08:45排程自動生效。
+
+## 2026-08-27（續六）· P0：投資長擴大到非持股（進場側）
+
+Leo 分享老墨戰情室 Discord bot 截圖當升級藍本（拆解已寫進記憶
+mofi_warroom_structure.md，含P0-P4路線），並指出「投資長不應該只看我手上持有的
+股票」。P0 實作：
+
+1. today_tickers() 回傳 {ticker: {held, triggers}}，觸發源擴充：
+   - industry層拿掉 `if tk in holdings` 濾網：持股全收；**非持股只收轉入改善/領先
+     的籃子成分股**（轉弱籃子對非持股沒行動意義，全收會噴雜訊）
+   - 新增巴菲特到俗價（buffett_watch.json 41檔現價≤cheap且未持有），5天冷卻
+     （state/chief_buy_cooldown.json）——這是「狀態」不是「事件」，不冷卻會天天重複
+2. prompt 加持有狀態語意（非持股：續抱/可買=可考慮進場、考慮出場=避開）
+3. 推播分兩區：💼持股（出場管理）/🆕進場機會（非持股）
+4. 非持股估值材料退查 buffett_watch.json（valuation_state只涵蓋持股）
+
+**首測抓到兩個bug都修了**：MU/LITE明明持有被標非持股（holdings.json 61檔 vs
+trade_plan.load_holdings 66檔兩來源不一致→聯集）；台股帶後綴代號(5287.TWO)被
+市場regex誤判成美股。
+
+**真實跑24檔驗證（持股8+非持股16），設計價值立刻顯現**：BMY雙綠（唯一兩角度同意
+進場）；DAL到俗價但趨勢雙紅→擋住價值陷阱；TROW價值綠趨勢紅→先不進；VZ雙綠且
+趨勢brief自動引用當天「通訊產業轉強」。已推Telegram（1則）。
+
+已知縮水因素：台股候選11檔趨勢全⚪（supertrend_invalidation僅美股，待擴充）；
+今天16檔到俗價是舊×12線灌的，週六buffett_watch換常利新線後會大幅縮減。

@@ -96,6 +96,7 @@ PROMPT = """你是投資長，讀研究員整理好的材料，給這檔股票�
    不要為了看起來一致而修改任一邊。
 
 今天是 {date}，股票代號 {ticker}（{name}）。
+{held_line}
 
 已知材料：
 
@@ -172,8 +173,19 @@ def _basket_quadrant(market, basket, period="60"):
 
 
 def today_tickers():
-    """掃今天新增的 research_notes，收集出「值得投資長看一眼」的股票代號。
-    stock層直接列ticker(逗號分隔可能有多檔)；industry層要反查籃子裡有沒有Leo的持股。"""
+    """掃今天新增的 research_notes + 買進機會來源，收集「值得投資長看一眼」的股票。
+
+    2026-08-28 P0 擴充（Leo：「投資長不應該只看我手上持有的股票」）——原本觸發範圍
+    偏持股管理（出場側），進場機會半邊缺席。現在回傳 {ticker: {"held": bool,
+    "triggers": [...]}}，涵蓋：
+    1. stock 層筆記（持股翻面＋守備清單翻面本來就都有寫，不用改）
+    2. industry 層：拿掉 `if tk in holdings` 濾網——持股照舊全收；**非持股只收
+       「轉入改善/領先」的籃子成分股**（轉弱的籃子對沒持有的股票沒有行動意義，
+       全收會讓每次翻象限都噴出10檔AI呼叫，大多數是雜訊）
+    3. 巴菲特清單到俗價（buffett_watch.json 41檔現價 ≤ cheap 且未持有）——進場側
+       主訊號，原本只活在 buy_digest 週報完全沒接投資長。
+       ⚠️ 這是「狀態」不是「事件」（到俗價會持續好幾天），加5天冷卻避免天天重複判斷
+       同一檔（state/chief_buy_cooldown.json）。"""
     date = time.strftime("%Y-%m-%d")
     notes = []
     if os.path.exists(NOTES_PATH):
@@ -188,20 +200,73 @@ def today_tickers():
             if n.get("ts") == date:
                 notes.append(n)
 
+    # 2026-08-28 修：held 判斷不能只看 holdings.json（61檔）——跟 trade_plan.load_holdings()
+    # 的 Firstrade 實際持股（66檔）是兩個不同來源，首測 MU/LITE 明明持有卻被標非持股。
+    # 兩個來源聯集，任一來源說有就算持有（寧可多算持股，也不要把持股當進場機會評）。
     holdings = set(_load_json("holdings.json", []) or [])
-    tickers = set()
+    try:
+        from trade_plan import load_holdings
+        active, _legacy = load_holdings()
+        holdings |= {r.get("ticker") for r in active if r.get("ticker")}
+    except Exception as e:
+        print(f"trade_plan.load_holdings 讀取失敗（退回只用holdings.json）：{e}")
+    targets = {}
+
+    def add(tk, trigger):
+        tk = tk.strip()
+        if not tk:
+            return
+        t = targets.setdefault(tk, {"held": tk in holdings, "triggers": []})
+        if trigger not in t["triggers"]:
+            t["triggers"].append(trigger)
+
     for n in notes:
         if n["layer"] == "stock":
             for tk in n["scope"].split(","):
-                tickers.add(tk.strip())
+                add(tk, f"個股事件（{n.get('source','')}）")
         elif n["layer"] == "industry":
-            # 產業翻象限，反查這個籃子裡有沒有 Leo 的持股（只有前5大成分股資料可查，
-            # 已知限制——不在前5大的持股即使受影響也查不到，見 dev_log）
+            ev = (n.get("events") or [{}])[0].get("event", "")
+            entering = ("→改善" in ev) or ("→領先" in ev)
             rev = _ticker_rrg_basket()
             for tk, (mkt, basket) in rev.items():
-                if basket_matches_scope(n, basket) and tk in holdings:
-                    tickers.add(tk)
-    return sorted(tickers), notes
+                if not basket_matches_scope(n, basket):
+                    continue
+                if tk in holdings:
+                    add(tk, f"所屬產業翻象限（{n.get('scope','')}）")
+                elif entering:
+                    add(tk, f"產業轉強（{n.get('scope','')} {ev.replace('RRG象限','').split('（')[0]}）")
+
+    # 3. 巴菲特清單到俗價（未持有＋5天冷卻）
+    try:
+        wl = _load_json("buffett_watch.json", {}) or {}
+        cool = _load_json("state/chief_buy_cooldown.json", {}) or {}
+        cand = [tk for tk, w in wl.items()
+                if tk not in holdings and w.get("cheap")]
+        if cand:
+            import yfinance as yf
+            import datetime as _dt
+            data = yf.download(cand, period="5d", progress=False, threads=False,
+                               auto_adjust=True, group_by="ticker")
+            today_d = _dt.date.fromisoformat(date)
+            for tk in cand:
+                last = cool.get(tk)
+                if last and (today_d - _dt.date.fromisoformat(last)).days < 5:
+                    continue
+                try:
+                    df = data[tk] if len(cand) > 1 else data
+                    cur = float(df["Close"].dropna().iloc[-1])
+                except Exception:
+                    continue
+                if cur <= wl[tk]["cheap"]:
+                    add(tk, f"巴菲特到俗價（現價{cur:.1f} ≤ 俗價{wl[tk]['cheap']:.1f}）")
+                    cool[tk] = date
+            os.makedirs("state", exist_ok=True)
+            json.dump(cool, open("state/chief_buy_cooldown.json", "w", encoding="utf-8"),
+                      ensure_ascii=False)
+    except Exception as e:
+        print(f"巴菲特到俗價檢查失敗（不影響其他觸發）：{e}")
+
+    return targets, notes
 
 
 def basket_matches_scope(note, basket_key):
@@ -209,7 +274,9 @@ def basket_matches_scope(note, basket_key):
 
 
 def gather_material(ticker, notes):
-    is_tw = bool(re.match(r"^\d{4,6}[A-Z]?$", ticker))
+    # 台股代號兩種形態都要認得：純數字（valuation_state 用 "2412"）跟帶後綴
+    # （buffett_watch 用 "5287.TWO"/"2731.TW"）——首測後綴形態被誤判成美股
+    is_tw = bool(re.match(r"^\d{4,6}[A-Z]?(\.TWO?)?$", ticker))
     market_prefix = "TW" if is_tw else "US"
     sig_key = f"{market_prefix}:{ticker}"
 
@@ -218,9 +285,17 @@ def gather_material(ticker, notes):
 
     val_state = _load_json("state/valuation_state.json", {})
     v = val_state.get(ticker)
-    value_material = (f"貴俗價現況：現價${v['price']:,.2f}，俗價${v['cheap']:,.2f}，"
-                      f"貴價${v['expensive']:,.2f}，訊號{v['icon']}（更新於{v.get('updated_at','')}）"
-                      if v else "查無貴俗價資料")
+    if v:
+        value_material = (f"貴俗價現況：現價${v['price']:,.2f}，俗價${v['cheap']:,.2f}，"
+                          f"貴價${v['expensive']:,.2f}，訊號{v['icon']}（更新於{v.get('updated_at','')}）")
+    else:
+        # 非持股（valuation_state 只涵蓋持股）→ 退查巴菲特候選池（每週六更新）
+        w = (_load_json("buffett_watch.json", {}) or {}).get(ticker)
+        value_material = (f"巴菲特候選池資料（每週六更新，更新日{w.get('updated','')}）："
+                          f"俗價${w['cheap']:,.2f}，貴價${w['expensive']:,.2f}，"
+                          f"ROE {w.get('roe', 0)*100:.0f}%，盈再率{w.get('reinvest', 0)*100:.0f}%"
+                          f"（{w.get('reinvest_grade','')}），產業龍頭排名#{w.get('rank','?')}"
+                          if w else "查無貴俗價資料")
     try:
         from trade_plan import buffett_targets
         bt = buffett_targets(ticker)
@@ -258,13 +333,23 @@ def gather_material(ticker, notes):
     return sig_key, ai_sig, value_material, trend_material, today_events
 
 
-def ask_claude(ticker, name, ai_sig, value_material, trend_material, today_events, date):
+def ask_claude(ticker, name, ai_sig, value_material, trend_material, today_events, date,
+               held=True, triggers=None):
     exe = _claude_bin()
     if not exe:
         raise RuntimeError("找不到 claude CLI")
+    # 2026-08-28 P0：非持股的判斷語意不一樣——沒有「出場」可言，judgment 枚舉不變
+    # 但要告訴 AI 怎麼解讀（續抱/可買=可考慮進場、考慮出場=不適合進場/避開）
+    if held:
+        held_line = "Leo 目前【持有】這檔——判斷語意是「要不要繼續持有」。"
+    else:
+        held_line = ("Leo 目前【未持有】這檔，是進場機會評估——判斷語意：\n"
+                     "續抱/可買=建議可考慮進場、觀望=先不進、考慮出場=不適合進場（避開）。")
+    if triggers:
+        held_line += "\n這次被觸發的原因：" + "；".join(triggers)
     prompt = PROMPT.format(date=date, ticker=ticker, name=name, ai_signal=ai_sig,
                            value_material=value_material, trend_material=trend_material,
-                           today_events=today_events)
+                           today_events=today_events, held_line=held_line)
     r = subprocess.run(
         [exe, "-p", "--dangerously-skip-permissions", "--tools", "",
          "--output-format", "json", "--json-schema", json.dumps(SCHEMA, ensure_ascii=False)],
@@ -337,21 +422,35 @@ def _send_telegram(verdicts, notes=None):
                     v["value_angle"]["judgment"] == "考慮出場")
         return 0 if both_exit else (1 if one_exit else 2)
 
-    ordered = sorted(verdicts, key=_urgency)
+    held_vs = sorted([v for v in verdicts if v.get("held", True)], key=_urgency)
+    new_vs = sorted([v for v in verdicts if not v.get("held", True)],
+                    key=lambda v: 0 if v["trend_angle"]["judgment"] == "續抱/可買" else 1)
 
     lines = [f"📊 <b>投資長判斷 {date}</b>"]
     if notes:
         lines += _overview_lines(notes)
     lines.append("<i>兩角度各自獨立不合併；🔴出場 🟡觀望 🟢續抱；最終決策是你的</i>")
     lines.append("")
-    for v in ordered:
+
+    def _block(v, entry=False):
         ta, va = v["trend_angle"], v["value_angle"]
-        both_exit = _urgency(v) == 0
+        both_exit = _urgency(v) == 0 and not entry
         head = f"<b>【{v['ticker']}】</b>" + ("　‼️ 兩角度同喊出場" if both_exit else "")
-        lines.append(head)
-        lines.append(f"　趨勢 {_J_ICON.get(ta['judgment'],'')}｜{ta.get('brief') or ta['judgment']}")
-        lines.append(f"　價值 {_J_ICON.get(va['judgment'],'')}｜{va.get('brief') or va['judgment']}")
-        lines.append("")
+        if entry and v.get("triggers"):
+            head += f"　<i>{v['triggers'][0]}</i>"
+        out = [head,
+               f"　趨勢 {_J_ICON.get(ta['judgment'],'')}｜{ta.get('brief') or ta['judgment']}",
+               f"　價值 {_J_ICON.get(va['judgment'],'')}｜{va.get('brief') or va['judgment']}", ""]
+        return out
+
+    if held_vs:
+        lines.append("💼 <b>持股</b>")
+        for v in held_vs:
+            lines += _block(v)
+    if new_vs:
+        lines.append("🆕 <b>進場機會（非持股）</b>——<i>🟢可考慮進場 🟡先不進 🔴避開</i>")
+        for v in new_vs:
+            lines += _block(v, entry=True)
 
     # Telegram 單則上限 4096 字元——超過就按檔切多則，不讓訊息被硬砍
     chunks, cur = [], []
@@ -375,19 +474,24 @@ def _send_telegram(verdicts, notes=None):
 
 
 def run():
-    tickers, notes = today_tickers()
-    if not tickers:
-        print("今天沒有新研究筆記涉及任何持股，投資長沒東西可判斷")
+    targets, notes = today_tickers()
+    if not targets:
+        print("今天沒有任何觸發（持股事件/產業轉強/巴菲特到俗價），投資長沒東西可判斷")
         return []
 
-    print(f"今天有 {len(tickers)} 檔持股有新研究筆記：{tickers}")
+    held_n = sum(1 for t in targets.values() if t["held"])
+    print(f"今天觸發 {len(targets)} 檔（持股 {held_n}、非持股 {len(targets)-held_n}）：{sorted(targets)}")
     date = time.strftime("%Y-%m-%d")
     verdicts = []
-    for tk in tickers:
-        print(f"  分析 {tk}...")
+    for tk in sorted(targets):
+        info = targets[tk]
+        print(f"  分析 {tk}（{'持股' if info['held'] else '非持股'}｜{'；'.join(info['triggers'])}）...")
         sig_key, ai_sig, value_m, trend_m, events = gather_material(tk, notes)
         try:
-            v = ask_claude(tk, tk, ai_sig, value_m, trend_m, events, date)
+            v = ask_claude(tk, tk, ai_sig, value_m, trend_m, events, date,
+                           held=info["held"], triggers=info["triggers"])
+            v["held"] = info["held"]
+            v["triggers"] = info["triggers"]
             verdicts.append(v)
         except Exception as e:
             print(f"  {tk} 分析失敗：{e}")
