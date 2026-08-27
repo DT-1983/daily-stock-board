@@ -81,9 +81,18 @@ def main():
         tw_names = {}
 
     def disp(tk):
+        """代號＋中文名，包成真連結（Yahoo股市個股頁）。
+        2026-08-27 Leo反饋「1580.TWO連結有問題，其它有連結」——查出其實我們從沒放過
+        連結：.TW 是真實頂級網域，Telegram 把 4763.TW 誤判成網址自動變連結（點下去
+        是 http://4763.tw 這種不存在/被搶註的站，有誤導風險），.TWO 非網域所以沒變。
+        修法：全部給真連結（台股→tw.stock.yahoo.com、美股→finance.yahoo.com），
+        HTML <a> 會蓋掉 Telegram 的自動網址偵測，誤導連結順帶消失。"""
         code = tk.split(".")[0]
         nm = tw_names.get(code)
-        return f"{tk} {nm}" if nm else tk
+        label = f"{code} {nm}" if nm else tk
+        url = (f"https://tw.stock.yahoo.com/quote/{tk}" if tk.endswith((".TW", ".TWO"))
+               else f"https://finance.yahoo.com/quote/{tk}")
+        return f'<a href="{url}">{label}</a>'
 
     lines = ["💰 <b>本週買進機會（巴菲特價值法）</b>", ""]
     if double:

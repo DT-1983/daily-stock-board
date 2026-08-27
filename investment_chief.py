@@ -494,11 +494,14 @@ def _send_telegram(verdicts, notes=None):
     lines.append("")
 
     def _tkname(tk):
-        # 台股補中文名（2026-08-27）；美股維持代號
+        # 台股補中文名（2026-08-27）；美股維持代號。
+        # 有中文名時顯示「1580 新麥」去掉 .TW/.TWO 後綴——.TW 是真實頂級網域，
+        # Telegram 會把 4763.TW 誤判成網址變成誤導連結（見 buy_digest.disp 說明）。
         try:
             from industry_rotation import _tw_chinese_names
-            nm = _tw_chinese_names().get(str(tk).split(".")[0])
-            return f"{tk} {nm}" if nm else str(tk)
+            code = str(tk).split(".")[0]
+            nm = _tw_chinese_names().get(code)
+            return f"{code} {nm}" if nm else str(tk)
         except Exception:
             return str(tk)
 
