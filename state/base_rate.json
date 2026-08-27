@@ -26,6 +26,13 @@
     "beats": 17,
     "median_surprise": 7.0,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 11.762155,
+    "trailing_pe": 13.023642,
+    "ps": 2.2316422,
+    "price": 314.0,
+    "implied_growth": 0.1072496494052324
    }
   },
   {
@@ -53,6 +60,13 @@
     "beats": 17,
     "median_surprise": 2.4,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 11.502353,
+    "trailing_pe": 13.59589,
+    "ps": 1.4454454,
+    "price": 198.5,
+    "implied_growth": 0.1820094549350033
    }
   },
   {
@@ -80,6 +94,13 @@
     "beats": 13,
     "median_surprise": 5.5,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 15.533626,
+    "trailing_pe": 29.310345,
+    "ps": 2.828123,
+    "price": 212.5,
+    "implied_growth": 0.8868965301469214
    }
   },
   {
@@ -107,6 +128,13 @@
     "beats": 10,
     "median_surprise": -4.1,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 16.381954,
+    "trailing_pe": 26.02837,
+    "ps": 2.8348155,
+    "price": 73.4,
+    "implied_growth": 0.5888440414373035
    }
   },
   {
@@ -134,6 +162,13 @@
     "beats": 10,
     "median_surprise": -3.8,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 16.324757,
+    "trailing_pe": 19.157305,
+    "ps": 3.0171094,
+    "price": 170.5,
+    "implied_growth": 0.17351241430423725
    }
   },
   {
@@ -161,6 +196,13 @@
     "beats": 8,
     "median_surprise": -7.9,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 32.416126,
+    "trailing_pe": 55.355858,
+    "ps": 11.083041,
+    "price": 770.0,
+    "implied_growth": 0.7076642039212211
    }
   },
   {
@@ -188,6 +230,12 @@
     "beats": 1,
     "median_surprise": -49.1,
     "bias": "共識偏樂觀"
+   },
+   "pe": {
+    "forward_pe": 94.62962,
+    "trailing_pe": null,
+    "ps": 2.999326,
+    "price": 51.1
    }
   },
   {
@@ -198,6 +246,12 @@
     "beats": 9,
     "median_surprise": -5.9,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": 9.419014,
+    "ps": 1.0986563,
+    "price": 107.0
    }
   },
   {
@@ -225,6 +279,13 @@
     "beats": 9,
     "median_surprise": -17.8,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 59.236946,
+    "trailing_pe": 72.303925,
+    "ps": 9.388219,
+    "price": 147.5,
+    "implied_growth": 0.22058833012762014
    }
   },
   {
@@ -252,6 +313,13 @@
     "beats": 14,
     "median_surprise": 26.1,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 8.438178,
+    "trailing_pe": 11.752267,
+    "ps": 0.9924689,
+    "price": 38.9,
+    "implied_growth": 0.39274935892558793
    }
   },
   {
@@ -279,6 +347,13 @@
     "beats": 11,
     "median_surprise": -1.3,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 31.68903,
+    "trailing_pe": 54.469696,
+    "ps": 4.820284,
+    "price": 359.5,
+    "implied_growth": 0.7188817707578932
    }
   },
   {
@@ -289,6 +364,12 @@
     "beats": 6,
     "median_surprise": -35.7,
     "bias": "共識偏樂觀"
+   },
+   "pe": {
+    "forward_pe": 8.639706,
+    "trailing_pe": null,
+    "ps": 0.703648,
+    "price": 11.75
    }
   },
   {
@@ -316,6 +397,13 @@
     "beats": 16,
     "median_surprise": 5.6,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 10.896425,
+    "trailing_pe": 16.677698,
+    "ps": 0.379612,
+    "price": 252.0,
+    "implied_growth": 0.5305660342727085
    }
   },
   {
@@ -343,6 +431,13 @@
     "beats": 23,
     "median_surprise": 5.3,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 16.956417,
+    "trailing_pe": 28.190432,
+    "ps": 14.074343,
+    "price": 2410.0,
+    "implied_growth": 0.6625229256864822
    }
   },
   {
@@ -370,6 +465,13 @@
     "beats": 16,
     "median_surprise": 4.8,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 18.783285,
+    "trailing_pe": 33.022594,
+    "ps": 3.7605667,
+    "price": 2090.0,
+    "implied_growth": 0.7580840625055734
    }
   },
   {
@@ -377,26 +479,33 @@
    "requirement": {
     "kind": "tw_monthly",
     "tier": "normal",
-    "fy": 1016038202920.0,
+    "fy": 1000498128790.0,
     "year": 2026,
-    "analysts": 6,
+    "analysts": 7,
     "ytd": 560357927000.0,
     "months_done": 7,
     "months_left": 5,
-    "need_avg": 91136055184.0,
+    "need_avg": 88028040358.0,
     "hist_n": 260,
     "prev_avg": 58627444200.0,
-    "need_yoy": 0.5544947665312008,
+    "need_yoy": 0.5014817984850857,
     "yoy_max": 0.6299795973107829,
     "yoy_med": 0.02753003842910884,
     "yoy_n": 20,
-    "excess": -0.07548483077958212
+    "excess": -0.12849779882569723
    },
    "track_record": {
     "n": 25,
     "beats": 13,
     "median_surprise": 1.1,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 15.096874,
+    "trailing_pe": 21.229774,
+    "ps": 0.287789,
+    "price": 65.6,
+    "implied_growth": 0.406236416890013
    }
   },
   {
@@ -419,7 +528,13 @@
     "yoy_n": 20,
     "excess": -0.1320941517561045
    },
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": 21.982117,
+    "ps": 5.845976,
+    "price": 147.5
+   }
   },
   {
    "ticker": "2382.TW",
@@ -446,6 +561,13 @@
     "beats": 22,
     "median_surprise": 13.9,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 10.444357,
+    "trailing_pe": 14.750111,
+    "ps": 0.4588331,
+    "price": 333.5,
+    "implied_growth": 0.4122564941049027
    }
   },
   {
@@ -473,6 +595,13 @@
     "beats": 17,
     "median_surprise": 7.9,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 11.3924055,
+    "trailing_pe": 12.23103,
+    "ps": 0.8503201,
+    "price": 108.0,
+    "implied_growth": 0.07361259217818406
    }
   },
   {
@@ -500,12 +629,25 @@
     "beats": 23,
     "median_surprise": 9.6,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 27.660027,
+    "trailing_pe": 64.03247,
+    "ps": 10.399031,
+    "price": 3865.0,
+    "implied_growth": 1.3149821943413142
    }
   },
   {
    "ticker": "2597.TW",
    "requirement": null,
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": 14.733677,
+    "ps": 1.5923636,
+    "price": 171.5
+   }
   },
   {
    "ticker": "2618.TW",
@@ -532,6 +674,13 @@
     "beats": 14,
     "median_surprise": 11.9,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 8.830456,
+    "trailing_pe": 9.076433,
+    "ps": 0.9685421,
+    "price": 42.75,
+    "implied_growth": 0.027855526373723016
    }
   },
   {
@@ -559,6 +708,13 @@
     "beats": 14,
     "median_surprise": 4.9,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 9.352751,
+    "trailing_pe": 8.952912,
+    "ps": 0.42795503,
+    "price": 144.5,
+    "implied_growth": -0.042750951030343876
    }
   },
   {
@@ -569,6 +725,12 @@
     "beats": 7,
     "median_surprise": 15.2,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": 13.314333,
+    "ps": 2.2259395,
+    "price": 163.5
    }
   },
   {
@@ -596,6 +758,13 @@
     "beats": 15,
     "median_surprise": 10.1,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 11.367311,
+    "trailing_pe": 13.842482,
+    "ps": 1.7710674,
+    "price": 116.0,
+    "implied_growth": 0.21774463635243202
    }
   },
   {
@@ -606,6 +775,13 @@
     "beats": 16,
     "median_surprise": 9.9,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 28.633406,
+    "trailing_pe": 13.279678,
+    "ps": 3.1882567,
+    "price": 132.0,
+    "implied_growth": -0.5362173120445399
    }
   },
   {
@@ -633,6 +809,13 @@
     "beats": 16,
     "median_surprise": 3.5,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 22.118574,
+    "trailing_pe": 45.049908,
+    "ps": 7.091945,
+    "price": 3340.0,
+    "implied_growth": 1.0367455876676321
    }
   },
   {
@@ -660,6 +843,13 @@
     "beats": 12,
     "median_surprise": 0.3,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 18.01241,
+    "trailing_pe": 23.934181,
+    "ps": 2.368087,
+    "price": 320.0,
+    "implied_growth": 0.3287606155978018
    }
   },
   {
@@ -687,6 +877,13 @@
     "beats": 17,
     "median_surprise": 12.0,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 31.377205,
+    "trailing_pe": 77.63158,
+    "ps": 12.612851,
+    "price": 1180.0,
+    "implied_growth": 1.474139427013974
    }
   },
   {
@@ -697,17 +894,35 @@
     "beats": 7,
     "median_surprise": -14.4,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": 32.651062,
+    "price": 124.5
    }
   },
   {
    "ticker": "3081.TW",
    "requirement": null,
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": null,
+    "price": null
+   }
   },
   {
    "ticker": "3105.TW",
    "requirement": null,
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": null,
+    "price": null
+   }
   },
   {
    "ticker": "3130.TW",
@@ -717,6 +932,13 @@
     "beats": 7,
     "median_surprise": -5.1,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 12.929975,
+    "trailing_pe": 12.796352,
+    "ps": 2.526112,
+    "price": 210.5,
+    "implied_growth": -0.010334358728458448
    }
   },
   {
@@ -727,12 +949,24 @@
     "beats": 8,
     "median_surprise": -29.8,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": 8.046317,
+    "price": 67.2
    }
   },
   {
    "ticker": "3163.TW",
    "requirement": null,
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": null,
+    "price": null
+   }
   },
   {
    "ticker": "3189.TW",
@@ -759,6 +993,13 @@
     "beats": 10,
     "median_surprise": -0.5,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 34.53331,
+    "trailing_pe": 159.51134,
+    "ps": 10.757393,
+    "price": 914.0,
+    "implied_growth": 3.6190573680889546
    }
   },
   {
@@ -786,17 +1027,36 @@
     "beats": 15,
     "median_surprise": 4.6,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 7.6510673,
+    "trailing_pe": 14.569805,
+    "ps": 0.18835865,
+    "price": 179.5,
+    "implied_growth": 0.9042839944696344
    }
   },
   {
    "ticker": "3324.TW",
    "requirement": null,
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": null,
+    "price": null
+   }
   },
   {
    "ticker": "3363.TW",
    "requirement": null,
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": null,
+    "price": null
+   }
   },
   {
    "ticker": "3450.TW",
@@ -823,12 +1083,25 @@
     "beats": 5,
     "median_surprise": -14.7,
     "bias": "共識偏樂觀"
+   },
+   "pe": {
+    "forward_pe": 1.5169482,
+    "trailing_pe": 117.00404,
+    "ps": 9.313309,
+    "price": 578.0,
+    "implied_growth": 76.13120329356005
    }
   },
   {
    "ticker": "3491.TW",
    "requirement": null,
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": null,
+    "price": null
+   }
   },
   {
    "ticker": "3576.TW",
@@ -838,12 +1111,25 @@
     "beats": 6,
     "median_surprise": -33.3,
     "bias": "共識偏樂觀"
+   },
+   "pe": {
+    "forward_pe": 13.115384,
+    "trailing_pe": 32.16981,
+    "ps": 10.502099,
+    "price": 17.05,
+    "implied_growth": 1.4528302030653464
    }
   },
   {
    "ticker": "3580.TW",
    "requirement": null,
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": null,
+    "price": null
+   }
   },
   {
    "ticker": "3596.TW",
@@ -870,6 +1156,13 @@
     "beats": 16,
     "median_surprise": 2.4,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 10.754496,
+    "trailing_pe": 12.480499,
+    "ps": 0.659284,
+    "price": 160.0,
+    "implied_growth": 0.1604912959193998
    }
   },
   {
@@ -897,12 +1190,26 @@
     "beats": 13,
     "median_surprise": 2.5,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 12.876033,
+    "trailing_pe": 11.192529,
+    "ps": 2.9109187,
+    "price": 77.9,
+    "implied_growth": -0.13074710199950557
    }
   },
   {
    "ticker": "4441.TW",
    "requirement": null,
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": 8.86296,
+    "trailing_pe": 9.722222,
+    "ps": 1.5513167,
+    "price": 178.5,
+    "implied_growth": 0.09694977750097045
+   }
   },
   {
    "ticker": "4540.TW",
@@ -929,6 +1236,12 @@
     "beats": 4,
     "median_surprise": -44.6,
     "bias": "共識偏樂觀"
+   },
+   "pe": {
+    "forward_pe": 55.067265,
+    "trailing_pe": null,
+    "ps": 2.308789,
+    "price": 61.4
    }
   },
   {
@@ -956,6 +1269,13 @@
     "beats": 3,
     "median_surprise": -8.5,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 37.348354,
+    "trailing_pe": 65.90214,
+    "ps": 7.769139,
+    "price": 215.5,
+    "implied_growth": 0.7645259547448866
    }
   },
   {
@@ -966,6 +1286,13 @@
     "beats": 9,
     "median_surprise": 7.9,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 0.4333018,
+    "trailing_pe": 8.858801,
+    "ps": 3.8429644,
+    "price": 45.8,
+    "implied_growth": 19.444874680880623
    }
   },
   {
@@ -993,27 +1320,58 @@
     "beats": 10,
     "median_surprise": 7.2,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 12.682271,
+    "trailing_pe": 14.749893,
+    "ps": 1.7146273,
+    "price": 345.0,
+    "implied_growth": 0.16303247265414855
    }
   },
   {
    "ticker": "4768.TW",
    "requirement": null,
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": null,
+    "price": null
+   }
   },
   {
    "ticker": "4908.TW",
    "requirement": null,
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": null,
+    "price": null
+   }
   },
   {
    "ticker": "4979.TW",
    "requirement": null,
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": null,
+    "price": null
+   }
   },
   {
    "ticker": "5236.TW",
    "requirement": null,
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": 13.547758,
+    "ps": 3.8330948,
+    "price": 139.0
+   }
   },
   {
    "ticker": "5287.TWO",
@@ -1040,6 +1398,13 @@
     "beats": 12,
     "median_surprise": -0.2,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 11.285773,
+    "trailing_pe": 9.84957,
+    "ps": 3.9318063,
+    "price": 137.5,
+    "implied_growth": -0.1272578316079901
    }
   },
   {
@@ -1067,17 +1432,36 @@
     "beats": 15,
     "median_surprise": 3.0,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 9.071428,
+    "trailing_pe": 12.7254505,
+    "ps": 1.7001829,
+    "price": 190.5,
+    "implied_growth": 0.4028056552948447
    }
   },
   {
    "ticker": "5483.TW",
    "requirement": null,
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": null,
+    "price": null
+   }
   },
   {
    "ticker": "5520.TWO",
    "requirement": null,
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": 8.659794,
+    "ps": 1.2252413,
+    "price": 84.0
+   }
   },
   {
    "ticker": "5609.TWO",
@@ -1087,12 +1471,24 @@
     "beats": 9,
     "median_surprise": -15.4,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": 10.142672,
+    "ps": 0.34646633,
+    "price": 78.2
    }
   },
   {
    "ticker": "6182.TW",
    "requirement": null,
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": null,
+    "price": null
+   }
   },
   {
    "ticker": "6271.TW",
@@ -1119,6 +1515,13 @@
     "beats": 19,
     "median_surprise": 9.2,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 20.727392,
+    "trailing_pe": 23.702032,
+    "ps": 3.7716005,
+    "price": 210.0,
+    "implied_growth": 0.1435125075069743
    }
   },
   {
@@ -1146,6 +1549,13 @@
     "beats": 12,
     "median_surprise": -3.9,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 16.836174,
+    "trailing_pe": 27.071823,
+    "ps": 0.9630485,
+    "price": 245.0,
+    "implied_growth": 0.6079557623958982
    }
   },
   {
@@ -1173,6 +1583,13 @@
     "beats": 15,
     "median_surprise": 2.1,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 11.3658905,
+    "trailing_pe": 13.018242,
+    "ps": 0.9502635,
+    "price": 78.5,
+    "implied_growth": 0.14537809421971826
    }
   },
   {
@@ -1183,6 +1600,12 @@
     "beats": 7,
     "median_surprise": -44.4,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 12.304148,
+    "trailing_pe": null,
+    "ps": 9.863394,
+    "price": 26.7
    }
   },
   {
@@ -1210,6 +1633,13 @@
     "beats": 14,
     "median_surprise": 4.6,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 10.751647,
+    "trailing_pe": 11.443299,
+    "ps": 1.2365144,
+    "price": 277.5,
+    "implied_growth": 0.06432986499649762
    }
   },
   {
@@ -1237,22 +1667,46 @@
     "beats": 12,
     "median_surprise": -0.8,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": 14.597949,
+    "ps": 2.0325947,
+    "price": 270.5
    }
   },
   {
    "ticker": "6826.TWO",
    "requirement": null,
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": 14.722132,
+    "ps": 2.0718927,
+    "price": 453.0
+   }
   },
   {
    "ticker": "6996.TWO",
    "requirement": null,
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": 12.083888,
+    "ps": 2.52122,
+    "price": 181.5
+   }
   },
   {
    "ticker": "8027.TW",
    "requirement": null,
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": null,
+    "price": null
+   }
   },
   {
    "ticker": "8046.TW",
@@ -1279,6 +1733,13 @@
     "beats": 16,
     "median_surprise": 4.8,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 31.04181,
+    "trailing_pe": 152.35294,
+    "ps": 17.847687,
+    "price": 1295.0,
+    "implied_growth": 3.9079915120928828
    }
   },
   {
@@ -1306,6 +1767,13 @@
     "beats": 17,
     "median_surprise": 5.8,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 12.7089815,
+    "trailing_pe": 14.235166,
+    "ps": 2.6028805,
+    "price": 261.5,
+    "implied_growth": 0.12008708172248106
    }
   },
   {
@@ -1333,6 +1801,13 @@
     "beats": 12,
     "median_surprise": -3.7,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 13.121721,
+    "trailing_pe": 13.882114,
+    "ps": 0.82245976,
+    "price": 68.3,
+    "implied_growth": 0.05794918212329003
    }
   },
   {
@@ -1360,6 +1835,13 @@
     "beats": 13,
     "median_surprise": 2.3,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 13.349437,
+    "trailing_pe": 12.872671,
+    "ps": 1.7199847,
+    "price": 82.9,
+    "implied_growth": -0.03571431514302814
    }
   },
   {
@@ -1370,6 +1852,13 @@
     "beats": 12,
     "median_surprise": -4.1,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 8.902533,
+    "trailing_pe": 12.775331,
+    "ps": 2.2386022,
+    "price": 116.0,
+    "implied_growth": 0.4350220324934486
    }
   },
   {
@@ -1396,6 +1885,12 @@
     "beats": 15,
     "median_surprise": 9.6,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 24.401346,
+    "trailing_pe": null,
+    "ps": 15.986978,
+    "price": 112.215
    }
   },
   {
@@ -1422,6 +1917,13 @@
     "beats": 23,
     "median_surprise": 4.5,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 33.037643,
+    "trailing_pe": 36.18024,
+    "ps": 9.851524,
+    "price": 315.12,
+    "implied_growth": 0.09512170707819556
    }
   },
   {
@@ -1448,6 +1950,13 @@
     "beats": 24,
     "median_surprise": 23.9,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 10.103707,
+    "trailing_pe": 7.7140064,
+    "ps": 1.7479973,
+    "price": 98.585,
+    "implied_growth": -0.2365172109602941
    }
   },
   {
@@ -1474,6 +1983,13 @@
     "beats": 21,
     "median_surprise": 4.0,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 12.924117,
+    "trailing_pe": 15.128194,
+    "ps": 1.5855534,
+    "price": 189.405,
+    "implied_growth": 0.17053985196822352
    }
   },
   {
@@ -1500,6 +2016,13 @@
     "beats": 22,
     "median_surprise": 28.7,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 8.079547,
+    "trailing_pe": 7.2297297,
+    "ps": 2.5804687,
+    "price": 147.125,
+    "implied_growth": -0.10518130533803438
    }
   },
   {
@@ -1526,6 +2049,13 @@
     "beats": 16,
     "median_surprise": 8.5,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 6.1950097,
+    "trailing_pe": 5.516854,
+    "ps": 0.8047198,
+    "price": 14.73,
+    "implied_growth": -0.10946806104274531
    }
   },
   {
@@ -1552,6 +2082,13 @@
     "beats": 15,
     "median_surprise": 22.1,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 10.6705475,
+    "trailing_pe": 10.073138,
+    "ps": 4.097694,
+    "price": 75.75,
+    "implied_growth": -0.05598677106305927
    }
   },
   {
@@ -1578,6 +2115,13 @@
     "beats": 10,
     "median_surprise": 25.6,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 47.202778,
+    "trailing_pe": 148.66502,
+    "ps": 43.560402,
+    "price": 301.79,
+    "implied_growth": 2.1494972605214038
    }
   },
   {
@@ -1604,6 +2148,13 @@
     "beats": 19,
     "median_surprise": 40.7,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 9.360751,
+    "trailing_pe": 5.1604247,
+    "ps": 0.9289159,
+    "price": 257.66,
+    "implied_growth": -0.4487168070168729
    }
   },
   {
@@ -1630,6 +2181,13 @@
     "beats": 22,
     "median_surprise": 6.4,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 25.82471,
+    "trailing_pe": 41.05771,
+    "ps": 12.267471,
+    "price": 476.68,
+    "implied_growth": 0.5898614156751423
    }
   },
   {
@@ -1656,6 +2214,13 @@
     "beats": 21,
     "median_surprise": 3.2,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 30.691107,
+    "trailing_pe": 120.35533,
+    "ps": 18.741549,
+    "price": 474.2,
+    "implied_growth": 2.9215050144655907
    }
   },
   {
@@ -1682,6 +2247,13 @@
     "beats": 20,
     "median_surprise": 25.4,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 24.6908,
+    "trailing_pe": 20.62299,
+    "ps": 3.5672092,
+    "price": 256.53,
+    "implied_growth": -0.16475002835064068
    }
   },
   {
@@ -1708,6 +2280,13 @@
     "beats": 24,
     "median_surprise": 10.0,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 39.090153,
+    "trailing_pe": 63.825317,
+    "ps": 24.132313,
+    "price": 201.688,
+    "implied_growth": 0.6327722482948581
    }
   },
   {
@@ -1734,6 +2313,13 @@
     "beats": 24,
     "median_surprise": 10.4,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 24.88425,
+    "trailing_pe": 40.29625,
+    "ps": 6.8503094,
+    "price": 161.185,
+    "implied_growth": 0.6193475792921224
    }
   },
   {
@@ -1760,6 +2346,12 @@
     "beats": 6,
     "median_surprise": -8.8,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": 40.6,
+    "ps": 2.262925,
+    "price": 4.06
    }
   },
   {
@@ -1786,6 +2378,12 @@
     "beats": 12,
     "median_surprise": 47.9,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": 13.015049,
+    "price": 27.985
    }
   },
   {
@@ -1812,6 +2410,13 @@
     "beats": 22,
     "median_surprise": 8.0,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 28.712387,
+    "trailing_pe": 58.376347,
+    "ps": 18.837887,
+    "price": 1732.61,
+    "implied_growth": 1.0331415496733172
    }
   },
   {
@@ -1838,6 +2443,12 @@
     "beats": 6,
     "median_surprise": -26.3,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": 206.09517,
+    "price": 61.06
    }
   },
   {
@@ -1864,6 +2475,12 @@
     "beats": 14,
     "median_surprise": 21.7,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": 2310.791,
+    "price": 5.765
    }
   },
   {
@@ -1890,6 +2507,12 @@
     "beats": 14,
     "median_surprise": 15.7,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 33.958973,
+    "trailing_pe": null,
+    "ps": 3.845216,
+    "price": 149.5672
    }
   },
   {
@@ -1916,6 +2539,13 @@
     "beats": 24,
     "median_surprise": 1.8,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 18.957726,
+    "trailing_pe": 61.506653,
+    "ps": 23.304358,
+    "price": 369.655,
+    "implied_growth": 2.2444109066667592
    }
   },
   {
@@ -1942,6 +2572,13 @@
     "beats": 9,
     "median_surprise": -25.0,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 51.237125,
+    "trailing_pe": 75.94964,
+    "ps": 1.7741028,
+    "price": 211.14,
+    "implied_growth": 0.4823165819705928
    }
   },
   {
@@ -1968,6 +2605,13 @@
     "beats": 21,
     "median_surprise": 7.7,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 11.638557,
+    "trailing_pe": 14.233257,
+    "ps": 3.7826674,
+    "price": 61.63,
+    "implied_growth": 0.22294000880005993
    }
   },
   {
@@ -1994,6 +2638,12 @@
     "beats": 20,
     "median_surprise": 7.2,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 10.339453,
+    "trailing_pe": null,
+    "ps": 1.2237269,
+    "price": 14.13
    }
   },
   {
@@ -2020,6 +2670,13 @@
     "beats": 9,
     "median_surprise": 2.9,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 7.882433,
+    "trailing_pe": 10.192015,
+    "ps": 3.1994967,
+    "price": 26.805,
+    "implied_growth": 0.29300369568634443
    }
   },
   {
@@ -2046,6 +2703,13 @@
     "beats": 11,
     "median_surprise": -3.3,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 44.667522,
+    "trailing_pe": 289.17105,
+    "ps": 20.791893,
+    "price": 219.77,
+    "implied_growth": 5.473854761855828
    }
   },
   {
@@ -2072,6 +2736,13 @@
     "beats": 18,
     "median_surprise": 11.4,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 11.092331,
+    "trailing_pe": 23.884354,
+    "ps": 1.9131691,
+    "price": 35.11,
+    "implied_growth": 1.1532312730299878
    }
   },
   {
@@ -2098,6 +2769,13 @@
     "beats": 22,
     "median_surprise": 7.5,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 10.250139,
+    "trailing_pe": 14.806168,
+    "ps": 2.7916741,
+    "price": 67.22,
+    "implied_growth": 0.4444846065014336
    }
   },
   {
@@ -2124,12 +2802,25 @@
     "beats": 24,
     "median_surprise": 8.5,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 15.897231,
+    "trailing_pe": 18.983685,
+    "ps": 5.1606236,
+    "price": 162.88,
+    "implied_growth": 0.19415041525156185
    }
   },
   {
    "ticker": "BRK.B",
    "requirement": null,
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": null,
+    "price": null
+   }
   },
   {
    "ticker": "BTDR",
@@ -2155,6 +2846,12 @@
     "beats": 2,
     "median_surprise": -32.4,
     "bias": "共識偏樂觀"
+   },
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": 3.8295116,
+    "price": 11.445
    }
   },
   {
@@ -2181,6 +2878,13 @@
     "beats": 22,
     "median_surprise": 14.3,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 10.963454,
+    "trailing_pe": 32.08128,
+    "ps": 0.9246913,
+    "price": 65.125,
+    "implied_growth": 1.9262019068078362
    }
   },
   {
@@ -2207,6 +2911,13 @@
     "beats": 21,
     "median_surprise": 9.1,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 29.598959,
+    "trailing_pe": 40.28886,
+    "ps": 4.054842,
+    "price": 155.515,
+    "implied_growth": 0.3611580055906696
    }
   },
   {
@@ -2233,6 +2944,13 @@
     "beats": 20,
     "median_surprise": 17.9,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 10.352557,
+    "trailing_pe": 14.372307,
+    "ps": 2.7380085,
+    "price": 133.375,
+    "implied_growth": 0.3882857153068562
    }
   },
   {
@@ -2259,6 +2977,13 @@
     "beats": 21,
     "median_surprise": 3.0,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 29.660252,
+    "trailing_pe": 193.22667,
+    "ps": 13.550885,
+    "price": 144.92,
+    "implied_growth": 5.5146671714050175
    }
   },
   {
@@ -2285,6 +3010,13 @@
     "beats": 15,
     "median_surprise": 8.8,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 9.581776,
+    "trailing_pe": 11.385135,
+    "ps": 1.2675436,
+    "price": 25.275,
+    "implied_growth": 0.1882071757887056
    }
   },
   {
@@ -2311,6 +3043,13 @@
     "beats": 11,
     "median_surprise": 4.2,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 21.1608,
+    "trailing_pe": 27.597265,
+    "ps": 3.1988506,
+    "price": 282.32,
+    "implied_growth": 0.3041692658122568
    }
   },
   {
@@ -2337,6 +3076,13 @@
     "beats": 22,
     "median_surprise": 3.5,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 8.350381,
+    "trailing_pe": 11.565343,
+    "ps": 0.26168397,
+    "price": 279.65,
+    "implied_growth": 0.3850078217987898
    }
   },
   {
@@ -2358,7 +3104,13 @@
     "qoq_n": 4,
     "excess": -0.21266070979662943
    },
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": 5.984496,
+    "ps": 0.49299526,
+    "price": 23.16
+   }
   },
   {
    "ticker": "CLS",
@@ -2384,6 +3136,13 @@
     "beats": 24,
     "median_surprise": 10.0,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 16.394491,
+    "trailing_pe": 33.307693,
+    "ps": 2.5912037,
+    "price": 320.42,
+    "implied_growth": 1.0316393476320798
    }
   },
   {
@@ -2410,6 +3169,13 @@
     "beats": 19,
     "median_surprise": 19.5,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 16.61737,
+    "trailing_pe": 45.62,
+    "ps": 1.0085812,
+    "price": 11.405,
+    "implied_growth": 1.7453201078148948
    }
   },
   {
@@ -2436,6 +3202,13 @@
     "beats": 23,
     "median_surprise": 9.2,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 21.179386,
+    "trailing_pe": 71.706314,
+    "ps": 8.127739,
+    "price": 295.43,
+    "implied_growth": 2.385665382367553
    }
   },
   {
@@ -2462,6 +3235,12 @@
     "beats": 3,
     "median_surprise": -132.0,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 127.67857,
+    "trailing_pe": null,
+    "ps": 13.045235,
+    "price": 17.875
    }
   },
   {
@@ -2488,6 +3267,13 @@
     "beats": 21,
     "median_surprise": 11.4,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 6.80436,
+    "trailing_pe": 8.621799,
+    "ps": 1.4892067,
+    "price": 131.31,
+    "implied_growth": 0.2670991834647196
    }
   },
   {
@@ -2514,6 +3300,13 @@
     "beats": 9,
     "median_surprise": -37.6,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 15.725373,
+    "trailing_pe": 37.744183,
+    "ps": 5.08628,
+    "price": 32.46,
+    "implied_growth": 1.4002090761217558
    }
   },
   {
@@ -2535,7 +3328,13 @@
     "qoq_n": 4,
     "excess": -0.0865109033198117
    },
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": 12.840708,
+    "ps": 0.8107243,
+    "price": 29.02
+   }
   },
   {
    "ticker": "EMR",
@@ -2561,6 +3360,13 @@
     "beats": 22,
     "median_surprise": 6.7,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 21.822634,
+    "trailing_pe": 34.560173,
+    "ps": 4.7468443,
+    "price": 157.94,
+    "implied_growth": 0.5836847650929764
    }
   },
   {
@@ -2587,6 +3393,13 @@
     "beats": 18,
     "median_surprise": 15.9,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 16.923471,
+    "trailing_pe": 38.59406,
+    "ps": 3.8671334,
+    "price": 38.98,
+    "implied_growth": 1.280504986240707
    }
   },
   {
@@ -2613,6 +3426,13 @@
     "beats": 24,
     "median_surprise": 2.8,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 26.01302,
+    "trailing_pe": 42.516308,
+    "ps": 5.3937955,
+    "price": 417.085,
+    "implied_growth": 0.6344241460622411
    }
   },
   {
@@ -2639,6 +3459,13 @@
     "beats": 12,
     "median_surprise": 5.4,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 8.221247,
+    "trailing_pe": 16.581882,
+    "ps": 0.83148515,
+    "price": 47.59,
+    "implied_growth": 1.0169546055482823
    }
   },
   {
@@ -2660,11 +3487,13 @@
     "qoq_n": 4,
     "excess": -0.05972532100999017
    },
-   "track_record": {
-    "n": 24,
-    "beats": 16,
-    "median_surprise": 10.3,
-    "bias": "共識大致中性"
+   "track_record": null,
+   "pe": {
+    "forward_pe": 9.162327,
+    "trailing_pe": 13.046211,
+    "ps": 4.2311926,
+    "price": 211.74,
+    "implied_growth": 0.4238971169660284
    }
   },
   {
@@ -2691,6 +3520,13 @@
     "beats": 18,
     "median_surprise": 3.5,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 35.03893,
+    "trailing_pe": 69.762665,
+    "ps": 7.67132,
+    "price": 151.385,
+    "implied_growth": 0.9910044342107478
    }
   },
   {
@@ -2717,6 +3553,13 @@
     "beats": 20,
     "median_surprise": 12.5,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 22.822197,
+    "trailing_pe": 16.970911,
+    "ps": 9.282184,
+    "price": 338.4,
+    "implied_growth": -0.25638574585961194
    }
   },
   {
@@ -2743,6 +3586,13 @@
     "beats": 22,
     "median_surprise": 13.2,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 10.092775,
+    "trailing_pe": 15.67757,
+    "ps": 3.0356052,
+    "price": 50.325,
+    "implied_growth": 0.5533458340248345
    }
   },
   {
@@ -2769,12 +3619,25 @@
     "beats": 18,
     "median_surprise": 8.2,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 12.094737,
+    "trailing_pe": 61.89231,
+    "ps": 40.59578,
+    "price": 40.23,
+    "implied_growth": 4.117292753037954
    }
   },
   {
    "ticker": "HENKY",
    "requirement": null,
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": 14.839416,
+    "ps": 1.6106099,
+    "price": 20.33
+   }
   },
   {
    "ticker": "HIG",
@@ -2800,6 +3663,13 @@
     "beats": 19,
     "median_surprise": 17.6,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 10.063993,
+    "trailing_pe": 9.514157,
+    "ps": 1.2729552,
+    "price": 137.765,
+    "implied_growth": -0.05463398076687842
    }
   },
   {
@@ -2826,6 +3696,13 @@
     "beats": 22,
     "median_surprise": 7.4,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 13.465369,
+    "trailing_pe": 51.3885,
+    "ps": 1.8768948,
+    "price": 54.9857,
+    "implied_growth": 2.816345471111857
    }
   },
   {
@@ -2847,7 +3724,14 @@
     "qoq_n": 4,
     "excess": -0.09301372795092522
    },
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": 10.852236,
+    "trailing_pe": 14.682857,
+    "ps": 5.2232413,
+    "price": 102.78,
+    "implied_growth": 0.3529798835926532
+   }
   },
   {
    "ticker": "HUBB",
@@ -2873,6 +3757,13 @@
     "beats": 19,
     "median_surprise": 3.7,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 20.653677,
+    "trailing_pe": 28.009188,
+    "ps": 4.0119114,
+    "price": 472.515,
+    "implied_growth": 0.3561356653345553
    }
   },
   {
@@ -2899,6 +3790,12 @@
     "beats": 8,
     "median_surprise": 64.0,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": 33.819954,
+    "price": 87.24
    }
   },
   {
@@ -2925,6 +3822,13 @@
     "beats": 19,
     "median_surprise": 17.6,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 37.925972,
+    "trailing_pe": 43.216824,
+    "ps": 7.7687383,
+    "price": 231.21,
+    "implied_growth": 0.13950471724231628
    }
   },
   {
@@ -2951,6 +3855,12 @@
     "beats": 19,
     "median_surprise": 31.7,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 44.553585,
+    "trailing_pe": null,
+    "ps": 8.424763,
+    "price": 90.8951
    }
   },
   {
@@ -2977,6 +3887,12 @@
     "beats": 6,
     "median_surprise": -2.5,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": 53.46104,
+    "ps": 19.432043,
+    "price": 41.165
    }
   },
   {
@@ -3003,12 +3919,25 @@
     "beats": 22,
     "median_surprise": 11.6,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 30.517908,
+    "trailing_pe": 42.342125,
+    "ps": 11.960888,
+    "price": 368.3765,
+    "implied_growth": 0.3874517545567018
    }
   },
   {
    "ticker": "ITOCY",
    "requirement": null,
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": 16.4875,
+    "ps": 0.0060896208,
+    "price": 13.19
+   }
   },
   {
    "ticker": "IX",
@@ -3029,7 +3958,14 @@
     "qoq_n": 4,
     "excess": 0.08820019220035324
    },
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": 3.299404,
+    "trailing_pe": 10.942091,
+    "ps": 0.012225923,
+    "price": 38.735,
+    "implied_growth": 2.3163841105848206
+   }
   },
   {
    "ticker": "JCI",
@@ -3055,6 +3991,13 @@
     "beats": 20,
     "median_surprise": 2.7,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 23.639313,
+    "trailing_pe": 40.17465,
+    "ps": 3.4563248,
+    "price": 142.62,
+    "implied_growth": 0.699484667765091
    }
   },
   {
@@ -3081,6 +4024,13 @@
     "beats": 20,
     "median_surprise": 9.7,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 14.209427,
+    "trailing_pe": 15.2177725,
+    "ps": 5.069696,
+    "price": 355.365,
+    "implied_growth": 0.07096313595192827
    }
   },
   {
@@ -3107,6 +4057,13 @@
     "beats": 20,
     "median_surprise": 19.2,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 14.548569,
+    "trailing_pe": 39.39679,
+    "ps": 4.7297673,
+    "price": 85.885,
+    "implied_growth": 1.707949489740194
    }
   },
   {
@@ -3117,6 +4074,13 @@
     "beats": 3,
     "median_surprise": -13.4,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 17.972477,
+    "trailing_pe": 12.803922,
+    "ps": 0.006207369,
+    "price": 19.59,
+    "implied_growth": -0.28758167279891367
    }
   },
   {
@@ -3143,6 +4107,13 @@
     "beats": 23,
     "median_surprise": 7.3,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 10.344964,
+    "trailing_pe": 33.520466,
+    "ps": 0.23624703,
+    "price": 57.32,
+    "implied_growth": 2.240268984986318
    }
   },
   {
@@ -3169,6 +4140,13 @@
     "beats": 22,
     "median_surprise": 37.5,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 47.798885,
+    "trailing_pe": 314.17645,
+    "ps": 6.578287,
+    "price": 53.41,
+    "implied_growth": 5.572882400917929
    }
   },
   {
@@ -3195,6 +4173,13 @@
     "beats": 22,
     "median_surprise": 3.3,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 17.203062,
+    "trailing_pe": 28.171215,
+    "ps": 1.9244018,
+    "price": 340.4601,
+    "implied_growth": 0.637569811699801
    }
   },
   {
@@ -3221,6 +4206,13 @@
     "beats": 21,
     "median_surprise": 2.3,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 19.517912,
+    "trailing_pe": 26.566227,
+    "ps": 3.8056958,
+    "price": 262.74,
+    "implied_growth": 0.3611203391018467
    }
   },
   {
@@ -3247,6 +4239,12 @@
     "beats": 23,
     "median_surprise": 9.0,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 28.415329,
+    "trailing_pe": null,
+    "ps": 27.918304,
+    "price": 938.08
    }
   },
   {
@@ -3273,6 +4271,13 @@
     "beats": 16,
     "median_surprise": 3.8,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 17.209938,
+    "trailing_pe": 20.784422,
+    "ps": 1.6873131,
+    "price": 563.05,
+    "implied_growth": 0.20769883075697293
    }
   },
   {
@@ -3299,6 +4304,12 @@
     "beats": 11,
     "median_surprise": -24.7,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": 5.809724,
+    "price": 12.095
    }
   },
   {
@@ -3325,6 +4336,13 @@
     "beats": 21,
     "median_surprise": 4.1,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 17.572159,
+    "trailing_pe": 23.817427,
+    "ps": 0.25202432,
+    "price": 888.39,
+    "implied_growth": 0.3554069821471568
    }
   },
   {
@@ -3351,6 +4369,13 @@
     "beats": 24,
     "median_surprise": 2.9,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 37.721767,
+    "trailing_pe": 79.886185,
+    "ps": 19.706247,
+    "price": 1312.53,
+    "implied_growth": 1.1177742018288805
    }
   },
   {
@@ -3377,6 +4402,13 @@
     "beats": 19,
     "median_surprise": 1.6,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 38.959774,
+    "trailing_pe": 84.261986,
+    "ps": 25.366438,
+    "price": 246.045,
+    "implied_growth": 1.162794527504189
    }
   },
   {
@@ -3403,6 +4435,13 @@
     "beats": 23,
     "median_surprise": 7.0,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 21.380138,
+    "trailing_pe": 28.046745,
+    "ps": 11.277984,
+    "price": 504.0,
+    "implied_growth": 0.31181309493886356
    }
   },
   {
@@ -3429,6 +4468,13 @@
     "beats": 22,
     "median_surprise": 8.7,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 5.8977494,
+    "trailing_pe": 20.68552,
+    "ps": 11.438556,
+    "price": 914.3,
+    "implied_growth": 2.5073582475376113
    }
   },
   {
@@ -3455,6 +4501,13 @@
     "beats": 22,
     "median_surprise": 8.0,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 15.76882,
+    "trailing_pe": 35.135277,
+    "ps": 21.888535,
+    "price": 229.08,
+    "implied_growth": 1.228148777143756
    }
   },
   {
@@ -3481,6 +4534,13 @@
     "beats": 19,
     "median_surprise": 7.4,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 24.029076,
+    "trailing_pe": 43.119446,
+    "ps": 5.197602,
+    "price": 155.23,
+    "implied_growth": 0.7944695834330044
    }
   },
   {
@@ -3507,6 +4567,13 @@
     "beats": 12,
     "median_surprise": 39.4,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 15.583518,
+    "trailing_pe": 23.267443,
+    "ps": 3.8107975,
+    "price": 90.045,
+    "implied_growth": 0.4930802531238454
    }
   },
   {
@@ -3533,6 +4600,13 @@
     "beats": 22,
     "median_surprise": 6.3,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 16.394203,
+    "trailing_pe": 48.522877,
+    "ps": 4.663431,
+    "price": 74.24,
+    "implied_growth": 1.9597582145347352
    }
   },
   {
@@ -3559,6 +4633,13 @@
     "beats": 21,
     "median_surprise": 6.5,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 25.281021,
+    "trailing_pe": 110.76879,
+    "ps": 16.078136,
+    "price": 294.645,
+    "implied_growth": 3.3814998611013376
    }
   },
   {
@@ -3585,6 +4666,13 @@
     "beats": 12,
     "median_surprise": 1.5,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 13.569925,
+    "trailing_pe": 21.837606,
+    "ps": 0.34465584,
+    "price": 25.55,
+    "implied_growth": 0.6092650475223704
    }
   },
   {
@@ -3611,6 +4699,13 @@
     "beats": 14,
     "median_surprise": 1.6,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 13.406454,
+    "trailing_pe": 10.948596,
+    "ps": 1.3938062,
+    "price": 218.315,
+    "implied_growth": -0.18333393751994376
    }
   },
   {
@@ -3637,6 +4732,13 @@
     "beats": 7,
     "median_surprise": 9.2,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 9.961594,
+    "trailing_pe": 19.702005,
+    "ps": 0.6968838,
+    "price": 68.76,
+    "implied_growth": 0.9777964249496616
    }
   },
   {
@@ -3663,6 +4765,13 @@
     "beats": 19,
     "median_surprise": 5.6,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 11.290897,
+    "trailing_pe": 12.974463,
+    "ps": 1.4747037,
+    "price": 127.02,
+    "implied_growth": 0.1491082595120654
    }
   },
   {
@@ -3689,6 +4798,12 @@
     "beats": 20,
     "median_surprise": 17.1,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 59.21435,
+    "trailing_pe": null,
+    "ps": 13.651517,
+    "price": 165.995
    }
   },
   {
@@ -3715,6 +4830,12 @@
     "beats": 5,
     "median_surprise": -39.2,
     "bias": "共識偏樂觀"
+   },
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": 4.224895,
+    "price": 2.25
    }
   },
   {
@@ -3741,6 +4862,13 @@
     "beats": 23,
     "median_surprise": 6.2,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 31.702585,
+    "trailing_pe": 71.08219,
+    "ps": 2.8450212,
+    "price": 622.68,
+    "implied_growth": 1.2421575401501173
    }
   },
   {
@@ -3767,6 +4895,12 @@
     "beats": 9,
     "median_surprise": -46.4,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": 11.777713,
+    "price": 21.17
    }
   },
   {
@@ -3793,6 +4927,13 @@
     "beats": 16,
     "median_surprise": 164.5,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 8.991831,
+    "trailing_pe": 6.207483,
+    "ps": 0.6323291,
+    "price": 9.125,
+    "implied_growth": -0.30965306176239293
    }
   },
   {
@@ -3819,12 +4960,25 @@
     "beats": 22,
     "median_surprise": 12.8,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 50.16062,
+    "trailing_pe": null,
+    "ps": 8.52829,
+    "price": 218.76
    }
   },
   {
    "ticker": "SSUMY",
    "requirement": null,
-   "track_record": null
+   "track_record": null,
+   "pe": {
+    "forward_pe": 3.7414966,
+    "trailing_pe": 14.102565,
+    "ps": 0.0069515137,
+    "price": 11.0,
+    "implied_growth": 2.7692310077202795
+   }
   },
   {
    "ticker": "TER",
@@ -3850,6 +5004,13 @@
     "beats": 24,
     "median_surprise": 10.5,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 31.433672,
+    "trailing_pe": 50.451775,
+    "ps": 12.827974,
+    "price": 366.2799,
+    "implied_growth": 0.6050232693145108
    }
   },
   {
@@ -3876,6 +5037,13 @@
     "beats": 19,
     "median_surprise": 7.5,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 10.088601,
+    "trailing_pe": 11.5723915,
+    "ps": 3.2318974,
+    "price": 50.3399,
+    "implied_growth": 0.14707594244236644
    }
   },
   {
@@ -3902,6 +5070,13 @@
     "beats": 24,
     "median_surprise": 43.5,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 12.87259,
+    "trailing_pe": 10.367852,
+    "ps": 0.99050325,
+    "price": 268.32,
+    "implied_growth": -0.19457917948136316
    }
   },
   {
@@ -3928,6 +5103,13 @@
     "beats": 17,
     "median_surprise": 21.2,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 12.230039,
+    "trailing_pe": 8.740489,
+    "ps": 0.0043982593,
+    "price": 192.99,
+    "implied_growth": -0.2853261547244452
    }
   },
   {
@@ -3954,6 +5136,13 @@
     "beats": 18,
     "median_surprise": 3.2,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 10.964968,
+    "trailing_pe": 11.333836,
+    "ps": 3.1717808,
+    "price": 112.885,
+    "implied_growth": 0.033640590651974556
    }
   },
   {
@@ -3980,6 +5169,13 @@
     "beats": 13,
     "median_surprise": 6.9,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 163.60751,
+    "trailing_pe": 330.05597,
+    "ps": 13.460304,
+    "price": 353.14,
+    "implied_growth": 1.0173644229412209
    }
   },
   {
@@ -4006,6 +5202,13 @@
     "beats": 24,
     "median_surprise": 5.1,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 19.681452,
+    "trailing_pe": 31.967712,
+    "ps": 0.5007044,
+    "price": 428.687,
+    "implied_growth": 0.6242557713729657
    }
   },
   {
@@ -4032,6 +5235,13 @@
     "beats": 22,
     "median_surprise": 8.1,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 25.064703,
+    "trailing_pe": 40.610348,
+    "ps": 12.525761,
+    "price": 266.81,
+    "implied_growth": 0.620220594674511
    }
   },
   {
@@ -4042,6 +5252,12 @@
     "beats": 3,
     "median_surprise": -75.0,
     "bias": "共識偏樂觀"
+   },
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": 326.80493,
+    "price": 13.4663
    }
   },
   {
@@ -4068,6 +5284,13 @@
     "beats": 20,
     "median_surprise": 7.6,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 7.2676244,
+    "trailing_pe": 7.135816,
+    "ps": 0.56881124,
+    "price": 174.8275,
+    "implied_growth": -0.018136380300555976
    }
   },
   {
@@ -4094,6 +5317,13 @@
     "beats": 14,
     "median_surprise": 1.5,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 9.845889,
+    "trailing_pe": 21.60789,
+    "ps": 1.1045432,
+    "price": 93.13,
+    "implied_growth": 1.1946103597145976
    }
   },
   {
@@ -4120,6 +5350,13 @@
     "beats": 21,
     "median_surprise": 2.6,
     "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 9.433784,
+    "trailing_pe": 12.972656,
+    "ps": 1.4901193,
+    "price": 49.815,
+    "implied_growth": 0.3751275204096258
    }
   },
   {
@@ -4146,6 +5383,13 @@
     "beats": 15,
     "median_surprise": 12.2,
     "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 16.46506,
+    "trailing_pe": 152.64287,
+    "ps": 2.050796,
+    "price": 85.48,
+    "implied_growth": 8.270714470521211
    }
   }
  ]
