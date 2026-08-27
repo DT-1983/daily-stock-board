@@ -70,28 +70,69 @@ def _split(text: str, limit: int = 1990):
     return chunks
 
 
-def send_discord(channel: str, text: str, persona: str = "戰情室") -> bool:
-    """發到指定頻道。channel: 'daily'|'earnings'（或直接給完整 webhook URL）。
-    回 True/False，失敗不 raise。"""
-    url = CHANNELS.get(channel, channel if str(channel).startswith("https://") else "")
+def _url(channel):
+    return CHANNELS.get(channel, channel if str(channel).startswith("https://") else "")
+
+
+def send_discord(channel: str, text: str, persona: str = "戰情室", return_ids=False):
+    """發到指定頻道。channel: 'daily'|'earnings'|'private'（或完整 webhook URL）。
+    回 True/False；return_ids=True 時回 [訊息id,...]（之後要編輯/刪除得留著 id）。
+    失敗不 raise。"""
+    url = _url(channel)
     if not url:
         print(f"[discord] 頻道 {channel} 沒設 webhook，跳過")
-        return False
+        return [] if return_ids else False
     display = PERSONAS.get(persona, persona)
-    ok = True
+    ok, ids = True, []
     for i, chunk in enumerate(_split(text)):
         try:
-            r = requests.post(url, json={"content": chunk, "username": display},
-                              timeout=15)
+            # ?wait=true 才會回傳訊息本體（含 id）——不加的話 Discord 回 204 空 body，
+            # 事後就無從編輯／刪除那則訊息（2026-08-27 想改說明訊息時才發現這個坑）
+            r = requests.post(url + ("?wait=true" if return_ids else ""),
+                              json={"content": chunk, "username": display}, timeout=15)
             if r.status_code not in (200, 204):
                 print(f"[discord] 發送失敗 {r.status_code}: {r.text[:150]}")
                 ok = False
+            elif return_ids and r.status_code == 200:
+                try:
+                    ids.append(r.json().get("id"))
+                except Exception:
+                    pass
             if i:               # 多則之間稍停，避免 rate limit（webhook 約 30則/分鐘）
                 time.sleep(0.6)
         except Exception as e:
             print(f"[discord] 發送例外：{e}")
             ok = False
-    return ok
+    return ids if return_ids else ok
+
+
+def edit_discord(channel: str, message_id: str, text: str) -> bool:
+    """編輯先前用 webhook 發出的訊息（需要當初 return_ids 拿到的 id）。"""
+    url = _url(channel)
+    if not (url and message_id):
+        return False
+    try:
+        r = requests.patch(f"{url}/messages/{message_id}", json={"content": text}, timeout=15)
+        if r.status_code not in (200, 204):
+            print(f"[discord] 編輯失敗 {r.status_code}: {r.text[:150]}")
+            return False
+        return True
+    except Exception as e:
+        print(f"[discord] 編輯例外：{e}")
+        return False
+
+
+def delete_discord(channel: str, message_id: str) -> bool:
+    """刪除先前用 webhook 發出的訊息。"""
+    url = _url(channel)
+    if not (url and message_id):
+        return False
+    try:
+        r = requests.delete(f"{url}/messages/{message_id}", timeout=15)
+        return r.status_code in (200, 204)
+    except Exception as e:
+        print(f"[discord] 刪除例外：{e}")
+        return False
 
 
 if __name__ == "__main__":
