@@ -1,130 +1,130 @@
 {
- "updated": "2026-08-26 15:54",
+ "updated": "2026-08-27 16:44",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "08/25",
-   "close": 7677.28,
-   "chg_pct": 0.32
+   "date": "08/26",
+   "close": 7675.7,
+   "chg_pct": -0.02
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "08/25",
-   "close": 26151.3,
-   "chg_pct": 0.66
+   "date": "08/26",
+   "close": 26130.2,
+   "chg_pct": -0.08
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "08/25",
-   "close": 53577.4,
-   "chg_pct": 0.3
+   "date": "08/26",
+   "close": 53463.88,
+   "chg_pct": -0.21
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "08/25",
-   "close": 11588.04,
-   "chg_pct": 1.44
+   "date": "08/26",
+   "close": 11611.24,
+   "chg_pct": 0.2
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "08/26",
-   "close": 45832.62,
-   "chg_pct": 1.47
+   "date": "08/27",
+   "close": 45975.22,
+   "chg_pct": 0.31
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "08/26",
-   "close": 31.78,
-   "chg_pct": -0.1
+   "date": "08/27",
+   "close": 31.71,
+   "chg_pct": -0.43
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "08/25",
-   "close": 4.64,
+   "date": "08/26",
+   "close": 4.66,
    "fmt": "yield",
-   "chg_bp": -6.5
+   "chg_bp": 2.5
   }
  ],
  "news": [
   {
-   "title": "黃金漲輸DRAM！南韓記憶體出口價3年狂飆11倍 1公斤值600克黃金",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6586911",
-   "ts": "08/26 15:50"
-  },
-  {
-   "title": "華為搶進埃及AI標案 擬出口2000顆昇騰晶片、美國急組聯盟攔截",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6587624",
-   "ts": "08/26 15:41"
-  },
-  {
-   "title": "愛派司下半年營運將優於上半年 海外市場目標每年成長2成",
+   "title": "SUMCO減持台勝科至38%仍列重要生產銷售基地、後續持股動向受關注",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6587604",
-   "ts": "08/26 15:36"
+   "url": "https://news.cnyes.com/news/id/6589085",
+   "ts": "08/27 16:30"
   },
   {
-   "title": "AI半導體紅利從HBM擴散，MLCC、載板供應吃緊成下一波焦點",
+   "title": "南俊國際通用伺服器缺料緩解 Q2將是今年最低點 VR、ASIC滑軌Q3放量",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6422728",
+   "ts": "08/27 16:24"
+  },
+  {
+   "title": "〈景氣燈號〉連亮8紅！41分持平、製造業回溫 經濟動能穩健但要留意4大不確定",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6589079",
+   "ts": "08/27 16:21"
+  },
+  {
+   "title": "法國拋註銷18%公債訴求！全球恐走向「憑空抹債」加劇通膨",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6587630",
-   "ts": "08/26 15:30"
+   "url": "https://news.cnyes.com/news/id/6588929",
+   "ts": "08/27 16:20"
   },
   {
-   "title": "智慧眼鏡普及遇隱私考驗，Meta、Ray-Ban面臨社會接受度挑戰",
+   "title": "金管會普渡 彭金隆許下三安之願 銀行局回應公民併",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6589058",
+   "ts": "08/27 16:19"
+  },
+  {
+   "title": "AI需求推升銅箔基板景氣建滔積層板迎量價齊升、目標價升至42.43港元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6587627",
-   "ts": "08/26 15:30"
+   "url": "https://news.cnyes.com/news/id/6589073",
+   "ts": "08/27 16:00"
   },
   {
-   "title": "川普政府「暫停」所有移民簽證申請！20萬庇護者恐受影響",
+   "title": "輝達拋驚人長期財測！科技巨頭營收排名大洗牌 將超車蘋果Alphabet躍居第二",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6587487",
-   "ts": "08/26 15:20"
+   "url": "https://news.cnyes.com/news/id/6589015",
+   "ts": "08/27 15:54"
   },
   {
-   "title": "聯電擬發行最高18億美元海外可轉債，資金將投入設備與廠務工程",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6587609",
-   "ts": "08/26 15:00"
+   "title": "溢價買下AI開發者天堂！輝達傳以129億美元收購Hugging Face 看好開源AI成下一成長引擎",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6588302",
+   "ts": "08/27 15:50"
   },
   {
-   "title": "台股帶量收復所有均線、外資回補365億 三大法人買超593.87億元",
+   "title": "AIDC吃電怎「選址」？龔明鑫釋解方：北部電網受限 中南部成設置首選",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6587607",
-   "ts": "08/26 14:58"
+   "url": "https://news.cnyes.com/news/id/6589011",
+   "ts": "08/27 15:43"
   },
   {
-   "title": "量增前，最後買進機會！SEMICON 2026低基期黑馬在這！",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6587595",
-   "ts": "08/26 14:35"
-  },
-  {
-   "title": "〈台股盤後〉連續6天測試4萬5關卡成功站穩 開低走高漲663點收45832.62點",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6587563",
-   "ts": "08/26 14:14"
+   "title": "AI浪潮遇現實難題 美半數擬建資料中心被迫延期或取消",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6588968",
+   "ts": "08/27 15:40"
   }
  ],
  "inst": {
-  "date": "08/26",
-  "total_yi": 593.9,
-  "foreign_yi": 366.0,
-  "trust_yi": 48.6
+  "date": "08/27",
+  "total_yi": 643.1,
+  "foreign_yi": 490.9,
+  "trust_yi": 1.8
  }
 }
