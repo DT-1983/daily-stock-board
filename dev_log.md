@@ -1980,3 +1980,23 @@ earnings_watch push()一點接全通(預告+快訊→龐統/earnings)。
 部署：本機走.env；**GitHub Actions 走 secrets**（DISCORD_WH_DAILY/EARNINGS 已用
 gh secret set 設好，tw-board/weekly-screen 對應步驟 env 已加）。端到端已驗證
 （孔明真實格式訊息發抵#每日戰情）。Telegram照舊雙發，Leo用幾天再決定TG留什麼。
+
+## 2026-08-28（續三）· Phase 2 統一組報器 daily_warroom.py 上線
+
+分工定案：**Telegram 維持逐則即時推播；Discord #每日戰情 收「一則五段式合成日報」**
+（好讀版）——呼應 Leo「telegram 很難讀」的原始動機。
+
+新增 `daily_warroom.py`：純讀檔+格式化（零AI呼叫零成本），五段結構借老墨骨架：
+①大盤/總經（指數美台兩行+排定事件+警示關鍵字新聞）②今日訊號異動（SuperTrend/
+AI轉買賣/翻貴，有變才列；st_flips_today.json 加date欄位供資料新鮮度判斷）
+③投資長判斷（讀advisor_verdicts.jsonl當天筆，同檔多筆留最後）④研究員筆記
+（產業翻象限/持股事件新聞一行一條）⑤近日要看（總經行事曆+未來7天財報）。
+發Discord時署名孔明，超長自動切多則（notify_discord處理）。
+
+**同時移除三個個別Discord雙發**（alert_telegram/valuation_alert/investment_chief）
+——內容經state檔案進合成日報，個別再發會同內容出現兩次。earnings頻道（龐統）跟
+週六buy_digest（跑在組報之後）維持個別發。排程：researcher_stock_sync.cmd 最後
+一步（08:45後，一天資料最齊的時點）。
+
+實測今天真實資料組報成功並發抵Discord：五段全populated（②8檔翻貴③24檔判斷
+④2個產業翻象限⑤非農行事曆）。
