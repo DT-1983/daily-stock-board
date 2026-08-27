@@ -8,6 +8,7 @@
 
 用法:python buffett_scan.py [--max-candidates 200]
 """
+import sys
 import json
 import argparse
 from datetime import datetime
@@ -74,16 +75,19 @@ def main():
     markets = [m.strip().lower() for m in args.markets.split(",") if m.strip()]
     today = datetime.now().strftime("%Y-%m-%d")
     out = {}
+    fetch_stats = {}   # market -> (候選數, 評估成功數)
 
     if "us" in markets:
         tickers = stage1_prefilter(min_market_cap=args.min_cap, max_candidates=args.max_candidates)
         us = [r for r in stage2_yfinance(tickers) if r]
+        fetch_stats["US"] = (len(tickers), len(us))
         n_us = _collect(us, "US", today, out)
         print(f"── 美股 BUY/WATCH：{n_us} 檔")
 
     if "tw" in markets:
         tw_tk = stage1_prefilter_tw(min_market_cap=args.tw_min_cap, max_candidates=args.tw_max_candidates)
         tw = [r for r in stage2_yfinance(tw_tk) if r]
+        fetch_stats["TW"] = (len(tw_tk), len(tw))
         n_tw = _collect(tw, "TW", today, out)
         zh = _tw_name_map()                      # 代號→中文名
         if zh:
@@ -92,6 +96,27 @@ def main():
                     code = tk.rsplit(".", 1)[0]           # .TW / .TWO 都剝掉
                     v["name"] = zh.get(code, v.get("name"))
         print(f"── 台股 BUY/WATCH：{n_tw} 檔（中文名 {len(zh)} 檔對照）")
+
+    # ── 完整性防線（2026-08-27，Leo：「跑出來是錯的比沒跑出來嚴重」）──────────
+    # 任一市場的資料抓取成功率 < MIN_FETCH_RATE → 整批不寫檔，沿用上一版清單。
+    # 背景：8/27 全掃 236 檔有 201 檔被 Yahoo 429 打掉、清單 41→22——SKIP 是
+    # 「抓不到資料」不是「品質淘汰」，殘缺清單會讓下游（到俗價觸發/buy_digest/
+    # 投資長）把「限流」誤讀成「這些股票不合格/消失」。寧可舊而完整，不要新而殘缺。
+    MIN_FETCH_RATE = 0.70
+    bad = {m: (c, s) for m, (c, s) in fetch_stats.items() if c > 0 and s / c < MIN_FETCH_RATE}
+    if bad:
+        detail = "；".join(f"{m} 候選{c}檔只評估到{s}檔（{s/c*100:.0f}%）" for m, (c, s) in bad.items())
+        print(f"🔴 完整性防線觸發：{detail} → 不覆蓋 buffett_watch.json，沿用上一版")
+        tok = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+        chat = os.environ.get("TELEGRAM_CHAT_ID", "")
+        if tok and chat:
+            import requests as _rq
+            _rq.post(f"https://api.telegram.org/bot{tok}/sendMessage",
+                     json={"chat_id": chat, "parse_mode": "HTML",
+                           "text": f"🔴 <b>巴菲特掃描資料不完整，本週清單未更新</b>\n{detail}\n"
+                                   f"疑似資料源限流，沿用上一版清單（寧舊勿殘）。"},
+                     timeout=20)
+        sys.exit(0)   # 刻意 exit 0：這是防線正常運作不是程式錯誤，別讓 workflow 紅燈
 
     json.dump(out, open("buffett_watch.json", "w", encoding="utf-8"),
               ensure_ascii=False, indent=1)
