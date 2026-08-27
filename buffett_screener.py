@@ -556,6 +556,7 @@ def fetch_fundamentals(ticker: str) -> dict:
         # （實測 PSX 幾乎全中；BMY 這種大額減損/併購費用多的還有差距，已知限制）。
         changli_eps = None
         changli_basis = None
+        ttm_ni = None            # 提到 try 外面——下面的幣別換算要用，不能只活在巢狀作用域裡
         try:
             shares = info.get("sharesOutstanding") or info.get("impliedSharesOutstanding")
             inc = stock.income_stmt
@@ -569,7 +570,6 @@ def fetch_fundamentals(ticker: str) -> dict:
                     # 抓不到才退 eps_ttm×股數（info 裡現成，零額外呼叫，GAAP 近似）。
                     # 429 限流問題不在這裡犧牲準確度解，改由 stage2 加大間隔+重試處理
                     # （2026-08-27 Actions 全掃被打爆 201/236 檔的教訓）。
-                    ttm_ni = None
                     try:
                         q = stock.quarterly_income_stmt
                         qf = "Normalized Income" if (q is not None and not q.empty and
@@ -592,6 +592,45 @@ def fetch_fundamentals(ticker: str) -> dict:
                             changli_basis = "normalized" if fld == "Normalized Income" else "net_income"
         except Exception:
             pass
+
+        # 🔴 幣別/ADR 換算（2026-08-28 修）。常利EPS 是從 income_stmt 的淨利算的，
+        # 那是**財報幣別、每股（原股）**；但股價是**掛牌幣別、每 ADR**。兩者直接相除
+        # 會得到完全錯誤的俗貴價。實測 12 檔美股 ADR 全中，且錯得很誇張：
+        #   TM 俗價 $30,428 vs 現價 $192（159倍）、SSUMY 101倍、ITOCY 84倍、
+        #   KNBWY 64倍、IX 26倍、CICHY 12倍、TSM 8倍、DNKEY 5倍 → **8 檔全顯示 🟢便宜**。
+        # 下游被汙染的有：翻貴警示、投資長價值角度、巴菲特頁、資產儀表板、預估前提檢查。
+        #
+        # 修法：yfinance 的 trailingEps 跟 currentPrice 是**同一個幣別/單位**（兩者相除
+        # 等於它自己回報的 trailingPE，已驗證），所以拿它當基準推換算係數：
+        #     scale = trailingEps ÷ （我們自己從財報算的 TTM EPS）
+        # 這個係數會把幣別與 ADR 換股比例**一次修掉**，不用另外查匯率。
+        # 實測：TSM 0.0314(≈1/31.8 台幣)、TM 0.0069(≈1/145 日圓)、BAYRY 1.153(歐元)，
+        # 美國本土股 AAPL/NVDA 是 0.99（無錯位，套用等於不動）。
+        fx_scale = None
+        fx_note = ""
+        try:
+            cur, fcur = info.get("currency"), info.get("financialCurrency")
+            if cur and fcur and cur != fcur:
+                sh = info.get("sharesOutstanding") or info.get("impliedSharesOutstanding")
+                te = info.get("trailingEps")
+                ours = (ttm_ni / float(sh)) if (ttm_ni and sh) else None
+                if ours and te and ours * te > 0:      # 同號才算，一正一負代表對不上
+                    fx_scale = te / ours
+                else:
+                    fx_note = "幣別不符且推不出換算係數"
+            elif cur and not fcur:
+                fx_note = "查不到財報幣別"
+        except Exception:
+            fx_note = "換算係數計算失敗"
+        if fx_scale:
+            if changli_eps:
+                changli_eps = round(changli_eps * fx_scale, 4)
+            eps_history = [round(e * fx_scale, 4) for e in eps_history]
+        elif fx_note.startswith("幣別不符"):
+            # 推不出係數就**不要給俗貴價**——寧可空白也不要一個差 100 倍的 🟢。
+            # （Leo 的原則：跑出來是錯的比沒跑出來嚴重。）
+            changli_eps = None
+            changli_basis = None
 
         # 歷史 ROE（從資產負債表 + 損益表計算）
         roe_history = []
