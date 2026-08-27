@@ -338,19 +338,37 @@ def baserate_message(scope):
         if d.get("date") != datetime.date.today().isoformat():
             return None
         held = BR._held_set()
-        hot = [c for c in d.get("checks", [])
-               if (c.get("requirement") or {}).get("tier") in ("unprecedented", "rare")
-               and ((c["ticker"] in held) if scope == "private" else (c["ticker"] not in held))]
+        mine = [c for c in d.get("checks", [])
+                if ((c["ticker"] in held) if scope == "private" else (c["ticker"] not in held))]
+        # 每月 11 號推完整清單（台股月營收 10 號前公布完，那天資料最新）；
+        # 其他週一只推**燈號有變的**。同一份清單每週貼一次，第二週就沒人看了
+        # ——沿用系統裡既有的「變化才推」模式（Leo 2026-08-28 指定）。
+        full = datetime.date.today().day in (11, 12, 13)   # 11 號可能不是週一，給三天窗
+        hot = [c for c in mine
+               if (c.get("requirement") or {}).get("tier") in ("unprecedented", "rare")]
+        if not full:
+            hot = [c for c in hot if c.get("changed")]
+            # 降級也是新聞（🚫→✅ 表示壓力解除），所以變化清單不能只留高危的
+            hot += [c for c in mine if c.get("changed")
+                    and (c.get("requirement") or {}).get("tier") == "normal"]
         if not hot:
             return None
         hot.sort(key=lambda c: (0 if c["requirement"]["tier"] == "unprecedented" else 1,
                                 -(c["requirement"].get("excess") or 0)))
-        head = ("# 📐 預估前提檢查・持股" if scope == "private"
-                else "# 📐 預估前提檢查・觀察名單")
-        out = [head, "分析師預估要求的成長，這家公司自己做過嗎？"
-                     "（🚫要破自己的紀錄　⚠️剛好貼在紀錄上）", ""]
+        who = "持股" if scope == "private" else "觀察名單"
+        if full:
+            out = [f"# 📐 預估前提檢查・{who}（每月完整清單）",
+                   "分析師預估要求的成長，這家公司自己做過嗎？"
+                   "（🚫要破自己的紀錄　⚠️剛好貼在紀錄上）", ""]
+        else:
+            out = [f"# 📐 預估前提檢查・{who}（本週異動）",
+                   f"燈號跟上次（{d.get('prev_date','')}）不一樣的才列，沒變的不重複貼。", ""]
         for c in hot[:3]:                       # 前三名完整展開
-            out += BR.card(c) + [""]
+            block = BR.card(c)
+            if not full and c.get("prev_tier"):
+                block.insert(1, f"　變化：{BR.TIER.get(c['prev_tier'],'')} → "
+                                f"{BR.TIER.get(c['requirement']['tier'],'')}")
+            out += block + [""]
         rest = hot[3:]
         if rest:
             out.append("**同樣要破紀錄，數字較小的**")
