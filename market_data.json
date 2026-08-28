@@ -1,94 +1,94 @@
 {
- "updated": "2026-08-28 19:32",
+ "updated": "2026-08-29 03:23",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "08/27",
-   "close": 7730.99,
-   "chg_pct": 0.72
+   "date": "08/28",
+   "close": 7710.71,
+   "chg_pct": -0.26
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "08/27",
-   "close": 26541.35,
-   "chg_pct": 1.57
+   "date": "08/28",
+   "close": 26399.44,
+   "chg_pct": -0.53
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "08/27",
-   "close": 53569.44,
-   "chg_pct": 0.2
+   "date": "08/28",
+   "close": 53576.53,
+   "chg_pct": 0.01
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "08/27",
-   "close": 11882.17,
-   "chg_pct": 2.33
+   "date": "08/28",
+   "close": 11483.86,
+   "chg_pct": -3.35
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "08/28",
-   "close": 46331.45,
-   "chg_pct": 0.77
+   "date": "08/27",
+   "close": 45975.22,
+   "chg_pct": 0.31
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "08/28",
-   "close": 31.6,
-   "chg_pct": -0.64
+   "close": 31.65,
+   "chg_pct": -0.5
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "08/27",
-   "close": 4.67,
+   "date": "08/28",
+   "close": 4.72,
    "fmt": "yield",
-   "chg_bp": 0.8
+   "chg_bp": 4.8
   }
  ],
  "news": [
   {
-   "title": "Pimco：AI融資「過多過快」 正在推高債券殖利率",
+   "title": "盤中速報 - 伊魯米納(ILMN-US)大跌5%，報216.38美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6590782",
-   "ts": "08/28 19:30"
+   "url": "https://news.cnyes.com/news/id/6591230",
+   "ts": "08/29 02:36"
   },
   {
-   "title": "鋅價突破每噸3,900美元創逾4年新高礦山供應受阻、LME庫存下滑",
+   "title": "美國救日元原來是在救自己？貝森特揭背後盤算",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6590936",
-   "ts": "08/28 19:00"
+   "url": "https://news.cnyes.com/news/id/6591215",
+   "ts": "08/29 02:30"
   },
   {
-   "title": "印尼整頓非法錫礦見效PT Timah上半年淨利暴增804.7%、產量回升74.8%",
+   "title": "鉅亨速報 - Factset 最新調查：CareTrust REIT公司(CTRE-US)EPS預估上修至1.56元，預估目標價為45.00元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6590934",
-   "ts": "08/28 19:00"
+   "url": "https://news.cnyes.com/news/id/6591226",
+   "ts": "08/29 02:15"
   },
   {
-   "title": "歐盟CBAM擬擴大至180種下游產品現代鋼鐵示警汽車零件、家電碳成本升高",
+   "title": "鉅亨速報 - Factset 最新調查：歐米茄健康照護投資人(OHI-US)EPS預估上修至2.68元，預估目標價為51.00元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6590933",
-   "ts": "08/28 19:00"
+   "url": "https://news.cnyes.com/news/id/6591225",
+   "ts": "08/29 02:15"
   },
   {
-   "title": "軟銀擬籌集100億美元聯貸 擴大布局OpenAI投資",
+   "title": "鉅亨速報 - Factset 最新調查：前線公司(FRO-US)EPS預估上修至8.96元，預估目標價為41.09元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6590783",
-   "ts": "08/28 19:00"
+   "url": "https://news.cnyes.com/news/id/6591224",
+   "ts": "08/29 02:15"
   },
   {
    "title": "欣興指今遭檢調調查對財務及業務並沒有重大影響 外資砸42.77億元大買",
@@ -123,8 +123,8 @@
  ],
  "inst": {
   "date": "08/28",
-  "total_yi": 468.2,
-  "foreign_yi": 415.9,
-  "trust_yi": 9.6
+  "total_yi": 458.3,
+  "foreign_yi": 417.5,
+  "trust_yi": -2.0
  }
 }
