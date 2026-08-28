@@ -259,7 +259,7 @@ def sec3_chief(date, scope="public"):
     return lines
 
 
-def sec4_research(notes, scope="public"):
+def sec4_research(notes, scope="public", date=None):
     """④ 研究員筆記。public=產業層（不涉持股）；private=持股事件新聞。"""
     got = False
     if scope == "private":
@@ -280,6 +280,34 @@ def sec4_research(notes, scope="public"):
             got = True
     if not got:
         lines.append("今日無產業象限翻轉。")
+
+    # 全市場籌碼異常（2026-08-28，chip_scan.py）。放公開版：這是全市場公開資訊、
+    # 跟持股無關，不會洩漏部位。跟我們既有的籌碼運用互補——screen.py/tw_analyze.py
+    # 只看守備清單內的股票，這裡是**清單外**也掃得到，可能更早抓到轉強股。
+    try:
+        import chip_scan as _cs
+        ce = _cs._load(_cs.OUT_PATH, {})
+        cd = ce.get("date")
+        # 用「資料日期在 3 天內」而不是「等於今天」：台股收盤後才有籌碼資料，
+        # 週末/連假的日報要顯示的是最近一個交易日的結果（週六看週五的才對）。
+        # 非當日的標出日期，不要讓人以為是今天的。
+        if cd and ce.get("events"):
+            try:
+                gap = (datetime.date.fromisoformat(date) - datetime.date.fromisoformat(cd)).days
+            except Exception:
+                gap = 99
+            if 0 <= gap <= 3:
+                ls = _cs.summary_lines(ce["events"], max_each=6)
+                if ls:
+                    when = "" if gap == 0 else f"・{cd}"
+                    lines.append("")
+                    lines.append(f"**🔍 全市場籌碼異常**（{len(ce['events'])} 筆・三大法人{when}）")
+                    lines += ls
+    except Exception as e:
+        # 不要完全靜默——2026-08-28 第一版寫錯（sec4_research 當時沒有 date 參數，
+        # 引用了不存在的變數）就是被 `except: pass` 吞掉，畫面上看起來像「今天沒有
+        # 籌碼異常」而不是「程式錯了」。今天已經因為這個模式踩了四五次坑。
+        print(f"  [warn] 籌碼異常區塊失敗：{e}")
     return lines
 
 
@@ -422,7 +450,7 @@ def compose(date=None, scope="public", part="all"):
         chief = [sec3_chief(date, "private")]
     else:
         research = [sec1_market(notes), sec2_signals(date, "public"),
-                    sec4_research(notes, "public"), sec5_watch(date)]
+                    sec4_research(notes, "public", date), sec5_watch(date)]
         chief = [sec3_chief(date, "public")]
 
     if part == "research":
