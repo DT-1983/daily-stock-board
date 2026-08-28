@@ -406,11 +406,54 @@ def card_digest(path, url):
     return "\n".join(lines)
 
 
+def _card_period_end(path):
+    """讀已產生卡片的『會計期間截至』日期。讀不到回 None。"""
+    import re as _re
+    try:
+        h = io.open(path, encoding="utf-8").read()
+    except Exception:
+        return None
+    m = _re.search(r"會計期間截至\s*([\d-]+)", h)
+    return m.group(1) if m else None
+
+
+def _infographic_is_fresh(path, ed):
+    """卡片的『會計期間截至』離公告日 ed 是否合理接近（財報通常公告日在期末後
+    3-6 週）。2026-08-28 修：NVDA 8/26 已公布，get_earnings_dates 抓得到 EPS，
+    但 yfinance 的 quarterly_income_stmt（完整三表）還沒跟上，還停在上一季
+    （2026-04-30 而不是 2026-07-31）——fetch() 沒有這層檢查，會照樣產出一張
+    數字全部落後一季的卡片，而且 daily_followup 不管新不新都把 state 標成
+    'sent'，之後永遠不會重試，這張卡片就永遠是舊的。
+    這裡抓：期末日離公告日超過 75 天就判定太舊。門檻校準自實測（2026-08-28）：
+    AAPL/MSFT/TSLA/AMD 正常差距 22~35 天；NVDA 卡在舊季別時差距是 118 天
+    （幾乎整整一季）。75 天留了約 2 倍安全邊際給正常但報得慢的公司，同時
+    遠低於一季(~91天)，不會誤把「差一整季」判成新鮮。"""
+    pe = _card_period_end(path)
+    if not pe:
+        return False           # 讀不到日期，保守當作沒準備好
+    try:
+        from datetime import date as _date
+        gap = (ed - _date.fromisoformat(pe)).days
+    except Exception:
+        return False
+    return 0 <= gap <= 75
+
+
 def daily_followup(args):
     """每日輕量跟催。只看 state.upcoming 已發過預告的（tk, 財報日），
     財報日在 [today-AFTER_DAYS, today] 且 reported 沒記過 → 確認真的公布了
-    （Reported EPS 有值）→ 產懶人包 + 老墨式四段推播。"""
+    （Reported EPS 有值）→ 產懶人包 + 老墨式四段推播。
+
+    2026-08-28 加：懶人包卡片單獨補跑（infographic_pending）。原本 `st["reported"]`
+    一旦標成 "sent" 就永遠不會再檢查那檔——但 make_infographic() 沒有「資料新不新」
+    的把關，quarterly_income_stmt（完整三表）常常比 get_earnings_dates（EPS 數字）
+    晚更新好幾天。實測 NVDA：8/26 公布，EPS/意外都推對了，但完整三表 8/28 當下
+    還停在上一季，卡片被悄悄產成舊季別、state 卻標記完成——之後永遠不會補。
+    現在拆成兩層：EPS 快訊該推的照舊只推一次；卡片沒跟上就記進
+    infographic_pending，之後每天輕量重試，直到 yfinance 資料跟上為止。
+    """
     st = load_state()
+    st.setdefault("infographic_pending", {})
     today = datetime.now(TW).date()
     personal = set(_personal())
     kids = {k for k, v in _holdings().items() if v[1] != "Leo"} - personal
@@ -424,14 +467,46 @@ def daily_followup(args):
         except ValueError:
             continue
         if 0 <= (today - ed).days <= AFTER_DAYS and st["reported"].get(key) != "sent":
-            cands.append((tk, ed, key))
+            cands.append((tk, ed, key, "new"))
+    # 卡片還沒跟上、但 EPS 快訊已經推過的——只補卡片，不重推 EPS/共識（避免每天洗版）。
+    # 30 天還沒跟上就放棄重試（資料源長期缺漏，不是延遲問題，繼續試沒意義）。
+    for key, ds in list(st["infographic_pending"].items()):
+        tk = key.rsplit("@", 1)[0]
+        try:
+            ed = datetime.strptime(ds, "%Y-%m-%d").date()
+        except ValueError:
+            del st["infographic_pending"][key]
+            continue
+        if (today - ed).days > 30:
+            print(f"  {tk} 懶人包補跑超過30天仍未跟上，放棄")
+            del st["infographic_pending"][key]
+            continue
+        cands.append((tk, ed, key, "pending"))
     if not cands:
         print("每日跟催：沒有「已預告、近日公布、還沒處理」的財報")
         return
 
     print(f"每日跟催：{len(cands)} 檔候選 {[c[0] for c in cands]}")
     blocks, made, discord_digests = [], 0, []
-    for tk, ed, key in cands:
+    for tk, ed, key, kind in cands:
+        if kind == "pending":
+            # 只補卡片：不重抓 EPS/意外/共識（那些已經推過），成功才發輕量訊息。
+            if made >= args.max_infographics or args.dry_run:
+                continue
+            print(f"  補跑懶人包 {tk} …")
+            p = make_infographic(tk)
+            if not p or not _infographic_is_fresh(p, ed):
+                print(f"  {tk} 三表仍未跟上，留在 pending 明天再試")
+                continue
+            made += 1
+            del st["infographic_pending"][key]
+            url = f"{PAGES}/{os.path.basename(p)}"
+            dg = card_digest(p, url)
+            blocks.append(f"📄 <b>{tk}</b> 財報懶人包補上了（{ed} 財報，資料延遲跟上）")
+            if dg:
+                discord_digests.append(dg)
+            continue
+
         info = earnings_info(tk)
         time.sleep(0.35)
         if not info or not info.get("last_date") or info["last_date"] < ed:
@@ -452,7 +527,7 @@ def daily_followup(args):
         if tk in held and made < args.max_infographics and not args.dry_run:
             print(f"  產懶人包 {tk} …")
             p = make_infographic(tk)
-            if p:
+            if p and _infographic_is_fresh(p, ed):
                 made += 1
                 url = f"{PAGES}/{os.path.basename(p)}"
                 b.append(f'　📄 <a href="{url}">財報懶人包（已更新）</a>')
@@ -462,6 +537,12 @@ def daily_followup(args):
                 dg = card_digest(p, url)
                 if dg:
                     discord_digests.append(dg)
+            elif p:
+                # 卡片產出來了，但財報三表資料還沒跟上（見本函式檔頭說明）——
+                # 不算完成，記進 infographic_pending 之後每天輕量重試。
+                print(f"  {tk} 卡片產出但三表未跟上（仍是舊季別），排入補跑佇列")
+                b.append("　📄 財報懶人包：資料源三表尚未更新，補跑中（明天起會自動重試）")
+                st["infographic_pending"][key] = ed.isoformat()
             flash = _ai_flash(tk, nm, info, consensus)
             if flash:
                 b.append(f"　③ 指引vs共識：{flash['guidance_vs_consensus']}")
@@ -472,6 +553,8 @@ def daily_followup(args):
             st["reported"][key] = "sent"
 
     if not blocks:
+        if not args.dry_run:
+            save_state(st)          # infographic_pending 的增減也要存
         return
     msg = "📊 <b>財報快訊（公布後跟催）</b>\n\n" + "\n\n".join(blocks)
     print("\n" + msg.replace("<b>", "").replace("</b>", ""))
