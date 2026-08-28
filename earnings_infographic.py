@@ -212,9 +212,8 @@ def score(d: dict) -> dict:
     現在改為直接沿用 buffett_screener 的既有實作，不另立標準。
     依據：memory/hongruitai_method.md（該檔開頭即註明「動巴菲特相關前先讀」）。
     """
-    from buffett_screener import (fetch_fundamentals, ROE_MIN, ROE_YEARS,
-                                  REINVEST_IDEAL, REINVEST_MAX, PAYOUT_MIN,
-                                  PE_CHEAP, PE_EXPENSIVE)
+    from buffett_screener import (fetch_fundamentals, evaluate, ROE_MIN, ROE_YEARS,
+                                  REINVEST_IDEAL, REINVEST_MAX, PAYOUT_MIN)
     f = fetch_fundamentals(d["ticker"]) or {}
 
     roe = f.get("roe_current")
@@ -253,8 +252,13 @@ def score(d: dict) -> dict:
                    "label": "③ 配息率 ≥ 40%"}
 
     # ── 俗價／貴價（只有兩條線，沒有合理價）──
-    cheap = eps_ttm * PE_CHEAP if eps_ttm and eps_ttm > 0 else None
-    expensive = eps_ttm * PE_EXPENSIVE if eps_ttm and eps_ttm > 0 else None
+    # 2026-08-28 修：這裡原本自己算 eps_ttm*PE_CHEAP(EPS×12，已棄用的舊公式)，跟
+    # buffett_screener.evaluate() 8/27 改版後的常利+CHEAP_DISCOUNT(÷1.15^8≈EPS×9.81)
+    # 完全脫鉤——同一檔股票，這張卡片跟 buffett.html/investment_chief/base_rate
+    # 顯示的俗貴價會對不上（Leo 8/28 發現「財報分析資料好像倒退了」就是這個）。
+    # 改叫 evaluate(f) 用同一套邏輯，全站數字一致。
+    ev = evaluate(f)
+    cheap, expensive = ev.get("cheap_price"), ev.get("exp_price")
     if not (price and cheap):
         pos, pos_txt = None, "EPS 為負或缺值，俗貴價不適用"
     elif price <= cheap:
@@ -331,7 +335,7 @@ def narrative(d: dict, sc: dict, extra_facts: str = "") -> dict:
 
 俗貴價（洪瑞泰只有這兩條線，沒有合理價）
   近四季 EPS {sc['eps_ttm']}
-  俗價（買）EPS×12 = {sc['cheap']}　貴價（賣）EPS×30 = {sc['expensive']}
+  俗價（買，貴價÷1.15^8）= {sc['cheap']}　貴價（賣，常利EPS×30）= {sc['expensive']}
   現價 {sc['price']} → {sc['pos_txt']}
 
 變壞判定：{sc['verdict']}　理由：{'、'.join(sc['reasons']) or '無'}
@@ -349,7 +353,7 @@ def narrative(d: dict, sc: dict, extra_facts: str = "") -> dict:
 · **核心順序：先挑「好公司」（不會變的公司），再等「便宜」才買。品質第一、估值第二。**
 · 三大量化關卡：① ROE≥15% 且要連續穩定 ② 盈再率<80%（理想<40%，>200% 是掏空地雷）
   ③ 配息率≥40%（配得出現金才是真賺錢，作假帳的公司配不出現金）
-· 估值**只有兩條線**：俗價 EPS×12（買）、貴價 EPS×30（賣）。**沒有合理價，不要用 PEG／EV倍數／目標價來論估值。**
+· 估值**只有兩條線**：俗價（常利EPS×30÷1.15^8，買）、貴價（常利EPS×30，賣）。**沒有合理價，不要用 PEG／EV倍數／目標價來論估值。**
 · **「不聽未來轉機、爆發力的鬼故事」** —— 不要用「未來成長想像」當利多，要看已實現的獲利穩定度。
 · **公司變壞就該賣**：EPS 衰退、預估 EPS 下修、高負債都是變壞訊號。
 · 這套框架**只回答「這是不是洪瑞泰會買的股票」**，不代表這是公司唯一值得看的角度。
@@ -608,7 +612,7 @@ def render(d, sc, n, extra_html=None):
     rate_html += (
         f'<div style="margin-top:12px;padding-top:11px;border-top:1px solid #1E3A5F">'
         f'<div style="color:#F5B841;font-size:11.5px;font-weight:700;margin-bottom:5px">'
-        f'俗貴價（EPS×12 買／EPS×30 賣）</div>'
+        f'俗貴價（常利EPS基準，買=÷1.15^8／賣=×30）</div>'
         f'<div style="font-size:12.5px;color:#C7D8EC;line-height:1.7">'
         f'近四季 EPS {_pf(sc["eps_ttm"])}　'
         f'<span style="color:#22C55E">俗價 {_pf(sc["cheap"])}</span>　'
@@ -700,7 +704,7 @@ def render(d, sc, n, extra_html=None):
   星級評分中的成長性/財務體質/估值/風險由公式計算，「競爭護城河」與文字敘述由 AI 依上述數據撰寫。<br>
   <b>本頁並列兩套獨立策略，互不覆蓋，可能給出相反結論——那是正常的，不是 bug</b>：<br>
   　<b>① 洪瑞泰（Mike桑）選股法</b>（左下卡）：三大關卡（ROE≥15% 且連續穩定／盈再率&lt;80%／
-  配息率≥40%）＋ 俗價 EPS×12 買、貴價 EPS×30 賣 ＋ 變壞判定。長線、重品質、不看成長故事。<br>
+  配息率≥40%）＋ 俗價（常利EPS÷1.15^8）買、貴價（常利EPS×30）賣 ＋ 變壞判定。長線、重品質、不看成長故事。<br>
   　<b>② 分析師共識與估值</b>（右下卡）：BUY/HOLD/SELL 標章為 yfinance 彙整的<b>賣方分析師共識</b>，
   搭配 Forward P/E、PEG、FCF Yield、EV/Sales。市場派觀點，含成長性預期。<br>
   兩者衝突時（例：分析師喊 BUY 但洪瑞泰三關全不過）＝ 該檔是「市場看好但體質不合格」，
