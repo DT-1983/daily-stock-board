@@ -84,6 +84,13 @@ def _fetch_hist(code, market):
         try:
             h = yf.Ticker(sym).history(period="1y")
             if h is not None and not h.empty and len(h) >= 120:
+                # 2026-08-28 修：Ticker().history() 回 tz-aware index（如 America/New_York），
+                # 但 prefetch() 的批次 yf.download() 回 tz-naive。同一條鏈裡混到一個
+                # cache 命中（naive）+ 一個這裡 fallback 抓的（aware），_basket_index
+                # union 時間戳會直接 TypeError。兩條路徑統一在這裡去掉 tz，只保留日期本身
+                # （日線資料本來就不需要時區資訊）。
+                if h.index.tz is not None:
+                    h = h.tz_localize(None)
                 return h
         except Exception:
             continue
@@ -105,8 +112,15 @@ def compute_chain(members, market, bench_closes, with_rrg=True, prev=None):
     import board_html as _L
     from technical_indicators import squeeze_momentum, squeeze_intensity
 
-    hist_list = [h for h in (_HIST_CACHE.get((market, c)) or _fetch_hist(c, market)
-                             for c in members) if h is not None]
+    # 2026-08-28 修：原本用 `_HIST_CACHE.get(...) or _fetch_hist(...)`——`or` 要先對
+    # 左邊求真假值，而 pandas DataFrame 只要不是空的/單一值就會直接炸
+    # ValueError("truth value of a DataFrame is ambiguous")。cache 命中（prefetch()
+    # 已經抓過的股票，正常情況幾乎每次都命中）就必爆，這支 --daily 模式第一次真的
+    # 上排程（8/28 08:45）就撞上，之前只在手動測試時跑過少量股票沒踩到。
+    def _cached_or_fetch(c):
+        h = _HIST_CACHE.get((market, c))
+        return h if h is not None else _fetch_hist(c, market)
+    hist_list = [h for h in (_cached_or_fetch(c) for c in members) if h is not None]
     closes_list = [h["Close"] for h in hist_list]
     if len(closes_list) < MIN_MEMBERS:
         return None
@@ -225,7 +239,10 @@ def run(with_rrg=True):
             continue
         try:
             bh = yf.Ticker(BENCH[market]).history(period="1y")
-            bench_closes = {"index": bh.index, "close": bh["Close"].tolist()}
+            # 同一個 tz 問題（見 _fetch_hist 的說明）：這裡也是 Ticker().history()，
+            # index 是 tz-aware，跟籃子成分股（現已統一 tz-naive）放一起比較會炸。
+            bidx = bh.index.tz_localize(None) if bh.index.tz is not None else bh.index
+            bench_closes = {"index": bidx, "close": bh["Close"].tolist()}
         except Exception as e:
             print(f"  {market} 大盤 {BENCH[market]} 抓取失敗，跳過：{e}")
             continue
