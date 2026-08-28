@@ -268,16 +268,20 @@
    3265.0,
    3320.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
-  "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
-  "emoji": "⚪"
+  "reason": "MA5>MA10>MA20多頭排列，股價創波段新高；投信連買1669張、外資小買，籌碼與均線雙多",
+  "risk": "漲多獲利了結賣壓，PER偏高波動大",
+  "buy_point": "拉回MA5(3132)不破可分批進場",
+  "stop_loss": "跌破MA10 3079",
+  "target": "3500~3600",
+  "checklist": [
+   "確認站穩MA5不破",
+   "觀察投信是否續買",
+   "留意量能是否隨價放大"
+  ],
+  "signal": "買進",
+  "score": 78,
+  "oneliner": "均線多頭排列，投信買超，創高偏多操作",
+  "emoji": "🟢"
  },
  {
   "code": "2382",
@@ -548,16 +552,20 @@
    331.0,
    330.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
-  "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
-  "emoji": "⚪"
+  "reason": "MA5/MA10/MA20多頭排列，外資12日大買15361張、投信同步買超，籌碼與技術面同向偏多",
+  "risk": "組裝業毛利率偏低，獲利彈性有限",
+  "buy_point": "MA5(330.4)附近拉回可布局",
+  "stop_loss": "跌破MA10 329.2",
+  "target": "345~350",
+  "checklist": [
+   "確認外資買超是否延續",
+   "留意殖利率4.69%具支撐性",
+   "觀察量能是否放大配合"
+  ],
+  "signal": "買進",
+  "score": 72,
+  "oneliner": "均線多頭、外資投信同步加碼，續抱偏多",
+  "emoji": "🟢"
  },
  {
   "code": "2356",
@@ -828,15 +836,19 @@
    65.5,
    64.8
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5/MA10已跌破MA20，外資、投信近12日同步賣超，籌碼偏空，惟股價未跌破前低64.5",
+  "risk": "若續破64.5前低恐加速下跌",
+  "buy_point": "站穩MA20(66.0)且法人回補再考慮",
+  "stop_loss": "64.5(近期低點)",
+  "target": "先看回測MA20 66.0",
+  "checklist": [
+   "觀察是否跌破64.5前低",
+   "留意外資投信是否止賣",
+   "確認能否站回MA20"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 45,
+  "oneliner": "均線轉弱、法人雙賣，未破前低先觀望",
   "emoji": "⚪"
  },
  {
@@ -1108,15 +1120,19 @@
    1150.0,
    1070.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "單日重挫5.93%跌破MA5/MA10，惟MA5仍略高於MA20，外資12日仍大買46758張未轉空",
+  "risk": "單日重挫爆量，追高套牢風險高",
+  "buy_point": "止穩收復MA10(1124)再進場",
+  "stop_loss": "跌破MA20 1046.5",
+  "target": "1200(前波高點)",
+  "checklist": [
+   "確認是否止穩不再破底",
+   "留意投信是否轉買",
+   "觀察外資買超能否延續"
+  ],
   "signal": "觀望",
   "score": 50,
-  "oneliner": "資料分析失敗",
+  "oneliner": "爆量重挫但均線仍偏多，觀望等止穩",
   "emoji": "⚪"
  },
  {
@@ -1388,15 +1404,19 @@
    248.5,
    251.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5、MA10仍低於MA20呈空頭排列，外資投信近12日皆大賣，惟股價近日收復站上MA5/MA10",
+  "risk": "反彈若無法收復MA20，恐再破底",
+  "buy_point": "站穩MA20(254.2)再介入",
+  "stop_loss": "跌破245(近期低點)",
+  "target": "260~265",
+  "checklist": [
+   "觀察能否站穩MA20",
+   "留意外資賣超是否縮手",
+   "確認反彈量能是否放大"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 48,
+  "oneliner": "均線仍空頭但價量回升，暫不追空",
   "emoji": "⚪"
  },
  {
@@ -1668,15 +1688,19 @@
    2410.0,
    2410.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5>MA10>MA20多頭排列，惟外資買超、投信同期賣超，籌碼未同向，暫不追高",
+  "risk": "投信賣超未止，追高恐承接套牢",
+  "buy_point": "拉回MA10(2393.5)附近分批",
+  "stop_loss": "跌破MA20 2389.2",
+  "target": "2480~2500",
+  "checklist": [
+   "觀察投信是否轉為買超",
+   "確認均線多頭是否延續",
+   "留意大盤系統性風險"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 55,
+  "oneliner": "均線多頭但法人不同調，等投信轉買",
   "emoji": "⚪"
  },
  {
@@ -1948,15 +1972,19 @@
    179.0,
    178.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5、MA10均低於MA20呈空頭排列，外資投信近12日同步大賣，惟尚未跌破近期低點175.5",
+  "risk": "若續破175.5恐加速探底",
+  "buy_point": "站回MA20(185.7)且法人止賣再看多",
+  "stop_loss": "175.5(近期低點)",
+  "target": "先看反彈至MA10 179.9",
+  "checklist": [
+   "觀察是否跌破175.5前低",
+   "留意外資投信賣超力道",
+   "確認能否站回短均線"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 40,
+  "oneliner": "均線空頭、法人雙賣，未破底先觀望",
   "emoji": "⚪"
  },
  {
@@ -2228,16 +2256,20 @@
    1055.0,
    1075.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
-  "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
-  "emoji": "⚪"
+  "reason": "MA5>MA10>MA20多頭排列，股價跳空大漲創高；外資、投信近12日同步買超，籌碼與技術面共振",
+  "risk": "單日漲幅逾7%，留意獲利了結賣壓",
+  "buy_point": "拉回不破MA5(1071)可布局",
+  "stop_loss": "跌破MA10 1028.9",
+  "target": "1250~1300",
+  "checklist": [
+   "確認法人買超是否延續",
+   "留意量能是否隨價放大",
+   "觀察輝達AI鏈消息面是否延續"
+  ],
+  "signal": "買進",
+  "score": 80,
+  "oneliner": "均線多頭、法人雙買，輝達財報激勵偏多",
+  "emoji": "🟢"
  },
  {
   "code": "3450",
@@ -2248,7 +2280,7 @@
   "ma10": 562.7,
   "ma20": 522.6,
   "foreign": 2594,
-  "trust": 3511,
+  "trust": 3750,
   "rev_yoy": 98.0,
   "open": 586.0,
   "high": 635.0,
@@ -2508,16 +2540,20 @@
    567.0,
    576.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
-  "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
-  "emoji": "⚪"
+  "reason": "收盤站上MA5/MA10/MA20呈多頭排列,外資12日買超2594張、投信買超3750張,雙多訊號成立",
+  "risk": "單日漲近10%漲停鎖死,追高風險大,留意獲利了結賣壓",
+  "buy_point": "回測MA5(565)附近不破分批進場,或已持股續抱",
+  "stop_loss": "跌破MA10(563)",
+  "target": "挑戰前波高點700元關卡",
+  "checklist": [
+   "觀察明日是否跳空或爆量鎖漲停",
+   "追蹤外資投信買超是否延續",
+   "留意MA5是否被跌破"
+  ],
+  "signal": "買進",
+  "score": 82,
+  "oneliner": "爆量漲停,外資投信雙買,多頭趨勢最強",
+  "emoji": "🟢"
  },
  {
   "code": "3081",
@@ -2788,15 +2824,19 @@
    3265.0,
    3285.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "股價站穩MA5/MA10/MA20多頭排列,但外資12日賣超1449張、投信買超3328張,籌碼不同調未達雙多",
+  "risk": "外資持續調節可能壓抑漲勢,注意限制員工權利新股增資稀釋",
+  "buy_point": "待外資轉買超且不破MA5(3131)再進場",
+  "stop_loss": "跌破MA10(2975)",
+  "target": "前高3455元",
+  "checklist": [
+   "觀察外資是否轉買超",
+   "追蹤投信買超力道是否持續",
+   "留意增資基準日相關公告"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 55,
+  "oneliner": "均線多頭但法人分歧,外資賣投信買",
   "emoji": "⚪"
  },
  {
@@ -3068,15 +3108,19 @@
    2065.0,
    2100.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5(2074)<MA10(2115)<MA20(2195)偏空頭排列,外資投信12日皆賣超,但股價未明確跌破前低2030支撐",
+  "risk": "美股光模組、存儲股普跌拖累氣氛,若跌破2030恐加速下跌",
+  "buy_point": "不建議進場,待均線轉多再觀察",
+  "stop_loss": "跌破2030視為轉空",
+  "target": "反彈至MA20(2195)遇壓",
+  "checklist": [
+   "確認是否跌破近期低點2030",
+   "觀察法人賣超是否收斂",
+   "留意美股光通訊類股連動"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 35,
+  "oneliner": "均線糾結偏空,外資投信雙賣但未破支撐",
   "emoji": "⚪"
  },
  {
@@ -3348,15 +3392,19 @@
    599.0,
    596.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "股價站穩MA5/MA10/MA20多頭排列,惟外資12日賣超3373張、投信買超7921張,法人不同調",
+  "risk": "PER近百倍偏高,若投信買盤停歇,外資賣壓恐主導走勢",
+  "buy_point": "待外資轉buy或拉回MA10(572)不破再進場",
+  "stop_loss": "跌破MA10(572)",
+  "target": "前高651元",
+  "checklist": [
+   "追蹤外資賣超是否收斂",
+   "確認投信買超能否延續",
+   "留意MA10支撐是否守穩"
+  ],
   "signal": "觀望",
   "score": 50,
-  "oneliner": "資料分析失敗",
+  "oneliner": "均線多頭但外資大賣、投信大買互抵",
   "emoji": "⚪"
  },
  {
@@ -3368,7 +3416,7 @@
   "ma10": 391.1,
   "ma20": 380.5,
   "foreign": 9968,
-  "trust": 7975,
+  "trust": 9411,
   "rev_yoy": 31.2,
   "open": 449.5,
   "high": 461.5,
@@ -3628,16 +3676,20 @@
    412.0,
    434.5
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
-  "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
-  "emoji": "⚪"
+  "reason": "MA5>MA10>MA20多頭排列,外資12日買超9968張、投信買超9411張,雙多力道強勁",
+  "risk": "PER已逾50倍偏高,連日急漲後留意拉回整理",
+  "buy_point": "拉回不破MA10(391)分批布局",
+  "stop_loss": "跌破MA20(380)",
+  "target": "挑戰前波高值461.5元,續強看500元關卡",
+  "checklist": [
+   "觀察外資投信買超是否延續",
+   "留意MA10支撐是否守穩",
+   "注意連續急漲後的量能變化"
+  ],
+  "signal": "買進",
+  "score": 85,
+  "oneliner": "均線多頭排列,外資投信同步大買",
+  "emoji": "🟢"
  },
  {
   "code": "3363",
@@ -3908,15 +3960,19 @@
    648.0,
    678.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5>MA10>MA20多頭排列,外資12日買超1395張,但投信0張未跟進,未達雙多條件",
+  "risk": "EPS為負、毛利率僅0.2%基本面偏弱,若外資轉賣恐缺乏支撐",
+  "buy_point": "待投信也轉買超再進場",
+  "stop_loss": "跌破MA10(625)",
+  "target": "挑戰漲停價715元",
+  "checklist": [
+   "觀察投信是否開始買超",
+   "追蹤外資買超力道",
+   "留意基本面持續虧損風險"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 48,
+  "oneliner": "均線多頭但投信無動作,單靠外資買超",
   "emoji": "⚪"
  },
  {
@@ -4188,15 +4244,19 @@
    769.0,
    750.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5>MA10>MA20仍屬多頭排列,惟收盤跌破MA5(760.8),外資賣超1660張、投信小賣45張",
+  "risk": "公告股價達注意交易資訊標準,波動風險升高,留意主管機關關注措施",
+  "buy_point": "待站回MA5(761)且法人轉買再進場",
+  "stop_loss": "跌破MA20(718)",
+  "target": "反彈測試前高784元",
+  "checklist": [
+   "確認是否重新站上MA5",
+   "觀察注意交易資訊後續是否有處置措施",
+   "追蹤外資賣超是否加劇"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 40,
+  "oneliner": "均線仍多頭但股價轉弱,法人偏賣",
   "emoji": "⚪"
  },
  {
@@ -4468,15 +4528,19 @@
    175.0,
    183.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5>MA10>MA20多頭排列,惟外資12日賣超2151張、投信0張未跟進,籌碼未達雙多",
+  "risk": "PER逾75倍評價偏高,若外資賣壓延續恐拖累漲勢",
+  "buy_point": "待投信進場買超或外資轉buy再進場",
+  "stop_loss": "跌破MA10(165)",
+  "target": "挑戰漲停價195.5元",
+  "checklist": [
+   "觀察投信是否開始買超",
+   "追蹤外資賣超是否收斂",
+   "留意MA10支撐是否守穩"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 42,
+  "oneliner": "均線多頭但外資賣超、投信未進場",
   "emoji": "⚪"
  },
  {
@@ -4748,16 +4812,20 @@
    71.6,
    72.4
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
-  "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
-  "emoji": "⚪"
+  "reason": "MA5>MA10>MA20多頭排列，外資12日買超7554張、投信買超3502張，籌碼與均線同步偏多",
+  "risk": "短線漲多獲利了結賣壓，追高風險",
+  "buy_point": "拉回71.5~72(近MA5/MA10)",
+  "stop_loss": "69.6(MA20)",
+  "target": "75",
+  "checklist": [
+   "確認MA5持續站上MA10",
+   "觀察外資是否持續買超",
+   "留意74.3前高壓力"
+  ],
+  "signal": "買進",
+  "score": 72,
+  "oneliner": "均線多頭排列，外資投信同步買超",
+  "emoji": "🟢"
  },
  {
   "code": "3023",
@@ -5028,16 +5096,20 @@
    314.5,
    315.5
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
-  "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
-  "emoji": "⚪"
+  "reason": "MA5>MA10>MA20多頭排列，外資12日買超1175張，惟投信轉小幅賣超202張",
+  "risk": "投信轉賣，310~320區間高檔震盪整理",
+  "buy_point": "316~318(近MA5/MA10)",
+  "stop_loss": "313(MA20下方)",
+  "target": "325(前高)",
+  "checklist": [
+   "確認投信賣超是否擴大",
+   "觀察外資買超能否延續",
+   "留意325前高壓力"
+  ],
+  "signal": "買進",
+  "score": 62,
+  "oneliner": "均線多頭排列，外資買超支撐",
+  "emoji": "🟢"
  },
  {
   "code": "2049",
@@ -5308,15 +5380,19 @@
    354.5,
    346.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5<MA10<MA20均線空頭排列，惟投信買超2826張抵銷外資賣超3297張，籌碼分歧",
+  "risk": "外資若持續調節、再度跌破349恐續弱",
+  "buy_point": "站穩MA10 358.8且外資轉買",
+  "stop_loss": "343.5(近期低點)",
+  "target": "觀望階段不設",
+  "checklist": [
+   "觀察外資是否止賣",
+   "確認能否站上MA10 358.8",
+   "留意343.5支撐是否守住"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 45,
+  "oneliner": "均線空頭但投信買超止跌，訊號矛盾",
   "emoji": "⚪"
  },
  {
@@ -5588,15 +5664,19 @@
    204.0,
    208.5
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "股價216已站上MA5/MA10/MA20，但均線仍呈空頭排列，外資小賣273張、投信無動作",
+  "risk": "均線未轉多前追高風險高，籌碼未見明確買盤",
+  "buy_point": "MA5上穿MA10、均線轉多後",
+  "stop_loss": "208(前波支撐)",
+  "target": "觀望階段不設",
+  "checklist": [
+   "觀察MA5能否上穿MA10",
+   "確認外資轉為買超",
+   "留意208支撐"
+  ],
   "signal": "觀望",
   "score": 50,
-  "oneliner": "資料分析失敗",
+  "oneliner": "股價強勢突破均線但排列未轉多，先觀望",
   "emoji": "⚪"
  },
  {
@@ -5868,15 +5948,19 @@
    146.0,
    144.5
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "均線空頭排列，外資12日大賣6461張，惟股價在145附近打底尚未破前低",
+  "risk": "若跌破145恐加速下跌，外資賣壓仍重",
+  "buy_point": "站回MA20 150.1且外資轉買",
+  "stop_loss": "145(近期低點)",
+  "target": "觀望階段不設",
+  "checklist": [
+   "留意145是否跌破",
+   "觀察外資賣超是否收斂",
+   "確認能否站回MA20 150.1"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 35,
+  "oneliner": "均線空頭外資大賣，尚未破底暫觀望",
   "emoji": "⚪"
  },
  {
@@ -6148,15 +6232,19 @@
    50.1,
    50.1
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5/MA10/MA20糾結於50附近，外資小買377張，多空訊號不明確",
+  "risk": "EPS轉虧損，基本面轉弱疑慮",
+  "buy_point": "站穩51.1且站上三均線",
+  "stop_loss": "49.1(近期低點)",
+  "target": "觀望階段不設",
+  "checklist": [
+   "觀察EPS虧損是否改善",
+   "確認站上MA20 50.6",
+   "留意49.1支撐"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 48,
+  "oneliner": "均線糾結盤整，籌碼溫和，暫時觀望",
   "emoji": "⚪"
  },
  {
@@ -6428,15 +6516,19 @@
    144.5,
    139.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "股價大漲3.05%創近期新高，遠高於三均線，惟均線排列糾結、外資小賣659張",
+  "risk": "短線漲多，均線未跟上恐拉回修正",
+  "buy_point": "拉回不破147.5",
+  "stop_loss": "139(MA10)",
+  "target": "觀望階段不設",
+  "checklist": [
+   "觀察均線是否轉為多頭排列",
+   "確認外資買盤是否回補",
+   "留意拉回不破147.5"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 55,
+  "oneliner": "股價強勢創高，但均線排列未明確轉多",
   "emoji": "⚪"
  },
  {
@@ -6708,15 +6800,19 @@
    58.2,
    59.5
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "股價60.2站上三均線，惟MA5/MA10排列未明確多頭，外資僅小買359張",
+  "risk": "短線反彈後拉回風險，買盤動能待觀察",
+  "buy_point": "拉回58.8附近不破",
+  "stop_loss": "57.8(MA20下方)",
+  "target": "觀望階段不設",
+  "checklist": [
+   "觀察MA5是否站穩MA10之上",
+   "確認外資買超能否延續",
+   "留意58.8支撐"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 52,
+  "oneliner": "股價站上均線但排列未轉齊，外資買力有限",
   "emoji": "⚪"
  },
  {
@@ -6988,15 +7084,19 @@
    243.0,
    246.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5上穿MA10但MA20仍高於短均,非典型多頭排列;外資小買179張、投信賣198張籌碼分歧。",
+  "risk": "均線糾結,若拉回恐再跌破所有均線",
+  "buy_point": "站穩MA20(243.5)且投信轉買可介入",
+  "stop_loss": "跌破240(MA5)",
+  "target": "255(前波高)",
+  "checklist": [
+   "MA5是否站穩MA10之上",
+   "投信是否轉買超",
+   "量能是否持續放大"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 45,
+  "oneliner": "均線未同步多頭,投信轉賣,續觀望",
   "emoji": "⚪"
  },
  {
@@ -7008,7 +7108,7 @@
   "ma10": 391.1,
   "ma20": 380.5,
   "foreign": 9968,
-  "trust": 7975,
+  "trust": 9411,
   "rev_yoy": 31.2,
   "open": 449.5,
   "high": 461.5,
@@ -7268,16 +7368,20 @@
    412.0,
    434.5
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
-  "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
-  "emoji": "⚪"
+  "reason": "MA5>MA10>MA20多頭排列,外資12日買超9968張、投信買超9411張雙多確立。",
+  "risk": "今日高檔震盪收黑且量能爆大,留意獲利了結賣壓",
+  "buy_point": "拉回靠近MA5(405~410)或月線上緣分批布局",
+  "stop_loss": "跌破MA10(391)",
+  "target": "前高461.5，續強看480",
+  "checklist": [
+   "是否守穩MA5不破",
+   "外資投信是否持續買超",
+   "量能是否萎縮到位"
+  ],
+  "signal": "買進",
+  "score": 78,
+  "oneliner": "均線多頭+外資投信同步大買,拉回可分批進",
+  "emoji": "🟢"
  },
  {
   "code": "2454",
@@ -7548,15 +7652,19 @@
    3865.0,
    3925.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5略高於MA10,但MA20仍居最上方非典型多頭;外資買2603張,投信卻大賣6405張籌碼分歧。",
+  "risk": "投信持續調節賣壓,若外資轉弱恐拉回",
+  "buy_point": "站穩MA20(3929)且投信轉買可介入",
+  "stop_loss": "跌破3860(MA5/MA10)",
+  "target": "4050(前波高)",
+  "checklist": [
+   "投信是否止賣轉買",
+   "是否站穩MA20之上",
+   "外資買超是否持續"
+  ],
   "signal": "觀望",
   "score": 50,
-  "oneliner": "資料分析失敗",
+  "oneliner": "投信大賣壓抑,均線未完全多頭,續觀望",
   "emoji": "⚪"
  },
  {
@@ -7568,7 +7676,7 @@
   "ma10": 1321.0,
   "ma20": 1293.2,
   "foreign": -990,
-  "trust": 978,
+  "trust": 1071,
   "rev_yoy": 82.0,
   "open": 1500.0,
   "high": 1515.0,
@@ -7828,15 +7936,19 @@
    1340.0,
    1450.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5>MA10>MA20多頭排列,惟外資12日賣超990張,僅投信買超1071張未達雙多。",
+  "risk": "EPS失真、股價波動劇烈,近日單日大漲大跌互見,追高風險大",
+  "buy_point": "拉回至MA5(1368)附近且外資轉買可進場",
+  "stop_loss": "跌破MA10(1321)",
+  "target": "1600(前波滿足點)",
+  "checklist": [
+   "外資是否轉買超",
+   "股價拉回是否守住MA5",
+   "成交量是否維持熱度"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 55,
+  "oneliner": "均線多頭強,但外資賣超,籌碼未雙多",
   "emoji": "⚪"
  },
  {
@@ -8108,15 +8220,19 @@
    205.0,
    210.5
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5>MA10>MA20多頭排列,惟外資12日仍小賣79張、投信僅買1張,籌碼力道不足未達雙多。",
+  "risk": "缺乏法人資金挹注,追高恐無力續攻",
+  "buy_point": "外資轉買超且站穩215可進場",
+  "stop_loss": "跌破MA5(205)",
+  "target": "221(今日高點)",
+  "checklist": [
+   "外資是否轉為買超",
+   "投信買超力道是否放大",
+   "股價是否守住MA5"
+  ],
   "signal": "觀望",
   "score": 50,
-  "oneliner": "資料分析失敗",
+  "oneliner": "均線多頭排列但法人籌碼薄弱,續觀望",
   "emoji": "⚪"
  },
  {
@@ -8388,15 +8504,19 @@
    11.7,
    11.5
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "均線呈糾結整理(MA5/MA10/MA20互纏),外資仍小賣87張;月營收年減32.2%基本面疲弱。",
+  "risk": "EPS虧損、營收衰退,若跌破11.4恐轉弱",
+  "buy_point": "需站穩11.9且外資轉買方可留意",
+  "stop_loss": "跌破11.4(MA10)",
+  "target": "11.9(近期高點)",
+  "checklist": [
+   "外資是否止賣",
+   "營收年減是否收斂",
+   "能否站穩MA10之上"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 30,
+  "oneliner": "均線糾結、營收衰退,籌碼偏弱應觀望",
   "emoji": "⚪"
  },
  {
@@ -8668,15 +8788,19 @@
    17.05,
    17.4
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5(17.1)略低於MA10/MA20(17.2),均線未呈多頭排列,外資12日仍小賣、投信零買,籌碼未轉強",
+  "risk": "本業虧損(EPS-0.14、毛利率-6.8%),高PER靠題材撐,波動大易急殺",
+  "buy_point": "站穩17.2均線糾結區且外資轉買超",
+  "stop_loss": "跌破16.75",
+  "target": "18.15~19",
+  "checklist": [
+   "外資是否轉買超",
+   "能否站穩均線糾結區",
+   "月營收高成長能否延續"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 48,
+  "oneliner": "均線糾結方向不明,外資仍小賣,暫不進場",
   "emoji": "⚪"
  },
  {
@@ -8948,15 +9072,19 @@
    26.55,
    26.65
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5(26.4)約等於MA10、皆低於MA20(26.6),短均無明顯優勢,外資12日小賣、投信無動作",
+  "risk": "毛利率-53.3%虧損嚴重,若外資賣超擴大恐加速破底",
+  "buy_point": "站回MA20(26.6)且外資轉買",
+  "stop_loss": "跌破25.85",
+  "target": "28",
+  "checklist": [
+   "能否站回MA20之上",
+   "外資賣超是否收斂",
+   "月營收年增能否轉正"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 42,
+  "oneliner": "均線走平偏弱、外資小賣,訊號不明確",
   "emoji": "⚪"
  },
  {
@@ -9228,15 +9356,19 @@
    105.5,
    109.5
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "外資12日大賣逾4.2萬張、投信同步賣超,籌碼明顯偏空,惟股價守住MA20(106.2)、均線未成空頭排列",
+  "risk": "今日高點117.5拉回收110留長上影線,籌碼失血下追高風險大",
+  "buy_point": "外資轉買且站穩MA10(111.2)",
+  "stop_loss": "跌破106",
+  "target": "120",
+  "checklist": [
+   "外資投信賣超是否收斂",
+   "能否站回MA10之上",
+   "月營收動能是否延續"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 40,
+  "oneliner": "外資投信雙賣籌碼偏空,但均線支撐未破",
   "emoji": "⚪"
  },
  {
@@ -9508,15 +9640,19 @@
    177.5,
    180.5
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5/MA10均高於MA20呈短多排列,但外資12日大賣近1.87萬張、僅投信買超,籌碼不同調不足以買進",
+  "risk": "外資持續調節若轉弱恐拖累股價跌破均線支撐",
+  "buy_point": "拉回不破MA5(182)且外資賣壓縮小",
+  "stop_loss": "跌破179.8",
+  "target": "188~190",
+  "checklist": [
+   "外資賣超是否轉緩或止血",
+   "能否守住MA5/MA20支撐",
+   "投信買超是否延續"
+  ],
   "signal": "觀望",
   "score": 50,
-  "oneliner": "資料分析失敗",
+  "oneliner": "均線偏多但外資大賣、投信買,籌碼分歧未達雙多",
   "emoji": "⚪"
  },
  {
@@ -9788,16 +9924,20 @@
    38.85,
    38.65
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
-  "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
-  "emoji": "⚪"
+  "reason": "均線多頭排列，外資近12日大買逾2.6萬張，月營收年增10%支撐基本面，籌碼與趨勢雙多。",
+  "risk": "追高或大盤轉弱恐致回檔",
+  "buy_point": "拉回38.5-39.0或站穩39元之上",
+  "stop_loss": "跌破38.0(MA10)",
+  "target": "41-42元",
+  "checklist": [
+   "外資買超是否延續",
+   "是否守穩MA5不破",
+   "量能是否同步放大"
+  ],
+  "signal": "買進",
+  "score": 75,
+  "oneliner": "均線多頭排列，外資大買，可偏多操作",
+  "emoji": "🟢"
  },
  {
   "code": "1504",
@@ -10068,15 +10208,19 @@
    71.6,
    72.4
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5貼近MA10未成明確多頭排列，雖外資投信同步買超，但今日收黑，訊號混雜。",
+  "risk": "跌破MA10(72.0)恐轉弱",
+  "buy_point": "站穩MA5且站上73元前高",
+  "stop_loss": "跌破69.6(MA20)",
+  "target": "觀望中不設定",
+  "checklist": [
+   "均線是否轉為明確多頭排列",
+   "法人買超能否連續",
+   "能否站回73元之上"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 48,
+  "oneliner": "均線糾結，法人買超但趨勢未明",
   "emoji": "⚪"
  },
  {
@@ -10348,16 +10492,20 @@
    202.0,
    205.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
-  "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
-  "emoji": "⚪"
+  "reason": "MA5>MA10>MA20多頭排列，外資近12日買超1750張，但今日大跌逾3%，短線動能轉弱。",
+  "risk": "追高套牢，跌破202恐轉弱",
+  "buy_point": "拉回202-204(MA10附近)分批進場",
+  "stop_loss": "跌破199.5(MA20)",
+  "target": "215-220元(前高附近)",
+  "checklist": [
+   "是否守穩MA10不破",
+   "外資買超是否延續",
+   "量能是否萎縮止穩"
+  ],
+  "signal": "買進",
+  "score": 62,
+  "oneliner": "均線仍多頭，外資買超，惟拉回宜分批",
+  "emoji": "🟢"
  },
  {
   "code": "1513",
@@ -10628,15 +10776,19 @@
    166.5,
    168.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5與MA10幾乎持平未成多頭排列，外資買超但投信賣超，籌碼訊號分歧。",
+  "risk": "跌破164(MA20)恐轉弱",
+  "buy_point": "站穩171元前高且均線轉多頭排列後",
+  "stop_loss": "跌破164(MA20)",
+  "target": "觀望中不設定",
+  "checklist": [
+   "均線能否轉為多頭排列",
+   "投信賣超是否止穩",
+   "能否站回171元之上"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 45,
+  "oneliner": "均線打平，法人一買一賣，方向不明",
   "emoji": "⚪"
  },
  {
@@ -10908,15 +11060,19 @@
    723.0,
    749.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "均線仍多頭排列，但外資近12日轉賣超1932張，籌碼動能減弱，月營收年減8.3%。",
+  "risk": "外資賣超延續恐跌破均線",
+  "buy_point": "待外資轉買超且站穩755之上",
+  "stop_loss": "跌破709.5(MA20)",
+  "target": "觀望中不設定",
+  "checklist": [
+   "外資是否止賣轉買",
+   "能否站穩MA5不破",
+   "營收年增能否回正"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 47,
+  "oneliner": "均線多頭但外資轉賣，籌碼未達雙多",
   "emoji": "⚪"
  },
  {
@@ -11188,16 +11344,20 @@
    1150.0,
    1070.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
-  "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
-  "emoji": "⚪"
+  "reason": "MA5=MA10=1124>MA20=1046.5均線仍偏多，外資近12日大買4.68萬張；但今日爆量收黑跌破MA5/10須留意",
+  "risk": "今日高低差達160元、爆量長黑，恐轉弱假突破",
+  "buy_point": "拉回站穩1124(MA5/MA10)分批進場",
+  "stop_loss": "1046(MA20)",
+  "target": "1230(今日高點)",
+  "checklist": [
+   "確認股價站回MA5/MA10之上",
+   "外資買超是否延續不轉賣",
+   "觀察爆量收黑後量能是否收斂"
+  ],
+  "signal": "買進",
+  "score": 62,
+  "oneliner": "外資大買撐盤，惟爆量長黑要防假突破",
+  "emoji": "🟢"
  },
  {
   "code": "4768",
@@ -11468,15 +11628,19 @@
    325.0,
    310.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5317.7>MA10314.9>MA20309.4結構偏多，但外資近12日轉賣66張，籌碼未同步支持",
+  "risk": "EPS虧損(-0.42)、成交量僅485張籌碼稀薄，波動劇烈",
+  "buy_point": "外資轉買超且站穩MA5(317.7)再進場",
+  "stop_loss": "309(MA20)",
+  "target": "337(近期高點)",
+  "checklist": [
+   "外資是否由賣轉買",
+   "是否站穩MA5支撐",
+   "留意低量下的價格失真"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 48,
+  "oneliner": "均線仍多但外資轉賣，籌碼不同步先觀望",
   "emoji": "⚪"
  },
  {
@@ -11748,15 +11912,19 @@
    905.0,
    867.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5864.6>MA10860.4>MA20841.1均線多頭，但外資12日賣超5333張、投信買超5485張互抵，籌碼方向不一致",
+  "risk": "外資大賣與投信買超互相抵銷，若外資賣壓擴大恐轉弱",
+  "buy_point": "外資轉買超同步投信買超再進場",
+  "stop_loss": "841(MA20)",
+  "target": "933(今日高點)",
+  "checklist": [
+   "外資賣超是否收斂或轉買",
+   "投信買超能否延續",
+   "是否守住MA20支撐"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 52,
+  "oneliner": "均線偏多但外資投信方向分歧，觀望為宜",
   "emoji": "⚪"
  },
  {
@@ -12028,15 +12196,19 @@
    1175.0,
    1215.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5 1202略低於MA10 1206均線走平，外資12日賣超6908張明顯大於投信買超2988張，籌碼偏弱",
+  "risk": "今日下跌4.25%且外資持續賣超，須留意跌破支撐",
+  "buy_point": "站回MA10(1206)且外資轉買超再進場",
+  "stop_loss": "1168(MA20)",
+  "target": "1310(今日高點)",
+  "checklist": [
+   "外資賣超是否收斂",
+   "能否站回MA5/MA10之上",
+   "是否守穩MA20支撐不破"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 45,
+  "oneliner": "均線走平、外資賣超，籌碼偏弱先觀望",
   "emoji": "⚪"
  },
  {
@@ -12308,15 +12480,19 @@
    122.0,
    123.5
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5120.8>MA10116.8>MA20113.0均線偏多，但外資12日賣超1625張，法人買盤未同步進場",
+  "risk": "營收雖爆發成長(YoY173.5%)，但外資賣超中，追價風險偏高",
+  "buy_point": "外資轉買超且守穩MA5(120.8)再進場",
+  "stop_loss": "113(MA20)",
+  "target": "130(今日高點)",
+  "checklist": [
+   "外資是否由賣轉買",
+   "股價能否守穩MA5之上",
+   "留意EPS偏低的估值風險"
+  ],
   "signal": "觀望",
   "score": 50,
-  "oneliner": "資料分析失敗",
+  "oneliner": "均線偏多但外資持續賣超，缺法人買盤支持",
   "emoji": "⚪"
  },
  {
@@ -12588,15 +12764,19 @@
    176.5,
    181.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5175.8、MA10173.8皆低於MA20177.5，均線尚未轉多；外資近12日小幅賣超547張，籌碼未見明確支持",
+  "risk": "近期單日漲跌互見波動大，追高有拉回風險",
+  "buy_point": "站穩MA20(177.5)且外資轉買超再進場",
+  "stop_loss": "168(近期低點區)",
+  "target": "192(今日高點)",
+  "checklist": [
+   "是否站穩MA20之上",
+   "外資賣超能否轉為買超",
+   "EPS虧損下留意基本面風險"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 47,
+  "oneliner": "均線尚未轉多、外資小賣，續觀望",
   "emoji": "⚪"
  },
  {
@@ -12868,15 +13048,19 @@
    80.0,
    80.0
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5 79.3、MA10 79.5、MA20 79.1三線糾結無明確方向，外資小幅賣超147張",
+  "risk": "月營收年減29.3%基本面轉弱，且成交量僅201張流動性差",
+  "buy_point": "待均線收斂後轉為多頭排列再進場",
+  "stop_loss": "77(近期低點區)",
+  "target": "83.7(近期高點)",
+  "checklist": [
+   "均線能否轉為多頭排列",
+   "營收年減是否止穩",
+   "留意低成交量下價格失真"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 40,
+  "oneliner": "均線糾結、營收衰退，低量不追價",
   "emoji": "⚪"
  },
  {
@@ -13148,15 +13332,19 @@
    67.1,
    66.3
   ],
-  "reason": null,
-  "risk": null,
-  "buy_point": null,
-  "stop_loss": null,
-  "target": null,
-  "checklist": null,
+  "reason": "MA5、MA10、MA20皆糾結在66附近未見多頭排列，外資近12日賣超1243張",
+  "risk": "毛利率為負(-3.2%)、EPS虧損，基本面體質偏弱",
+  "buy_point": "待均線轉為多頭排列且外資轉買超再進場",
+  "stop_loss": "64(近期低點區)",
+  "target": "68.3(今日高點)",
+  "checklist": [
+   "均線是否轉為多頭排列",
+   "外資賣超能否收斂",
+   "毛利率轉正與否"
+  ],
   "signal": "觀望",
-  "score": 50,
-  "oneliner": "資料分析失敗",
+  "score": 38,
+  "oneliner": "均線糾結、基本面疲弱，續觀望",
   "emoji": "⚪"
  }
 ]
