@@ -273,3 +273,56 @@ if __name__ == "__main__":
     ap.add_argument("--daily", action="store_true",
                     help="每日模式：只算 SuperTrend+擠壓，RRG 沿用上次（週六）的值")
     run(with_rrg=not ap.parse_args().daily)
+
+
+# ────────────────────────── 跨鏈總覽（零成本模板，2026-08-28）──────────────────────────
+# 靈感來自 tide-tw.app 的 daily_brief.json：把排序後的數字直接套句型，**不叫 AI**。
+# 我們現有的 researcher_industry 是「翻象限才寫、寫的時候叫 AI 解釋為什麼」——
+# 那個保留（真的翻象限時值得花額度）；這裡補的是「每天都能給的一句話現況」，
+# 零成本、零延遲，適合放日報開場。兩者不重複：這個講「現在誰強誰弱」，
+# researcher_industry 講「為什麼會變」。
+
+_QUAD_RANK = {"領先": 0, "改善": 1, "弱化": 2, "落後": 3}
+_MKT_LABEL = {"us": "美", "tw": "台"}
+
+
+def _split_key(key):
+    """'us:AI 伺服器' → ('美', 'AI 伺服器')"""
+    mkt, _, name = key.partition(":")
+    return _MKT_LABEL.get(mkt, mkt), name
+
+
+def overview_line(path=OUT_PATH):
+    """一句話講今天八鏈的相對強弱。回 None 表示沒資料可講（不硬湊）。"""
+    try:
+        d = json.load(open(path, encoding="utf-8"))
+    except Exception:
+        return None
+    rows = []
+    for key, c in (d.get("chains") or {}).items():
+        r = c.get("rrg") or {}
+        if r.get("ratio") is None:
+            continue
+        mkt, name = _split_key(key)
+        rows.append({"mkt": mkt, "name": name, "ratio": r["ratio"],
+                     "quad": r.get("quadrant"), "st": c.get("supertrend")})
+    if len(rows) < 3:
+        return None
+    rows.sort(key=lambda x: -x["ratio"])
+    top, bottom = rows[0], rows[-1]
+    strong = sum(1 for r in rows if r["quad"] in ("領先", "改善"))
+    weak = len(rows) - strong
+
+    s = (f"📊 產業輪動：**{top['name']}（{top['mkt']}）領先全場**（RS {top['ratio']}）"
+         f"，**{bottom['name']}（{bottom['mkt']}）墊底**（RS {bottom['ratio']}）")
+    # 美台各算一次（同一個題材在兩個市場是兩筆），所以講「N 個籃子」不講「N 條鏈」——
+    # 寫「16 條鏈」會讓人以為有 16 個不同題材，實際是 8 個題材 × 兩個市場。
+    n_us = sum(1 for r in rows if r["mkt"] == "美")
+    n_tw = len(rows) - n_us
+    s += (f"｜{len(rows)} 個籃子（美{n_us}/台{n_tw}）中 "
+          f"{strong} 個領先或改善、{weak} 個弱化或落後")
+    # SuperTrend 空頭的鏈單獨點名——那是「趨勢已經轉壞」不只是相對弱
+    bears = [f"{r['name']}（{r['mkt']}）" for r in rows if r.get("st") == "空頭"]
+    if bears:
+        s += f"｜⚠️ SuperTrend 空頭：{'、'.join(bears)}"
+    return s
