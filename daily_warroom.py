@@ -132,6 +132,18 @@ def sec1_market(notes):
     except Exception:
         pass
 
+    # 📊 產業輪動一句話（2026-08-28，零成本模板不叫 AI，靈感來自 tide-tw.app 的
+    # daily_brief）。跟④段的 researcher_industry 不重複：這個講「今天誰強誰弱」
+    # （每天都有、純排序），researcher_industry 講「為什麼會翻象限」（有翻才寫、
+    # 值得花 AI 額度）。
+    try:
+        from chain_technicals import overview_line as _rot
+        r = _rot()
+        if r:
+            lines.append(r)
+    except Exception:
+        pass
+
     macro = [n for n in notes if n.get("layer") == "macro"]
     if macro:
         m = macro[-1]
