@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-28 15:40",
+ "updated": "2026-08-28 19:32",
  "indices": [
   {
    "sym": "^GSPC",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "杜蘭特25萬美元早期投資 隨輝達收購預估大賺6000萬美元",
+   "title": "Pimco：AI融資「過多過快」 正在推高債券殖利率",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6590611",
-   "ts": "08/28 15:40"
+   "url": "https://news.cnyes.com/news/id/6590782",
+   "ts": "08/28 19:30"
   },
   {
-   "title": "風險意識提高 主動式ETF驚見「戶數增、金額減」7月定期定額扣款下滑近1成",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6590626",
-   "ts": "08/28 15:25"
-  },
-  {
-   "title": "國人狂囤日元！7月境內日元級別基金申購突破200億 日股基金受矚",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6590608",
-   "ts": "08/28 15:22"
-  },
-  {
-   "title": "〈房產〉看好發展 外國人來台買進房產越買越霸氣 上半年買逾500幢",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6590604",
-   "ts": "08/28 15:04"
-  },
-  {
-   "title": "萬潤(6187)訂單看到2027年第二季，成長關鍵從需求轉向產能，點膠關鍵技術持續突破",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6590614",
-   "ts": "08/28 15:00"
-  },
-  {
-   "title": "AI資料中心太耗電 亞馬遜瑞典簽4座風場 綠電供應衝破1GW",
+   "title": "鋅價突破每噸3,900美元創逾4年新高礦山供應受阻、LME庫存下滑",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6590605",
-   "ts": "08/28 14:50"
+   "url": "https://news.cnyes.com/news/id/6590936",
+   "ts": "08/28 19:00"
   },
   {
-   "title": "華許全球央行年會首秀在即 投資人盼他帶來「清晰度」以重建市場信心",
+   "title": "印尼整頓非法錫礦見效PT Timah上半年淨利暴增804.7%、產量回升74.8%",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6590541",
-   "ts": "08/28 14:40"
+   "url": "https://news.cnyes.com/news/id/6590934",
+   "ts": "08/28 19:00"
   },
   {
-   "title": "〈台股盤後〉重回兆元量推漲356點站穩4萬6  周線收紅漲1107點",
+   "title": "歐盟CBAM擬擴大至180種下游產品現代鋼鐵示警汽車零件、家電碳成本升高",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6590933",
+   "ts": "08/28 19:00"
+  },
+  {
+   "title": "軟銀擬籌集100億美元聯貸 擴大布局OpenAI投資",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6590783",
+   "ts": "08/28 19:00"
+  },
+  {
+   "title": "欣興指今遭檢調調查對財務及業務並沒有重大影響 外資砸42.77億元大買",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6590588",
-   "ts": "08/28 14:34"
+   "url": "https://news.cnyes.com/news/id/6590856",
+   "ts": "08/28 18:33"
   },
   {
-   "title": "IPO前OpenAI加速變現 ChatGPT正式在印度免費與Go方案推廣告",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6590505",
-   "ts": "08/28 14:22"
+   "title": "鴻海和發新能源專案獲LEED 黃金級認證 建築能源成本省逾50%",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6590847",
+   "ts": "08/28 18:32"
   },
   {
-   "title": "輝達財測驚艷 分析師看好市值衝到13兆美元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6589914",
-   "ts": "08/28 14:00"
+   "title": "〈國泰金法說〉AI帶動企金放款強勁 國泰世華銀全年NIM展望樂觀上調",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6590851",
+   "ts": "08/28 18:31"
+  },
+  {
+   "title": "成本與CBAM雙重壓力籠罩 華新9月調漲316產品每公噸5000元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6590840",
+   "ts": "08/28 18:30"
+  },
+  {
+   "title": "鮮活果汁-KY在Q2賺回逾半個股本  上半年EPS達8.98元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6590839",
+   "ts": "08/28 18:27"
   }
  ],
  "inst": {
