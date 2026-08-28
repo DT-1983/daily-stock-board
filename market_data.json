@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-28 08:47",
+ "updated": "2026-08-28 15:40",
  "indices": [
   {
    "sym": "^GSPC",
@@ -37,17 +37,17 @@
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "08/26",
-   "close": 45832.62,
-   "chg_pct": 1.47
+   "date": "08/28",
+   "close": 46331.45,
+   "chg_pct": 0.77
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "08/28",
-   "close": 31.66,
-   "chg_pct": -0.47
+   "close": 31.6,
+   "chg_pct": -0.64
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "輝達大漲是陷阱？台股3天噴1500點後！現在追＝慘套？",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6590008",
-   "ts": "08/28 08:45"
-  },
-  {
-   "title": "西藏尼泊爾奪命山洪 旅行社總經理：失聯遊客生還機率僅1%",
+   "title": "杜蘭特25萬美元早期投資 隨輝達收購預估大賺6000萬美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6589979",
-   "ts": "08/28 08:40"
+   "url": "https://news.cnyes.com/news/id/6590611",
+   "ts": "08/28 15:40"
   },
   {
-   "title": "記憶體缺貨、長約護航 美光年底可望突破1300美元？",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6589899",
-   "ts": "08/28 08:40"
-  },
-  {
-   "title": "泰國推Siam Silica半導體戰略從PCB製造大國向IC設計、先進封裝升級",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6589995",
-   "ts": "08/28 08:30"
-  },
-  {
-   "title": "傳輝達暫停與AI雲端公司營收分成協議",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6589948",
-   "ts": "08/28 08:30"
-  },
-  {
-   "title": "AI泡沫論被打臉？輝達、Salesforce財報炸裂 克雷默：空頭慘遭殲滅",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6589954",
-   "ts": "08/28 08:20"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：東陽(1319-TW)EPS預估上修至6.45元，預估目標價為102.5元",
+   "title": "風險意識提高 主動式ETF驚見「戶數增、金額減」7月定期定額扣款下滑近1成",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6589978",
-   "ts": "08/28 08:10"
+   "url": "https://news.cnyes.com/news/id/6590626",
+   "ts": "08/28 15:25"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：健策(3653-TW)EPS預估上修至66.46元，預估目標價為6200元",
+   "title": "國人狂囤日元！7月境內日元級別基金申購突破200億 日股基金受矚",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6589977",
-   "ts": "08/28 08:10"
+   "url": "https://news.cnyes.com/news/id/6590608",
+   "ts": "08/28 15:22"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：兆豐金(2886-TW)EPS預估上修至2.7元，預估目標價為45.5元",
+   "title": "〈房產〉看好發展 外國人來台買進房產越買越霸氣 上半年買逾500幢",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6589976",
-   "ts": "08/28 08:10"
+   "url": "https://news.cnyes.com/news/id/6590604",
+   "ts": "08/28 15:04"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：兆豐金(2886-TW)目標價調升至45.5元，幅度約4.6%",
+   "title": "萬潤(6187)訂單看到2027年第二季，成長關鍵從需求轉向產能，點膠關鍵技術持續突破",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6589975",
-   "ts": "08/28 08:10"
+   "url": "https://news.cnyes.com/news/id/6590614",
+   "ts": "08/28 15:00"
+  },
+  {
+   "title": "AI資料中心太耗電 亞馬遜瑞典簽4座風場 綠電供應衝破1GW",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6590605",
+   "ts": "08/28 14:50"
+  },
+  {
+   "title": "華許全球央行年會首秀在即 投資人盼他帶來「清晰度」以重建市場信心",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6590541",
+   "ts": "08/28 14:40"
+  },
+  {
+   "title": "〈台股盤後〉重回兆元量推漲356點站穩4萬6  周線收紅漲1107點",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6590588",
+   "ts": "08/28 14:34"
+  },
+  {
+   "title": "IPO前OpenAI加速變現 ChatGPT正式在印度免費與Go方案推廣告",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6590505",
+   "ts": "08/28 14:22"
+  },
+  {
+   "title": "輝達財測驚艷 分析師看好市值衝到13兆美元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6589914",
+   "ts": "08/28 14:00"
   }
  ],
  "inst": {
-  "date": "08/27",
-  "total_yi": 626.8,
-  "foreign_yi": 490.9,
-  "trust_yi": -14.5
+  "date": "08/28",
+  "total_yi": 468.2,
+  "foreign_yi": 415.9,
+  "trust_yi": 9.6
  }
 }
