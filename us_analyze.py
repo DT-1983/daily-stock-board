@@ -262,11 +262,25 @@ def main():
         print(f"去重：{len(rows)} → {len(best)} 檔（跨鏈重複）")
     rows = list(best.values())
 
+    # 2026-08-28 加完整性守門。背景：8/28 07:00 headless claude OAuth 過期，
+    # analyze_chain() 的 ask_json() 對每一條鏈都失敗，但只是印一行「失敗：...」、
+    # 不拋例外——所有股票照樣落回預設值(觀望/50分/oneliner="資料分析失敗")寫進
+    # report，主程式正常結束（exit 0）。board_analyze_daily.cmd 完全沒有察覺，
+    # 網站直接發布了一份「全部60檔都判讀失敗」但看起來像正常資料的看板。
+    # 現在算真正判讀成功的比例，太低就非零結束——讓 .cmd 的失敗通知抓到，
+    # 也不覆蓋昨天還算數的舊報告（同 buffett_scan.py 的 MIN_FETCH_RATE 精神）。
+    ok_n = sum(1 for r in rows if r.get("oneliner") != "資料分析失敗")
+    ok_rate = ok_n / len(rows) if rows else 0
+    if rows and ok_rate < 0.5:
+        print(f"❌ AI 判讀成功率過低（{ok_n}/{len(rows)}={ok_rate:.0%}），"
+              f"疑似 claude 呼叫系統性失敗（OAuth過期/額度等），不覆蓋今天的報告")
+        sys.exit(1)
+
     date = datetime.now().strftime("%Y-%m-%d")
     out = args.output or f"reports/report_{datetime.now():%Y%m%d}.md"
     os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
     open(out, "w", encoding="utf-8").write(render(rows, date))
-    print(f"\n✅ 美股分析 {len(rows)} 檔 → {out}")
+    print(f"\n✅ 美股分析 {len(rows)} 檔（判讀成功 {ok_n}/{len(rows)}）→ {out}")
 
 
 if __name__ == "__main__":

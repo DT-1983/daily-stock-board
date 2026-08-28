@@ -233,8 +233,18 @@ def main():
     if results and len(results) < total * 0.5:
         print(f"\n⚠️ 只完成 {len(results)}/{total} 檔（疑似 FinMind 限流），拒絕覆寫 {out}")
         raise SystemExit(1)
+    # 2026-08-28 加第二道守門：跟 us_analyze.py 同一個 bug——上面那道只查「有沒有
+    # 抓到報價/財報」（FinMind 限流），沒查「AI 判讀真的成功了沒」。8/28 headless
+    # claude 全面失敗那次，每檔都正常抓到資料、只是 AI 判讀失敗退回預設值
+    # (oneliner="資料分析失敗")，len(results) 照樣是滿的，上面那道守門完全攔不住。
+    ok_n = sum(1 for r in results if r.get("oneliner") != "資料分析失敗")
+    ok_rate = ok_n / len(results) if results else 0
+    if results and ok_rate < 0.5:
+        print(f"\n❌ AI 判讀成功率過低（{ok_n}/{len(results)}={ok_rate:.0%}），"
+              f"疑似 claude 呼叫系統性失敗，拒絕覆寫 {out}")
+        raise SystemExit(1)
     json.dump(results, open(out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-    print(f"\n✅ 台股分析完成 {len(results)} 檔 → {out}")
+    print(f"\n✅ 台股分析完成 {len(results)} 檔（判讀成功 {ok_n}/{len(results)}）→ {out}")
 
 
 if __name__ == "__main__":
