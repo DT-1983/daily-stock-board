@@ -1,37 +1,37 @@
 {
- "updated": "2026-08-28 02:14",
+ "updated": "2026-08-28 08:47",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
    "date": "08/27",
-   "close": 7720.74,
-   "chg_pct": 0.59
+   "close": 7730.99,
+   "chg_pct": 0.72
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
    "date": "08/27",
-   "close": 26453.89,
-   "chg_pct": 1.24
+   "close": 26541.35,
+   "chg_pct": 1.57
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
    "date": "08/27",
-   "close": 53548.76,
-   "chg_pct": 0.16
+   "close": 53569.44,
+   "chg_pct": 0.2
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
    "date": "08/27",
-   "close": 11782.44,
-   "chg_pct": 1.47
+   "close": 11882.17,
+   "chg_pct": 2.33
   },
   {
    "sym": "^TWII",
@@ -45,80 +45,80 @@
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "08/27",
-   "close": 31.68,
-   "chg_pct": -0.51
+   "date": "08/28",
+   "close": 31.66,
+   "chg_pct": -0.47
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
    "date": "08/27",
-   "close": 4.68,
+   "close": 4.67,
    "fmt": "yield",
-   "chg_bp": 1.2
+   "chg_bp": 0.8
   }
  ],
  "news": [
   {
-   "title": "盤中速報 - 防特網(FTNT-US)大漲8.67%，報171.15美元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6589811",
-   "ts": "08/28 02:11"
-  },
-  {
-   "title": "盤中速報 - Zscaler公司(ZS-US)大漲10.18%，報187.5美元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6589810",
-   "ts": "08/28 02:11"
-  },
-  {
-   "title": "盤中速報 - 新思科技(SNPS-US)大漲10.82%，報454.57美元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6589809",
-   "ts": "08/28 02:11"
-  },
-  {
-   "title": "盤中速報 - 安可(AMKR-US)大漲5.89%，報51.22美元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6589808",
-   "ts": "08/28 02:11"
-  },
-  {
-   "title": "盤中速報 - 賽富時(CRM-US)大漲22.05%，報250.87美元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6589807",
-   "ts": "08/28 02:11"
-  },
-  {
-   "title": "新創大利多！產創條例三讀：股票緩課稅上限衝千萬、天使輪與創投認列年限放寬至8年",
+   "title": "輝達大漲是陷阱？台股3天噴1500點後！現在追＝慘套？",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6589492",
-   "ts": "08/28 00:16"
+   "url": "https://news.cnyes.com/news/id/6590008",
+   "ts": "08/28 08:45"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：聯茂(6213-TW)目標價調升至600元，幅度約5.26%",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6589524",
-   "ts": "08/27 22:10"
+   "title": "西藏尼泊爾奪命山洪 旅行社總經理：失聯遊客生還機率僅1%",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6589979",
+   "ts": "08/28 08:40"
   },
   {
-   "title": "〈第一金法說〉聯貸案「吸金」！搶攻供應鏈跨境商機 調高外幣放款年增目標至20%",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6589398",
-   "ts": "08/27 20:27"
+   "title": "記憶體缺貨、長約護航 美光年底可望突破1300美元？",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6589899",
+   "ts": "08/28 08:40"
   },
   {
-   "title": "〈第一金法說〉估央行續凍息、房市量縮價平靠自住剛需撐盤 今年房貸業務將成長5%",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6589353",
-   "ts": "08/27 20:25"
+   "title": "泰國推Siam Silica半導體戰略從PCB製造大國向IC設計、先進封裝升級",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6589995",
+   "ts": "08/28 08:30"
   },
   {
-   "title": "BenQ衝刺智慧照明應用銷售增近3成 推三款新品",
+   "title": "傳輝達暫停與AI雲端公司營收分成協議",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6589948",
+   "ts": "08/28 08:30"
+  },
+  {
+   "title": "AI泡沫論被打臉？輝達、Salesforce財報炸裂 克雷默：空頭慘遭殲滅",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6589954",
+   "ts": "08/28 08:20"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：東陽(1319-TW)EPS預估上修至6.45元，預估目標價為102.5元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6589384",
-   "ts": "08/27 20:20"
+   "url": "https://news.cnyes.com/news/id/6589978",
+   "ts": "08/28 08:10"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：健策(3653-TW)EPS預估上修至66.46元，預估目標價為6200元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6589977",
+   "ts": "08/28 08:10"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：兆豐金(2886-TW)EPS預估上修至2.7元，預估目標價為45.5元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6589976",
+   "ts": "08/28 08:10"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：兆豐金(2886-TW)目標價調升至45.5元，幅度約4.6%",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6589975",
+   "ts": "08/28 08:10"
   }
  ],
  "inst": {
