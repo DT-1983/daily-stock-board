@@ -297,7 +297,7 @@ def sec4_research(notes, scope="public", date=None):
             except Exception:
                 gap = 99
             if 0 <= gap <= 3:
-                ls = _cs.summary_lines(ce["events"], max_each=6)
+                ls = _cs.summary_lines(ce["events"])   # 用 chip_scan 的預設(4檔/類，連賣3檔)
                 if ls:
                     when = "" if gap == 0 else f"・{cd}"
                     lines.append("")

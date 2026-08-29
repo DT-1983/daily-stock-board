@@ -240,8 +240,16 @@ def calibrate():
         print(f"  門檻 {m}x → {hit} 檔觸發（{hit/n:.1%}）")
 
 
-def summary_lines(events, max_each=8):
-    """給日報/Discord 用。分四類，每類最多列 max_each 檔。"""
+def summary_lines(events, max_each=4):
+    """給日報/Discord 用。分四類，每類最多列 max_each 檔。
+
+    2026-08-29 版面（Leo：「看一下段落，不要太亂」）：
+    · 一檔一行不要用｜串長串——實測串起來每類 150 字，手機一行約 20 字會折 7-8 行，
+      四類糊成 31 行完全看不出斷點
+    · 每類之間空一行，讓四個區塊在手機上分得開
+    · 「連賣」只列 3 檔——四類裡它對決策的參考價值最低（賣壓通常已反映在股價上），
+      買方訊號（異常大買、連買）才是要找的進場線索
+    """
     if not events:
         return []
     groups = {"異常大買": [], "異常大賣": [], "連買": [], "連賣": []}
@@ -258,22 +266,23 @@ def summary_lines(events, max_each=8):
         if not lst:
             continue
         lst.sort(key=lambda e: -(e.get("vs_avg") or e.get("days") or 0))
-        # 2026-08-29 Leo：「異常大買跟連買警示會有細項嗎」——原本只列代號+名字，
-        # 但 events 裡本來就有 vs_avg(超出近20日平均幾倍)、days(連幾天)、
-        # shares(股數) 三個欄位完全沒用上。加上去才知道「哪幾檔特別誇張」，
-        # 不然 14 檔並列看起來一樣重要。張數用「千張」單位（台股慣用）。
-        items = []
-        for e in lst[:max_each]:
-            # 台股 1 張 = 1000 股。直接講「張」不要自作聰明換成「千張」——
-            # 第一版寫 f"{shares/1000/1000:,.0f}千張" 出來是「42千張」，
-            # 讀起來像 42,000 張但實際是 42,448 張；小額的更糟（1,2xx 張顯示成「1千張」）。
+        # 2026-08-29 版面（Leo：「看一下段落，不要太亂」）：一檔一行，不要全部用
+        # ｜串成一長串。實測串起來每類 150 字、手機一行約 20 字 → 折成 7-8 行，
+        # 四類糊成 31 行看不出斷點。改成標題一行、每檔一行縮排，並從 6 檔收到 4 檔
+        # （排序已由大到小，第 5 名之後的參考價值遞減，要看全部可查完整清單）。
+        if out:
+            out.append("")           # 類別之間空一行，手機上才分得開
+        n_show = 3 if k == "連賣" else max_each
+        out.append(f"{icons[k]} **{k}**（{len(lst)} 檔）")
+        for e in lst[:n_show]:
+            # 台股 1 張 = 1000 股。直接講「張」不要換算成「千張」——
+            # 「42千張」讀起來像 42,000 張但實際是 42,448 張，小額的更誤導。
             lots = abs(e.get("shares") or 0) / 1000
-            detail = (f"{e['vs_avg']:.1f}倍" if e.get("vs_avg")
-                      else f"連{e.get('days')}天")
-            items.append(f"{e['code']} {e['name']}（{detail}・{lots:,.0f}張）")
-        names = "｜".join(items)
-        more = f"　…還有 {len(lst)-max_each} 檔" if len(lst) > max_each else ""
-        out.append(f"{icons[k]} **{k}**（{len(lst)}）：{names}{more}")
+            detail = (f"{e['vs_avg']:.1f} 倍" if e.get("vs_avg")
+                      else f"連 {e.get('days')} 天")
+            out.append(f"　{e['code']} {e['name']}　{detail}・{lots:,.0f} 張")
+        if len(lst) > n_show:
+            out.append(f"-# 　…還有 {len(lst)-n_show} 檔")
     return out
 
 
