@@ -103,8 +103,15 @@ def _download(tickers, period):
         for tk in chunk:
             try:
                 df = data[tk] if len(chunk) > 1 else data
+                # 2026-08-29：yfinance 批次下載偶爾回 MultiIndex 欄位
+                # （('STRF','Close') 而不是 'Close'）——實測 1,246 檔裡有 1 檔這樣，
+                # 沒攤平會讓下游 df["Close"] 直接 KeyError，而且因為只有一檔，
+                # 整個細分類會被一個 except 吞掉變成「計算失敗」。這裡統一攤平。
+                if hasattr(df.columns, "nlevels") and df.columns.nlevels > 1:
+                    df = df.copy()
+                    df.columns = [c[-1] if isinstance(c, tuple) else c for c in df.columns]
                 df = df.dropna(how="all")
-                if len(df):
+                if len(df) and "Close" in df.columns:
                     if df.index.tz is not None:
                         df.index = df.index.tz_localize(None)
                     out[tk] = df
