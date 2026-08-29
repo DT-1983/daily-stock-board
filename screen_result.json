@@ -1,333 +1,333 @@
 {
- "date": "2026-08-27",
+ "date": "2026-08-29",
  "us": {
   "AI 伺服器": [
    {
     "code": "TSM",
     "name": "Taiwan Semiconductor Manufacturing Co Ltd ADR",
-    "mktcap": 2166338355200,
+    "mktcap": 2165456502784,
     "growth": 0.36,
-    "inflow": 0.392170123519645,
-    "score": 2.5
+    "inflow": 0.32523598150257305,
+    "score": 2.54
    },
    {
-    "code": "AMD",
-    "name": "Advanced Micro Devices Inc",
-    "mktcap": 785106206720,
-    "growth": 0.501,
-    "inflow": 0.15850567914126995,
+    "code": "MU",
+    "name": "Micron Technology Inc",
+    "mktcap": 1053565648896,
+    "growth": 3.457,
+    "inflow": 0.16301428979984658,
     "score": 2.35
-   },
-   {
-    "code": "ANET",
-    "name": "Arista Networks Inc",
-    "mktcap": 255082692608,
-    "growth": 0.377,
-    "inflow": 0.3439011199080893,
-    "score": 2.23
-   },
-   {
-    "code": "MSFT",
-    "name": "Microsoft Corp",
-    "mktcap": 3685818040320,
-    "growth": 0.177,
-    "inflow": 0.5569731585832454,
-    "score": 2.19
    },
    {
     "code": "NVDA",
     "name": "NVIDIA Corp",
-    "mktcap": 5078174924800,
-    "growth": 0.852,
-    "inflow": -0.03263267330538768,
+    "mktcap": 5253179637760,
+    "growth": 1.059,
+    "inflow": -0.01983052987961805,
+    "score": 2.23
+   },
+   {
+    "code": "ANET",
+    "name": "Arista Networks Inc",
+    "mktcap": 246418096128,
+    "growth": 0.377,
+    "inflow": 0.22577335951028768,
     "score": 2.19
    },
    {
-    "code": "MRVL",
-    "name": "Marvell Technology Inc",
-    "mktcap": 220281487360,
-    "growth": 0.276,
-    "inflow": 0.3981144169268249,
-    "score": 1.96
+    "code": "MSFT",
+    "name": "Microsoft Corp",
+    "mktcap": 3813240733696,
+    "growth": 0.177,
+    "inflow": 0.4180481092844252,
+    "score": 2.19
    },
    {
-    "code": "ASML",
-    "name": "ASML Holding NV ADR",
-    "mktcap": 670500323328,
-    "growth": 0.213,
-    "inflow": 0.21685804276074083,
-    "score": 1.88
+    "code": "AMD",
+    "name": "Advanced Micro Devices Inc",
+    "mktcap": 760047665152,
+    "growth": 0.501,
+    "inflow": 0.11038927261304306,
+    "score": 2.12
+   },
+   {
+    "code": "INTC",
+    "name": "Intel Corp",
+    "mktcap": 472947818496,
+    "growth": 0.254,
+    "inflow": 0.19222509558325182,
+    "score": 2.0
    },
    {
     "code": "AVGO",
     "name": "Broadcom Inc",
-    "mktcap": 1691748007936,
+    "mktcap": 1754548011008,
     "growth": 0.479,
-    "inflow": -0.04439270355344578,
-    "score": 1.88
+    "inflow": -0.10409570524202058,
+    "score": 1.85
    }
   ],
   "矽光子/光通訊": [
    {
     "code": "AMD",
     "name": "Advanced Micro Devices Inc",
-    "mktcap": 785106206720,
+    "mktcap": 760047665152,
     "growth": 0.501,
-    "inflow": 0.15850567914126995,
-    "score": 2.44
+    "inflow": 0.11038927261304306,
+    "score": 2.56
    },
    {
     "code": "NVDA",
     "name": "NVIDIA Corp",
-    "mktcap": 5078174924800,
-    "growth": 0.852,
-    "inflow": -0.03263267330538768,
-    "score": 2.22
+    "mktcap": 5253179637760,
+    "growth": 1.059,
+    "inflow": -0.01983052987961805,
+    "score": 2.56
    },
    {
     "code": "ALAB",
     "name": "Astera Labs Inc",
-    "mktcap": 50362724352,
+    "mktcap": 50218733568,
     "growth": 1.045,
-    "inflow": 0.10057887202262358,
+    "inflow": -0.000687146047952866,
     "score": 2.0
-   },
-   {
-    "code": "MPWR",
-    "name": "Monolithic Power Systems Inc",
-    "mktcap": 64076574720,
-    "growth": 0.476,
-    "inflow": 0.1400747865384231,
-    "score": 1.89
    },
    {
     "code": "AVGO",
     "name": "Broadcom Inc",
-    "mktcap": 1691748007936,
+    "mktcap": 1754548011008,
     "growth": 0.479,
-    "inflow": -0.04439270355344578,
-    "score": 1.78
+    "inflow": -0.10409570524202058,
+    "score": 1.67
    },
    {
-    "code": "PI",
-    "name": "Impinj Inc",
-    "mktcap": 4865789952,
-    "growth": 0.107,
-    "inflow": 0.16070584031361337,
-    "score": 1.22
-   },
-   {
-    "code": "TXN",
-    "name": "Texas Instruments Inc",
-    "mktcap": 239060828160,
-    "growth": 0.228,
-    "inflow": -0.12748804446167766,
-    "score": 1.11
+    "code": "MPWR",
+    "name": "Monolithic Power Systems Inc",
+    "mktcap": 61736386560,
+    "growth": 0.476,
+    "inflow": -0.05467816978141524,
+    "score": 1.44
    },
    {
     "code": "SLAB",
     "name": "Silicon Laboratories Inc",
-    "mktcap": 7301648384,
+    "mktcap": 7291971584,
     "growth": 0.183,
-    "inflow": 0.09589644064744603,
-    "score": 1.0
+    "inflow": 0.01982320064428562,
+    "score": 1.33
+   },
+   {
+    "code": "TXN",
+    "name": "Texas Instruments Inc",
+    "mktcap": 236202393600,
+    "growth": 0.228,
+    "inflow": -0.09031919719258369,
+    "score": 1.33
+   },
+   {
+    "code": "PI",
+    "name": "Impinj Inc",
+    "mktcap": 5196083200,
+    "growth": 0.107,
+    "inflow": 0.020065023363182208,
+    "score": 1.11
    }
   ],
   "低軌衛星": [
    {
     "code": "SPCX",
     "name": "Space Exploration Technologies Corp Class A",
-    "mktcap": 1840572006400,
+    "mktcap": 1865221931008,
     "growth": 0.919,
-    "inflow": 0.15686015852481125,
-    "score": 2.65
+    "inflow": 0.229963974810715,
+    "score": 2.73
    },
    {
     "code": "AMD",
     "name": "Advanced Micro Devices Inc",
-    "mktcap": 785106206720,
+    "mktcap": 760047665152,
     "growth": 0.501,
-    "inflow": 0.15850567914126995,
-    "score": 2.58
+    "inflow": 0.11038927261304306,
+    "score": 2.5
+   },
+   {
+    "code": "RTX",
+    "name": "RTX Corp",
+    "mktcap": 285333880832,
+    "growth": 0.145,
+    "inflow": 0.05779290817025988,
+    "score": 2.15
    },
    {
     "code": "KTOS",
     "name": "Kratos Defense & Security Solutions Inc",
-    "mktcap": 9936090112,
+    "mktcap": 9761509376,
     "growth": 0.305,
-    "inflow": 0.4370291627710396,
+    "inflow": 0.4007129487205738,
     "score": 2.12
-   },
-   {
-    "code": "LMT",
-    "name": "Lockheed Martin Corp",
-    "mktcap": 130539864064,
-    "growth": 0.105,
-    "inflow": 0.20422515453890827,
-    "score": 2.08
-   },
-   {
-    "code": "ASTS",
-    "name": "AST SpaceMobile Inc Ordinary Shares - Class A",
-    "mktcap": 23303350272,
-    "growth": 26.266,
-    "inflow": 0.02534247572590647,
-    "score": 2.08
-   },
-   {
-    "code": "AMZN",
-    "name": "Amazon.com Inc",
-    "mktcap": 2807461576704,
-    "growth": 0.196,
-    "inflow": 0.0002538263498122674,
-    "score": 1.96
    },
    {
     "code": "LHX",
     "name": "L3Harris Technologies Inc",
-    "mktcap": 48966995968,
+    "mktcap": 48940929024,
     "growth": 1.9,
-    "inflow": -0.049331968812018345,
-    "score": 1.88
+    "inflow": -0.04705477322649731,
+    "score": 2.0
+   },
+   {
+    "code": "LMT",
+    "name": "Lockheed Martin Corp",
+    "mktcap": 130131361792,
+    "growth": 0.105,
+    "inflow": 0.11332012371668682,
+    "score": 1.96
+   },
+   {
+    "code": "ASTS",
+    "name": "AST SpaceMobile Inc Ordinary Shares - Class A",
+    "mktcap": 22591172608,
+    "growth": 26.266,
+    "inflow": -0.04704371837518844,
+    "score": 1.92
    },
    {
     "code": "AVAV",
     "name": "AeroVironment Inc",
-    "mktcap": 7464825856,
+    "mktcap": 7518697984,
     "growth": 1.333,
-    "inflow": 0.08084503717691491,
-    "score": 1.85
+    "inflow": 0.055454197673789396,
+    "score": 1.88
    }
   ],
   "太陽能": [
    {
-    "code": "BE",
-    "name": "Bloom Energy Corp Class A",
-    "mktcap": 64268816384,
-    "growth": 1.655,
-    "inflow": 0.12808107233623614,
+    "code": "HASI",
+    "name": "HA Sustainable Infrastructure Capital Inc",
+    "mktcap": 5139831808,
+    "growth": 8.044,
+    "inflow": 0.29676086413737335,
     "score": 2.5
    },
    {
-    "code": "HASI",
-    "name": "HA Sustainable Infrastructure Capital Inc",
-    "mktcap": 5147541504,
-    "growth": 8.044,
-    "inflow": 0.2519918171156911,
+    "code": "BE",
+    "name": "Bloom Energy Corp Class A",
+    "mktcap": 62077534208,
+    "growth": 1.655,
+    "inflow": 0.04762245751699805,
     "score": 2.25
    },
    {
     "code": "FSLR",
     "name": "First Solar Inc",
-    "mktcap": 22131253248,
+    "mktcap": 21973274624,
     "growth": -0.037,
-    "inflow": 0.25677541053403313,
-    "score": 1.88
+    "inflow": 0.18380834929590334,
+    "score": 1.75
    },
    {
     "code": "NXT",
     "name": "Nextpower Inc Class A",
-    "mktcap": 13401874432,
+    "mktcap": 13126860800,
     "growth": 0.082,
-    "inflow": -0.010565834525243999,
-    "score": 1.5
+    "inflow": 0.07489014424115269,
+    "score": 1.62
    },
    {
     "code": "CWEN",
     "name": "Clearway Energy Inc Class C",
-    "mktcap": 8008271360,
+    "mktcap": 7833159168,
     "growth": 0.227,
-    "inflow": -0.09156098474782283,
+    "inflow": -0.1801896088530252,
     "score": 1.38
    },
    {
     "code": "ENPH",
     "name": "Enphase Energy Inc",
-    "mktcap": 5076336640,
+    "mktcap": 4922387968,
     "growth": -0.196,
-    "inflow": 0.3086996788588061,
-    "score": 1.38
-   },
-   {
-    "code": "RUN",
-    "name": "Sunrun Inc",
-    "mktcap": 2177955072,
-    "growth": 0.528,
-    "inflow": -0.041560679526594174,
-    "score": 1.12
+    "inflow": 0.22221362297650468,
+    "score": 1.25
    },
    {
     "code": "PLUG",
     "name": "Plug Power Inc",
-    "mktcap": 3031913728,
+    "mktcap": 3059857664,
     "growth": 0.025,
-    "inflow": 0.12493664001226527,
-    "score": 1.0
+    "inflow": 0.15203795793498429,
+    "score": 1.12
+   },
+   {
+    "code": "RUN",
+    "name": "Sunrun Inc",
+    "mktcap": 2094462592,
+    "growth": 0.528,
+    "inflow": -0.15766477462798006,
+    "score": 1.12
    }
   ],
   "Bitcoin→AI 機房": [
    {
     "code": "APLD",
     "name": "Applied Digital Corp",
-    "mktcap": 7639243776,
+    "mktcap": 7204258304,
     "growth": 4.066,
-    "inflow": -0.04782384753277241,
-    "score": 2.11
-   },
-   {
-    "code": "RIOT",
-    "name": "Riot Platforms Inc",
-    "mktcap": 7734087168,
-    "growth": 0.139,
-    "inflow": 0.15374981983429545,
-    "score": 2.11
-   },
-   {
-    "code": "HUT",
-    "name": "Hut 8 Corp",
-    "mktcap": 10477054976,
-    "growth": 0.814,
-    "inflow": -0.1989015636658168,
-    "score": 2.0
+    "inflow": -0.012076908058171888,
+    "score": 2.22
    },
    {
     "code": "IREN",
     "name": "IREN Ltd",
-    "mktcap": 14145049600,
-    "growth": 0,
-    "inflow": 0.07652990019312743,
+    "mktcap": 12669074432,
+    "growth": -0.24,
+    "inflow": 0.1228990636627601,
     "score": 2.0
+   },
+   {
+    "code": "RIOT",
+    "name": "Riot Platforms Inc",
+    "mktcap": 7126167040,
+    "growth": 0.139,
+    "inflow": 0.18234724075571446,
+    "score": 2.0
+   },
+   {
+    "code": "HUT",
+    "name": "Hut 8 Corp",
+    "mktcap": 9789266944,
+    "growth": 0.814,
+    "inflow": -0.16231771097645217,
+    "score": 1.89
    },
    {
     "code": "XYZ",
     "name": "Block Inc Class A",
-    "mktcap": 49926066176,
+    "mktcap": 50208440320,
     "growth": 0.093,
-    "inflow": -0.20654364936392275,
-    "score": 1.78
+    "inflow": -0.13480542122948785,
+    "score": 1.89
    },
    {
     "code": "BTDR",
     "name": "Bitdeer Technologies Group Ordinary Shares Class A",
-    "mktcap": 2899916544,
+    "mktcap": 2804792576,
     "growth": 0.471,
-    "inflow": 0.15777881371587552,
+    "inflow": 0.19003736699841947,
     "score": 1.67
    },
    {
     "code": "CORZ",
     "name": "Core Scientific Inc Ordinary Shares - New",
-    "mktcap": 5597750784,
+    "mktcap": 5305330688,
     "growth": 1.088,
-    "inflow": -0.3075746153450837,
+    "inflow": -0.3005098993512195,
     "score": 1.22
    },
    {
     "code": "MARA",
     "name": "MARA Holdings Inc",
-    "mktcap": 4334278144,
+    "mktcap": 4121813504,
     "growth": -0.267,
-    "inflow": 0.0074144287350006504,
+    "inflow": 0.06185246435532944,
     "score": 1.11
    }
   ],
@@ -335,215 +335,215 @@
    {
     "code": "ETN",
     "name": "Eaton Corp PLC",
-    "mktcap": 162910502912,
+    "mktcap": 156439756800,
     "growth": 0.214,
-    "inflow": 0.45845050005539145,
-    "score": 2.73
-   },
-   {
-    "code": "NVT",
-    "name": "nVent Electric PLC",
-    "mktcap": 25125206016,
-    "growth": 0.528,
-    "inflow": 0.3287786366765912,
-    "score": 2.45
-   },
-   {
-    "code": "PWR",
-    "name": "Quanta Services Inc",
-    "mktcap": 92721274880,
-    "growth": 0.411,
-    "inflow": 0.0967752436369555,
-    "score": 2.45
+    "inflow": 0.25066263886208073,
+    "score": 2.64
    },
    {
     "code": "CEG",
     "name": "Constellation Energy Corp",
-    "mktcap": 99035996160,
+    "mktcap": 98054569984,
     "growth": 0.23,
-    "inflow": 0.0224495946418978,
-    "score": 2.36
+    "inflow": 0.03013582919004293,
+    "score": 2.45
    },
    {
-    "code": "JCI",
-    "name": "Johnson Controls International PLC Registered Shares",
-    "mktcap": 87426662400,
-    "growth": 0.093,
-    "inflow": -0.03510155512826671,
+    "code": "NVT",
+    "name": "nVent Electric PLC",
+    "mktcap": 24032665600,
+    "growth": 0.528,
+    "inflow": 0.1873669751874325,
+    "score": 2.27
+   },
+   {
+    "code": "PWR",
+    "name": "Quanta Services Inc",
+    "mktcap": 90611965952,
+    "growth": 0.411,
+    "inflow": -0.0763458604593549,
+    "score": 2.18
+   },
+   {
+    "code": "UEC",
+    "name": "Uranium Energy Corp",
+    "mktcap": 6136416768,
+    "growth": 0,
+    "inflow": 0.3432229098387758,
+    "score": 1.45
+   },
+   {
+    "code": "BWXT",
+    "name": "BWX Technologies Inc",
+    "mktcap": 14004420608,
+    "growth": 0.18,
+    "inflow": -0.07866657707603991,
     "score": 1.36
    },
    {
     "code": "HUBB",
     "name": "Hubbell Inc",
-    "mktcap": 24961275904,
+    "mktcap": 24285020160,
     "growth": 0.153,
-    "inflow": -0.036815125102014845,
-    "score": 1.18
+    "inflow": -0.10176133595194105,
+    "score": 1.27
    },
    {
-    "code": "UEC",
-    "name": "Uranium Energy Corp",
-    "mktcap": 0,
-    "growth": 0,
-    "inflow": 0.26129451556214756,
+    "code": "JCI",
+    "name": "Johnson Controls International PLC Registered Shares",
+    "mktcap": 84555448320,
+    "growth": 0.093,
+    "inflow": -0.20212348988637593,
     "score": 1.18
-   },
-   {
-    "code": "BWXT",
-    "name": "BWX Technologies Inc",
-    "mktcap": 14032823296,
-    "growth": 0.18,
-    "inflow": -0.043008783008590186,
-    "score": 1.09
    }
   ],
   "機器人": [
    {
     "code": "APH",
     "name": "Amphenol Corp Class A",
-    "mktcap": 198929547264,
+    "mktcap": 194490810368,
     "growth": 0.55,
-    "inflow": 0.2066557167009455,
+    "inflow": 0.09509511069703647,
     "score": 2.56
-   },
-   {
-    "code": "MPWR",
-    "name": "Monolithic Power Systems Inc",
-    "mktcap": 64076574720,
-    "growth": 0.476,
-    "inflow": 0.1400747865384231,
-    "score": 2.19
-   },
-   {
-    "code": "ISRG",
-    "name": "Intuitive Surgical Inc",
-    "mktcap": 132713357312,
-    "growth": 0.185,
-    "inflow": 0.1188542991843149,
-    "score": 2.12
    },
    {
     "code": "NVDA",
     "name": "NVIDIA Corp",
-    "mktcap": 5078174924800,
-    "growth": 0.852,
-    "inflow": -0.03263267330538768,
-    "score": 2.12
+    "mktcap": 5253179637760,
+    "growth": 1.059,
+    "inflow": -0.01983052987961805,
+    "score": 2.56
    },
    {
-    "code": "TER",
-    "name": "Teradyne Inc",
-    "mktcap": 56767328256,
-    "growth": 1.039,
-    "inflow": 0.034324764294919624,
-    "score": 2.06
+    "code": "ISRG",
+    "name": "Intuitive Surgical Inc",
+    "mktcap": 133494398976,
+    "growth": 0.185,
+    "inflow": 0.0941131280063621,
+    "score": 2.25
    },
    {
     "code": "EMR",
     "name": "Emerson Electric Co",
-    "mktcap": 88294154240,
+    "mktcap": 86559399936,
     "growth": 0.07,
-    "inflow": 0.33280574131918966,
+    "inflow": 0.19881719418870167,
     "score": 1.94
    },
    {
-    "code": "ILMN",
-    "name": "Illumina Inc",
-    "mktcap": 33950838784,
-    "growth": 0.094,
-    "inflow": 0.24412357446001376,
-    "score": 1.69
+    "code": "MPWR",
+    "name": "Monolithic Power Systems Inc",
+    "mktcap": 61736386560,
+    "growth": 0.476,
+    "inflow": -0.05467816978141524,
+    "score": 1.94
    },
    {
-    "code": "AUR",
-    "name": "Aurora Innovation Inc Class A",
-    "mktcap": 11543934976,
-    "growth": 1.0,
-    "inflow": -0.019912828898712886,
-    "score": 1.56
+    "code": "TER",
+    "name": "Teradyne Inc",
+    "mktcap": 55496278016,
+    "growth": 1.039,
+    "inflow": -0.125412536119943,
+    "score": 1.88
+   },
+   {
+    "code": "SYM",
+    "name": "Symbotic Inc Ordinary Shares - Class A",
+    "mktcap": 24138921984,
+    "growth": 0.217,
+    "inflow": 0.008527548959873885,
+    "score": 1.75
+   },
+   {
+    "code": "TEL",
+    "name": "TE Connectivity PLC Registered Shares",
+    "mktcap": 58672750592,
+    "growth": 0.138,
+    "inflow": -0.01208511542149187,
+    "score": 1.75
    }
   ],
   "玻璃基板/TGV": [
    {
-    "code": "GLW",
-    "name": "Corning Incorporated",
-    "mktcap": 131602915328,
-    "growth": 0.166,
-    "inflow": 0.3018886549868908,
-    "score": 1.8
-   },
-   {
     "code": "INTC",
     "name": "Intel Corp",
-    "mktcap": 466445893632,
+    "mktcap": 472947818496,
     "growth": 0.254,
-    "inflow": 0.15308452473044457,
-    "score": 1.8
+    "inflow": 0.19222509558325182,
+    "score": 2.2
    },
    {
-    "code": "KLIC",
-    "name": "Kulicke and Soffa Industries, I",
-    "mktcap": 4441695232,
-    "growth": 1.226,
-    "inflow": 0.23889938653482773,
+    "code": "GLW",
+    "name": "Corning Incorporated",
+    "mktcap": 128329629696,
+    "growth": 0.166,
+    "inflow": 0.20067674117079906,
     "score": 1.6
    },
    {
     "code": "ONTO",
     "name": "Onto Innovation Inc.",
-    "mktcap": 17840709632,
+    "mktcap": 16551615488,
     "growth": 0.353,
-    "inflow": 0.1713162329151844,
+    "inflow": 0.0800379022916498,
     "score": 1.6
    },
    {
     "code": "AMAT",
     "name": "Applied Materials Inc",
-    "mktcap": 380736307200,
+    "mktcap": 366380154880,
     "growth": 0.248,
-    "inflow": -0.09346566102890055,
+    "inflow": -0.18973489558018422,
     "score": 1.2
    },
    {
     "code": "CAMT",
     "name": "Camtek Ltd.",
-    "mktcap": 6685216256,
+    "mktcap": 6326804992,
     "growth": 0.025,
-    "inflow": 0.2548207865780586,
-    "score": 1.0
+    "inflow": 0.2745279135196012,
+    "score": 1.2
+   },
+   {
+    "code": "KLIC",
+    "name": "Kulicke and Soffa Industries, I",
+    "mktcap": 4240228096,
+    "growth": 1.226,
+    "inflow": 0.06749018706956451,
+    "score": 1.2
    }
   ],
   "關鍵金屬/原物料": [
    {
     "code": "SCCO",
     "name": "Southern Copper Corporation",
-    "mktcap": 180478459904,
+    "mktcap": 177143300096,
     "growth": 0.406,
-    "inflow": 0.18653095597542968,
+    "inflow": 0.24026634961323426,
     "score": 2.0
    },
    {
     "code": "PAAS",
     "name": "Pan American Silver Corp.",
-    "mktcap": 21821345792,
+    "mktcap": 21920851968,
     "growth": 0.384,
-    "inflow": 0.45492718525970366,
+    "inflow": 0.4788696845020549,
     "score": 1.67
    },
    {
     "code": "FCX",
     "name": "Freeport-McMoRan, Inc.",
-    "mktcap": 113445388288,
+    "mktcap": 109783539712,
     "growth": -0.073,
-    "inflow": 0.4167630274480964,
+    "inflow": 0.33923031711462887,
     "score": 1.33
    },
    {
     "code": "CCJ",
     "name": "Cameco Corporation",
-    "mktcap": 46758821888,
+    "mktcap": 43557654528,
     "growth": -0.072,
-    "inflow": 0.281077013128188,
+    "inflow": 0.28250616473163886,
     "score": 1.0
    }
   ]
@@ -553,65 +553,65 @@
    {
     "code": "3017",
     "name": "ASIA VITAL COMPONENTS CO LTD",
-    "mktcap": 1311093686272,
+    "mktcap": 1318944505856,
     "growth": 0.5739113833331853,
-    "inflow": 0.13960925104571612,
+    "inflow": 0.14567767635942153,
     "score": 2.0
    },
    {
     "code": "2382",
     "name": "QUANTA COMPUTER",
-    "mktcap": 1367189356544,
+    "mktcap": 1363089948672,
     "growth": 1.3131830412017855,
-    "inflow": -0.03731504643208127,
-    "score": 1.85
-   },
-   {
-    "code": "2356",
-    "name": "INVENTEC CORP",
-    "mktcap": 235338350592,
-    "growth": 0.657284615063187,
-    "inflow": 0.12872516512096752,
+    "inflow": -0.05481923014911645,
     "score": 1.85
    },
    {
     "code": "3037",
     "name": "UNIMICRON TECHNOLOGY",
-    "mktcap": 1879586897920,
+    "mktcap": 1768086044672,
     "growth": 0.4369159138764762,
-    "inflow": 0.1466560420610525,
+    "inflow": 0.15970897342036355,
     "score": 1.85
    },
    {
     "code": "2317",
     "name": "HON HAI PRECISION INDUSTRY",
-    "mktcap": 3534472085504,
+    "mktcap": 3548497838080,
     "growth": 0.5418913901503828,
-    "inflow": 0.02243247016710724,
+    "inflow": 0.04732167016138304,
     "score": 1.77
-   },
-   {
-    "code": "2330",
-    "name": "TAIWAN SEMICONDUCTOR MANUFACTUR",
-    "mktcap": 62497012842496,
-    "growth": 0.4468755126916979,
-    "inflow": -0.010549001853656545,
-    "score": 1.69
-   },
-   {
-    "code": "3231",
-    "name": "WISTRON CORPORATION",
-    "mktcap": 570819346432,
-    "growth": 0.6076046186556017,
-    "inflow": 0.064448057527926,
-    "score": 1.69
    },
    {
     "code": "3324",
     "name": "3324",
     "mktcap": 0,
     "growth": 1.1669713862814595,
-    "inflow": 0.09292415839849687,
+    "inflow": 0.11209056756950674,
+    "score": 1.77
+   },
+   {
+    "code": "2330",
+    "name": "TAIWAN SEMICONDUCTOR MANUFACTUR",
+    "mktcap": 62756334075904,
+    "growth": 0.4468755126916979,
+    "inflow": 0.04493952368285747,
+    "score": 1.69
+   },
+   {
+    "code": "2356",
+    "name": "INVENTEC CORP",
+    "mktcap": 232827125760,
+    "growth": 0.657284615063187,
+    "inflow": 0.1085431838853273,
+    "score": 1.69
+   },
+   {
+    "code": "3231",
+    "name": "WISTRON CORPORATION",
+    "mktcap": 566049308672,
+    "growth": 0.6076046186556017,
+    "inflow": 0.055071197013103326,
     "score": 1.62
    }
   ],
@@ -619,9 +619,9 @@
    {
     "code": "3450",
     "name": "ELITE ADVANCED LASER CORP",
-    "mktcap": 84203610112,
+    "mktcap": 92507430912,
     "growth": 0.9800183615933964,
-    "inflow": 0.06242496043896415,
+    "inflow": 0.06350832906066212,
     "score": 2.57
    },
    {
@@ -629,15 +629,15 @@
     "name": "3081",
     "mktcap": 0,
     "growth": 1.7653575803052206,
-    "inflow": 0.04954429385569502,
+    "inflow": 0.05242183476737738,
     "score": 2.14
    },
    {
     "code": "2345",
     "name": "ACCTON TECHNOLOGY CORP",
-    "mktcap": 1168117727232,
+    "mktcap": 1187679567872,
     "growth": 0.7168985948774074,
-    "inflow": -0.09299354559688854,
+    "inflow": -0.10444709442676453,
     "score": 1.71
    },
    {
@@ -645,7 +645,7 @@
     "name": "4979",
     "mktcap": 0,
     "growth": 0.31011263151931523,
-    "inflow": 0.06643687769310119,
+    "inflow": 0.07032281395921988,
     "score": 1.29
    },
    {
@@ -653,7 +653,7 @@
     "name": "3105",
     "mktcap": 0,
     "growth": 0.3117757947581632,
-    "inflow": 0.018608870052701017,
+    "inflow": 0.03139528268171517,
     "score": 1.29
    },
    {
@@ -661,7 +661,7 @@
     "name": "3363",
     "mktcap": 0,
     "growth": 0.1209361529023496,
-    "inflow": -0.00498666908561175,
+    "inflow": 0.0012842213276153538,
     "score": 1.0
    },
    {
@@ -669,7 +669,7 @@
     "name": "3163",
     "mktcap": 0,
     "growth": 0.2865262126408623,
-    "inflow": -0.05039351054552827,
+    "inflow": -0.04587515696065556,
     "score": 1.0
    },
    {
@@ -677,99 +677,99 @@
     "name": "4908",
     "mktcap": 0,
     "growth": 0.5163065195340115,
-    "inflow": -0.03381227326339586,
+    "inflow": -0.03284271153589708,
     "score": 1.0
    }
   ],
   "機器人": [
    {
-    "code": "1504",
-    "name": "TECO ELECTRIC & MACHINERY CO",
-    "mktcap": 172150980608,
-    "growth": 0.1381231550821953,
-    "inflow": 0.17824299497518345,
-    "score": 2.25
-   },
-   {
     "code": "3023",
     "name": "SINBON ELECTRONICS CO LTD",
-    "mktcap": 76822085632,
+    "mktcap": 76101877760,
     "growth": 0.28972028456128784,
-    "inflow": 0.16838243851017676,
+    "inflow": 0.21951344628314454,
+    "score": 2.12
+   },
+   {
+    "code": "1504",
+    "name": "TECO ELECTRIC & MACHINERY CO",
+    "mktcap": 170274668544,
+    "growth": 0.1381231550821953,
+    "inflow": 0.1777903147678152,
     "score": 2.0
    },
    {
     "code": "2049",
     "name": "HIWIN TECHNOLOGIES CORP",
-    "mktcap": 127188312064,
+    "mktcap": 125242458112,
     "growth": 0.33938784592309346,
-    "inflow": 0.06789389919870291,
+    "inflow": 0.06500992548245003,
     "score": 1.88
    },
    {
     "code": "4576",
     "name": "HIWIN MIKROSYSTEM CORP",
-    "mktcap": 25817298944,
+    "mktcap": 25877198848,
     "growth": 0.6011825798568686,
-    "inflow": 0.01806408658305756,
-    "score": 1.75
+    "inflow": 0.011289875112931433,
+    "score": 1.88
    },
    {
     "code": "2359",
     "name": "SOLOMON TECHNOLOGY CORP",
-    "mktcap": 25277222912,
+    "mktcap": 24934481920,
     "growth": 0.36322222185409614,
-    "inflow": 0.020397207547505247,
-    "score": 1.5
+    "inflow": 0.022172089968549875,
+    "score": 1.62
    },
    {
     "code": "1536",
     "name": "HOTA INDUSTRIAL MFG CO",
-    "mktcap": 14254830592,
+    "mktcap": 14031664128,
     "growth": 0.09591256885078381,
-    "inflow": 0.14689968081444904,
-    "score": 1.25
+    "inflow": 0.20801619935684496,
+    "score": 1.38
    },
    {
     "code": "1597",
     "name": "CHIEFTEK PRECISION CO LTD",
-    "mktcap": 12871145472,
+    "mktcap": 13263823872,
     "growth": 0.4775050571703645,
-    "inflow": 7.179433665192216e-05,
+    "inflow": -0.03634350113340802,
     "score": 1.12
    },
    {
     "code": "4540",
     "name": "TBI MOTION TECHNOLOGY CO LTD",
-    "mktcap": 7072464896,
+    "mktcap": 6934240768,
     "growth": 0.3569877221754354,
-    "inflow": 0.026197114253592724,
-    "score": 1.12
+    "inflow": 0.005741749244092303,
+    "score": 0.88
    }
   ],
   "低軌衛星": [
    {
     "code": "6285",
     "name": "WNC CORPORATION",
-    "mktcap": 118443130880,
+    "mktcap": 119410008064,
     "growth": 0.898178052045651,
-    "inflow": 0.016038190302929477,
-    "score": 2.6
+    "inflow": -0.0027095166705168373,
+    "score": 2.4
+   },
+   {
+    "code": "2454",
+    "name": "MEDIATEK INC",
+    "mktcap": 6364712140800,
+    "growth": 0.12158135262975867,
+    "inflow": 0.013198467791205065,
+    "score": 2.0
    },
    {
     "code": "3105",
     "name": "3105",
     "mktcap": 0,
     "growth": 0.3117757947581632,
-    "inflow": 0.018608870052701017,
-    "score": 1.8
-   },
-   {
-    "code": "2454",
-    "name": "MEDIATEK INC",
-    "mktcap": 6173051846656,
-    "growth": 0.12158135262975867,
-    "inflow": -0.007502020276742464,
+    "inflow": 0.03139528268171517,
     "score": 1.8
    },
    {
@@ -777,23 +777,23 @@
     "name": "3491",
     "mktcap": 0,
     "growth": 0.8201583372219015,
-    "inflow": -0.010074574999380786,
+    "inflow": -0.03080684051297843,
     "score": 1.2
    },
    {
     "code": "6271",
     "name": "TONG HSING ELECTRONIC INDUSTRIE",
-    "mktcap": 43902181376,
+    "mktcap": 44947472384,
     "growth": 0.22423649652746191,
-    "inflow": -0.06427656708192506,
+    "inflow": -0.05576314483610736,
     "score": 1.2
    },
    {
     "code": "2314",
     "name": "MICROELECTRONICS TECHNOLOGY",
-    "mktcap": 1276002944,
+    "mktcap": 1259713664,
     "growth": -0.3223433407387557,
-    "inflow": -0.07593744050517472,
+    "inflow": -0.07213196321858709,
     "score": 0.4
    }
   ],
@@ -801,17 +801,17 @@
    {
     "code": "3576",
     "name": "UNITED RENEWABLE ENERGY CO LTD",
-    "mktcap": 27735728128,
+    "mktcap": 28467757056,
     "growth": 0.7274884307951199,
-    "inflow": -0.0024565599605726827,
+    "inflow": 0.02520189603218028,
     "score": 2.67
    },
    {
     "code": "6443",
     "name": "TSEC CORPORATION",
-    "mktcap": 13691673600,
+    "mktcap": 13666032640,
     "growth": -0.016673705057447807,
-    "inflow": 0.11122194670491797,
+    "inflow": 0.05741530090618361,
     "score": 1.67
    },
    {
@@ -819,7 +819,7 @@
     "name": "6182",
     "mktcap": 0,
     "growth": 0.18898165043273218,
-    "inflow": -0.06992422003421941,
+    "inflow": -0.0705695404616519,
     "score": 1.0
    },
    {
@@ -827,7 +827,7 @@
     "name": "5483",
     "mktcap": 0,
     "growth": 0.277207831816783,
-    "inflow": -0.08531472788249331,
+    "inflow": -0.09598501447048056,
     "score": 0.67
    }
   ],
@@ -835,41 +835,41 @@
    {
     "code": "1605",
     "name": "WALSIN LIHWA CORP",
-    "mktcap": 172378849280,
+    "mktcap": 172821987328,
     "growth": 0.10081873496610494,
-    "inflow": 0.22242037122995414,
+    "inflow": 0.25939007014283544,
     "score": 2.0
    },
    {
     "code": "1504",
     "name": "TECO ELECTRIC & MACHINERY CO",
-    "mktcap": 172150980608,
+    "mktcap": 170274668544,
     "growth": 0.1381231550821953,
-    "inflow": 0.17824299497518345,
+    "inflow": 0.1777903147678152,
     "score": 1.75
    },
    {
     "code": "1503",
     "name": "SHIHLIN ELEC & ENGINEERING",
-    "mktcap": 110706548736,
+    "mktcap": 107059748864,
     "growth": 0.1509591746066914,
-    "inflow": 0.11679485242664743,
+    "inflow": 0.0927997848120932,
     "score": 1.5
    },
    {
     "code": "1513",
     "name": "CHUNG HSIN ELECTRIC & MACHINERY",
-    "mktcap": 84239613952,
+    "mktcap": 83004432384,
     "growth": 0.03833103085238321,
-    "inflow": 0.28836970310863713,
+    "inflow": 0.31450713899975075,
     "score": 1.25
    },
    {
     "code": "1519",
     "name": "FORTUNE ELECTRIC CO LTD",
-    "mktcap": 267551195136,
+    "mktcap": 262339166208,
     "growth": -0.08315990648591809,
-    "inflow": -0.046506334125398396,
+    "inflow": -0.06293983593247365,
     "score": 1.0
    }
   ],
@@ -877,9 +877,9 @@
    {
     "code": "3037",
     "name": "UNIMICRON TECHNOLOGY",
-    "mktcap": 1879586897920,
+    "mktcap": 1768086044672,
     "growth": 0.4369159138764762,
-    "inflow": 0.1466560420610525,
+    "inflow": 0.15970897342036355,
     "score": 2.55
    },
    {
@@ -887,31 +887,31 @@
     "name": "4768",
     "mktcap": 0,
     "growth": 0.7900834895212132,
-    "inflow": 0.10468178694603636,
+    "inflow": 0.04433031462042772,
     "score": 1.91
    },
    {
     "code": "3189",
     "name": "KINSUS INTERCONNECT TECHNOLOGY ",
-    "mktcap": 481596080128,
+    "mktcap": 473692405760,
     "growth": 0.3585228262015483,
-    "inflow": 0.017617419315974558,
+    "inflow": 0.007870380124506818,
     "score": 1.82
    },
    {
     "code": "8046",
     "name": "NAN YA PRINTED CIRCUIT BOARD CO",
-    "mktcap": 836784357376,
+    "mktcap": 801245233152,
     "growth": 0.5024118404310352,
-    "inflow": -0.032818991032635234,
+    "inflow": -0.036259904811543474,
     "score": 1.73
    },
    {
     "code": "3055",
     "name": "SPIROX CORP",
-    "mktcap": 14035124224,
+    "mktcap": 14373319680,
     "growth": 1.7349468713105076,
-    "inflow": -0.1309843549511612,
+    "inflow": -0.1518140041891721,
     "score": 1.45
    },
    {
@@ -919,7 +919,7 @@
     "name": "8027",
     "mktcap": 0,
     "growth": 0.6255825330209326,
-    "inflow": 0.0543331274929145,
+    "inflow": 0.019199030191770473,
     "score": 1.36
    },
    {
@@ -927,15 +927,15 @@
     "name": "3580",
     "mktcap": 0,
     "growth": -0.2934575884366679,
-    "inflow": 0.11042517994793044,
+    "inflow": 0.06020074395761771,
     "score": 1.36
    },
    {
     "code": "3149",
     "name": "G-TECH OPTOELECTRONICS CORP",
-    "mktcap": 19234897920,
+    "mktcap": 19005911040,
     "growth": 0.24123807037391587,
-    "inflow": 0.012567307875618794,
+    "inflow": 0.003428739249548288,
     "score": 1.36
    }
   ]
