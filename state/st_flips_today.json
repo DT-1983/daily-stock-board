@@ -1,6 +1,22 @@
 {
-"date": "2026-08-28",
-"flips_hold": [],
+"date": "2026-08-29",
+"flips_hold": [
+{
+"code": "CLS",
+"name": "",
+"word": "🟢→🔴 翻空",
+"dir": -1
+}
+],
 "flips_watch": [],
-"ai_alerts": []
+"ai_alerts": [
+{
+"chain": "機器人",
+"market": "TW",
+"sig": "🟢",
+"code": "1504",
+"name": "東元",
+"reason": "觀望→買進"
+}
+]
 }
