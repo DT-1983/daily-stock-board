@@ -89,3 +89,10 @@ static/
 docs/specs/
 .fm_cache/
 trade_plan.py
+
+# 股價快取（price_store.py）：可重建的衍生資料，不進版控
+# 296 檔 10MB、擴到 industry 細分類會到 1,400 檔約 50MB，每天都在變動，
+# 進版控會讓 repo 迅速肥大且每次 commit 都是大 diff。
+# ⚠️ 代價：GitHub Actions 上沒有快取可用（每次都是冷啟動重抓）。
+# 本機排程有快取所以很快；Actions 那邊靠批次下載本身就已經快 8 倍，可接受。
+state/price_store/
