@@ -322,15 +322,38 @@ def _tw_chinese_names():
     # 絕不用 verify=False 繞過（資安規則）。順手把簡稱裡的「*」記號拿掉。
     cache_path = "state/tw_names_cache.json"
     out = {}
-    try:
-        r = requests.get("https://openapi.twse.com.tw/v1/opendata/t187ap03_L", timeout=15)
-        r.raise_for_status()
-        for row in r.json():
-            code, name = row.get("公司代號"), row.get("公司簡稱")
-            if code and name:
-                out[code] = name.replace("*", "")
-    except Exception as e:
-        print(f"  證交所中文名查詢失敗（不影響其他資料）：{e}")
+    twse_ok = False
+    # 2026-08-29 加重試：證交所會擋 GitHub Actions 雲端 IP（實測 8/29 週報那次
+    # Connection reset by peer，跟 Yahoo 擋 Actions 是同一個模式）。本機幾乎不會失敗。
+    for attempt in range(3):
+        try:
+            r = requests.get("https://openapi.twse.com.tw/v1/opendata/t187ap03_L", timeout=15)
+            r.raise_for_status()
+            for row in r.json():
+                code, name = row.get("公司代號"), row.get("公司簡稱")
+                if code and name:
+                    out[code] = name.replace("*", "")
+            twse_ok = True
+            break
+        except Exception as e:
+            if attempt == 2:
+                print(f"  證交所中文名 requests 失敗3次：{e}")
+    if not twse_ok:
+        try:      # curl 備援，跟櫃買那段同一套（Actions 上 curl 有時通得過）
+            import subprocess, tempfile
+            tf = os.path.join(tempfile.gettempdir(), "twse_names.json")
+            r = subprocess.run(["curl", "-sS", "--max-time", "20",
+                                "https://openapi.twse.com.tw/v1/opendata/t187ap03_L",
+                                "-o", tf], capture_output=True, timeout=30)
+            if r.returncode == 0:
+                for row in json.load(open(tf, encoding="utf-8")):
+                    code, name = row.get("公司代號"), row.get("公司簡稱")
+                    if code and name:
+                        out[code] = name.replace("*", "")
+                twse_ok = True
+                print("  證交所中文名改用 curl 備援成功")
+        except Exception as e:
+            print(f"  證交所 curl 備援也失敗（改用磁碟快取補）：{e}")
     tpex_ok = False
     for attempt in range(3):
         try:
@@ -364,13 +387,19 @@ def _tw_chinese_names():
                 print("  櫃買中心中文名改用 curl 備援成功")
         except Exception as e:
             print(f"  curl 備援也失敗（改用磁碟快取補）：{e}")
+    # 2026-08-29 修：原本是 `if out and tpex_ok: 存檔 / elif: 用快取補`——只要櫃買
+    # 成功就走存檔分支，**證交所失敗時完全不會去補快取**。實測 8/29 週報：證交所被
+    # Actions IP 擋掉、櫃買成功 → 上櫃(.TWO)有中文名、上市(.TW)全部只剩代號
+    # （Leo 反饋「4763.TW/2618.TW/2731.TW 沒名字，1580新麥/5520力泰有」）。
+    # 改成兩件事拆開做：① 永遠先用快取補缺的 ② 只有兩邊都成功才覆蓋快取
+    # （單邊成功就存檔會把另一邊的舊資料洗掉，下次更慘）。
     try:
-        if out and tpex_ok:
-            os.makedirs("state", exist_ok=True)
-            json.dump(out, open(cache_path, "w", encoding="utf-8"), ensure_ascii=False)
-        elif os.path.exists(cache_path):
+        if os.path.exists(cache_path):
             for k, v in json.load(open(cache_path, encoding="utf-8")).items():
                 out.setdefault(k, v)     # 這次抓到的優先，缺的用快取補
+        if out and twse_ok and tpex_ok:
+            os.makedirs("state", exist_ok=True)
+            json.dump(out, open(cache_path, "w", encoding="utf-8"), ensure_ascii=False)
     except Exception:
         pass
     _TW_NAME_CACHE = out
