@@ -1,37 +1,37 @@
 {
- "updated": "2026-08-29 03:23",
+ "updated": "2026-08-29 15:12",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "08/28",
-   "close": 7710.71,
-   "chg_pct": -0.26
+   "date": "08/27",
+   "close": 7730.99,
+   "chg_pct": 0.72
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "08/28",
-   "close": 26399.44,
-   "chg_pct": -0.53
+   "date": "08/27",
+   "close": 26541.35,
+   "chg_pct": 1.57
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "08/28",
-   "close": 53576.53,
-   "chg_pct": 0.01
+   "date": "08/27",
+   "close": 53569.44,
+   "chg_pct": 0.2
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "08/28",
-   "close": 11483.86,
-   "chg_pct": -3.35
+   "date": "08/27",
+   "close": 11882.17,
+   "chg_pct": 2.33
   },
   {
    "sym": "^TWII",
@@ -46,79 +46,79 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "08/28",
-   "close": 31.65,
-   "chg_pct": -0.5
+   "close": 31.63,
+   "chg_pct": -0.56
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "08/28",
-   "close": 4.72,
+   "date": "08/27",
+   "close": 4.67,
    "fmt": "yield",
-   "chg_bp": 4.8
+   "chg_bp": 0.8
   }
  ],
  "news": [
   {
-   "title": "盤中速報 - 伊魯米納(ILMN-US)大跌5%，報216.38美元",
+   "title": "川普對委內瑞拉石油出手！掌控650億桶石油、美企擬進軍17座油田　盧比歐：雙贏",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6591230",
-   "ts": "08/29 02:36"
+   "url": "https://news.cnyes.com/news/id/6591422",
+   "ts": "08/29 14:20"
   },
   {
-   "title": "美國救日元原來是在救自己？貝森特揭背後盤算",
+   "title": "古爾斯比力挺華許抗通膨！警告經濟過熱 通膨尚未脫離險境",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6591215",
-   "ts": "08/29 02:30"
+   "url": "https://news.cnyes.com/news/id/6591270",
+   "ts": "08/29 13:30"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：CareTrust REIT公司(CTRE-US)EPS預估上修至1.56元，預估目標價為45.00元",
+   "title": "美海軍被曝陷入嚴重財政危機！傳靠挪用軍人「薪水」打伊朗",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6591226",
-   "ts": "08/29 02:15"
+   "url": "https://news.cnyes.com/news/id/6591419",
+   "ts": "08/29 13:18"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：歐米茄健康照護投資人(OHI-US)EPS預估上修至2.68元，預估目標價為51.00元",
+   "title": "「巴菲特式投資」可能淪為AI時代受害者？",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6591225",
-   "ts": "08/29 02:15"
+   "url": "https://news.cnyes.com/news/id/6590290",
+   "ts": "08/29 13:10"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：前線公司(FRO-US)EPS預估上修至8.96元，預估目標價為41.09元",
+   "title": "Teradyne再告中國協作機器人廠專利戰從軟體延伸至硬體",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6591224",
-   "ts": "08/29 02:15"
+   "url": "https://news.cnyes.com/news/id/6591455",
+   "ts": "08/29 13:00"
   },
   {
-   "title": "欣興指今遭檢調調查對財務及業務並沒有重大影響 外資砸42.77億元大買",
+   "title": "〈熱門股〉精材今明年營運旺 三大法人同步敲進周漲26%",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6590856",
-   "ts": "08/28 18:33"
+   "url": "https://news.cnyes.com/news/id/6591330",
+   "ts": "08/29 10:36"
   },
   {
-   "title": "鴻海和發新能源專案獲LEED 黃金級認證 建築能源成本省逾50%",
+   "title": "〈熱門股〉松川精密獲AI需求助攻外資也力挺 股價收新天價327.5元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6590847",
-   "ts": "08/28 18:32"
+   "url": "https://news.cnyes.com/news/id/6591307",
+   "ts": "08/29 10:34"
   },
   {
-   "title": "〈國泰金法說〉AI帶動企金放款強勁 國泰世華銀全年NIM展望樂觀上調",
+   "title": "新創迎黃金期！產創條例修正3大亮點吸睛 4大會計為何搶按讚？一表看",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6590851",
-   "ts": "08/28 18:31"
+   "url": "https://news.cnyes.com/news/id/6591379",
+   "ts": "08/29 10:33"
   },
   {
-   "title": "成本與CBAM雙重壓力籠罩 華新9月調漲316產品每公噸5000元",
+   "title": "輝達財報+MSCI雙利多！台股兆元成交量再現 法人本周掃貨10檔ETF名單一次看",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6590840",
-   "ts": "08/28 18:30"
+   "url": "https://news.cnyes.com/news/id/6591180",
+   "ts": "08/29 10:28"
   },
   {
-   "title": "鮮活果汁-KY在Q2賺回逾半個股本  上半年EPS達8.98元",
+   "title": "〈熱門股〉精確AI液冷散熱業務將起飛 周反彈18%至近1個半月高",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6590839",
-   "ts": "08/28 18:27"
+   "url": "https://news.cnyes.com/news/id/6591167",
+   "ts": "08/29 10:23"
   }
  ],
  "inst": {
