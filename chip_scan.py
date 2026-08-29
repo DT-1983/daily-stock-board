@@ -258,7 +258,20 @@ def summary_lines(events, max_each=8):
         if not lst:
             continue
         lst.sort(key=lambda e: -(e.get("vs_avg") or e.get("days") or 0))
-        names = "｜".join(f"{e['code']} {e['name']}" for e in lst[:max_each])
+        # 2026-08-29 Leo：「異常大買跟連買警示會有細項嗎」——原本只列代號+名字，
+        # 但 events 裡本來就有 vs_avg(超出近20日平均幾倍)、days(連幾天)、
+        # shares(股數) 三個欄位完全沒用上。加上去才知道「哪幾檔特別誇張」，
+        # 不然 14 檔並列看起來一樣重要。張數用「千張」單位（台股慣用）。
+        items = []
+        for e in lst[:max_each]:
+            # 台股 1 張 = 1000 股。直接講「張」不要自作聰明換成「千張」——
+            # 第一版寫 f"{shares/1000/1000:,.0f}千張" 出來是「42千張」，
+            # 讀起來像 42,000 張但實際是 42,448 張；小額的更糟（1,2xx 張顯示成「1千張」）。
+            lots = abs(e.get("shares") or 0) / 1000
+            detail = (f"{e['vs_avg']:.1f}倍" if e.get("vs_avg")
+                      else f"連{e.get('days')}天")
+            items.append(f"{e['code']} {e['name']}（{detail}・{lots:,.0f}張）")
+        names = "｜".join(items)
         more = f"　…還有 {len(lst)-max_each} 檔" if len(lst) > max_each else ""
         out.append(f"{icons[k]} **{k}**（{len(lst)}）：{names}{more}")
     return out
