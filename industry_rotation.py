@@ -422,17 +422,33 @@ def _fetch_baskets(market):
     if market not in _MARKET_BENCH:
         raise ValueError(f"未知市場：{market}")
 
-    index_bench = yf.Ticker(_MARKET_BENCH[market]).history(period="3y")["Close"]
     members = _sector_members(_MARKET_TV[market])
+
+    # 2026-08-29 改批次＋快取（Leo 指定）。原本逐檔 yf.Ticker().history(period="3y")，
+    # 294 檔要 12 分鐘；實測批次比逐檔快 8 倍（8檔：1.6秒 vs 0.2秒），加上 price_store
+    # 的本地快取，同一天重跑幾乎零下載。這也是「industry 細分類」能不能做的關鍵——
+    # 1,380 檔逐檔要 45 分鐘（不可行），批次＋快取後約 7 分鐘（可行）。
+    # price_store 另一個好處是抗 API 失效：8/28 一天內就遇到 Yahoo 擋 Actions IP、
+    # 證交所擋 Actions IP 兩次，有快取時「今天抓不到」不等於「今天沒資料」。
+    import price_store
+    # TradingView 的特別股代號用句點（BRK.B），yfinance 要連字號（BRK-B）——
+    # 2026-08-26 實測踩到：不轉會直接抓不到資料（BRK.A/BRK.B/PBR.A 都是這樣）。
+    def _yf(tk):
+        return tk.replace(".", "-") if market == "us" else tk
+    all_tks = sorted({_yf(tk) for info in members.values() for tk, _ in info["members"]})
+    all_tks.append(_MARKET_BENCH[market])
+    cached = price_store.get_ohlc(all_tks, period="3y")
+    bh = cached.get(_MARKET_BENCH[market])
+    if bh is None or bh.empty:
+        raise RuntimeError(f"抓不到大盤基準 {_MARKET_BENCH[market]}，無法計算 RRG")
+    index_bench = bh["Close"]
+
     baskets, holdings = [], {}
     for sector, info in members.items():
         closes_list, shares_list = [], []
         for tk, shares in info["members"]:
-            # TradingView 的特別股代號用句點（BRK.B），yfinance 要連字號（BRK-B）——
-            # 2026-08-26 實測踩到：不轉會直接抓不到資料（BRK.A/BRK.B/PBR.A 都是這樣）。
-            yf_tk = tk.replace(".", "-") if market == "us" else tk
-            h = yf.Ticker(yf_tk).history(period="3y")
-            if h.empty:
+            h = cached.get(_yf(tk))
+            if h is None or h.empty:
                 continue
             closes_list.append(h["Close"])
             shares_list.append(shares)
