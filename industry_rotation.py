@@ -54,6 +54,12 @@ from tradingview_screener import Query, col
 
 PERIODS = [20, 60, 120, 240]
 HIST_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "industry_rotation_history.json")
+# 2026-08-29：industry 細分類用**獨立歷史檔**，不動 HIST_PATH 的結構。
+# 理由：現有檔已經有 52 週回填好的歷史，在 hist[market][benchmark] 底下再插一層
+# 會讓 load_history 的舊格式相容邏輯變複雜、且有弄壞既有資料的風險。
+# 兩個檔各自獨立，粗細分類的軌跡歷史互不干擾。
+HIST_PATH_IND = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                             "industry_rotation_history_industry.json")
 HIST_KEEP_WEEKS = 52          # 回放範圍最長給「一年」，對齊老墨控制面板的選項
 
 US_BENCHMARK = "^GSPC"          # 跟 technical_indicators._benchmark 美股基準一致
@@ -84,7 +90,7 @@ TOP_HOLDINGS_N = 10  # 排行榜「展開看前N大成分股」＋投資長「�
                      # 七鏈以外的類股沒有守備清單在追，前5太淺會漏掉不少中大型股。
 
 
-def _sector_members(market, min_market_cap=3e9):
+def _sector_members(market, min_market_cap=3e9, group_by="sector"):
     """某市場（"taiwan" 或 "america"）各 sector 市值前 SECTOR_BASKET_SIZE 大成分股。
     用 TradingView 一次性快照，不逐檔查——這一步快（幾秒），真正貴的是後面逐檔抓歷史價格。
 
@@ -116,8 +122,13 @@ def _sector_members(market, min_market_cap=3e9):
     修法：只收 NYSE/NASDAQ 主板掛牌（排除 OTC），且排除代號帶 "/" 的特別股
     （TradingView 特別股代號格式是「母股代號/類別」，例如 T/PA）。"""
     base = Query().set_markets(market)
-    cols = ["name", "description", "sector", "market_cap_basic", "total_shares_outstanding",
-            "close", "exchange"]
+    # 2026-08-29 加 group_by 參數（Leo：「產業輪動可以加一個細分 industry 的選擇按鈕嗎」）。
+    # TradingView 同時給 sector（粗，台20/美20）與 industry（細，台98/美128）兩個欄位。
+    # 兩者是「按公司做什麼生意」分類，跟七鏈的「按 AI 題材」分類是不同維度——
+    # industry 更細但**取代不了七鏈**：實測矽光子那條鏈的成分股散在 Semiconductors/
+    # Industrial Machinery/Electrical Products 三個 industry 裡。
+    cols = ["name", "description", "sector", "industry", "market_cap_basic",
+            "total_shares_outstanding", "close", "exchange"]
     wheres = [col("market_cap_basic") >= min_market_cap, col("close") >= 5.0]
     if market == "taiwan":
         wheres.append(col("exchange").isin(["TWSE", "TPEX"]))
@@ -134,7 +145,7 @@ def _sector_members(market, min_market_cap=3e9):
         df = df[~df["ticker"].str.contains("/", regex=False)]   # 排除特別股（同一家公司重複計算）
     tw_names = _tw_chinese_names() if market == "taiwan" else {}
     out = {}
-    for sector, grp in df.groupby("sector"):
+    for sector, grp in df.groupby(group_by):
         if not sector or str(sector).lower() == "nan":
             continue
         top = grp.sort_values("market_cap_basic", ascending=False).head(SECTOR_BASKET_SIZE)
@@ -406,7 +417,7 @@ def _tw_chinese_names():
     return out
 
 
-def _fetch_baskets(market):
+def _fetch_baskets(market, group_by="sector"):
     """只做網路抓取（貴的部分），回 (baskets, index_bench, holdings)。
     baskets = [(key, name, closes_series, size_series), ...]；
     holdings = {key: [{ticker,name,weight_pct}, ...]}（排行榜展開用）。
@@ -422,7 +433,7 @@ def _fetch_baskets(market):
     if market not in _MARKET_BENCH:
         raise ValueError(f"未知市場：{market}")
 
-    members = _sector_members(_MARKET_TV[market])
+    members = _sector_members(_MARKET_TV[market], group_by=group_by)
 
     # 2026-08-29 改批次＋快取（Leo 指定）。原本逐檔 yf.Ticker().history(period="3y")，
     # 294 檔要 12 分鐘；實測批次比逐檔快 8 倍（8檔：1.6秒 vs 0.2秒），加上 price_store
@@ -448,7 +459,12 @@ def _fetch_baskets(market):
         closes_list, shares_list = [], []
         for tk, shares in info["members"]:
             h = cached.get(_yf(tk))
-            if h is None or h.empty:
+            # 2026-08-29：一定要檢查 Close 欄位在不在，不能只檢查 empty。
+            # 實測 1,246 檔裡有 1 檔（STRF）yfinance 回 MultiIndex 欄位，
+            # h["Close"] 直接 KeyError，而 main() 那層的 except 會把整個細分類
+            # 吞成「計算失敗」——**一檔壞資料害掉 109 個籃子**。
+            # price_store 那邊也修了（攤平 MultiIndex），這裡是第二道防線。
+            if h is None or h.empty or "Close" not in h.columns:
                 continue
             closes_list.append(h["Close"])
             shares_list.append(shares)
@@ -527,15 +543,16 @@ def _empty_history():
     return {"us": {"index": [], "equal": []}, "tw": {"index": [], "equal": []}}
 
 
-def load_history():
+def load_history(path=None):
     """歷史存檔結構 2026-08-25 改成 hist[market][benchmark] = [rows...]（多了基準這一層，
     才能讓「加權指數」跟「等權類股」兩種基準各自留自己的軌跡歷史）。
     舊檔是 hist[market] = [rows...]（沒有基準這層），讀到舊格式時搬進 "index"
     （原本就是用加權指數/S&P500算的），不丟掉已經回填好的歷史。"""
-    if not os.path.exists(HIST_PATH):
+    path = path or HIST_PATH
+    if not os.path.exists(path):
         return _empty_history()
     try:
-        with open(HIST_PATH, encoding="utf-8") as f:
+        with open(path, encoding="utf-8") as f:
             hist = json.load(f)
     except Exception:
         return _empty_history()
@@ -565,11 +582,12 @@ def append_history(hist, market, benchmark, snapshot, date_str):
     return hist
 
 
-def save_history(hist):
-    tmp = HIST_PATH + ".tmp"
+def save_history(hist, path=None):
+    path = path or HIST_PATH
+    tmp = path + ".tmp"
     with open(tmp, "w", encoding="utf-8") as f:
         json.dump(hist, f, ensure_ascii=False)
-    os.replace(tmp, HIST_PATH)
+    os.replace(tmp, path)
 
 
 # ── HTML 渲染（跟 ark_report.py 同款：BASE_CSS + header + click-selector）────
@@ -663,9 +681,12 @@ PERIOD_LABEL = {20: "短線", 60: "波段", 120: "中期", 240: "長期"}
 RANGE_WEEKS = [("1m", "1個月", 4), ("3m", "3個月", 13), ("6m", "半年", 26), ("1y", "一年", 52)]
 
 
-def render_html(snaps, hist, holdings=None):
+def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdings_ind=None):
     """snaps: {"us": {"index": current_snapshot, "equal": current_snapshot}, "tw": {...}}
-    hist:  {"us": {"index": [rows...], "equal": [rows...]}, "tw": {...}}"""
+    hist:  {"us": {"index": [rows...], "equal": [rows...]}, "tw": {...}}
+    snaps_ind/hist_ind/holdings_ind: 同結構但用 TradingView 的 industry 細分類
+    （2026-08-29 加，台股98類/美股128類 vs 粗分類的20類）。給 None 就只出粗分類，
+    前端不顯示切換按鈕。"""
     import json as _json
     from board_theme import BASE_CSS, header, NAV, esc
 
@@ -684,15 +705,41 @@ def render_html(snaps, hist, holdings=None):
     # 不再另外算一份 trail_*——原本 _trail_data 產的軌跡跟 frames 是分開算的兩套資料，
     # 排序/缺值處理不保證一致，且前端尾巴長度滑桿需要能動態切不同長度，
     # 讓 frames 當唯一資料來源才不會有兩份「歷史軌跡」各算各的、可能對不起來。
-    payload = {}
-    for m in ("us", "tw"):
-        payload[m] = {}
-        payload["frames_" + m] = {}
-        for bench in ("index", "equal"):
-            snap = snaps[m][bench]
-            rows = hist.get(m, {}).get(bench, [])
-            payload[m][bench] = {str(n): _bubble_data(snap, n, radius_fn[m]) for n in PERIODS}
-            payload["frames_" + m][bench] = {str(n): _frames_data(rows, snap, n, radius_fn[m]) for n in PERIODS}
+    def _build_payload(sn, hi_, rfn, frame_periods=None):
+        """同一套邏輯給粗/細分類各建一份 payload（2026-08-29 拆成函式）。
+
+        frame_periods：要產動畫幀的週期。細分類籃子數是粗分類的 4.5 倍，
+        4 個週期全存會讓 payload 從 1.7MB 爆到 9MB（整頁 11MB，手機開很慢）——
+        細分類只給預設的 60 日幀，其他週期照樣看得到「現在」的座標，
+        只是沒有回放軌跡。粗分類維持四個週期全有。"""
+        fps = frame_periods or PERIODS
+        pl = {}
+        for m in ("us", "tw"):
+            pl[m] = {}
+            pl["frames_" + m] = {}
+            for bench in ("index", "equal"):
+                snap = (sn.get(m) or {}).get(bench) or {}
+                rows = hi_.get(m, {}).get(bench, [])
+                pl[m][bench] = {str(n): _bubble_data(snap, n, rfn[m]) for n in PERIODS}
+                pl["frames_" + m][bench] = {str(n): _frames_data(rows, snap, n, rfn[m])
+                                            for n in fps}
+        return pl
+
+    payload = _build_payload(snaps, hist, radius_fn)
+
+    # 細分類：獨立算自己的半徑尺（籃子數與規模分布跟粗分類差很多，共用同一把尺
+    # 會讓細分類的泡泡全部擠成一團小點）
+    payload_ind = None
+    if snaps_ind:
+        def _sizes_ind(market):
+            sz = [d.get("size", 0.0) for d in (snaps_ind.get(market) or {}).get("index", {}).values()]
+            for bench_rows in (hist_ind or {}).get(market, {}).values():
+                for row in bench_rows:
+                    sz += [b.get("size", 0.0) for b in row.get("snapshot", {}).values()]
+            return sz
+        radius_ind = {m: _size_scale(_sizes_ind(m)) for m in ("us", "tw")}
+        payload_ind = _build_payload(snaps_ind, hist_ind or {}, radius_ind,
+                                     frame_periods=[60])
 
     snap_tw_index = snaps["tw"]["index"]
     snap_us_index = snaps["us"]["index"]
@@ -775,6 +822,7 @@ def render_html(snaps, hist, holdings=None):
     # 2026-08-25：控制面板從「圖表正上方整排」改成「圖表左側直排」（用戶反饋
     # 篩選要放圖的左邊或右邊）——每個 ctrlrow 改直排（標籤在控制項上面），
     # 240px 窄欄放得下。
+    has_ind = bool(snaps_ind)
     ctrl_html = (
         # 2026-08-25：拿掉共用的 "ctrl" class——它是全站另一個用途的 sticky 頂列
         # （z-index/border-bottom/margin-bottom 都是那邊要的，不是這裡要的），
@@ -786,6 +834,15 @@ def render_html(snaps, hist, holdings=None):
         '<button data-m="us" aria-pressed="true">美股</button>'
         '<button data-m="tw" aria-pressed="false">台股</button></div>'
         '</div>'
+        # 2026-08-29 顆粒度切換（Leo：「可以加一個細分 industry 的選擇按鈕嗎」）。
+        # 沒有細分類資料時整排不顯示（--skip-industry 或細分類計算失敗）。
+        + (('<div class="ctrlrow">'
+            '<span class="ctrllbl" title="粗＝TradingView sector（約20類）；細＝TradingView industry（台98/美128類）。細分類看得到「半導體 vs 電子零組件」這種在粗分類裡被混在一起的分化">分類顆粒度</span>'
+            '<div class="seg" role="group" aria-label="切換分類顆粒度" id="granSeg">'
+            '<button data-g="sector" aria-pressed="true">粗分類</button>'
+            '<button data-g="industry" aria-pressed="false">細分類</button></div>'
+            '</div>') if has_ind else '')
+        + 
         '<div class="ctrlrow">'
         '<span class="ctrllbl">基準（相對誰比強弱）</span>'
         f'<div class="seg" role="group" aria-label="切換基準" id="benchSeg">{bench_btns}</div>'
@@ -855,7 +912,9 @@ def render_html(snaps, hist, holdings=None):
         '僅供研究參考，正式決策前請自行查核。</p></div>'
     )
 
-    script_html = _rrg_script(payload, holdings or {"us": {}, "tw": {}})
+    script_html = _rrg_script(payload, holdings or {"us": {}, "tw": {}},
+                              payload_ind=payload_ind,
+                              holdings_ind=holdings_ind or {"us": {}, "tw": {}})
     return head_html + hdr + layout_html + note_html + disc_html + script_html + "</body></html>"
 
 
@@ -895,7 +954,7 @@ def _axis_bounds(payload, pad=0.6):
     return round(center - half, 1), round(center + half, 1)
 
 
-def _rrg_script(payload, holdings):
+def _rrg_script(payload, holdings, payload_ind=None, holdings_ind=None):
     import json as _json
     lines = []
     lines.append('<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>')
@@ -906,6 +965,14 @@ def _rrg_script(payload, holdings):
     # 一個籃子的成分股不會因為
     # 你切了計算週期就變了。
     lines.append("window.RRG_HOLDINGS = " + _json.dumps(holdings, ensure_ascii=False) + ";")
+    # 2026-08-29 細分類（TradingView industry，台98/美128類）。整包另存一份，
+    # 切換時直接換資料來源，不用重算——兩份格式完全一樣，前端邏輯不用改。
+    lines.append("window.RRG_DATA_IND = " + (_json.dumps(payload_ind, ensure_ascii=False)
+                                            if payload_ind else "null") + ";")
+    lines.append("window.RRG_HOLDINGS_IND = " + _json.dumps(holdings_ind or {}, ensure_ascii=False) + ";")
+    lines.append("var curGran = 'sector';")   # sector=粗分類 / industry=細分類
+    lines.append("function RRGD(){return (curGran==='industry'&&window.RRG_DATA_IND)?window.RRG_DATA_IND:window.RRG_DATA;}")
+    lines.append("function RRGH(){return (curGran==='industry'&&window.RRG_DATA_IND)?(window.RRG_HOLDINGS_IND||{}):window.RRG_HOLDINGS;}")
     # 2026-08-26：預設週期改 60 日（Leo 指定）；回放範圍3個月／尾巴8週本來就已經是預設值。
     lines.append("var rrgChart = null, curM = 'us', curP = '60', curBench = 'index', curRange = '3m', tailWeeks = 8;")
     lines.append("var hoveredKey = null, _lastFullFrames = [], _lastUptoIdx = -1, _lastAllPts = [];")
@@ -1036,9 +1103,14 @@ function _lerp(a, b, t) { return a + (b - a) * t; }
 function rrgGet(kind) {
   // kind: 'bubble'(現在座標) | 'trail'（保留給舊資料相容） | 'frames'（動畫用逐週快照）
   var key = (kind === 'bubble') ? curM : (kind + '_' + curM);
-  var byBench = window.RRG_DATA[key] || {};
+  var byBench = RRGD()[key] || {};
   var byPeriod = byBench[curBench] || {};
-  return byPeriod[curP] || [];
+  var v = byPeriod[curP];
+  // 2026-08-29：細分類為了控制檔案大小只產 60 日的動畫幀（籃子多 4.5 倍，
+  // 四個週期全存會讓頁面從 2MB 爆到 11MB）。切到其他週期時 frames 會是 undefined
+  // ——退回 60 日的幀，讓回放仍可用（現在座標 bubble 四個週期都還是完整的）。
+  if ((v === undefined || v === null) && kind === 'frames') v = byPeriod['60'];
+  return v || [];
 }
 
 function stopPlay() {
@@ -1090,7 +1162,7 @@ var MP_PERIODS = [20, 60, 120, 240];
 var MP_LABEL = {20: '短線', 60: '波段', 120: '中期', 240: '長期'};
 function mpDots(key) {
   return MP_PERIODS.map(function(n) {
-    var byBench = window.RRG_DATA[curM] || {};
+    var byBench = RRGD()[curM] || {};
     var arr = (byBench[curBench] || {})[String(n)] || [];
     var pt = arr.find(function(p) { return p.key === key; });
     var q = pt && pt.quadrant;
@@ -1318,7 +1390,7 @@ function renderRankList() {
 // 展開一個籃子＝看它前幾大成分股（台美股都是市值排序的前幾大——
 // 兩者都是靜態資料，見 window.RRG_HOLDINGS）。
 function holdingsHTML(key) {
-  var list = ((window.RRG_HOLDINGS || {})[curM] || {})[key] || [];
+  var list = ((RRGH() || {})[curM] || {})[key] || [];
   if (!list.length) {
     return '<div class="rrgexpand"><div class="rrgexpempty">暫無成分股資料</div></div>';
   }
@@ -1475,6 +1547,19 @@ document.getElementById('mktSeg').addEventListener('click', function(e) {
   document.querySelectorAll('#mktSeg button').forEach(function(x){x.setAttribute('aria-pressed', x===b);});
   curM = b.dataset.m;
   selectedKeys.clear();   // 換市場代號完全不同一套（美股ETF代號 vs 台股sector名），選取沒意義了
+  draw();
+});
+// 2026-08-29 顆粒度切換（粗分類 sector / 細分類 industry）。
+// 切換時要清掉勾選——兩套分類的籃子名稱完全不同（Electronic Technology vs
+// Semiconductors），不清掉的話勾選狀態會對不到任何籃子，圖表會變空白。
+var granEl = document.getElementById('granSeg');
+if (granEl) granEl.addEventListener('click', function(e) {
+  var b = e.target.closest('button'); if (!b) return;
+  document.querySelectorAll('#granSeg button').forEach(function(x){x.setAttribute('aria-pressed', x===b);});
+  curGran = b.dataset.g;
+  selectedKeys.clear();
+  var ci = document.getElementById('selInfo'); if (ci) ci.textContent = '';
+  var cc = document.getElementById('selClear'); if (cc) cc.style.display = 'none';
   draw();
 });
 document.getElementById('benchSeg').addEventListener('click', function(e) {
@@ -1663,19 +1748,20 @@ CSS_EXTRA = """
 """
 
 
-def main():
-    import argparse
-    ap = argparse.ArgumentParser()
-    ap.add_argument("-o", "--output", default="docs/rotation.html")
-    args = ap.parse_args()
+def build(group_by="sector", hist_path=None):
+    """跑一輪：抓籃子→算兩種基準的快照→更新歷史。回 (snaps, hist, holdings)。
 
-    print("抓美股產業籃子（TradingView分類+成分股，需逐檔抓歷史價，較慢；兩種基準共用同一批，只抓一次）…")
-    us_baskets, us_index_bench, us_holdings = _fetch_baskets("us")
-    print("抓台股產業籃子（需逐檔抓歷史價，較慢；兩種基準共用同一批，只抓一次）…")
-    tw_baskets, tw_index_bench, tw_holdings = _fetch_baskets("tw")
+    2026-08-29 從 main() 拆出來（Leo：「加一個細分 industry 的選擇按鈕」）——
+    粗分類(sector)跟細分類(industry)走完全一樣的流程，只差 group_by 跟歷史檔路徑，
+    拆成函式才不用把整段複製兩次。"""
+    label = "粗分類 sector" if group_by == "sector" else "細分類 industry"
+    print(f"抓美股產業籃子（{label}；兩種基準共用同一批，只抓一次）…")
+    us_baskets, us_index_bench, us_holdings = _fetch_baskets("us", group_by=group_by)
+    print(f"抓台股產業籃子（{label}）…")
+    tw_baskets, tw_index_bench, tw_holdings = _fetch_baskets("tw", group_by=group_by)
     holdings = {"us": us_holdings, "tw": tw_holdings}
 
-    hist = load_history()
+    hist = load_history(hist_path)
     date_str = time.strftime("%Y-%m-%d")
     snaps = {"us": {}, "tw": {}}
     for m, baskets, index_bench in (("us", us_baskets, us_index_bench), ("tw", tw_baskets, tw_index_bench)):
@@ -1698,9 +1784,31 @@ def main():
             for d, s in backfill:
                 hist = append_history(hist, m, bench, s, d)
             hist = append_history(hist, m, bench, snap, date_str)
-    save_history(hist)
+    save_history(hist, hist_path)
+    return snaps, hist, holdings
 
-    html = render_html(snaps, hist, holdings)
+
+def main():
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("-o", "--output", default="docs/rotation.html")
+    ap.add_argument("--skip-industry", action="store_true",
+                    help="只跑粗分類（趕時間或只想更新 sector 時用）")
+    args = ap.parse_args()
+
+    snaps, hist, holdings = build("sector")
+
+    # 細分類（台股98類/美股128類）。有 price_store 快取後成本可接受：
+    # 成分股大量跟粗分類重疊，重疊的部分零下載。
+    snaps_ind = hist_ind = holdings_ind = None
+    if not args.skip_industry:
+        try:
+            snaps_ind, hist_ind, holdings_ind = build("industry", HIST_PATH_IND)
+        except Exception as e:
+            print(f"警告 細分類計算失敗（不影響粗分類）：{e}")
+
+    html = render_html(snaps, hist, holdings,
+                       snaps_ind=snaps_ind, hist_ind=hist_ind, holdings_ind=holdings_ind)
     # obis 一律嘗試寫，不用額外參數——跟 buffett_html.py/portfolio_html.py 同款寫法
     # （本機成功；GitHub Actions 上這個路徑不存在，try/except 吞掉不影響其他輸出）。
     # 先前這裡要求 --obis 才寫，跟其他頁面不一致、容易忘記加，已改掉。
