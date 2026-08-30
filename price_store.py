@@ -70,6 +70,10 @@ def _read_cached(ticker):
         # 混在一起比較時間戳會 TypeError）
         if df.index.tz is not None:
             df.index = df.index.tz_localize(None)
+        # 已經存進快取的盤中列（Close 是 NaN）在這裡也要擋——不然要等下次重抓
+        # 才會消失，而 STALE_HOURS 內不會重抓。見 _download 那邊的說明。
+        if "Close" in df.columns:
+            df = df.dropna(subset=["Close"])
         return df
     except Exception:
         return None
@@ -110,7 +114,17 @@ def _download(tickers, period):
                 if hasattr(df.columns, "nlevels") and df.columns.nlevels > 1:
                     df = df.copy()
                     df.columns = [c[-1] if isinstance(c, tuple) else c for c in df.columns]
-                df = df.dropna(how="all")
+                # 2026-08-30 修：原本 dropna(how="all") 只清「整列全 NaN」，
+                # 但 yfinance 在美股尚未收盤時會回一列 OHLC 全 NaN、**Volume 卻有值**
+                # 的當日列（實測 ^GSPC 8/28）——how="all" 攔不住。
+                # 後果很嚴重：籃子指數有值、基準是 NaN → 相除全 NaN →
+                # **美股「加權指數」基準的 RRG 整個算不出來（0 個籃子）**，
+                # 台股沒事只是因為 ^TWII 那天剛好沒有盤中列。
+                # 改成以 Close 為準：沒有收盤價的那列對所有下游計算都沒有意義。
+                if "Close" in df.columns:
+                    df = df.dropna(subset=["Close"])
+                else:
+                    df = df.dropna(how="all")
                 if len(df) and "Close" in df.columns:
                     if df.index.tz is not None:
                         df.index = df.index.tz_localize(None)
