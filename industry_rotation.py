@@ -473,7 +473,11 @@ def _fetch_baskets(market, group_by="sector"):
             print(f"  [industry_rotation] {sector} 成分股資料不足（<{SECTOR_MIN_MEMBERS}檔），跳過")
             continue
         size_series = _basket_size_series(list(zip(closes_list, shares_list)))
-        baskets.append((sector, SECTOR_TW_LABEL.get(sector, sector), b, size_series))
+        # 2026-08-30：細分類查 INDUSTRY_TW_LABEL（115個，實際跑出來的完整清單），
+        # 粗分類查 SECTOR_TW_LABEL（20個）。兩張表分開是因為 TradingView 的
+        # sector/industry 是兩套不同的命名，不是包含關係。查不到就顯示英文不硬湊。
+        _label = (INDUSTRY_TW_LABEL if group_by == "industry" else SECTOR_TW_LABEL)
+        baskets.append((sector, _label.get(sector, sector), b, size_series))
         holdings[sector] = info["holdings"]
     return baskets, index_bench, holdings
 
@@ -535,6 +539,69 @@ SECTOR_TW_LABEL = {   # TradingView sector 英文 → 繁中（跟 buffett_html_
     "Retail Trade": "零售貿易", "Technology Services": "科技服務",
     "Transportation": "運輸", "Utilities": "公用事業",
 }
+
+# TradingView industry（細分類）英文→繁中，2026-08-30 加（Leo：「台股細產業可以顯示中文嗎」）。
+# 這 115 個是實際跑出來的完整清單（台77+美109去重），不是猜的——TradingView 的
+# industry 分類是固定集合，一次建好就不用維護。查不到的照樣顯示英文（不硬湊）。
+INDUSTRY_TW_LABEL = {
+    "Advertising/Marketing Services": "廣告行銷", "Aerospace & Defense": "航太國防",
+    "Agricultural Commodities/Milling": "農產加工", "Air Freight/Couriers": "空運快遞",
+    "Airlines": "航空", "Alternative Power Generation": "替代能源發電", "Aluminum": "鋁業",
+    "Apparel/Footwear": "成衣鞋類", "Apparel/Footwear Retail": "服飾零售",
+    "Auto Parts: OEM": "汽車零件", "Automotive Aftermarket": "汽車售後市場",
+    "Beverages: Alcoholic": "酒類飲料", "Beverages: Non-Alcoholic": "非酒精飲料",
+    "Biotechnology": "生技", "Broadcasting": "廣播電視", "Building Products": "建材",
+    "Cable/Satellite TV": "有線衛星電視", "Casinos/Gaming": "博弈",
+    "Chemicals: Agricultural": "農業化學", "Chemicals: Major Diversified": "綜合化學",
+    "Chemicals: Specialty": "特用化學", "Coal": "煤炭",
+    "Computer Communications": "電腦通訊", "Computer Peripherals": "電腦週邊",
+    "Computer Processing Hardware": "電腦處理硬體", "Construction Materials": "營建材料",
+    "Containers/Packaging": "容器包裝", "Contract Drilling": "鑽探服務",
+    "Data Processing Services": "資料處理服務", "Department Stores": "百貨",
+    "Discount Stores": "量販折扣店", "Electric Utilities": "電力公用事業",
+    "Electrical Products": "電機產品", "Electronic Components": "電子零組件",
+    "Electronic Equipment/Instruments": "電子儀器設備",
+    "Electronic Production Equipment": "電子生產設備",
+    "Electronics Distributors": "電子通路", "Electronics/Appliances": "電器家電",
+    "Engineering & Construction": "工程營建", "Environmental Services": "環保服務",
+    "Finance/Rental/Leasing": "融資租賃", "Financial Conglomerates": "金融集團",
+    "Financial Publishing/Services": "金融資訊服務", "Food Distributors": "食品通路",
+    "Food Retail": "食品零售", "Food: Major Diversified": "綜合食品",
+    "Food: Meat/Fish/Dairy": "肉品水產乳品", "Food: Specialty/Candy": "特色食品糖果",
+    "Forest Products": "林產", "Gas Distributors": "天然氣配售",
+    "Home Furnishings": "家飾", "Home Improvement Chains": "居家修繕連鎖",
+    "Homebuilding": "住宅營建", "Hospital/Nursing Management": "醫院照護經營",
+    "Hotels/Resorts/Cruise lines": "飯店渡假郵輪", "Household/Personal Care": "家用個人護理",
+    "Industrial Machinery": "工業機械", "Industrial Specialties": "工業特用品",
+    "Information Technology Services": "資訊服務", "Insurance Brokers/Services": "保險經紀",
+    "Integrated Oil": "綜合石油", "Internet Retail": "網路零售",
+    "Internet Software/Services": "網路軟體服務", "Investment Banks/Brokers": "投資銀行券商",
+    "Investment Managers": "資產管理", "Investment Trusts/Mutual Funds": "投資信託基金",
+    "Life/Health Insurance": "壽險健康險", "Major Banks": "大型銀行",
+    "Major Telecommunications": "大型電信", "Managed Health Care": "健康管理照護",
+    "Marine Shipping": "海運", "Medical Distributors": "醫材通路",
+    "Medical Specialties": "醫療專科", "Medical/Nursing Services": "醫護服務",
+    "Metal Fabrication": "金屬加工", "Miscellaneous Commercial Services": "其他商業服務",
+    "Miscellaneous Manufacturing": "其他製造", "Motor Vehicles": "整車製造",
+    "Movies/Entertainment": "影視娛樂", "Multi-Line Insurance": "綜合保險",
+    "Oil & Gas Pipelines": "油氣管線", "Oil & Gas Production": "油氣生產",
+    "Oil Refining/Marketing": "煉油行銷", "Oilfield Services/Equipment": "油田服務設備",
+    "Other Consumer Services": "其他消費服務", "Other Metals/Minerals": "其他金屬礦產",
+    "Other Transportation": "其他運輸", "Packaged Software": "套裝軟體",
+    "Pharmaceuticals: Major": "大型製藥", "Pharmaceuticals: Other": "其他製藥",
+    "Precious Metals": "貴金屬", "Property/Casualty Insurance": "產險",
+    "Publishing: Newspapers": "報業出版", "Pulp & Paper": "紙漿造紙",
+    "Railroads": "鐵路", "Real Estate Development": "不動產開發",
+    "Real Estate Investment Trusts": "REITs不動產信託", "Recreational Products": "休閒用品",
+    "Regional Banks": "區域銀行", "Restaurants": "餐飲", "Savings Banks": "儲蓄銀行",
+    "Semiconductors": "半導體", "Specialty Insurance": "特殊保險",
+    "Specialty Stores": "專門店", "Specialty Telecommunications": "特殊電信",
+    "Steel": "鋼鐵", "Telecommunications Equipment": "電信設備", "Textiles": "紡織",
+    "Tobacco": "菸草", "Tools & Hardware": "工具五金", "Trucking": "貨運",
+    "Trucks/Construction/Farm Machinery": "卡車工程農機", "Water Utilities": "自來水",
+    "Wholesale Distributors": "批發通路", "Wireless Telecommunications": "無線電信",
+}
+
 
 
 # ── 歷史存檔：給軌跡尾巴用 ────────────────────────────────────────────
