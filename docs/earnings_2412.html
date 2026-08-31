@@ -1,0 +1,317 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex"><title>2412.TW Q2 2026 財報懶人包</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A1628;color:#E8EEF7;
+ font-family:"Microsoft JhengHei","PingFang TC",-apple-system,"Segoe UI",sans-serif;
+ padding:22px;line-height:1.5}
+.wrap{max-width:1280px;margin:0 auto}
+.card{background:#132A47;border:1px solid #1E3A5F;border-radius:14px;padding:16px}
+.hd{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;
+ border-bottom:3px solid #F5B841;padding-bottom:14px;margin-bottom:18px;flex-wrap:wrap}
+.hd h1{font-size:27px;font-weight:800;letter-spacing:.5px}
+.hd .sub{color:#8FA8C8;font-size:13px;margin-top:3px}
+.tk{font-size:34px;font-weight:800;color:#F5B841;line-height:1}
+.tk-sub{color:#8FA8C8;font-size:12px;text-align:right;margin-top:4px}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}
+.kpi{background:#132A47;border:1px solid #1E3A5F;border-radius:14px;padding:14px 12px;
+ border-top:3px solid #2E4A6F}
+.kpi .lb{color:#8FA8C8;font-size:11.5px;letter-spacing:.4px;text-transform:uppercase}
+.kpi .vl{font-size:26px;font-weight:800;margin:5px 0 3px;letter-spacing:-.5px}
+.kpi .yo{font-size:13px;font-weight:700}
+.up{color:#22C55E}.dn{color:#EF4444}.neu{color:#8FA8C8}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px}
+h2{font-size:14px;font-weight:800;color:#F5B841;letter-spacing:.6px;margin-bottom:11px;
+ text-transform:uppercase}
+.item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #1E3A5F}
+.item:last-child{border-bottom:0}
+.ic{font-size:19px;line-height:1.2;flex-shrink:0;width:24px;text-align:center}
+.it-t{font-weight:700;font-size:13.5px;margin-bottom:2px}
+.it-d{color:#A9C0DC;font-size:12.5px;line-height:1.55}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{color:#8FA8C8;font-weight:600;text-align:right;padding:6px 4px;
+ border-bottom:1px solid #1E3A5F;font-size:11.5px}
+th:first-child{text-align:left}
+td{padding:6px 4px;text-align:right;border-bottom:1px solid #16304F}
+td:first-child{text-align:left;color:#C7D8EC}
+.gauge{text-align:center;margin-top:12px}
+.gauge .lbl{font-size:15px;font-weight:800;margin-top:-8px}
+.gauge .rsn{color:#8FA8C8;font-size:11.5px;margin-top:5px;line-height:1.45}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.pos{background:#0E2E1E;border:1px solid #1B5E3A}
+.neg{background:#2E1418;border:1px solid #5E1B24}
+.pos h2{color:#22C55E}.neg h2{color:#EF4444}
+.li{display:flex;gap:9px;padding:7px 0;font-size:12.8px;line-height:1.5;align-items:flex-start}
+.li .m{flex-shrink:0;font-weight:800}
+.pos .m{color:#22C55E}.neg .m{color:#EF4444}
+.dec{display:grid;grid-template-columns:1.15fr 1fr;gap:12px;margin-bottom:16px}
+.rate{display:flex;justify-content:space-between;align-items:center;padding:8px 0;
+ border-bottom:1px solid #1E3A5F;font-size:13px}
+.rate:last-of-type{border-bottom:0}
+.st{color:#F5B841;letter-spacing:2.5px;font-size:14.5px}
+.st .off{color:#33507A}
+.na{color:#8FA8C8;font-size:11.5px;letter-spacing:0}
+.badge{text-align:center;padding:14px;border-radius:12px;margin-bottom:12px}
+.badge .bg{font-size:31px;font-weight:800;letter-spacing:2px;line-height:1}
+.badge .bs{font-size:11.5px;margin-top:5px;opacity:.92}
+.note{color:#8FA8C8;font-size:11.5px;margin-top:9px;line-height:1.5}
+.bl{background:linear-gradient(90deg,#14304F,#1B3E63);border:1px solid #2A4E78;
+ border-radius:14px;padding:16px 20px;display:flex;align-items:center;gap:15px}
+.bl .e{font-size:29px;flex-shrink:0}
+.bl .t{font-size:11.5px;color:#F5B841;font-weight:800;letter-spacing:1.2px;margin-bottom:3px}
+.bl .c{font-size:14.5px;line-height:1.6}
+.verdict{margin-top:14px;padding:14px 16px;background:#161a20;border:1px solid #2a2e35;
+ border-left:3px solid #F5B841;border-radius:10px}
+.verdict .vt{font-size:11.5px;font-weight:700;color:#F5B841;letter-spacing:.5px;margin-bottom:6px}
+.verdict .vc{font-size:13.5px;line-height:1.7;color:#C7D8EC}
+.ftr{color:#6B84A6;font-size:11px;margin-top:16px;line-height:1.7;
+ border-top:1px solid #1E3A5F;padding-top:12px}
+.warn{background:#3A2A0E;border:1px solid #7A5A1E;color:#F5C96B;border-radius:9px;
+ padding:9px 13px;font-size:12px;margin-bottom:14px}
+@media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}
+ .grid3,.two,.dec{grid-template-columns:1fr}}
+
+.positioning{margin-top:16px;padding-top:14px;border-top:1px solid #16223A}
+.positioning h3{font-size:14px;font-weight:700;color:#F5B841;margin-bottom:4px}
+.chainpos{font-size:12.5px;color:#C7D8EC;line-height:1.6;margin-bottom:8px;
+ padding:8px 10px;background:#161a20;border-radius:8px}
+.posnote{font-size:11.5px;color:#8a8f98;margin-bottom:10px}
+.segarrow{text-align:center;font-size:10.5px;color:#4a5568;margin:2px 0}
+.segrow{margin:6px 0 10px}
+.segname{font-size:12px;color:#93C5FD;font-weight:600}
+.segmine{color:#F5B841;font-weight:700;font-size:10.5px}
+.segdo{font-size:11px;color:#8a8f98;margin:2px 0 6px}
+.segcells{display:flex;flex-wrap:wrap;gap:6px}
+.peer{background:#1a1d23;border:1px solid #2a2e35;border-radius:8px;padding:6px 9px;font-size:11.5px;min-width:120px}
+.peer.focus{border-color:#4a9eff;box-shadow:0 0 0 1px #4a9eff}
+.pt{font-weight:700;color:#e8eaed}
+.pc{color:#6b7280;font-weight:400;margin-left:4px;font-size:10.5px}
+.pv{color:#9aa0a6;margin-top:2px}
+.pv .pos{color:#4ade80}.pv .neg{color:#ff8a8a}.pv .flat{color:#6b7280}
+
+.reality{margin-top:16px;padding-top:14px;border-top:1px solid #16223A}
+.reality h3{font-size:14px;font-weight:700;color:#F5B841;margin-bottom:4px}
+.realitysub{font-size:11.5px;color:#93C5FD;font-weight:600;margin:12px 0 5px}
+.realitytbl{width:100%;border-collapse:collapse;font-size:12px}
+.realitytbl th{color:#8a8f98;font-weight:600;text-align:right;padding:5px 7px;
+ border-bottom:1px solid #2a2e35;font-size:10.5px}
+.realitytbl th:first-child,.realitytbl td:first-child{text-align:left}
+.realitytbl td{padding:5px 7px;border-bottom:1px solid #1a1d23;text-align:right;color:#e8eaed}
+.realitytbl tr:last-child td{border-bottom:0}
+.realitytbl .pos{color:#4ade80}.realitytbl .neg{color:#ff8a8a}.realitytbl .flat{color:#6b7280}
+.ndot{color:#EAB308;cursor:help}
+.realitywarn{background:#2a2410;border:1px solid #5c4a1a;border-radius:8px;
+ padding:9px 11px;font-size:12px;line-height:1.6;color:#F5D98B;margin-top:10px}
+
+.technical{margin-top:16px;padding-top:14px;border-top:1px solid #16223A}
+.technical h3{font-size:14px;font-weight:700;color:#F5B841;margin-bottom:4px}
+.techgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:10px}
+.ttile{background:#1a1d23;border:1px solid #2a2e35;border-radius:9px;padding:9px 11px}
+.tn{font-size:10px;color:#6b7280;letter-spacing:.3px;font-weight:600}
+.tv{font-size:14px;font-weight:700;margin-top:4px;color:#e8eaed}
+.ts{font-size:11px;color:#9aa0a6;margin-top:2px}
+.techtoggle{margin-top:12px;width:100%;padding:9px;background:#1a1d23;border:1px solid #2a2e35;
+ border-radius:8px;color:#93C5FD;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.techtoggle:hover{border-color:#4a9eff}
+.techcharts{margin-top:10px}
+.tclabel{font-size:11px;color:#8a8f98;margin:10px 0 4px}
+.tcbox{height:180px}
+.tcbox-sm{height:100px}
+.tcwin{display:inline-flex;background:#1a1d23;border:1px solid #2a2e35;border-radius:8px;
+ padding:2px;margin-bottom:6px}
+.tcwin button{border:0;background:transparent;color:#8a8f98;font-size:11px;font-weight:600;
+ padding:5px 12px;border-radius:6px;cursor:pointer;font-family:inherit}
+.tcwin button[aria-pressed=true]{background:#334155;color:#e8eaed}
+
+.callnote-block{margin-top:10px}
+.callnote-text{font-size:12.5px;color:#e8eaed;line-height:1.6;background:#1a1d23;
+ border:1px solid #2a2e35;border-radius:8px;padding:9px 11px;margin-top:6px}
+.callnote-quote{margin-top:10px;font-size:12.5px;color:#C7D8EC;line-height:1.6;
+ font-style:italic;border-left:2px solid #F5B841;padding-left:10px}
+.callnote-speaker{font-size:11px;color:#8a8f98;margin-top:4px;font-style:normal}
+</style></head><body><div class="wrap">
+
+<div class="hd">
+  <div><h1>中華電</h1>
+    <div class="sub">Q2 2026 財報懶人包　·　會計期間截至 2026-06-30　·　YoY 基準 2025-06-30</div></div>
+  <div><div class="tk">2412.TW</div>
+    <div class="tk-sub">股價 136.0 TWD　·　產生於 2026-08-31 17:04</div></div>
+</div>
+
+<div class="kpis"><div class="kpi"><div class="lb">營收 Revenue</div><div class="vl">60.99B</div><span class="yo up">▲ +8.1% YoY</span></div><div class="kpi"><div class="lb">毛利 Gross Profit</div><div class="vl">22.66B</div><span class="yo up">▲ +5.7% YoY</span></div><div class="kpi"><div class="lb">營業利益 Op. Income</div><div class="vl">13.26B</div><span class="yo up">▲ +5.7% YoY</span></div><div class="kpi"><div class="lb">淨利 Net Income</div><div class="vl">10.64B</div><span class="yo up">▲ +4.7% YoY</span></div><div class="kpi"><div class="lb">資本支出 CapEx</div><div class="vl">5.43B</div><span class="yo neu">-22.0% YoY</span></div></div>
+
+<div class="grid3">
+  <div class="card"><h2>營運亮點 Highlights</h2><div class="item"><div class="ic">💰</div><div><div class="it-t">自由現金流大增</div><div class="it-d">自由現金流年增62.2%達152.1億元,資本支出反減22.0%,現金創造力顯著提升。</div></div></div><div class="item"><div class="ic">📡</div><div><div class="it-t">ICT三引擎齊發</div><div class="it-d">ICT營收年增32%,大數據年增167%,資安年增34%,新簽約已達去年全年水準。</div></div></div><div class="item"><div class="ic">🌏</div><div><div class="it-t">海外業務爆發</div><div class="it-d">國際子公司合計營收年增242%,美國營運年增逾11倍,東南亞翻倍成長。</div></div></div><div class="item"><div class="ic">📶</div><div><div class="it-t">5G市占創新高</div><div class="it-d">行動業務營收市占率41.2%創新高,5G市占率39.4%,滲透率達49%。</div></div></div></div>
+  <div class="card"><h2>財務數據 Financial Results</h2>
+    <table><tr><th>項目</th><th>本季</th><th>YoY</th></tr><tr><td>營收</td><td>60.99B</td><td class="up">+8.1%</td></tr><tr><td>毛利</td><td>22.66B</td><td class="up">+5.7%</td></tr><tr><td>營業利益</td><td>13.26B</td><td class="up">+5.7%</td></tr><tr><td>淨利</td><td>10.64B</td><td class="up">+4.7%</td></tr><tr><td>營運現金流</td><td>20.64B</td><td class="up">+26.4%</td></tr><tr><td>自由現金流</td><td>15.21B</td><td class="up">+62.2%</td></tr></table>
+    <div class="gauge"><h2 style="margin-top:16px">市場情緒 Sentiment</h2>
+      <svg viewBox="0 0 220 118" style="width:100%;max-width:220px"><path d="M34.0,100.0 A76,76 0 0 1 48.5,55.3" stroke="#EF4444" stroke-width="15" fill="none" stroke-linecap="butt"/><path d="M48.5,55.3 A76,76 0 0 1 86.5,27.7" stroke="#F97316" stroke-width="15" fill="none" stroke-linecap="butt"/><path d="M86.5,27.7 A76,76 0 0 1 133.5,27.7" stroke="#8FA8C8" stroke-width="15" fill="none" stroke-linecap="butt"/><path d="M133.5,27.7 A76,76 0 0 1 171.5,55.3" stroke="#4ADE80" stroke-width="15" fill="none" stroke-linecap="butt"/><path d="M171.5,55.3 A76,76 0 0 1 186.0,100.0" stroke="#22C55E" stroke-width="15" fill="none" stroke-linecap="butt"/><line x1="110" y1="100" x2="110.0" y2="37.7" stroke="#E8EEF7" stroke-width="3.5" stroke-linecap="round"/><circle cx="110" cy="100" r="7" fill="#E8EEF7"/></svg><div class="lbl" style="color:#8FA8C8">NEUTRAL</div>
+      <div class="rsn">技術面多頭但動能轉弱,估值居中,基本面穩健但關卡未過</div></div>
+  </div>
+  <div class="card"><h2>資本與產能動態 Capital &amp; Capacity</h2><div class="item"><div class="ic">🏗</div><div><div class="it-t">資本支出反減</div><div class="it-d">上半年資本支出98.5億元年減14.3%,自由現金流達218.9億元。</div></div></div><div class="item"><div class="ic">🖥</div><div><div class="it-t">AI機房擴建</div><div class="it-d">林口AI資料中心機房容量達36MW,卡位AI資料中心成長商機。</div></div></div><div class="item"><div class="ic">💪</div><div><div class="it-t">負債結構穩健</div><div class="it-d">調整後負債比率23.72%,較去年25.21%下降,淨負債/EBITDA為0。</div></div></div><div class="item"><div class="ic">🛰</div><div><div class="it-t">衛星ICT新賽道</div><div class="it-d">上半年衛星相關ICT合約金額超過2億元,新簽約已超越去年全年水準。</div></div></div></div>
+</div>
+
+<div class="two">
+  <div class="card pos"><h2>✓ 利多 Key Positives</h2>
+    <div class="li"><span class="m">✓</span><span>自由現金流年增62.2%達152.1億元</span></div><div class="li"><span class="m">✓</span><span>ICT訂單年增30%,新簽約已達去年全年水準</span></div><div class="li"><span class="m">✓</span><span>大數據/資安年增167%/34%,雙引擎成長</span></div><div class="li"><span class="m">✓</span><span>海外子公司營收年增242%,美國營運增逾11倍</span></div><div class="li"><span class="m">✓</span><span>行動與5G市占雙創新高,41.2%/39.4%</span></div></div>
+  <div class="card neg"><h2>✕ 風險 Key Risks &amp; Concerns</h2>
+    <div class="li"><span class="m">✕</span><span>毛利率近6季自38.7%緩降至37.5%,結構承壓</span></div><div class="li"><span class="m">✕</span><span>營益率21.7%較去年同期22.2%下滑</span></div><div class="li"><span class="m">✕</span><span>ROE僅10.9%,近4年皆未達15%門檻</span></div><div class="li"><span class="m">✕</span><span>配息率0%,配息偏低需留意盈餘品質</span></div><div class="li"><span class="m">✕</span><span>年度EPS較前一年衰退,觸發變壞觀察</span></div></div>
+</div>
+
+<div class="dec">
+  <div class="card"><h2>洪瑞泰選股法 Decision Framework</h2><div class="rate"><div>① 高 ROE ≥ 15%<div style="color:#6B84A6;font-size:10.5px;font-weight:400;margin-top:1px">近 4 年 0/4 年達標（需 ≥3）</div></div><div style="text-align:right"><div style="font-weight:700">10.9%</div><span style="color:#EF4444;font-weight:800">❌ 不過</span></div></div><div class="rate"><div>② 盈再率 < 80%<div style="color:#6B84A6;font-size:10.5px;font-weight:400;margin-top:1px">🏆 印鈔機（<40%）</div></div><div style="text-align:right"><div style="font-weight:700">0.5%</div><span style="color:#22C55E;font-weight:800">✅ 過</span></div></div><div class="rate"><div>③ 配息率 ≥ 40%<div style="color:#6B84A6;font-size:10.5px;font-weight:400;margin-top:1px">配息偏低，留意盈餘品質</div></div><div style="text-align:right"><div style="font-weight:700">0.0%</div><span style="color:#EF4444;font-weight:800">❌ 不過</span></div></div><div style="margin-top:12px;padding-top:11px;border-top:1px solid #1E3A5F"><div style="color:#F5B841;font-size:11.5px;font-weight:700;margin-bottom:5px">俗貴價（常利EPS基準，買=÷1.15^8／賣=×30）</div><div style="font-size:12.5px;color:#C7D8EC;line-height:1.7">近四季 EPS 5.08　<span style="color:#22C55E">俗價 48.19</span>　<span style="color:#EF4444">貴價 147.42</span><br>現價 136.00 → <b>🟡 俗價~貴價之間 → 觀望</b></div></div><div style="margin-top:12px;padding-top:11px;border-top:1px solid #1E3A5F"><div style="color:#F5B841;font-size:11.5px;font-weight:700;margin-bottom:5px">變壞判定（EPS 衰退／照妖鏡）</div><div style="color:#F5B841;font-weight:700;font-size:13.5px">🟠 出現 1 個警訊，觀察</div><div style="color:#A9C0DC;font-size:12px;margin-top:3px">· 年度 EPS 較前一年衰退</div></div>
+    <div style="margin-top:13px;padding-top:12px;border-top:1px solid #1E3A5F">
+      <div style="color:#F5B841;font-size:11.5px;font-weight:700;margin-bottom:4px">長線投資邏輯</div>
+      <div style="font-size:12.8px;line-height:1.6;color:#C7D8EC">ROE 10.9%未達標且近4年掛零,盈再率0.5%堪稱印鈔機但配息率掛零,獲利品質存疑,非典型洪瑞泰嚴選標的。</div>
+      <div style="color:#F5B841;font-size:11.5px;font-weight:700;margin:11px 0 4px">適合的投資人</div>
+      <div style="font-size:12.8px;color:#C7D8EC">適合追求穩定現金流、能接受低配息的長期防禦型投資人</div>
+    </div>
+  </div>
+  <div class="card"><h2>分析師共識與估值 Consensus</h2>
+    <div class="badge" style="background:#3A3212;border:1px solid #F5B841">
+      <div class="bg" style="color:#F5B841">HOLD</div>
+      <div class="bs" style="color:#F5B841">6 位分析師共識　·　平均目標價 136.5
+        （潛在空間 +0.4%）</div>
+    </div>
+    <table><tr><td>Forward P/E</td><td>25.20</td><td style="color:#6B84A6;font-size:11px;text-align:right">低於 20 偏便宜</td></tr><tr><td>PEG Ratio</td><td>1.69</td><td style="color:#6B84A6;font-size:11px;text-align:right">小於 1＝成長性被低估</td></tr><tr><td>FCF Yield</td><td>1.44%</td><td style="color:#6B84A6;font-size:11px;text-align:right">自由現金流／市值，越高越好</td></tr><tr><td>EV / Sales</td><td>4.19</td><td style="color:#6B84A6;font-size:11px;text-align:right">越低越好</td></tr><tr><td>Trailing P/E</td><td>26.77</td><td style="color:#6B84A6;font-size:11px;text-align:right">看過去 12 個月</td></tr><tr><td>P / B</td><td>2.88</td><td style="color:#6B84A6;font-size:11px;text-align:right">資產面估值</td></tr></table>
+    <div style="margin-top:11px;padding-top:10px;border-top:1px solid #1E3A5F">
+      <div style="color:#F5B841;font-size:11.5px;font-weight:700;margin-bottom:4px">進場策略</div>
+      <div style="font-size:12.8px;line-height:1.6;color:#C7D8EC">現價136元居俗價48.19與貴價147.42之間,建議拉回近52週低點129.5附近分批布局</div>
+      <div class="note">52 週區間 129.5 ~ 147.0　·　市值 1055.01B
+        　·　淨現金 39.82B</div>
+    </div>
+  </div>
+</div>
+
+<div class="bl"><div class="e">💡</div>
+  <div><div class="t">BOTTOM LINE</div><div class="c">本季獲利穩健成長,現金流大幅改善但毛利率長期走低,估值已不便宜,適合已持有者續抱、新資金謹慎進場。</div></div>
+  <div class="e">📈</div></div>
+
+<div class="verdict"><div class="vt">🔎 綜合判斷</div><div class="vc">三表與法說會逐字稿齊備,可交叉查核。①毛利率近6季自38.7%降至37.5%;②業外損益逐季震盪(0.8~8.0億),非穩定成長;③ICT/大數據/資安年增32%/167%/34%,海外子公司營收年增242%,為本業成長亮點。下一步驗證AIDC商機轉訂單進度。</div></div>
+<div class="reality"><h3>財報與營收實況</h3>
+<div class="posnote">近 6 季趨勢，⚠ 標記業外收益大於本業營業利益的季度</div>
+<table class="realitytbl"><tr><th>季度</th><th>營收</th><th>毛利率</th><th>營益率</th><th>EPS</th><th>業外損益</th></tr><tr><td>2025-03</td><td class="num">558.1億</td><td class="num">38.7%</td><td class="num">22.4%</td><td class="num">1.26</td><td class="num"><span class="num pos">1.8億</span></td></tr><tr><td>2025-06</td><td class="num">567.3億</td><td class="num">38.4%</td><td class="num">22.1%</td><td class="num">1.31</td><td class="num"><span class="num pos">5.9億</span></td></tr><tr><td>2025-09</td><td class="num">579.2億</td><td class="num">37.1%</td><td class="num">20.9%</td><td class="num">1.22</td><td class="num"><span class="num pos">1.6億</span></td></tr><tr><td>2025-12</td><td class="num">656.5億</td><td class="num">33.6%</td><td class="num">17.3%</td><td class="num">1.20</td><td class="num"><span class="num pos">8.0億</span></td></tr><tr><td>2026-03</td><td class="num">599.9億</td><td class="num">37.9%</td><td class="num">21.8%</td><td class="num">1.30</td><td class="num"><span class="num pos">0.8億</span></td></tr><tr><td>2026-06</td><td class="num">613.6億</td><td class="num">37.5%</td><td class="num">21.6%</td><td class="num">1.38</td><td class="num"><span class="num pos">6.9億</span></td></tr></table>
+
+<div class="realitysub">月營收 YoY（近 6 月）</div><table class="realitytbl"><tr><th>月份</th><th>營收</th><th>年增率</th></tr><tr><td>2026-02</td><td class="num">187.9億</td><td class="num pos">+2.7%</td></tr><tr><td>2026-03</td><td class="num">207.9億</td><td class="num pos">+7.6%</td></tr><tr><td>2026-04</td><td class="num">205.0億</td><td class="num pos">+7.6%</td></tr><tr><td>2026-05</td><td class="num">195.2億</td><td class="num pos">+5.4%</td></tr><tr><td>2026-06</td><td class="num">213.4億</td><td class="num pos">+11.4%</td></tr><tr><td>2026-07</td><td class="num">198.8億</td><td class="num pos">+3.7%</td></tr></table>
+</div>
+<div class="technical"><h3>技術面四指標</h3>
+<div class="posnote">近一年日線計算，基準指數：台股加權指數</div>
+<div class="techgrid"><div class="ttile"><div class="tn">SUPER TREND</div><div class="tv"><span style="color:#4ade80">多頭</span></div><div class="ts">第31根／史上平均61根／20日延續率86%／贏過歷史18%</div></div><div class="ttile"><div class="tn">雙重颱風K線</div><div class="tv"><span style="color:#4ade80">多頭</span></div><div class="ts">第 32 根</div></div><div class="ttile"><div class="tn">EXCEED CHARGE</div><div class="tv"><span style="color:#EAB308">微壓</span></div><div class="ts">弱空動能（動能 -1.78）</div></div><div class="ttile"><div class="tn">RS 相對強弱</div><div class="tv">短線 <b class="num" style="color:#ff8a8a">-5.0%</b>　長線 <b class="num" style="color:#ff8a8a">-25.3%</b></div><div class="ts"></div></div></div>
+<button class="techtoggle" onclick="ti_toggle_2412_TW()" id="ti_btn_2412_TW">展開圖表 ▾</button>
+<div class="techcharts" id="ti_charts_2412_TW" style="display:none">
+  <div class="tcwin" id="ti_win_2412_TW">
+    <button data-w="90" aria-pressed="true">90天</button>
+    <button data-w="365" aria-pressed="false">1年</button>
+  </div>
+  <div class="tclabel">價格 + SuperTrend + 雙重颱風K線</div>
+  <div class="tcbox"><canvas id="ti_c1_2412_TW"></canvas></div>
+  <div class="tclabel">EXCEED CHARGE 動能柱（金點＝擠壓中，綠/紅點＝已釋放）</div>
+  <div class="tcbox tcbox-sm"><canvas id="ti_c2_2412_TW"></canvas></div>
+  <div class="tclabel">RS 相對強弱（短線30日／長線1年，紅線＝與大盤同步基準線）</div>
+  <div class="tcbox tcbox-sm"><canvas id="ti_c3_2412_TW"></canvas></div>
+</div>
+<script>
+window.TI_DATA_2412_TW = {"dates": ["08/19", "08/20", "08/21", "08/22", "08/25", "08/26", "08/27", "08/28", "08/29", "09/01", "09/02", "09/03", "09/04", "09/05", "09/08", "09/09", "09/10", "09/11", "09/12", "09/15", "09/16", "09/17", "09/18", "09/19", "09/22", "09/23", "09/24", "09/25", "09/26", "09/30", "10/01", "10/02", "10/03", "10/07", "10/08", "10/09", "10/13", "10/14", "10/15", "10/16", "10/17", "10/20", "10/21", "10/22", "10/23", "10/27", "10/28", "10/29", "10/30", "10/31", "11/03", "11/04", "11/05", "11/06", "11/07", "11/10", "11/11", "11/12", "11/13", "11/14", "11/17", "11/18", "11/19", "11/20", "11/21", "11/24", "11/25", "11/26", "11/27", "11/28", "12/01", "12/02", "12/03", "12/04", "12/05", "12/08", "12/09", "12/10", "12/11", "12/12", "12/15", "12/16", "12/17", "12/18", "12/19", "12/22", "12/23", "12/24", "12/26", "12/29", "12/30", "12/31", "01/02", "01/05", "01/06", "01/07", "01/08", "01/09", "01/12", "01/13", "01/14", "01/15", "01/16", "01/19", "01/20", "01/21", "01/22", "01/23", "01/26", "01/27", "01/28", "01/29", "01/30", "02/02", "02/03", "02/04", "02/05", "02/06", "02/09", "02/10", "02/11", "02/23", "02/24", "02/25", "02/26", "03/02", "03/03", "03/04", "03/05", "03/06", "03/09", "03/10", "03/11", "03/12", "03/13", "03/16", "03/17", "03/18", "03/19", "03/20", "03/23", "03/24", "03/25", "03/26", "03/27", "03/30", "03/31", "04/01", "04/02", "04/07", "04/08", "04/09", "04/10", "04/13", "04/14", "04/15", "04/16", "04/17", "04/20", "04/21", "04/22", "04/23", "04/24", "04/27", "04/28", "04/29", "04/30", "05/04", "05/05", "05/06", "05/07", "05/08", "05/11", "05/12", "05/13", "05/14", "05/15", "05/18", "05/19", "05/20", "05/21", "05/22", "05/25", "05/26", "05/27", "05/28", "05/29", "06/01", "06/02", "06/03", "06/04", "06/05", "06/08", "06/09", "06/10", "06/11", "06/12", "06/15", "06/16", "06/17", "06/18", "06/22", "06/23", "06/24", "06/25", "06/26", "06/29", "06/30", "07/01", "07/02", "07/03", "07/06", "07/07", "07/08", "07/09", "07/10", "07/13", "07/14", "07/15", "07/16", "07/17", "07/20", "07/21", "07/22", "07/23", "07/24", "07/27", "07/28", "07/29", "07/30", "07/31", "08/03", "08/04", "08/05", "08/06", "08/07", "08/10", "08/11", "08/12", "08/13", "08/14", "08/17", "08/18", "08/19", "08/20", "08/21", "08/24", "08/25", "08/26", "08/27", "08/28", "08/31"], "closes": [132.86, 131.41, 132.37, 130.93, 130.45, 128.52, 129.01, 128.04, 127.56, 129.01, 129.97, 129.01, 129.97, 129.49, 129.49, 130.45, 130.45, 129.49, 130.45, 129.97, 129.01, 129.49, 129.01, 129.01, 128.52, 128.52, 129.49, 128.52, 129.49, 128.52, 129.49, 128.04, 128.04, 128.04, 128.52, 128.04, 127.56, 127.56, 126.6, 127.08, 128.04, 128.04, 128.04, 128.52, 129.01, 127.08, 127.08, 127.08, 126.6, 126.12, 126.6, 126.12, 127.08, 126.6, 127.56, 128.04, 127.08, 127.08, 126.6, 126.6, 127.08, 126.12, 125.64, 127.08, 126.6, 127.08, 126.12, 126.12, 126.12, 125.64, 125.15, 125.15, 125.15, 124.67, 125.15, 124.67, 125.15, 124.67, 125.15, 125.64, 125.64, 125.64, 124.67, 125.15, 126.12, 125.64, 125.64, 125.64, 126.6, 127.08, 126.12, 125.64, 127.08, 128.04, 127.56, 128.04, 128.52, 128.52, 128.52, 128.52, 128.04, 128.52, 128.04, 129.01, 128.04, 128.04, 128.04, 129.01, 129.01, 128.04, 128.52, 128.52, 128.52, 128.04, 128.52, 128.04, 127.56, 128.04, 127.08, 127.56, 128.04, 129.97, 130.45, 130.93, 129.01, 132.86, 132.86, 130.45, 131.89, 131.41, 130.93, 129.97, 130.45, 130.93, 130.93, 131.41, 131.89, 132.37, 130.45, 129.01, 129.01, 129.01, 129.97, 129.49, 129.01, 129.01, 128.04, 129.01, 129.01, 129.01, 129.01, 129.97, 130.45, 129.49, 129.97, 130.45, 131.41, 132.37, 131.89, 131.89, 131.41, 130.93, 130.45, 131.89, 131.89, 131.41, 130.93, 130.45, 130.93, 130.93, 130.45, 131.41, 130.45, 130.45, 132.37, 132.37, 132.86, 131.89, 137.19, 133.82, 132.37, 131.89, 131.41, 130.93, 131.89, 131.41, 131.89, 135.26, 136.71, 135.74, 136.23, 135.74, 133.34, 136.71, 138.63, 139.59, 139.59, 140.08, 141.04, 140.08, 138.63, 139.11, 138.63, 138.15, 138.63, 137.67, 136.71, 136.23, 136.23, 135.74, 135.74, 136.23, 135.74, 134.3, 133.5, 133.5, 133.5, 133.0, 133.0, 136.0, 138.0, 139.0, 139.0, 138.5, 138.0, 139.0, 140.5, 141.0, 140.5, 140.5, 139.5, 139.0, 136.5, 137.0, 137.0, 137.5, 136.5, 136.0, 136.0, 136.0, 135.0, 136.0, 137.0, 136.0, 136.5, 136.5, 136.5, 136.5, 136.0, 135.5, 135.5, 136.0], "st": [127.24, 127.24, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 127.42, 130.72, 130.65, 130.65, 130.65, 130.65, 130.65, 130.65, 130.65, 130.65, 130.65, 130.37, 130.19, 130.19, 130.19, 130.19, 130.19, 130.19, 130.19, 130.19, 130.19, 130.19, 130.19, 130.19, 130.19, 130.19, 130.19, 130.19, 130.19, 130.19, 130.07, 129.58, 129.36, 129.06, 128.62, 128.44, 128.18, 128.18, 128.18, 127.88, 127.73, 127.73, 127.73, 127.73, 127.73, 127.73, 127.73, 127.73, 127.73, 127.73, 127.73, 127.73, 127.73, 127.73, 127.73, 127.73, 124.11, 124.86, 124.86, 125.27, 125.27, 125.27, 125.51, 125.51, 125.51, 125.51, 125.51, 125.51, 125.51, 125.51, 125.85, 125.99, 125.99, 125.99, 126.09, 126.09, 126.09, 126.09, 126.09, 126.09, 126.09, 126.09, 126.09, 126.09, 126.09, 126.66, 127.19, 127.19, 127.19, 128.2, 128.2, 128.2, 128.2, 128.2, 128.2, 128.2, 128.2, 128.2, 128.2, 128.2, 128.2, 128.2, 128.2, 128.2, 128.2, 128.2, 128.2, 128.2, 128.2, 133.03, 133.03, 133.03, 132.71, 132.71, 132.71, 132.71, 132.71, 132.71, 132.71, 132.71, 132.71, 132.71, 132.71, 132.71, 132.71, 132.71, 132.71, 132.71, 132.71, 132.71, 132.71, 132.71, 132.71, 132.71, 132.71, 132.71, 132.71, 132.71, 132.71, 128.48, 128.49, 129.75, 129.75, 129.75, 129.75, 129.75, 129.75, 129.75, 129.75, 129.75, 129.75, 129.75, 130.16, 130.16, 130.16, 130.16, 130.16, 130.16, 131.82, 132.19, 132.79, 133.85, 133.85, 133.85, 133.85, 133.85, 133.85, 133.85, 133.85, 133.85, 133.85, 133.85, 133.85, 133.85, 133.85, 133.85, 133.85, 139.49, 138.44, 138.44, 138.28, 138.28, 138.28, 138.28, 131.99, 131.99, 131.99, 131.99, 132.09, 133.76, 134.4, 134.44, 134.44, 134.44, 134.44, 134.44, 134.44, 134.44, 134.44, 134.44, 134.44, 134.44, 134.44, 134.44, 134.44, 134.44, 134.44, 134.44, 134.44, 134.44, 134.44, 134.44, 134.44, 134.44, 134.44], "st_dir": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], "dt": [127.13, 127.13, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 127.22, 130.83, 130.55, 130.55, 130.55, 130.55, 130.55, 130.55, 130.55, 130.35, 130.35, 130.06, 129.97, 129.97, 129.97, 129.97, 129.97, 129.97, 129.97, 129.97, 129.97, 129.97, 129.97, 129.97, 129.97, 129.97, 129.97, 129.97, 129.97, 129.97, 129.97, 129.49, 129.34, 128.96, 128.57, 128.28, 127.9, 127.9, 127.75, 127.22, 127.08, 127.08, 127.08, 127.08, 127.08, 127.08, 127.08, 127.08, 127.08, 127.08, 127.08, 127.08, 123.71, 123.71, 123.71, 123.71, 124.0, 124.87, 124.87, 125.2, 125.2, 125.2, 125.2, 125.2, 125.2, 125.2, 125.35, 125.35, 125.35, 125.39, 126.02, 126.31, 126.31, 126.31, 126.31, 126.31, 126.31, 126.31, 126.31, 126.31, 126.31, 126.31, 126.31, 126.31, 126.31, 126.65, 127.13, 127.13, 127.13, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 127.9, 128.14, 128.62, 128.62, 128.62, 128.62, 128.62, 128.62, 128.62, 128.62, 128.62, 128.62, 128.62, 128.62, 128.62, 128.62, 128.62, 128.62, 128.62, 128.62, 128.62, 128.91, 130.06, 130.06, 130.06, 130.06, 130.06, 130.06, 130.06, 130.06, 130.06, 130.06, 130.06, 130.35, 130.35, 130.35, 130.35, 130.35, 130.35, 130.93, 131.17, 132.52, 133.63, 133.63, 133.63, 133.63, 133.63, 133.63, 133.63, 133.63, 133.63, 133.63, 133.63, 133.63, 133.63, 133.63, 133.63, 133.63, 139.08, 138.0, 138.0, 137.69, 137.69, 137.69, 131.91, 131.94, 131.94, 131.94, 131.94, 131.94, 133.0, 133.65, 133.65, 133.65, 133.65, 133.65, 133.65, 133.65, 133.65, 133.65, 133.65, 133.65, 133.65, 133.65, 133.65, 133.65, 133.65, 133.65, 133.65, 133.65, 133.65, 133.65, 133.65, 133.65, 133.65, 133.65], "dt_dir": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1], "mom": [4.39, 4.61, 4.89, 4.77, 4.44, 3.74, 3.05, 2.21, 1.17, 0.58, 0.18, -0.38, -0.74, -1.08, -1.34, -1.34, -1.36, -1.55, -1.48, -1.3, -1.17, -1.01, -0.77, -0.57, -0.45, -0.48, -0.3, -0.4, -0.43, -0.55, -0.43, -0.67, -0.78, -0.92, -0.97, -1.0, -1.04, -1.14, -1.29, -1.31, -1.23, -1.09, -0.98, -0.75, -0.48, -0.59, -0.58, -0.64, -0.65, -0.79, -0.7, -0.82, -0.72, -0.72, -0.48, -0.22, -0.17, -0.14, -0.28, -0.38, -0.29, -0.37, -0.52, -0.33, -0.16, -0.04, -0.1, -0.17, -0.26, -0.47, -0.71, -0.98, -1.12, -1.35, -1.37, -1.39, -1.38, -1.43, -1.41, -1.3, -1.12, -1.04, -1.18, -1.07, -0.81, -0.53, -0.31, -0.07, 0.31, 0.68, 0.79, 0.78, 1.02, 1.3, 1.47, 1.63, 1.85, 1.97, 2.08, 2.18, 2.16, 2.19, 2.0, 1.98, 1.82, 1.61, 1.38, 1.32, 1.31, 1.12, 0.93, 0.66, 0.48, 0.27, 0.12, -0.09, -0.33, -0.43, -0.67, -0.78, -0.83, -0.48, -0.13, 0.35, 0.35, 0.95, 1.48, 1.6, 1.97, 2.12, 2.19, 2.04, 1.97, 1.9, 1.86, 1.81, 1.76, 1.81, 1.36, 0.64, -0.05, -0.53, -0.76, -1.0, -1.48, -1.59, -1.78, -1.95, -1.93, -1.91, -1.9, -1.78, -1.52, -1.39, -1.15, -0.76, -0.14, 0.7, 1.21, 1.53, 1.68, 1.7, 1.69, 1.88, 1.98, 1.93, 1.68, 1.4, 1.19, 0.95, 0.6, 0.47, 0.2, -0.15, -0.11, -0.09, 0.11, 0.22, 0.99, 1.09, 0.87, 0.53, 0.07, -0.31, -0.46, -0.72, -0.91, -0.53, 0.08, 0.44, 0.79, 1.06, 0.75, 1.03, 1.77, 2.53, 3.22, 3.81, 4.83, 5.28, 5.24, 5.15, 4.84, 4.3, 3.84, 3.08, 2.11, 1.32, 0.69, -0.06, -0.73, -1.3, -2.18, -3.05, -3.72, -4.2, -4.55, -4.78, -4.77, -4.16, -3.26, -2.12, -1.04, -0.14, 0.68, 1.57, 2.54, 3.42, 4.03, 4.5, 4.7, 4.78, 4.29, 3.7, 3.01, 2.36, 1.46, 0.38, -0.74, -1.62, -2.44, -2.87, -3.03, -3.36, -3.56, -3.6, -3.43, -3.13, -2.85, -2.55, -2.25, -1.78], "sq_on": [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, true, true, true, false, false, false, false, false, false, false, false, false, true, true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true], "rs_s": [-0.91, 0.45, 2.47, 0.66, 0.06, -1.62, -2.34, -3.42, -1.04, -0.25, -0.36, 0.63, -0.07, -0.42, -0.99, -1.2, -3.15, -3.64, -4.01, -5.57, -4.57, -5.73, -4.8, -6.13, -5.18, -5.36, -7.16, -6.01, -5.86, -3.2, -4.93, -5.27, -6.39, -6.97, -8.48, -7.9, -8.35, -7.4, -6.29, -6.89, -7.74, -6.11, -6.63, -6.03, -6.64, -5.78, -6.89, -6.67, -7.75, -6.93, -6.72, -5.93, -5.19, -2.71, -2.71, -2.28, -2.76, -2.6, -2.9, -2.09, -0.68, -0.98, 3.0, 3.37, 0.59, 3.62, 3.31, 1.68, -0.53, -1.32, -1.47, -0.37, -1.48, -1.82, -2.11, -2.3, -3.69, -2.8, -3.12, -1.79, -2.4, -1.99, -0.42, 0.35, 0.19, -0.62, -2.18, -1.92, -1.7, -3.04, -4.17, -2.54, -2.56, -3.98, -5.74, -6.58, -5.76, -5.15, -4.6, -5.58, -5.41, -6.23, -4.81, -7.08, -7.46, -7.5, -4.95, -6.25, -7.31, -6.96, -7.35, -8.38, -7.57, -5.41, -4.02, -5.68, -5.17, -4.06, -3.27, -4.41, -4.58, -5.41, -5.11, -8.6, -7.29, -6.91, -7.42, -3.89, 0.45, -2.23, -2.49, 2.68, 1.05, -2.77, -0.67, 0.35, 0.96, -1.83, -4.19, -2.11, -1.53, 1.81, 1.72, -1.19, -0.76, -0.68, 1.98, 4.53, -0.1, 1.86, 0.58, -3.48, -4.36, -5.38, -5.1, -6.55, -6.85, -8.13, -7.08, -7.47, -9.13, -9.81, -7.92, -10.41, -11.93, -11.57, -10.91, -9.18, -12.76, -12.8, -12.44, -14.22, -12.85, -11.27, -10.93, -8.86, -9.78, -4.1, -5.15, -3.93, -3.28, -6.21, -8.02, -9.71, -9.21, -9.79, -5.56, -6.41, -7.84, -7.4, -8.99, -8.54, -4.44, 0.89, -0.93, 2.67, 3.3, 1.69, -1.56, -3.32, -2.95, -4.34, -7.1, -5.26, -3.53, -4.46, -0.93, -1.77, -4.19, -5.67, -4.35, -4.37, -4.64, -2.73, -3.18, -2.27, -2.65, -1.06, -0.72, 0.77, 8.48, 8.64, 3.48, 1.63, 2.44, 6.41, 6.85, 11.68, 15.81, 14.76, 5.36, 2.61, 2.87, -0.3, 0.41, -0.05, -2.12, -2.5, -3.34, -5.15, -4.05, -3.5, -3.14, -1.62, -2.21, -2.97, -2.04, -3.4, -5.19, -5.46, -5.35], "rs_l": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, -3.26, -4.95, -4.15, -5.5, -4.76, -6.32, -5.59, -5.96, -7.93, -7.03, -7.08, -4.74, -6.66, -7.22, -8.58, -9.52, -11.33, -11.15, -11.89, -11.3, -10.49, -11.38, -12.55, -11.41, -12.3, -12.15, -13.12, -12.72, -14.14, -14.31, -15.65, -15.28, -15.42, -15.05, -14.69, -12.78, -13.01, -12.87, -13.53, -13.57, -14.04, -13.55, -12.6, -13.07, -9.78, -9.52, -11.97, -9.34, -9.56, -10.92, -12.85, -13.6, -13.8, -12.87, -13.88, -14.22, -14.53, -14.73, -15.99, -15.25, -15.54, -14.36, -14.85, -14.47, -13.08, -12.35, -12.47, -13.17, -14.54, -14.34, -14.17, -15.34, -16.37, -15.06, -15.14, -16.53, -18.28, -19.19, -18.77, -18.52, -18.28, -19.29, -19.31, -20.17, -19.17, -21.26, -21.79, -22.04, -20.11, -21.31, -22.37, -22.26, -22.81, -23.89, -23.49, -22.01, -21.17, -22.8, -22.67, -22.0, -21.6, -22.75, -23.11, -23.99, -24.02, -27.07, -26.33, -26.26, -26.87, -24.32, -21.1, -23.29, -23.63, -19.72, -20.99, -24.03, -22.46, -21.68, -21.17, -23.38, -25.28, -23.72, -23.31, -20.7, -20.64, -22.8, -22.47, -22.43, -20.32, -18.23, -21.72, -20.18, -21.08, -24.19, -24.86, -25.66, -25.36, -26.42, -26.62, -27.58, -26.79, -27.2, -28.52, -29.13, -27.88, -29.99, -31.3, -31.23, -30.94, -29.85, -32.76, -32.94, -32.89, -34.49, -33.81, -32.98, -32.99, -31.74, -32.7, -28.85, -29.96, -29.33, -29.16, -31.57, -33.12, -34.61, -34.53, -35.23, -32.48, -33.28, -34.48, -34.42, -35.76, -35.67, -32.99, -29.43, -30.7, -28.16, -27.63, -28.66, -30.91, -32.09, -31.79, -32.73, -34.61, -33.33, -32.11, -32.72, -30.25, -30.75, -32.51, -33.62, -32.82, -32.93, -33.15, -31.8, -32.01, -31.27, -31.4, -30.24, -29.9, -28.68, -23.01, -22.44, -25.68, -26.76, -26.1, -23.07, -22.59, -18.93, -15.59, -15.82, -22.18, -23.89, -23.4, -25.39, -24.59, -24.68, -25.97, -26.12, -26.6, -27.77, -26.72, -26.07, -25.55, -24.1, -24.29, -24.6, -23.64, -24.43, -25.62, -25.67, -25.45]};
+let ti_drawn_2412_TW = false;
+let ti_charts_2412_TW = null;
+let ti_win_2412_TW = 90;
+function ti_toggle_2412_TW(){
+  const box = document.getElementById('ti_charts_2412_TW');
+  const btn = document.getElementById('ti_btn_2412_TW');
+  const open = box.style.display !== 'none';
+  box.style.display = open ? 'none' : 'block';
+  btn.textContent = open ? '展開圖表 ▾' : '收合圖表 ▴';
+  if (!open && !ti_drawn_2412_TW) { ti_drawn_2412_TW = true; ti_draw_2412_TW(); }
+}
+document.getElementById('ti_win_2412_TW').addEventListener('click', function(e){
+  const b = e.target.closest('button');
+  if (!b) return;
+  Array.prototype.forEach.call(this.querySelectorAll('button'), x => x.setAttribute('aria-pressed', x === b));
+  ti_win_2412_TW = b.dataset.w === '365' ? 365 : 90;
+  if (ti_drawn_2412_TW) ti_draw_2412_TW();
+});
+function ti_draw_2412_TW(){
+  const full = window.TI_DATA_2412_TW;
+  const n = full.dates.length;
+  const cut = Math.max(0, n - ti_win_2412_TW);
+  const slice = arr => (arr || []).slice(cut);
+  const d = {dates: slice(full.dates), closes: slice(full.closes), st: slice(full.st),
+    st_dir: slice(full.st_dir), dt: slice(full.dt), dt_dir: slice(full.dt_dir),
+    mom: slice(full.mom), sq_on: slice(full.sq_on), rs_s: slice(full.rs_s), rs_l: slice(full.rs_l)};
+  if (ti_charts_2412_TW) { ti_charts_2412_TW.forEach(c => c.destroy()); }
+  const segColor = dir => ctx => {
+    const i = ctx.p1DataIndex; const v = dir[i];
+    return v === -1 ? '#ff8a8a' : (v === 1 ? '#4ade80' : '#6b7280');
+  };
+  const c1 = new Chart(document.getElementById('ti_c1_2412_TW'), {type:'line',
+    data:{labels:d.dates,datasets:[
+      {label:'收盤',data:d.closes,borderColor:'#8FA8C8',borderWidth:1.2,pointRadius:0,tension:.15},
+      {label:'SuperTrend',data:d.st,borderWidth:1.6,pointRadius:0,
+        segment:{borderColor:segColor(d.st_dir)}},
+      {label:'雙重颱風',data:d.dt,borderWidth:1.6,pointRadius:0,borderDash:[4,3],
+        segment:{borderColor:segColor(d.dt_dir)}}]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{labels:{color:'#9aa0a6',boxWidth:14,font:{size:10}}}},
+      scales:{x:{ticks:{color:'#6b7280',font:{size:9},maxRotation:0,autoSkip:true,maxTicksLimit:8},grid:{display:false}},
+        y:{ticks:{color:'#6b7280',font:{size:9}},grid:{color:'#1a1d23'}}}}});
+  // 動能柱：多頭轉強亮綠/轉弱暗綠，空頭轉強亮紅/轉弱暗紅（TTM Squeeze 慣例）；
+  // sq_on 點陣列（擠壓中金色、已釋放依動能方向上色）疊在 y=0 當擠壓/釋放標記
+  const momColor = d.mom.map((v, i) => {
+    if (v == null) return '#2a2e35';
+    const prev = i > 0 ? d.mom[i - 1] : v;
+    if (v >= 0) return v >= prev ? '#4ade80' : '#1e7a45';
+    return v <= prev ? '#ff8a8a' : '#8a2e2e';
+  });
+  const dotColor = d.sq_on.map((on, i) => {
+    if (on) return '#EAB308';
+    const m = d.mom[i];
+    return m == null ? '#6b7280' : (m >= 0 ? '#4ade80' : '#ff8a8a');
+  });
+  const c2 = new Chart(document.getElementById('ti_c2_2412_TW'), {type:'bar',
+    data:{labels:d.dates,datasets:[
+      {label:'動能',data:d.mom,backgroundColor:momColor,order:2},
+      {label:'擠壓/釋放',type:'line',data:d.mom.map(()=>0),showLine:false,
+        pointRadius:2.6,pointBackgroundColor:dotColor,pointBorderWidth:0,order:1}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{ticks:{display:false},grid:{display:false}},
+        y:{ticks:{color:'#6b7280',font:{size:9}},grid:{color:'#1a1d23'}}}}});
+  const c3 = new Chart(document.getElementById('ti_c3_2412_TW'), {type:'line',
+    data:{labels:d.dates,datasets:[
+      {label:'基準線(0%)',data:d.mom.map(()=>0),borderColor:'#EF4444',borderWidth:2,
+        pointRadius:0,order:3},
+      {label:'短線30日',data:d.rs_s,borderColor:'#EAB308',borderWidth:1.4,pointRadius:0,tension:.15,order:1},
+      {label:'長線1年',data:d.rs_l,borderColor:'#4a9eff',borderWidth:1.4,pointRadius:0,tension:.15,order:2}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:'#9aa0a6',boxWidth:14,font:{size:10},
+        filter:item=>item.text!=='基準線(0%)'}}},
+      scales:{x:{ticks:{display:false},grid:{display:false}},
+        y:{ticks:{color:'#6b7280',font:{size:9}},grid:{color:'#1a1d23'}}}}});
+  ti_charts_2412_TW = [c1, c2, c3];
+}
+</script>
+</div>
+
+<div class="reality"><h3>管理層口頭重點</h3>
+<div class="posnote">資料來源：法說會逐字稿公開內容（Motley Fool／GuruFocus等），管理層口頭發言，非公司正式財報數字，數字未經覆核</div>
+<div class="techgrid"><div class="ttile"><div class="tn">行動業務營收市占率創新高</div><div class="tv">行動業務營收市占率達41.2%，創歷史新高；行動用戶市占率39.8%，5G市占率39.4%（5G滲透率達智慧型手機用戶的49%）</div></div><div class="ttile"><div class="tn">ICT營收年增幅度</div><div class="tv">ICT營收年增32%，其中經常性ICT營收年增9%；ICT訂單金額年增30%</div></div><div class="ttile"><div class="tn">大數據與資安業務高速成長</div><div class="tv">大數據營收年增167%；資安營收年增34%，資安訂閱戶數達110萬戶，年增11%</div></div><div class="ttile"><div class="tn">IDC業務營收與市占率</div><div class="tv">IDC營收年增14%，以集團口徑計算，台灣IDC市占率達78%</div></div><div class="ttile"><div class="tn">海外子公司營收爆發性成長</div><div class="tv">國際子公司合計營收年增242%；美國營運營收年增逾11倍；東南亞營收較去年同期翻倍</div></div><div class="ttile"><div class="tn">上半年ICT新簽約金額已超前</div><div class="tv">上半年ICT新簽約金額已達2025全年總額水準，其中衛星相關ICT合約上半年金額超過新台幣2億元</div></div><div class="ttile"><div class="tn">上半年資本支出與自由現金流</div><div class="tv">上半年資本支出新台幣98.5億元，年減14.3%（行動資本支出年減9%、非行動資本支出年減16.3%）；上半年自由現金流達新台幣218.9億元</div></div><div class="ttile"><div class="tn">AI資料中心機房容量</div><div class="tv">林口AI資料中心機房容量達36百萬瓦（36MW）</div></div><div class="ttile"><div class="tn">寬頻與多元訂閱服務動能</div><div class="tv">寬頻ARPU達每月新台幣824元，年增20元；300Mbps以上高速寬頻用戶占比42%；多重服務（multi-play）用戶數已連續18季維持年增14%</div></div><div class="ttile"><div class="tn">財務體質穩健</div><div class="tv">帳列負債比率31%，調整後負債比率23.72%（較去年同期25.21%下降）；淨負債對EBITDA比率為0</div></div></div>
+<div class="callnote-block"><div class="realitysub">管理層展望</div><div class="callnote-text"><b>全年營運目標信心與下半年資本支出配置</b>：管理層表示，基於上半年優於預期的表現，對達成全年營運目標具信心，並預期今年資本支出將有更大比重配置在下半年</div><div class="callnote-text"><b>ICT營收目標展望上修</b>：管理層表示「相當有信心超越今年的ICT營收目標」，並預期今年ICT營收波動型態將與去年相似</div><div class="callnote-text"><b>AI資料中心商機中期展望</b>：管理層預估未來2至3年內，大型AI資料中心（AIDC）專案可望帶來達新台幣數十億元等級的商機價值</div><div class="callnote-text"><b>影音服務展望</b>：管理層表示，受惠即將到來的亞運賽事，對下一季的影音業務（MOD/Hami）表現持樂觀態度</div></div>
+<div class="callnote-quote">「我們正在將中華電信定位為AI時代區域內獨一無二的AAA樞紐。」<div class="callnote-speaker">—— 林榮支（Rong-Shy Lin），總經理</div></div>
+</div>
+
+<div class="ftr">
+  <b>資料來源</b>：所有財務數字與估值指標皆取自 yfinance 之公司申報財報，未經 AI 生成或修改。
+  星級評分中的成長性/財務體質/估值/風險由公式計算，「競爭護城河」與文字敘述由 AI 依上述數據撰寫。<br>
+  <b>本頁並列兩套獨立策略，互不覆蓋，可能給出相反結論——那是正常的，不是 bug</b>：<br>
+  　<b>① 洪瑞泰（Mike桑）選股法</b>（左下卡）：三大關卡（ROE≥15% 且連續穩定／盈再率&lt;80%／
+  配息率≥40%）＋ 俗價（常利EPS÷1.15^8）買、貴價（常利EPS×30）賣 ＋ 變壞判定。長線、重品質、不看成長故事。<br>
+  　<b>② 分析師共識與估值</b>（右下卡）：BUY/HOLD/SELL 標章為 yfinance 彙整的<b>賣方分析師共識</b>，
+  搭配 Forward P/E、PEG、FCF Yield、EV/Sales。市場派觀點，含成長性預期。<br>
+  兩者衝突時（例：分析師喊 BUY 但洪瑞泰三關全不過）＝ 該檔是「市場看好但體質不合格」，
+  請自行判斷要跟哪一套。本頁為研究參考，不構成投資建議。<br>
+  <b>已知限制</b>：無法取得法說會內容、管理層展望與新聞，因此「下季展望」類資訊不予呈現，避免編造。<br>
+  <b>資料源落差</b>：上方核心卡片（洪瑞泰／分析師共識）用 yfinance，「財報與營收實況」用 FinMind（台股）——
+  兩者更新頻率不同，若季度標籤看起來不一致，是資料源落後、不是抓錯。以「財報與營收實況」區塊數字為準。
+</div>
+</div></body></html>

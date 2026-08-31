@@ -12,7 +12,7 @@ import json
 from datetime import datetime, timedelta
 import requests
 
-from llm_board import ask_json
+from llm_board import ask_json_traditional as ask_json  # 2026-08-31：改走繁體驗收版（實測 tw_analysis.json 出現過「几乎持平」）
 
 import sys as _sys
 if _sys.stdout.encoding and _sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
