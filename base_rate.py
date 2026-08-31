@@ -338,6 +338,18 @@ def line(c):
     if t:
         out += (f"\n-# 分析師準頭：{t['n']}季中 {t['beats']}季低估、"
                 f"中位數 {t['median_surprise']:+.1f}% → {t['bias']}")
+    # 2026-08-31 加毛利率循環位階。本檔量的是「期待 vs 自己的歷史成長率」，量不到
+    # 「現在的獲利能力在自己歷史的哪個位置」——MU 就是缺這塊會誤判的例子：
+    # tier=✅normal（只要求季增 +22%、自己做過 +75%）看起來寬鬆，但那個基期是
+    # 毛利率從中位 37.7% 衝到 84.6%（24季最高，區間 -32.7~84.6%）撐出來的。
+    # 兩行並排，綠燈跟紅旗同時看得到。細節與適用範圍見 margin_cycle.py。
+    try:
+        from margin_cycle import line as _mline
+        ml = _mline(c["ticker"])
+        if ml:
+            out += "\n" + ml
+    except Exception:
+        pass          # 毛利率是附加資訊，抓不到不能擋掉主要的 base_rate 判讀
     return out
 
 
