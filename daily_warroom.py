@@ -338,23 +338,56 @@ def sec5_watch(date):
     return lines
 
 
-def sec_thesis(date):
+def sec_thesis(date, scope="private"):
     """⑤ 失效條件日檢（P1，2026-08-27）——讀 thesis_check.py 的當日結果。
-    老墨式三態：🚫觸發/⚠️逼近/✅健康＋📋待財報檢。"""
-    lines = ["**⑤ 失效條件日檢**"]
+    老墨式三態：🚫觸發/⚠️逼近/✅健康＋📋待財報檢。
+
+    2026-08-31 加 scope 分流（Leo：「也推了不是持股的？」）——投資長 P0 擴充後
+    非持股的進場評估也會登錄失效條件，48 檔裡有 41 檔是非持股，全部被推進
+    🔒持股密報。現在 private 只出持股、public 只出非持股（那是進場觀察，
+    放公開版才對）。
+    """
+    lines = ["**⑤ 失效條件日檢**" if scope == "private" else "**⑥ 觀察名單失效條件**"]
     d = _load("state/thesis_check_today.json", {}) or {}
     if not d:
-        lines.append("尚無登錄的失效條件（投資長判斷產出後自動登錄）。")
-        return lines
+        return []                     # 沒登錄過就整段不出現，不要放佔位語佔版面
     tag = "" if d.get("date") == date else "（⚠️非今日資料）"
-    for tk, msg in d.get("triggered", []):
-        lines.append(f"・🚫 **{tkname(tk)}** {msg}{tag}")
-    for tk, msg in d.get("near", []):
-        lines.append(f"・⚠️ {tkname(tk)} {msg}{tag}")
-    pm = d.get("pending_metric", [])
-    lines.append(f"・✅ 健康 {d.get('healthy', 0)} 條"
-                 + (f"｜📋 待財報檢 {len(pm)} 條" if pm else ""))
-    return lines
+    want_held = (scope == "private")
+
+    def _pick(rows):
+        """相容新舊格式：新的是 (tk,msg,held)，舊的是 (tk,msg) 沒有 held 欄位。
+        舊格式一律當持股處理（跟改版前的行為一致，不會突然消失）。"""
+        out = []
+        for r in rows:
+            tk, msg = r[0], r[1]
+            held = r[2] if len(r) > 2 else True
+            if bool(held) == want_held:
+                out.append((tk, msg))
+        return out
+
+    trig, near = _pick(d.get("triggered", [])), _pick(d.get("near", []))
+    pend = _pick(d.get("pending_metric", []))
+    hz = d.get("healthy", 0)
+    n_ok = (hz.get("held" if want_held else "watch", 0) if isinstance(hz, dict)
+            else (hz if want_held else 0))
+
+    # 只列前 5 檔——8/31 那次持股密報一次噴出十幾檔🚫，每檔還帶一整句說明，
+    # 手機上完全看不完（Leo：「排版很難懂不易閱讀」）。觸發的按「超過幅度」排序，
+    # 最誇張的先看。
+    for tk, msg in trig[:5]:
+        lines.append(f"🚫 **{tkname(tk)}**　{msg[:34]}")
+    if len(trig) > 5:
+        lines.append(f"-# 　…另有 {len(trig)-5} 檔已觸發")
+    for tk, msg in near[:3]:
+        lines.append(f"⚠️ {tkname(tk)}　{msg[:34]}")
+    if len(near) > 3:
+        lines.append(f"-# 　…另有 {len(near)-3} 檔逼近")
+
+    tail = f"✅ 健康 {n_ok} 條"
+    if pend:
+        tail += f"｜📋 待財報檢 {len(pend)} 條"
+    lines.append(f"-# {tail}{tag}")
+    return lines if len(lines) > 1 else []
 
 
 def _empty(sec_lines):
@@ -450,7 +483,8 @@ def compose(date=None, scope="public", part="all"):
         chief = [sec3_chief(date, "private")]
     else:
         research = [sec1_market(notes), sec2_signals(date, "public"),
-                    sec4_research(notes, "public", date), sec5_watch(date)]
+                    sec4_research(notes, "public", date), sec5_watch(date),
+                    sec_thesis(date, "public")]
         chief = [sec3_chief(date, "public")]
 
     if part == "research":
