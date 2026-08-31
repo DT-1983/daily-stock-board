@@ -378,6 +378,16 @@ def sec_thesis(date, scope="private"):
     # 「排版很難懂」衝突。趨勢排前面（它是每天會動的那類，價值是慢變數）。
     AI_ = {"trend": "📉", "value": "💰"}
 
+    # 👦 小孩持股（2026-08-31 Leo：「一起在持股密報裡，但幫我標明小孩持股」）
+    try:
+        from trade_plan import kids_tickers
+        KIDS = kids_tickers()
+    except Exception:
+        KIDS = set()
+
+    def _who(tk):
+        return "👦 " if tk in KIDS else ""
+
     def _srt(rows):
         return sorted(rows, key=lambda r: 0 if r[2] == "trend" else 1)
 
@@ -391,11 +401,11 @@ def sec_thesis(date, scope="private"):
     # 手機上完全看不完（Leo：「排版很難懂不易閱讀」）。觸發的按「超過幅度」排序，
     # 最誇張的先看。
     for tk, msg, ang in trig[:5]:
-        lines.append(f"🚫{AI_.get(ang, '💰')} **{tkname(tk)}**　{msg[:34]}")
+        lines.append(f"🚫{AI_.get(ang, '💰')} {_who(tk)}**{tkname(tk)}**　{msg[:34]}")
     if len(trig) > 5:
         lines.append(f"-# 　…另有 {len(trig)-5} 檔已觸發")
     for tk, msg, ang in near[:3]:
-        lines.append(f"⚠️{AI_.get(ang, '💰')} {tkname(tk)}　{msg[:34]}")
+        lines.append(f"⚠️{AI_.get(ang, '💰')} {_who(tk)}{tkname(tk)}　{msg[:34]}")
     if len(near) > 3:
         lines.append(f"-# 　…另有 {len(near)-3} 檔逼近")
 

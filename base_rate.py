@@ -333,7 +333,10 @@ def line(c):
     if not r:
         return None
     body = _fmt_tw(r) if r["kind"] == "tw_monthly" else _fmt_us(r)
-    out = f"{TIER[r['tier']]} **{c['ticker']}**｜{body}"
+    # 👦 標記小孩持股（2026-08-31 Leo 指定）——密報裡 Leo 自己的和小孩的會混在
+    # 同一則，不標的話看不出這筆是誰的部位、也不知道該不該一起做決定。
+    mark = "👦 " if c["ticker"] in _kids() else ""
+    out = f"{TIER[r['tier']]} {mark}**{c['ticker']}**｜{body}"
     t = c.get("track_record")
     if t:
         out += (f"\n-# 分析師準頭：{t['n']}季中 {t['beats']}季低估、"
@@ -353,13 +356,45 @@ def line(c):
     return out
 
 
+_KIDS = None
+
+
+def _kids():
+    """小孩持股代號（快取一次）。抓不到回空集合，不擋主要判讀。"""
+    global _KIDS
+    if _KIDS is None:
+        try:
+            from trade_plan import kids_tickers
+            _KIDS = kids_tickers()
+        except Exception:
+            _KIDS = set()
+    return _KIDS
+
+
 def _held_set():
+    """算「持股」的代號集合——決定這一列要進持股密報還是公開版。
+
+    2026-08-31 加小孩：load_holdings() 是**風控母體**（只有 Firstrade），
+    但小孩的券商帳戶帳戶也是實際持股，該進密報而不是被當成觀察名單。
+    用 trade_plan.monitored_holdings() 這個獨立的**監控母體**，
+    不動 ACTIVE_ACCOUNTS（那會把小孩部位算進 Leo 的保險絲和部位上限）。"""
+    out = set()
     try:
         from trade_plan import load_holdings
         active, _ = load_holdings()
-        return {h["ticker"] for h in active if isinstance(h, dict) and h.get("ticker")}
+        out |= {h["ticker"] for h in active if isinstance(h, dict) and h.get("ticker")}
     except Exception:
-        return set()
+        pass
+    try:
+        import re as _re
+        from trade_plan import monitored_holdings
+        for tk, _ow, _nm in monitored_holdings():
+            out.add(tk)
+            if _re.match(r"^\d{4,6}[A-Z]?$", str(tk)):
+                out.add(f"{tk}.TW")     # base_rate 內部用帶後綴的代號
+    except Exception:
+        pass
+    return out
 
 
 def summary_lines(max_items=8, scope=None, fresh_only=True):
@@ -412,6 +447,17 @@ def default_tickers():
         from trade_plan import load_holdings
         active, _ = load_holdings()
         ts += [h["ticker"] for h in active if isinstance(h, dict) and h.get("ticker")]
+    except Exception:
+        pass
+    try:
+        # 2026-08-31：小孩的台股（元大 Ian/Loewe）本來完全不在 186 檔裡，
+        # 只有財報快訊看得到它們。台股代號補 .TW 後綴才查得到月營收共識。
+        import re as _re
+        from trade_plan import monitored_holdings
+        for tk, ow, _nm in monitored_holdings():
+            if ow == "Leo":
+                continue
+            ts.append(f"{tk}.TW" if _re.match(r"^\d{4,6}[A-Z]?$", str(tk)) else tk)
     except Exception:
         pass
     try:
