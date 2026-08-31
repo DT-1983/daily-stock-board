@@ -74,7 +74,7 @@ _TYPE_LABEL = {"guidance": "展望", "quote": "引述"}
 def build(ticker, company_name="", quarter_label=""):
     """回 (html, summary_text)。抓不到逐字稿或解析失敗都回 ("", "")，不中斷主流程。"""
     try:
-        data = llm_board.ask_json(_prompt(ticker, company_name, quarter_label))
+        data = llm_board.ask_json_traditional(_prompt(ticker, company_name, quarter_label))
     except Exception as e:
         print(f"  [earnings_call] {ticker} 逐字稿摘要失敗：{e}")
         return "", ""

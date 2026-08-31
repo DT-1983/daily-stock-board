@@ -21,7 +21,7 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
 import yfinance as yf
 
-from llm_board import ask_json
+from llm_board import ask_json_traditional as ask_json  # 2026-08-31：改走繁體驗收版（實測 tw_analysis.json 出現過「几乎持平」）
 
 SCREEN_JSON = "screen_result.json"
 SIG_EMOJI = {"買進": "🟢", "賣出": "🔴", "觀望": "⚪", "持有": "🔵"}
