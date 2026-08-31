@@ -13,6 +13,7 @@ import argparse
 from datetime import datetime, timedelta
 import requests
 import yfinance as yf
+import tw_symbol
 
 if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
     sys.stdout.reconfigure(encoding="utf-8")  # Windows cp950 印 emoji 會炸
@@ -117,7 +118,10 @@ def fm(ds, sid, start):
 
 def tw_metrics(code):
     try:
-        info = yf.Ticker(code + ".TW").info
+        # 2026-08-31 修：原本硬掛 .TW，上櫃股（如 3105 穩懋）的 marketCap 回 None，
+        # 被下面的 except 吞掉變 mc=0。而市值是 rank_score 三因子之一，等於這些股票
+        # 的市值分數永遠墊底——不是它們小，是後綴給錯抓不到。
+        info = yf.Ticker(tw_symbol.resolve(code)).info
         mc = info.get("marketCap") or 0
         NAME.setdefault(code, info.get("shortName", code))
     except Exception:

@@ -30,16 +30,18 @@ import time
 if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
     sys.stdout.reconfigure(encoding="utf-8")
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import tw_symbol
+
 REG_PATH = "state/thesis_conditions.json"
 OUT_PATH = "state/thesis_check_today.json"
 NEAR_PCT = 0.02      # 距失效線 2% 內算「逼近」
 
 
 def _yf_symbol(tk):
-    import re
-    if re.match(r"^\d{4,6}[A-Z]?$", str(tk)):
-        return f"{tk}.TW"
-    return str(tk)
+    # 2026-08-31：原本裸代號一律接 .TW，上櫃股（3264/3265 已在登錄名單裡）拿不到
+    # 收盤價，price_below/above 這類條件會靜默地永遠檢不了。改走共用解析。
+    return tw_symbol.resolve(tk)
 
 
 _ST_CACHE = {}

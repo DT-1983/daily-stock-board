@@ -27,6 +27,10 @@ from datetime import datetime, timezone, timedelta
 if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
     sys.stdout.reconfigure(encoding="utf-8")
 
+import os as _os
+sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import tw_symbol
+
 import logging
 import yfinance as yf
 
@@ -102,7 +106,7 @@ def _holdings(owners=None, category=None) -> dict:
                 continue
             tk = h["ticker"]
             if h.get("category") == "台股" and not tk.endswith((".TW", ".TWO")):
-                tk = f"{tk}.TW"
+                tk = tw_symbol.resolve(tk)      # 上櫃要 .TWO
             # 同一檔多人持有 → 保留第一個 owner，顯示時再標「多人」
             if tk not in out:
                 out[tk] = (h.get("name") or tk, ow)
@@ -123,8 +127,10 @@ def _board() -> dict:
         d = json.load(open("screen_result.json", encoding="utf-8"))
         for x in (y for lst in d.get("us", {}).values() for y in lst):
             out[x["code"]] = x.get("name") or x["code"]
+        # 2026-08-31：原本一律 .TW，守備清單裡 13/44 是上櫃股，卡片會全部抓不到三表。
+        # resolve() 第一次會 probe，結果進 state/tw_suffix.json，之後零網路成本。
         for x in (y for lst in d.get("tw", {}).values() for y in lst):
-            out[f'{x["code"]}.TW'] = x.get("name") or x["code"]
+            out[tw_symbol.resolve(x["code"])] = x.get("name") or x["code"]
     except Exception as e:
         print(f"  [board] 讀不到守備清單：{e}")
     return out
