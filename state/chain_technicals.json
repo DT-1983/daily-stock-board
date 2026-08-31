@@ -1,5 +1,5 @@
 {
- "date": "2026-08-28",
+ "date": "2026-08-31",
  "period": 60,
  "mode": "daily",
  "chains": {
@@ -14,10 +14,10 @@
    "supertrend": "多頭",
    "squeeze": {
     "on": true,
-    "level": "微壓",
+    "level": "中壓",
     "momentum_up": true
    },
-   "summary": "弱化象限(RS 100.43/動能 98.59)｜SuperTrend多頭｜微壓蓄力中，動能偏多"
+   "summary": "弱化象限(RS 100.43/動能 98.59)｜SuperTrend多頭｜中壓蓄力中，動能偏多"
   },
   "us:矽光子/光通訊": {
    "members_used": 8,
@@ -110,10 +110,10 @@
    "supertrend": "多頭",
    "squeeze": {
     "on": true,
-    "level": "極壓",
+    "level": "中壓",
     "momentum_up": false
    },
-   "summary": "落後象限(RS 99.8/動能 98.98)｜SuperTrend多頭｜極壓蓄力中，動能偏空"
+   "summary": "落後象限(RS 99.8/動能 98.98)｜SuperTrend多頭｜中壓蓄力中，動能偏空"
   },
   "us:玻璃基板/TGV": {
    "members_used": 6,
