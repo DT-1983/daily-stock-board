@@ -269,6 +269,20 @@ def today_tickers():
         holdings |= {r.get("ticker") for r in active if r.get("ticker")}
     except Exception as e:
         print(f"trade_plan.load_holdings 讀取失敗（退回只用holdings.json）：{e}")
+    try:
+        # 2026-08-31：小孩的券商帳戶持股也算「持有」——否則會被當成進場機會評估，
+        # 語意完全錯（那些已經在手上了）。load_holdings 是風控母體不含小孩，
+        # 所以另外從監控母體補進來。
+        from trade_plan import monitored_holdings
+        import re as _re
+        for tk, ow, _nm in monitored_holdings():
+            if ow == "Leo":
+                continue
+            holdings.add(tk)
+            if _re.match(r"^\d{4,6}[A-Z]?$", str(tk)):
+                holdings.add(f"{tk}.TW")
+    except Exception as e:
+        print(f"小孩持股讀取失敗（不影響 Leo 的判定）：{e}")
     targets = {}
 
     def add(tk, trigger):
