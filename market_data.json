@@ -1,37 +1,37 @@
 {
- "updated": "2026-08-31 15:40",
+ "updated": "2026-08-31 23:02",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "08/28",
-   "close": 7711.76,
-   "chg_pct": -0.25
+   "date": "08/31",
+   "close": 7678.8,
+   "chg_pct": -0.43
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "08/28",
-   "close": 26402.42,
-   "chg_pct": -0.52
+   "date": "08/31",
+   "close": 26308.93,
+   "chg_pct": -0.35
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "08/28",
-   "close": 53559.99,
-   "chg_pct": -0.02
+   "date": "08/31",
+   "close": 53231.96,
+   "chg_pct": -0.61
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "08/28",
-   "close": 11469.66,
-   "chg_pct": -3.47
+   "date": "08/31",
+   "close": 11485.43,
+   "chg_pct": 0.14
   },
   {
    "sym": "^TWII",
@@ -46,85 +46,85 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "08/31",
-   "close": 31.69,
-   "chg_pct": 0.09
+   "close": 31.67,
+   "chg_pct": 0.02
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "08/28",
-   "close": 4.72,
+   "date": "08/31",
+   "close": 4.76,
    "fmt": "yield",
-   "chg_bp": 4.8
+   "chg_bp": 4.0
   }
  ],
  "news": [
   {
-   "title": "逾5成選民反對 冰島公投否決重啟「加入歐盟」談判",
+   "title": "OpenAI找到新金雞母！ChatGPT廣告一年可望進帳10億美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6592635",
-   "ts": "08/31 15:40"
+   "url": "https://news.cnyes.com/news/id/6593123",
+   "ts": "08/31 23:00"
   },
   {
-   "title": "川普威脅「炸碎」哈爾克島！美炸拉拉克島引伊朗反擊、荷姆茲海峽航運告急",
+   "title": "AI ASIC進入放量初期，先進製程接案能力成為供應鏈關鍵",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6592638",
-   "ts": "08/31 15:20"
+   "url": "https://news.cnyes.com/news/id/6593189",
+   "ts": "08/31 22:30"
   },
   {
-   "title": "高盛調升柴油利潤預測逾一倍 因地緣衝突加劇全球煉油市場吃緊",
+   "title": "油價降不下來！美伊戰火恐讓明年續守每桶80美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6592614",
-   "ts": "08/31 15:10"
+   "url": "https://news.cnyes.com/news/id/6593038",
+   "ts": "08/31 22:30"
   },
   {
-   "title": "南韓槓桿ETF退燒 模擬交易嚇跑散戶、成交額暴跌96%",
+   "title": "習近平見普丁 稱國際形勢難預料因素明顯增多",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6592092",
-   "ts": "08/31 15:10"
+   "url": "https://news.cnyes.com/news/id/6593179",
+   "ts": "08/31 22:29"
   },
   {
-   "title": "Michael Saylor高喊「We're Back！」微策略又準備加碼比特幣了？",
+   "title": "鉅亨速報 - Factset 最新調查：Oklo Inc. Class A(OKLO-US)EPS預估下修至-0.97元，預估目標價為80.00元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6592607",
-   "ts": "08/31 14:40"
+   "url": "https://news.cnyes.com/news/id/6593178",
+   "ts": "08/31 22:15"
   },
   {
-   "title": "野村投信最新台股看法--【台股操盤人筆記】把握榮景上漲機會，但也為循環轉折做準備",
+   "title": "聯發科搶XPU、輝達賣整套 黃仁勳首揭AI兩強結盟盤算",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6590579",
-   "ts": "08/31 14:36"
+   "url": "https://news.cnyes.com/news/id/6593156",
+   "ts": "08/31 21:53"
   },
   {
-   "title": "賴清德重申「AI新十大建設」四大基礎工程 感謝產業界攜手拚經濟",
+   "title": "輝達砸35億美元認購聯發科ECB 結盟進軍AI工廠、客製化XPU",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6592612",
-   "ts": "08/31 14:35"
+   "url": "https://news.cnyes.com/news/id/6593121",
+   "ts": "08/31 21:17"
   },
   {
-   "title": "〈SEMICON〉吳田玉：AI才剛開始 未來想像空間是現在百倍、千倍甚至萬倍",
+   "title": "輝達豪砸35億美元投資聯發科！黃仁勳押注台灣晶片大廠",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6592636",
-   "ts": "08/31 14:34"
+   "url": "https://news.cnyes.com/news/id/6593110",
+   "ts": "08/31 20:59"
   },
   {
-   "title": "〈台股盤後〉MSCI生效尾盤爆量跌點收斂至202點守住4萬6 月線大漲3008點",
+   "title": "貿協率華碩、創見登史國參展 展現AI與綠色農業助攻非洲市場",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6592628",
-   "ts": "08/31 14:32"
+   "url": "https://news.cnyes.com/news/id/6593052",
+   "ts": "08/31 20:11"
   },
   {
-   "title": "台股收跌0.4%失守46,200點欣興、矽力-KY重挫近10%，南亞亮燈漲停",
+   "title": "〈凱基金法說〉ONE KGI展綜效 楊文鈞：銀證互相導客帶入逾600億元利潤",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6592653",
-   "ts": "08/31 14:30"
+   "url": "https://news.cnyes.com/news/id/6593018",
+   "ts": "08/31 20:08"
   }
  ],
  "inst": {
   "date": "08/31",
-  "total_yi": -267.6,
+  "total_yi": -258.5,
   "foreign_yi": -143.9,
-  "trust_yi": -49.1
+  "trust_yi": -40.0
  }
 }
