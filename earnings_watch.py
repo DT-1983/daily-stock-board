@@ -551,7 +551,12 @@ def daily_followup(args):
         return
 
     print(f"每日跟催：{len(cands)} 檔候選 {[c[0] for c in cands]}")
-    blocks, made, discord_digests = [], 0, []
+    # 2026-08-31 改成逐檔配對 (block, digest)。原本是兩個獨立 list，Discord 只發
+    # digest 那份，沒有卡片的股票被壓成一行「另有 N 檔已公布但沒有懶人包」——
+    # Leo 8/31：「沒看到（MRVL），只有看到富邦的」。MRVL 的 EPS/共識/指引vs共識/
+    # 盤後反應/白話總結整包就這樣沒送出去，state 卻已標 sent 永遠不會再推。
+    # 現在：有卡片就發卡片摘要，沒卡片就發四段快訊，不再有東西被靜默丟掉。
+    items, made = [], 0
     for tk, ed, key, kind in cands:
         if kind == "pending":
             # 只補卡片：不重抓 EPS/意外/共識（那些已經推過），成功才發輕量訊息。
@@ -566,9 +571,9 @@ def daily_followup(args):
             del st["infographic_pending"][key]
             url = f"{PAGES}/{os.path.basename(p)}"
             dg = card_digest(p, url)
-            blocks.append(f"📄 <b>{tk}</b> 財報懶人包補上了（{ed} 財報，資料延遲跟上）")
-            if dg:
-                discord_digests.append(dg)
+            items.append((tk,
+                          f"📄 <b>{tk}</b> 財報懶人包補上了（{ed} 財報，資料延遲跟上）",
+                          dg))
             continue
 
         info = earnings_info(tk)
@@ -588,6 +593,7 @@ def daily_followup(args):
             rev_t = f"營收 {consensus['revenue']/1e9:.1f}B" if consensus.get("revenue") else ""
             eps_t = f"EPS {consensus['eps']:.2f}" if consensus.get("eps") is not None else ""
             b.append(f"　② 下季共識：{'、'.join(x for x in (eps_t, rev_t) if x)}（{consensus['analysts']}位分析師）")
+        dg_this = None
         if tk in (held | set(US_WATCH)) and made < args.max_infographics and not args.dry_run:
             print(f"  產懶人包 {tk} …")
             p = make_infographic(tk)
@@ -598,9 +604,7 @@ def daily_followup(args):
                 # 2026-08-27 Leo：「摘要網站裡的財報分析就可以了，然後附上連結」——
                 # Discord #財報 改發卡片摘要（純解析已產生的卡片，不再叫一次AI）。
                 # Telegram 維持原本的簡短快訊（即時通知不需要長摘要）。
-                dg = card_digest(p, url)
-                if dg:
-                    discord_digests.append(dg)
+                dg_this = card_digest(p, url)
             elif p:
                 # 卡片產出來了，但財報三表資料還沒跟上（見本函式檔頭說明）——
                 # 不算完成，記進 infographic_pending 之後每天輕量重試。
@@ -612,7 +616,7 @@ def daily_followup(args):
                 b.append(f"　③ 指引vs共識：{flash['guidance_vs_consensus']}")
                 b.append(f"　④ 盤後反應：{flash['market_reaction']}")
                 b.append(f"　💡 {flash['takeaway']}")
-        blocks.append("\n".join(b))
+        items.append((tk, "\n".join(b), dg_this))
         if not args.dry_run:
             st["reported"][key] = "sent"
 
@@ -627,7 +631,7 @@ def daily_followup(args):
         if not args.dry_run:
             st["upcoming"][k] = "sent"
 
-    if not blocks and pre_lines:
+    if not items and pre_lines:
         # 只有預告沒有快訊：發短訊，不套「財報快訊」標題（那會誤導成已經公布了）
         hdr = f"📅 <b>未來 {AHEAD_DAYS} 天要出財報</b>"
         msg = hdr + "\n" + "\n".join(pre_lines)
@@ -641,10 +645,11 @@ def daily_followup(args):
         save_state(st)
         return
 
-    if not blocks:
+    if not items:
         if not args.dry_run:
             save_state(st)          # infographic_pending 的增減也要存
         return
+    blocks = [b for _, b, _ in items]
     msg = "📊 <b>財報快訊（公布後跟催）</b>\n\n" + "\n\n".join(blocks)
     if pre_lines:
         msg += ("\n" * 2 + f"📅 <b>未來 {AHEAD_DAYS} 天要出財報</b>"
@@ -656,14 +661,25 @@ def daily_followup(args):
     # Discord #財報 收「財報卡片摘要」（含數字表、分析師共識、優缺點、懶人包連結），
     # Telegram 維持短快訊——這是 8/27 定的分工，之前 digests 組好卻沒發出去。
     # 沒有懶人包可摘要時（非持股、或超過 max-infographics）就退回發短快訊。
-    d_msg = None
-    if discord_digests:
-        d_msg = "# 📊 財報快訊" + NL2 + NL2.join(discord_digests)
-        if len(blocks) > len(discord_digests):
-            d_msg += NL2 + f"-# 另有 {len(blocks)-len(discord_digests)} 檔已公布但沒有懶人包（非持股或超過本次產出上限）"
+    # 逐檔決定：有卡片摘要就用摘要（資訊量最完整），沒有就用四段快訊。
+    # **不再把沒卡片的壓成一行計數**——那等於把 EPS/共識/指引/盤後反應整包丟掉，
+    # 而 state 已標 sent 不會再推（8/31 MRVL 就是這樣消失的）。
+    from notify_discord import tg_html_to_md
+    parts = []
+    for tk, block, dg in items:
+        if dg:
+            parts.append(dg)
+        else:
+            bd = block.replace("⭐", "").replace("👦", "")
+            parts.append(tg_html_to_md(bd))
+    n_dg = sum(1 for _, _, dg in items if dg)
+    d_msg = ("# 📊 財報快訊" + NL2 + NL2.join(parts)) if parts else None
+    if d_msg and n_dg < len(items):
+        d_msg += NL2 + (f"-# 其中 {len(items)-n_dg} 檔的懶人包卡片尚未更新"
+                        "（資料源三表未跟上，補跑中），先給快訊數字")
     if push(msg, discord_msg=d_msg):
         print("✅ 已發 Discord")
-    print(f"　Discord #財報：{'卡片摘要 %d 檔' % len(discord_digests) if d_msg else '短快訊（無懶人包可摘要）'}")
+    print(f"　Discord #財報：卡片摘要 {n_dg} 檔＋快訊 {len(items)-n_dg} 檔")
     save_state(st)
 
 

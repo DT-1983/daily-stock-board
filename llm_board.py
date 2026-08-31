@@ -24,20 +24,53 @@ GEMINI_MODEL = os.environ.get("TW_LLM_MODEL", "gemini/gemini-3-flash-preview")
 TIMEOUT = int(os.environ.get("BOARD_LLM_TIMEOUT", "600"))
 
 
-# ── 簡體字偵測（2026-08-31）。Leo 硬規則禁簡體，但 8/31 實測 MRVL 的財報快訊
-# 與整張財報卡片都是簡體——**prompt 裡寫「用繁體中文」不等於做到**，餵進去的
-# 查核資料是簡中新聞時模型會跟著漂過去。放這裡是因為所有走 LLM 的產出都該驗收。
+# ── 簡體字偵測（2026-08-31）。Leo 硬規則禁簡體，但 8/31 實測 MRVL 的財報快訊與
+# 整張財報卡片都是簡體——**prompt 裡寫「用繁體中文」不等於做到**，餵進去的查核
+# 資料是簡中新聞時模型會跟著漂過去。放這裡是因為所有走 LLM 的產出都該驗收。
 #
-# 只列**繁體中文裡不會出現**的簡化字，刻意避開 后/台/干/只/裡/面 這類兩邊都合法的。
-# ⚠️ 偵測用，不做轉換——一對多的轉換（發/髮、乾/幹、只/隻）自己寫必錯。
+# 作法：OpenCC 轉一次，跟原文比對，有差異的字＝簡體。OpenCC 是本機純文字轉換
+# 函式庫（不連網、不吃憑證、無帳號），已在環境裡。比自己維護字表可靠——第一版
+# 手寫字表漏了「晶圆」的 圆，MRVL 那則因此漏網。
+#
+# ⚠️ 設定必須用 **s2tw（台灣標準）不是 s2t**：s2t 會把 峰→峯、群→羣、為→爲，
+# 那是中國的繁體用字習慣，會把正常台灣中文誤判成簡體。實測 s2t 誤動 5 字、
+# s2tw 只誤動 3 字（台/干/采）。
+#
+# ⚠️ AMBIGUOUS：即使用了 s2tw，仍有一批字**在繁體中文本來就合法**、同時又是
+# 別字的簡化形（台/臺、后/後、准/準、佣/傭、范/範…），這些要扣掉否則「台積電」
+# 「批准」「佣金」「范姜」全變簡體。清單是實測 s2tw 會改動的候選字再人工複核，
+# 砍掉 摆荡复牵（純簡體字）與 几万与党种并云（現代財經文裡幾乎只會是簡體）。
+# ⚠️ OpenCC 是**詞組級**轉換，同一個字在不同詞裡結果不同：「發布日期」不變，
+# 「公布財報／布局」卻會 布→佈。所以白名單是字級的，涵蓋所有詞境。
+# 實測進榜的：布（公布/布局→佈）、表（手表→錶）、污（污染→汙）。
+AMBIGUOUS = set("台后里干采咸划丑涂范郁准岳佣占游布表污注")
+
+# OpenCC 匯入不到時的退路（功能降級不炸）。只列繁體不會出現的字。
 SIMPLIFIED = set("营产报涨电币会万亿达应权关联发优势场单价业计记说语证论议观见"
                  "开区个们时长东车轮华图书专务实现级标题问给经过还这样从"
-                 "净现资总额购销费额约级层构")
+                 "净现资总额购销费约层构圆员团园国图")
+
+try:
+    import opencc as _opencc
+    _S2TW = _opencc.OpenCC("s2tw")
+except Exception:
+    _S2TW = None
+
+
+def simplified_chars(txt):
+    """回 txt 裡的簡體字集合（已扣掉一對多歧義字）。空集合＝乾淨。"""
+    txt = txt or ""
+    if _S2TW is not None:
+        conv = _S2TW.convert(txt)
+        if len(conv) == len(txt):        # 逐字對齊才比得起來
+            return {a for a, b in zip(txt, conv) if a != b} - AMBIGUOUS
+        # 長度不一致（少數一對多轉換）就退回字表，不硬猜對位
+    return (SIMPLIFIED & set(txt)) - AMBIGUOUS
 
 
 def has_simplified(txt):
-    """回 True 代表 txt 裡有繁體中文不會出現的簡化字。"""
-    return bool(SIMPLIFIED & set(txt or ""))
+    """回 True 代表 txt 裡有簡體字。"""
+    return bool(simplified_chars(txt))
 
 
 def walk_strings(o):
@@ -151,7 +184,7 @@ def ask_json_traditional(prompt, tries=3, log=print):
         out = ask_json(prompt + fix)
         if not out:
             return out
-        bad = sorted(set("".join(walk_strings(out))) & SIMPLIFIED)
+        bad = sorted(simplified_chars("".join(walk_strings(out))))
         if not bad:
             return out
         log(f"    ⚠️ 出現簡體字 {''.join(bad[:10])}（第 {a+1}/{tries} 次），要求改寫")
