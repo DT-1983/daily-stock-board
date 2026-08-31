@@ -1,15 +1,59 @@
 {
-"date": "2026-08-29",
-"flips_hold": [
+"date": "2026-08-31",
+"flips_hold": [],
+"flips_watch": [
 {
-"code": "CLS",
+"code": "CAMT",
+"name": "",
+"word": "🟢→🔴 翻空",
+"dir": -1
+},
+{
+"code": "JCI",
+"name": "",
+"word": "🟢→🔴 翻空",
+"dir": -1
+},
+{
+"code": "ONTO",
 "name": "",
 "word": "🟢→🔴 翻空",
 "dir": -1
 }
 ],
-"flips_watch": [],
 "ai_alerts": [
+{
+"chain": "AI 電力/核能",
+"market": "US",
+"sig": "🔴",
+"code": "HUBB",
+"name": "Hubbell Inc",
+"reason": "觀望→賣出"
+},
+{
+"chain": "太陽能",
+"market": "US",
+"sig": "🔴",
+"code": "NXT",
+"name": "Nextpower Inc Class A",
+"reason": "觀望→賣出"
+},
+{
+"chain": "太陽能",
+"market": "US",
+"sig": "🔴",
+"code": "RUN",
+"name": "Sunrun Inc",
+"reason": "觀望→賣出"
+},
+{
+"chain": "AI 伺服器",
+"market": "TW",
+"sig": "🟢",
+"code": "2330",
+"name": "台積電",
+"reason": "觀望→買進"
+},
 {
 "chain": "機器人",
 "market": "TW",
