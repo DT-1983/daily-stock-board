@@ -144,24 +144,141 @@ ALERT_KEYWORDS = [
 ]
 
 
-def market_anomaly(market_data_path="market_data.json"):
-    """零成本：讀既有的 market_data.json（market_fetch.py 每天已經在抓），
-    判斷主要指數/殖利率有沒有異常波動。回傳觸發原因清單，空list=正常。
-    讀不到檔案就回空——沒資料時不該假裝偵測過（寧可漏報也不要謊報）。"""
+LIVE_INDICES = {"^GSPC": "S&P 500", "^IXIC": "那斯達克", "^DJI": "道瓊工業",
+                "^SOX": "費城半導體", "^TWII": "台股加權"}
+YIELD_SYM, YIELD_NAME = "^TNX", "美債 10 年殖利率"
+
+# 各市場的「當地時區 UTC 偏移, 收盤時間」。用來判斷 yfinance 給的最後一根日 K
+# 是不是**還沒收完的當日盤中 bar**——盤中 bar 的日期已經是今天，但數字還會變，
+# 拿它去比 2% 門檻等於用半截資料判異常。2026-08-31 22:19（美東 10:19 開盤中）
+# 實測就抓到 ^SOX 的「08/31 -3.03%」，那是盤中值不是收盤。
+# 排程在 07:00/08:45 跑時美股早就收了，所以正常情況不會踩到；這道是給臨時手動
+# 執行和之後可能改時間用的（見 memory unexecuted_code_paths：沒守的路徑遲早會走到）。
+_CLOSE_RULE = {"^TWII": (8, 13, 30)}          # 台股 13:30 收
+_US_CLOSE = (-4, 16, 0)                       # 美股 16:00 ET（夏令 UTC-4）
+
+
+def _session_done(sym, bar_date):
+    """這根 bar 代表的交易日收完了沒。"""
+    off, hh, mm = _CLOSE_RULE.get(sym, _US_CLOSE)
+    now_local = datetime.now(timezone(timedelta(hours=off)))
+    if bar_date < now_local.date():
+        return True
+    if bar_date > now_local.date():
+        return False
+    return (now_local.hour, now_local.minute) >= (hh, mm)
+
+
+def _live_index_moves():
+    """自己抓指數最近一個交易日的漲跌幅。回 [(名稱, pct, bp, MM/DD)]；抓不到回 None。
+
+    2026-08-31 加。原本只讀 market_data.json，但那份檔案的更新權在 GitHub Actions
+    手上，而 07:00 這批比 Actions 早跑——實測當天讀到的是**兩個交易日前**的資料：
+    拿 8/27 的費半 +2.33% 當「今日異常」去叫 AI 查證，而 8/28 實際是 -3.47%，
+    等於查了一個已經被隔日行情推翻的事件，AI 回來的筆記還把日期寫成 8/28，
+    那筆錯誤事實直接進了 research_notes.jsonl 被投資長讀走。
+
+    自己抓一樣零成本（yfinance），而且不再依賴那條本來就常漏跑的 Actions 排程。
+    """
+    try:
+        import yfinance as yf
+    except Exception:
+        return None
+    syms = list(LIVE_INDICES) + [YIELD_SYM]
+    try:
+        data = yf.download(syms, period="5d", progress=False, threads=False,
+                           auto_adjust=True, group_by="ticker")
+    except Exception:
+        return None
+    out = []
+    for s in syms:
+        try:
+            c = data[s]["Close"].dropna()
+            # 最後一根還在盤中就往前退一根，只用收完的交易日
+            if len(c) and not _session_done(s, c.index[-1].date()):
+                c = c.iloc[:-1]
+            if len(c) < 2:
+                continue
+            last, prev = float(c.iloc[-1]), float(c.iloc[-2])
+            when = c.index[-1].strftime("%m/%d")
+            if s == YIELD_SYM:
+                out.append((YIELD_NAME, None, (last - prev) * 100, when))
+            else:
+                out.append((LIVE_INDICES[s], (last / prev - 1) * 100, None, when))
+        except Exception:
+            continue
+    return out or None
+
+
+def _rows_from_file(market_data_path):
+    """market_data.json 的同格式列表。不在這裡判新鮮度，交給 `market_anomaly` 統一比。"""
     if not os.path.exists(market_data_path):
-        return []
+        return None
     try:
         data = json.load(open(market_data_path, encoding="utf-8"))
     except Exception:
-        return []
-    hits = []
-    for idx in data.get("indices", []):
-        pct, bp = idx.get("chg_pct"), idx.get("chg_bp")
-        nm = idx.get("name", idx.get("sym", ""))
+        return None
+    return [(idx.get("name", idx.get("sym", "")), idx.get("chg_pct"),
+             idx.get("chg_bp"), str(idx.get("date") or ""))
+            for idx in data.get("indices", [])]
+
+
+MAX_STALE_DAYS = 3       # 週一讀週五收盤＝3 天，是正常的上限
+
+
+def _as_date(mmdd, today):
+    """"08/28" → date。跨年時（12月的日期配到1月的今天）自動退一年。"""
+    try:
+        mm, dd = (int(x) for x in str(mmdd).split("/"))
+    except Exception:
+        return None
+    try:
+        d = datetime(today.year, mm, dd).date()
+    except ValueError:
+        return None
+    return d.replace(year=today.year - 1) if (d - today).days > 300 else d
+
+
+def market_anomaly(market_data_path="market_data.json"):
+    """零成本：判斷主要指數/殖利率有沒有異常波動。回傳觸發原因清單，空list=正常。
+
+    **兩個來源逐指數取比較新的那一個**，然後丟掉太舊的。為什麼要這樣：
+
+    · 只讀 market_data.json 不行——那份檔案的更新權在 GitHub Actions 手上，而 07:00
+      這批比 Actions 早跑。2026-08-31 實測讀到兩個交易日前的資料：拿 8/27 的費半
+      +2.33% 當「今日異常」去叫 AI 查證，而 8/28 實際是 -3.47%，等於查一個已經被
+      隔日行情推翻的事件，AI 回來的筆記還把日期寫成 8/28，錯誤事實進了
+      research_notes.jsonl 被投資長讀走。
+    · 只自己抓也不行——同一天實測，本機 yfinance 對所有美股標的都只到 8/27（8/30
+      還抓得到 8/28，隔天反而退化），但 Actions 上的同一支 market_fetch.py 抓得到。
+      **自己抓不是解法，只是換一個地方過期**，而且它不會知道自己過期了。
+
+    所以真正的防線是「帶著日期比較」而不是「換來源」。日期也一併寫進觸發原因
+    （例如「費城半導體 08/28 單日跌 3.47%」），日報①段的「今日觸發」就不會再跟
+    同一段的指數行情自相矛盾。
+    """
+    today = datetime.now(TPE).date()
+    best = {}
+    for rows in (_live_index_moves(), _rows_from_file(market_data_path)):
+        for nm, pct, bp, when in rows or []:
+            d = _as_date(when, today)
+            if d is None:
+                continue
+            if nm not in best or d > best[nm][0]:
+                best[nm] = (d, pct, bp, when)
+
+    hits, stale = [], []
+    for nm, (d, pct, bp, when) in sorted(best.items()):
+        if (today - d).days > MAX_STALE_DAYS:
+            stale.append(f"{nm}({when})")
+            continue
         if pct is not None and abs(pct) >= INDEX_MOVE_PCT:
-            hits.append(f"{nm} 單日{'漲' if pct > 0 else '跌'} {abs(pct):.2f}%")
+            hits.append(f"{nm} {when} 單日{'漲' if pct > 0 else '跌'} {abs(pct):.2f}%")
         if bp is not None and abs(bp) >= YIELD_MOVE_BP:
-            hits.append(f"{nm} 單日變動 {bp:+.1f}bp")
+            hits.append(f"{nm} {when} 單日變動 {bp:+.1f}bp")
+    if stale:
+        # 寧可漏報也不要謊報：兩個來源都給不出夠新的資料時，說出來，不要靜靜跳過。
+        print("  ⚠️ 兩個來源都過期，這幾筆不列入異常判斷：" + "、".join(stale))
     return hits
 
 

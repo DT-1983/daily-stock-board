@@ -14,6 +14,7 @@ Telegram」，但那是舊設計，實際上 TG 推播一直是 alert_telegram.p
 import os
 import json
 import yfinance as yf
+import tw_symbol
 from board_html import supertrend, TW_NAME
 
 ST_STATE = "state/st_state.json"
@@ -62,7 +63,10 @@ def detect_flips():
     tw_syms = sorted(set(tw_watch))
     dirs = {}
     dirs.update(batch_dirs(us_syms))
-    dirs.update({k.replace(".TW", ""): v for k, v in batch_dirs([c + ".TW" for c in tw_syms]).items()})
+    # 2026-08-31 修：原本一律 `c + ".TW"`，上櫃股全部抓不到 → 被 batch_dirs 的
+    # except 吞掉，結果不是報錯而是「這檔今天沒有翻面」。實測當時 st_state.json
+    # 裡上市 31/31 有狀態、上櫃 0/13，等於守備清單三成的股票從來沒被偵測過。
+    dirs.update(tw_symbol.batch_with_otc(tw_syms, batch_dirs))
 
     prev = {}
     if os.path.exists(ST_STATE):
