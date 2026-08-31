@@ -62,14 +62,36 @@ SCHEMA = {
             "required": ["status", "judgment", "brief", "reasoning"],
         },
         # 2026-08-27 P1（老墨「報告死亡條件」）：這個判斷的可證偽失效條件。
-        # price 類日檢零成本；metric 類（財報數字門檻）等該檔財報時由 AI 查證。
-        "conditions": {
-            "type": "array",
-            "maxItems": 3,
+        # 2026-08-31 拆成兩組（Leo：「失效條件也可以分兩個嗎，不是只有價值投資」）——
+        # 原本單一 conditions 陣列，實測 44 條價格類裡有 39 條是俗貴價，因為系統餵給
+        # AI 最明確的數字就是貴俗價，它自然往那邊寫。拆成 trend/value 兩組**強制
+        # 每個角度各自給條件**，跟本檔既有的「兩角度獨立判斷不合併」硬規則一致。
+        # 型別：
+        #   price_below/above ── 價格線，每日對現價檢查（零成本）
+        #   supertrend_flip   ── SuperTrend 由多翻空，每日算得出來（不必等財報）
+        #   rs_below          ── RS(60日) 跌破自身均線，每日算得出來
+        #   metric            ── 財報/基本面門檻，等下次財報才驗證
+        "trend_conditions": {
+            "type": "array", "maxItems": 2,
             "items": {
                 "type": "object",
                 "properties": {
-                    "type": {"type": "string", "enum": ["price_below", "price_above", "metric"]},
+                    "type": {"type": "string",
+                             "enum": ["price_below", "price_above",
+                                      "supertrend_flip", "rs_below", "metric"]},
+                    "value": {"type": ["number", "null"]},
+                    "desc": {"type": "string", "maxLength": 50},
+                },
+                "required": ["type", "desc"],
+            },
+        },
+        "value_conditions": {
+            "type": "array", "maxItems": 2,
+            "items": {
+                "type": "object",
+                "properties": {
+                    "type": {"type": "string",
+                             "enum": ["price_below", "price_above", "metric"]},
                     "value": {"type": ["number", "null"]},
                     "desc": {"type": "string", "maxLength": 50},
                 },
@@ -87,7 +109,8 @@ SCHEMA = {
             "required": ["status", "judgment", "brief", "reasoning"],
         },
     },
-    "required": ["ticker", "trend_angle", "value_angle"],
+    "required": ["ticker", "trend_angle", "value_angle",
+                 "trend_conditions", "value_conditions"],
 }
 
 PROMPT = """你是投資長，讀研究員整理好的材料，給這檔股票兩個獨立角度的進出場判斷。
@@ -140,12 +163,25 @@ PROMPT = """你是投資長，讀研究員整理好的材料，給這檔股票�
   也不要塞兩三個理由把句子拉長**（手機一行只放得下約20字，太長會折成好幾行很難讀）。
 - reasoning：完整詳細版（事實/推論分開標註），存檔供深讀。
 
-另外填 conditions（頂層欄位，1-3條）：**這個判斷的可證偽失效條件（死亡條件）**——
-「出現什麼情況代表這個判斷錯了/該重新評估」。規則：
-- price_below/price_above：價格失效線，value 必須給具體數字（系統每天自動對照）
+另外**兩個角度各自**填失效條件（死亡條件）——「出現什麼情況代表這個角度的判斷錯了」。
+⚠️ **兩組要真的不一樣，不要兩邊都寫估值**。2026-08 實測發現：因為材料裡貴俗價的
+數字最明確，AI 幾乎全部往估值寫（44條價格條件裡39條是貴俗價），結果趨勢角度形同沒有
+失效條件。趨勢就寫趨勢的失效（破線/翻空/RS轉弱），價值就寫價值的失效（估值/財報數字）。
+
+**trend_conditions（1-2條，趨勢角度的失效）** 可用型別：
+- supertrend_flip：SuperTrend 由多翻空（value 不用填，系統每天自己算）
+- rs_below：RS(60日) 跌破自身均線（value 不用填，系統每天自己算）
+- price_below/price_above：具體價格線（value 必須給數字，例如跌破支撐 185.5）
+- metric：要等財報才驗證的（趨勢角度很少用到）
+
+**value_conditions（1-2條，價值角度的失效）** 可用型別：
+- price_below/price_above：估值線，value 必須給數字（例如漲破貴價 148.32）
 - metric：財報/基本面門檻，desc 必須含具體數字（例「毛利率跌破70%」「單季營收年增轉負」），
   這類會在該公司下次財報公布時被查證
-- 只寫真的可證偽的條件，不要寫「市場情緒轉差」這種驗證不了的。"""
+
+共同規則：
+- 只寫真的可證偽的條件，不要寫「市場情緒轉差」這種驗證不了的
+- desc 要具體到「看到什麼數字就知道成立了」"""
 
 
 def _load_json(path, default=None):
@@ -551,25 +587,44 @@ def run():
 
 def _register_conditions(verdicts):
     """P1（2026-08-27）：把投資長給的失效條件登錄進 state/thesis_conditions.json。
-    同一檔新判斷=新論點=覆蓋舊條件（狀態重置 active）；thesis_check.py 每天對照。"""
+    同一檔新判斷=新論點=覆蓋舊條件（狀態重置 active）；thesis_check.py 每天對照。
+
+    2026-08-31：改收 trend_conditions / value_conditions 兩組，每條多帶一個
+    `angle` 欄（trend/value），下游 thesis_check 與日報才分得開是哪個角度失效。
+    仍相容舊的單一 conditions 欄位——歷史 verdicts 重跑時不會整批掉條件。"""
     path = "state/thesis_conditions.json"
     reg = _load_json(path, {}) or {}
-    n = 0
+    n = n_stock = 0
     for v in verdicts:
-        conds = v.get("conditions") or []
+        conds = []
+        for key, angle in (("trend_conditions", "trend"),
+                           ("value_conditions", "value")):
+            for c in (v.get(key) or []):
+                conds.append({"type": c.get("type"), "value": c.get("value"),
+                              "desc": c.get("desc"), "angle": angle,
+                              "status": "active"})
+        # 舊格式回落：2026-08-31 之前產生的 verdict 只有平的 conditions，沒有角度。
+        # 標 angle="value" 而不是留空——那批實測 39/44 條寫的就是俗貴價，
+        # 標成 value 比標 unknown 誠實，也讓日報不用處理第三種狀態。
+        if not conds:
+            for c in (v.get("conditions") or []):
+                conds.append({"type": c.get("type"), "value": c.get("value"),
+                              "desc": c.get("desc"), "angle": "value",
+                              "status": "active"})
         if not conds:
             continue
         reg[v["ticker"]] = {
             "source_date": v.get("ts"),
             "held": v.get("held", True),
-            "conditions": [{"type": c.get("type"), "value": c.get("value"),
-                            "desc": c.get("desc"), "status": "active"} for c in conds],
+            "conditions": conds,
         }
         n += len(conds)
+        n_stock += 1
     if n:
         os.makedirs("state", exist_ok=True)
         json.dump(reg, open(path, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
-        print(f"已登錄 {n} 條失效條件（{sum(1 for v in verdicts if v.get('conditions'))} 檔）")
+        nt = sum(1 for v in reg.values() for c in v["conditions"] if c.get("angle") == "trend")
+        print(f"已登錄 {n} 條失效條件（{n_stock} 檔）｜登錄簿趨勢類 {nt} 條")
 
 
 if __name__ == "__main__":
