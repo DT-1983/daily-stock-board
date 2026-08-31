@@ -297,12 +297,17 @@ def sec4_research(notes, scope="public", date=None):
             except Exception:
                 gap = 99
             if 0 <= gap <= 3:
-                ls = _cs.summary_lines(ce["events"])   # 用 chip_scan 的預設(4檔/類，連賣3檔)
+                # 2026-08-31：訊息只列每類 2 檔＋連結到完整頁面（Leo：「會不會太多資訊？」）。
+                # 分工＝訊息回答「今天有沒有事」、頁面回答「細節是什麼」——
+                # 頁面還能標註哪幾檔在七鏈裡，那是訊息塞不下的資訊。
+                ls = _cs.summary_lines(ce["events"], max_each=2)
                 if ls:
                     when = "" if gap == 0 else f"・{cd}"
                     lines.append("")
                     lines.append(f"**🔍 全市場籌碼異常**（{len(ce['events'])} 筆・三大法人{when}）")
                     lines += ls
+                    lines.append("-# [完整清單＋七鏈標註]"
+                                 "(https://dt-1983.github.io/daily-stock-board/chip.html)")
     except Exception as e:
         # 不要完全靜默——2026-08-28 第一版寫錯（sec4_research 當時沒有 date 參數，
         # 引用了不存在的變數）就是被 `except: pass` 吞掉，畫面上看起來像「今天沒有
