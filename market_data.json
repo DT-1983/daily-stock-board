@@ -1,124 +1,124 @@
 {
- "updated": "2026-08-29 15:12",
+ "updated": "2026-08-31 08:47",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "08/27",
-   "close": 7730.99,
-   "chg_pct": 0.72
+   "date": "08/28",
+   "close": 7711.76,
+   "chg_pct": -0.25
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "08/27",
-   "close": 26541.35,
-   "chg_pct": 1.57
+   "date": "08/28",
+   "close": 26402.42,
+   "chg_pct": -0.52
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "08/27",
-   "close": 53569.44,
-   "chg_pct": 0.2
+   "date": "08/28",
+   "close": 53559.99,
+   "chg_pct": -0.02
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "08/27",
-   "close": 11882.17,
-   "chg_pct": 2.33
+   "date": "08/28",
+   "close": 11469.66,
+   "chg_pct": -3.47
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "08/27",
-   "close": 45975.22,
-   "chg_pct": 0.31
+   "date": "08/28",
+   "close": 46331.45,
+   "chg_pct": 0.77
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "08/28",
-   "close": 31.63,
-   "chg_pct": -0.56
+   "date": "08/31",
+   "close": 31.64,
+   "chg_pct": -0.06
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "08/27",
-   "close": 4.67,
+   "date": "08/28",
+   "close": 4.72,
    "fmt": "yield",
-   "chg_bp": 0.8
+   "chg_bp": 4.8
   }
  ],
  "news": [
   {
-   "title": "川普對委內瑞拉石油出手！掌控650億桶石油、美企擬進軍17座油田　盧比歐：雙贏",
+   "title": "美軍攻擊伊朗拉拉克島 伊朗報復襲擊駐約旦美軍基地",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6591422",
-   "ts": "08/29 14:20"
+   "url": "https://news.cnyes.com/news/id/6592071",
+   "ts": "08/31 08:43"
   },
   {
-   "title": "古爾斯比力挺華許抗通膨！警告經濟過熱 通膨尚未脫離險境",
+   "title": "輝達財測粉碎延誤謠言！台股挑戰47000點，鎖定季底一波流的黑馬名單！",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6590366",
+   "ts": "08/31 08:30"
+  },
+  {
+   "title": "彭博：蘋果內部測試過折疊iPhone觸控筆",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6591270",
-   "ts": "08/29 13:30"
+   "url": "https://news.cnyes.com/news/id/6592000",
+   "ts": "08/31 08:21"
   },
   {
-   "title": "美海軍被曝陷入嚴重財政危機！傳靠挪用軍人「薪水」打伊朗",
+   "title": "【台股要崩？】Fed突放鷹＋欣興遭搜索！恐殺500點？今天「這件事」千萬別做！",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6592069",
+   "ts": "08/31 08:21"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：仁寶(2324-TW)EPS預估上修至2.2元，預估目標價為40元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6592019",
+   "ts": "08/31 08:11"
+  },
+  {
+   "title": "AI泡沫離破裂還有多遠？《巴隆》揭「25法則」：美股漲勢可能還沒完",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6591419",
-   "ts": "08/29 13:18"
+   "url": "https://news.cnyes.com/news/id/6591838",
+   "ts": "08/31 07:10"
   },
   {
-   "title": "「巴菲特式投資」可能淪為AI時代受害者？",
+   "title": "摩根士丹利點名「5檔」AI主權概念股！SpaceX目標價300美元、潛在漲幅105%",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6590290",
-   "ts": "08/29 13:10"
+   "url": "https://news.cnyes.com/news/id/6591544",
+   "ts": "08/31 06:40"
   },
   {
-   "title": "Teradyne再告中國協作機器人廠專利戰從軟體延伸至硬體",
+   "title": "台積電代工價喊漲10%至15%？AI狂潮推升議價權、回檔成佈局機會",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6591949",
+   "ts": "08/31 06:10"
+  },
+  {
+   "title": "台積電代工價喊漲10%至15%？AI狂潮推升議價權、回檔成佈局機會",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6591455",
-   "ts": "08/29 13:00"
+   "url": "https://news.cnyes.com/news/id/6591949",
+   "ts": "08/31 06:10"
   },
   {
-   "title": "〈熱門股〉精材今明年營運旺 三大法人同步敲進周漲26%",
+   "title": "〈台股盤前要聞〉MSCI調整生效提防量價震盪、台指期夜盤失守4萬6",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6591330",
-   "ts": "08/29 10:36"
-  },
-  {
-   "title": "〈熱門股〉松川精密獲AI需求助攻外資也力挺 股價收新天價327.5元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6591307",
-   "ts": "08/29 10:34"
-  },
-  {
-   "title": "新創迎黃金期！產創條例修正3大亮點吸睛 4大會計為何搶按讚？一表看",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6591379",
-   "ts": "08/29 10:33"
-  },
-  {
-   "title": "輝達財報+MSCI雙利多！台股兆元成交量再現 法人本周掃貨10檔ETF名單一次看",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6591180",
-   "ts": "08/29 10:28"
-  },
-  {
-   "title": "〈熱門股〉精確AI液冷散熱業務將起飛 周反彈18%至近1個半月高",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6591167",
-   "ts": "08/29 10:23"
+   "url": "https://news.cnyes.com/news/id/6591961",
+   "ts": "08/31 05:20"
   }
  ],
  "inst": {
