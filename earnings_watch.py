@@ -75,8 +75,14 @@ GRACE_DAYS = 3      # 排定日當天沒開機 → 之後 3 天內補跑仍算�
 # ────────────────────────────── universe ──────────────────────────────
 
 # 2026-08-03 用戶指定：美股只追這 4 檔（原本 49 檔守備清單全追太雜）
+# 2026-08-31 對齊財報分析網站（Leo：「美股財報會更新的範圍可以跟財報分析網站一樣嗎」）。
+# 網站上有 11 檔美股卡片，這裡只掃 7 檔——差的 4 檔（GLW/GOOG/INTC/MSFT）卡片
+# 產得出來卻**永遠不會自動更新**，停在 8/28 那次批次重產的版本。補齊後兩邊一致。
+# 其中 GLW/GOOG/MSFT 是 Leo 實際持股，INTC 是守備清單。
 US_WATCH = {"TSLA": "Tesla", "NVDA": "NVIDIA", "AMD": "AMD", "MRVL": "Marvell",
-            "MU": "美光科技", "AVGO": "博通", "PLTR": "Palantir"}  # 2026-08-04 用戶加 3 檔
+            "MU": "美光科技", "AVGO": "博通", "PLTR": "Palantir",   # 2026-08-04 用戶加 3 檔
+            "GLW": "康寧", "GOOG": "Alphabet", "MSFT": "微軟",
+            "INTC": "英特爾"}                                       # 2026-08-31 補齊
 
 
 def _holdings(owners=None, category=None) -> dict:
@@ -244,7 +250,15 @@ def save_state(s: dict):
 # ────────────────────────────── 懶人包 ──────────────────────────────
 
 def make_infographic(ticker: str) -> str | None:
-    """呼叫 earnings_infographic.py 產 HTML，回相對路徑（失敗回 None）。"""
+    """呼叫 earnings_infographic.py 產 HTML，回相對路徑（失敗回 None）。
+
+    2026-08-31 修：台股統一用**純代號**當檔名。之前兩條路徑對同一檔給不同代號形式
+    （8/28 批次重產用 "2881" → earnings_2881.html；每日跟催的 universe 是
+    "2881.TW" → earnings_2881_TW.html），結果同一家公司在財報網站上出現兩張卡，
+    舊那張還永遠不會再更新。earnings_infographic 兩種代號都吃得下，差別只在檔名。"""
+    import re as _re
+    if _re.match(r"^\d{4,6}[A-Z]?\.TWO?$", str(ticker)):
+        ticker = str(ticker).split(".")[0]
     safe = ticker.replace(".", "_")
     out = f"docs/earnings_{safe}.html"
     try:
@@ -314,6 +328,16 @@ def _next_q_consensus(tk):
         return None
 
 
+# 只列**繁體中文裡不會出現**的簡化字（避開 后/台/干/只/裡 這類兩邊都合法的），
+# 用來偵測不用來轉換——一對多的轉換（發/髮、乾/幹）自己寫必錯，見記憶 feedback_traditional_chinese_only。
+_SIMP = set("营产报涨电币会万亿达应权关联发优势场单价业计记说语证论议观见"
+            "开区个们时长东车轮华图书专业务实现级达标题问题给经过还这样从")
+
+
+def _has_simplified(txt):
+    return bool(_SIMP & set(txt or ""))
+
+
 def _ai_flash(tk, nm, info, consensus):
     """老墨式財報即時解讀（一次 AI+WebSearch 呼叫，跟 researcher_macro 查證模式同款）：
     ②公司下季指引 vs 共識（指引數字要查新聞稿，yfinance沒有）③盤後股價反應解讀
@@ -344,7 +368,8 @@ def _ai_flash(tk, nm, info, consensus):
    高還是低？有什麼含金量細節（例如排除某地區收入）？
 2. market_reaction：盤後/隔日股價怎麼反應？是慶祝行情還是賣事實？
 3. takeaway：一句白話總結，包含對台股供應鏈（若相關）的連動意義。
-每段都是完整的中文句子，重要數字附上。"""
+每段都是完整的**繁體中文（台灣用語）**句子，重要數字附上。
+⚠️ 查到的簡體中文資料要翻成繁體再寫，不要照抄簡體字。"""
         r = subprocess.run(
             [exe, "-p", "--dangerously-skip-permissions",
              "--output-format", "json", "--json-schema", json.dumps(schema, ensure_ascii=False)],
@@ -352,8 +377,27 @@ def _ai_flash(tk, nm, info, consensus):
             encoding="utf-8", errors="replace", timeout=300)
         if r.returncode != 0:
             return None
-        out = json.loads(r.stdout)
-        return out.get("structured_output")
+        out = (json.loads(r.stdout) or {}).get("structured_output")
+        if not out:
+            return None
+        # 2026-08-31：MRVL 那則 ③④💡 整段簡體（营收/盘后/晶圆），2881/2882 卻是繁體
+        # ——prompt 從來沒指定字體，AI 查到簡中新聞就跟著寫。加一次重試；
+        # 還是簡體就整段不用（Leo 硬規則禁簡體，寧可少一段也不推錯的字）。
+        if _has_simplified("".join(str(v) for v in out.values())):
+            print(f"  [{tk}] AI快訊出現簡體字，重試一次")
+            r2 = subprocess.run(
+                [exe, "-p", "--dangerously-skip-permissions",
+                 "--output-format", "json", "--json-schema", json.dumps(schema, ensure_ascii=False)],
+                input=prompt + "\n" * 2 + "⚠️ 上一次你用了簡體字。這次務必全部用繁體中文（台灣用語）。",
+                capture_output=True, text=True, encoding="utf-8",
+                errors="replace", timeout=300)
+            out2 = ((json.loads(r2.stdout) or {}).get("structured_output")
+                    if r2.returncode == 0 else None)
+            if out2 and not _has_simplified("".join(str(v) for v in out2.values())):
+                return out2
+            print(f"  [{tk}] 重試後仍是簡體，這則放棄 ③④💡（只推 ①② 數字）")
+            return None
+        return out
     except Exception as e:
         print(f"  [{tk}] AI快訊失敗（不擋主要推播）：{e}")
         return None
