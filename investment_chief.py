@@ -120,6 +120,7 @@ PROMPT = """你是投資長，讀研究員整理好的材料，給這檔股票�
 2. 資料不足就直接說缺少什麼、judgment 填「資料不足」，不要硬掰
 3. **不要替 Leo 執行交易，最終決策是他的**——你的 judgment 是建議，不是指令
 4. **只根據下面提供的材料寫，不要自己去查其他資料**
+4b. **全部用繁體中文（台灣用語）**，一個簡體字都不能出現
 5. **兩個角度要獨立判斷，不要互相影響**——長期價值角度不看短線趨勢好壞，
    中短期趨勢角度不因為長期便宜就樂觀。就算兩個角度給出相反的建議也照實寫，
    不要為了看起來一致而修改任一邊。
@@ -459,20 +460,35 @@ def ask_claude(ticker, name, ai_sig, value_material, trend_material, today_event
     prompt = PROMPT.format(date=date, ticker=ticker, name=name, ai_signal=ai_sig,
                            value_material=value_material, trend_material=trend_material,
                            today_events=today_events, held_line=held_line)
-    r = subprocess.run(
-        [exe, "-p", "--dangerously-skip-permissions", "--tools", "",
-         "--output-format", "json", "--json-schema", json.dumps(SCHEMA, ensure_ascii=False)],
-        input=prompt, capture_output=True, text=True,
-        encoding="utf-8", errors="replace", timeout=300,
-    )
-    if r.returncode != 0:
-        raise RuntimeError(f"claude 失敗 (exit {r.returncode}): {(r.stderr or '')[:300]}")
-    out = json.loads(r.stdout)
-    if out.get("is_error"):
-        raise RuntimeError(f"claude 回錯誤: {out}")
-    verdict = out.get("structured_output")
-    if not verdict:
-        raise RuntimeError(f"沒有 structured_output：{r.stdout[:300]}")
+    # 2026-08-31：加簡體字驗收。實測最近 40 筆判斷有 6 筆帶簡體（价/现/体/撑/综），
+    # 這些會直接進 Discord 持股密報。Leo 硬規則禁簡體，改稿重試一次；
+    # 兩次都簡體就照原樣回（判斷內容比字體重要，但會印出來讓人看得到）。
+    from llm_board import simplified_chars, walk_strings
+    fix, verdict = "", None
+    for attempt in range(2):
+        r = subprocess.run(
+            [exe, "-p", "--dangerously-skip-permissions", "--tools", "",
+             "--output-format", "json", "--json-schema", json.dumps(SCHEMA, ensure_ascii=False)],
+            input=prompt + fix, capture_output=True, text=True,
+            encoding="utf-8", errors="replace", timeout=300,
+        )
+        if r.returncode != 0:
+            raise RuntimeError(f"claude 失敗 (exit {r.returncode}): {(r.stderr or '')[:300]}")
+        out = json.loads(r.stdout)
+        if out.get("is_error"):
+            raise RuntimeError(f"claude 回錯誤: {out}")
+        verdict = out.get("structured_output")
+        if not verdict:
+            raise RuntimeError(f"沒有 structured_output：{r.stdout[:300]}")
+        bad = sorted(simplified_chars("".join(walk_strings(verdict))))
+        if not bad:
+            break
+        if attempt == 0:
+            print(f"    ⚠️ {ticker} 判斷含簡體字 {''.join(bad[:8])}，重寫一次")
+            fix = ("\n" * 2 + "⚠️ 你上一次的回答用了簡體字（" + "".join(bad[:8])
+                   + "）。整份重寫，全部用繁體中文（台灣用語）。")
+        else:
+            print(f"    ⚠️ {ticker} 重試後仍含簡體 {''.join(bad[:8])}，照原樣採用")
     verdict["ts"] = date
     verdict["cost_usd"] = out.get("total_cost_usd")
     return verdict
