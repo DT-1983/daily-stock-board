@@ -378,15 +378,17 @@ def sec_thesis(date, scope="private"):
     # 「排版很難懂」衝突。趨勢排前面（它是每天會動的那類，價值是慢變數）。
     AI_ = {"trend": "📉", "value": "💰"}
 
-    # 👦 小孩持股（2026-08-31 Leo：「一起在持股密報裡，但幫我標明小孩持股」）
+    # 標記持有人（2026-08-31 Leo：「一起在持股密報裡，但幫我標明」）
+    # 👦 小孩｜🏠 Leo 的繼承台股（監控但不參與風控）｜空＝Firstrade 核心部位
     try:
-        from trade_plan import kids_tickers
-        KIDS = kids_tickers()
+        from trade_plan import kids_tickers, legacy_tickers
+        _MK = {t: "🏠 " for t in legacy_tickers()}
+        _MK.update({t: "👦 " for t in kids_tickers()})
     except Exception:
-        KIDS = set()
+        _MK = {}
 
     def _who(tk):
-        return "👦 " if tk in KIDS else ""
+        return _MK.get(tk, "")
 
     def _srt(rows):
         return sorted(rows, key=lambda r: 0 if r[2] == "trend" else 1)

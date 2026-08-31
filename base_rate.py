@@ -333,9 +333,10 @@ def line(c):
     if not r:
         return None
     body = _fmt_tw(r) if r["kind"] == "tw_monthly" else _fmt_us(r)
-    # 👦 標記小孩持股（2026-08-31 Leo 指定）——密報裡 Leo 自己的和小孩的會混在
-    # 同一則，不標的話看不出這筆是誰的部位、也不知道該不該一起做決定。
-    mark = "👦 " if c["ticker"] in _kids() else ""
+    # 標記持有人（2026-08-31 Leo 指定）——密報裡三群會混在同一則，不標的話看不出
+    # 這筆是誰的部位：👦 小孩｜🏠 Leo 的繼承台股（納入監控但不參與風控計算）｜
+    # 空白＝Leo 自己操作的 Firstrade 核心部位。
+    mark = _mark(c["ticker"])
     out = f"{TIER[r['tier']]} {mark}**{c['ticker']}**｜{body}"
     t = c.get("track_record")
     if t:
@@ -356,19 +357,24 @@ def line(c):
     return out
 
 
-_KIDS = None
+_MARKS = None
 
 
-def _kids():
-    """小孩持股代號（快取一次）。抓不到回空集合，不擋主要判讀。"""
-    global _KIDS
-    if _KIDS is None:
+def _mark(tk):
+    """代號 → 顯示標記。👦 小孩｜🏠 Leo 的繼承台股｜空＝Leo 自己操作的部位。
+    整份快取一次（owner_mark 每次呼叫都會重讀 holdings.json，191 檔會讀 191 次）。"""
+    global _MARKS
+    if _MARKS is None:
         try:
-            from trade_plan import kids_tickers
-            _KIDS = kids_tickers()
+            from trade_plan import kids_tickers, legacy_tickers
+            _MARKS = {}
+            for t in legacy_tickers():
+                _MARKS[t] = "🏠 "
+            for t in kids_tickers():
+                _MARKS[t] = "👦 "          # 小孩優先（不會重疊，防禦性寫法）
         except Exception:
-            _KIDS = set()
-    return _KIDS
+            _MARKS = {}
+    return _MARKS.get(tk, "")
 
 
 def _held_set():
@@ -450,14 +456,16 @@ def default_tickers():
     except Exception:
         pass
     try:
-        # 2026-08-31：小孩的台股（元大 Ian/Loewe）本來完全不在 186 檔裡，
-        # 只有財報快訊看得到它們。台股代號補 .TW 後綴才查得到月營收共識。
-        import re as _re
+        # 2026-08-31：監控母體（小孩的券商帳戶 + Leo 的台股繼承帳戶）本來完全不在
+        # 名單裡，只有財報快訊看得到。台股代號要補後綴才查得到月營收共識，
+        # 用 tw_symbol.resolve 而不是硬掛 .TW——上櫃股要 .TWO。
+        import tw_symbol
         from trade_plan import monitored_holdings
-        for tk, ow, _nm in monitored_holdings():
-            if ow == "Leo":
-                continue
-            ts.append(f"{tk}.TW" if _re.match(r"^\d{4,6}[A-Z]?$", str(tk)) else tk)
+        for tk, _ow, _nm in monitored_holdings():
+            # 不依 owner 過濾——Leo 的 Firstrade 上面 load_holdings 已經加過了，
+            # set 會去重；依 owner 濾反而會把 MONITOR_LEO_TW 打開後的台股濾掉
+            # （2026-08-31 實測踩到：加了 Leo 台股卻沒進掃描名單）。
+            ts.append(tw_symbol.resolve(tk) if tw_symbol.is_tw_code(tk) else tk)
     except Exception:
         pass
     try:
