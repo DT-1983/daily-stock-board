@@ -105,12 +105,35 @@ def save_closed(s):
     json.dump(sorted(s), open(CLOSED_PATH, "w", encoding="utf-8"), ensure_ascii=False)
 
 
+PUBLISH_HOUR = 13
+PUBLISH_MIN = 35
+
+
+def _published(d, now=None):
+    """證交所類指數是否已公布。收盤 13:30 後才有，這裡抓 13:35 留 5 分鐘緩衝。
+
+    ⚠️ 2026-08-31 修：少了這道判斷 = 資料永久遺失。排程 08:45 跑時證交所對「今天」
+    會回一個正常 JSON 但沒有價格指數表，fetch_day 判成 "closed"（非交易日）寫進
+    黑名單，而黑名單設計上**永不重試**——於是每一天都在自己那天早上被判死，隔天
+    也不會回頭補。8/28 和 8/31 就是這樣掉的，累積數會永遠卡在 53 天，100MA 永遠
+    算不出來。未公布的日期要**完全跳過**（不打請求也不寫黑名單），留給明天早上補。
+    """
+    now = now or dt.datetime.now()
+    if d < now.date():
+        return True
+    if d > now.date():
+        return False
+    return (now.hour, now.minute) >= (PUBLISH_HOUR, PUBLISH_MIN)
+
+
 def _fill(dates, h, closed, pause=0.4):
     """補指定日期清單。回 (新增數, 被擋數)。"""
     got = blocked = 0
     for d in dates:
         key = d.isoformat()
         if key in h or key in closed:
+            continue
+        if not _published(d):
             continue
         st, r = fetch_day(d.strftime("%Y%m%d"))
         if st == "ok":
