@@ -19,7 +19,10 @@ import json
 import argparse
 from datetime import datetime
 
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+# 2026-09-01 從 TextIOWrapper 改 reconfigure：被 import 時原本會把呼叫端已包好的
+# stdout 關掉，之後對方 print 就 ValueError（earnings_watch 同一個坑 8/31 修過）
+if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
+    sys.stdout.reconfigure(encoding="utf-8")
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from board_theme import BASE_CSS, header, NAV, esc  # noqa: E402
