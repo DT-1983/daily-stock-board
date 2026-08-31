@@ -328,14 +328,7 @@ def _next_q_consensus(tk):
         return None
 
 
-# 只列**繁體中文裡不會出現**的簡化字（避開 后/台/干/只/裡 這類兩邊都合法的），
-# 用來偵測不用來轉換——一對多的轉換（發/髮、乾/幹）自己寫必錯，見記憶 feedback_traditional_chinese_only。
-_SIMP = set("营产报涨电币会万亿达应权关联发优势场单价业计记说语证论议观见"
-            "开区个们时长东车轮华图书专业务实现级达标题问题给经过还这样从")
-
-
-def _has_simplified(txt):
-    return bool(_SIMP & set(txt or ""))
+from llm_board import has_simplified as _has_simplified  # noqa: E402
 
 
 def _ai_flash(tk, nm, info, consensus):

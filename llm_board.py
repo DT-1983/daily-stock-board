@@ -24,6 +24,35 @@ GEMINI_MODEL = os.environ.get("TW_LLM_MODEL", "gemini/gemini-3-flash-preview")
 TIMEOUT = int(os.environ.get("BOARD_LLM_TIMEOUT", "600"))
 
 
+# ── 簡體字偵測（2026-08-31）。Leo 硬規則禁簡體，但 8/31 實測 MRVL 的財報快訊
+# 與整張財報卡片都是簡體——**prompt 裡寫「用繁體中文」不等於做到**，餵進去的
+# 查核資料是簡中新聞時模型會跟著漂過去。放這裡是因為所有走 LLM 的產出都該驗收。
+#
+# 只列**繁體中文裡不會出現**的簡化字，刻意避開 后/台/干/只/裡/面 這類兩邊都合法的。
+# ⚠️ 偵測用，不做轉換——一對多的轉換（發/髮、乾/幹、只/隻）自己寫必錯。
+SIMPLIFIED = set("营产报涨电币会万亿达应权关联发优势场单价业计记说语证论议观见"
+                 "开区个们时长东车轮华图书专务实现级标题问给经过还这样从"
+                 "净现资总额购销费额约级层构")
+
+
+def has_simplified(txt):
+    """回 True 代表 txt 裡有繁體中文不會出現的簡化字。"""
+    return bool(SIMPLIFIED & set(txt or ""))
+
+
+def walk_strings(o):
+    """把巢狀 dict/list 裡的字串全攤平——LLM 回的 JSON 常是 list of dict，
+    只檢查頂層 values 會漏掉最長的那幾段敘事。"""
+    if isinstance(o, str):
+        yield o
+    elif isinstance(o, dict):
+        for v in o.values():
+            yield from walk_strings(v)
+    elif isinstance(o, (list, tuple)):
+        for v in o:
+            yield from walk_strings(v)
+
+
 def _claude_bin():
     p = os.environ.get("CLAUDE_BIN")
     if p and os.path.exists(p):
@@ -107,3 +136,26 @@ def ask_json(prompt, retries=1):
         except Exception as e:
             last = f"{e}｜回覆開頭：{txt[:200]}"
     raise ValueError(f"JSON 解析失敗：{last}")
+
+
+def ask_json_traditional(prompt, tries=3, log=print):
+    """ask_json 的繁體版：回來的 JSON 若含簡化字，帶著「你用了哪幾個」重寫，
+    最多 tries 次。全失敗回 None——呼叫端該當作「這次產不出來」走既有的重試佇列，
+    不要為了有東西可交而把簡體字送出去（Leo 硬規則）。
+
+    2026-08-31 抽出來的原因：這段邏輯 earnings_infographic 和 earnings_watch 都要用，
+    而且寫在 narrative() 裡面時**測不到重試路徑**（narrative 要一整包財報 facts 才跑得動）。
+    """
+    fix = ""
+    for a in range(tries):
+        out = ask_json(prompt + fix)
+        if not out:
+            return out
+        bad = sorted(set("".join(walk_strings(out))) & SIMPLIFIED)
+        if not bad:
+            return out
+        log(f"    ⚠️ 出現簡體字 {''.join(bad[:10])}（第 {a+1}/{tries} 次），要求改寫")
+        fix = ("\n" * 2 + "⚠️ 你上一次的回答用了簡體字（" + "".join(bad[:10])
+               + "）。整份重寫，全部用繁體中文（台灣用語），一個簡體字都不能有。")
+    log(f"    ⚠️ {tries} 次仍是簡體，放棄這次產出")
+    return None
