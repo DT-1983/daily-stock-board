@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-31 13:47",
+ "updated": "2026-08-31 15:40",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,16 +38,16 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "08/31",
-   "close": 45979.67,
-   "chg_pct": -0.76
+   "close": 46128.47,
+   "chg_pct": -0.44
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "08/31",
-   "close": 31.67,
-   "chg_pct": 0.04
+   "close": 31.69,
+   "chg_pct": 0.09
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "「SaaS已死」喊太早？Salesforce帶動軟體股反攻 有望一路漲到10月",
+   "title": "逾5成選民反對 冰島公投否決重啟「加入歐盟」談判",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6592450",
-   "ts": "08/31 13:43"
+   "url": "https://news.cnyes.com/news/id/6592635",
+   "ts": "08/31 15:40"
   },
   {
-   "title": "美債投資人質疑聯準會升息預期 華許溝通風格引發市場震盪",
+   "title": "川普威脅「炸碎」哈爾克島！美炸拉拉克島引伊朗反擊、荷姆茲海峽航運告急",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6592553",
-   "ts": "08/31 13:40"
+   "url": "https://news.cnyes.com/news/id/6592638",
+   "ts": "08/31 15:20"
   },
   {
-   "title": "〈焦點股〉美伊戰火重燃 油價跳漲 南亞、台化漲停領塑化股多檔強漲",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6592561",
-   "ts": "08/31 13:23"
-  },
-  {
-   "title": "〈焦點股〉立碁登場SEMICON秀光模組1.6T技術 逆勢放量攻漲停",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6592555",
-   "ts": "08/31 13:17"
-  },
-  {
-   "title": "捷流閥業大啖 AI 基建商機  半導體及高科技接單增至3-4成",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6592534",
-   "ts": "08/31 12:59"
-  },
-  {
-   "title": "〈焦點股〉建準下半年營運看旺 亮燈漲停股價創今年高點",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6582497",
-   "ts": "08/31 12:58"
-  },
-  {
-   "title": "〈SEMICON〉家登先進封裝載具增長雙位數 方圓規格通吃",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6568028",
-   "ts": "08/31 12:51"
-  },
-  {
-   "title": "貝森特警告中國1.2兆美元貿易順差「難以持續」！籲G20聯手逼北京轉向內需",
+   "title": "高盛調升柴油利潤預測逾一倍 因地緣衝突加劇全球煉油市場吃緊",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6592017",
-   "ts": "08/31 12:20"
+   "url": "https://news.cnyes.com/news/id/6592614",
+   "ts": "08/31 15:10"
   },
   {
-   "title": "看多美債40年也變心 「債市多頭總司令」大砍長債轉抱現金",
+   "title": "南韓槓桿ETF退燒 模擬交易嚇跑散戶、成交額暴跌96%",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6592089",
-   "ts": "08/31 12:10"
+   "url": "https://news.cnyes.com/news/id/6592092",
+   "ts": "08/31 15:10"
   },
   {
-   "title": "美國擬「每週」對伊朗祭新制裁！貝森特警告：銀行成首波目標",
+   "title": "Michael Saylor高喊「We're Back！」微策略又準備加碼比特幣了？",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6592016",
-   "ts": "08/31 10:54"
+   "url": "https://news.cnyes.com/news/id/6592607",
+   "ts": "08/31 14:40"
+  },
+  {
+   "title": "野村投信最新台股看法--【台股操盤人筆記】把握榮景上漲機會，但也為循環轉折做準備",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6590579",
+   "ts": "08/31 14:36"
+  },
+  {
+   "title": "賴清德重申「AI新十大建設」四大基礎工程 感謝產業界攜手拚經濟",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6592612",
+   "ts": "08/31 14:35"
+  },
+  {
+   "title": "〈SEMICON〉吳田玉：AI才剛開始 未來想像空間是現在百倍、千倍甚至萬倍",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6592636",
+   "ts": "08/31 14:34"
+  },
+  {
+   "title": "〈台股盤後〉MSCI生效尾盤爆量跌點收斂至202點守住4萬6 月線大漲3008點",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6592628",
+   "ts": "08/31 14:32"
+  },
+  {
+   "title": "台股收跌0.4%失守46,200點欣興、矽力-KY重挫近10%，南亞亮燈漲停",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6592653",
+   "ts": "08/31 14:30"
   }
  ],
  "inst": {
-  "date": "08/28",
-  "total_yi": 458.3,
-  "foreign_yi": 417.5,
-  "trust_yi": -2.0
+  "date": "08/31",
+  "total_yi": -267.6,
+  "foreign_yi": -143.9,
+  "trust_yi": -49.1
  }
 }
