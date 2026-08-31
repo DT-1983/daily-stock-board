@@ -459,6 +459,33 @@ def daily_followup(args):
     kids = {k for k, v in _holdings().items() if v[1] != "Leo"} - personal
     held = personal | kids
 
+    # ── 每日全持股掃描（2026-08-31 加，Leo：「Marvell 財報出來了會有摘要嗎？」→ 不會）
+    # 舊行為：候選**只**從 st["upcoming"] 來，也就是「季度重掃當天剛好落在 T-7 內」
+    # 才會被登錄，之後才輪得到每日跟催。MRVL 實測踩到這個洞：季度重掃 8/19 跑，
+    # MRVL 財報 8/27 = T-8，**差一天**沒進 upcoming；下次重掃 11/19。結果 8/27 真的
+    # 公布了（EPS 0.94、意外 +0.99%），系統整季完全不會提。
+    # 修法：每天直接掃「實際持股」（26 檔，yfinance 免費、約 10 秒），
+    # T-7 內沒預告過就補預告、已公布沒處理過就進跟催。key 去重不變 → 不會重推。
+    # 不掃守備清單全表（那是季度重掃的職責），持股才是漏掉會痛的那批。
+    # 掃描範圍＝build_universe("holdings")（台股實際持股 + US_WATCH 四檔），
+    # 不是 held。MRVL 正是「在守備清單、不在持股」那類——用 held 掃還是漏掉它。
+    scan_new = {}
+    for tk in sorted(build_universe(getattr(args, "universe", "holdings") or "holdings")):
+        info = earnings_info(tk)
+        time.sleep(0.35)
+        if not info:
+            continue
+        d_ = info.get("days_to")
+        if d_ is not None and 0 <= d_ <= AHEAD_DAYS:
+            k = f'{tk}@{info["next_date"]}'
+            if st.setdefault("upcoming", {}).get(k) != "sent":
+                scan_new[k] = (tk, info)
+        ld = info.get("last_date")
+        if ld and 0 <= (today - ld).days <= AFTER_DAYS:
+            k = f"{tk}@{ld}"
+            st.setdefault("upcoming", {}).setdefault(k, "sent")   # 補登錄，供下面取用
+            # reported 的去重在下面的候選迴圈統一做，這裡只負責讓它「看得到」
+
     cands = []
     for key in st.get("upcoming", {}):
         tk, ds = key.rsplit("@", 1)
@@ -524,7 +551,7 @@ def daily_followup(args):
             rev_t = f"營收 {consensus['revenue']/1e9:.1f}B" if consensus.get("revenue") else ""
             eps_t = f"EPS {consensus['eps']:.2f}" if consensus.get("eps") is not None else ""
             b.append(f"　② 下季共識：{'、'.join(x for x in (eps_t, rev_t) if x)}（{consensus['analysts']}位分析師）")
-        if tk in held and made < args.max_infographics and not args.dry_run:
+        if tk in (held | set(US_WATCH)) and made < args.max_infographics and not args.dry_run:
             print(f"  產懶人包 {tk} …")
             p = make_infographic(tk)
             if p and _infographic_is_fresh(p, ed):
@@ -552,11 +579,39 @@ def daily_followup(args):
         if not args.dry_run:
             st["reported"][key] = "sent"
 
+    # T-7 預告（來自上面的每日掃描）。獨立一段、每個財報日只發一次。
+    # 2026-08-31 前預告只在季度重掃當天產生，等於一年只有 4 天有機會發預告。
+    pre_lines = []
+    for k, (tk, info) in sorted(scan_new.items(), key=lambda x: x[1][1]["days_to"]):
+        nm = _holdings().get(tk, (tk,))[0] if tk in _holdings() else US_WATCH.get(tk, tk)
+        when = "今天" if info["days_to"] == 0 else f'{info["days_to"]} 天後'
+        pre_lines.append(f'{_mark(tk, personal, kids)}<b>{tk}</b> {nm}　'
+                         f'{info["next_date"]}（{when}）')
+        if not args.dry_run:
+            st["upcoming"][k] = "sent"
+
+    if not blocks and pre_lines:
+        # 只有預告沒有快訊：發短訊，不套「財報快訊」標題（那會誤導成已經公布了）
+        hdr = f"📅 <b>未來 {AHEAD_DAYS} 天要出財報</b>"
+        msg = hdr + "\n" + "\n".join(pre_lines)
+        print(msg.replace("<b>", "").replace("</b>", ""))
+        if args.dry_run:
+            print("(dry-run：沒推播、沒寫state)")
+            return
+        d = "# 📅 未來 7 天要出財報" + NL2 + NL2.join(
+            l.replace("<b>", "**").replace("</b>", "**") for l in pre_lines)
+        push(msg, discord_msg=d)
+        save_state(st)
+        return
+
     if not blocks:
         if not args.dry_run:
             save_state(st)          # infographic_pending 的增減也要存
         return
     msg = "📊 <b>財報快訊（公布後跟催）</b>\n\n" + "\n\n".join(blocks)
+    if pre_lines:
+        msg += ("\n" * 2 + f"📅 <b>未來 {AHEAD_DAYS} 天要出財報</b>"
+                + "\n" + "\n".join(pre_lines))
     print("\n" + msg.replace("<b>", "").replace("</b>", ""))
     if args.dry_run:
         print("(dry-run：沒推播、沒寫state)")
@@ -651,7 +706,7 @@ def main():
             star = mk
             link = ""
             # 只幫「實際持股」自動產懶人包，守備清單太多會爆量
-            if tk in held and made < args.max_infographics and not args.dry_run:
+            if tk in (held | set(US_WATCH)) and made < args.max_infographics and not args.dry_run:
                 print(f"  產懶人包 {tk} …")
                 p = make_infographic(tk)
                 if p:

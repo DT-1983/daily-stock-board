@@ -360,17 +360,28 @@ def sec_thesis(date, scope="private"):
     want_held = (scope == "private")
 
     def _pick(rows):
-        """相容新舊格式：新的是 (tk,msg,held)，舊的是 (tk,msg) 沒有 held 欄位。
-        舊格式一律當持股處理（跟改版前的行為一致，不會突然消失）。"""
+        """相容三代格式：(tk,msg) → (tk,msg,held) → (tk,msg,held,angle)。
+        缺 held 一律當持股（跟改版前行為一致，不會突然消失）；
+        缺 angle 一律當價值——8/31 之前登錄的 83 條實測 39/44 條寫的就是俗貴價，
+        標 value 比標 unknown 誠實。"""
         out = []
         for r in rows:
             tk, msg = r[0], r[1]
             held = r[2] if len(r) > 2 else True
+            angle = r[3] if len(r) > 3 else "value"
             if bool(held) == want_held:
-                out.append((tk, msg))
+                out.append((tk, msg, angle))
         return out
 
-    trig, near = _pick(d.get("triggered", [])), _pick(d.get("near", []))
+    # 2026-08-31（Leo：「失效條件也可以分兩個嗎，不是只有價值投資」）：
+    # 每行掛角度符號而不是拆成兩個小節——拆節會讓行數翻倍，跟 8/31 才剛修好的
+    # 「排版很難懂」衝突。趨勢排前面（它是每天會動的那類，價值是慢變數）。
+    AI_ = {"trend": "📉", "value": "💰"}
+
+    def _srt(rows):
+        return sorted(rows, key=lambda r: 0 if r[2] == "trend" else 1)
+
+    trig, near = _srt(_pick(d.get("triggered", []))), _srt(_pick(d.get("near", [])))
     pend = _pick(d.get("pending_metric", []))
     hz = d.get("healthy", 0)
     n_ok = (hz.get("held" if want_held else "watch", 0) if isinstance(hz, dict)
@@ -379,18 +390,20 @@ def sec_thesis(date, scope="private"):
     # 只列前 5 檔——8/31 那次持股密報一次噴出十幾檔🚫，每檔還帶一整句說明，
     # 手機上完全看不完（Leo：「排版很難懂不易閱讀」）。觸發的按「超過幅度」排序，
     # 最誇張的先看。
-    for tk, msg in trig[:5]:
-        lines.append(f"🚫 **{tkname(tk)}**　{msg[:34]}")
+    for tk, msg, ang in trig[:5]:
+        lines.append(f"🚫{AI_.get(ang, '💰')} **{tkname(tk)}**　{msg[:34]}")
     if len(trig) > 5:
         lines.append(f"-# 　…另有 {len(trig)-5} 檔已觸發")
-    for tk, msg in near[:3]:
-        lines.append(f"⚠️ {tkname(tk)}　{msg[:34]}")
+    for tk, msg, ang in near[:3]:
+        lines.append(f"⚠️{AI_.get(ang, '💰')} {tkname(tk)}　{msg[:34]}")
     if len(near) > 3:
         lines.append(f"-# 　…另有 {len(near)-3} 檔逼近")
 
     tail = f"✅ 健康 {n_ok} 條"
     if pend:
         tail += f"｜📋 待財報檢 {len(pend)} 條"
+    if trig or near:
+        tail += "　📉趨勢／💰價值"
     lines.append(f"-# {tail}{tag}")
     return lines if len(lines) > 1 else []
 
