@@ -35,6 +35,9 @@ import technical_indicators as TI  # 2026-08-06：技術面四指標（BEST MATC
 import earnings_call as EC  # 2026-08-09：管理層口頭重點（法說會逐字稿，補財報三表沒有的公司自訂KPI）
 
 OBIS = r"C:\Users\Mophy\Documents\Google drive\BB-8 工作區\04_AI Report\Investment"
+# 台股中文名的第二來源（board_html_legacy.TW_NAME 只有七鏈守備清單的 62 檔，
+# Leo 的持股台泥/正新/台灣大/中華電不在裡面，卡片標題會退成 yfinance 的英文長名）
+HOLDINGS_JSON = r"C:\Users\Mophy\AI\assets-dashboard\data\holdings.json"
 
 
 # ────────────────────────────── 資料層 ──────────────────────────────
@@ -135,6 +138,24 @@ def fetch(ticker: str) -> dict:
             tw_name = _L.TW_NAME.get(tw_code.group(1))
         except Exception:
             pass
+        if not tw_name:
+            # TW_NAME 只有七鏈守備清單的 62 檔，Leo 的持股（台泥/正新/台灣大/中華電…）
+            # 不在裡面，卡片標題就會退成 yfinance 的英文長名
+            # 「Chunghwa Telecom Co., Ltd.」。持股檔本來就有中文名，補這一層。
+            # 直接讀 JSON，不 import earnings_watch——那支在 module level 重包
+            # stdout，被 import 就會把呼叫端已經包好的那層關掉（實測會讓對方
+            # 之後的 print 直接 ValueError: I/O operation on closed file）
+            try:
+                import json as _json
+                hp = HOLDINGS_JSON
+                code = tw_code.group(1)
+                for row in _json.load(open(hp, encoding="utf-8")):
+                    t = str(row.get("ticker", ""))
+                    if t.split(".")[0] == code and row.get("name"):
+                        tw_name = row["name"]
+                        break
+            except Exception:
+                pass
 
     d = {
         "ticker": ticker.upper(),
