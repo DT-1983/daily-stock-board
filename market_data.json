@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-31 08:47",
+ "updated": "2026-08-31 13:47",
  "indices": [
   {
    "sym": "^GSPC",
@@ -37,17 +37,17 @@
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "08/28",
-   "close": 46331.45,
-   "chg_pct": 0.77
+   "date": "08/31",
+   "close": 45979.67,
+   "chg_pct": -0.76
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "08/31",
-   "close": 31.64,
-   "chg_pct": -0.06
+   "close": 31.67,
+   "chg_pct": 0.04
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "美軍攻擊伊朗拉拉克島 伊朗報復襲擊駐約旦美軍基地",
+   "title": "「SaaS已死」喊太早？Salesforce帶動軟體股反攻 有望一路漲到10月",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6592071",
-   "ts": "08/31 08:43"
+   "url": "https://news.cnyes.com/news/id/6592450",
+   "ts": "08/31 13:43"
   },
   {
-   "title": "輝達財測粉碎延誤謠言！台股挑戰47000點，鎖定季底一波流的黑馬名單！",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6590366",
-   "ts": "08/31 08:30"
-  },
-  {
-   "title": "彭博：蘋果內部測試過折疊iPhone觸控筆",
+   "title": "美債投資人質疑聯準會升息預期 華許溝通風格引發市場震盪",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6592000",
-   "ts": "08/31 08:21"
+   "url": "https://news.cnyes.com/news/id/6592553",
+   "ts": "08/31 13:40"
   },
   {
-   "title": "【台股要崩？】Fed突放鷹＋欣興遭搜索！恐殺500點？今天「這件事」千萬別做！",
+   "title": "〈焦點股〉美伊戰火重燃 油價跳漲 南亞、台化漲停領塑化股多檔強漲",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6592069",
-   "ts": "08/31 08:21"
+   "url": "https://news.cnyes.com/news/id/6592561",
+   "ts": "08/31 13:23"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：仁寶(2324-TW)EPS預估上修至2.2元，預估目標價為40元",
+   "title": "〈焦點股〉立碁登場SEMICON秀光模組1.6T技術 逆勢放量攻漲停",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6592019",
-   "ts": "08/31 08:11"
+   "url": "https://news.cnyes.com/news/id/6592555",
+   "ts": "08/31 13:17"
   },
   {
-   "title": "AI泡沫離破裂還有多遠？《巴隆》揭「25法則」：美股漲勢可能還沒完",
+   "title": "捷流閥業大啖 AI 基建商機  半導體及高科技接單增至3-4成",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6592534",
+   "ts": "08/31 12:59"
+  },
+  {
+   "title": "〈焦點股〉建準下半年營運看旺 亮燈漲停股價創今年高點",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6582497",
+   "ts": "08/31 12:58"
+  },
+  {
+   "title": "〈SEMICON〉家登先進封裝載具增長雙位數 方圓規格通吃",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6568028",
+   "ts": "08/31 12:51"
+  },
+  {
+   "title": "貝森特警告中國1.2兆美元貿易順差「難以持續」！籲G20聯手逼北京轉向內需",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6591838",
-   "ts": "08/31 07:10"
+   "url": "https://news.cnyes.com/news/id/6592017",
+   "ts": "08/31 12:20"
   },
   {
-   "title": "摩根士丹利點名「5檔」AI主權概念股！SpaceX目標價300美元、潛在漲幅105%",
+   "title": "看多美債40年也變心 「債市多頭總司令」大砍長債轉抱現金",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6591544",
-   "ts": "08/31 06:40"
+   "url": "https://news.cnyes.com/news/id/6592089",
+   "ts": "08/31 12:10"
   },
   {
-   "title": "台積電代工價喊漲10%至15%？AI狂潮推升議價權、回檔成佈局機會",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6591949",
-   "ts": "08/31 06:10"
-  },
-  {
-   "title": "台積電代工價喊漲10%至15%？AI狂潮推升議價權、回檔成佈局機會",
+   "title": "美國擬「每週」對伊朗祭新制裁！貝森特警告：銀行成首波目標",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6591949",
-   "ts": "08/31 06:10"
-  },
-  {
-   "title": "〈台股盤前要聞〉MSCI調整生效提防量價震盪、台指期夜盤失守4萬6",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6591961",
-   "ts": "08/31 05:20"
+   "url": "https://news.cnyes.com/news/id/6592016",
+   "ts": "08/31 10:54"
   }
  ],
  "inst": {
