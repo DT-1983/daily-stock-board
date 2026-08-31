@@ -74,7 +74,12 @@ _TYPE_LABEL = {"guidance": "展望", "quote": "引述"}
 def build(ticker, company_name="", quarter_label=""):
     """回 (html, summary_text)。抓不到逐字稿或解析失敗都回 ("", "")，不中斷主流程。"""
     try:
-        data = llm_board.ask_json_traditional(_prompt(ticker, company_name, quarter_label))
+        # tries=1（2026-08-31）：繁體驗收預設重試 3 次，而 llm_board.TIMEOUT 是 600 秒，
+        # 相乘後單一張卡片的法說會步驟最壞要 30 分鐘——2882 實測卡了 20 分鐘還沒回。
+        # 這一段是**選配的加值資訊**（抓不到就回 ("","") 不中斷主流程），
+        # 沒必要為它付三倍的等待。回來是簡體就整段不用，不重試。
+        data = llm_board.ask_json_traditional(
+            _prompt(ticker, company_name, quarter_label), tries=1)
     except Exception as e:
         print(f"  [earnings_call] {ticker} 逐字稿摘要失敗：{e}")
         return "", ""

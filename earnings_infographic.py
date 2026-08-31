@@ -78,10 +78,43 @@ def _tw_core(code, n=8):
     yoy_date = next((dt for dt in dates if date.fromisoformat(dt).year == cd.year - 1
                      and date.fromisoformat(dt).month == cd.month), None)
 
+    # 2026-08-31 修（Leo：「為什麼玉山點進去資料會是空的？」）：金控股的 FinMind
+    # 科目名稱跟一般股不同，寫死單一名稱會整欄 N/A。實測對照：
+    #   一般股（鴻海/新產）：IncomeAfterTaxes、OperatingIncome、GrossProfit
+    #   金控（玉山/富邦/國泰）：**IncomeAfterTax**（少一個 s）、無 OperatingIncome、
+    #                          無 GrossProfit（銀行本來就沒有毛利概念，N/A 是對的）
+    # 所以只有淨利需要補候選名稱；毛利/營業利益維持 N/A，不拿稅前淨利硬湊
+    # （那是不同的概念，標成營業利益是騙人）。
+    ALIASES = {"IncomeAfterTaxes": ["IncomeAfterTaxes", "IncomeAfterTax"]}
+
+    # YoY 基期健全度：富邦金 2025-06-30 的 Revenue 在 FinMind 是 37.9 億，
+    # 其他季都 700~1,400 億——基期本身不可比，照算會得到 +2700.4% 這種數字
+    # （8/31 Discord 上真的推出去了）。基期太低就顯示 N/A，不給假的成長率。
+    #
+    # 門檻取自實測分布不是拍腦袋：掃 17 檔台股共 304 個季度的「單季營收÷該檔中位數」，
+    # 最低的 6 個季度**全部是金控/壽險**（富邦金 2022-12-31 甚至是負營收 -36.7%、
+    # 2025-06-30 是 4.5%、國泰金 2025-06-30 是 27.8%），而全體第 5 百分位是 70.8%
+    # ——40% 落在 37.8% 與 70.8% 中間的空隙裡，抓得到全部異常又不誤傷正常季度。
+    # 代價是金控的營收 YoY 會常常顯示 N/A，那是誠實的：壽險單季營收含投資與避險
+    # 損益抵銷，本來就不是穩定可比的數列。
+    BASE_MIN_RATIO = 0.4
+
+    def _median(vals):
+        v = sorted(x for x in vals if x is not None)
+        return v[len(v) // 2] if v else None
+
     def pair(field):
-        a = by_date[cur_date].get(field)
-        b = by_date.get(yoy_date, {}).get(field) if yoy_date else None
-        pct = ((a / b - 1) * 100) if (a is not None and b not in (None, 0)) else None
+        names = ALIASES.get(field, [field])
+        name = next((n for n in names if n in by_date[cur_date]), names[0])
+        a = by_date[cur_date].get(name)
+        b = by_date.get(yoy_date, {}).get(name) if yoy_date else None
+        pct = None
+        if a is not None and b not in (None, 0):
+            med = _median([by_date[dt].get(name) for dt in dates])
+            if med and med > 0 and b < med * BASE_MIN_RATIO:
+                pct = None          # 基期異常，不給成長率（見 BASE_MIN_RATIO）
+            else:
+                pct = (a / b - 1) * 100
         return {"cur": a, "prev": b, "yoy": pct}
 
     cf_by_date = {}
