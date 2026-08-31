@@ -1,202 +1,241 @@
 {
- "date": "2026-08-31",
+ "date": "2026-09-01",
  "triggered": [],
  "near": [],
  "pending_metric": [
   [
    "1303",
    "製程工業籃子RS-Ratio跌破100（跌出leading象限）",
-   false
+   false,
+   "value"
   ],
   [
    "1402",
    "製程工業籃子RS-Ratio跌破100，脫離leading象限",
-   false
+   false,
+   "value"
   ],
   [
    "1802",
    "洪瑞泰品質關由未過轉為通過",
-   false
+   false,
+   "value"
   ],
   [
    "1802",
    "個股RS(60日)重新站回自身60日均線之上",
-   false
+   false,
+   "value"
   ],
   [
    "3264",
    "商業服務籃子RS-Momentum跌破100（原102.54，轉弱）",
-   false
+   false,
+   "value"
   ],
   [
    "3265",
    "商業服務籃子RS-Momentum跌破100（現102.54）視為籃子轉弱訊號",
-   false
+   false,
+   "value"
   ],
   [
    "6830",
    "SuperTrend由多頭翻空頭（趨勢轉空）",
-   false
+   false,
+   "value"
   ],
   [
    "6830",
    "商業服務籃子跌出improving/leading象限（轉回weakening或lagging）",
-   false
+   false,
+   "value"
   ],
   [
    "6830",
    "RS(60日)由未跌破轉為跌破",
-   false
+   false,
+   "value"
   ],
   [
    "ADM",
    "製程工業籃子RS-Momentum跌破100，產業轉強訊號失效",
-   false
+   false,
+   "value"
   ],
   [
    "AMD",
    "下一季營收季增未達共識隱含要求+26%",
-   true
+   true,
+   "value"
   ],
   [
    "CAMT",
    "單季營收年增/季增未達成共識所需的季增+29%（下次財報查證）",
-   false
+   false,
+   "value"
   ],
   [
    "CI",
    "單季營收未達季增3%（低於季均73.5B）",
-   true
+   true,
+   "value"
   ],
   [
    "CLS",
    "單季營收季增未達共識隱含+26%（下次財報查證）",
-   true
+   true,
+   "value"
   ],
   [
    "CTAS",
    "洪瑞泰品質關由「未過」轉為「通過」",
-   false
+   false,
+   "value"
   ],
   [
    "CTAS",
    "個股SuperTrend由翻空轉為重新翻多",
-   false
+   false,
+   "value"
   ],
   [
    "ELV",
    "個股SuperTrend由空翻多（趨勢訊號轉多）",
-   false
+   false,
+   "value"
   ],
   [
    "ELV",
    "所屬產業籃子健康服務跌出leading象限",
-   false
+   false,
+   "value"
   ],
   [
    "HUBB",
    "剩餘兩季營收季增未達+6%，未達成分析師隱含成長要求",
-   false
+   false,
+   "value"
   ],
   [
    "HUM",
    "SuperTrend訊號由空翻多（技術面轉為支持進場）",
-   false
+   false,
+   "value"
   ],
   [
    "HUM",
    "健康服務籃子跌出leading象限（轉為weakening或lagging）",
-   false
+   false,
+   "value"
   ],
   [
    "HUM",
    "洪瑞泰品質關卡由未過轉為通過（估值材料重新變得可用）",
-   false
+   false,
+   "value"
   ],
   [
    "JCI",
    "第4季營收未達季增+6%(未達約70億美元,跌破共識隱含門檻)",
-   false
+   false,
+   "value"
   ],
   [
    "LH",
    "下季營收未達約3.7B（未能季增打平，成長不如預估要求）",
-   true
+   true,
+   "value"
   ],
   [
    "LIN",
    "製程工業籃子RS-Momentum跌破100（產業動能轉弱）",
-   false
+   false,
+   "value"
   ],
   [
    "MCK",
    "單季營收季增轉負，跌破預估前提要求的+3%假設",
-   true
+   true,
+   "value"
   ],
   [
    "NTR",
    "產業籃子RS-Ratio與RS-Momentum同時跌破100（轉為lagging象限）",
-   false
+   false,
+   "value"
   ],
   [
    "NTR",
    "SuperTrend由多頭翻轉為空頭（趨勢失效訊號觸發）",
-   false
+   false,
+   "value"
   ],
   [
    "NXT",
    "單季營收季增率達到約+21%(挑戰自身歷史最高+6%的紀錄)",
-   false
+   false,
+   "value"
   ],
   [
    "NXT",
    "全年營收明顯低於4.3B共識,顯示分析師需大幅下修",
-   false
+   false,
+   "value"
   ],
   [
    "ONTO",
    "剩餘兩季單季營收季增低於17%，未達共識要求進度",
-   false
+   false,
+   "value"
   ],
   [
    "RELX",
    "洪瑞泰品質關轉為通過（目前判定為未過/失效）",
-   false
+   false,
+   "value"
   ],
   [
    "RUN",
    "單季營收低於季均US$0.8B（未達共識隱含-10%季增下限）",
-   false
+   false,
+   "value"
   ],
   [
    "SHOP",
    "商業服務籃子RS-Ratio跌破100（脫離leading象限）",
-   false
+   false,
+   "value"
   ],
   [
    "SHW",
    "SuperTrend由多頭轉為空頭排列（技術面翻空）",
-   false
+   false,
+   "value"
   ],
   [
    "SHW",
    "所屬產業籃子「製程工業」由improving轉為weakening或lagging象限",
-   false
+   false,
+   "value"
   ],
   [
    "SHW",
    "洪瑞泰品質關由未過轉為通過（品質關解除失效）",
-   false
+   false,
+   "value"
   ],
   [
    "SPGI",
    "洪瑞泰品質關由未過轉為通過（下次資料更新時查證）",
-   false
+   false,
+   "value"
   ],
   [
    "XYZ",
    "單季營收低於6.7B，未達支撐全年共識26.1B所需季增速度",
-   true
+   true,
+   "value"
   ]
  ],
  "healthy": {
