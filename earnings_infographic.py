@@ -190,6 +190,36 @@ def fetch(ticker: str) -> dict:
             d["capex"] = tw_core["capex"]
             d["fcf"] = tw_core["fcf"]
 
+    # 美股核心卡疊 SEC EDGAR（2026-08-31，Leo：「網頁財報分析 2 天內做深入分析」）。
+    # 跟上面台股走 FinMind 完全同一個模式：**只在 EDGAR 真的比較新的時候才覆蓋**，
+    # 拿不到或不夠新就維持 yfinance，所以不會比改之前差。
+    # 為什麼需要：yfinance 的 quarterly_income_stmt 在財報剛公布時慢好幾天——
+    # 實測 MRVL 8/27 公布、D+4 還是上一季；NVDA 8/26 公布、D+5 還是上一季。
+    # SEC 10-Q 則是 9/11 檔 D+0~D+1 就有。細節與三個坑見 sec_quarterly.py。
+    # 反例保留：GLW 的 10-Q 7/29 就送了但 XBRL 33 天沒進 companyfacts，
+    # 那種情況這裡條件不成立、自動用 yfinance——兩邊失敗的公司不一樣，疊起來才完整。
+    if not tw_code:
+        try:
+            from sec_quarterly import quarterly_us
+            us_core = quarterly_us(ticker.upper())
+        except Exception as e:
+            print(f"（EDGAR 取用失敗，改用 yfinance：{e}）")
+            us_core = None
+        if us_core and us_core["cur_date"] > d["period_end"]:
+            cd2 = date.fromisoformat(us_core["cur_date"])
+            d["quarter"] = f"Q{(cd2.month - 1)//3 + 1} {cd2.year}"
+            d["period_end"] = us_core["cur_date"]
+            d["yoy_period"] = us_core["yoy_date"] or d["yoy_period"]
+            d["partial_yoy"] = us_core["partial_yoy"]
+            for fld in ("revenue", "gross", "op_income", "net_income",
+                        "eps", "ocf", "capex", "fcf"):
+                # 該科目 EDGAR 沒有就保留 yfinance 的（例如 GOOG 沒有 GrossProfit），
+                # 不要用 None 把原本有的數字蓋掉
+                if us_core[fld]["cur"] is not None:
+                    d[fld] = us_core[fld]
+            d["source_note"] = f"SEC EDGAR 10-Q（{us_core['cur_date']}）"
+
+
     # 毛利率 / 營益率（自己算，不靠 info 的口徑）
     rev = d["revenue"]["cur"]
     if rev:
