@@ -67,34 +67,40 @@ def run():
                 pass
 
     date = time.strftime("%Y-%m-%d")
-    triggered, near, pending_metric, healthy = [], [], [], 0
+    triggered, near, pending_metric = [], [], []
+    healthy = {"held": 0, "watch": 0}
     for tk, entry in reg.items():
         px = prices.get(tk)
+        # 2026-08-31 修：thesis_conditions.json 登錄時本來就有記 held（投資長 P0 擴充後
+        # 非持股的進場評估也會登錄失效條件），但這裡完全沒讀它，結果 48 檔裡 41 檔
+        # 非持股的全被推進「🔒持股密報」——Leo 反饋「也推了不是持股的？」。
+        # 帶著 held 往下傳，日報才能分流（持股→密報、非持股→公開版）。
+        _h = bool(entry.get("held"))
         for c in entry.get("conditions", []):
             if c.get("status") == "triggered":
                 continue                      # 已觸發過的不重複報
             ctype, val = c.get("type"), c.get("value")
             if ctype == "metric" or not val:
-                pending_metric.append((tk, c.get("desc", "")))
+                pending_metric.append((tk, c.get("desc", ""), _h))
                 continue
             if px is None:
                 continue                      # 抓不到價，這條今天跳過（不硬判）
             if ctype == "price_below":
                 if px <= val:
                     c["status"], c["triggered_date"] = "triggered", date
-                    triggered.append((tk, f"跌破失效線 {val}（現價 {px:.2f}）｜{c.get('desc','')}"))
+                    triggered.append((tk, f"跌破失效線 {val}（現價 {px:.2f}）｜{c.get('desc','')}", _h))
                 elif (px - val) / val <= NEAR_PCT:
-                    near.append((tk, f"距失效線 {val} 僅 {(px-val)/val*100:.1f}%（現價 {px:.2f}）"))
+                    near.append((tk, f"距失效線 {val} 僅 {(px-val)/val*100:.1f}%（現價 {px:.2f}）", _h))
                 else:
-                    healthy += 1
+                    healthy["held" if _h else "watch"] += 1
             elif ctype == "price_above":
                 if px >= val:
                     c["status"], c["triggered_date"] = "triggered", date
-                    triggered.append((tk, f"升破失效線 {val}（現價 {px:.2f}）｜{c.get('desc','')}"))
+                    triggered.append((tk, f"升破失效線 {val}（現價 {px:.2f}）｜{c.get('desc','')}", _h))
                 elif (val - px) / val <= NEAR_PCT:
-                    near.append((tk, f"距失效線 {val} 僅 {(val-px)/val*100:.1f}%（現價 {px:.2f}）"))
+                    near.append((tk, f"距失效線 {val} 僅 {(val-px)/val*100:.1f}%（現價 {px:.2f}）", _h))
                 else:
-                    healthy += 1
+                    healthy["held" if _h else "watch"] += 1
 
     json.dump(reg, open(REG_PATH, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     out = {"date": date, "triggered": [list(x) for x in triggered],
