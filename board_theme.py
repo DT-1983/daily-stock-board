@@ -38,6 +38,7 @@ NAV = [
     ("buffett", "buffett", "巴菲特清單", "buffett.html"),
     ("portfolio", "portfolio", "策略賽馬", "portfolios.html"),
     ("earnings", "earnings", "財報分析", "earnings.html"),
+    ("chip", "activity", "籌碼異動", "chip.html"),
     ("gdp", "gdp", "GDP 觀察", "gdp.html"),
     ("ark", "ark", "ARK 追蹤", "ark.html"),
 ]
