@@ -116,10 +116,13 @@ def sec1_market(notes):
         else:
             continue
         (us if (it.get("grp") == "US" and pct is not None) else tw).append(part)
-    if us:
-        lines.append("🇺🇸 " + "｜".join(us[:4]))
-    if tw:
-        lines.append("🇹🇼 " + "｜".join(tw[:4]))
+    # 2026-09-01 Leo：「大盤可以一個指數一段嗎？」——原本 4 個指數用「｜」串一行，
+    # 手機一行放得下約 20 字，4 個指數會折成 3 行且斷在奇怪的地方（實測截圖）。
+    # 改成一個指數一行：行數變多但每行都完整，掃視反而快。
+    for p_ in us[:4]:
+        lines.append("🇺🇸 " + p_)
+    for p_ in tw[:4]:
+        lines.append("🇹🇼 " + p_)
 
     # 🌡️ 大盤體溫計（P2，2026-08-27）：電金比 vs 100MA。只報狀態不下行動指令——
     # 老墨的「連N日轉弱→清倉」門檻是他自己系統的規則，我們沒有對應回測依據
@@ -137,10 +140,13 @@ def sec1_market(notes):
     # （每天都有、純排序），researcher_industry 講「為什麼會翻象限」（有翻才寫、
     # 值得花 AI 額度）。
     try:
-        from chain_technicals import overview_line as _rot
+        from chain_technicals import overview_line as _rot, bears_line as _bear
         r = _rot()
         if r:
             lines.append(r)
+        b = _bear()
+        if b:
+            lines.append(b)      # 獨立一段（Leo 2026-09-01）
     except Exception:
         pass
 
