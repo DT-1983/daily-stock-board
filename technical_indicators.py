@@ -53,6 +53,38 @@ _BENCHMARK_NAME = {"^TWII": "台股加權指數", "^GSPC": "S&P 500"}
 
 # ── 雙重颱風K線：SuperTrend 的 SMA-ATR 變體 ──────────────────────────
 
+def typhoon_state(closes, vols, dt_dir, n=20):
+    """雙重颱風的三態顏色：1=紅(偏多) / -1=綠(偏空) / 0=黃(不明)。
+
+    官方定義（mophyfei/MOFI_XQ「DOUBLE TYPHOON 雙重颱風 K 線」README）：
+      紅＝市場偏多、綠＝市場偏空、黃＝偏不明；
+      「之所以叫雙重，是因為要**同時通過兩道關卡**確認才會判成偏多或偏空，
+        只要兩邊沒有一致，就會亮黃燈。」
+    燈 3「雙重颱風不為綠」＝ 不是偏空 → 紅與黃都算亮。
+
+    ⚠️⚠️ **第二道關卡是逆向推導的，不是官方公開的定義。**
+    .xsb 實測是加密二進位（39% 可讀、抽出的字串全是亂碼），還原不出邏輯。
+    這裡用「20 日平均成本(VWAP) 的走向」當第二道，理由與驗證：
+      · 官方參數表寫「**成本**計算天數 預設 20」——「成本」對應 VWAP，
+        而 VWAP 已經實測對上老墨的 135.95（收盤 20MA 是 133.78，差 1.6%）
+      · 用 Leo 提供的三個有標示的截圖案例反推，三個全中：
+          9939 2026-08-26  第一道空 × VWAP20↑ → 不一致 → 黃   （老墨：不明）✅
+          9939 2024-12-16  第一道空 × VWAP20↓ → 一致   → 綠   （老墨：弱勢）✅
+          8996 2026-08-26  第一道多 × VWAP20↑ → 一致   → 紅   （老墨：強勢）✅
+      · 另外兩個候選（RS60、收vs前一根）被 8996 那個案例排除；
+        「SMA20 走向」同樣三個全中，**目前無法與 VWAP 版區分**——
+        要區分得找到兩者走向相反、且老墨有標示的日子。
+    → 樣本只有 3 個。看到跟老墨畫面不一致時，**先懷疑這裡**。
+    """
+    if dt_dir is None or len(closes) < n + 2:
+        return None
+    vw = _vwap(closes, vols, n)
+    if vw[-1] is None or vw[-2] is None:
+        return None
+    second = 1 if vw[-1] > vw[-2] else -1
+    return dt_dir if dt_dir == second else 0
+
+
 def double_typhoon(highs, lows, closes, period=10, mult=3.0):
     n = len(closes)
     if n < period + 1:
@@ -478,7 +510,8 @@ def build(ticker, disp_days=756):
             ("壓力歷史延續機率", f"{st_stats['prob_down']:.1f}%" if st_stats and st_stats.get('prob_down') else None),
         ])
         + _rows("雙重颱風 K 線", [
-            ("方向", ("多頭" if dt_dir == 1 else "空頭") if dt_dir is not None else None),
+            ("顏色狀態", {1: "🔴 紅／偏多", -1: "🟢 綠／偏空", 0: "🟡 黃／不明"}.get(
+                typhoon_state(closes, vols, dt_dir))),
             ("20 日平均成本", _n(_ma20)),
             ("收盤相對成本", ("在成本之上" if closes[-1] >= _ma20 else "在成本之下") if _ma20 else None),
         ])
