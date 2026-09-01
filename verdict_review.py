@@ -135,7 +135,14 @@ def evaluate(r, angle):
     res["ret"] = round((last / base - 1) * 100, 2)
 
     # first_hit：論點失效價有沒有在窗口內真的被觸發（用當日高低點，不是收盤價）
-    inv = a.get("invalidation_price")
+    # 2026-09-01 起改讀 invalidation_level（純數字）。舊資料只有
+    # invalidation_price（string），而且 90/90 全是「無法給出失效價」的說明文字
+    # ——那不是 AI 的問題，是當時材料沒給 SuperTrend 線的數值，已修。
+    # 這裡保留對舊欄位的相容：萬一它剛好是數字也收。
+    inv = a.get("invalidation_level")
+    if inv is None:
+        old_inv = a.get("invalidation_price")
+        inv = old_inv if isinstance(old_inv, (int, float)) else None
     if isinstance(inv, (int, float)) and inv:
         lo, hi = win["Low"].min(), win["High"].max()
         if res["dir"] == "bull":
