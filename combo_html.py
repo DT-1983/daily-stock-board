@@ -255,7 +255,7 @@ def build(d):
                 f'共 {len(notgt)} 檔</small></div>' + _table(notgt))
     body.append(FILTER_JS)
     body.append("</div>")
-    return (header("activity", "COMBO 打點",
+    return (header("lamp", "進出燈號",
                    f'四燈共振 × 風報比　·　資料日 {esc(d.get("date",""))}', NAV, "combo")
             + NL.join(body))
 
@@ -274,7 +274,13 @@ def main():
         attach_charts(d["rows"], limit=a.chart_limit)
     html = ("<!doctype html><html lang=\"zh-Hant\"><head><meta charset=\"utf-8\">"
             "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
-            "<title>COMBO 打點</title><style>" + BASE_CSS + CSS + _ti_css() + "</style></head><body>"
+            "<title>進出燈號</title>"
+            # 🔴 一定要載 Chart.js：technical_indicators 產的是「畫圖的程式碼」，
+            #    不是圖片。少了這行整頁 240 個 Chart() 全部 ReferenceError，
+            #    版面看起來正常但圖表區永遠空白（財報卡有載，這頁原本漏了）。
+            "<script src=" + chr(34) + "https://cdn.jsdelivr.net/npm/chart.js@4"
+            + chr(34) + "></script>"
+            "<style>" + BASE_CSS + CSS + _ti_css() + "</style></head><body>"
             + build(d) + "</body></html>")
     os.makedirs(os.path.dirname(a.output) or ".", exist_ok=True)
     io.open(a.output, "w", encoding="utf-8", newline=NL).write(html)

@@ -23,6 +23,10 @@ ICONS = {
     "earnings": '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/>',
     "ark": '<path d="M3 3v18h18"/><path d="m7 14 4-5 3 3 5-7"/>',
     "rotation": '<circle cx="12" cy="12" r="3"/><path d="M12 3a9 9 0 0 1 8.5 6M21 12a9 9 0 0 1-8.5 6M3 12a9 9 0 0 1 3-6.7M6 20.7A9 9 0 0 1 3 14"/>',
+    # 進出燈號＝交通號誌（三顆燈）：直接對應「亮幾燈」這件事
+    "lamp": '<rect x="7" y="2" width="10" height="20" rx="5"/><circle cx="12" cy="7" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="17" r="1.6"/>',
+    # 籌碼異動＝疊起來的籌碼／代幣
+    "chip": '<ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v5c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 11v5c0 1.7 3.6 3 8 3s8-1.3 8-3v-5"/>',
     "back": '<path d="M19 12H5M12 19l-7-7 7-7"/>',
     "chevron": '<path d="M9 18l6-6-6-6"/>',
     "close": '<path d="M18 6 6 18M6 6l12 12"/>',
@@ -38,8 +42,8 @@ NAV = [
     ("buffett", "buffett", "巴菲特清單", "buffett.html"),
     ("portfolio", "portfolio", "策略賽馬", "portfolios.html"),
     ("earnings", "earnings", "財報分析", "earnings.html"),
-    ("combo", "activity", "COMBO 打點", "combo.html"),
-    ("chip", "activity", "籌碼異動", "chip.html"),
+    ("combo", "lamp", "進出燈號", "combo.html"),
+    ("chip", "chip", "籌碼異動", "chip.html"),
     ("gdp", "gdp", "GDP 觀察", "gdp.html"),
     ("ark", "ark", "ARK 追蹤", "ark.html"),
 ]
