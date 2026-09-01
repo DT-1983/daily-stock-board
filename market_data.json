@@ -1,53 +1,53 @@
 {
- "updated": "2026-08-31 23:02",
+ "updated": "2026-09-01 08:47",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
    "date": "08/31",
-   "close": 7678.8,
-   "chg_pct": -0.43
+   "close": 7686.14,
+   "chg_pct": -0.33
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
    "date": "08/31",
-   "close": 26308.93,
-   "chg_pct": -0.35
+   "close": 26370.89,
+   "chg_pct": -0.12
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
    "date": "08/31",
-   "close": 53231.96,
-   "chg_pct": -0.61
+   "close": 53185.9,
+   "chg_pct": -0.7
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
    "date": "08/31",
-   "close": 11485.43,
-   "chg_pct": 0.14
+   "close": 11535.05,
+   "chg_pct": 0.57
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "08/31",
-   "close": 46128.47,
-   "chg_pct": -0.44
+   "date": "08/28",
+   "close": 46331.45,
+   "chg_pct": 0.77
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "08/31",
+   "date": "09/01",
    "close": 31.67,
-   "chg_pct": 0.02
+   "chg_pct": 0.15
   },
   {
    "sym": "^TNX",
@@ -56,69 +56,69 @@
    "date": "08/31",
    "close": 4.76,
    "fmt": "yield",
-   "chg_bp": 4.0
+   "chg_bp": 3.8
   }
  ],
  "news": [
   {
-   "title": "OpenAI找到新金雞母！ChatGPT廣告一年可望進帳10億美元",
+   "title": "川普最新表態：伊朗淪失敗國家 已經死了",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6593123",
-   "ts": "08/31 23:00"
+   "url": "https://news.cnyes.com/news/id/6593369",
+   "ts": "09/01 08:45"
   },
   {
-   "title": "AI ASIC進入放量初期，先進製程接案能力成為供應鏈關鍵",
+   "title": "新興股市創22年來最強8月漲幅！「美元貶值交易」是主要推手 9月面臨Fed升息大考",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6593189",
-   "ts": "08/31 22:30"
+   "url": "https://news.cnyes.com/news/id/6593341",
+   "ts": "09/01 08:40"
   },
   {
-   "title": "油價降不下來！美伊戰火恐讓明年續守每桶80美元",
+   "title": "美股重點新聞摘要2026年9月1日",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6593038",
-   "ts": "08/31 22:30"
+   "url": "https://news.cnyes.com/news/id/6592980",
+   "ts": "09/01 08:30"
   },
   {
-   "title": "習近平見普丁 稱國際形勢難預料因素明顯增多",
+   "title": "ChatGPT每週活躍用戶突破10億人，Ads上線不到200天年化營收達10億美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6593179",
-   "ts": "08/31 22:29"
+   "url": "https://news.cnyes.com/news/id/6593421",
+   "ts": "09/01 08:30"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：Oklo Inc. Class A(OKLO-US)EPS預估下修至-0.97元，預估目標價為80.00元",
+   "title": "鉅亨速報 - Factset 最新調查：國泰金(2882-TW)EPS預估上修至8.53元，預估目標價為115元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6593374",
+   "ts": "09/01 08:10"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：南亞科(2408-TW)目標價調升至617.5元，幅度約4.66%",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6593373",
+   "ts": "09/01 08:10"
+  },
+  {
+   "title": "美通膨預期會失控嗎？高盛研究揭三大關鍵結論",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6593178",
-   "ts": "08/31 22:15"
+   "url": "https://news.cnyes.com/news/id/6593290",
+   "ts": "09/01 08:10"
   },
   {
-   "title": "聯發科搶XPU、輝達賣整套 黃仁勳首揭AI兩強結盟盤算",
+   "title": "〈台股盤前要聞〉9月開局捍衛4萬6、輝達砸35億美元認購聯發科ECB",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6593156",
-   "ts": "08/31 21:53"
+   "url": "https://news.cnyes.com/news/id/6589725",
+   "ts": "09/01 05:10"
   },
   {
-   "title": "輝達砸35億美元認購聯發科ECB 結盟進軍AI工廠、客製化XPU",
+   "title": "材料-KY去年下半年3.05元股息訂9/16除息交易",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6593121",
-   "ts": "08/31 21:17"
+   "url": "https://news.cnyes.com/news/id/6593111",
+   "ts": "08/31 23:53"
   },
   {
-   "title": "輝達豪砸35億美元投資聯發科！黃仁勳押注台灣晶片大廠",
+   "title": "輝達35億美元入股聯發科NVLink開放客製AI晶片新戰局",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6593110",
-   "ts": "08/31 20:59"
-  },
-  {
-   "title": "貿協率華碩、創見登史國參展 展現AI與綠色農業助攻非洲市場",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6593052",
-   "ts": "08/31 20:11"
-  },
-  {
-   "title": "〈凱基金法說〉ONE KGI展綜效 楊文鈞：銀證互相導客帶入逾600億元利潤",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6593018",
-   "ts": "08/31 20:08"
+   "url": "https://news.cnyes.com/news/id/6593217",
+   "ts": "08/31 23:30"
   }
  ],
  "inst": {
