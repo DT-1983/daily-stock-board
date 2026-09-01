@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-01 13:21",
+ "updated": "2026-09-01 17:12",
  "indices": [
   {
    "sym": "^GSPC",
@@ -7,7 +7,7 @@
    "grp": "US",
    "date": "08/31",
    "close": 7686.14,
-   "chg_pct": -0.58
+   "chg_pct": -0.33
   },
   {
    "sym": "^IXIC",
@@ -15,7 +15,7 @@
    "grp": "US",
    "date": "08/31",
    "close": 26370.89,
-   "chg_pct": -0.64
+   "chg_pct": -0.12
   },
   {
    "sym": "^DJI",
@@ -23,7 +23,7 @@
    "grp": "US",
    "date": "08/31",
    "close": 53185.9,
-   "chg_pct": -0.72
+   "chg_pct": -0.7
   },
   {
    "sym": "^SOX",
@@ -31,23 +31,23 @@
    "grp": "US",
    "date": "08/31",
    "close": 11535.05,
-   "chg_pct": -2.92
+   "chg_pct": 0.57
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
    "date": "09/01",
-   "close": 46887.29,
-   "chg_pct": 1.65
+   "close": 46948.72,
+   "chg_pct": 1.78
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/01",
-   "close": 31.63,
-   "chg_pct": 0.0
+   "close": 31.67,
+   "chg_pct": 0.15
   },
   {
    "sym": "^TNX",
@@ -56,75 +56,75 @@
    "date": "08/31",
    "close": 4.76,
    "fmt": "yield",
-   "chg_bp": 8.6
+   "chg_bp": 3.8
   }
  ],
  "news": [
   {
-   "title": "矽晶圓3年多來首見6、8、12吋全面漲價！AI算力需求爆發",
+   "title": "法人最新看法出爐！輝達35億美元入股聯發科，AI ASIC成長預期再升溫",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6593752",
-   "ts": "09/01 13:14"
+   "url": "https://news.cnyes.com/news/id/6594134",
+   "ts": "09/01 17:00"
   },
   {
-   "title": "淡化美升息施壓！日財長：已與美財長確認將續採協調一致的外匯行動",
+   "title": "〈港股盤後〉科技股領跌 恒指連二黑 希音首日破發",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6593804",
-   "ts": "09/01 12:20"
+   "url": "https://news.cnyes.com/news/id/6594025",
+   "ts": "09/01 16:50"
   },
   {
-   "title": "貝森特對俄放話「戰爭不結束什麼都不可能」！俄羅斯想獲經濟紓困需先停戰",
+   "title": "AI兩週造出真晶片！OpenAI驚爆「人類看不懂AI程式碼」、輝達CUDA護城河面臨新挑戰",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6593376",
-   "ts": "09/01 12:20"
+   "url": "https://news.cnyes.com/news/id/6593925",
+   "ts": "09/01 16:40"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：長榮航太(2645-TW)目標價調升至249元，幅度約7.79%",
+   "title": "統一超釋出逾5000名門市夥伴職缺 百位儲備幹部職年薪有望破百萬",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6593877",
-   "ts": "09/01 12:10"
+   "url": "https://news.cnyes.com/news/id/6594087",
+   "ts": "09/01 16:37"
   },
   {
-   "title": "戴爾今年狂飆265%還能漲？輝達、SpaceX成新推手",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6593311",
-   "ts": "09/01 12:10"
-  },
-  {
-   "title": "百億美元帳面收益灌進財報 華爾街對AI浮盈大敲警鐘",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6593841",
-   "ts": "09/01 12:05"
-  },
-  {
-   "title": "OpenAI、Anthropic也加入搶購潮 蘋果Mac mini成AI產業首選裝置",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6593355",
-   "ts": "09/01 12:00"
-  },
-  {
-   "title": "〈焦點股〉獲利爆發+法說行情！凱基金、台新新光金大漲改寫新天價",
+   "title": "無畏台股高盤震盪！聯博00984D強勢「吸金」規模飆7倍 奪全台首檔百億主動債ETF",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6593840",
-   "ts": "09/01 11:58"
+   "url": "https://news.cnyes.com/news/id/6594060",
+   "ts": "09/01 16:37"
   },
   {
-   "title": "〈焦點股〉亞力在手訂單達130億元創高 走揚拚站穩5日線",
+   "title": "仁寶攜HUMAIN深化AI布局 跨足雲端、邊緣與實體AI智慧運算平台",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6593815",
-   "ts": "09/01 11:41"
+   "url": "https://news.cnyes.com/news/id/6593835",
+   "ts": "09/01 16:36"
   },
   {
-   "title": "研華邊緣、實體A雙軸並進 布局半導體三大應用",
+   "title": "國泰投信利關人交易違規案 金管會重罰600萬元、1年內禁發海外基金或ETF",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6593787",
-   "ts": "09/01 11:24"
+   "url": "https://news.cnyes.com/news/id/6594088",
+   "ts": "09/01 16:26"
+  },
+  {
+   "title": "美債市場上演8月驚魂記 為何救得越猛跌得越狠？",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6594043",
+   "ts": "09/01 16:10"
+  },
+  {
+   "title": "日本10年債殖利率衝3%創30年新高！日元疲弱加劇日銀升息壓力",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6593992",
+   "ts": "09/01 15:40"
+  },
+  {
+   "title": "Anthropic陷「史上規模最大」智慧財產權竊盜之一！索尼、華納聯手起訴",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6593753",
+   "ts": "09/01 15:30"
   }
  ],
  "inst": {
-  "date": "08/31",
-  "total_yi": -258.5,
-  "foreign_yi": -143.9,
-  "trust_yi": -40.0
+  "date": "09/01",
+  "total_yi": 561.4,
+  "foreign_yi": 267.1,
+  "trust_yi": 131.0
  }
 }
