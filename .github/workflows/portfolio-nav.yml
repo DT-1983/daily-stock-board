@@ -60,9 +60,17 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add portfolios.json docs/portfolios.html
           git commit -m "chore: 模擬倉每日淨值更新 [skip ci]" || echo "無變化（沒有檔案異動）"
-          # push 失敗＝整趟白跑且不會自我修復，必須讓人知道，不能只 echo 一句
-          if ! git push; then
-            echo "::error::push 失敗，這次的更新沒有上線"
+          # push 失敗＝整趟白跑且不會自我修復，必須讓人知道，不能只 echo 一句。
+          # 2026-09-01 修：8/27 給 tw-board/market-home/weekly-screen 加的 rebase 重試
+          # 唯獨漏掉這支 → 本機同時段 push 一次撞車就整批丟掉（9/1 09:00 就是這樣掛的）。
+          ok=""
+          for i in 1 2 3; do
+            if git push; then ok=1; break; fi
+            echo "push 被拒（第 $i 次），rebase 遠端後重試"
+            git pull --rebase || break
+          done
+          if [ -z "$ok" ]; then
+            echo "::error::push 失敗 3 次，這次的更新沒有上線"
             curl -sS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
               -d chat_id="${TELEGRAM_CHAT_ID}" -d parse_mode=HTML \
               -d text="🔴 <b>模擬倉 push 失敗</b>%0A數字算好了但沒推上線，網站看到的還是舊的。" >/dev/null || true
