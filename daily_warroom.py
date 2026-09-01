@@ -548,7 +548,24 @@ def main():
         for part, persona in (("research", "龐統"), ("chief", "孔明")):
             msg = compose(scope=scope, part=part)
             if not msg:
-                print(f"[{ch}/{part}] 今天沒有實質內容，不發")
+                # 2026-09-01 Leo：「投資長在持股密報可以推一個今日無消息的訊息嗎？」
+                # ——原本沒內容就整則不發，於是「今天持股真的沒事」跟「投資長掛了/
+                # 批次沒跑」在 Discord 上長得一模一樣（今天 08:45 就是這樣，Leo 以為壞了）。
+                # 跟 stocks_forum 的心跳同一個道理：**沒消息也要說一聲沒消息**。
+                # 只在持股密報的投資長那則補心跳——#每日戰情是公開頻道，
+                # 每天多一則「無事」是雜訊；而持股密報是 Leo 每天在等的那一則。
+                if ch == "private" and part == "chief":
+                    hb = (f"# 🧭 持股判斷 · {datetime.date.today():%Y-%m-%d}"
+                          + NL + "今日持股無新事件，投資長不出手。"
+                          + NL + "-# 沒有持股被觸發（產業翻象限／個股訊號／到俗價都沒發生）。"
+                            "這是「已檢查、無事」，不是漏推。")
+                    if args.dry_run:
+                        print(f"\n───── {ch} / {persona}（心跳）─────\n{hb}")
+                    else:
+                        print(f"[{ch}/{part}→{persona}] 心跳",
+                              send_discord(ch, hb, persona=persona))
+                else:
+                    print(f"[{ch}/{part}] 今天沒有實質內容，不發")
                 continue
             if args.dry_run:
                 print(f"\n───── {ch} / {persona} ─────\n{msg}")

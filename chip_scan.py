@@ -50,6 +50,7 @@ TPEX_URL = "https://www.tpex.org.tw/www/zh-tw/insti/dailyTrade"
 # 那就不叫異常了——跟今天 base_rate 犯的同一個錯（門檻太寬沒鑑別度），
 # 這次先跑 calibrate() 看分布再訂。
 ANOMALY_MULT = 5.0        # 當日 |買賣超| > 近20日平均絕對值 × 這個倍數 → 異常
+DAILY_LOOKBACK = 5      # 每日跑往回補幾個日曆日（涵蓋週末+連假）
 MIN_HISTORY = 10          # 少於這麼多天歷史就不判異常（算不出穩定的基準）
 # 連續天數門檻同樣用實測分布訂（2026-08-28）：
 #   連買 ≥3天 60檔、≥4天 30檔、≥5天 13檔｜連賣 ≥3天 45檔、≥4天 30檔、≥5天 18檔
@@ -122,9 +123,19 @@ def fetch_day(date_str):
     tp = fetch_tpex(date_str)
     if tw is None and tp is None:
         return {}, False           # 兩邊都被擋 → 這天沒抓到，不要記成「沒資料」
+    # 2026-09-01：原本只要有一邊成功就當整天完成存進歷史。實測 8/31 就這樣只存到
+    # 上市 1,085 檔（櫃買當下 SSL 失敗），少掉 782 檔上櫃股——而歷史一旦寫入就
+    # 不再重抓，那天的上櫃籌碼永遠是缺的。半套資料比沒有更糟：它會讓「異常」
+    # 的分母（近20日平均）失真，卻看不出來。
+    # 改成任一邊失敗就整天判定未完成（ok=False），下次重抓。
+    # 非交易日兩邊都會回**空 dict 而不是 None**，所以不受影響。
+    if tw is None or tp is None:
+        which = "證交所" if tw is None else "櫃買"
+        print(f"  {date_str} {which}抓取失敗，整天不寫入（避免存半套資料），下次重抓")
+        return {}, False
     merged = {}
-    merged.update(tw or {})
-    merged.update(tp or {})
+    merged.update(tw)
+    merged.update(tp)
     return merged, True
 
 
@@ -145,16 +156,29 @@ def collect(dates):
     hist = _load(HIST_PATH, {})
     names = _load(NAMES_PATH, {})
     added = 0
+    today = dt.date.today()
     for d in dates:
         key = d.isoformat()
-        if key in hist:
-            continue
+        if hist.get(key):
+            continue               # 已經有**實際資料**才跳過（空的要留著重試，見下）
         data, ok = fetch_day(d.strftime("%Y%m%d"))
         if not ok:
             print(f"  {key} 抓取被擋，跳過（下次會再試）")
             continue
         if not data:
-            hist[key] = {}         # 非交易日：記成空的，不再重抓
+            # 2026-09-01 修：原本無條件 `hist[key] = {}` 當成非交易日永久記下來。
+            # 但**「當天資料還沒公布」跟「非交易日」都回空**——而批次在 08:45 跑、
+            # 證交所要收盤後才發當日籌碼，所以每天抓「今天」必然是空的，
+            # 然後被永久標記成沒資料、再也不重抓。
+            # 實測後果：chip_scan 8/29 上線後**每日收集從來沒成功過一次**，
+            # 8/31 有資料卻整天被跳過，events 一直停在 8/28（8/24~28 是當初
+            # --backfill 補的），而它每天照印「✅ N 筆籌碼異常」exit 0。
+            # 修法：只有**過去的日期**才敢認定是非交易日；今天/未來一律不寫，
+            # 留給明天重抓。同 [[cache_negative_result_bug]]。
+            if d < today:
+                hist[key] = {}     # 過去的日期還是空 → 真的是非交易日/休市
+            else:
+                print(f"  {key} 尚未公布（當日資料收盤後才有），不寫入，明天重抓")
             continue
         hist[key] = {c: v for c, (n, v) in data.items()}
         names.update({c: n for c, (n, v) in data.items()})
@@ -300,8 +324,15 @@ def main():
         print(f"補歷史 {len(ds)} 個工作日…")
         collect(sorted(ds))
     else:
-        d = dt.datetime.strptime(a.date, "%Y%m%d").date() if a.date else today
-        collect([d])
+        if a.date:
+            collect([dt.datetime.strptime(a.date, "%Y%m%d").date()])
+        else:
+            # 2026-09-01：原本只抓 `today`，但 08:45 跑的時候當日資料還沒公布，
+            # 等於每天都抓空的。改成回溯 DAILY_LOOKBACK 個日曆日——昨天(或上週五)
+            # 的資料這時候一定有了。已經有資料的日期會在 collect() 裡被跳過，
+            # 所以多抓幾天幾乎不花時間。
+            ds = [today - dt.timedelta(days=i) for i in range(DAILY_LOOKBACK)]
+            collect(sorted(d for d in ds if d.weekday() < 5))
 
     if a.calibrate:
         calibrate()
