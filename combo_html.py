@@ -28,7 +28,7 @@ NL = chr(10)
 Q = chr(39)
 
 CSS = """
-.cbwrap{max-width:1180px;margin:0 auto;padding:0 14px 60px}
+.cbwrap{padding:0}   /* 外層已經有 .wrap 限寬置中，這裡不要再限一次 */
 .cbstat{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 6px}
 .cbstat div{background:var(--card);border:1px solid var(--line);border-radius:10px;
   padding:10px 14px;min-width:120px}
@@ -281,7 +281,10 @@ def main():
             "<script src=" + chr(34) + "https://cdn.jsdelivr.net/npm/chart.js@4"
             + chr(34) + "></script>"
             "<style>" + BASE_CSS + CSS + _ti_css() + "</style></head><body>"
-            + build(d) + "</body></html>")
+            # header 必須包在 .wrap 裡（首頁就是這樣做的），否則標題會貼齊視窗
+            # 左緣、跟下面的內容對不齊——.wrap 才有 max-width:1100px + 置中。
+            "<div class=" + chr(34) + "wrap" + chr(34) + ">"
+            + build(d) + "</div></body></html>")
     os.makedirs(os.path.dirname(a.output) or ".", exist_ok=True)
     io.open(a.output, "w", encoding="utf-8", newline=NL).write(html)
     print(f"✅ 已存：{a.output}（{len(html):,} bytes）")

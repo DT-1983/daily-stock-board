@@ -144,7 +144,10 @@ tr.hit td.c{color:var(--accent);font-weight:600}
     return (f'<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width,initial-scale=1">'
             f'<title>籌碼異動</title><style>{css}</style></head><body>'
-            + hdr + "".join(secs) + note + '</body></html>')
+            # header 要包在 .wrap 裡（首頁的做法），否則標題貼齊視窗左緣、
+            # 跟下面的內容對不齊——.wrap 才有 max-width + 置中。
+            + '<div class="wrap">'
+            + hdr + "".join(secs) + note + '</div></body></html>')
 
 
 def main():
