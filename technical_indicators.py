@@ -305,12 +305,14 @@ def _flip_bars(dr):
     return cur, n
 
 
-def build(ticker, disp_days=252):
+def build(ticker, disp_days=756):
     """算一次，回 (html, summary_text)。理由同 fundamentals_reality.build()：
     避免財報卡渲染跟 narrative() 的 LLM prompt 各自重抓一次價量資料。
     2026-08-11：RS窗改30日/1年、抓2年資料當暖機（原本抓1年配200日長線窗，暖機不夠，
     圖表前面一大段長線RS是空的，跟看板 board_html_legacy.fetch_us_charts 同一個修法）
-    ——算完指標後只裁回近 disp_days(≈1年交易日) 給前端顯示，時間範圍跟改版前一樣。"""
+    ——算完指標後裁回近 disp_days 給前端顯示。
+    2026-09-01：252→756（≈3年），對齊老墨「近三年日線」；前端時間窗可切到 3 年，
+    不然按鈕給了 3 年但資料只有 1 年，切了畫面不會變。"""
     try:
         t = yf.Ticker(ticker)
         hist = t.history(period="2y")
@@ -437,7 +439,9 @@ def build(ticker, disp_days=252):
 <div class="techcharts" id="ti_charts_{uid}" style="display:none">
   <div class="tcwin" id="ti_win_{uid}">
     <button data-w="90" aria-pressed="true">90天</button>
+    <button data-w="180" aria-pressed="false">半年</button>
     <button data-w="365" aria-pressed="false">1年</button>
+    <button data-w="1095" aria-pressed="false">3年</button>
   </div>
   <div class="tclabel">價格 + SuperTrend + 雙重颱風K線</div>
   <div class="tcbox"><canvas id="ti_c1_{uid}"></canvas></div>
@@ -463,7 +467,7 @@ document.getElementById('ti_win_{uid}').addEventListener('click', function(e){{
   const b = e.target.closest('button');
   if (!b) return;
   Array.prototype.forEach.call(this.querySelectorAll('button'), x => x.setAttribute('aria-pressed', x === b));
-  ti_win_{uid} = b.dataset.w === '365' ? 365 : 90;
+  ti_win_{uid} = parseInt(b.dataset.w, 10) || 90;
   if (ti_drawn_{uid}) ti_draw_{uid}();
 }});
 function ti_draw_{uid}(){{
