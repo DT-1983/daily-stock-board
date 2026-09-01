@@ -146,6 +146,9 @@ def scan_one(tk, sym, df, bench_closes):
     if not st or st["dir"][-1] is None:
         return None
     dt = ti.double_typhoon(H, L, C)
+    vols_k = [None if v is None else (v / 1000 if _is_tw(tk) else v)
+              for v in df["Volume"].tolist()]
+    ty_state = ti.typhoon_state(C, vols_k, dt["dir"][-1]) if dt else None
     sq = ti.squeeze_momentum(H, L, C)
     rs = ti.mansfield_rs(C, bench_closes, short=RS_SHORT, long=RS_LONG) or {}
 
@@ -161,7 +164,10 @@ def scan_one(tk, sym, df, bench_closes):
     lamps = {
         "L1 SuperTrend 多方": bool(st["dir"][-1] == 1),
         "L2 動能 > 0": bool(mom is not None and mom > 0),
-        "L3 雙重颱風不為綠": bool(dt["dir"][-1] == 1),
+        # 官方定義：紅=偏多、綠=偏空、黃=不明；「不為綠」＝不是偏空，紅與黃都算亮。
+        # 原本只有 dir==1（多）才亮 → 把「黃(不明)」誤判成滅，會系統性少算一燈。
+        # ⚠️ 三態的第二道關卡是逆向推導的，見 technical_indicators.typhoon_state。
+        "L3 雙重颱風不為綠": bool(ty_state != -1) if ty_state is not None else False,
         f"L4 RS{RS_SHORT}日乖離 > +{RS_BIAS_MIN:g}%": bool(rs_s is not None and rs_s > RS_BIAS_MIN),
     }
     lit = sum(1 for v in lamps.values() if v)
@@ -176,6 +182,7 @@ def scan_one(tk, sym, df, bench_closes):
             "rs_short": round(float(rs_s), 2) if rs_s is not None else None,
             "rs_long": round(float(rs.get("long")), 2) if rs.get("long") is not None else None,
             "lamps": lamps, "lit": int(lit), "combo": bool(lit >= COMBO_MIN),
+            "typhoon": ty_state,
             "asof": str(df.index[-1])[:10]}
 
 
