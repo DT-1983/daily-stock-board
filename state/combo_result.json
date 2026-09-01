@@ -1,0 +1,5031 @@
+{
+  "date": "2026-09-01",
+  "combo_min": 3,
+  "rs_short": 60,
+  "rs_bias_min": 3.0,
+  "rows": [
+    {
+      "ticker": "NVDA",
+      "symbol": "NVDA",
+      "price": 220.78,
+      "bull": true,
+      "st_line": 207.41,
+      "gap_pct": 6.06,
+      "momentum": 1.76,
+      "rs_short": 4.03,
+      "rs_long": 4.32,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "NVIDIA Corp",
+      "src": [
+        "守備清單",
+        "持股"
+      ],
+      "target": 323.42,
+      "rr": 7.68,
+      "target_n": null,
+      "target_low": 180.0,
+      "target_high": 515.0
+    },
+    {
+      "ticker": "UEC",
+      "symbol": "UEC",
+      "price": 12.24,
+      "bull": true,
+      "st_line": 11.25,
+      "gap_pct": 8.09,
+      "momentum": 1.61,
+      "rs_short": 10.2,
+      "rs_long": -16.43,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Uranium Energy Corp",
+      "src": [
+        "守備清單"
+      ],
+      "target": 18.03,
+      "rr": 5.85,
+      "target_n": null,
+      "target_low": 12.0,
+      "target_high": 26.75
+    },
+    {
+      "ticker": "TM",
+      "symbol": "TM",
+      "price": 196.54,
+      "bull": true,
+      "st_line": 187.59,
+      "gap_pct": 4.55,
+      "momentum": 3.14,
+      "rs_short": 6.37,
+      "rs_long": -11.15,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Toyota Motor Corporation",
+      "src": [
+        "持股"
+      ],
+      "target": 231.58,
+      "rr": 3.91,
+      "target_n": null,
+      "target_low": 220.0,
+      "target_high": 239.31209
+    },
+    {
+      "ticker": "SSUMY",
+      "symbol": "SSUMY",
+      "price": 11.16,
+      "bull": true,
+      "st_line": 10.47,
+      "gap_pct": 6.18,
+      "momentum": 0.08,
+      "rs_short": 6.88,
+      "rs_long": 9.55,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Sumitomo Corporation",
+      "src": [
+        "持股"
+      ],
+      "target": 13.71,
+      "rr": 3.7,
+      "target_n": null,
+      "target_low": 13.71,
+      "target_high": 13.71
+    },
+    {
+      "ticker": "XYZ",
+      "symbol": "XYZ",
+      "price": 82.02,
+      "bull": true,
+      "st_line": 77.17,
+      "gap_pct": 5.91,
+      "momentum": 0.28,
+      "rs_short": 3.18,
+      "rs_long": 8.31,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Block Inc Class A",
+      "src": [
+        "守備清單",
+        "持股"
+      ],
+      "target": 98.35,
+      "rr": 3.37,
+      "target_n": null,
+      "target_low": 75.0,
+      "target_high": 125.0
+    },
+    {
+      "ticker": "UHS",
+      "symbol": "UHS",
+      "price": 170.33,
+      "bull": true,
+      "st_line": 162.95,
+      "gap_pct": 4.33,
+      "momentum": 3.55,
+      "rs_short": 5.81,
+      "rs_long": -18.56,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Universal Health Services, Inc.",
+      "src": [
+        "持股"
+      ],
+      "target": 193.94,
+      "rr": 3.2,
+      "target_n": null,
+      "target_low": 166.0,
+      "target_high": 290.0
+    },
+    {
+      "ticker": "PAAS",
+      "symbol": "PAAS",
+      "price": 51.92,
+      "bull": true,
+      "st_line": 47.35,
+      "gap_pct": 8.8,
+      "momentum": 4.46,
+      "rs_short": 8.8,
+      "rs_long": -3.3,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Pan American Silver Corp.",
+      "src": [
+        "守備清單"
+      ],
+      "target": 65.9,
+      "rr": 3.06,
+      "target_n": null,
+      "target_low": 53.0,
+      "target_high": 94.0
+    },
+    {
+      "ticker": "ANET",
+      "symbol": "ANET",
+      "price": 195.69,
+      "bull": true,
+      "st_line": 176.84,
+      "gap_pct": 9.63,
+      "momentum": 3.02,
+      "rs_short": 8.53,
+      "rs_long": 20.08,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Arista Networks Inc",
+      "src": [
+        "守備清單"
+      ],
+      "target": 241.82,
+      "rr": 2.45,
+      "target_n": null,
+      "target_low": 185.0,
+      "target_high": 289.0
+    },
+    {
+      "ticker": "BAYRY",
+      "symbol": "BAYRY",
+      "price": 14.25,
+      "bull": true,
+      "st_line": 13.53,
+      "gap_pct": 5.05,
+      "momentum": 0.16,
+      "rs_short": 6.58,
+      "rs_long": 17.9,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Bayer Aktiengesellschaft",
+      "src": [
+        "持股"
+      ],
+      "target": 15.89,
+      "rr": 2.28,
+      "target_n": null,
+      "target_low": 15.3,
+      "target_high": 16.68
+    },
+    {
+      "ticker": "8046",
+      "symbol": "8046.TW",
+      "price": 1225.0,
+      "bull": true,
+      "st_line": 1035.34,
+      "gap_pct": 15.48,
+      "momentum": 99.48,
+      "rs_short": 6.52,
+      "rs_long": 62.26,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "南電",
+      "src": [
+        "守備清單"
+      ],
+      "target": 1650.08,
+      "rr": 2.24,
+      "target_n": null,
+      "target_low": 1095.0,
+      "target_high": 2500.0
+    },
+    {
+      "ticker": "MSFT",
+      "symbol": "MSFT",
+      "price": 507.29,
+      "bull": true,
+      "st_line": 476.52,
+      "gap_pct": 6.07,
+      "momentum": 8.05,
+      "rs_short": 16.91,
+      "rs_long": 4.63,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Microsoft Corp",
+      "src": [
+        "守備清單",
+        "持股"
+      ],
+      "target": 569.45,
+      "rr": 2.02,
+      "target_n": null,
+      "target_low": 400.0,
+      "target_high": 870.0
+    },
+    {
+      "ticker": "THC",
+      "symbol": "THC",
+      "price": 265.91,
+      "bull": true,
+      "st_line": 254.98,
+      "gap_pct": 4.11,
+      "momentum": 7.22,
+      "rs_short": 19.1,
+      "rs_long": 18.57,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Tenet Healthcare Corporation",
+      "src": [
+        "持股"
+      ],
+      "target": 285.1,
+      "rr": 1.76,
+      "target_n": null,
+      "target_low": 260.0,
+      "target_high": 315.0
+    },
+    {
+      "ticker": "MCK",
+      "symbol": "MCK",
+      "price": 885.32,
+      "bull": true,
+      "st_line": 825.79,
+      "gap_pct": 6.72,
+      "momentum": 14.74,
+      "rs_short": 5.57,
+      "rs_long": -2.41,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "McKesson Corporation",
+      "src": [
+        "持股"
+      ],
+      "target": 986.94,
+      "rr": 1.71,
+      "target_n": null,
+      "target_low": 845.0,
+      "target_high": 1080.0
+    },
+    {
+      "ticker": "3491",
+      "symbol": "3491.TWO",
+      "price": 1480.0,
+      "bull": true,
+      "st_line": 1185.45,
+      "gap_pct": 19.9,
+      "momentum": 126.32,
+      "rs_short": 7.77,
+      "rs_long": 3.81,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "昇達科",
+      "src": [
+        "守備清單"
+      ],
+      "target": 1982.17,
+      "rr": 1.7,
+      "target_n": null,
+      "target_low": 1100.0,
+      "target_high": 2600.0
+    },
+    {
+      "ticker": "2313",
+      "symbol": "2313.TW",
+      "price": 252.0,
+      "bull": true,
+      "st_line": 213.99,
+      "gap_pct": 15.08,
+      "momentum": 27.57,
+      "rs_short": 7.98,
+      "rs_long": 12.24,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "華通",
+      "src": [
+        "持股"
+      ],
+      "target": 316.0,
+      "rr": 1.68,
+      "target_n": null,
+      "target_low": 256.0,
+      "target_high": 360.0
+    },
+    {
+      "ticker": "LITE",
+      "symbol": "LITE",
+      "price": 914.76,
+      "bull": true,
+      "st_line": 717.25,
+      "gap_pct": 21.59,
+      "momentum": 77.27,
+      "rs_short": 8.56,
+      "rs_long": 44.99,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Lumentum Holdings Inc.",
+      "src": [
+        "持股"
+      ],
+      "target": 1148.3,
+      "rr": 1.18,
+      "target_n": null,
+      "target_low": 820.0,
+      "target_high": 1400.0
+    },
+    {
+      "ticker": "BNY",
+      "symbol": "BNY",
+      "price": 161.28,
+      "bull": true,
+      "st_line": 156.11,
+      "gap_pct": 3.21,
+      "momentum": 2.69,
+      "rs_short": 3.34,
+      "rs_long": 17.32,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "BNY",
+      "src": [
+        "持股"
+      ],
+      "target": 167.33,
+      "rr": 1.17,
+      "target_n": null,
+      "target_low": 135.0,
+      "target_high": 184.0
+    },
+    {
+      "ticker": "1519",
+      "symbol": "1519.TW",
+      "price": 761.0,
+      "bull": true,
+      "st_line": 682.87,
+      "gap_pct": 10.27,
+      "momentum": 55.98,
+      "rs_short": 6.8,
+      "rs_long": -21.76,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "華城",
+      "src": [
+        "守備清單"
+      ],
+      "target": 848.62,
+      "rr": 1.12,
+      "target_n": null,
+      "target_low": 727.2727,
+      "target_high": 950.4133
+    },
+    {
+      "ticker": "CNH",
+      "symbol": "CNH",
+      "price": 11.83,
+      "bull": true,
+      "st_line": 10.48,
+      "gap_pct": 11.41,
+      "momentum": 0.47,
+      "rs_short": 8.16,
+      "rs_long": 2.32,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "CNH Industrial N.V.",
+      "src": [
+        "持股"
+      ],
+      "target": 13.24,
+      "rr": 1.05,
+      "target_n": null,
+      "target_low": 9.0,
+      "target_high": 21.0
+    },
+    {
+      "ticker": "3017",
+      "symbol": "3017.TW",
+      "price": 3410.0,
+      "bull": true,
+      "st_line": 2844.08,
+      "gap_pct": 16.6,
+      "momentum": 352.0,
+      "rs_short": 26.0,
+      "rs_long": 35.65,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "奇鋐",
+      "src": [
+        "守備清單"
+      ],
+      "target": 3878.47,
+      "rr": 0.83,
+      "target_n": null,
+      "target_low": 3327.0,
+      "target_high": 4250.0
+    },
+    {
+      "ticker": "3189",
+      "symbol": "3189.TW",
+      "price": 874.0,
+      "bull": true,
+      "st_line": 745.65,
+      "gap_pct": 14.69,
+      "momentum": 38.27,
+      "rs_short": 7.9,
+      "rs_long": 81.37,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "景碩",
+      "src": [
+        "守備清單"
+      ],
+      "target": 952.77,
+      "rr": 0.61,
+      "target_n": null,
+      "target_low": 450.0,
+      "target_high": 1250.0
+    },
+    {
+      "ticker": "1605",
+      "symbol": "1605.TW",
+      "price": 38.75,
+      "bull": true,
+      "st_line": 34.83,
+      "gap_pct": 10.12,
+      "momentum": 2.32,
+      "rs_short": 3.27,
+      "rs_long": -13.79,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "華新",
+      "src": [
+        "守備清單"
+      ],
+      "target": 41.0,
+      "rr": 0.57,
+      "target_n": null,
+      "target_low": 40.0,
+      "target_high": 42.0
+    },
+    {
+      "ticker": "LH",
+      "symbol": "LH",
+      "price": 332.66,
+      "bull": true,
+      "st_line": 314.32,
+      "gap_pct": 5.51,
+      "momentum": 14.4,
+      "rs_short": 11.46,
+      "rs_long": 11.98,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Labcorp Holdings Inc.",
+      "src": [
+        "持股"
+      ],
+      "target": 341.5,
+      "rr": 0.48,
+      "target_n": null,
+      "target_low": 293.0,
+      "target_high": 385.0
+    },
+    {
+      "ticker": "3324",
+      "symbol": "3324.TWO",
+      "price": 1375.0,
+      "bull": true,
+      "st_line": 1123.54,
+      "gap_pct": 18.29,
+      "momentum": 118.87,
+      "rs_short": 32.25,
+      "rs_long": 1.87,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "雙鴻",
+      "src": [
+        "守備清單"
+      ],
+      "target": 1420.2,
+      "rr": 0.18,
+      "target_n": null,
+      "target_low": 1025.0,
+      "target_high": 1840.0
+    },
+    {
+      "ticker": "3363",
+      "symbol": "3363.TWO",
+      "price": 786.0,
+      "bull": true,
+      "st_line": 629.08,
+      "gap_pct": 19.96,
+      "momentum": 87.25,
+      "rs_short": 22.69,
+      "rs_long": 7.52,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "上詮",
+      "src": [
+        "守備清單"
+      ],
+      "target": 770.5,
+      "rr": -0.1,
+      "target_n": null,
+      "target_low": 708.0,
+      "target_high": 833.0
+    },
+    {
+      "ticker": "2884",
+      "symbol": "2884.TW",
+      "price": 39.9,
+      "bull": true,
+      "st_line": 36.7,
+      "gap_pct": 8.02,
+      "momentum": 0.91,
+      "rs_short": 6.19,
+      "rs_long": -10.72,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "玉山金",
+      "src": [
+        "持股"
+      ],
+      "target": 39.03,
+      "rr": -0.27,
+      "target_n": null,
+      "target_low": 37.0,
+      "target_high": 41.1
+    },
+    {
+      "ticker": "PAA",
+      "symbol": "PAA",
+      "price": 25.65,
+      "bull": true,
+      "st_line": 24.0,
+      "gap_pct": 6.43,
+      "momentum": 1.21,
+      "rs_short": 8.92,
+      "rs_long": 19.84,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Plains All American Pipeline, L.P.",
+      "src": [
+        "持股"
+      ],
+      "target": 24.94,
+      "rr": -0.43,
+      "target_n": null,
+      "target_low": 20.0,
+      "target_high": 27.0
+    },
+    {
+      "ticker": "2882",
+      "symbol": "2882.TW",
+      "price": 111.0,
+      "bull": true,
+      "st_line": 100.28,
+      "gap_pct": 9.66,
+      "momentum": 4.39,
+      "rs_short": 6.36,
+      "rs_long": 6.23,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "國泰金",
+      "src": [
+        "持股"
+      ],
+      "target": 105.0,
+      "rr": -0.56,
+      "target_n": null,
+      "target_low": 76.0,
+      "target_high": 130.0
+    },
+    {
+      "ticker": "3081",
+      "symbol": "3081.TWO",
+      "price": 3425.0,
+      "bull": true,
+      "st_line": 2824.41,
+      "gap_pct": 17.54,
+      "momentum": 700.99,
+      "rs_short": 51.59,
+      "rs_long": 102.79,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "聯亞",
+      "src": [
+        "守備清單"
+      ],
+      "target": 3036.37,
+      "rr": -0.65,
+      "target_n": null,
+      "target_low": 900.0,
+      "target_high": 4401.0
+    },
+    {
+      "ticker": "FCX",
+      "symbol": "FCX",
+      "price": 75.74,
+      "bull": true,
+      "st_line": 70.51,
+      "gap_pct": 6.91,
+      "momentum": 7.33,
+      "rs_short": 13.13,
+      "rs_long": 23.01,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Freeport-McMoRan, Inc.",
+      "src": [
+        "守備清單"
+      ],
+      "target": 72.05,
+      "rr": -0.71,
+      "target_n": null,
+      "target_low": 30.0,
+      "target_high": 83.0
+    },
+    {
+      "ticker": "2881",
+      "symbol": "2881.TW",
+      "price": 145.0,
+      "bull": true,
+      "st_line": 129.92,
+      "gap_pct": 10.4,
+      "momentum": 10.18,
+      "rs_short": 8.12,
+      "rs_long": 7.76,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "富邦金",
+      "src": [
+        "持股"
+      ],
+      "target": 132.98,
+      "rr": -0.8,
+      "target_n": null,
+      "target_low": 85.85,
+      "target_high": 160.0
+    },
+    {
+      "ticker": "3105",
+      "symbol": "3105.TWO",
+      "price": 492.0,
+      "bull": true,
+      "st_line": 371.02,
+      "gap_pct": 24.59,
+      "momentum": 54.86,
+      "rs_short": 16.7,
+      "rs_long": 30.32,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "穩懋",
+      "src": [
+        "守備清單"
+      ],
+      "target": 376.13,
+      "rr": -0.96,
+      "target_n": null,
+      "target_low": 142.0,
+      "target_high": 590.0
+    },
+    {
+      "ticker": "4979",
+      "symbol": "4979.TWO",
+      "price": 600.0,
+      "bull": true,
+      "st_line": 484.38,
+      "gap_pct": 19.27,
+      "momentum": 74.38,
+      "rs_short": 18.82,
+      "rs_long": 20.73,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "華星光",
+      "src": [
+        "守備清單"
+      ],
+      "target": 475.0,
+      "rr": -1.08,
+      "target_n": null,
+      "target_low": 250.0,
+      "target_high": 700.0
+    },
+    {
+      "ticker": "SCCO",
+      "symbol": "SCCO",
+      "price": 208.87,
+      "bull": true,
+      "st_line": 190.39,
+      "gap_pct": 8.85,
+      "momentum": 16.47,
+      "rs_short": 10.4,
+      "rs_long": 16.18,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Southern Copper Corporation",
+      "src": [
+        "守備清單"
+      ],
+      "target": 169.06,
+      "rr": -2.15,
+      "target_n": null,
+      "target_low": 126.97628,
+      "target_high": 275.0
+    },
+    {
+      "ticker": "3450",
+      "symbol": "3450.TW",
+      "price": 625.0,
+      "bull": true,
+      "st_line": 503.04,
+      "gap_pct": 19.51,
+      "momentum": 96.81,
+      "rs_short": 19.26,
+      "rs_long": 38.53,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "聯鈞",
+      "src": [
+        "守備清單"
+      ],
+      "target": 360.0,
+      "rr": -2.17,
+      "target_n": null,
+      "target_low": 360.0,
+      "target_high": 360.0
+    },
+    {
+      "ticker": "3163",
+      "symbol": "3163.TWO",
+      "price": 761.0,
+      "bull": true,
+      "st_line": 635.91,
+      "gap_pct": 16.44,
+      "momentum": 64.88,
+      "rs_short": 7.48,
+      "rs_long": 10.58,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "波若威",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "4908",
+      "symbol": "4908.TWO",
+      "price": 229.5,
+      "bull": true,
+      "st_line": 181.92,
+      "gap_pct": 20.73,
+      "momentum": 31.01,
+      "rs_short": 31.59,
+      "rs_long": 39.87,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "前鼎",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "ARKG",
+      "symbol": "ARKG",
+      "price": 47.23,
+      "bull": true,
+      "st_line": 44.56,
+      "gap_pct": 5.65,
+      "momentum": 5.95,
+      "rs_short": 13.93,
+      "rs_long": 34.47,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "ARK Genomic Revolution ETF",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "ARKK",
+      "symbol": "ARKK",
+      "price": 85.57,
+      "bull": true,
+      "st_line": 79.99,
+      "gap_pct": 6.52,
+      "momentum": 8.16,
+      "rs_short": 6.79,
+      "rs_long": -0.07,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "ARK Innovation ETF",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "CICHY",
+      "symbol": "CICHY",
+      "price": 24.19,
+      "bull": true,
+      "st_line": 22.73,
+      "gap_pct": 6.04,
+      "momentum": 0.51,
+      "rs_short": 8.21,
+      "rs_long": 8.34,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "China Construction Bank Corporation",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "ITOCY",
+      "symbol": "ITOCY",
+      "price": 13.13,
+      "bull": true,
+      "st_line": 12.5,
+      "gap_pct": 4.8,
+      "momentum": 0.21,
+      "rs_short": 6.52,
+      "rs_long": -2.84,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "ITOCHU Corporation",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "KNBWY",
+      "symbol": "KNBWY",
+      "price": 19.4,
+      "bull": true,
+      "st_line": 18.27,
+      "gap_pct": 5.82,
+      "momentum": 0.52,
+      "rs_short": 5.5,
+      "rs_long": 9.71,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Kirin Holdings Company, Limited",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "HASI",
+      "symbol": "HASI",
+      "price": 39.55,
+      "bull": true,
+      "st_line": 39.19,
+      "gap_pct": 0.91,
+      "momentum": 0.17,
+      "rs_short": -0.11,
+      "rs_long": 2.98,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "HA Sustainable Infrastructure Capital Inc",
+      "src": [
+        "守備清單"
+      ],
+      "target": 49.2,
+      "rr": 26.81,
+      "target_n": null,
+      "target_low": 41.0,
+      "target_high": 60.0
+    },
+    {
+      "ticker": "CWEN",
+      "symbol": "CWEN",
+      "price": 31.75,
+      "bull": true,
+      "st_line": 31.26,
+      "gap_pct": 1.54,
+      "momentum": 0.06,
+      "rs_short": -9.31,
+      "rs_long": -16.61,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Clearway Energy Inc Class C",
+      "src": [
+        "守備清單"
+      ],
+      "target": 43.5,
+      "rr": 23.98,
+      "target_n": null,
+      "target_low": 34.0,
+      "target_high": 58.0
+    },
+    {
+      "ticker": "HPE",
+      "symbol": "HPE",
+      "price": 52.24,
+      "bull": true,
+      "st_line": 51.57,
+      "gap_pct": 1.28,
+      "momentum": -1.56,
+      "rs_short": 3.86,
+      "rs_long": 56.5,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Hewlett Packard Enterprise Company",
+      "src": [
+        "持股"
+      ],
+      "target": 65.35,
+      "rr": 19.56,
+      "target_n": null,
+      "target_low": 28.0,
+      "target_high": 80.0
+    },
+    {
+      "ticker": "CCJ",
+      "symbol": "CCJ",
+      "price": 98.76,
+      "bull": true,
+      "st_line": 96.97,
+      "gap_pct": 1.81,
+      "momentum": 7.73,
+      "rs_short": -0.62,
+      "rs_long": -11.69,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Cameco Corporation",
+      "src": [
+        "守備清單"
+      ],
+      "target": 129.76,
+      "rr": 17.32,
+      "target_n": null,
+      "target_low": 85.29395,
+      "target_high": 173.51659
+    },
+    {
+      "ticker": "3231",
+      "symbol": "3231.TW",
+      "price": 182.0,
+      "bull": true,
+      "st_line": 169.52,
+      "gap_pct": 6.86,
+      "momentum": -13.07,
+      "rs_short": 4.83,
+      "rs_long": -6.7,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "緯創",
+      "src": [
+        "守備清單"
+      ],
+      "target": 266.53,
+      "rr": 6.77,
+      "target_n": null,
+      "target_low": 165.0,
+      "target_high": 400.0
+    },
+    {
+      "ticker": "6592",
+      "symbol": "6592.TW",
+      "price": 60.2,
+      "bull": true,
+      "st_line": 59.24,
+      "gap_pct": 1.59,
+      "momentum": 0.16,
+      "rs_short": -5.03,
+      "rs_long": -26.46,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "和潤企業",
+      "src": [
+        "持股"
+      ],
+      "target": 66.0,
+      "rr": 6.04,
+      "target_n": null,
+      "target_low": 66.0,
+      "target_high": 66.0
+    },
+    {
+      "ticker": "GSK",
+      "symbol": "GSK",
+      "price": 50.25,
+      "bull": true,
+      "st_line": 48.77,
+      "gap_pct": 2.95,
+      "momentum": 0.0,
+      "rs_short": -4.06,
+      "rs_long": -7.54,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "GSK plc",
+      "src": [
+        "持股"
+      ],
+      "target": 58.58,
+      "rr": 5.63,
+      "target_n": null,
+      "target_low": 50.0,
+      "target_high": 70.0
+    },
+    {
+      "ticker": "MRVL",
+      "symbol": "MRVL",
+      "price": 211.66,
+      "bull": true,
+      "st_line": 197.45,
+      "gap_pct": 6.71,
+      "momentum": 18.33,
+      "rs_short": -12.02,
+      "rs_long": 42.92,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Marvell Technology, Inc.",
+      "src": [
+        "持股"
+      ],
+      "target": 278.89,
+      "rr": 4.73,
+      "target_n": null,
+      "target_low": 126.0,
+      "target_high": 400.0
+    },
+    {
+      "ticker": "CEG",
+      "symbol": "CEG",
+      "price": 274.77,
+      "bull": true,
+      "st_line": 256.2,
+      "gap_pct": 6.76,
+      "momentum": 4.08,
+      "rs_short": 2.47,
+      "rs_long": -18.53,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Constellation Energy Corp",
+      "src": [
+        "守備清單"
+      ],
+      "target": 348.3,
+      "rr": 3.96,
+      "target_n": null,
+      "target_low": 290.0,
+      "target_high": 441.0
+    },
+    {
+      "ticker": "MARA",
+      "symbol": "MARA",
+      "price": 10.77,
+      "bull": true,
+      "st_line": 8.8,
+      "gap_pct": 18.29,
+      "momentum": 0.69,
+      "rs_short": -12.46,
+      "rs_long": -19.5,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "MARA Holdings Inc",
+      "src": [
+        "守備清單"
+      ],
+      "target": 17.99,
+      "rr": 3.67,
+      "target_n": null,
+      "target_low": 6.0,
+      "target_high": 30.0
+    },
+    {
+      "ticker": "GLW",
+      "symbol": "GLW",
+      "price": 148.73,
+      "bull": true,
+      "st_line": 136.81,
+      "gap_pct": 8.01,
+      "momentum": 1.77,
+      "rs_short": -15.56,
+      "rs_long": 4.12,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Corning Incorporated",
+      "src": [
+        "守備清單",
+        "持股"
+      ],
+      "target": 191.4,
+      "rr": 3.58,
+      "target_n": null,
+      "target_low": 129.0,
+      "target_high": 226.0
+    },
+    {
+      "ticker": "1504",
+      "symbol": "1504.TW",
+      "price": 73.5,
+      "bull": true,
+      "st_line": 66.97,
+      "gap_pct": 8.88,
+      "momentum": 4.47,
+      "rs_short": 2.1,
+      "rs_long": -34.36,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "東元",
+      "src": [
+        "守備清單"
+      ],
+      "target": 95.86,
+      "rr": 3.42,
+      "target_n": null,
+      "target_low": 76.0,
+      "target_high": 165.0
+    },
+    {
+      "ticker": "CVSA",
+      "symbol": "CVSA",
+      "price": 132.33,
+      "bull": true,
+      "st_line": 122.59,
+      "gap_pct": 7.36,
+      "momentum": 4.14,
+      "rs_short": 2.5,
+      "rs_long": 2.95,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Covista Inc.",
+      "src": [
+        "持股"
+      ],
+      "target": 159.5,
+      "rr": 2.79,
+      "target_n": null,
+      "target_low": 140.0,
+      "target_high": 175.0
+    },
+    {
+      "ticker": "2382",
+      "symbol": "2382.TW",
+      "price": 342.0,
+      "bull": true,
+      "st_line": 308.43,
+      "gap_pct": 9.82,
+      "momentum": 28.33,
+      "rs_short": -2.85,
+      "rs_long": -15.77,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "廣達",
+      "src": [
+        "守備清單"
+      ],
+      "target": 427.84,
+      "rr": 2.56,
+      "target_n": null,
+      "target_low": 250.0,
+      "target_high": 626.0
+    },
+    {
+      "ticker": "AES",
+      "symbol": "AES",
+      "price": 14.74,
+      "bull": true,
+      "st_line": 14.62,
+      "gap_pct": 0.81,
+      "momentum": 0.02,
+      "rs_short": -1.01,
+      "rs_long": -4.34,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "The AES Corporation",
+      "src": [
+        "持股"
+      ],
+      "target": 15.0,
+      "rr": 2.17,
+      "target_n": null,
+      "target_low": 15.0,
+      "target_high": 15.0
+    },
+    {
+      "ticker": "1597",
+      "symbol": "1597.TW",
+      "price": 144.5,
+      "bull": true,
+      "st_line": 122.54,
+      "gap_pct": 15.2,
+      "momentum": 2.15,
+      "rs_short": -0.51,
+      "rs_long": 3.88,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "直得",
+      "src": [
+        "守備清單"
+      ],
+      "target": 189.0,
+      "rr": 2.03,
+      "target_n": null,
+      "target_low": 189.0,
+      "target_high": 189.0
+    },
+    {
+      "ticker": "1513",
+      "symbol": "1513.TW",
+      "price": 166.0,
+      "bull": true,
+      "st_line": 156.25,
+      "gap_pct": 5.87,
+      "momentum": 3.82,
+      "rs_short": -3.63,
+      "rs_long": -22.35,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "中興電",
+      "src": [
+        "守備清單"
+      ],
+      "target": 185.5,
+      "rr": 2.0,
+      "target_n": null,
+      "target_low": 166.0,
+      "target_high": 214.0
+    },
+    {
+      "ticker": "2454",
+      "symbol": "2454.TW",
+      "price": 4315.0,
+      "bull": true,
+      "st_line": 3715.66,
+      "gap_pct": 13.89,
+      "momentum": -21.34,
+      "rs_short": 4.37,
+      "rs_long": 43.55,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "聯發科",
+      "src": [
+        "守備清單"
+      ],
+      "target": 5502.92,
+      "rr": 1.98,
+      "target_n": null,
+      "target_low": 1751.0,
+      "target_high": 10369.0
+    },
+    {
+      "ticker": "1503",
+      "symbol": "1503.TW",
+      "price": 208.5,
+      "bull": true,
+      "st_line": 188.45,
+      "gap_pct": 9.62,
+      "momentum": 7.42,
+      "rs_short": -5.1,
+      "rs_long": -21.31,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "士電",
+      "src": [
+        "守備清單"
+      ],
+      "target": 243.5,
+      "rr": 1.75,
+      "target_n": null,
+      "target_low": 210.0,
+      "target_high": 277.0
+    },
+    {
+      "ticker": "3045",
+      "symbol": "3045.TW",
+      "price": 115.5,
+      "bull": true,
+      "st_line": 110.84,
+      "gap_pct": 4.03,
+      "momentum": 4.47,
+      "rs_short": -1.89,
+      "rs_long": -21.72,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "台灣大",
+      "src": [
+        "持股"
+      ],
+      "target": 123.5,
+      "rr": 1.72,
+      "target_n": null,
+      "target_low": 112.0,
+      "target_high": 130.0
+    },
+    {
+      "ticker": "UNM",
+      "symbol": "UNM",
+      "price": 93.22,
+      "bull": true,
+      "st_line": 86.59,
+      "gap_pct": 7.11,
+      "momentum": 0.81,
+      "rs_short": 2.59,
+      "rs_long": 8.41,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Unum Group",
+      "src": [
+        "持股"
+      ],
+      "target": 101.85,
+      "rr": 1.3,
+      "target_n": null,
+      "target_low": 88.0,
+      "target_high": 122.0
+    },
+    {
+      "ticker": "3023",
+      "symbol": "3023.TW",
+      "price": 320.0,
+      "bull": true,
+      "st_line": 288.89,
+      "gap_pct": 9.72,
+      "momentum": 10.71,
+      "rs_short": -0.34,
+      "rs_long": -5.55,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "信邦",
+      "src": [
+        "守備清單"
+      ],
+      "target": 358.29,
+      "rr": 1.23,
+      "target_n": null,
+      "target_low": 235.0,
+      "target_high": 410.0
+    },
+    {
+      "ticker": "4540",
+      "symbol": "4540.TW",
+      "price": 59.4,
+      "bull": true,
+      "st_line": 52.13,
+      "gap_pct": 12.24,
+      "momentum": 2.68,
+      "rs_short": -0.45,
+      "rs_long": -10.15,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "全球傳動",
+      "src": [
+        "守備清單"
+      ],
+      "target": 68.3,
+      "rr": 1.22,
+      "target_n": null,
+      "target_low": 67.6,
+      "target_high": 69.0
+    },
+    {
+      "ticker": "SLAB",
+      "symbol": "SLAB",
+      "price": 219.05,
+      "bull": true,
+      "st_line": 215.83,
+      "gap_pct": 1.47,
+      "momentum": 0.39,
+      "rs_short": -1.59,
+      "rs_long": 11.03,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Silicon Laboratories Inc",
+      "src": [
+        "守備清單"
+      ],
+      "target": 222.86,
+      "rr": 1.18,
+      "target_n": null,
+      "target_low": 200.0,
+      "target_high": 231.0
+    },
+    {
+      "ticker": "4576",
+      "symbol": "4576.TW",
+      "price": 230.5,
+      "bull": true,
+      "st_line": 184.02,
+      "gap_pct": 20.16,
+      "momentum": -0.84,
+      "rs_short": 5.59,
+      "rs_long": 11.66,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "大銀微系統",
+      "src": [
+        "守備清單"
+      ],
+      "target": 268.5,
+      "rr": 0.82,
+      "target_n": null,
+      "target_low": 224.0,
+      "target_high": 313.0
+    },
+    {
+      "ticker": "TSLA",
+      "symbol": "TSLA",
+      "price": 367.95,
+      "bull": true,
+      "st_line": 317.53,
+      "gap_pct": 13.7,
+      "momentum": 31.2,
+      "rs_short": -1.58,
+      "rs_long": -17.49,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Tesla, Inc.",
+      "src": [
+        "持股"
+      ],
+      "target": 390.09,
+      "rr": 0.44,
+      "target_n": null,
+      "target_low": 125.0,
+      "target_high": 600.0
+    },
+    {
+      "ticker": "PI",
+      "symbol": "PI",
+      "price": 174.32,
+      "bull": true,
+      "st_line": 151.69,
+      "gap_pct": 12.98,
+      "momentum": -0.02,
+      "rs_short": 16.6,
+      "rs_long": 5.93,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Impinj Inc",
+      "src": [
+        "守備清單"
+      ],
+      "target": 180.89,
+      "rr": 0.29,
+      "target_n": null,
+      "target_low": 144.0,
+      "target_high": 220.0
+    },
+    {
+      "ticker": "6271",
+      "symbol": "6271.TW",
+      "price": 231.0,
+      "bull": true,
+      "st_line": 193.48,
+      "gap_pct": 16.24,
+      "momentum": 26.64,
+      "rs_short": 2.09,
+      "rs_long": 6.51,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "同欣電",
+      "src": [
+        "守備清單"
+      ],
+      "target": 218.4,
+      "rr": -0.34,
+      "target_n": null,
+      "target_low": 175.0,
+      "target_high": 250.0
+    },
+    {
+      "ticker": "3055",
+      "symbol": "3055.TW",
+      "price": 129.5,
+      "bull": true,
+      "st_line": 99.77,
+      "gap_pct": 22.96,
+      "momentum": 18.98,
+      "rs_short": 1.84,
+      "rs_long": 18.17,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "蔚華科",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "3580",
+      "symbol": "3580.TWO",
+      "price": 83.2,
+      "bull": true,
+      "st_line": 72.36,
+      "gap_pct": 13.03,
+      "momentum": 3.18,
+      "rs_short": -7.73,
+      "rs_long": -17.33,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "友威科",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "DNKEY",
+      "symbol": "DNKEY",
+      "price": 29.01,
+      "bull": true,
+      "st_line": 28.2,
+      "gap_pct": 2.79,
+      "momentum": 0.08,
+      "rs_short": 2.49,
+      "rs_long": 11.52,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Danske Bank A/S",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "TLT",
+      "symbol": "TLT",
+      "price": 82.52,
+      "bull": true,
+      "st_line": 81.21,
+      "gap_pct": 1.59,
+      "momentum": 0.41,
+      "rs_short": -3.45,
+      "rs_long": -11.54,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "iShares 20+ Year Treasury Bond ETF",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "XYLG",
+      "symbol": "XYLG",
+      "price": 29.5,
+      "bull": true,
+      "st_line": 29.05,
+      "gap_pct": 1.53,
+      "momentum": 0.16,
+      "rs_short": 0.36,
+      "rs_long": -0.09,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-08-31",
+      "name": "Global X S&P 500 Covered Call & Growth ETF",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "006208",
+      "symbol": "006208.TW",
+      "price": 248.35,
+      "bull": true,
+      "st_line": 234.25,
+      "gap_pct": 5.68,
+      "momentum": 8.64,
+      "rs_short": -0.28,
+      "rs_long": 2.05,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "富邦台50",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "2850",
+      "symbol": "2850.TW",
+      "price": 160.5,
+      "bull": true,
+      "st_line": 152.96,
+      "gap_pct": 4.7,
+      "momentum": 0.76,
+      "rs_short": 1.24,
+      "rs_long": -4.6,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "新產",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "1733",
+      "symbol": "1733.TW",
+      "price": 32.2,
+      "bull": true,
+      "st_line": 30.69,
+      "gap_pct": 4.69,
+      "momentum": 0.8,
+      "rs_short": -0.21,
+      "rs_long": -22.76,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "五鼎",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "0050",
+      "symbol": "0050.TW",
+      "price": 108.45,
+      "bull": true,
+      "st_line": 101.77,
+      "gap_pct": 6.16,
+      "momentum": 2.91,
+      "rs_short": -0.43,
+      "rs_long": 1.57,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "元大台灣50",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "00981A",
+      "symbol": "00981A.TW",
+      "price": 30.37,
+      "bull": true,
+      "st_line": 27.37,
+      "gap_pct": 9.88,
+      "momentum": 1.63,
+      "rs_short": -0.63,
+      "rs_long": 8.72,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "asof": "2026-09-01",
+      "name": "主動統一台股增長",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "3037",
+      "symbol": "3037.TW",
+      "price": 971.0,
+      "bull": true,
+      "st_line": 964.18,
+      "gap_pct": 0.7,
+      "momentum": 79.13,
+      "rs_short": -2.3,
+      "rs_long": 46.97,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-09-01",
+      "name": "欣興",
+      "src": [
+        "守備清單"
+      ],
+      "target": 1257.89,
+      "rr": 42.07,
+      "target_n": null,
+      "target_low": 900.0,
+      "target_high": 1700.0
+    },
+    {
+      "ticker": "GOOG",
+      "symbol": "GOOG",
+      "price": 335.41,
+      "bull": true,
+      "st_line": 332.76,
+      "gap_pct": 0.79,
+      "momentum": -17.76,
+      "rs_short": -5.97,
+      "rs_long": -3.9,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Alphabet Inc.",
+      "src": [
+        "持股"
+      ],
+      "target": 422.34,
+      "rr": 32.8,
+      "target_n": null,
+      "target_low": 340.0,
+      "target_high": 475.0
+    },
+    {
+      "ticker": "AAOI",
+      "symbol": "AAOI",
+      "price": 107.69,
+      "bull": true,
+      "st_line": 105.61,
+      "gap_pct": 1.93,
+      "momentum": -14.38,
+      "rs_short": -18.98,
+      "rs_long": 14.16,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Applied Optoelectronics, Inc.",
+      "src": [
+        "持股"
+      ],
+      "target": 163.4,
+      "rr": 26.78,
+      "target_n": null,
+      "target_low": 109.0,
+      "target_high": 220.0
+    },
+    {
+      "ticker": "4768",
+      "symbol": "4768.TWO",
+      "price": 307.5,
+      "bull": true,
+      "st_line": 280.25,
+      "gap_pct": 8.86,
+      "momentum": 16.87,
+      "rs_short": -10.06,
+      "rs_long": -34.22,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-09-01",
+      "name": "晶呈科技",
+      "src": [
+        "守備清單"
+      ],
+      "target": 960.0,
+      "rr": 23.94,
+      "target_n": null,
+      "target_low": 960.0,
+      "target_high": 960.0
+    },
+    {
+      "ticker": "AER",
+      "symbol": "AER",
+      "price": 145.94,
+      "bull": true,
+      "st_line": 143.92,
+      "gap_pct": 1.38,
+      "momentum": -5.35,
+      "rs_short": -2.83,
+      "rs_long": -3.97,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "AerCap Holdings N.V.",
+      "src": [
+        "持股"
+      ],
+      "target": 179.3,
+      "rr": 16.51,
+      "target_n": null,
+      "target_low": 165.0,
+      "target_high": 190.0
+    },
+    {
+      "ticker": "IREN",
+      "symbol": "IREN",
+      "price": 37.12,
+      "bull": true,
+      "st_line": 34.3,
+      "gap_pct": 7.6,
+      "momentum": -1.15,
+      "rs_short": -17.07,
+      "rs_long": -28.56,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "IREN Ltd",
+      "src": [
+        "守備清單"
+      ],
+      "target": 78.19,
+      "rr": 14.56,
+      "target_n": null,
+      "target_low": 41.0,
+      "target_high": 131.0
+    },
+    {
+      "ticker": "CLS",
+      "symbol": "CLS",
+      "price": 299.4,
+      "bull": true,
+      "st_line": 285.84,
+      "gap_pct": 4.53,
+      "momentum": -31.96,
+      "rs_short": -14.37,
+      "rs_long": -14.02,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Celestica Inc.",
+      "src": [
+        "持股"
+      ],
+      "target": 477.22,
+      "rr": 13.11,
+      "target_n": null,
+      "target_low": 415.0,
+      "target_high": 550.0
+    },
+    {
+      "ticker": "COHR",
+      "symbol": "COHR",
+      "price": 277.83,
+      "bull": true,
+      "st_line": 265.57,
+      "gap_pct": 4.41,
+      "momentum": -40.5,
+      "rs_short": -16.96,
+      "rs_long": 3.72,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Coherent Corp.",
+      "src": [
+        "持股"
+      ],
+      "target": 416.09,
+      "rr": 11.28,
+      "target_n": null,
+      "target_low": 280.0,
+      "target_high": 500.0
+    },
+    {
+      "ticker": "BWA",
+      "symbol": "BWA",
+      "price": 64.16,
+      "bull": true,
+      "st_line": 62.6,
+      "gap_pct": 2.43,
+      "momentum": -0.8,
+      "rs_short": -6.19,
+      "rs_long": 8.26,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "BorgWarner Inc.",
+      "src": [
+        "持股"
+      ],
+      "target": 79.67,
+      "rr": 9.94,
+      "target_n": null,
+      "target_low": 62.0,
+      "target_high": 95.0
+    },
+    {
+      "ticker": "ISRG",
+      "symbol": "ISRG",
+      "price": 376.86,
+      "bull": true,
+      "st_line": 365.91,
+      "gap_pct": 2.91,
+      "momentum": 1.91,
+      "rs_short": -5.12,
+      "rs_long": -27.0,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Intuitive Surgical Inc",
+      "src": [
+        "守備清單"
+      ],
+      "target": 478.01,
+      "rr": 9.24,
+      "target_n": null,
+      "target_low": 324.0,
+      "target_high": 685.0
+    },
+    {
+      "ticker": "ASTS",
+      "symbol": "ASTS",
+      "price": 59.1,
+      "bull": true,
+      "st_line": 56.81,
+      "gap_pct": 3.87,
+      "momentum": -5.66,
+      "rs_short": -18.25,
+      "rs_long": -31.92,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "AST SpaceMobile Inc Ordinary Shares - Class A",
+      "src": [
+        "守備清單"
+      ],
+      "target": 78.48,
+      "rr": 8.46,
+      "target_n": null,
+      "target_low": 42.5,
+      "target_high": 108.0
+    },
+    {
+      "ticker": "EMR",
+      "symbol": "EMR",
+      "price": 152.44,
+      "bull": true,
+      "st_line": 149.82,
+      "gap_pct": 1.72,
+      "momentum": -2.17,
+      "rs_short": 1.44,
+      "rs_long": 0.35,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Emerson Electric Co",
+      "src": [
+        "守備清單"
+      ],
+      "target": 171.81,
+      "rr": 7.39,
+      "target_n": null,
+      "target_low": 104.0,
+      "target_high": 205.0
+    },
+    {
+      "ticker": "2317",
+      "symbol": "2317.TW",
+      "price": 256.0,
+      "bull": true,
+      "st_line": 239.69,
+      "gap_pct": 6.37,
+      "momentum": -10.11,
+      "rs_short": -1.83,
+      "rs_long": -18.9,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-09-01",
+      "name": "鴻海",
+      "src": [
+        "守備清單",
+        "持股"
+      ],
+      "target": 347.45,
+      "rr": 5.61,
+      "target_n": null,
+      "target_low": 260.0,
+      "target_high": 435.0
+    },
+    {
+      "ticker": "2330",
+      "symbol": "2330.TW",
+      "price": 2440.0,
+      "bull": true,
+      "st_line": 2293.77,
+      "gap_pct": 5.99,
+      "momentum": 43.42,
+      "rs_short": -2.29,
+      "rs_long": -3.14,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-09-01",
+      "name": "台積電",
+      "src": [
+        "守備清單"
+      ],
+      "target": 3229.33,
+      "rr": 5.4,
+      "target_n": null,
+      "target_low": 2650.0,
+      "target_high": 4200.0
+    },
+    {
+      "ticker": "HIG",
+      "symbol": "HIG",
+      "price": 137.38,
+      "bull": true,
+      "st_line": 135.01,
+      "gap_pct": 1.73,
+      "momentum": -4.21,
+      "rs_short": -1.49,
+      "rs_long": -6.15,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "The Hartford Insurance Group, Inc.",
+      "src": [
+        "持股"
+      ],
+      "target": 149.85,
+      "rr": 5.26,
+      "target_n": null,
+      "target_low": 135.0,
+      "target_high": 164.0
+    },
+    {
+      "ticker": "TEL",
+      "symbol": "TEL",
+      "price": 205.25,
+      "bull": true,
+      "st_line": 197.22,
+      "gap_pct": 3.91,
+      "momentum": -8.85,
+      "rs_short": -2.18,
+      "rs_long": -13.56,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "TE Connectivity PLC Registered Shares",
+      "src": [
+        "守備清單"
+      ],
+      "target": 246.79,
+      "rr": 5.17,
+      "target_n": null,
+      "target_low": 209.0,
+      "target_high": 306.0
+    },
+    {
+      "ticker": "APH",
+      "symbol": "APH",
+      "price": 158.55,
+      "bull": true,
+      "st_line": 150.62,
+      "gap_pct": 5.0,
+      "momentum": -6.88,
+      "rs_short": -2.47,
+      "rs_long": 2.56,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Amphenol Corp Class A",
+      "src": [
+        "守備清單"
+      ],
+      "target": 192.12,
+      "rr": 4.23,
+      "target_n": null,
+      "target_low": 105.0,
+      "target_high": 230.0
+    },
+    {
+      "ticker": "6285",
+      "symbol": "6285.TW",
+      "price": 249.0,
+      "bull": true,
+      "st_line": 216.47,
+      "gap_pct": 13.06,
+      "momentum": -0.74,
+      "rs_short": -4.22,
+      "rs_long": 5.53,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-09-01",
+      "name": "啟碁",
+      "src": [
+        "守備清單"
+      ],
+      "target": 318.0,
+      "rr": 2.12,
+      "target_n": null,
+      "target_low": 270.0,
+      "target_high": 371.0
+    },
+    {
+      "ticker": "JPM",
+      "symbol": "JPM",
+      "price": 356.02,
+      "bull": true,
+      "st_line": 345.66,
+      "gap_pct": 2.91,
+      "momentum": -3.32,
+      "rs_short": 2.25,
+      "rs_long": 4.33,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "JPMorgan Chase & Co.",
+      "src": [
+        "持股"
+      ],
+      "target": 374.57,
+      "rr": 1.79,
+      "target_n": null,
+      "target_low": 305.0,
+      "target_high": 420.0
+    },
+    {
+      "ticker": "ALAB",
+      "symbol": "ALAB",
+      "price": 296.98,
+      "bull": true,
+      "st_line": 243.99,
+      "gap_pct": 17.84,
+      "momentum": -24.79,
+      "rs_short": -15.34,
+      "rs_long": 27.35,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Astera Labs Inc",
+      "src": [
+        "守備清單"
+      ],
+      "target": 389.95,
+      "rr": 1.75,
+      "target_n": null,
+      "target_low": 190.0,
+      "target_high": 500.0
+    },
+    {
+      "ticker": "HSBC",
+      "symbol": "HSBC",
+      "price": 103.14,
+      "bull": true,
+      "st_line": 100.53,
+      "gap_pct": 2.53,
+      "momentum": -1.5,
+      "rs_short": 2.23,
+      "rs_long": 13.89,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "HSBC Holdings plc",
+      "src": [
+        "持股"
+      ],
+      "target": 106.08,
+      "rr": 1.13,
+      "target_n": null,
+      "target_low": 101.0,
+      "target_high": 115.24
+    },
+    {
+      "ticker": "2049",
+      "symbol": "2049.TW",
+      "price": 359.0,
+      "bull": true,
+      "st_line": 316.58,
+      "gap_pct": 11.82,
+      "momentum": -11.1,
+      "rs_short": 1.65,
+      "rs_long": 1.16,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-09-01",
+      "name": "上銀",
+      "src": [
+        "守備清單"
+      ],
+      "target": 398.71,
+      "rr": 0.94,
+      "target_n": null,
+      "target_low": 160.0,
+      "target_high": 510.0
+    },
+    {
+      "ticker": "BEN",
+      "symbol": "BEN",
+      "price": 34.15,
+      "bull": true,
+      "st_line": 32.96,
+      "gap_pct": 3.48,
+      "momentum": -0.04,
+      "rs_short": 0.63,
+      "rs_long": 17.19,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Franklin Resources, Inc.",
+      "src": [
+        "持股"
+      ],
+      "target": 35.18,
+      "rr": 0.87,
+      "target_n": null,
+      "target_low": 26.0,
+      "target_high": 41.0
+    },
+    {
+      "ticker": "2412",
+      "symbol": "2412.TW",
+      "price": 136.0,
+      "bull": true,
+      "st_line": 134.44,
+      "gap_pct": 1.15,
+      "momentum": -1.5,
+      "rs_short": -5.3,
+      "rs_long": -25.25,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-09-01",
+      "name": "中華電",
+      "src": [
+        "持股"
+      ],
+      "target": 136.5,
+      "rr": 0.32,
+      "target_n": null,
+      "target_low": 118.0,
+      "target_high": 150.0
+    },
+    {
+      "ticker": "2359",
+      "symbol": "2359.TW",
+      "price": 144.0,
+      "bull": true,
+      "st_line": 137.98,
+      "gap_pct": 4.18,
+      "momentum": -3.99,
+      "rs_short": -2.58,
+      "rs_long": -21.09,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-09-01",
+      "name": "所羅門",
+      "src": [
+        "守備清單"
+      ],
+      "target": 144.0,
+      "rr": 0.0,
+      "target_n": null,
+      "target_low": 144.0,
+      "target_high": 144.0
+    },
+    {
+      "ticker": "2356",
+      "symbol": "2356.TW",
+      "price": 66.6,
+      "bull": true,
+      "st_line": 60.7,
+      "gap_pct": 8.86,
+      "momentum": -0.83,
+      "rs_short": -0.94,
+      "rs_long": -0.59,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-09-01",
+      "name": "英業達",
+      "src": [
+        "守備清單"
+      ],
+      "target": 66.5,
+      "rr": -0.02,
+      "target_n": null,
+      "target_low": 56.0,
+      "target_high": 77.0
+    },
+    {
+      "ticker": "1101",
+      "symbol": "1101.TW",
+      "price": 25.3,
+      "bull": true,
+      "st_line": 23.5,
+      "gap_pct": 7.11,
+      "momentum": -0.01,
+      "rs_short": 1.28,
+      "rs_long": -21.37,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-09-01",
+      "name": "台泥",
+      "src": [
+        "持股"
+      ],
+      "target": 24.33,
+      "rr": -0.54,
+      "target_n": null,
+      "target_low": 16.5,
+      "target_high": 29.0
+    },
+    {
+      "ticker": "2314",
+      "symbol": "2314.TW",
+      "price": 11.4,
+      "bull": true,
+      "st_line": 10.99,
+      "gap_pct": 3.6,
+      "momentum": -0.15,
+      "rs_short": -16.03,
+      "rs_long": -57.88,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-09-01",
+      "name": "台揚",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "6182",
+      "symbol": "6182.TWO",
+      "price": 116.0,
+      "bull": false,
+      "st_line": 124.01,
+      "gap_pct": -6.91,
+      "momentum": 13.1,
+      "rs_short": -7.24,
+      "rs_long": 59.73,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-09-01",
+      "name": "合晶",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "ARKQ",
+      "symbol": "ARKQ",
+      "price": 122.5,
+      "bull": true,
+      "st_line": 121.6,
+      "gap_pct": 0.73,
+      "momentum": 1.05,
+      "rs_short": -3.6,
+      "rs_long": -7.84,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "ARK Autonomous Technology & Robotics ETF",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "2303",
+      "symbol": "2303.TW",
+      "price": 132.5,
+      "bull": false,
+      "st_line": 135.57,
+      "gap_pct": -2.32,
+      "momentum": 8.86,
+      "rs_short": -7.1,
+      "rs_long": 29.87,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 2,
+      "combo": false,
+      "asof": "2026-09-01",
+      "name": "聯電",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "TER",
+      "symbol": "TER",
+      "price": 349.83,
+      "bull": true,
+      "st_line": 347.92,
+      "gap_pct": 0.55,
+      "momentum": -26.65,
+      "rs_short": -10.19,
+      "rs_long": 13.6,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 1,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Teradyne Inc",
+      "src": [
+        "守備清單"
+      ],
+      "target": 446.47,
+      "rr": 50.6,
+      "target_n": null,
+      "target_low": 350.0,
+      "target_high": 550.0
+    },
+    {
+      "ticker": "TSM",
+      "symbol": "TSM",
+      "price": 415.32,
+      "bull": false,
+      "st_line": 434.21,
+      "gap_pct": -4.55,
+      "momentum": 3.5,
+      "rs_short": -3.8,
+      "rs_long": 7.62,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 1,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Taiwan Semiconductor Manufacturing Co Ltd ADR",
+      "src": [
+        "守備清單",
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "MU",
+      "symbol": "MU",
+      "price": 958.73,
+      "bull": false,
+      "st_line": 1044.51,
+      "gap_pct": -8.95,
+      "momentum": 55.12,
+      "rs_short": -1.88,
+      "rs_long": 71.32,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 1,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Micron Technology Inc",
+      "src": [
+        "守備清單",
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "PLUG",
+      "symbol": "PLUG",
+      "price": 2.16,
+      "bull": false,
+      "st_line": 2.4,
+      "gap_pct": -11.11,
+      "momentum": 0.02,
+      "rs_short": -11.15,
+      "rs_long": -22.49,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 1,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Plug Power Inc",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "BTDR",
+      "symbol": "BTDR",
+      "price": 10.85,
+      "bull": false,
+      "st_line": 12.21,
+      "gap_pct": -12.53,
+      "momentum": 0.49,
+      "rs_short": -18.07,
+      "rs_long": -25.92,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 1,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Bitdeer Technologies Group Ordinary Shares Class A",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "ONTO",
+      "symbol": "ONTO",
+      "price": 267.21,
+      "bull": false,
+      "st_line": 335.0,
+      "gap_pct": -25.37,
+      "momentum": 4.0,
+      "rs_short": -12.6,
+      "rs_long": 12.48,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 1,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Onto Innovation Inc.",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "3576",
+      "symbol": "3576.TW",
+      "price": 17.8,
+      "bull": false,
+      "st_line": 19.08,
+      "gap_pct": -7.19,
+      "momentum": 0.28,
+      "rs_short": -2.74,
+      "rs_long": -0.97,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 1,
+      "combo": false,
+      "asof": "2026-09-01",
+      "name": "聯合再生",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "6443",
+      "symbol": "6443.TW",
+      "price": 25.75,
+      "bull": false,
+      "st_line": 28.31,
+      "gap_pct": -9.94,
+      "momentum": 0.13,
+      "rs_short": -19.58,
+      "rs_long": -35.5,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 1,
+      "combo": false,
+      "asof": "2026-09-01",
+      "name": "元晶",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "5483",
+      "symbol": "5483.TWO",
+      "price": 183.5,
+      "bull": false,
+      "st_line": 209.84,
+      "gap_pct": -14.35,
+      "momentum": 11.43,
+      "rs_short": -6.64,
+      "rs_long": 1.07,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 1,
+      "combo": false,
+      "asof": "2026-09-01",
+      "name": "中美晶",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "8027",
+      "symbol": "8027.TWO",
+      "price": 185.0,
+      "bull": false,
+      "st_line": 198.33,
+      "gap_pct": -7.21,
+      "momentum": 5.5,
+      "rs_short": -13.56,
+      "rs_long": -2.34,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 1,
+      "combo": false,
+      "asof": "2026-09-01",
+      "name": "鈦昇",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "3149",
+      "symbol": "3149.TW",
+      "price": 64.2,
+      "bull": false,
+      "st_line": 73.49,
+      "gap_pct": -14.47,
+      "momentum": 1.31,
+      "rs_short": -20.57,
+      "rs_long": -8.58,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 1,
+      "combo": false,
+      "asof": "2026-09-01",
+      "name": "正達",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "AAPL",
+      "symbol": "AAPL",
+      "price": 316.85,
+      "bull": false,
+      "st_line": 327.0,
+      "gap_pct": -3.2,
+      "momentum": 1.99,
+      "rs_short": 0.41,
+      "rs_long": 4.61,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 1,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Apple Inc.",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "CI",
+      "symbol": "CI",
+      "price": 276.08,
+      "bull": false,
+      "st_line": 295.48,
+      "gap_pct": -7.03,
+      "momentum": 0.7,
+      "rs_short": -4.89,
+      "rs_long": -9.3,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 1,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "The Cigna Group",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "KR",
+      "symbol": "KR",
+      "price": 57.54,
+      "bull": false,
+      "st_line": 59.81,
+      "gap_pct": -3.95,
+      "momentum": 0.67,
+      "rs_short": -3.14,
+      "rs_long": -17.61,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 1,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "The Kroger Co.",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "2105",
+      "symbol": "2105.TW",
+      "price": 31.15,
+      "bull": false,
+      "st_line": 32.4,
+      "gap_pct": -4.01,
+      "momentum": 0.22,
+      "rs_short": -5.01,
+      "rs_long": -27.54,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 1,
+      "combo": false,
+      "asof": "2026-09-01",
+      "name": "正新",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "AMD",
+      "symbol": "AMD",
+      "price": 470.72,
+      "bull": false,
+      "st_line": 534.19,
+      "gap_pct": -13.48,
+      "momentum": -10.93,
+      "rs_short": -8.38,
+      "rs_long": 38.97,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Advanced Micro Devices Inc",
+      "src": [
+        "守備清單",
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "INTC",
+      "symbol": "INTC",
+      "price": 89.51,
+      "bull": false,
+      "st_line": 102.84,
+      "gap_pct": -14.89,
+      "momentum": -7.06,
+      "rs_short": -17.37,
+      "rs_long": 25.16,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Intel Corp",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "AVGO",
+      "symbol": "AVGO",
+      "price": 370.34,
+      "bull": false,
+      "st_line": 394.45,
+      "gap_pct": -6.51,
+      "momentum": -42.94,
+      "rs_short": -5.82,
+      "rs_long": -6.79,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Broadcom Inc",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "MPWR",
+      "symbol": "MPWR",
+      "price": 1267.77,
+      "bull": false,
+      "st_line": 1446.34,
+      "gap_pct": -14.09,
+      "momentum": -78.49,
+      "rs_short": -10.25,
+      "rs_long": -2.12,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Monolithic Power Systems Inc",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "TXN",
+      "symbol": "TXN",
+      "price": 260.91,
+      "bull": false,
+      "st_line": 286.5,
+      "gap_pct": -9.81,
+      "momentum": -9.61,
+      "rs_short": -10.81,
+      "rs_long": 7.66,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Texas Instruments Inc",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "RTX",
+      "symbol": "RTX",
+      "price": 207.73,
+      "bull": false,
+      "st_line": 222.42,
+      "gap_pct": -7.07,
+      "momentum": -8.77,
+      "rs_short": 1.26,
+      "rs_long": 2.0,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "RTX Corp",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "KTOS",
+      "symbol": "KTOS",
+      "price": 50.98,
+      "bull": false,
+      "st_line": 60.78,
+      "gap_pct": -19.22,
+      "momentum": -1.69,
+      "rs_short": -6.1,
+      "rs_long": -38.25,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Kratos Defense & Security Solutions Inc",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "LHX",
+      "symbol": "LHX",
+      "price": 266.25,
+      "bull": false,
+      "st_line": 281.15,
+      "gap_pct": -5.6,
+      "momentum": -17.13,
+      "rs_short": -9.75,
+      "rs_long": -21.36,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "L3Harris Technologies Inc",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "LMT",
+      "symbol": "LMT",
+      "price": 561.23,
+      "bull": false,
+      "st_line": 600.73,
+      "gap_pct": -7.04,
+      "momentum": -25.6,
+      "rs_short": 0.59,
+      "rs_long": -4.74,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Lockheed Martin Corp",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "AVAV",
+      "symbol": "AVAV",
+      "price": 148.35,
+      "bull": false,
+      "st_line": 175.07,
+      "gap_pct": -18.01,
+      "momentum": -22.82,
+      "rs_short": -10.41,
+      "rs_long": -43.7,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "AeroVironment Inc",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "BE",
+      "symbol": "BE",
+      "price": 206.3,
+      "bull": false,
+      "st_line": 249.87,
+      "gap_pct": -21.12,
+      "momentum": -7.09,
+      "rs_short": -15.75,
+      "rs_long": 9.92,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Bloom Energy Corp Class A",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "FSLR",
+      "symbol": "FSLR",
+      "price": 201.9,
+      "bull": false,
+      "st_line": 232.27,
+      "gap_pct": -15.04,
+      "momentum": -28.89,
+      "rs_short": -14.62,
+      "rs_long": -20.43,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "First Solar Inc",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "NXT",
+      "symbol": "NXT",
+      "price": 82.03,
+      "bull": false,
+      "st_line": 98.61,
+      "gap_pct": -20.21,
+      "momentum": -9.43,
+      "rs_short": -24.58,
+      "rs_long": -28.29,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Nextpower Inc Class A",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "ENPH",
+      "symbol": "ENPH",
+      "price": 36.42,
+      "bull": false,
+      "st_line": 42.84,
+      "gap_pct": -17.63,
+      "momentum": -1.36,
+      "rs_short": -18.57,
+      "rs_long": -15.7,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Enphase Energy Inc",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "RUN",
+      "symbol": "RUN",
+      "price": 8.57,
+      "bull": false,
+      "st_line": 10.1,
+      "gap_pct": -17.85,
+      "momentum": -0.77,
+      "rs_short": -25.67,
+      "rs_long": -49.54,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Sunrun Inc",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "APLD",
+      "symbol": "APLD",
+      "price": 25.41,
+      "bull": false,
+      "st_line": 31.27,
+      "gap_pct": -23.06,
+      "momentum": -2.42,
+      "rs_short": -24.06,
+      "rs_long": -26.35,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Applied Digital Corp",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "RIOT",
+      "symbol": "RIOT",
+      "price": 19.0,
+      "bull": false,
+      "st_line": 23.75,
+      "gap_pct": -25.0,
+      "momentum": -0.9,
+      "rs_short": -17.27,
+      "rs_long": -6.49,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Riot Platforms Inc",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "HUT",
+      "symbol": "HUT",
+      "price": 78.64,
+      "bull": false,
+      "st_line": 103.46,
+      "gap_pct": -31.56,
+      "momentum": -13.3,
+      "rs_short": -24.8,
+      "rs_long": 6.34,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Hut 8 Corp",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "CORZ",
+      "symbol": "CORZ",
+      "price": 16.3,
+      "bull": false,
+      "st_line": 20.07,
+      "gap_pct": -23.13,
+      "momentum": -3.34,
+      "rs_short": -29.68,
+      "rs_long": -23.01,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Core Scientific Inc Ordinary Shares - New",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "ETN",
+      "symbol": "ETN",
+      "price": 401.88,
+      "bull": false,
+      "st_line": 446.9,
+      "gap_pct": -11.2,
+      "momentum": -22.97,
+      "rs_short": -4.64,
+      "rs_long": -2.1,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Eaton Corp PLC",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "NVT",
+      "symbol": "NVT",
+      "price": 150.75,
+      "bull": false,
+      "st_line": 174.08,
+      "gap_pct": -15.48,
+      "momentum": -5.84,
+      "rs_short": -7.88,
+      "rs_long": 8.35,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "nVent Electric PLC",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "PWR",
+      "symbol": "PWR",
+      "price": 607.09,
+      "bull": false,
+      "st_line": 686.06,
+      "gap_pct": -13.01,
+      "momentum": -36.3,
+      "rs_short": -10.91,
+      "rs_long": 0.6,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Quanta Services Inc",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "BWXT",
+      "symbol": "BWXT",
+      "price": 152.29,
+      "bull": false,
+      "st_line": 168.41,
+      "gap_pct": -10.59,
+      "momentum": -11.36,
+      "rs_short": -16.37,
+      "rs_long": -27.82,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "BWX Technologies Inc",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "HUBB",
+      "symbol": "HUBB",
+      "price": 453.0,
+      "bull": false,
+      "st_line": 493.6,
+      "gap_pct": -8.96,
+      "momentum": -37.12,
+      "rs_short": -9.14,
+      "rs_long": -12.38,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Hubbell Inc",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "JCI",
+      "symbol": "JCI",
+      "price": 138.24,
+      "bull": false,
+      "st_line": 150.54,
+      "gap_pct": -8.9,
+      "momentum": -7.41,
+      "rs_short": -6.33,
+      "rs_long": -2.16,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Johnson Controls International PLC Registered Shares",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "SYM",
+      "symbol": "SYM",
+      "price": 39.67,
+      "bull": false,
+      "st_line": 45.33,
+      "gap_pct": -14.27,
+      "momentum": -3.11,
+      "rs_short": -7.48,
+      "rs_long": -34.56,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Symbotic Inc Ordinary Shares - Class A",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "AMAT",
+      "symbol": "AMAT",
+      "price": 458.39,
+      "bull": false,
+      "st_line": 535.01,
+      "gap_pct": -16.72,
+      "momentum": -28.5,
+      "rs_short": -17.87,
+      "rs_long": 15.02,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Applied Materials Inc",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "CAMT",
+      "symbol": "CAMT",
+      "price": 134.0,
+      "bull": false,
+      "st_line": 163.74,
+      "gap_pct": -22.19,
+      "momentum": -7.56,
+      "rs_short": -16.11,
+      "rs_long": -14.96,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Camtek Ltd.",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "KLIC",
+      "symbol": "KLIC",
+      "price": 80.06,
+      "bull": false,
+      "st_line": 96.79,
+      "gap_pct": -20.9,
+      "momentum": -5.89,
+      "rs_short": -24.08,
+      "rs_long": 4.12,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Kulicke and Soffa Industries, I",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "2345",
+      "symbol": "2345.TW",
+      "price": 2205.0,
+      "bull": false,
+      "st_line": 2385.24,
+      "gap_pct": -8.17,
+      "momentum": -172.54,
+      "rs_short": -7.78,
+      "rs_long": 3.0,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-09-01",
+      "name": "智邦",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "1536",
+      "symbol": "1536.TW",
+      "price": 49.35,
+      "bull": false,
+      "st_line": 52.85,
+      "gap_pct": -7.09,
+      "momentum": -0.3,
+      "rs_short": -6.03,
+      "rs_long": -37.3,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-09-01",
+      "name": "和大",
+      "src": [
+        "守備清單"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "ACGL",
+      "symbol": "ACGL",
+      "price": 98.07,
+      "bull": false,
+      "st_line": 103.78,
+      "gap_pct": -5.82,
+      "momentum": -0.65,
+      "rs_short": -1.93,
+      "rs_long": -5.2,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Arch Capital Group Ltd.",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "AGO",
+      "symbol": "AGO",
+      "price": 74.7,
+      "bull": false,
+      "st_line": 79.31,
+      "gap_pct": -6.17,
+      "momentum": -4.6,
+      "rs_short": -7.39,
+      "rs_long": -16.89,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Assured Guaranty Ltd.",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "ALL",
+      "symbol": "ALL",
+      "price": 257.8,
+      "bull": false,
+      "st_line": 274.54,
+      "gap_pct": -6.49,
+      "momentum": -9.04,
+      "rs_short": 2.09,
+      "rs_long": 9.68,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "The Allstate Corporation",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "API",
+      "symbol": "API",
+      "price": 4.19,
+      "bull": false,
+      "st_line": 4.64,
+      "gap_pct": -10.74,
+      "momentum": -0.11,
+      "rs_short": -2.43,
+      "rs_long": -3.93,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Agora, Inc.",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "ARKX",
+      "symbol": "ARKX",
+      "price": 32.38,
+      "bull": false,
+      "st_line": 34.43,
+      "gap_pct": -6.33,
+      "momentum": -0.12,
+      "rs_short": -3.19,
+      "rs_long": -5.86,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "ARK Space & Defense Innovation ETF",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "BA",
+      "symbol": "BA",
+      "price": 207.78,
+      "bull": false,
+      "st_line": 222.22,
+      "gap_pct": -6.95,
+      "momentum": -17.99,
+      "rs_short": -7.45,
+      "rs_long": -12.97,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "The Boeing Company",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "BAC",
+      "symbol": "BAC",
+      "price": 61.94,
+      "bull": false,
+      "st_line": 64.71,
+      "gap_pct": -4.47,
+      "momentum": -1.34,
+      "rs_short": 1.14,
+      "rs_long": 5.83,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Bank of America Corporation",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "BCS",
+      "symbol": "BCS",
+      "price": 26.64,
+      "bull": false,
+      "st_line": 28.07,
+      "gap_pct": -5.37,
+      "momentum": -0.59,
+      "rs_short": -2.54,
+      "rs_long": 3.12,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Barclays PLC",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "BRK.B",
+      "symbol": "BRK-B",
+      "price": 504.03,
+      "bull": false,
+      "st_line": 520.55,
+      "gap_pct": -3.28,
+      "momentum": -17.81,
+      "rs_short": -0.99,
+      "rs_long": -6.32,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Berkshire Hathaway Inc.",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "C",
+      "symbol": "C",
+      "price": 131.62,
+      "bull": false,
+      "st_line": 139.69,
+      "gap_pct": -6.13,
+      "momentum": -1.79,
+      "rs_short": -5.05,
+      "rs_long": 3.17,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Citigroup Inc.",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "CCL",
+      "symbol": "CCL",
+      "price": 23.89,
+      "bull": false,
+      "st_line": 26.76,
+      "gap_pct": -12.01,
+      "momentum": -3.08,
+      "rs_short": -14.54,
+      "rs_long": -21.1,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Carnival Corporation Ltd.",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "CPA",
+      "symbol": "CPA",
+      "price": 126.45,
+      "bull": false,
+      "st_line": 137.83,
+      "gap_pct": -9.0,
+      "momentum": -11.23,
+      "rs_short": -12.42,
+      "rs_long": -8.89,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Copa Holdings, S.A.",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "FNF",
+      "symbol": "FNF",
+      "price": 46.45,
+      "bull": false,
+      "st_line": 49.99,
+      "gap_pct": -7.62,
+      "momentum": -3.31,
+      "rs_short": -6.77,
+      "rs_long": -16.53,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Fidelity National Financial, Inc.",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "HENKY",
+      "symbol": "HENKY",
+      "price": 20.4,
+      "bull": false,
+      "st_line": 21.15,
+      "gap_pct": -3.68,
+      "momentum": -0.55,
+      "rs_short": 0.17,
+      "rs_long": -1.14,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Henkel AG & Co. KGaA",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "IX",
+      "symbol": "IX",
+      "price": 38.97,
+      "bull": false,
+      "st_line": 40.02,
+      "gap_pct": -2.69,
+      "momentum": -1.35,
+      "rs_short": -3.04,
+      "rs_long": 10.58,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "ORIX Corporation",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "ON",
+      "symbol": "ON",
+      "price": 74.09,
+      "bull": false,
+      "st_line": 82.93,
+      "gap_pct": -11.93,
+      "momentum": -4.39,
+      "rs_short": -21.48,
+      "rs_long": -6.29,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "ON Semiconductor Corporation",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "PHIN",
+      "symbol": "PHIN",
+      "price": 68.44,
+      "bull": false,
+      "st_line": 75.0,
+      "gap_pct": -9.59,
+      "momentum": -5.2,
+      "rs_short": -13.73,
+      "rs_long": -7.21,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "PHINIA Inc.",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "PHM",
+      "symbol": "PHM",
+      "price": 126.32,
+      "bull": false,
+      "st_line": 135.16,
+      "gap_pct": -7.0,
+      "momentum": -2.61,
+      "rs_short": -3.14,
+      "rs_long": -7.33,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "PulteGroup, Inc.",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "TFC",
+      "symbol": "TFC",
+      "price": 49.58,
+      "bull": false,
+      "st_line": 52.61,
+      "gap_pct": -6.11,
+      "momentum": -1.42,
+      "rs_short": -3.99,
+      "rs_long": -4.48,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-08-31",
+      "name": "Truist Financial Corporation",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "2891",
+      "symbol": "2891.TW",
+      "price": 66.5,
+      "bull": false,
+      "st_line": 67.78,
+      "gap_pct": -1.92,
+      "momentum": -0.37,
+      "rs_short": -3.28,
+      "rs_long": -5.46,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-09-01",
+      "name": "中信金",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "1227",
+      "symbol": "1227.TW",
+      "price": 28.45,
+      "bull": false,
+      "st_line": 29.72,
+      "gap_pct": -4.46,
+      "momentum": -0.24,
+      "rs_short": -4.9,
+      "rs_long": -29.16,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-09-01",
+      "name": "佳格",
+      "src": [
+        "持股"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    },
+    {
+      "ticker": "9914",
+      "symbol": "9914.TW",
+      "price": 82.1,
+      "bull": false,
+      "st_line": 93.22,
+      "gap_pct": -13.54,
+      "momentum": -0.68,
+      "rs_short": 1.98,
+      "rs_long": -27.36,
+      "lamps": {
+        "L1 SuperTrend 多方": false,
+        "L2 動能 > 0": false,
+        "L3 雙重颱風不為綠": false,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 0,
+      "combo": false,
+      "asof": "2026-09-01",
+      "name": "美利達",
+      "src": [
+        "自訂"
+      ],
+      "target": null,
+      "rr": null,
+      "target_n": null
+    }
+  ]
+}

@@ -106,7 +106,7 @@ def render(data, chains):
 
     sub = (f'{len(ev)} 筆・資料日 {esc(date)}・三大法人買賣超（上市＋上櫃約 1,870 檔全掃）'
            f'　|　<b>{n_chain} 檔在七鏈守備清單內</b>（整列淺色標示）')
-    hdr = header("activity", "籌碼異動", sub, NAV, "chip")
+    hdr = header("chip", "籌碼異動", sub, NAV, "chip")
 
     note = (
         '<div class="note"><b>怎麼看</b>'
