@@ -96,3 +96,14 @@ trade_plan.py
 # ⚠️ 代價：GitHub Actions 上沒有快取可用（每次都是冷啟動重抓）。
 # 本機排程有快取所以很快；Actions 那邊靠批次下載本身就已經快 8 倍，可接受。
 state/price_store/
+
+# 2026-09-01：投資判斷與研究筆記移出版控。
+# 這個 repo 是 PUBLIC（GitHub Pages 免費方案的必要條件），而這兩個檔是孔明對
+# 每一檔的完整判斷＋推理，其中 held=true 直接標明持有哪些。沒有金額股數，
+# 但投資思路是完整的。實查 GitHub Actions 完全沒用到（只有本機 8 支 .py 讀），
+# 移出版控零成本。歷史已公開，移除只能防未來。
+# ⚠️ 光加這裡沒用，-f 會繞過 .gitignore——board_analyze_daily.cmd 的
+#    `git add -f ... state ...` 與 researcher_stock_sync.cmd 的逐檔強制加
+#    都已一併改掉。改動這三處要一起看。
+state/advisor_verdicts.jsonl
+state/research_notes.jsonl
