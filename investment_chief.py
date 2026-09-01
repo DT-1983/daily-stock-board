@@ -54,6 +54,11 @@ SCHEMA = {
                 "brief": {"type": "string", "maxLength": 38},
                 "reasoning": {"type": "string"},
                 "invalidation_price": {"type": "string"},
+                # 2026-09-01 新增：純數字的失效價位。原本只有上面那個 string，
+                # AI 只能寫敘述，程式拿不到數字做 first_hit 比對（復盤官要用）。
+                # 兩個都留：string 講「為什麼是這個價」，number 給程式比對。
+                # 沒有明確價位就填 null，不要塞文字進來。
+                "invalidation_level": {"type": ["number", "null"]},
                 "support_resistance": {"type": "string"},
                 "volume_price_divergence": {"type": "string"},
                 "event_risk": {"type": "string"},
@@ -149,7 +154,10 @@ PROMPT = """你是投資長，讀研究員整理好的材料，給這檔股票�
 
 任務（先趨勢、後價值）：
 1. trend_angle：根據趨勢+新聞材料判斷續抱/觀望/考慮出場，並補充5個強化維度：
-   失效價位（invalidation_price）、支撐壓力區間（support_resistance）、
+   失效價位（invalidation_price，文字說明「為什麼是這個價位、跌破代表什麼」）、
+   **失效價位數字（invalidation_level）——只填數字不要文字**：趨勢角度通常就是
+   材料裡給的 SuperTrend 線值；材料沒有明確價位時填 null，不要用文字填塞。
+   支撐壓力區間（support_resistance）、
    量價背離（volume_price_divergence，材料不夠判斷就寫「材料不足無法判斷」）、
    事件風險（event_risk，今天的新聞算不算風險）、多空辯論（bull_bear_debate，
    一句話講多方觀點、一句話講空方觀點）。
@@ -456,8 +464,14 @@ def gather_material(ticker, notes):
         from trade_plan import supertrend_invalidation
         sti = supertrend_invalidation(ticker)
         if sti:
-            trend_material += (f"SuperTrend：{'已翻空' if sti['st_bearish'] else '多頭'}／"
-                               f"RS(60日)：{'已跌破' if sti['rs60_broken'] else '未跌破'}／"
+            # 2026-09-01：這裡原本只給「已翻空/多頭」這種文字、沒有給**數值**，
+            # 導致 invalidation_price 90/90 全是「材料未提供具體價位，無法給出
+            # 失效價」。孔明不是不肯寫，是真的沒有數字可寫。
+            _lv = (f"（SuperTrend 線在 {sti['st_line']}，現價 {sti['price']}，距離 {sti['gap_pct']:+.2f}%）"
+                   if sti.get("st_line") and sti.get("gap_pct") is not None else "")
+            _rs = (f"（RS 現值 {sti['rs60']}）" if sti.get("rs60") is not None else "")
+            trend_material += (f"SuperTrend：{'已翻空' if sti['st_bearish'] else '多頭'}{_lv}／"
+                               f"RS(60日)：{'已跌破' if sti['rs60_broken'] else '未跌破'}{_rs}／"
                                f"{sti['note']}\n")
     except Exception as e:
         trend_material += f"（supertrend_invalidation查詢失敗：{e}）\n"
