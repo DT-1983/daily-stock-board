@@ -305,6 +305,41 @@ def _flip_bars(dr):
     return cur, n
 
 
+def _vwap(closes, vols, n):
+    """20 日「平均成本」＝成交量加權平均收盤價（不是簡單移動平均）。
+
+    ⭐ 這是實測出來的，不是照定義猜的：9939 @ 2026-08-26 老墨顯示 135.95，
+    收盤 20MA 算出來是 133.78（差 1.6%），改用 VWAP 是 **135.95**，小數點都一樣。
+    「平均成本」這個名字本來就暗示是成本（帶量）而不是單純均價。
+    順帶對上截圖的「收盤相對成本：在成本之下」（133.00 < 135.95）。
+    """
+    out, pv, vv = [], [], []
+    for c, v in zip(closes, vols):
+        if c is None or v is None or (isinstance(c, float) and np.isnan(c)):
+            out.append(None)
+            continue
+        pv.append(float(c) * float(v)); vv.append(float(v))
+        if len(pv) > n:
+            pv.pop(0); vv.pop(0)
+        s = sum(vv)
+        out.append(sum(pv) / s if (len(pv) == n and s > 0) else None)
+    return out
+
+
+def _sma(arr, n):
+    """簡單移動平均。前 n-1 筆給 None（不足視窗就不給值，別用不完整的平均充數）。"""
+    out, s, q = [], 0.0, []
+    for v in arr:
+        if v is None or (isinstance(v, float) and np.isnan(v)):
+            out.append(None)
+            continue
+        q.append(float(v)); s += float(v)
+        if len(q) > n:
+            s -= q.pop(0)
+        out.append(s / n if len(q) == n else None)
+    return out
+
+
 def build(ticker, disp_days=756):
     """算一次，回 (html, summary_text)。理由同 fundamentals_reality.build()：
     避免財報卡渲染跟 narrative() 的 LLM prompt 各自重抓一次價量資料。
@@ -394,6 +429,11 @@ def build(ticker, disp_days=756):
             badges.append("轉強")
         rs_sub = "　".join(badges)
 
+    # 成交量：台股 yfinance 回「股」，除以 1000 換成「張」跟老墨的顯示一致
+    _isw = bool(re.match(r"^[0-9]{4,6}[A-Z]?(\.TWO?)?$", str(ticker)))
+    vols = [None if v is None or (isinstance(v, float) and np.isnan(v))
+            else (float(v) / 1000 if _isw else float(v))
+            for v in hist["Volume"].tolist()]
     tiles = "".join([
         trend_tile("SUPER TREND", st_dir, st_bars, st_stats),
         trend_tile("雙重颱風K線", dt_dir, dt_bars),
@@ -402,10 +442,68 @@ def build(ticker, disp_days=756):
         _tile("RS 相對強弱", rs_html, rs_sub),
     ])
 
+    # 2026-09-01 Leo：老墨左側資訊欄那幾個明細區塊。上面四個 tile 是「一眼看狀態」，
+    # 這裡是「看細項數字」——資料本來就都算出來了，只是先前沒呈現。
+    def _rows(title, pairs):
+        body = "".join(
+            f'<div class="tprow"><span>{k}</span><b>{v}</b></div>' for k, v in pairs if v is not None)
+        return f'<div class="tpanel"><div class="tph">{title}</div>{body}</div>' if body else ""
+
+    def _n(v, n=2, suf=""):
+        return "—" if v is None or (isinstance(v, float) and np.isnan(v)) else f"{v:,.{n}f}{suf}"
+
+    _bull = st_dir == 1 if st_dir is not None else None
+    _stl = st["st"][-1] if st else None
+    _ma20 = _vwap(closes, vols, 20)[-1]
+    _v, _vm = (vols[-1] if vols else None), _sma(vols, 20)[-1]
+    _unit = " 張" if _isw else ""
+
+    def _vfmt(v):
+        """台股已換算成「張」直接顯示；美股是股數（動輒千萬），縮成 M/K 才讀得懂。"""
+        if v is None:
+            return None
+        if _isw:
+            return f"{v:,.0f} 張"
+        return f"{v/1e6:,.1f}M" if v >= 1e6 else (f"{v/1e3:,.0f}K" if v >= 1e3 else f"{v:,.0f}")
+    panels = (
+        _rows("SUPER TREND PRO MAX", [
+            ("多方支撐", _n(_stl) if _bull else "N/A"),
+            ("空方壓力", "N/A" if _bull else _n(_stl)),
+            ("這波走了幾根", f"{st_stats.get('cur_len')} 根" if st_stats else None),
+            ("多頭平均長度", f"{st_stats['avg_len_up']:.1f} 根" if st_stats and st_stats.get('avg_len_up') else None),
+            ("空頭平均長度", f"{st_stats['avg_len_down']:.1f} 根" if st_stats and st_stats.get('avg_len_down') else None),
+            ("多頭最小長度", f"{st_stats['min_len_up']} 根" if st_stats and st_stats.get('min_len_up') else None),
+            ("空頭最小長度", f"{st_stats['min_len_down']} 根" if st_stats and st_stats.get('min_len_down') else None),
+            ("支撐歷史延續機率", f"{st_stats['prob_up']:.1f}%" if st_stats and st_stats.get('prob_up') else None),
+            ("壓力歷史延續機率", f"{st_stats['prob_down']:.1f}%" if st_stats and st_stats.get('prob_down') else None),
+        ])
+        + _rows("雙重颱風 K 線", [
+            ("方向", ("多頭" if dt_dir == 1 else "空頭") if dt_dir is not None else None),
+            ("20 日平均成本", _n(_ma20)),
+            ("收盤相對成本", ("在成本之上" if closes[-1] >= _ma20 else "在成本之下") if _ma20 else None),
+        ])
+        + _rows("成交量", [
+            ("成交量", _vfmt(_v)),
+            ("20 日均量", _vfmt(_vm)),
+            ("量能", ("高於均量" if (_v or 0) >= (_vm or 0) else "低於均量") if _vm else None),
+        ])
+        + _rows("EXCEED CHARGE 充能爆發", [
+            ("動能", sq_mom_s),
+            ("動能方向", (sq_mlabel or "").replace("動能", "") or None),
+            ("擠壓等級", (sq_level or "擠壓中") if sq_on else "無"),
+        ])
+        + _rows("RS STRONGER 相對強弱", [
+            (f"短線 RS（{30} 日）", f"{rs_s:+.2f}%" if rs_s is not None else None),
+            (f"長線 RS（{250} 日）", f"{rs_l:+.2f}%" if rs_l is not None else None),
+            ("加值訊號", rs_sub or None),
+        ])
+    )
+
     # ── 展開圖表：全部一年份資料都送到前端，90天/1年是前端切片切換，
     # 不用重抓資料（2026-08-11：原本寫死近120個交易日，用戶要求可切換90天/一年）
     uid = re.sub(r"[^A-Za-z0-9]", "_", ticker.upper())
     dates_full = [d.strftime("%m/%d") for d in hist.index]
+
 
     def _clean(arr):
         out = []
@@ -430,11 +528,17 @@ def build(ticker, disp_days=756):
                   for v in (sq["squeeze_on"] if sq is not None else [])][cut:],
         "rs_s": (_clean(rs_s_series) if rs_s_series is not None else [])[cut:],
         "rs_l": (_clean(rs_l_series) if rs_l_series is not None else [])[cut:],
+        # 2026-09-01 Leo：補上老墨圖上有、我們沒有的兩層——
+        #   ma20＝20 日平均成本（主圖那條橘虛線），vol/vol_ma20＝成交量與 20 日均量。
+        #   兩者只要 OHLCV，零額外資料源。
+        "ma20": _clean(_vwap(closes, vols, 20))[cut:],   # 量加權，不是 SMA
+        "vol": [None if v is None else int(v) for v in vols][cut:],
+        "vol_ma20": _clean(_sma(vols, 20))[cut:],
     }
 
     html = f"""<div class="technical"><h3>技術面四指標</h3>
 <div class="posnote">近一年日線計算，基準指數：{_BENCHMARK_NAME.get(_benchmark(ticker), _benchmark(ticker))}</div>
-<div class="techgrid">{tiles}</div>
+<div class="techgrid">{tiles}</div>{panels}
 <button class="techtoggle" onclick="ti_toggle_{uid}()" id="ti_btn_{uid}">展開圖表 ▾</button>
 <div class="techcharts" id="ti_charts_{uid}" style="display:none">
   <div class="tcwin" id="ti_win_{uid}">
@@ -445,6 +549,8 @@ def build(ticker, disp_days=756):
   </div>
   <div class="tclabel">價格 + SuperTrend + 雙重颱風K線</div>
   <div class="tcbox"><canvas id="ti_c1_{uid}"></canvas></div>
+  <div class="tclabel">成交量（青線＝20 日均量）</div>
+  <div class="tcbox tcbox-sm"><canvas id="ti_cv_{uid}"></canvas></div>
   <div class="tclabel">EXCEED CHARGE 動能柱（金點＝擠壓中，綠/紅點＝已釋放）</div>
   <div class="tcbox tcbox-sm"><canvas id="ti_c2_{uid}"></canvas></div>
   <div class="tclabel">RS 相對強弱（短線30日／長線1年，紅線＝與大盤同步基準線）</div>
@@ -477,7 +583,8 @@ function ti_draw_{uid}(){{
   const slice = arr => (arr || []).slice(cut);
   const d = {{dates: slice(full.dates), closes: slice(full.closes), st: slice(full.st),
     st_dir: slice(full.st_dir), dt: slice(full.dt), dt_dir: slice(full.dt_dir),
-    mom: slice(full.mom), sq_on: slice(full.sq_on), rs_s: slice(full.rs_s), rs_l: slice(full.rs_l)}};
+    mom: slice(full.mom), sq_on: slice(full.sq_on), rs_s: slice(full.rs_s), rs_l: slice(full.rs_l),
+    ma20: slice(full.ma20), vol: slice(full.vol), vol_ma20: slice(full.vol_ma20)}};
   if (ti_charts_{uid}) {{ ti_charts_{uid}.forEach(c => c.destroy()); }}
   const segColor = dir => ctx => {{
     const i = ctx.p1DataIndex; const v = dir[i];
@@ -489,10 +596,26 @@ function ti_draw_{uid}(){{
       {{label:'SuperTrend',data:d.st,borderWidth:1.6,pointRadius:0,
         segment:{{borderColor:segColor(d.st_dir)}}}},
       {{label:'雙重颱風',data:d.dt,borderWidth:1.6,pointRadius:0,borderDash:[4,3],
-        segment:{{borderColor:segColor(d.dt_dir)}}}}]}},
+        segment:{{borderColor:segColor(d.dt_dir)}}}},
+      // 20 日平均成本＝量加權(VWAP) 不是 SMA——實測對上老墨的 135.95
+      {{label:'20日平均成本',data:d.ma20,borderColor:'#F59E0B',borderWidth:1.2,
+        pointRadius:0,borderDash:[2,2],tension:.15}}]}},
     options:{{responsive:true,maintainAspectRatio:false,interaction:{{mode:'index',intersect:false}},
       plugins:{{legend:{{labels:{{color:'#9aa0a6',boxWidth:14,font:{{size:10}}}}}}}},
       scales:{{x:{{ticks:{{color:'#6b7280',font:{{size:9}},maxRotation:0,autoSkip:true,maxTicksLimit:8}},grid:{{display:false}}}},
+        y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
+  // 成交量：紅漲綠跌（台股慣例），疊 20 日均量線——老墨圖上有、我們原本漏了
+  const volColor = d.closes.map(function(c, i) {{
+    const prev = i > 0 ? d.closes[i - 1] : c;
+    return (c == null || prev == null) ? '#2a2e35' : (c >= prev ? '#ef4444' : '#22c55e');
+  }});
+  const cv = new Chart(document.getElementById('ti_cv_{uid}'), {{
+    data:{{labels:d.dates,datasets:[
+      {{type:'bar',label:'成交量',data:d.vol,backgroundColor:volColor,order:2}},
+      {{type:'line',label:'20日均量',data:d.vol_ma20,borderColor:'#22d3ee',
+        borderWidth:1.3,pointRadius:0,tension:.2,order:1}}]}},
+    options:{{responsive:true,maintainAspectRatio:false,plugins:{{legend:{{display:false}}}},
+      scales:{{x:{{ticks:{{display:false}},grid:{{display:false}}}},
         y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
   // 動能柱：多頭轉強亮綠/轉弱暗綠，空頭轉強亮紅/轉弱暗紅（TTM Squeeze 慣例）；
   // sq_on 點陣列（擠壓中金色、已釋放依動能方向上色）疊在 y=0 當擠壓/釋放標記
@@ -526,7 +649,7 @@ function ti_draw_{uid}(){{
         filter:item=>item.text!=='基準線(0%)'}}}}}},
       scales:{{x:{{ticks:{{display:false}},grid:{{display:false}}}},
         y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
-  ti_charts_{uid} = [c1, c2, c3];
+  ti_charts_{uid} = [c1, cv, c2, c3];
 }}
 </script>
 </div>"""
@@ -571,6 +694,11 @@ CSS = """
 .techtoggle:hover{border-color:#4a9eff}
 .techcharts{margin-top:10px}
 .tclabel{font-size:11px;color:#8a8f98;margin:10px 0 4px}
+.tpanel{background:#1a1d23;border:1px solid #2a2e35;border-radius:9px;padding:8px 11px;margin-top:8px}
+.tph{font-size:11px;color:#F5B841;font-weight:700;margin-bottom:5px}
+.tprow{display:flex;justify-content:space-between;gap:10px;padding:2px 0;font-size:12px}
+.tprow>span{color:#8a8f98}
+.tprow>b{color:#e8eaed;font-weight:600}
 .tcbox{height:180px}
 .tcbox-sm{height:100px}
 .tcwin{display:inline-flex;background:#1a1d23;border:1px solid #2a2e35;border-radius:8px;
