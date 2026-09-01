@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-01 17:12",
+ "updated": "2026-09-01 20:31",
  "indices": [
   {
    "sym": "^GSPC",
@@ -46,8 +46,8 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/01",
-   "close": 31.67,
-   "chg_pct": 0.15
+   "close": 31.69,
+   "chg_pct": 0.21
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "法人最新看法出爐！輝達35億美元入股聯發科，AI ASIC成長預期再升溫",
+   "title": "AI賺翻獎金卻談不攏！美光台灣工會逾八成挺罷工 晶片供應鏈拉警報",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6594134",
-   "ts": "09/01 17:00"
+   "url": "https://news.cnyes.com/news/id/6594361",
+   "ts": "09/01 20:30"
   },
   {
-   "title": "〈港股盤後〉科技股領跌 恒指連二黑 希音首日破發",
+   "title": "AI賺翻獎金卻談不攏！美光台灣工會逾八成挺罷工 晶片供應鏈拉警報",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6594025",
-   "ts": "09/01 16:50"
+   "url": "https://news.cnyes.com/news/id/6594361",
+   "ts": "09/01 20:30"
   },
   {
-   "title": "AI兩週造出真晶片！OpenAI驚爆「人類看不懂AI程式碼」、輝達CUDA護城河面臨新挑戰",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6593925",
-   "ts": "09/01 16:40"
-  },
-  {
-   "title": "統一超釋出逾5000名門市夥伴職缺 百位儲備幹部職年薪有望破百萬",
+   "title": "力麗郭紹儀連任紡拓會董事長 攜手業界共創新局",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6594087",
-   "ts": "09/01 16:37"
+   "url": "https://news.cnyes.com/news/id/6594383",
+   "ts": "09/01 20:24"
   },
   {
-   "title": "無畏台股高盤震盪！聯博00984D強勢「吸金」規模飆7倍 奪全台首檔百億主動債ETF",
+   "title": "央行信用管制波及！土銀土建融降至4000億 土銀董座盼「鬆綁」這件事",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6594060",
-   "ts": "09/01 16:37"
+   "url": "https://news.cnyes.com/news/id/6594366",
+   "ts": "09/01 20:16"
   },
   {
-   "title": "仁寶攜HUMAIN深化AI布局 跨足雲端、邊緣與實體AI智慧運算平台",
+   "title": "鉅亨速報 - Factset 最新調查：SpaceX(SPCX-US)EPS預估下修至-0.04元，預估目標價為216.00元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6594409",
+   "ts": "09/01 20:15"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：野村集團(NMR-US)EPS預估上修至0.96元，預估目標價為10.61元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6594407",
+   "ts": "09/01 20:15"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：Tempus AI, Inc. Class ATEM-US的目標價調升至69元，幅度約20%",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6594406",
+   "ts": "09/01 20:15"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：Protagonist Therapeutics Inc(PTGX-US)EPS預估上修至4.9元，預估目標價為172.00元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6594405",
+   "ts": "09/01 20:15"
+  },
+  {
+   "title": "飆股玉晶光等6檔處置股明起抓去關 處置至9/8、9/10止",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6593835",
-   "ts": "09/01 16:36"
+   "url": "https://news.cnyes.com/news/id/6594376",
+   "ts": "09/01 20:14"
   },
   {
-   "title": "國泰投信利關人交易違規案 金管會重罰600萬元、1年內禁發海外基金或ETF",
+   "title": "佳必琪接單熱絡 CSP客戶下長單能見度直達2028年",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6594088",
-   "ts": "09/01 16:26"
-  },
-  {
-   "title": "美債市場上演8月驚魂記 為何救得越猛跌得越狠？",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6594043",
-   "ts": "09/01 16:10"
-  },
-  {
-   "title": "日本10年債殖利率衝3%創30年新高！日元疲弱加劇日銀升息壓力",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6593992",
-   "ts": "09/01 15:40"
-  },
-  {
-   "title": "Anthropic陷「史上規模最大」智慧財產權竊盜之一！索尼、華納聯手起訴",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6593753",
-   "ts": "09/01 15:30"
+   "url": "https://news.cnyes.com/news/id/6594374",
+   "ts": "09/01 20:13"
   }
  ],
  "inst": {
   "date": "09/01",
-  "total_yi": 561.4,
+  "total_yi": 566.4,
   "foreign_yi": 267.1,
-  "trust_yi": 131.0
+  "trust_yi": 136.0
  }
 }
