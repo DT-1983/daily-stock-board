@@ -617,6 +617,14 @@ def run():
 
     if not verdicts:
         return []
+    # 補上判斷當下的基準價（沒有它就無法回測判斷準不準）。
+    # 抓不到也明確寫 None，才分得出「當天沒抓到」和「舊版本沒有這個欄位」。
+    px = _snapshot_prices([v["ticker"] for v in verdicts])
+    for v in verdicts:
+        v.update(px.get(v["ticker"]) or
+                 {"price": None, "price_asof": None, "price_symbol": None})
+    got = sum(1 for v in verdicts if v.get("price") is not None)
+    print(f"  基準價：{got}/{len(verdicts)} 檔取得")
     os.makedirs("state", exist_ok=True)
     with open(VERDICTS_PATH, "a", encoding="utf-8") as f:
         for v in verdicts:
@@ -626,6 +634,41 @@ def run():
     _register_conditions(verdicts)
     return verdicts
 
+
+
+def _snapshot_prices(tickers):
+    """判斷當下的收盤價，寫進 verdict 當日後復盤的基準（2026-09-01 加）。
+
+    ⚠️ 為什麼一定要「當場」記：沒有基準價就算不出「照這個判斷做會賺賠多少」，
+    而事後回頭補抓歷史收盤價，等於把盤中做成的判斷用收盤價重新定錨。
+    同一個坑已經踩過兩次（RRG 資金規模、analyst_price_targets 都只有現在、
+    沒有歷史）——資料源不留歷史，越晚開始存越虧。
+
+    ⚠️ period 必須維持 "3y"，不可以為了省事改 "5d"：price_store._write_cached
+    是 to_pickle **直接覆蓋不合併**，用短天期會把 industry_rotation(RRG) 依賴的
+    三年快取洗掉。
+
+    ⚠️ targets 的代號格式是混的（1229 / 1580.TWO / 1615.TW / NVDA），裸台股代號
+    一定要過 tw_symbol.resolve() 補後綴，否則上櫃股會靜默抓不到（見 memory
+    otc_suffix_coverage_gap）。
+    """
+    import price_store, tw_symbol
+    sym = {tk: tw_symbol.resolve(tk) for tk in tickers}
+    try:
+        closes = price_store.get_closes(sorted(set(sym.values())), period="3y")
+    except Exception as e:                       # noqa: BLE001
+        print(f"  [price] 取價失敗，這批判斷不記基準價：{str(e)[:80]}")
+        return {}
+    out = {}
+    for tk, s in sym.items():
+        ser = closes.get(s)
+        if ser is None or not len(ser.dropna()):
+            continue          # 抓不到就留空，不要寫進一個錯的基準價
+        ser = ser.dropna()
+        out[tk] = {"price": round(float(ser.iloc[-1]), 4),
+                   "price_asof": str(ser.index[-1])[:10],
+                   "price_symbol": s}
+    return out
 
 def _register_conditions(verdicts):
     """P1（2026-08-27）：把投資長給的失效條件登錄進 state/thesis_conditions.json。
