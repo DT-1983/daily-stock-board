@@ -159,12 +159,20 @@ def _row_html(r):
         gaph = (f'<span class="dimv" title="SuperTrend 空方，這條線是壓力不是停損">'
                 f'站上 {r["st_line"]:,.1f} 才翻多（還要 {abs(gap):.1f}%）</span>')
     tid = "d_" + esc(r["ticker"]).replace(".", "_").replace("-", "_")
+    # ⚠️ 一次點擊到位：原本點「圖」只展開這一列，裡面的圖表還是收合的
+    #    （technical_indicators 自帶「展開圖表 ▾」），等於要點兩次才看得到圖。
+    #    Leo 回報「無法點進去看細項的圖表」就是卡在這一層。
+    #    展開時順便把內層 toggle 也按下去，只在它還沒展開時按（避免又收起來）。
+    _js = ("var e=document.getElementById(" + Q + tid + Q + ");"
+           "var open=e.style.display!=" + Q + "table-row" + Q + ";"
+           "e.style.display=open?" + Q + "table-row" + Q + ":" + Q + "none" + Q + ";"
+           "if(open){var t=e.querySelector(" + Q + ".techtoggle" + Q + ");"
+           "var c=e.querySelector(" + Q + ".techcharts" + Q + ");"
+           "if(t&&c&&c.style.display==" + Q + "none" + Q + "){t.click();}}"
+           "this.textContent=open?" + Q + "▾ 收合" + Q + ":" + Q + "▸ 圖表" + Q + ";")
     btn = ("<button class=" + chr(34) + "expbtn" + chr(34) +
-           " onclick=" + chr(34) +
-           "var e=document.getElementById(" + Q + tid + Q + ");" +
-           "e.style.display=e.style.display==" + Q + "table-row" + Q +
-           "?" + Q + "none" + Q + ":" + Q + "table-row" + Q + ";" + chr(34) +
-           ">圖</button> ") if r.get("chart") else ""
+           " onclick=" + chr(34) + _js + chr(34) +
+           ">▸ 圖表</button> ") if r.get("chart") else ""
     import re as _re
     mkt = "tw" if _re.match(r"^[0-9]{4,6}[A-Z]?(\.TWO?)?$", str(r["ticker"])) else "us"
     srcs = "|".join(r.get("src") or [])
@@ -233,6 +241,17 @@ def build(d):
                 f'<div><b style="color:#22C55E">{len(hit)}</b><span>⭐ 打點成立（且風報比 ≥ 1）</span></div>'
                 f'<div><b style="color:#EF4444">{sum(1 for r in ok if (r.get("rr") or 0) < 0)}</b>'
                 '<span>現價已超過共識目標</span></div></div>')
+    body.append(FILTER_HTML)
+    body.append(f'<div class="cbsec">⭐ 打點成立<small>亮 ≥{d["combo_min"]} 燈且風報比 ≥ 1，'
+                f'共 {len(hit)} 檔</small></div>' + _table(hit))
+    body.append(f'<div class="cbsec">COMBO 成立但風報比 &lt; 1<small>技術面共振了，'
+                f'但這個價位進場賠率不划算，共 {len(weak)} 檔</small></div>' + _table(weak))
+    body.append(f'<div class="cbsec">COMBO 成立但查無目標價<small>只能看距停損，'
+                f'共 {len(notgt)} 檔</small></div>' + _table(notgt))
+    body.append(FILTER_JS)
+    # 2026-09-01 Leo：說明移到最下面——一進頁面應該先看到訊號，
+    #                 不是先讀一大段規則。
+    body.append('<div class="cbsec" style="margin-top:34px">📖 這頁怎麼看</div>')
     body.append('<div class="cbnote">'
                 '<b>四個燈</b>：① SuperTrend 多方　② 動能 &gt; 0　③ 雙重颱風不為綠　'
                 f'④ RS{d["rs_short"]}日乖離 &gt; +{d["rs_bias_min"]:g}%。'
@@ -246,14 +265,6 @@ def build(d):
                 'ETF 與部分上櫃小型股查無目標價，那些只給「距停損」。<br>'
                 '⚠️ 出場仍依原規則（SuperTrend 翻空賣一半／RS 跌破 60MA 全出），'
                 '這頁只管進場時機，不是停利建議。</div>')
-    body.append(FILTER_HTML)
-    body.append(f'<div class="cbsec">⭐ 打點成立<small>亮 ≥{d["combo_min"]} 燈且風報比 ≥ 1，'
-                f'共 {len(hit)} 檔</small></div>' + _table(hit))
-    body.append(f'<div class="cbsec">COMBO 成立但風報比 &lt; 1<small>技術面共振了，'
-                f'但這個價位進場賠率不划算，共 {len(weak)} 檔</small></div>' + _table(weak))
-    body.append(f'<div class="cbsec">COMBO 成立但查無目標價<small>只能看距停損，'
-                f'共 {len(notgt)} 檔</small></div>' + _table(notgt))
-    body.append(FILTER_JS)
     body.append("</div>")
     return (header("lamp", "進出燈號",
                    f'四燈共振 × 風報比　·　資料日 {esc(d.get("date",""))}', NAV, "combo")
