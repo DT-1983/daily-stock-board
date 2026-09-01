@@ -3075,3 +3075,159 @@ NameError: name 'is_tw' is not defined   → [WARN] valuation_alert failed
 - `is_tw` NameError 在 `valuation_alert.py` 之外的模組（該檔本身沒有這個名字），
   時間點在今天早上那次修正之前，**是否已修待實跑確認**。
 
+---
+
+### 2026-09-01 16:30　修掉「每天 git pull --rebase 都失敗」
+
+**現象**（`board_analyze.log` 07:00 那輪）：
+
+```
+error: cannot pull with rebase: You have unstaged changes.
+error: Please commit or stash them.
+```
+
+**根因**：這個 repo 被好幾支排程＋手動執行同時寫，工作區**常態是髒的**
+（`docs/*.html`、`state/*.json` 這些每輪重新生成的產出物）。
+`git pull --rebase` 遇到未提交變更就直接死。
+
+⭐ **而且它一直是靜默的**——先做覆蓋率檢查（不要只修眼前那支）：
+
+| 檔案 | `pull --rebase` 處數 | 有錯誤檢查嗎 |
+|---|---|---|
+| `ark_report_biweekly.cmd` | 1 | ❌ |
+| `board_analyze_daily.cmd` | 2 | ❌ |
+| `buffett_scan_weekly.cmd` | 2 | ❌ |
+| `researcher_stock_sync.cmd` | 2 | ❌ |
+
+**7 處全部沒檢查 errorlevel**。所以 rc=1 其實來自別的步驟（valuation_alert 的
+`is_tw` NameError），pull 失敗從頭到尾沒有任何人知道。
+
+#### 修法兩層
+
+1. **`--autostash`**（7 處全加）：git 內建的 stash→rebase→pop，治本。
+2. **開頭那次 pull 加 errorlevel 檢查**（4 支）：進 `FAILED` 累積器
+   （buffett 沒有這個機制，且它 push 階段有 rebase 重試會自我修復，只記 `[WARN]`）。
+
+#### 實測（前後對照，不是推論）
+
+工作區當時真的髒、且落後遠端 1 個 commit：
+
+```
+舊：git pull --rebase           → error: cannot pull with rebase: You have unstaged changes.
+新：git pull --rebase --autostash → Fast-forward ... Applied autostash.
+```
+
+本機修改**完整保留**（6 個檔逐一比對）。`dev_log.md` 一度顯示「有差異」，
+查下去是 **LF→CRLF**（行數相同、位元組正好多 3077＝每行一個 `
+`），
+去掉行尾後內容完全相同。那是 `core.autocrlf=true` 的既有行為，
+**任何 checkout/stash 都會這樣，不是 `--autostash` 引入的**。
+
+`.cmd` 語法也另外實測過（`set FAILED` 在括號區塊裡是 cmd 的延遲展開雷區）：
+成功的 pull 不加東西、失敗的 pull → `FAILED=[ badpull]` ＋ log 有 `[WARN]`。
+
+#### 順帶：`dev_log.md` 是髒工作區的常態來源之一
+
+它**不在** `board_analyze_daily.cmd` 的 `git add -f reports tw_analysis.json state docs`
+清單內 → 永遠不會被自動提交 → 工作區永遠帶著一個未追蹤變更。
+這次一併 commit（`47ec5a8`）。
+
+#### 🔴 順帶抓到一個隱私問題（assets-dashboard）
+
+`.gitignore` 寫著「資產資料(個人財務隱私,絕對不進版控) `data/*.json`」，
+但我建的備份檔叫 `holdings.json.bak-20260901-155110`——**副檔名不是 `.json`，
+規則擋不住**，持股明細真的被 commit 進去過一次。
+已撤回並改成整個 `data/` 不進版控。**這個 repo 沒有 remote，所以沒有外洩。**
+
+⭐ 通用教訓：**副檔名式的 ignore 規則擋不住 `.bak` / `.tmp` / `.1` 這類後綴**。
+目錄裡全是敏感資料時，就該擋整個目錄而不是擋副檔名。
+
+#### 尚未處理（回報 Leo）
+
+`.gitattributes` 寫了 `*.sh text eol=lf`，但工作區的 `docker/entrypoint.sh`、
+`scripts/ci_gate.sh` 實際是 **CRLF**（git status 乾淨 → index 裡存的就是 CRLF）。
+這些檔案看起來不屬於本專案（`scripts/` 底下是 feishu/longbridge/tushare 的東西），
+在 Linux/Docker 會壞，但如果沒人在跑就沒有影響。**未動，等 Leo 判斷。**
+
+---
+
+### 2026-09-01 17:00　清掉上游 ZhuLinsen/daily_stock_analysis 的 908 個檔案
+
+Leo：「查怎麼混進來的，不需要的就拿掉」。
+
+#### 怎麼混進來的
+
+本 repo 2026-06-27 以 **[ZhuLinsen/daily_stock_analysis](https://github.com/ZhuLinsen/daily_stock_analysis)**
+（MIT，中國的「股票智能分析系統」，A股/港股/美股/日股/韓股）為起點建立，
+第一個 commit `de488d5` 一次帶進 **920 個上游檔案**。
+判讀層 2026-07-31 改為本機 headless claude 後上游程式碼全面停用，但從未清理。
+
+先前那些「查不出來源」的東西一次全部解釋了：
+簡體中文的 `.gitattributes`、`docker/entrypoint.sh`、`scripts/` 底下的
+feishu/longbridge/tushare、還有 repo 根目錄那個會連鎖 import
+`fake_useragent` 的 `main.py`。
+
+#### 🔴 我的第一個判斷基準是錯的
+
+原本用「首次出現在 `de488d5` ＝上游的」，結果**把每天在跑的
+`.github/workflows/tw-board.yml` 也列進移除清單**。
+原因：`de488d5` 的訊息是「daily_stock_analysis **＋ TW 美股晨會看板**」——
+那個 commit 同時包含上游程式碼和 Leo 自建的初版，兩者混在一起。
+
+改用**跟上游 repo 實際比對**才可靠：
+
+```
+gh api repos/ZhuLinsen/daily_stock_analysis/commits?until=2026-06-28  → a2f19f6（936 檔）
+gh api .../git/trees/{a2f19f6,HEAD}?recursive=1                       → 聯集 1155 條路徑
+```
+
+取 clone 當時與現行 HEAD 的**聯集**，是因為上游後來改名/刪除過檔案——
+只比 HEAD 會把 `src/services/alphasift_service.py` 這種誤判成「Leo 的」。
+（920 帶進 vs 6/27 版 936 檔，數字吻合。）
+
+⭐ **「從沒改過」不能當作「沒在用」的證據**：`tw_report.py` 只有 1 個 commit，
+但被 `alert_telegram.py` / `board_html.py` 引用、`weekly-screen.yml` 在跑。
+判斷歸屬要看**引用關係**，不是修改歷史。
+
+#### 移除範圍與驗證
+
+908 檔（保留 `.gitignore`——Leo 改過 3 次、`requirements.txt`——Actions 在用）：
+11 個全上游目錄、`docs/` 的 109 份上游文件（Leo 的 38 個網站頁面保留）、
+`.github/` 的 14 個上游設定（Leo 的 5 個 workflow 保留）、
+`main.py` / `server.py` / `webui.py` / `LICENSE` / `README.md` / `AGENTS.md` /
+`CLAUDE.md` / `SKILL.md` / `pyproject.toml` / `setup.cfg` / `.gitattributes` 等。
+
+驗證（三層）：
+1. **反向引用檢查**——Leo 的 65 支 .py 對 `api`/`bot`/`src` 的 import 數為 0
+2. **靜態 AST 掃描**——移除後全數 import 可解析，僅剩的 `db`/`litellm` 兩項
+   是移除前就存在的問題
+3. **實跑** `portfolio_html.py`（86KB）與 `earnings_index.py`（30KB）產出正常
+4. **真 Actions 跑一次** `portfolio-nav.yml` → ✓，**2m43s 降到 1m10s**
+
+移除 `.gitattributes` 沒有造成行尾重新正規化（實查 git status 只有 1 個
+無關的 M）。
+
+#### requirements 42 → 9 個套件
+
+清單由 AST import 掃描產生。移掉 efinance / akshare / tushare / pytdx /
+baostock / longbridge 等中國券商行情源、lark-oapi(飛書) / dingtalk-stream /
+discord.py 等推播 SDK、fastapi / jinja2 / newspaper3k 等。
+
+🔴 **一併移除這行**——每次 CI 都從上游作者的 GitHub 直接安裝程式碼：
+
+```
+git+https://github.com/ZhuLinsen/alphasift.git@377049...#egg=alphasift
+```
+
+⚠️ `weekly-screen.yml` 不走 requirements.txt（自己 `pip install` 一串），
+不受影響。
+
+#### 順帶發現（未處理，待 Leo 決定）
+
+1. **`import db` 必定 ImportError**——`db.py` 在 repo 和本機都不存在，
+   但 `buffett_screener.py` 有 2 處呼叫（`get_db_position_tickers` /
+   `write_to_db`）、`buffett_sp500.py` 有 2 處。這幾條路徑從沒成功執行過。
+2. **repo 是 PUBLIC**，根目錄的 `holdings.json`（監控代號清單）、
+   `portfolios.json`（模擬倉）都公開可見。GitHub Pages 免費方案需要 public，
+   算是必要代價，但 Leo 應該知道範圍。
+
