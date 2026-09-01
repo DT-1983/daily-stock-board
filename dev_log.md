@@ -2818,3 +2818,260 @@ Leo 的 12 檔台股全是上市。算不出俗貴價的 5 檔是 4 檔 ETF（�
 根治要在 push 失敗時自動 `pull --rebase` 重試一次——**還沒做，等 Leo 決定**。
 
 （08:45 只跑 13 分鐘 vs 昨天 79 分是正常的：今天 6 檔候選，昨天 51 檔。）
+
+---
+
+### 2026-09-01 15:30　模擬倉 push 失敗：8/27 修過的問題漏了一支 workflow
+
+**現象**（Telegram）：`🔴 模擬倉 push 失敗｜數字算好了但沒推上線，網站看到的還是舊的。`
+
+**查證**（`gh run view 33475700017 --log-failed`）：
+
+```
+[main b0957fa] chore: 模擬倉每日淨值更新 [skip ci]
+ 2 files changed, 641 insertions(+), 593 deletions(-)
+ ! [rejected]        main -> main (fetch first)
+```
+
+數字**算對了也 commit 了**，只有 push 掉了 → runner 是拋棄式的，
+`portfolios.json` 跟 `docs/portfolios.html` 兩份產出當場消失。
+
+**撞車對象是我自己**（全部 UTC）：
+
+| 時間 | 事件 |
+|---|---|
+| 05:59:10 | portfolio-nav 排程啟動，checkout 拿到當下的 main |
+| **06:00:15** | **我本機 push `046e709`（趨勢失效條件修正）** |
+| 06:01:33 | nav 的 `git push` → rejected |
+
+**根因不是撞車，是這支沒有重試。** 8/27 已經為了同一個問題加過 rebase 重試，
+但只加了三支：
+
+| workflow | 8/27 rebase 重試 |
+|---|---|
+| `tw-board.yml` | ✅ |
+| `market-home.yml` | ✅ |
+| `weekly-screen.yml` | ✅ |
+| **`portfolio-nav.yml`** | ❌ 漏 |
+
+諷刺的是 `portfolio-nav.yml` 是防呆寫最厚的一支（8/19 加了資料過期警示、
+`if: always()` 強制發佈、FAILED 累積、失敗推 TG），唯獨 push 那段停在
+「失敗就通知 + exit 1」。**通知寫得越完整，越容易在下一輪修補時被當成「這支處理過了」跳過。**
+
+**修法**：把 tw-board 的 rebase 重試 3 次原封不動搬過來（`d1e5b18`），
+再 `gh workflow run portfolio-nav.yml` 補跑當天淨值。
+
+⭐ **收尾動作要固定成覆蓋率檢查，不是「修完手上這幾支」**：
+
+```bash
+for f in .github/workflows/*.yml; do grep -L "git pull --rebase" "$f"; done
+```
+
+跟 `otc_suffix_coverage_gap`、`earnings_card_stale_formula_bug` 是同一種病：
+改核心做法時沒有掃全部呼叫點。
+
+---
+
+### 2026-09-01 15:40　資產中控台 Firstrade 小計 vs Firstrade App 對不上（查證結果）
+
+Leo：「為什麼跑出來的跟我在 FIRSTRADE 看到的價值不一樣?」
+
+| 來源 | 數字 |
+|---|---|
+| 資產中控台「Firstrade」小計 | US$66,870 |
+| Firstrade App　Total Account Value | US$67,546.85 |
+| 差額 | **US$676.77** |
+
+**實跑 `_quote_one_holding` 重算全部 66 檔**（不是看畫面推論）：
+
+```
+Firstrade 持股即時市值合計 = US$66,870.08  (66/66 檔有報價)
+抓不到價: []
+```
+
+→ **排除掉三個常見嫌疑**：
+- ❌ 不是抓價失敗落回舊值（66/66 全有報價）
+- ❌ 不是匯率問題（小計走 `live_value_native`，是原生 USD 不經匯率）
+- ❌ 不是零股沒記到（`holdings.json` 有 11 檔是小數股，AAPL 記的是 `5.00991`，
+  跟 App 的 5.00991 一致；畫面上的「5」只是四捨五入顯示）
+
+**結構性差異（部分成立，但不是主因）**：`renderHoldingsSummary()`
+（`static/index.html:568`）的小計是 `Σ 持股即時市值`，定義上不含現金。
+但實際查證後，**現金只有 US$64.01**，解釋不了 676.77。
+
+#### 🔴 我第一版的結論是錯的：「差額是現金」
+
+Leo 打開 Balance details 後推翻：
+
+```
+Total Account Value  $67,536.51
+Cash & Equiv.            $64.01     ← 不是 676.77
+Long Stocks          $67,473.00
+Margin / Short / Open Orders  全部 $0.00
+```
+
+**我犯的錯**：算出一個「跟股價無關的固定金額」，就套上最順的解釋（現金），
+沒有去要能證實它的那個數字就寫進結論。這正是 `verify_final_state_not_observed`
+講的——**推論寫成結論**。正確講法應該是「差額 676.77 與股價無關，可能是現金，
+要看 Balance details 才知道」。
+
+#### 重算後的真實缺口
+
+先校準基準。Firstrade 顯示**即時價**，yfinance 給的是**前一交易日收盤價**，
+用截圖裡的兩檔驗證：
+
+| | Firstrade 即時 | 當日變動 | 回推前收 | 我的價 |
+|---|---|---|---|---|
+| AAOI | 107.40 | −0.29 | **107.69** | 107.69 ✅ |
+| AAPL | 316.63 | −0.22 | **316.85** | 316.85 ✅ |
+
+兩檔完全吻合 → 兩邊的差別就是 Day Change，把它扣掉才是同基準：
+
+```
+Firstrade Long Stocks (即時)  = 67,473.00
+  減 Day Change               =     34.71
+Firstrade 持股（前收基準）     = 67,438.29
+我算的（yfinance 前收）        = 66,870.08
+真實缺口                       =    568.21   ← 0.84%
+```
+
+**已排除的原因**（都是實跑不是推論）：
+
+- ❌ 現金 —— 只有 64.01
+- ❌ 抓價失敗落回舊值 —— 66/66 全有報價
+- ❌ 匯率 —— 小計走 `live_value_native`，原生 USD
+- ❌ 零股沒記到 —— 11 檔小數股，AAPL 記的是 `5.00991`，與 App 一致
+- ❌ 價格基準不同 —— 已用 Day Change 校準
+- ❌ **代號抓到別的標的** —— 66 檔逐一比對 yfinance `longName`，全部指向正確公司
+- ❌ 最近誤刪 —— 對 `holdings.json.bak-20260831-210243` 做 diff，檔數/股數皆無變化
+
+#### 結案：68 vs 66，四處差異全部定位
+
+Leo 提供網頁版完整截圖，右下角 **「1 至 68 的 68」** 是關鍵——檔數就對不上。
+把 68 列全部抄進來做完整比對（不是只找那兩檔）：
+
+| 差異 | Firstrade | holdings.json | 前收金額 |
+|---|---|---|---|
+| **MRVL** 未收錄 | 2 股 | 無 | 423.32 |
+| **C158889** 未收錄 | 6 股 | 無 | 0.00（無報價） |
+| **SPCX** 股數 | 6 | 5 | 143.69 |
+| **XYLG** 股數 | 9.38292 | 9.35889 | 0.71 |
+
+```
+我原本算的            66,870.08
+  + MRVL 2股@211.66      423.32
+  + C158889                0.00
+  + SPCX 補 1 股          143.69
+  + XYLG 補 0.02403 股      0.71
+  ---------------------------------
+修正後                 67,437.80
+Firstrade（前收基準）   67,438.29
+殘差                        0.49   ← 截圖只到小數兩位的四捨五入
+```
+
+⭐ **交叉驗證**：另外把 66 檔的 `cost_basis` 全部對一遍（`= USD 成本 × 32.3810`，
+12 檔反推匯率完全一致），**不一致的正好只有 SPCX / XYLG 這兩檔**：
+
+- SPCX 成本多 US$143.62 → 加碼 1 股買在 143.62，單位成本 176.72 → 171.20 ✅
+- XYLG 成本多 US$0.71 → 配息再投資 0.02403 股 @ 29.55（該列有 `D` 標記）✅
+
+**兩條獨立的線索（股數、成本）指向同一個結論**，不是硬湊出來的。
+
+#### 修正內容
+
+`data/holdings.json`（備份 `holdings.json.bak-20260901-155110`）：
+補 MRVL / C158889 兩筆、SPCX 5→6、XYLG 股數與成本校正。
+重算後 68 檔 = **US$67,437.80**，唯一抓不到價的是 C158889（落回 market_value=0，
+不影響總額）。
+
+#### 連帶處理：C158889 不能進策略母體
+
+`trade_plan.py` 的 `HOLDINGS_PATH` 直接指向這份 `holdings.json`，所以：
+
+- ✅ **MRVL 自動進了策略部位**（67 檔）與監控母體（93 檔），`owner_mark` 為空字串
+  ＝Leo 核心部位。它上週才出財報，之前完全不在任何清單裡。
+- ❌ **C158889 也會跟著進去**——無報價、非個股，會讓 base_rate／貴俗價／財報
+  各自多一筆永遠失敗的雜訊。
+
+加了 `NON_TRADABLE = {"C158889"}`。⭐ 但原本 `load_holdings` /
+`monitored_holdings` / `legacy_tickers` / `kids_tickers` **四個函式各自
+`json.loads(HOLDINGS_PATH...)`**，要排一個代號得改四個地方——這正是今天上午
+才記進 `silent_failure_pattern` 的同一種病。所以收成單一入口 `_read_rows()`，
+四處統一走它。
+
+驗證：策略部位 67（MRVL ✅ / C158889 ❌）、監控母體 93、繼承台股 36、小孩 24。
+
+⚠️ `trade_plan.py` 在 `.gitignore` 內，這次修改同樣只在本機。
+
+#### 這次做對的地方（相對於前一節的錯誤）
+
+拿到 68 列資料後**沒有只去找那 2 檔就收工**，而是全部 68 列逐項比對股數與成本——
+才會抓到 SPCX / XYLG 這兩處「不在原始假設裡」的差異。
+如果只找漏掉的檔，缺口會停在 423.81 對不上 568.21，然後又要開始猜。
+
+---
+
+### 2026-09-01 16:00　Firstrade 月度對帳提醒上線
+
+Leo：「每月對一次吧 給我提醒」。
+
+**為什麼是「提醒」不是「自動對帳」**：Firstrade 沒有公開 API，本機永遠拿不到
+券商端的權威數字。硬做成自動對帳只會做出一個**不知道自己對不對**的東西。
+所以機器算好自己這邊、推 Discord，由 Leo 對一眼。
+
+- `assets-dashboard/reconcile_reminder.py`
+- `firstrade_reconcile_monthly.cmd` → 排程 `FirstradeReconcileMonthly`
+  每月 1 號 09:30，`StartWhenAvailable=True`（電腦沒開會補跑，
+  這是 `ArkReportBiweekly` 從沒執行過的那個坑）
+- 推 Discord `private`（持股密報），persona 仲達-風險官
+- state：`data/reconcile_state.json`，下次會顯示「上次對帳 X 天前、當時幾檔幾元」
+
+訊息內容刻意設計成 30 秒對得完：**先看檔數**（最快的判別，這次就是靠
+「1 至 68 的 68」破案）、再看總額、附上小數股清單（最可能漂的）。
+並寫明 **0.5% 以內算正常**——那是即時 vs 前收的落差，不寫的話 Leo 會去查
+根本不是問題的東西。
+
+#### 踩到三個坑，都是驗證抓出來的
+
+**1. `sys.path.insert(0, daily_stock_analysis)` → `import main` 抓錯檔**
+那邊也有一支 `main.py`，而且會連鎖 import 一堆這裡沒裝的套件
+（`fake_useragent` 直接炸）。改 `append`，讓本專案優先。
+
+**2. 🔴 heredoc 寫出來的 `.cmd` 是 LF-only，cmd.exe 執行失敗**
+第一次用排程器觸發：`LastTaskResult=1`，而且 **log 檔連建都沒建**——
+連 `echo. >> "%LOG%"` 都沒跑到，等於整個檔案沒被執行。轉成 CRLF 後 rc=0。
+
+⚠️ **我一度把原因說成「多行括號區塊 + LF」，那是推論而且是錯的**：
+`board_analyze_daily.cmd` 同樣 LF-only、同樣有括號結構，卻一直正常在跑。
+**確定的只有「LF→CRLF 修好了」，確切機制我沒查出來**——不要把它寫成定論。
+
+**3. 🔴 推送失敗會被吞掉（自己造的綠燈假象）**
+`send_discord` 失敗只印警告、回 False、**不 raise**。我第一版忽略回傳值，
+實測用壞掉的 webhook：`404 Unknown Webhook` → 照樣印「已推送並記錄」、
+**exit 0、而且把 state 寫進去**。等於把一次沒送出去的提醒記成做過了，
+下個月還會顯示「上次對帳＝這次」。
+→ 改成看回傳值；失敗時 **rc=1 且不寫 state**。兩條路徑都實測過：
+
+```
+失敗路徑：[discord] 發送失敗 404 → [reconcile] 推送失敗 → exit 1 → state 未變動 ✅
+正常路徑：排程器觸發 LastTaskResult=0，NextRunTime 2026/10/1 09:30 ✅
+```
+
+這條完全是自己造的坑，而且跟今天上午才寫進 `silent_failure_pattern` 的
+「`|| echo` 是靜默失敗製造機」是同一件事——**只是這次是 Python 版的**。
+
+#### 順帶發現（尚未處理）
+
+`BoardAnalyzeDaily` 今天 07:00 `LastTaskResult=1`，log 裡兩個原因：
+
+```
+error: cannot pull with rebase: You have unstaged changes.
+NameError: name 'is_tw' is not defined   → [WARN] valuation_alert failed
+```
+
+- **unstaged changes 卡住 pull --rebase**：工作區長期有沒 commit 的產出物
+  （`docs/earnings.html`、`state/chain_technicals.json`、`chief_buy_cooldown.json`、
+  `valuation_state.json`），每天的 `git pull --rebase` 都會失敗。
+- `is_tw` NameError 在 `valuation_alert.py` 之外的模組（該檔本身沒有這個名字），
+  時間點在今天早上那次修正之前，**是否已修待實跑確認**。
+
