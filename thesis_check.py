@@ -37,6 +37,26 @@ REG_PATH = "state/thesis_conditions.json"
 OUT_PATH = "state/thesis_check_today.json"
 NEAR_PCT = 0.02      # 距失效線 2% 內算「逼近」
 
+# 趨勢型條件：型別 → (是否觸發的判斷式, 顯示標籤)。
+# 2026-09-01 補反向型別：原本只有「由多翻空」，但**非持股的看空判斷需要反向的
+# 失效條件**（「如果它由空翻多，代表我看空錯了」），AI 只能硬套同一個 type，
+# 結果 desc 寫「由空翻多」卻被拿去對 st_bearish 檢查 → 實測 5 個新觸發裡
+# 3 個是假訊號（1580/2731/4763，畫面上「翻空」跟 desc 的「翻多」自相矛盾，
+# Leo 一眼看出來）。方向必須跟判斷相反，型別就要成對。
+TREND_TYPES = {
+    "supertrend_bear": lambda bear, rsdn: bear,          # 由多翻空
+    "supertrend_bull": lambda bear, rsdn: not bear,      # 由空翻多
+    "rs_below":        lambda bear, rsdn: rsdn,          # 跌破 60MA
+    "rs_above":        lambda bear, rsdn: not rsdn,      # 站回 60MA
+    # 舊型別相容：9/1 之前登錄的都是這個名字，語意等同 supertrend_bear
+    "supertrend_flip": lambda bear, rsdn: bear,
+}
+TREND_LABEL = {
+    "supertrend_bear": "SuperTrend 翻空", "supertrend_bull": "SuperTrend 翻多",
+    "rs_below": "RS 跌破60MA", "rs_above": "RS 站回60MA",
+    "supertrend_flip": "SuperTrend 翻空",
+}
+
 
 def _yf_symbol(tk):
     # 2026-08-31：原本裸代號一律接 .TW，上櫃股（3264/3265 已在登錄名單裡）拿不到
@@ -106,9 +126,10 @@ def run():
         # 非持股的全被推進「🔒持股密報」——Leo 反饋「也推了不是持股的？」。
         # 帶著 held 往下傳，日報才能分流（持股→密報、非持股→公開版）。
         _h = bool(entry.get("held"))
-        _trend_needed = any(c.get("type") in ("supertrend_flip", "rs_below")
+        _trend_needed = any(c.get("type") in TREND_TYPES
                             and c.get("status") == "active"
                             for c in entry.get("conditions", []))
+        _born = entry.get("source_date")
         inval = _st_state(tk) if _trend_needed else None
         for c in entry.get("conditions", []):
             if c.get("status") == "triggered":
@@ -118,16 +139,25 @@ def run():
             desc = c.get("desc", "")
 
             # ── 趨勢型（每日算得出來，不必等財報）
-            if ctype in ("supertrend_flip", "rs_below"):
+            if ctype in TREND_TYPES:
                 if not inval:
                     # 算不出來就誠實掛「待檢」，不要因為抓不到資料就當健康——
                     # 那正是 8 月連踩多次的「綠燈但沒做事」模式
                     pending_metric.append((tk, f"{desc}（趨勢資料不足，今日未檢）", _h, ang))
                     continue
-                hit = (inval.get("st_bearish") if ctype == "supertrend_flip"
-                       else inval.get("rs60_broken"))
-                label = "SuperTrend 翻空" if ctype == "supertrend_flip" else "RS 跌破60MA"
+                bear = bool(inval.get("st_bearish"))
+                rsdn = bool(inval.get("rs60_broken"))
+                hit, label = TREND_TYPES[ctype](bear, rsdn), TREND_LABEL[ctype]
                 if hit:
+                    # 2026-09-01：登錄當天就成立的不算「新觸發」——那代表條件被寫成
+                    # **現況描述**而不是未來事件（實例 2618 的「RS 持續低於均線未收復」，
+                    # 一登錄就 triggered）。這種不是失效，是條件本身沒寫好，
+                    # 混進 🚫 會稀釋真正的訊號。標成待處理讓它看得見但不佔警示版面。
+                    if _born == date:
+                        pending_metric.append(
+                            (tk, f"{desc}（⚠️登錄當天即成立，條件寫成現況描述非未來事件）",
+                             _h, ang))
+                        continue
                     c["status"], c["triggered_date"] = "triggered", date
                     triggered.append((tk, f"{label}｜{desc}", _h, ang))
                 else:

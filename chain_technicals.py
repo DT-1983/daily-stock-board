@@ -321,8 +321,26 @@ def overview_line(path=OUT_PATH):
     n_tw = len(rows) - n_us
     s += (f"｜{len(rows)} 個籃子（美{n_us}/台{n_tw}）中 "
           f"{strong} 個領先或改善、{weak} 個弱化或落後")
-    # SuperTrend 空頭的鏈單獨點名——那是「趨勢已經轉壞」不只是相對弱
-    bears = [f"{r['name']}（{r['mkt']}）" for r in rows if r.get("st") == "空頭"]
-    if bears:
-        s += f"｜⚠️ SuperTrend 空頭：{'、'.join(bears)}"
+    # 2026-09-01 Leo：「SuperTrend 接在前面了，請改為獨立一段」——原本用「｜」
+    # 續在產業輪動後面，手機上那一行會折成 4~5 行，兩件事糊在一起看不出斷點。
+    # 改由 bears_line() 另外回傳，呼叫端當獨立一行放。
     return s
+
+
+def bears_line(path=OUT_PATH):
+    """SuperTrend 已翻空頭的鏈，獨立一行。沒有就回 None（不硬湊）。
+
+    跟 overview_line 分開的理由：那是「相對強弱排名」，這是「趨勢已經轉壞」——
+    兩件事不同層級，接在同一行會讓人以為墊底的那條就是翻空的那條。"""
+    try:
+        d = json.load(open(path, encoding="utf-8"))
+    except Exception:
+        return None
+    bears = []
+    for key, c in (d.get("chains") or {}).items():
+        if c.get("supertrend") == "空頭":
+            mkt, name = _split_key(key)
+            bears.append(f"{name}（{mkt}）")
+    if not bears:
+        return None
+    return f"⚠️ **SuperTrend 空頭**（{len(bears)} 條鏈）：" + "、".join(bears)

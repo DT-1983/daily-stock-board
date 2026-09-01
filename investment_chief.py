@@ -68,8 +68,12 @@ SCHEMA = {
         # 每個角度各自給條件**，跟本檔既有的「兩角度獨立判斷不合併」硬規則一致。
         # 型別：
         #   price_below/above ── 價格線，每日對現價檢查（零成本）
-        #   supertrend_flip   ── SuperTrend 由多翻空，每日算得出來（不必等財報）
-        #   rs_below          ── RS(60日) 跌破自身均線，每日算得出來
+        #   supertrend_bear   ── SuperTrend 由多翻空（看多的人用）
+        #   supertrend_bull   ── SuperTrend 由空翻多（看空/避開的人用）
+        #   rs_below / rs_above ── RS(60日) 跌破 / 站回自身均線
+        # ⚠️ 2026-09-01 補方向：原本只有單向的 supertrend_flip，非持股的看空判斷
+        # 沒有對應型別可用，AI 只能硬套 → desc 寫「由空翻多」卻被當成「由多翻空」
+        # 檢查，實測 5 個「新觸發」裡 3 個是假訊號（1580/2731/4763）。
         #   metric            ── 財報/基本面門檻，等下次財報才驗證
         "trend_conditions": {
             "type": "array", "maxItems": 2,
@@ -78,7 +82,8 @@ SCHEMA = {
                 "properties": {
                     "type": {"type": "string",
                              "enum": ["price_below", "price_above",
-                                      "supertrend_flip", "rs_below", "metric"]},
+                                      "supertrend_bear", "supertrend_bull",
+                                      "rs_below", "rs_above", "metric"]},
                     "value": {"type": ["number", "null"]},
                     "desc": {"type": "string", "maxLength": 50},
                 },
@@ -169,9 +174,16 @@ PROMPT = """你是投資長，讀研究員整理好的材料，給這檔股票�
 數字最明確，AI 幾乎全部往估值寫（44條價格條件裡39條是貴俗價），結果趨勢角度形同沒有
 失效條件。趨勢就寫趨勢的失效（破線/翻空/RS轉弱），價值就寫價值的失效（估值/財報數字）。
 
-**trend_conditions（1-2條，趨勢角度的失效）** 可用型別：
-- supertrend_flip：SuperTrend 由多翻空（value 不用填，系統每天自己算）
-- rs_below：RS(60日) 跌破自身均線（value 不用填，系統每天自己算）
+**trend_conditions（1-2條，趨勢角度的失效）** 可用型別（value 都不用填，系統每天自己算）：
+- supertrend_bear：SuperTrend **由多翻空** ← 你判斷「趨勢向上/可進場」時用這個
+- supertrend_bull：SuperTrend **由空翻多** ← 你判斷「趨勢向下/避開」時用這個
+- rs_below：RS(60日) **跌破**自身均線 ← 看多時用
+- rs_above：RS(60日) **站回**自身均線 ← 看空時用
+⚠️ **方向要跟你的判斷相反**：失效條件是「什麼情況代表我錯了」。
+   說「趨勢轉弱不宜進場」→ 失效條件是它**轉強**（supertrend_bull / rs_above）；
+   說「趨勢向上可續抱」→ 失效條件是它**轉弱**（supertrend_bear / rs_below）。
+⚠️ **必須是還沒發生的事**。不要寫「RS 持續低於均線未收復」這種**描述現況**的句子
+   ——那登錄當下就成立，不是可證偽的條件。要寫「如果…就代表我錯了」。
 - price_below/price_above：具體價格線（value 必須給數字，例如跌破支撐 185.5）
 - metric：要等財報才驗證的（趨勢角度很少用到）
 
