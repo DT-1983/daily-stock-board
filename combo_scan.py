@@ -165,7 +165,11 @@ def scan_one(tk, sym, df, bench_closes):
         f"L4 RS{RS_SHORT}日乖離 > +{RS_BIAS_MIN:g}%": bool(rs_s is not None and rs_s > RS_BIAS_MIN),
     }
     lit = sum(1 for v in lamps.values() if v)
-    return {"ticker": tk, "symbol": sym, "price": round(px, 2),
+    # ⚠️ 空方時那條線不是「停損」是「壓力」——語意完全不同。
+    # 老墨的處理：SuperTrend 空方時不算風報比，改顯示「站上 X 才翻多（還要 +Y%）」。
+    # 我們照做：bull=False 時 gap_pct 代表「離翻多還要漲多少」，頁面要分開講。
+    bull = bool(st["dir"][-1] == 1)
+    return {"ticker": tk, "symbol": sym, "price": round(px, 2), "bull": bull,
             "st_line": round(float(st_line), 2) if st_line else None,
             "gap_pct": round((px - st_line) / px * 100, 2) if st_line else None,
             "momentum": round(float(mom), 2) if mom is not None else None,
@@ -181,7 +185,8 @@ def add_rr(row, tgt):
     row["target"] = None
     row["rr"] = None
     row["target_n"] = None
-    if not tgt or tgt.get("mean") is None or not row.get("st_line"):
+    # 空方不給風報比：沒有「持有中的停損」可言，這時談賠率是無意義的
+    if not row.get("bull") or not tgt or tgt.get("mean") is None or not row.get("st_line"):
         return row
     mean, px, sl = float(tgt["mean"]), row["price"], row["st_line"]
     row["target"] = round(mean, 2)
