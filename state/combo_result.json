@@ -32,7 +32,16 @@
       "rr": 14.97,
       "target_n": null,
       "target_low": 12.0,
-      "target_high": 26.75
+      "target_high": 26.75,
+      "sector": "Non-Energy Minerals",
+      "industry": "Other Metals/Minerals",
+      "sector_zh": "非能源礦業",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "PAAS",
@@ -62,7 +71,16 @@
       "rr": 6.68,
       "target_n": null,
       "target_low": 53.0,
-      "target_high": 94.0
+      "target_high": 94.0,
+      "sector": "Non-Energy Minerals",
+      "industry": "Precious Metals",
+      "sector_zh": "非能源礦業",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "UHS",
@@ -92,7 +110,16 @@
       "rr": 4.14,
       "target_n": null,
       "target_low": 166.0,
-      "target_high": 290.0
+      "target_high": 290.0,
+      "sector": "Health Services",
+      "industry": "Hospital/Nursing Management",
+      "sector_zh": "健康服務",
+      "quad": {
+        "20": "leading",
+        "60": "weakening",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "TM",
@@ -122,7 +149,16 @@
       "rr": 3.81,
       "target_n": null,
       "target_low": 220.0,
-      "target_high": 239.31209
+      "target_high": 239.31209,
+      "sector": "Consumer Durables",
+      "industry": "Motor Vehicles",
+      "sector_zh": "耐久消費品",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "BAYRY",
@@ -152,7 +188,16 @@
       "rr": 3.8,
       "target_n": null,
       "target_low": 15.3,
-      "target_high": 16.68
+      "target_high": 16.68,
+      "sector": "Health Technology",
+      "industry": "Pharmaceuticals: Major",
+      "sector_zh": "健康科技",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "SSUMY",
@@ -182,7 +227,16 @@
       "rr": 3.75,
       "target_n": null,
       "target_low": 13.71,
-      "target_high": 13.71
+      "target_high": 13.71,
+      "sector": "Distribution Services",
+      "industry": "Wholesale Distributors",
+      "sector_zh": "流通服務",
+      "quad": {
+        "20": "lagging",
+        "60": "leading",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "1504",
@@ -212,7 +266,16 @@
       "rr": 3.53,
       "target_n": null,
       "target_low": 76.0,
-      "target_high": 165.0
+      "target_high": 165.0,
+      "sector": "Producer Manufacturing",
+      "industry": "Electrical Products",
+      "sector_zh": "生產製造",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "MSFT",
@@ -243,7 +306,16 @@
       "rr": 3.49,
       "target_n": null,
       "target_low": 400.0,
-      "target_high": 870.0
+      "target_high": 870.0,
+      "sector": "Technology Services",
+      "industry": "Packaged Software",
+      "sector_zh": "科技服務",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "CVSA",
@@ -273,7 +345,16 @@
       "rr": 3.27,
       "target_n": null,
       "target_low": 140.0,
-      "target_high": 175.0
+      "target_high": 175.0,
+      "sector": "Consumer Services",
+      "industry": "Other Consumer Services",
+      "sector_zh": "消費服務",
+      "quad": {
+        "20": "lagging",
+        "60": "leading",
+        "120": "lagging"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "CEG",
@@ -303,7 +384,16 @@
       "rr": 2.87,
       "target_n": null,
       "target_low": 290.0,
-      "target_high": 441.0
+      "target_high": 441.0,
+      "sector": "Utilities",
+      "industry": "Electric Utilities",
+      "sector_zh": "公用事業",
+      "quad": {
+        "20": "lagging",
+        "60": "improving",
+        "120": "lagging"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "THC",
@@ -333,7 +423,16 @@
       "rr": 2.6,
       "target_n": null,
       "target_low": 260.0,
-      "target_high": 315.0
+      "target_high": 315.0,
+      "sector": "Health Services",
+      "industry": "Hospital/Nursing Management",
+      "sector_zh": "健康服務",
+      "quad": {
+        "20": "leading",
+        "60": "weakening",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "8046",
@@ -363,7 +462,16 @@
       "rr": 2.35,
       "target_n": null,
       "target_low": 1095.0,
-      "target_high": 2500.0
+      "target_high": 2500.0,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Components",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "3491",
@@ -393,7 +501,16 @@
       "rr": 2.24,
       "target_n": null,
       "target_low": 1100.0,
-      "target_high": 2600.0
+      "target_high": 2600.0,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Production Equipment",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "2313",
@@ -423,7 +540,16 @@
       "rr": 2.02,
       "target_n": null,
       "target_low": 256.0,
-      "target_high": 360.0
+      "target_high": 360.0,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Components",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "BNY",
@@ -453,7 +579,16 @@
       "rr": 2.01,
       "target_n": null,
       "target_low": 135.0,
-      "target_high": 184.0
+      "target_high": 184.0,
+      "sector": "Finance",
+      "industry": "Investment Banks/Brokers",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "LITE",
@@ -483,7 +618,16 @@
       "rr": 1.95,
       "target_n": null,
       "target_low": 820.0,
-      "target_high": 1400.0
+      "target_high": 1400.0,
+      "sector": "Producer Manufacturing",
+      "industry": "Electrical Products",
+      "sector_zh": "生產製造",
+      "quad": {
+        "20": "lagging",
+        "60": "lagging",
+        "120": "lagging"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "1519",
@@ -513,7 +657,16 @@
       "rr": 1.21,
       "target_n": null,
       "target_low": 727.2727,
-      "target_high": 950.4133
+      "target_high": 950.4133,
+      "sector": "Producer Manufacturing",
+      "industry": "Electrical Products",
+      "sector_zh": "生產製造",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "LH",
@@ -543,7 +696,16 @@
       "rr": 1.1,
       "target_n": null,
       "target_low": 293.0,
-      "target_high": 385.0
+      "target_high": 385.0,
+      "sector": "Health Services",
+      "industry": "Medical/Nursing Services",
+      "sector_zh": "健康服務",
+      "quad": {
+        "20": "leading",
+        "60": "weakening",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "MCK",
@@ -573,7 +735,16 @@
       "rr": 1.1,
       "target_n": null,
       "target_low": 845.0,
-      "target_high": 1080.0
+      "target_high": 1080.0,
+      "sector": "Distribution Services",
+      "industry": "Medical Distributors",
+      "sector_zh": "流通服務",
+      "quad": {
+        "20": "lagging",
+        "60": "leading",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "3017",
@@ -603,7 +774,16 @@
       "rr": 0.77,
       "target_n": null,
       "target_low": 3327.0,
-      "target_high": 4250.0
+      "target_high": 4250.0,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Production Equipment",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "1605",
@@ -633,7 +813,16 @@
       "rr": 0.66,
       "target_n": null,
       "target_low": 40.0,
-      "target_high": 42.0
+      "target_high": 42.0,
+      "sector": "Producer Manufacturing",
+      "industry": "Electrical Products",
+      "sector_zh": "生產製造",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "3189",
@@ -663,7 +852,16 @@
       "rr": 0.66,
       "target_n": null,
       "target_low": 450.0,
-      "target_high": 1250.0
+      "target_high": 1250.0,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Components",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "4576",
@@ -693,7 +891,16 @@
       "rr": 0.58,
       "target_n": null,
       "target_low": 224.0,
-      "target_high": 313.0
+      "target_high": 313.0,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Equipment/Instruments",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "CNH",
@@ -723,7 +930,16 @@
       "rr": 0.38,
       "target_n": null,
       "target_low": 9.0,
-      "target_high": 21.0
+      "target_high": 21.0,
+      "sector": "Producer Manufacturing",
+      "industry": "Trucks/Construction/Farm Machinery",
+      "sector_zh": "生產製造",
+      "quad": {
+        "20": "lagging",
+        "60": "lagging",
+        "120": "lagging"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "AAPL",
@@ -753,7 +969,16 @@
       "rr": -0.03,
       "target_n": null,
       "target_low": 215.0,
-      "target_high": 400.0
+      "target_high": 400.0,
+      "sector": "Electronic Technology",
+      "industry": "Telecommunications Equipment",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "3324",
@@ -783,7 +1008,16 @@
       "rr": -0.06,
       "target_n": null,
       "target_low": 1025.0,
-      "target_high": 1840.0
+      "target_high": 1840.0,
+      "sector": "Electronic Technology",
+      "industry": "Computer Peripherals",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "3363",
@@ -813,7 +1047,16 @@
       "rr": -0.1,
       "target_n": null,
       "target_low": 708.0,
-      "target_high": 833.0
+      "target_high": 833.0,
+      "sector": "Producer Manufacturing",
+      "industry": "Electrical Products",
+      "sector_zh": "生產製造",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "FCX",
@@ -843,7 +1086,16 @@
       "rr": -0.17,
       "target_n": null,
       "target_low": 30.0,
-      "target_high": 83.0
+      "target_high": 83.0,
+      "sector": "Non-Energy Minerals",
+      "industry": "Other Metals/Minerals",
+      "sector_zh": "非能源礦業",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "2884",
@@ -873,7 +1125,16 @@
       "rr": -0.28,
       "target_n": null,
       "target_low": 37.0,
-      "target_high": 41.1
+      "target_high": 41.1,
+      "sector": "Finance",
+      "industry": "Major Banks",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "PAA",
@@ -903,7 +1164,16 @@
       "rr": -0.55,
       "target_n": null,
       "target_low": 20.0,
-      "target_high": 27.0
+      "target_high": 27.0,
+      "sector": "Industrial Services",
+      "industry": "Oil & Gas Pipelines",
+      "sector_zh": "工業服務",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "lagging"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "2882",
@@ -933,7 +1203,16 @@
       "rr": -0.56,
       "target_n": null,
       "target_low": 76.0,
-      "target_high": 130.0
+      "target_high": 130.0,
+      "sector": "Finance",
+      "industry": "Life/Health Insurance",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "3081",
@@ -963,7 +1242,16 @@
       "rr": -0.62,
       "target_n": null,
       "target_low": 900.0,
-      "target_high": 4401.0
+      "target_high": 4401.0,
+      "sector": "Producer Manufacturing",
+      "industry": "Industrial Machinery",
+      "sector_zh": "生產製造",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "2881",
@@ -993,7 +1281,16 @@
       "rr": -0.72,
       "target_n": null,
       "target_low": 85.85,
-      "target_high": 160.0
+      "target_high": 160.0,
+      "sector": "Finance",
+      "industry": "Multi-Line Insurance",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "4979",
@@ -1023,7 +1320,16 @@
       "rr": -1.06,
       "target_n": null,
       "target_low": 250.0,
-      "target_high": 700.0
+      "target_high": 700.0,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "3105",
@@ -1053,7 +1359,16 @@
       "rr": -1.15,
       "target_n": null,
       "target_low": 142.0,
-      "target_high": 590.0
+      "target_high": 590.0,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "3450",
@@ -1083,7 +1398,16 @@
       "rr": -2.31,
       "target_n": null,
       "target_low": 360.0,
-      "target_high": 360.0
+      "target_high": 360.0,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "SCCO",
@@ -1113,7 +1437,16 @@
       "rr": -2.66,
       "target_n": null,
       "target_low": 126.97628,
-      "target_high": 275.0
+      "target_high": 275.0,
+      "sector": "Non-Energy Minerals",
+      "industry": "Other Metals/Minerals",
+      "sector_zh": "非能源礦業",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "3163",
@@ -1141,7 +1474,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Components",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "4908",
@@ -1169,7 +1511,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "3055",
@@ -1197,7 +1548,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Components",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "ARKG",
@@ -1225,7 +1585,12 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": null,
+      "industry": null,
+      "sector_zh": null,
+      "quad": null,
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "ARKK",
@@ -1253,7 +1618,12 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": null,
+      "industry": null,
+      "sector_zh": null,
+      "quad": null,
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "CICHY",
@@ -1281,7 +1651,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Finance",
+      "industry": "Major Banks",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "ITOCY",
@@ -1309,7 +1688,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Distribution Services",
+      "industry": "Food Distributors",
+      "sector_zh": "流通服務",
+      "quad": {
+        "20": "lagging",
+        "60": "leading",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "KNBWY",
@@ -1337,7 +1725,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Consumer Non-Durables",
+      "industry": "Beverages: Alcoholic",
+      "sector_zh": "非耐久消費品",
+      "quad": {
+        "20": "weakening",
+        "60": "improving",
+        "120": "lagging"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "NVDA",
@@ -1368,7 +1765,16 @@
       "rr": 9.01,
       "target_n": null,
       "target_low": 180.0,
-      "target_high": 515.0
+      "target_high": 515.0,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "6592",
@@ -1398,7 +1804,16 @@
       "rr": 8.41,
       "target_n": null,
       "target_low": 66.0,
-      "target_high": 66.0
+      "target_high": 66.0,
+      "sector": "Finance",
+      "industry": "Finance/Rental/Leasing",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "MARA",
@@ -1428,7 +1843,16 @@
       "rr": 7.46,
       "target_n": null,
       "target_low": 6.0,
-      "target_high": 30.0
+      "target_high": 30.0,
+      "sector": "Technology Services",
+      "industry": "Data Processing Services",
+      "sector_zh": "科技服務",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "ANET",
@@ -1458,7 +1882,16 @@
       "rr": 5.96,
       "target_n": null,
       "target_low": 185.0,
-      "target_high": 289.0
+      "target_high": 289.0,
+      "sector": "Electronic Technology",
+      "industry": "Computer Peripherals",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "3231",
@@ -1488,7 +1921,16 @@
       "rr": 5.85,
       "target_n": null,
       "target_low": 165.0,
-      "target_high": 400.0
+      "target_high": 400.0,
+      "sector": "Electronic Technology",
+      "industry": "Computer Processing Hardware",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "MRVL",
@@ -1518,7 +1960,16 @@
       "rr": 4.89,
       "target_n": null,
       "target_low": 126.0,
-      "target_high": 400.0
+      "target_high": 400.0,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "1513",
@@ -1548,7 +1999,16 @@
       "rr": 2.95,
       "target_n": null,
       "target_low": 166.0,
-      "target_high": 214.0
+      "target_high": 214.0,
+      "sector": "Producer Manufacturing",
+      "industry": "Electrical Products",
+      "sector_zh": "生產製造",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "2382",
@@ -1578,7 +2038,16 @@
       "rr": 2.9,
       "target_n": null,
       "target_low": 250.0,
-      "target_high": 626.0
+      "target_high": 626.0,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Production Equipment",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "2454",
@@ -1608,7 +2077,16 @@
       "rr": 2.27,
       "target_n": null,
       "target_low": 1751.0,
-      "target_high": 10369.0
+      "target_high": 10369.0,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "UNM",
@@ -1638,7 +2116,16 @@
       "rr": 1.98,
       "target_n": null,
       "target_low": 88.0,
-      "target_high": 122.0
+      "target_high": 122.0,
+      "sector": "Finance",
+      "industry": "Multi-Line Insurance",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "1597",
@@ -1668,7 +2155,16 @@
       "rr": 1.91,
       "target_n": null,
       "target_low": 189.0,
-      "target_high": 189.0
+      "target_high": 189.0,
+      "sector": "Producer Manufacturing",
+      "industry": "Miscellaneous Manufacturing",
+      "sector_zh": "生產製造",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "1503",
@@ -1698,7 +2194,16 @@
       "rr": 1.85,
       "target_n": null,
       "target_low": 210.0,
-      "target_high": 277.0
+      "target_high": 277.0,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Equipment/Instruments",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "3045",
@@ -1728,7 +2233,16 @@
       "rr": 1.8,
       "target_n": null,
       "target_low": 112.0,
-      "target_high": 130.0
+      "target_high": 130.0,
+      "sector": "Communications",
+      "industry": "Wireless Telecommunications",
+      "sector_zh": "通訊",
+      "quad": {
+        "20": "lagging",
+        "60": "improving",
+        "120": "improving"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "AES",
@@ -1758,7 +2272,16 @@
       "rr": 1.64,
       "target_n": null,
       "target_low": 15.0,
-      "target_high": 15.0
+      "target_high": 15.0,
+      "sector": "Utilities",
+      "industry": "Electric Utilities",
+      "sector_zh": "公用事業",
+      "quad": {
+        "20": "lagging",
+        "60": "improving",
+        "120": "lagging"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "SLAB",
@@ -1788,7 +2311,16 @@
       "rr": 1.41,
       "target_n": null,
       "target_low": 200.0,
-      "target_high": 231.0
+      "target_high": 231.0,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "3023",
@@ -1818,7 +2350,16 @@
       "rr": 1.33,
       "target_n": null,
       "target_low": 235.0,
-      "target_high": 410.0
+      "target_high": 410.0,
+      "sector": "Distribution Services",
+      "industry": "Electronics Distributors",
+      "sector_zh": "流通服務",
+      "quad": {
+        "20": "lagging",
+        "60": "improving",
+        "120": "lagging"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "4540",
@@ -1848,7 +2389,16 @@
       "rr": 1.24,
       "target_n": null,
       "target_low": 67.6,
-      "target_high": 69.0
+      "target_high": 69.0,
+      "sector": "Producer Manufacturing",
+      "industry": "Electrical Products",
+      "sector_zh": "生產製造",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "TSLA",
@@ -1878,7 +2428,16 @@
       "rr": 0.93,
       "target_n": null,
       "target_low": 125.0,
-      "target_high": 600.0
+      "target_high": 600.0,
+      "sector": "Consumer Durables",
+      "industry": "Motor Vehicles",
+      "sector_zh": "耐久消費品",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "HSBC",
@@ -1908,7 +2467,16 @@
       "rr": 0.86,
       "target_n": null,
       "target_low": 101.0,
-      "target_high": 115.24
+      "target_high": 115.24,
+      "sector": "Finance",
+      "industry": "Major Banks",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "PI",
@@ -1938,7 +2506,16 @@
       "rr": 0.75,
       "target_n": null,
       "target_low": 144.0,
-      "target_high": 220.0
+      "target_high": 220.0,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "2303",
@@ -1968,7 +2545,16 @@
       "rr": -0.06,
       "target_n": null,
       "target_low": 41.0,
-      "target_high": 258.0
+      "target_high": 258.0,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "6271",
@@ -1998,7 +2584,16 @@
       "rr": -0.2,
       "target_n": null,
       "target_low": 175.0,
-      "target_high": 250.0
+      "target_high": 250.0,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Components",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "1101",
@@ -2028,7 +2623,16 @@
       "rr": -0.53,
       "target_n": null,
       "target_low": 16.5,
-      "target_high": 29.0
+      "target_high": 29.0,
+      "sector": "Non-Energy Minerals",
+      "industry": "Construction Materials",
+      "sector_zh": "非能源礦業",
+      "quad": {
+        "20": "improving",
+        "60": "weakening",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "6182",
@@ -2056,7 +2660,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Producer Manufacturing",
+      "industry": "Industrial Machinery",
+      "sector_zh": "生產製造",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "3580",
@@ -2084,7 +2697,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Producer Manufacturing",
+      "industry": "Industrial Machinery",
+      "sector_zh": "生產製造",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "TLT",
@@ -2112,7 +2734,12 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": null,
+      "industry": null,
+      "sector_zh": null,
+      "quad": null,
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "XYLG",
@@ -2140,7 +2767,12 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": null,
+      "industry": null,
+      "sector_zh": null,
+      "quad": null,
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "006208",
@@ -2168,7 +2800,12 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": null,
+      "industry": null,
+      "sector_zh": null,
+      "quad": null,
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "2850",
@@ -2196,7 +2833,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Finance",
+      "industry": "Property/Casualty Insurance",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "1733",
@@ -2224,7 +2870,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Health Technology",
+      "industry": "Biotechnology",
+      "sector_zh": "健康科技",
+      "quad": {
+        "20": "lagging",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "0050",
@@ -2252,7 +2907,12 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": null,
+      "industry": null,
+      "sector_zh": null,
+      "quad": null,
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "00981A",
@@ -2280,7 +2940,12 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": null,
+      "industry": null,
+      "sector_zh": null,
+      "quad": null,
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "XYZ",
@@ -2311,7 +2976,16 @@
       "rr": 157.46,
       "target_n": null,
       "target_low": 75.0,
-      "target_high": 125.0
+      "target_high": 125.0,
+      "sector": "Commercial Services",
+      "industry": "Miscellaneous Commercial Services",
+      "sector_zh": "商業服務",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "GOOG",
@@ -2341,7 +3015,16 @@
       "rr": 81.36,
       "target_n": null,
       "target_low": 340.0,
-      "target_high": 475.0
+      "target_high": 475.0,
+      "sector": "Technology Services",
+      "industry": "Internet Software/Services",
+      "sector_zh": "科技服務",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "CWEN",
@@ -2371,7 +3054,16 @@
       "rr": 46.08,
       "target_n": null,
       "target_low": 34.0,
-      "target_high": 58.0
+      "target_high": 58.0,
+      "sector": "Utilities",
+      "industry": "Alternative Power Generation",
+      "sector_zh": "公用事業",
+      "quad": {
+        "20": "lagging",
+        "60": "improving",
+        "120": "lagging"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "AAOI",
@@ -2401,7 +3093,16 @@
       "rr": 40.01,
       "target_n": null,
       "target_low": 109.0,
-      "target_high": 220.0
+      "target_high": 220.0,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "AER",
@@ -2431,7 +3132,16 @@
       "rr": 37.38,
       "target_n": null,
       "target_low": 165.0,
-      "target_high": 190.0
+      "target_high": 190.0,
+      "sector": "Finance",
+      "industry": "Finance/Rental/Leasing",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "IREN",
@@ -2461,7 +3171,16 @@
       "rr": 25.54,
       "target_n": null,
       "target_low": 41.0,
-      "target_high": 131.0
+      "target_high": 131.0,
+      "sector": "Technology Services",
+      "industry": "Data Processing Services",
+      "sector_zh": "科技服務",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "HASI",
@@ -2491,7 +3210,16 @@
       "rr": 19.76,
       "target_n": null,
       "target_low": 41.0,
-      "target_high": 60.0
+      "target_high": 60.0,
+      "sector": "Finance",
+      "industry": "Investment Managers",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "CLS",
@@ -2521,7 +3249,16 @@
       "rr": 12.71,
       "target_n": null,
       "target_low": 415.0,
-      "target_high": 550.0
+      "target_high": 550.0,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Components",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "COHR",
@@ -2551,7 +3288,16 @@
       "rr": 10.6,
       "target_n": null,
       "target_low": 280.0,
-      "target_high": 500.0
+      "target_high": 500.0,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "BWA",
@@ -2581,7 +3327,16 @@
       "rr": 10.08,
       "target_n": null,
       "target_low": 62.0,
-      "target_high": 95.0
+      "target_high": 95.0,
+      "sector": "Producer Manufacturing",
+      "industry": "Trucks/Construction/Farm Machinery",
+      "sector_zh": "生產製造",
+      "quad": {
+        "20": "lagging",
+        "60": "lagging",
+        "120": "lagging"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "GLW",
@@ -2612,7 +3367,16 @@
       "rr": 8.65,
       "target_n": null,
       "target_low": 129.0,
-      "target_high": 226.0
+      "target_high": 226.0,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Components",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "HIG",
@@ -2642,7 +3406,16 @@
       "rr": 6.06,
       "target_n": null,
       "target_low": 135.0,
-      "target_high": 164.0
+      "target_high": 164.0,
+      "sector": "Finance",
+      "industry": "Property/Casualty Insurance",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "2317",
@@ -2673,7 +3446,16 @@
       "rr": 4.88,
       "target_n": null,
       "target_low": 260.0,
-      "target_high": 435.0
+      "target_high": 435.0,
+      "sector": "Electronic Technology",
+      "industry": "Computer Peripherals",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "GSK",
@@ -2703,7 +3485,16 @@
       "rr": 4.47,
       "target_n": null,
       "target_low": 50.0,
-      "target_high": 70.0
+      "target_high": 70.0,
+      "sector": "Health Technology",
+      "industry": "Pharmaceuticals: Major",
+      "sector_zh": "健康科技",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "TEL",
@@ -2733,7 +3524,16 @@
       "rr": 4.06,
       "target_n": null,
       "target_low": 209.0,
-      "target_high": 306.0
+      "target_high": 306.0,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "ALAB",
@@ -2763,7 +3563,16 @@
       "rr": 3.51,
       "target_n": null,
       "target_low": 190.0,
-      "target_high": 500.0
+      "target_high": 500.0,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "APH",
@@ -2793,7 +3602,16 @@
       "rr": 2.76,
       "target_n": null,
       "target_low": 105.0,
-      "target_high": 230.0
+      "target_high": 230.0,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Components",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "6285",
@@ -2823,7 +3641,16 @@
       "rr": 2.67,
       "target_n": null,
       "target_low": 270.0,
-      "target_high": 371.0
+      "target_high": 371.0,
+      "sector": "Electronic Technology",
+      "industry": "Telecommunications Equipment",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "JPM",
@@ -2853,7 +3680,16 @@
       "rr": 2.56,
       "target_n": null,
       "target_low": 305.0,
-      "target_high": 420.0
+      "target_high": 420.0,
+      "sector": "Finance",
+      "industry": "Major Banks",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "2049",
@@ -2883,7 +3719,16 @@
       "rr": 1.03,
       "target_n": null,
       "target_low": 160.0,
-      "target_high": 510.0
+      "target_high": 510.0,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Components",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "2412",
@@ -2913,7 +3758,16 @@
       "rr": 0.21,
       "target_n": null,
       "target_low": 118.0,
-      "target_high": 150.0
+      "target_high": 150.0,
+      "sector": "Communications",
+      "industry": "Major Telecommunications",
+      "sector_zh": "通訊",
+      "quad": {
+        "20": "lagging",
+        "60": "improving",
+        "120": "improving"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "2356",
@@ -2943,7 +3797,16 @@
       "rr": -0.02,
       "target_n": null,
       "target_low": 56.0,
-      "target_high": 77.0
+      "target_high": 77.0,
+      "sector": "Electronic Technology",
+      "industry": "Computer Processing Hardware",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "2359",
@@ -2973,7 +3836,16 @@
       "rr": -0.06,
       "target_n": null,
       "target_low": 144.0,
-      "target_high": 144.0
+      "target_high": 144.0,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Production Equipment",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "MU",
@@ -3002,7 +3874,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "CCJ",
@@ -3030,7 +3911,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Non-Energy Minerals",
+      "industry": "Other Metals/Minerals",
+      "sector_zh": "非能源礦業",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "3037",
@@ -3058,7 +3948,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Components",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "2330",
@@ -3086,7 +3985,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "2314",
@@ -3114,7 +4022,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Telecommunications Equipment",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "5483",
@@ -3142,7 +4059,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "4768",
@@ -3170,7 +4096,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Process Industries",
+      "industry": "Chemicals: Major Diversified",
+      "sector_zh": "製程工業",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "CI",
@@ -3198,7 +4133,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Health Services",
+      "industry": "Managed Health Care",
+      "sector_zh": "健康服務",
+      "quad": {
+        "20": "leading",
+        "60": "weakening",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "DNKEY",
@@ -3226,7 +4170,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Finance",
+      "industry": "Major Banks",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "KR",
@@ -3254,7 +4207,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Retail Trade",
+      "industry": "Food Retail",
+      "sector_zh": "零售貿易",
+      "quad": {
+        "20": "lagging",
+        "60": "improving",
+        "120": "lagging"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "2105",
@@ -3282,7 +4244,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Consumer Durables",
+      "industry": "Automotive Aftermarket",
+      "sector_zh": "耐久消費品",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "improving"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "9914",
@@ -3310,7 +4281,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Consumer Durables",
+      "industry": "Motor Vehicles",
+      "sector_zh": "耐久消費品",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "improving"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "TSM",
@@ -3339,7 +4319,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "KTOS",
@@ -3367,7 +4356,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Aerospace & Defense",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "BTDR",
@@ -3395,7 +4393,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Technology Services",
+      "industry": "Data Processing Services",
+      "sector_zh": "科技服務",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "3576",
@@ -3423,7 +4430,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "8027",
@@ -3451,7 +4467,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Producer Manufacturing",
+      "industry": "Industrial Machinery",
+      "sector_zh": "生產製造",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "3149",
@@ -3479,7 +4504,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Consumer Durables",
+      "industry": "Home Furnishings",
+      "sector_zh": "耐久消費品",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "improving"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "ARKQ",
@@ -3507,7 +4541,12 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": null,
+      "industry": null,
+      "sector_zh": null,
+      "quad": null,
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "ARKX",
@@ -3535,7 +4574,12 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": null,
+      "industry": null,
+      "sector_zh": null,
+      "quad": null,
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "2891",
@@ -3563,7 +4607,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Finance",
+      "industry": "Regional Banks",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "AMD",
@@ -3592,7 +4645,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "INTC",
@@ -3620,7 +4682,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "AVGO",
@@ -3648,7 +4719,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "MPWR",
@@ -3676,7 +4756,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "TXN",
@@ -3704,7 +4793,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "RTX",
@@ -3732,7 +4830,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Aerospace & Defense",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "LHX",
@@ -3760,7 +4867,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Aerospace & Defense",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "LMT",
@@ -3788,7 +4904,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Aerospace & Defense",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "ASTS",
@@ -3816,7 +4941,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Communications",
+      "industry": "Specialty Telecommunications",
+      "sector_zh": "通訊",
+      "quad": {
+        "20": "leading",
+        "60": "improving",
+        "120": "lagging"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "AVAV",
@@ -3844,7 +4978,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Aerospace & Defense",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "BE",
@@ -3872,7 +5015,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Production Equipment",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "FSLR",
@@ -3900,7 +5052,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "NXT",
@@ -3928,7 +5089,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Equipment/Instruments",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "ENPH",
@@ -3956,7 +5126,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Producer Manufacturing",
+      "industry": "Electrical Products",
+      "sector_zh": "生產製造",
+      "quad": {
+        "20": "lagging",
+        "60": "lagging",
+        "120": "lagging"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "PLUG",
@@ -3984,7 +5163,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Production Equipment",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "RUN",
@@ -4012,7 +5200,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "APLD",
@@ -4040,7 +5237,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Technology Services",
+      "industry": "Data Processing Services",
+      "sector_zh": "科技服務",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "RIOT",
@@ -4068,7 +5274,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Technology Services",
+      "industry": "Information Technology Services",
+      "sector_zh": "科技服務",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "HUT",
@@ -4096,7 +5311,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Technology Services",
+      "industry": "Data Processing Services",
+      "sector_zh": "科技服務",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "CORZ",
@@ -4124,7 +5348,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Technology Services",
+      "industry": "Packaged Software",
+      "sector_zh": "科技服務",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "ETN",
@@ -4152,7 +5385,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Producer Manufacturing",
+      "industry": "Electrical Products",
+      "sector_zh": "生產製造",
+      "quad": {
+        "20": "lagging",
+        "60": "lagging",
+        "120": "lagging"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "NVT",
@@ -4180,7 +5422,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Components",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "PWR",
@@ -4208,7 +5459,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Industrial Services",
+      "industry": "Engineering & Construction",
+      "sector_zh": "工業服務",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "lagging"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "BWXT",
@@ -4236,7 +5496,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Aerospace & Defense",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "HUBB",
@@ -4264,7 +5533,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Producer Manufacturing",
+      "industry": "Electrical Products",
+      "sector_zh": "生產製造",
+      "quad": {
+        "20": "lagging",
+        "60": "lagging",
+        "120": "lagging"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "JCI",
@@ -4292,7 +5570,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Producer Manufacturing",
+      "industry": "Industrial Machinery",
+      "sector_zh": "生產製造",
+      "quad": {
+        "20": "lagging",
+        "60": "lagging",
+        "120": "lagging"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "ISRG",
@@ -4320,7 +5607,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Health Technology",
+      "industry": "Medical Specialties",
+      "sector_zh": "健康科技",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "EMR",
@@ -4348,7 +5644,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Equipment/Instruments",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "TER",
@@ -4376,7 +5681,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Production Equipment",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "SYM",
@@ -4404,7 +5718,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Producer Manufacturing",
+      "industry": "Industrial Machinery",
+      "sector_zh": "生產製造",
+      "quad": {
+        "20": "lagging",
+        "60": "lagging",
+        "120": "lagging"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "ONTO",
@@ -4432,7 +5755,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Equipment/Instruments",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "AMAT",
@@ -4460,7 +5792,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Producer Manufacturing",
+      "industry": "Industrial Machinery",
+      "sector_zh": "生產製造",
+      "quad": {
+        "20": "lagging",
+        "60": "lagging",
+        "120": "lagging"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "CAMT",
@@ -4488,7 +5829,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Components",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "KLIC",
@@ -4516,7 +5866,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Producer Manufacturing",
+      "industry": "Industrial Machinery",
+      "sector_zh": "生產製造",
+      "quad": {
+        "20": "lagging",
+        "60": "lagging",
+        "120": "lagging"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "2345",
@@ -4544,7 +5903,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Telecommunications Equipment",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "1536",
@@ -4572,7 +5940,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Consumer Durables",
+      "industry": "Motor Vehicles",
+      "sector_zh": "耐久消費品",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "improving"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "6443",
@@ -4600,7 +5977,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "weakening",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "ACGL",
@@ -4628,7 +6014,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Finance",
+      "industry": "Multi-Line Insurance",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "AGO",
@@ -4656,7 +6051,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Finance",
+      "industry": "Specialty Insurance",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "ALL",
@@ -4684,7 +6088,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Finance",
+      "industry": "Multi-Line Insurance",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "API",
@@ -4712,7 +6125,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Technology Services",
+      "industry": "Packaged Software",
+      "sector_zh": "科技服務",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "BA",
@@ -4740,7 +6162,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Aerospace & Defense",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "BAC",
@@ -4768,7 +6199,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Finance",
+      "industry": "Major Banks",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "BCS",
@@ -4796,7 +6236,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Finance",
+      "industry": "Investment Banks/Brokers",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "BEN",
@@ -4824,7 +6273,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Finance",
+      "industry": "Investment Managers",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "BRK.B",
@@ -4852,7 +6310,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Finance",
+      "industry": "Property/Casualty Insurance",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "C",
@@ -4880,7 +6347,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Finance",
+      "industry": "Major Banks",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "CCL",
@@ -4908,7 +6384,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Consumer Services",
+      "industry": "Hotels/Resorts/Cruise lines",
+      "sector_zh": "消費服務",
+      "quad": {
+        "20": "lagging",
+        "60": "leading",
+        "120": "lagging"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "CPA",
@@ -4936,7 +6421,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Transportation",
+      "industry": "Airlines",
+      "sector_zh": "運輸",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "FNF",
@@ -4964,7 +6458,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Finance",
+      "industry": "Specialty Insurance",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "HENKY",
@@ -4992,7 +6495,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Process Industries",
+      "industry": "Industrial Specialties",
+      "sector_zh": "製程工業",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "lagging"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "HPE",
@@ -5020,7 +6532,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Computer Processing Hardware",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "IX",
@@ -5048,7 +6569,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Finance",
+      "industry": "Finance/Rental/Leasing",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "ON",
@@ -5076,7 +6606,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "improving",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "PHIN",
@@ -5104,7 +6643,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Producer Manufacturing",
+      "industry": "Auto Parts: OEM",
+      "sector_zh": "生產製造",
+      "quad": {
+        "20": "lagging",
+        "60": "lagging",
+        "120": "lagging"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "PHM",
@@ -5132,7 +6680,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Consumer Durables",
+      "industry": "Homebuilding",
+      "sector_zh": "耐久消費品",
+      "quad": {
+        "20": "leading",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "TFC",
@@ -5160,7 +6717,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Finance",
+      "industry": "Regional Banks",
+      "sector_zh": "金融",
+      "quad": {
+        "20": "weakening",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-01"
     },
     {
       "ticker": "1227",
@@ -5188,7 +6754,16 @@
       ],
       "target": null,
       "rr": null,
-      "target_n": null
+      "target_n": null,
+      "sector": "Consumer Non-Durables",
+      "industry": "Food: Major Diversified",
+      "sector_zh": "非耐久消費品",
+      "quad": {
+        "20": "lagging",
+        "60": "improving",
+        "120": "improving"
+      },
+      "quad_date": "2026-09-01"
     }
   ]
 }
