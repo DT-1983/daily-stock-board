@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-02 12:46",
+ "updated": "2026-09-02 15:40",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,8 +38,8 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "09/02",
-   "close": 46245.61,
-   "chg_pct": -1.5
+   "close": 46164.72,
+   "chg_pct": -1.67
   },
   {
    "sym": "TWD=X",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "挑戰台積電！英特爾14A製程進展加速、缺陷密度改善創22奈米以來最快",
+   "title": "德國擬數周內敲定更強硬的對中貿易方案 不排除加徵關稅",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6595116",
-   "ts": "09/02 12:32"
+   "url": "https://news.cnyes.com/news/id/6595187",
+   "ts": "09/02 15:40"
   },
   {
-   "title": "〈SEMICON〉Google連DDR4都撿回來用！疾呼DRAM廠擴產 南亞科、華邦電受惠",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6595108",
-   "ts": "09/02 12:31"
-  },
-  {
-   "title": "Dyson不只賣吹風機 首款AI牙刷在台開賣要價16990元",
+   "title": "AI半導體專利5年暴增114%，三星、IBM領跑，雲端巨頭加速自研晶片重塑競爭版圖",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6595005",
-   "ts": "09/02 12:30"
+   "url": "https://news.cnyes.com/news/id/6595280",
+   "ts": "09/02 15:30"
   },
   {
-   "title": "馬斯克：明年底AI能「完成所有數位領域工作」、10年內機器人超越人類生產力總和",
+   "title": "2030年投運！藍色起源獲NASA約7億美元大單 將開發高性能火星通訊網絡",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6595008",
-   "ts": "09/02 12:20"
+   "url": "https://news.cnyes.com/news/id/6595214",
+   "ts": "09/02 15:20"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：矽力-KY(6415-TW)EPS預估上修至11.87元，預估目標價為610元",
+   "title": "一詮擴大新北雙基地產能 明年底散熱片月產值拚提升2.5倍",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6595139",
-   "ts": "09/02 12:10"
+   "url": "https://news.cnyes.com/news/id/6595241",
+   "ts": "09/02 15:12"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：技嘉(2376-TW)EPS預估上修至33.63元，預估目標價為490元",
+   "title": "半導體展高峰論壇有這些廠商參與 AI基建聚焦三大方向",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6595138",
-   "ts": "09/02 12:10"
+   "url": "https://news.cnyes.com/news/id/6595235",
+   "ts": "09/02 15:11"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：台化(1326-TW)EPS預估下修至3.75元，預估目標價為80元",
+   "title": "〈SEMICON〉華立：半導體材料調漲10-15% 需求看到2028年底",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6595137",
-   "ts": "09/02 12:10"
+   "url": "https://news.cnyes.com/news/id/6595229",
+   "ts": "09/02 15:10"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：緯穎(6669-TW)EPS預估上修至361.05元，預估目標價為7847.5元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6595136",
-   "ts": "09/02 12:10"
-  },
-  {
-   "title": "博通財報要回答這些問題 股價才有望重啟漲勢",
+   "title": "台灣美光工會醞釀罷工 對公司股價有何影響？",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6594658",
-   "ts": "09/02 12:10"
+   "url": "https://news.cnyes.com/news/id/6594640",
+   "ts": "09/02 15:00"
   },
   {
-   "title": "美債崩、日元潰！滙豐：當前亞洲金融環境與1997年危機前夕驚人相似",
+   "title": "〈SEMICON〉立碁1.6T光模組已送出驗證 董座童義興：明年下半年迎營收貢獻",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6595236",
+   "ts": "09/02 14:51"
+  },
+  {
+   "title": "植田和男釋放9月升息強烈訊號！日銀升息預期近100%、日債殖利率飆近30年高",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6595092",
-   "ts": "09/02 12:00"
+   "url": "https://news.cnyes.com/news/id/6595161",
+   "ts": "09/02 14:50"
+  },
+  {
+   "title": "國際遊艇展11/13登場  貿協：已邀歐美、東南亞國際買主來台採購",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6595185",
+   "ts": "09/02 14:16"
   }
  ],
  "inst": {
-  "date": "09/01",
-  "total_yi": 566.4,
-  "foreign_yi": 267.1,
-  "trust_yi": 136.0
+  "date": "09/02",
+  "total_yi": -1150.3,
+  "foreign_yi": -913.5,
+  "trust_yi": -33.2
  }
 }
