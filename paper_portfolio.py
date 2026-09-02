@@ -12,7 +12,7 @@
   · 產業鏈全 / 巴菲特價值 / 7 鏈明細 → 每週日隨守備清單重篩調倉
   · 產業鏈+趨勢 → 每日追 SuperTrend，綠燈名單一有變就換股（翻燈才動，不天天重配）
 
-  · 三指標合流 → 每日檢查SuperTrend+RS30日+EXCEED CHARGE噴出，事件觸發才動（見下方CHAIN_COMBO）
+  · 進出燈號 → 每日讀 combo_scan 四燈結果：打點(≥3燈+風報比≥1)進、ST翻空賣半、RS跌破60MA全出（見下方CHAIN_COMBO）
 
 用法:python paper_portfolio.py [init|rebalance|rebalance-trend|rebalance-combo|nav]
 """
@@ -25,7 +25,7 @@ import yfinance as yf
 import board_html_legacy as _L
 from technical_indicators import squeeze_momentum, mansfield_rs_series, _benchmark
 
-STORE = "portfolios.json"
+STORE = os.environ.get("PORTFOLIO_STATE", "portfolios.json")   # 測試時指到別的檔
 SCREEN = "screen_result.json"
 BUFFETT = "buffett_watch.json"
 BASE = 10000.0
@@ -49,18 +49,24 @@ TREND_MIN_SLOTS    = 8         # 最少切成 N 份；綠燈不足時剩餘留�
 # 不是回測過擬合：等權重讓它一檔就能砸掉整個精選倉。
 BTC_CHAIN = "Bitcoin→AI 機房"
 BTC_MAX_WEIGHT = 0.10          # 該鏈標的在跨鏈主倉的合計權重上限
-# ── 三指標合流倉（2026-08-11 新設，實驗性）───────────────────────────
-# 假說：純日線SuperTrend翻燈雜訊多（見上方TREND_WEEKLY註解，75%賣訊是錯的），
-# 用RS(30日)+EXCEED CHARGE擠壓噴出當「降噪濾網」是否能改善。
-# backtest_combined_signal.py 6個月回測：合流篩選把賣錯率從57%降到38%，
-# 方向正確但樣本(10筆)不足以下定論——這個倉就是拿真金白銀(模擬)去累積更長樣本。
-# 買：SuperTrend翻多 + RS30日>0 + 擠壓剛噴出(前一根還在擠壓、這一根釋放)
-# 賣（2026-08-11改為不對稱兩階段，用戶依自己回測結果指示的「最優進出法」）：
-#   ① SuperTrend單獨翻空 → 賣一半（不用等RS/squeeze同時翻）
-#   ② RS(60日)線跌破自己的60日均線（rs_60由正轉負）→ 剩餘部位全出
-# 詳見 backtest_position_sim.py（完整倉位模擬回測，跟backtest_combined_signal.py
-# 的「訊號後N日報酬統計」是互補的兩支，不是同一套評測方法）
-CHAIN_COMBO = "三指標合流"
+# ── 進出燈號倉（2026-09-02 由「三指標合流」換成，實驗性）──────────────────
+# 三指標合流（ST翻多+RS30>0+擠壓剛噴出「同一天」）是事件同步條件，8/18 開倉到 9/2
+# 一次都沒觸發、10000 現金全趴著——不是訊號不好，是三件事同天發生的機率太低。
+# 改成老墨的 COMBO 四燈「狀態」判斷，跟 docs/combo.html 進出燈號頁同一份資料
+# （直接讀 combo_scan.py 產出的 state/combo_result.json，頁面看到什麼、倉就照什麼進出，
+# 兩邊不會漂移；本機 07:00 掃描→push，Actions 09:00 讀）。
+# 進場（打點）：≥3 燈成立 且 風報比 ≥ 1（分子=市場目標價共識−現價、分母=現價−ST線）
+#   四燈 = L1 SuperTrend(日線,SMA版ATR)多方 / L2 動能>0 / L3 雙重颱風不為綠 / L4 RS60日乖離>+3%
+#   排序：亮燈數多者先、同燈數風報比高者先；每檔 1/TREND_MIN_SLOTS 倉，現金用完為止
+# 出場（跟原本三指標一樣，老墨的不對稱兩階段）：
+#   ① ST 翻空（bull=False）→ 賣一半（狀態判斷；賣過一半的不重複）
+#   ② RS60 跌破自己的 60MA（rs_short<0）→ 剩餘全出，全出後 LAMP_COOLDOWN_DAYS 內不再進
+# 沒有歷史回測：目標價沒有歷史資料，風報比回不了頭——這個倉本身就是累積樣本的器材。
+CHAIN_COMBO = "進出燈號"
+CHAIN_COMBO_OLD = "三指標合流"   # portfolios.json 舊倉名，load() 時自動改名（歷史淨值沿用，都是 10000）
+LAMP_RESULT = "state/combo_result.json"
+LAMP_MAX_AGE_DAYS = 4            # 掃描結果超過這麼多天沒更新就不動作（別拿舊燈號下單）
+LAMP_COOLDOWN_DAYS = 7           # 全出後幾個日曆天內不重新進場（避免出了隔天又買回）
 MAIN = [CHAIN_ALL, CHAIN_TREND, BUFFETT_NAME, CHAIN_COMBO]
 FX_FALLBACK = 32.0              # USD/TWD 備援匯率
 
@@ -70,7 +76,9 @@ def tw_yf(code):
 
 
 def is_tw(tk):
-    return tk.endswith(".TW")
+    # 2026-09-02：上櫃股是 .TWO（combo_result 的 symbol 走 tw_symbol.resolve），
+    # 原本只認 .TW 會把台幣價當美金加總
+    return tk.endswith(".TW") or tk.endswith(".TWO")
 
 
 def get_fx():
@@ -205,6 +213,48 @@ def trend_longs(tickers, weekly=None):
         except Exception:
             longs.append(tk)
     return sorted(longs)
+
+
+def load_lamp_result(today):
+    """讀 combo_scan.py 的結果；缺檔或太舊回 None（寧可不動，不拿舊燈號下單）。"""
+    if not os.path.exists(LAMP_RESULT):
+        print(f"⚠️ 找不到 {LAMP_RESULT}，進出燈號倉不動作")
+        return None
+    res = json.load(open(LAMP_RESULT, encoding="utf-8"))
+    from datetime import date as _d
+    age = (_d.fromisoformat(today) - _d.fromisoformat(res["date"])).days
+    if age > LAMP_MAX_AGE_DAYS:
+        print(f"⚠️ {LAMP_RESULT} 是 {res['date']} 的（{age} 天前），太舊不動作")
+        return None
+    return res
+
+
+def lamp_signal_events(rows, held_frac, exits, today):
+    """進出燈號倉：狀態判斷，回 (buy, half_sell, full_exit)。
+    rows 是 combo_result 的列（已依 亮燈數↓/風報比↓ 排好，買單照這個順序吃現金）。
+    買：未持有 + combo(≥3燈) + rr≥1 + 不在全出冷卻期
+    賣①：全倉 + ST 翻空(bull=False) → 賣一半      賣②：持有 + rs_short<0 → 全出
+    exits：{symbol: 全出日期}，冷卻用。"""
+    from datetime import date as _d
+    buy, half_sell, full_exit = [], [], []
+    for r in rows:
+        tk = r.get("symbol") or r.get("ticker")
+        frac = held_frac.get(tk, 0.0)
+        if frac == 0.0:
+            rr = r.get("rr")
+            if r.get("combo") and rr is not None and rr >= 1:
+                ex = exits.get(tk)
+                if ex and (_d.fromisoformat(today) - _d.fromisoformat(ex)).days < LAMP_COOLDOWN_DAYS:
+                    continue
+                buy.append(tk)
+            continue
+        rs = r.get("rs_short")
+        if rs is not None and rs < 0:
+            full_exit.append(tk)
+            continue
+        if frac == 1.0 and not r.get("bull", True):
+            half_sell.append(tk)
+    return buy, sorted(half_sell), sorted(full_exit)
 
 
 def combo_signal_events(tickers, held_frac):
@@ -375,7 +425,16 @@ def build_holdings_map(prices):
 
 
 def load():
-    return json.load(open(STORE, encoding="utf-8")) if os.path.exists(STORE) else None
+    if not os.path.exists(STORE):
+        return None
+    state = json.load(open(STORE, encoding="utf-8"))
+    # 2026-09-02 倉名「三指標合流」→「進出燈號」：同一個 $10,000、同一條歷史線
+    pfs = state.get("portfolios", {})
+    if CHAIN_COMBO_OLD in pfs and CHAIN_COMBO not in pfs:
+        pfs[CHAIN_COMBO] = pfs.pop(CHAIN_COMBO_OLD)
+        state["main"] = [CHAIN_COMBO if n == CHAIN_COMBO_OLD else n for n in state.get("main", [])]
+        print(f"（倉名 {CHAIN_COMBO_OLD} → {CHAIN_COMBO}）")
+    return state
 
 
 def save(state):
@@ -613,8 +672,8 @@ def main():
         return
     fx = get_fx()
 
-    # 三指標合流倉延遲建倉（2026-08-11新設）：跟其他倉不同，一開始不buy整個宇宙，
-    # 空手等第一個事件觸發訊號才進場——所以只需要在state裡補一個空倉位當起點。
+    # 進出燈號倉（原三指標合流，2026-08-11新設）延遲建倉：跟其他倉不同，一開始不buy整個宇宙，
+    # 空手等第一個打點才進場——所以只需要在state裡補一個空倉位當起點。
     # 同時補state["main"]（portfolio_html.py讀這個決定「主策略」分組，不是讀MAIN常數）。
     dirty = False
     if CHAIN_COMBO not in state["portfolios"]:
@@ -674,24 +733,30 @@ def main():
             rm = sorted(cur - set(longs))
             print(f"✅ 趨勢倉調倉 {date}（匯率 {fx:.2f}）：+{add or '無'} / -{rm or '無'} → {len(longs)} 檔")
     elif cmd == "rebalance-combo":
-        # 三指標合流倉：事件觸發才動，跟趨勢倉的「狀態維持」不同（見combo_signal_events）。
-        # 2026-08-11 改不對稱出場：ST單獨翻空賣一半、RS(60日)跌破自己60MA才全出。
-        select = chain_select_union()
+        # 進出燈號倉（2026-09-02 換自三指標合流）：讀 combo_scan 結果做狀態判斷，
+        # 部位獨立管理（combo_apply 直接動股數，不整籃重配）。
         pf = state["portfolios"][CHAIN_COMBO]
         combo_frac = state.setdefault("combo_frac", {})
-        # 持股裡沒有紀錄比例的（例如舊資料或手動調整過）預設當作全倉
         for tk in pf["holdings"]:
             combo_frac.setdefault(tk, 1.0)
-        buy, half_sell, full_exit = combo_signal_events(select, combo_frac)
-        if not buy and not half_sell and not full_exit:
-            print("三指標合流倉無新訊號，不調倉")
-        else:
-            allt = _all_tickers(state) | set(buy) | set(half_sell) | set(full_exit)
-            prices = fetch_prices(allt)
-            combo_apply(state, pf, combo_frac, buy, half_sell, full_exit, prices, fx, date)
-            save(state)
-            print(f"✅ 三指標合流倉 {date}（匯率 {fx:.2f}）：買進+{buy or '無'} / "
-                 f"賣一半{half_sell or '無'} / 全出{full_exit or '無'} → 現持 {len(pf['holdings'])} 檔")
+        res = load_lamp_result(date)
+        if res is not None:
+            exits = state.setdefault("lamp_exits", {})
+            buy, half_sell, full_exit = lamp_signal_events(res["rows"], combo_frac, exits, date)
+            if not buy and not half_sell and not full_exit:
+                print(f"進出燈號倉無動作（燈號日期 {res['date']}，現持 {len(pf['holdings'])} 檔）")
+            else:
+                allt = _all_tickers(state) | set(buy) | set(half_sell) | set(full_exit)
+                prices = fetch_prices(allt)
+                before = set(pf["holdings"])
+                combo_apply(state, pf, combo_frac, buy, half_sell, full_exit, prices, fx, date)
+                bought = sorted(set(pf["holdings"]) - before)
+                for tk in full_exit:
+                    exits[tk] = date
+                save(state)
+                print(f"✅ 進出燈號倉 {date}（燈號 {res['date']}，匯率 {fx:.2f}）：買進+{bought or '無'}"
+                      f"（打點候選 {len(buy)} 檔，現金吃完為止） / 賣一半{half_sell or '無'} / "
+                      f"全出{full_exit or '無'} → 現持 {len(pf['holdings'])} 檔，現金 ${pf['cash']:,.0f}")
     elif cmd == "nav":
         prices = fetch_prices(_all_tickers(state))
         update_nav(state, prices, fx, date)
