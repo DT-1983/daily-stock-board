@@ -41,6 +41,7 @@ TOP_PER_CHAIN = 2              # （保留供他用；產業鏈倉已改用完�
 #  · 2026 YTD 回測：週線 +71.1%/回撤-16.1%/換股8次 vs 日線 +17.9%/-28.9%/47次
 #  · 5.5 年 QQQ：週線 +73.5%(9次) ≈ 日線 +70.8%(44次)，報酬相當但交易只要 1/5
 TREND_WEEKLY = True            # True=週線判斷（False 可切回日線做對照）
+TREND_ATR = "wilder"           # 趨勢倉 SuperTrend 的 ATR：wilder（5.7 年回測基準）/ sma（老墨版，顯示層與進出燈號用）
 TREND_CONFIRM_DAYS = 1         # 週線本身已濾掉日內雜訊，確認天數降回 1（避免雙重延遲）
 TREND_MIN_SLOTS    = 8         # 最少切成 N 份；綠燈不足時剩餘留現金（避免集中在 3-4 檔）
 # ── Bitcoin→AI 機房限重（2026-07-28）─────────────────────────────────
@@ -141,11 +142,17 @@ def _supertrend_dir(highs, lows, closes, period=10, mult=3.0):
     for i in range(1, n):
         tr.append(max(highs[i] - lows[i], abs(highs[i] - closes[i - 1]), abs(lows[i] - closes[i - 1])))
     atr = [None] * n
-    # 2026-09-02：Wilder RMA → SMA。策略層統一改用 SMA 版 ATR（見 st_alert 說明）。
-    # 這支刻意不 import technical_indicators（會拉進 numpy/markdown 依賴鏈），
-    # 所以是就地改算法，不是換 import。
-    for i in range(period - 1, n):
-        atr[i] = sum(tr[i - period + 1:i + 1]) / period
+    # 2026-09-02：一度改成 SMA（跟顯示層/進出燈號統一），同日用 backtest_trend_2026.py
+    # 重跑 5.7 年（QQQ + 守備清單 × 日/週線）：週線趨勢倉 Wilder 報酬略優、SMA 沒有優勢，
+    # 依「只改有結構性證據的」原則改回 Wilder；用 TREND_ATR 切換，兩版都能重跑對照。
+    # 這支刻意不 import technical_indicators（會拉進 numpy/markdown 依賴鏈），所以就地算。
+    if TREND_ATR == "sma":
+        for i in range(period - 1, n):
+            atr[i] = sum(tr[i - period + 1:i + 1]) / period
+    else:
+        atr[period - 1] = sum(tr[:period]) / period
+        for i in range(period, n):
+            atr[i] = (atr[i - 1] * (period - 1) + tr[i]) / period
     hl2 = [(highs[i] + lows[i]) / 2 for i in range(n)]
     up = lo = None
     dr = 1
@@ -221,7 +228,8 @@ def combo_signal_events(tickers, held_frac):
             continue
         if not bench_closes:
             continue
-        # 2026-09-02：策略層統一改 SMA 版 ATR（見 st_alert 說明）
+        # 2026-09-02：三指標合流倉用 SMA 版 ATR——跟進出燈號/顯示層同一套（對齊老墨的燈號定義）；
+        # 週線趨勢倉另走 _supertrend_dir(TREND_ATR="wilder")，兩層刻意不同，見 supertrend_backtest_findings 證據五
         from technical_indicators import supertrend_sma as _st_sma
         st = _st_sma(highs, lows, closes)
         if not st:
