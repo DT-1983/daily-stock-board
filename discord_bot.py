@@ -59,17 +59,22 @@ tree = app_commands.CommandTree(client)
 
 @client.event
 async def on_ready():
-    print(f"[discord_bot] 登入為 {client.user}（id={client.user.id}）")
+    print(f"[discord_bot] 登入為 {client.user}（id={client.user.id}）", flush=True)
     try:
         if GUILD_ID:
             guild = discord.Object(id=int(GUILD_ID))
+            # 指令是用 @tree.command()（無 guild=）宣告的全域指令，只呼叫
+            # sync(guild=) 不會生效——那只同步「本來就綁定這個 guild」的指令，
+            # 全域指令要先 copy_global_to() 複製一份進這個 guild 才會被 sync 到。
+            tree.copy_global_to(guild=guild)
             synced = await tree.sync(guild=guild)
-            print(f"[discord_bot] 指令已同步到伺服器 {GUILD_ID}：{len(synced)} 個")
+            print(f"[discord_bot] 指令已同步到伺服器 {GUILD_ID}：{len(synced)} 個", flush=True)
         else:
             synced = await tree.sync()
-            print(f"[discord_bot] 指令已全域同步（Discord 那邊最多要等 1 小時才會出現）：{len(synced)} 個")
+            print(f"[discord_bot] 指令已全域同步（Discord 那邊最多要等 1 小時才會出現）：{len(synced)} 個", flush=True)
     except Exception:
         traceback.print_exc()
+        sys.stdout.flush()
 
 
 @tree.command(name="查", description="查任意股票的即時燈號＋RRG象限（隆中對）")
