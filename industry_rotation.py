@@ -704,7 +704,7 @@ def _bubble_data(snapshot, period, radius_fn):
     return pts
 
 
-def _frames_data(hist_rows, snapshot, period, radius_fn, max_frames=52):
+def _frames_data(hist_rows, snapshot, period, radius_fn, max_frames=None):
     """「圈圈會跑」動畫＋軌跡尾巴共用的資料來源：把歷史快照依日期切成一格一格的畫面，
     每格是「當天所有籃子的座標」。前端用 buildTrailDs() 對這份資料動態切片組軌跡線，
     不再另外算一份給尾巴專用的資料（原本 _trail_data 是分開算的，排序/缺值處理
@@ -719,6 +719,11 @@ def _frames_data(hist_rows, snapshot, period, radius_fn, max_frames=52):
     某幀缺該籃子就沿用它上一個已知位置（不是补0、不是跳過），
     這樣每幀陣列長度/順序永遠一致，前端才能安全逐一補間。
     """
+    # 2026-09-02：max_frames 原本寫死 52（週頻時代「52 週＝一年」）。9/1 回填改每日後
+    # 歷史檔已有 250 個交易日，但這裡仍只切最後 52 格＝兩個半月，播放軸選「一年」
+    # 也只有 52 天——就是「台股 frames 只有 56 個日期」的真因。改成跟 HIST_KEEP_POINTS 同步。
+    # 幀數 ×4.8 會讓頁面 6MB→30MB，所以序列化時走 _compact_frames() 壓成陣列（見該函式）。
+    max_frames = max_frames or HIST_KEEP_POINTS
     keys_order = list(snapshot.keys())
     last_known = {}
     frames = []
@@ -1037,12 +1042,71 @@ def _axis_bounds(payload, pad=0.6):
     return round(center - half, 1), round(center + half, 1)
 
 
+def _compact_frames(payload):
+    """序列化前把 frames_* 從「每幀每點一個物件」壓成陣列，前端 rrgExpand() 載入時原樣還原。
+
+    2026-09-02：幀數 52→250 後，物件格式每點約 130 bytes（key/name/quadrant 字串每幀重複），
+    粗＋細分類合計會從 5.5MB 變 27MB，手機開不了。壓成 [鍵索引, ratio, momentum, size(百萬), radius]
+    每點約 29 bytes；key/name 只存一次在表頭，quadrant 由 ratio/momentum 在前端重算
+    （跟 Python quadrant() 同一套 >=100 判斷）。實測整頁維持在 6MB 上下。
+    ⚠️ 只動 frames_*；us/tw 的「現在」泡泡資料、holdings 都不動。"""
+    out = {}
+    for k, v in payload.items():
+        if not k.startswith("frames_"):
+            out[k] = v
+            continue
+        out[k] = {}
+        for bench, byp in v.items():
+            out[k][bench] = {}
+            for per, frames in byp.items():
+                keys, names, idx = [], [], {}
+                for f in frames:
+                    for pt in f["points"]:
+                        if pt["key"] not in idx:
+                            idx[pt["key"]] = len(keys)
+                            keys.append(pt["key"])
+                            names.append(pt.get("name", pt["key"]))
+                fr = []
+                for f in frames:
+                    fr.append([f["date"], [[idx[pt["key"]], pt["ratio"], pt["momentum"],
+                                            int(round((pt.get("size") or 0) / 1e6)), pt.get("radius")]
+                                           for pt in f["points"]]])
+                out[k][bench][per] = {"keys": keys, "names": names, "f": fr}
+    return out
+
+
+# 前端還原：跑在任何讀 RRG_DATA 的程式之前，之後的 JS 看到的結構跟以前一模一樣
+_EXPAND_JS = """
+function rrgExpand(D){
+  if(!D) return;
+  function Q(r,m){ return r>=100 ? (m>=100?'leading':'weakening') : (m>=100?'improving':'lagging'); }
+  Object.keys(D).forEach(function(k){
+    if(k.indexOf('frames_')!==0) return;
+    var byB=D[k];
+    Object.keys(byB).forEach(function(b){
+      Object.keys(byB[b]).forEach(function(p){
+        var c=byB[b][p];
+        if(!c || !c.f) return;               // 已是展開格式（或空）就不動
+        byB[b][p]=c.f.map(function(fr){
+          return {date:fr[0], points:fr[1].map(function(a){
+            return {key:c.keys[a[0]], name:c.names[a[0]], ratio:a[1], momentum:a[2],
+                    quadrant:Q(a[1],a[2]), size:a[3]*1e6, radius:a[4]};
+          })};
+        });
+      });
+    });
+  });
+}
+rrgExpand(window.RRG_DATA); rrgExpand(window.RRG_DATA_IND);
+"""
+
+
 def _rrg_script(payload, holdings, payload_ind=None, holdings_ind=None):
     import json as _json
     lines = []
     lines.append('<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>')
     lines.append("<script>")
-    lines.append("window.RRG_DATA = " + _json.dumps(payload, ensure_ascii=False) + ";")
+    lines.append("window.RRG_DATA = " + _json.dumps(_compact_frames(payload), ensure_ascii=False) + ";")
     # 2026-08-26：展開排行榜某產業看前5大成分股用（台美股都是市值排序的前5大，
     # 見 _sector_members）。靜態資料，不像 RRG_DATA 要按市場/基準/週期分層——
     # 一個籃子的成分股不會因為
@@ -1050,9 +1114,10 @@ def _rrg_script(payload, holdings, payload_ind=None, holdings_ind=None):
     lines.append("window.RRG_HOLDINGS = " + _json.dumps(holdings, ensure_ascii=False) + ";")
     # 2026-08-29 細分類（TradingView industry，台98/美128類）。整包另存一份，
     # 切換時直接換資料來源，不用重算——兩份格式完全一樣，前端邏輯不用改。
-    lines.append("window.RRG_DATA_IND = " + (_json.dumps(payload_ind, ensure_ascii=False)
+    lines.append("window.RRG_DATA_IND = " + (_json.dumps(_compact_frames(payload_ind), ensure_ascii=False)
                                             if payload_ind else "null") + ";")
     lines.append("window.RRG_HOLDINGS_IND = " + _json.dumps(holdings_ind or {}, ensure_ascii=False) + ";")
+    lines.append(_EXPAND_JS)   # 一定要在 RRGD()/任何讀幀的程式之前跑
     lines.append("var curGran = 'sector';")   # sector=粗分類 / industry=細分類
     lines.append("function RRGD(){return (curGran==='industry'&&window.RRG_DATA_IND)?window.RRG_DATA_IND:window.RRG_DATA;}")
     lines.append("function RRGH(){return (curGran==='industry'&&window.RRG_DATA_IND)?(window.RRG_HOLDINGS_IND||{}):window.RRG_HOLDINGS;}")
