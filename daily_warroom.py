@@ -359,6 +359,22 @@ def sec5_watch(date):
             ups.append((ed, tk))
     for ed, tk in sorted(ups)[:5]:
         lines.append(f"・📊 {ed.strftime('%m-%d')} {tk} 財報")
+    # 2026-09-03 老墨三段時程「驗證日程」（行動 5）：到期前 21 天列出、逾期未驗證持續提醒。
+    # 行事曆型，零成本；不自動上網查證（那是付費呼叫），驗證在對談中做、用 roadmap_milestones.py 更新狀態。
+    rm = _load("state/roadmap_milestones.json", {}) or {}
+    due_soon = []
+    for m in rm.get("milestones", []):
+        if m.get("status") != "pending":
+            continue
+        try:
+            dd = (datetime.date.fromisoformat(m["due"]) - today_d).days
+        except Exception:
+            continue
+        if dd <= 21:
+            due_soon.append((dd, m))
+    for dd, m in sorted(due_soon, key=lambda x: x[0])[:4]:
+        tag = f"逾期 {-dd} 天未驗證" if dd < 0 else f"{m['due'][5:]} 前"
+        lines.append(f"・📌 驗證日程｜{m['claim']}（{tag}）")
     if len(lines) == 1:
         lines.append("近10天無排定事件/財報。")
     return lines
