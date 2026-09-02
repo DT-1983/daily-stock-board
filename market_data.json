@@ -1,124 +1,124 @@
 {
- "updated": "2026-09-01 20:31",
+ "updated": "2026-09-02 08:46",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "08/31",
-   "close": 7686.14,
-   "chg_pct": -0.33
+   "date": "09/01",
+   "close": 7631.47,
+   "chg_pct": -0.71
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "08/31",
-   "close": 26370.89,
-   "chg_pct": -0.12
+   "date": "09/01",
+   "close": 26099.77,
+   "chg_pct": -1.03
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "08/31",
-   "close": 53185.9,
-   "chg_pct": -0.7
+   "date": "09/01",
+   "close": 52766.88,
+   "chg_pct": -0.79
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "08/31",
-   "close": 11535.05,
-   "chg_pct": 0.57
+   "date": "09/01",
+   "close": 11288.61,
+   "chg_pct": -2.14
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/01",
-   "close": 46948.72,
-   "chg_pct": 1.78
+   "date": "08/31",
+   "close": 46128.47,
+   "chg_pct": 0.33
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/01",
+   "date": "09/02",
    "close": 31.69,
-   "chg_pct": 0.21
+   "chg_pct": 0.01
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "08/31",
-   "close": 4.76,
+   "date": "09/01",
+   "close": 4.8,
    "fmt": "yield",
    "chg_bp": 3.8
   }
  ],
  "news": [
   {
-   "title": "AI賺翻獎金卻談不攏！美光台灣工會逾八成挺罷工 晶片供應鏈拉警報",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6594361",
-   "ts": "09/01 20:30"
-  },
-  {
-   "title": "AI賺翻獎金卻談不攏！美光台灣工會逾八成挺罷工 晶片供應鏈拉警報",
+   "title": "馬斯克：AI催動全球經濟成長30% 未來十年人形機器人10億台",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6594361",
-   "ts": "09/01 20:30"
+   "url": "https://news.cnyes.com/news/id/6594720",
+   "ts": "09/02 08:36"
   },
   {
-   "title": "力麗郭紹儀連任紡拓會董事長 攜手業界共創新局",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6594383",
-   "ts": "09/01 20:24"
-  },
-  {
-   "title": "央行信用管制波及！土銀土建融降至4000億 土銀董座盼「鬆綁」這件事",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6594366",
-   "ts": "09/01 20:16"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：SpaceX(SPCX-US)EPS預估下修至-0.04元，預估目標價為216.00元",
+   "title": "AI token跌破1美元創新低 OpenAI、Anthropic商業模式面臨壓力",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6594409",
-   "ts": "09/01 20:15"
+   "url": "https://news.cnyes.com/news/id/6594659",
+   "ts": "09/02 08:30"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：野村集團(NMR-US)EPS預估上修至0.96元，預估目標價為10.61元",
+   "title": "美伊衝突升溫推升油價，美股全面走低、那斯達克跌0.9%",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6594407",
-   "ts": "09/01 20:15"
+   "url": "https://news.cnyes.com/news/id/6594759",
+   "ts": "09/02 08:30"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：Tempus AI, Inc. Class ATEM-US的目標價調升至69元，幅度約20%",
+   "title": "AI資料中心缺電推升現場發電需求，斗山燃料電池拿下5,014億韓元美國大單",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6594406",
-   "ts": "09/01 20:15"
+   "url": "https://news.cnyes.com/news/id/6594757",
+   "ts": "09/02 08:30"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：Protagonist Therapeutics Inc(PTGX-US)EPS預估上修至4.9元，預估目標價為172.00元",
+   "title": "Anthropic推企業AI安全防護AI Agent安全治理成新戰場",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6594405",
-   "ts": "09/01 20:15"
+   "url": "https://news.cnyes.com/news/id/6594756",
+   "ts": "09/02 08:30"
   },
   {
-   "title": "飆股玉晶光等6檔處置股明起抓去關 處置至9/8、9/10止",
+   "title": "5檔9月除息ETF怎麼選？破解高年化配息率迷思 含息總報酬才是王道！",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6594376",
-   "ts": "09/01 20:14"
+   "url": "https://news.cnyes.com/news/id/6594462",
+   "ts": "09/02 08:17"
   },
   {
-   "title": "佳必琪接單熱絡 CSP客戶下長單能見度直達2028年",
+   "title": "鉅亨速報 - Factset 最新調查：華通(2313-TW)EPS預估下修至7.64元，預估目標價為317.5元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6594374",
-   "ts": "09/01 20:13"
+   "url": "https://news.cnyes.com/news/id/6594722",
+   "ts": "09/02 08:10"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：國泰金(2882-TW)EPS預估上修至8.88元，預估目標價為125元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6594721",
+   "ts": "09/02 08:10"
+  },
+  {
+   "title": "營收速報 - 2026年9月2日台股中小型公司8月營收一覽（新增14家）",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6594707",
+   "ts": "09/02 07:55"
+  },
+  {
+   "title": "〈能源盤後〉美伊戰火再起！原油暴漲逾5% Brent創5周新高 WTI重返90美元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6594646",
+   "ts": "09/02 05:18"
   }
  ],
  "inst": {
