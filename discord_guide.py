@@ -142,7 +142,9 @@ def _chunks(text, limit=1900):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dry-run", action="store_true")
-    ap.add_argument("--channel", default="daily")
+    # 2026-09-03：Leo 的「個人記錄區」是獨立頻道 #個人記錄區（不是 #每日戰情），總覽改預設發那裡；
+    # DISCORD_WH_NOTES 還沒填時退回 daily，不要靜默不發。
+    ap.add_argument("--channel", default="notes")
     a = ap.parse_args()
 
     msgs = _chunks(build())
@@ -154,7 +156,10 @@ def main():
         print(f"{NL}(dry-run：沒發送)")
         return
 
-    from notify_discord import send_discord
+    from notify_discord import send_discord, CHANNELS
+    if a.channel == "notes" and not CHANNELS.get("notes"):
+        print("⚠️ DISCORD_WH_NOTES 未填，改發 #每日戰情（daily）——請 Leo 在 #個人記錄區 建 webhook 後填 .env 再重跑")
+        a.channel = "daily"
     ids = []
     for i, m in enumerate(msgs, 1):
         r = send_discord(a.channel, m, persona="龐統", return_ids=True)
