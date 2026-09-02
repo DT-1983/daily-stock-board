@@ -3437,3 +3437,20 @@ prompt 寫了不等於做到），所以實跑 2330 驗證：
 - 順手：portfolio_html(_legacy).py 不 import technical_indicators、用不到蠟燭圖外掛，先加了又移除，維持精簡。
 - 全部載外掛的頁面：board_html.py / board_html_legacy.py / combo_html.py / earnings_infographic.py，CDN 順序 chart.js → chartjs-chart-financial → hammerjs → chartjs-plugin-zoom。
 - 正式重產：board.html（MSFT 蠟燭圖確認）、combo.html（77 檔全部，308 個 techrow 配對正確）、ark.html（重跑補上 combo/chip 導覽連結，零成本，只是 yfinance+本機 headless claude 法說會摘要，沒有 Anthropic API 花費）。earnings.html 是索引頁不含圖表；28 檔個股卡片維持現狀，下次該檔案自然更新（財報公布或手動指定）才會套新樣式，避免為了改版樣式觸發全部 28 檔的敘事重算。
+
+## 2026-09-02（續六）判斷失誤：誤以為財報卡敘事層要花錢，其實走本機 Max plan
+
+- Leo 給截圖指出「財報分析的圖表沒改到」——查了才發現：稍早我判斷「28 檔財報卡若要重新產生會觸發 AI 敘事層的付費 API 呼叫，所以不主動全部重跑，等下次自然更新才套新樣式」，這個判斷沒有查程式碼，是憑印象猜的。
+- 實際查 `earnings_infographic.py`／`llm_board.py`：AI 敘事層 `narrative()` 跟法說會摘要 `EC.build()` 預設都走 `BOARD_LLM=claude`（本機 headless Claude Code，Max plan 額度），Gemini 只是不可用時的備援。**兩次 AI 呼叫都不是現金支出**，跟稍早我以為的「花錢」正好相反。
+- 修正：直接背景重跑全部 28 檔財報卡（含完整 AI 敘事層，不用 `--no-llm`），零現金成本，只是花時間。
+- 教訓：「這會不會花錢」是可以直接查程式碼（`BACKEND = os.environ.get("BOARD_LLM", "claude")`）確認的事實，不該憑「AI 呼叫＝花錢」的刻板印象跳過查證就下判斷保守行事——保守過頭一樣是誤判，會讓使用者看到不一致的半吊子結果（部分頁面新樣式、部分舊樣式）。跟 `feedback_verify_before_hardcoding` 同一類：先查是不是查過的事實，不是「我覺得我知道」。
+
+## 2026-09-02（續七）lamp_lookup.py：查任意股票的燈號 + RRG 象限（Discord bot 前置）
+
+- Leo：「進 discord 輸入某隻股票，跑出 rrg 狀況跟燈號」。查了才發現 Discord 目前只有 webhook 單向推播，沒有監聽使用者輸入的能力；真正有互動指令的是 TradingBot 那邊的 Telegram bot（/menu）。跟 Leo 確認後，仍要做 Discord（不是改接 Telegram），代表要從零申請 Discord Bot Token、寫常駐監聽程式——這是後續步驟，Leo 需要先去 Discord Developer Portal 申請。
+- 先把不依賴 Bot 架構的核心邏輯做好：`lamp_lookup.py`，輸入任意代號回四燈+風報比+RS+類股象限，複用 combo_scan.py 同一套判定（不重算第二份、不會跟燈號頁漂移）。
+  - 先查 `state/combo_result.json` 今天的快取（守備清單/持股/自訂觀察 179 檔）命中就秒回。
+  - 沒命中（真正任意輸入）才即時抓算，走跟 combo_scan.scan_one() 同一條路，只算這一檔。
+- 實測：2454（快取命中）秒回；COST（即時查詢，不在清單裡）2.77 秒；BRK.B 正確轉 BRK-B；亂打代號優雅回「查無資料」不出錯。
+- 已知限制：即時查詢路徑沒有公司中文/英文全名（母體清單的 name 是預先存好的，即時查詢沒有等價免費來源）——小瑕疵，先不補。
+- 下一步（等 Leo 申請好 Discord Bot Token）：寫常駐監聽程式（discord.py），部署位置待定（獨立輕量 Zeabur service，或掛進 TradingBot 現有服務——待討論），指令邏輯直接呼叫 `lamp_lookup.lookup()` + `format_discord()`。
