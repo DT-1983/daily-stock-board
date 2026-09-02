@@ -35,17 +35,20 @@ ICONS = {
 
 # 全站導覽（2026-08-04 首頁改版：儀表板當首頁，看板搬 board.html，新增 GDP 頁）
 # 各頁一律 from board_theme import NAV，不要自己再定義一份。
+# 2026-09-03 Leo 指定順序：產業輪動 → 進出燈號 → 籌碼異動 → 策略賽馬 → 產業鏈 →
+# 財報分析 → GDP → ARK。首頁維持第一個（站台慣例）；巴菲特清單 Leo 沒列到，
+# 先擺在指定的八項之後，要拿掉或插回中間再說。
 NAV = [
     ("home", "home", "首頁", "./"),
     ("rotation", "rotation", "產業輪動", "rotation.html"),
-    ("board", "board", "產業鏈看板", "board.html"),
-    ("buffett", "buffett", "巴菲特清單", "buffett.html"),
-    ("portfolio", "portfolio", "策略賽馬", "portfolios.html"),
-    ("earnings", "earnings", "財報分析", "earnings.html"),
     ("combo", "lamp", "進出燈號", "combo.html"),
     ("chip", "chip", "籌碼異動", "chip.html"),
+    ("portfolio", "portfolio", "策略賽馬", "portfolios.html"),
+    ("board", "board", "產業鏈看板", "board.html"),
+    ("earnings", "earnings", "財報分析", "earnings.html"),
     ("gdp", "gdp", "GDP 觀察", "gdp.html"),
     ("ark", "ark", "ARK 追蹤", "ark.html"),
+    ("buffett", "buffett", "巴菲特清單", "buffett.html"),
 ]
 
 
