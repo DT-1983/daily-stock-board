@@ -40,6 +40,9 @@ WATCHLIST_PATH = "state/combo_watchlist.json"
 TARGETS_CACHE = "state/price_targets.json"
 STATE_PATH = "state/combo_state.json"
 RESULT_PATH = "state/combo_result.json"
+SECTOR_MAP_PATH = "state/sector_map.json"   # 個股→TradingView 類股（30 天快取）
+SECTOR_MAP_DAYS = 30
+ROTATION_HIST = "industry_rotation_history.json"   # 輪動頁的歷史快照（讀最新一筆）
 
 RS_SHORT, RS_LONG = 60, 240      # 老墨的預設，不是我們財報卡的 30/1年
 RS_BIAS_MIN = 3.0                # 燈4 門檻：RS 60日乖離 > +3%
@@ -280,11 +283,98 @@ def scan_all(force_targets=False):
     tgt = price_targets([r["ticker"] for r in rows], force=force_targets)
     for r in rows:
         add_rr(r, tgt.get(r["ticker"]))
+    attach_sector(rows)
     rows.sort(key=lambda r: (-r["lit"], -(r["rr"] if r["rr"] is not None else -99)))
     print(f"  算出 {len(rows)} 檔，跳過 {len(skipped)} 檔")
     if skipped:
         from collections import Counter
         print("  跳過原因：", dict(Counter(x[1] for x in skipped)))
+    return rows
+
+
+# ── 類股象限（2026-09-02 Leo：「做欄位多一個顯示吧」）────────────────────
+# ⚠️ 純顯示欄位，不是第五個燈、不進 combo/打點判定。理由見 combo.html 頁尾說明：
+#   燈四已是個股層級的相對強度；RRG 三週期（20/60/120）今天八成類股互相打架，
+#   當門檻等於賭週期。要不要升級成門檻，等燈號倉跑出「落後象限部位特別虧」的證據再說。
+def sector_map(tickers):
+    """{ticker: {sector, industry, exchange, asof}}。
+    用 TradingView 篩選器**按代號查**（跟輪動頁 _sector_members 同一個免費來源，
+    所以類股名稱跟輪動歷史檔的鍵一定對得上——實測 170 檔 0 個對不上）。
+    OTC ADR（BAYRY/SSUMY）查得到；ETF 查不到就記 None，30 天內不重查。"""
+    from datetime import date as _d
+    cache = _load(SECTOR_MAP_PATH, {})
+    today = _d.today()
+
+    def fresh(e):
+        try:
+            return bool(e) and (today - _d.fromisoformat(e["asof"])).days < SECTOR_MAP_DAYS
+        except Exception:                               # noqa: BLE001
+            return False
+
+    need = [t for t in tickers if not fresh(cache.get(t))]
+    if need:
+        try:
+            from tradingview_screener import Query, col
+            tw = [t for t in need if _is_tw(t)]
+            us = [t for t in need if not _is_tw(t)]
+            for market, tks in (("taiwan", tw), ("america", us)):
+                if not tks:
+                    continue
+                names = [t.split(".")[0] if market == "taiwan" else t for t in tks]
+                _, df = (Query().set_markets(market)
+                         .select("name", "sector", "industry", "exchange")
+                         .where(col("name").isin(names)).limit(2000).get_scanner_data())
+                found = {} if df is None else {str(r["name"]): r for _, r in df.iterrows()}
+                for t, nm in zip(tks, names):
+                    r = found.get(nm)
+
+                    def _v(k):
+                        v = None if r is None else r.get(k)
+                        return None if v is None or v != v else str(v)
+                    cache[t] = {"sector": _v("sector"), "industry": _v("industry"),
+                                "exchange": _v("exchange"), "asof": today.isoformat()}
+            print(f"  類股對應：補查 {len(need)} 檔，"
+                  f"{sum(1 for t in need if (cache.get(t) or {}).get('sector'))} 檔有類股")
+        except Exception as e:                          # noqa: BLE001
+            print(f"  [warn] TradingView 類股查詢失敗，沿用快取：{str(e)[:60]}")
+        _save(SECTOR_MAP_PATH, cache)
+    return cache
+
+
+def quadrants():
+    """{market: {"date": 快照日, sector_en: {"name": 中文, "20": q, "60": q, "120": q}}}
+    讀輪動頁最新一筆（index 基準）。缺檔回 {}——這欄位缺了頁面照出，只是顯示 —。"""
+    h = _load(ROTATION_HIST, {})
+    out = {}
+    for m in ("us", "tw"):
+        hist = (h.get(m) or {}).get("index") or []
+        if not hist:
+            continue
+        last = hist[-1]
+        out[m] = {"date": last.get("date")}
+        for k, v in (last.get("snapshot") or {}).items():
+            per = v.get("periods") or {}
+            out[m][k] = {"name": v.get("name") or k,
+                         **{n: (per.get(n) or {}).get("quadrant") for n in ("20", "60", "120")}}
+    return out
+
+
+def attach_sector(rows):
+    smap = sector_map([r["ticker"] for r in rows])
+    qs = quadrants()
+    n_q = 0
+    for r in rows:
+        e = smap.get(r["ticker"]) or {}
+        r["sector"] = e.get("sector")
+        r["industry"] = e.get("industry")
+        m = "tw" if _is_tw(r["ticker"]) else "us"
+        q = (qs.get(m) or {}).get(r["sector"]) if r["sector"] else None
+        r["sector_zh"] = q["name"] if q else None
+        r["quad"] = {n: q.get(n) for n in ("20", "60", "120")} if q else None
+        r["quad_date"] = (qs.get(m) or {}).get("date")
+        n_q += bool(q)
+    print(f"  類股象限：{n_q}/{len(rows)} 檔對到輪動圖"
+          f"（輪動快照 us {qs.get('us', {}).get('date')} / tw {qs.get('tw', {}).get('date')}）")
     return rows
 
 

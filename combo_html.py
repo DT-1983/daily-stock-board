@@ -41,62 +41,99 @@ CSS = """
 table.cb{width:100%;border-collapse:collapse;font-size:13px}
 table.cb th{text-align:right;padding:8px 6px;color:var(--dim);font-weight:600;
   border-bottom:1px solid var(--line);white-space:nowrap;font-size:12px}
-table.cb th:nth-child(1),table.cb th:nth-child(2){text-align:left}
+table.cb th:nth-child(-n+4){text-align:left}
 table.cb td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
-table.cb td:nth-child(1),table.cb td:nth-child(2){text-align:left}
+table.cb td:nth-child(-n+4){text-align:left}
 table.cb tr:hover td{background:rgba(255,255,255,.03)}
 .lamp{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:3px}
 .on{background:#22C55E}.off{background:#374151}
 .pos{color:#22C55E}.neg{color:#EF4444}.dimv{color:var(--dim)}
 .srcs{font-size:11px;color:var(--dim)}
-.cbfilter{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin:14px 0 4px;
-  background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 14px}
-.fgrp{display:flex;gap:6px;align-items:center}
-.fgrp>span{font-size:12px;color:var(--dim);margin-right:2px}
-.fbtn{background:var(--line);border:1px solid transparent;border-radius:7px;color:var(--ink);
-  cursor:pointer;font-family:inherit;font-size:12px;padding:5px 12px}
-.fbtn[aria-pressed=true]{background:var(--accent);color:#fff;border-color:var(--accent)}
+/* 篩選列：沿用 board_theme 的 .ctrl（置頂）+ .seg（市場）+ .sc（圓角籤，帶色點與計數）——
+   2026-09-02 Leo：「同步投資網站的設計風格跟按鈕方式」。看板頁就是這一套，這頁原本自己另寫了一組。 */
+.cbctrl{display:flex;flex-direction:column;gap:7px}
+.frow{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.flab{font-size:11.5px;color:var(--dim);min-width:30px}
 .fcount{font-size:12px;color:var(--dim);margin-left:auto}
+.sc .fn{color:var(--dim);font-weight:500}
+.sc[aria-pressed=true] .fn{color:var(--muted)}
+/* 類股象限標籤：四色跟產業輪動頁 QUADRANT_COLOR 完全一致，看兩頁不用重新記顏色 */
+.qb{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:5px;
+  color:#fff;margin-right:6px;letter-spacing:.3px}
+.qsec{font-size:11.5px;color:var(--muted)}
 .expbtn{background:none;border:1px solid var(--line);border-radius:6px;color:var(--dim);
   cursor:pointer;font-family:inherit;font-size:11px;padding:2px 7px}
 .expbtn:hover{border-color:#4a9eff;color:#93C5FD}
 tr.detail>td{padding:0 6px 14px;background:rgba(255,255,255,.02)}
-@media(max-width:760px){table.cb th:nth-child(n+8),table.cb td:nth-child(n+8){display:none}}
+@media(max-width:760px){table.cb th:nth-child(n+9),table.cb td:nth-child(n+9){display:none}
+  .qsec{display:none}}
 """
 
+# 象限四色與中文——優先從輪動頁 import，兩頁永遠同色；import 不到（缺套件）才用這份副本
+try:
+    from industry_rotation import QUADRANT_COLOR as QCOL, QUADRANT_LABEL as QLAB  # noqa: E402
+except Exception:                                       # noqa: BLE001
+    QCOL = {"leading": "#3987e5", "improving": "#2fbf71", "lagging": "#e5484d", "weakening": "#eda100"}
+    QLAB = {"leading": "領先", "improving": "改善", "lagging": "落後", "weakening": "弱化"}
+QORDER = ["leading", "improving", "weakening", "lagging"]
 
-FILTER_HTML = """<div class="cbfilter">
-<div class="fgrp"><span>市場</span>
-<button class="fbtn" data-f="mkt" data-v="all" aria-pressed="true">全部</button>
-<button class="fbtn" data-f="mkt" data-v="tw">台股</button>
-<button class="fbtn" data-f="mkt" data-v="us">美股</button></div>
-<div class="fgrp"><span>燈號</span>
-<button class="fbtn" data-f="lit" data-v="all" aria-pressed="true">全部</button>
-<button class="fbtn" data-f="lit" data-v="3">3 燈以上</button>
-<button class="fbtn" data-f="lit" data-v="4">4 燈</button>
-<button class="fbtn" data-f="lit" data-v="hit">3 燈 + 風報比≥1</button></div>
-<div class="fgrp"><span>來源</span>
-<button class="fbtn" data-f="src" data-v="all" aria-pressed="true">全部</button>
-<button class="fbtn" data-f="src" data-v="守備清單">守備清單</button>
-<button class="fbtn" data-f="src" data-v="持股">持股</button>
-<button class="fbtn" data-f="src" data-v="自訂">自訂</button></div>
-<span class="fcount" id="fcount"></span></div>"""
+
+def _sc(f, v, label, dot=None, pressed=False):
+    """站內標準圓角籤（board_theme .sc）：可帶色點，<b class="fn"> 由 JS 填「選它會剩幾檔」。"""
+    d = f'<span class="d2" style="background:{dot}"></span>' if dot else ""
+    return (f'<button class="sc" data-f="{f}" data-v="{esc(v)}" aria-pressed="{"true" if pressed else "false"}">'
+            f'{d}{esc(label)} <b class="fn"></b></button>')
+
+
+def filter_html():
+    quad = "".join(_sc("quad", q, QLAB[q], QCOL[q]) for q in QORDER)
+    return ('<div class="ctrl cbctrl">'
+            '<div class="frow"><span class="flab">市場</span>'
+            '<div class="seg" role="group" aria-label="切換市場">'
+            '<button data-f="mkt" data-v="all" aria-pressed="true">全部</button>'
+            '<button data-f="mkt" data-v="tw" aria-pressed="false">台股</button>'
+            '<button data-f="mkt" data-v="us" aria-pressed="false">美股</button></div>'
+            '<span class="fcount" id="fcount"></span></div>'
+            '<div class="frow"><span class="flab">燈號</span>'
+            + _sc("lit", "all", "全部", pressed=True) + _sc("lit", "3", "3 燈以上")
+            + _sc("lit", "4", "4 燈") + _sc("lit", "hit", "⭐ 打點（3 燈 + 風報比 ≥ 1）")
+            + '</div><div class="frow"><span class="flab">象限</span>'
+            + _sc("quad", "all", "全部", pressed=True) + quad + _sc("quad", "none", "無分類")
+            + '</div><div class="frow"><span class="flab">來源</span>'
+            + _sc("src", "all", "全部", pressed=True) + _sc("src", "守備清單", "守備清單")
+            + _sc("src", "持股", "持股") + _sc("src", "自訂", "自訂")
+            + '</div></div>')
 
 FILTER_JS = """<script>
-// 三組篩選（市場／燈號／來源）互相 AND。展開的圖表列跟著它的主列一起顯示或隱藏，
+// 四組篩選（市場／燈號／象限／來源）互相 AND。展開的圖表列跟著它的主列一起顯示或隱藏，
 // 否則篩掉主列後圖表會孤零零留在畫面上。
-var F = {mkt:"all", lit:"all", src:"all"};
+// 每顆籤上的計數＝「在其他三組目前選擇下，改選這顆會剩幾檔」——跟看板頁的計數同一種語意。
+var F = {mkt:"all", lit:"all", quad:"all", src:"all"};
+var ROWS = Array.prototype.slice.call(document.querySelectorAll("table.cb tr[data-tid]"));
+function match(tr, f, v){
+  if (v === "all") return true;
+  if (f === "mkt")  return tr.dataset.mkt === v;
+  if (f === "quad") return (tr.dataset.quad || "none") === v;
+  if (f === "src")  return (tr.dataset.src || "").split("|").indexOf(v) >= 0;
+  if (f === "lit"){
+    var lit = parseInt(tr.dataset.lit, 10);
+    if (v === "3") return lit >= 3;
+    if (v === "4") return lit >= 4;
+    if (v === "hit") return lit >= 3 && tr.dataset.rr === "1";
+  }
+  return true;
+}
+function rowOk(tr, over){
+  for (var f in F){
+    var v = (over && over.f === f) ? over.v : F[f];
+    if (!match(tr, f, v)) return false;
+  }
+  return true;
+}
 function applyFilter(){
   var n = 0;
-  document.querySelectorAll("table.cb tr[data-tid]").forEach(function(tr){
-    var okM = F.mkt === "all" || tr.dataset.mkt === F.mkt;
-    var lit = parseInt(tr.dataset.lit, 10);
-    var okL = F.lit === "all"
-      || (F.lit === "3" && lit >= 3)
-      || (F.lit === "4" && lit >= 4)
-      || (F.lit === "hit" && lit >= 3 && tr.dataset.rr === "1");
-    var okS = F.src === "all" || (tr.dataset.src || "").split("|").indexOf(F.src) >= 0;
-    var show = okM && okL && okS;
+  ROWS.forEach(function(tr){
+    var show = rowOk(tr, null);
     tr.style.display = show ? "" : "none";
     if (show) n++;
     var d = document.getElementById(tr.dataset.tid);
@@ -105,18 +142,26 @@ function applyFilter(){
   document.querySelectorAll(".cbsec").forEach(function(sec){
     var t = sec.nextElementSibling;
     if (!t || t.tagName !== "TABLE") return;
-    var any = Array.prototype.some.call(t.querySelectorAll("tr[data-tid]"),
-                                        function(r){ return r.style.display !== "none"; });
+    var any = t.querySelectorAll("tr[data-tid]").length &&
+      Array.prototype.some.call(t.querySelectorAll("tr[data-tid]"),
+                                function(r){ return r.style.display !== "none"; });
     sec.style.display = any ? "" : "none";
     t.style.display = any ? "" : "none";
   });
   document.getElementById("fcount").textContent = "符合 " + n + " 檔";
+  document.querySelectorAll("[data-f]").forEach(function(b){
+    var el = b.querySelector(".fn");
+    if (!el) return;
+    var c = 0;
+    ROWS.forEach(function(tr){ if (rowOk(tr, {f: b.dataset.f, v: b.dataset.v})) c++; });
+    el.textContent = c;
+  });
 }
-document.querySelectorAll(".fbtn").forEach(function(b){
+document.querySelectorAll("[data-f]").forEach(function(b){
   b.addEventListener("click", function(){
     var f = b.dataset.f;
     F[f] = b.dataset.v;
-    document.querySelectorAll('.fbtn[data-f="' + f + '"]').forEach(function(x){
+    document.querySelectorAll('[data-f="' + f + '"]').forEach(function(x){
       x.setAttribute("aria-pressed", x === b ? "true" : "false");
     });
     applyFilter();
@@ -177,11 +222,24 @@ def _row_html(r):
     mkt = "tw" if _re.match(r"^[0-9]{4,6}[A-Z]?(\.TWO?)?$", str(r["ticker"])) else "us"
     srcs = "|".join(r.get("src") or [])
     rrok = "1" if (r.get("rr") is not None and r["rr"] >= 1) else "0"
-    return (f'<tr data-mkt="{mkt}" data-lit="{r["lit"]}" data-rr="{rrok}" '
+    # 類股象限（純顯示）：標籤顯示 60 日象限，滑鼠停上去看 20/60/120 三週期＋細分類
+    q = r.get("quad") or {}
+    q60 = q.get("60")
+    if q60 in QLAB:
+        tip = "　".join(f"{n}日 {QLAB.get(q.get(n), '—')}" for n in ("20", "60", "120"))
+        tip += f"｜{r.get('industry') or ''}｜輪動快照 {r.get('quad_date') or ''}"
+        qh = (f'<span class="qb" style="background:{QCOL[q60]}" title="{esc(tip)}">{QLAB[q60]}</span>'
+              f'<span class="qsec">{esc(r.get("sector_zh") or "")}</span>')
+        qv = q60
+    else:
+        qh = '<span class="dimv" title="ETF 或查無類股分類">—</span>'
+        qv = "none"
+    return (f'<tr data-mkt="{mkt}" data-lit="{r["lit"]}" data-rr="{rrok}" data-quad="{qv}" '
             f'data-src="{esc(srcs)}" data-tid="{tid}">'
             f'<td>{btn}<b>{esc(r["ticker"])}</b></td>'
             f'<td>{esc((r.get("name") or "")[:16])}</td>'
-            f'<td style="text-align:left">{lamps}</td>'
+            f'<td>{qh}</td>'
+            f'<td>{lamps}</td>'
             f'<td>{r["lit"]}/4</td>'
             f'<td>{_fmt(r["price"])}</td>'
             f'<td>{_fmt(r.get("target"))}</td>'
@@ -189,13 +247,13 @@ def _row_html(r):
             f'<td>{_fmt(r.get("rs_short"),1,"%")}</td>'
             f'<td class="srcs">{esc("/".join(r.get("src") or []))}</td></tr>'
             + (f'<tr class="detail" id="{tid}" data-mkt="{mkt}" style="display:none">'
-               f'<td colspan="10">{r["chart"]}</td></tr>' if r.get("chart") else ""))
+               f'<td colspan="11">{r["chart"]}</td></tr>' if r.get("chart") else ""))
 
 
 def _table(rows):
     if not rows:
         return '<div class="cbnote">這一組目前沒有標的。</div>'
-    head = ("<tr><th>代號</th><th>名稱</th><th>燈號</th><th>燈</th><th>現價</th>"
+    head = ("<tr><th>代號</th><th>名稱</th><th>類股象限</th><th>燈號</th><th>燈</th><th>現價</th>"
             "<th>市場共識目標</th><th>風報比</th><th>距停損／翻多門檻</th><th>RS60</th><th>來源</th></tr>")
     return ('<table class="cb">' + head
             + "".join(_row_html(r) for r in rows) + "</table>")
@@ -241,7 +299,7 @@ def build(d):
                 f'<div><b style="color:#22C55E">{len(hit)}</b><span>⭐ 打點成立（且風報比 ≥ 1）</span></div>'
                 f'<div><b style="color:#EF4444">{sum(1 for r in ok if (r.get("rr") or 0) < 0)}</b>'
                 '<span>現價已超過共識目標</span></div></div>')
-    body.append(FILTER_HTML)
+    body.append(filter_html())
     body.append(f'<div class="cbsec">⭐ 打點成立<small>亮 ≥{d["combo_min"]} 燈且風報比 ≥ 1，'
                 f'共 {len(hit)} 檔</small></div>' + _table(hit))
     body.append(f'<div class="cbsec">COMBO 成立但風報比 &lt; 1<small>技術面共振了，'
@@ -263,6 +321,13 @@ def build(d):
                 '⚠️ 目標價用的是 <b>yfinance 市場共識</b>（多家券商平均），'
                 '<b>不是單一投顧報告的目標價</b>——兩者數字差很多，不要互相比較。'
                 'ETF 與部分上櫃小型股查無目標價，那些只給「距停損」。<br>'
+                '<b>類股象限</b>＝這檔所屬類股（TradingView 分類）在<a href="rotation.html">產業輪動圖</a>'
+                '的位置，顯示 <b>60 日</b>：'
+                + "　".join(f'<span class="qb" style="background:{QCOL[q]}">{QLAB[q]}</span>' for q in QORDER)
+                + '（滑鼠停在標籤上看 20／60／120 三週期）。'
+                '<b>只是參考欄位，不是第五個燈</b>——燈四已經是個股層級的相對強度，'
+                '而且三個週期常常互相打架（9/1 美股 20 個類股只有 3 個三週期一致），拿它當門檻等於在賭週期。'
+                '要不要升級成門檻，等進出燈號倉跑出「落後象限的部位特別虧」這種證據再說。ETF 無分類。<br>'
                 '⚠️ 出場仍依原規則（SuperTrend 翻空賣一半／RS 跌破 60MA 全出），'
                 '這頁只管進場時機，不是停利建議。</div>')
     body.append("</div>")
