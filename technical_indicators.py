@@ -64,7 +64,7 @@ def typhoon_state(closes, vols, dt_dir, n=20):
 
     ⚠️⚠️ **第二道關卡是逆向推導的，不是官方公開的定義。**
     .xsb 實測是加密二進位（39% 可讀、抽出的字串全是亂碼），還原不出邏輯。
-    這裡用「20 日平均成本(VWAP) 的走向」當第二道，理由與驗證：
+    這裡用「20 日均線(SMA) 的走向」當第二道。**2026-09-02 由實際畫面定案**：
       · 官方參數表寫「**成本**計算天數 預設 20」——「成本」對應 VWAP，
         而 VWAP 已經實測對上老墨的 135.95（收盤 20MA 是 133.78，差 1.6%）
       · 用 Leo 提供的三個有標示的截圖案例反推，三個全中：
@@ -78,10 +78,10 @@ def typhoon_state(closes, vols, dt_dir, n=20):
     """
     if dt_dir is None or len(closes) < n + 2:
         return None
-    vw = _vwap(closes, vols, n)
-    if vw[-1] is None or vw[-2] is None:
+    ma = _sma(closes, n)
+    if ma[-1] is None or ma[-2] is None:
         return None
-    second = 1 if vw[-1] > vw[-2] else -1
+    second = 1 if ma[-1] > ma[-2] else -1
     return dt_dir if dt_dir == second else 0
 
 
