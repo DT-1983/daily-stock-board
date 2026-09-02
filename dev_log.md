@@ -3415,3 +3415,11 @@ prompt 寫了不等於做到），所以實跑 2330 驗證：
 - 今日分布：77 檔 COMBO 成立中 60 日象限 領先 34／弱化 23／落後 8／改善 5／無分類 7；36 檔打點裡落後只有 5。
 - 驗證：本機 http.server 端出 docs/ 用瀏覽器實開，點「落後」→ 8 檔、其他組計數連動、空區塊收起；`.fbtn` 殘留 0。`.claude/launch.json` 放在 `C:\Users\Mophy\AI\`（不是 repo 內）。
 - 未併入：`industry_rotation.py` 與兩個 history json 仍是稍早 RRG 每日化的未提交修改（frames_tw 56 個日期問題未解），不混進這個 commit。
+
+## 2026-09-02（續四）產業輪動：52 幀硬上限的真因 + 幀資料緊湊化 + 改每日跑
+
+- 「台股 frames 只有 56 個日期」真因：`_frames_data(max_frames=52)` 是週頻時代「52 週＝一年」的硬上限，9/1 回填改每日後沒跟著改，歷史檔 250 天但頁面只切最後 52 格。教訓：改單位（週→日）要 grep 所有寫死的 52/26/13，不只改自己看到的。
+- 直接放大到 250 幀會讓頁面 6MB→27MB（每點物件 key/name/quadrant 每幀重複）。做 `_compact_frames()`：序列化時壓成 `[鍵索引, ratio, momentum, size百萬, radius]` 陣列、key/name 只存表頭；前端 `rrgExpand()` 在任何讀 RRG_DATA 的程式之前原樣還原，其餘 JS 不動；quadrant 由 ratio/momentum 重算。Python 端（_axis_bounds）仍拿完整物件。壓縮/還原對照測試通過。
+- 實測：250 幀 ×（粗 20+17 籃、細 109+76 籃）× 2 基準，整頁 6.32MB（原 5.99MB）。瀏覽器實開：250 幀、物件格式正確、圖表正常、console 0 錯誤。
+- 排程：原本只有週六 Actions 跑，「現在」泡泡最多舊 6 天。加進 `board_analyze_daily.cmd` 07:00，排在 researcher_industry 之前，兩個 history json 一起 git add。頁面副標改「每個交易日 07:00 更新」（明早重產後生效）。
+- 9/1 每日化的原始碼（step 5→1、250 點、tailDays、速度/直線度）之前一直沒 commit，線上頁面卻已是它產的；已補 commit 8f054e0。
