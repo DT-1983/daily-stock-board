@@ -107,3 +107,6 @@ state/price_store/
 #    都已一併改掉。改動這三處要一起看。
 state/advisor_verdicts.jsonl
 state/research_notes.jsonl
+
+# 2026-09-03 交易記錄（私人，跟 advisor_verdicts 同一批不進公開 repo）
+state/trade_journal.jsonl
