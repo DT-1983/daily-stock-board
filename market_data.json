@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-02 15:40",
+ "updated": "2026-09-02 20:04",
  "indices": [
   {
    "sym": "^GSPC",
@@ -46,8 +46,8 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/02",
-   "close": 31.78,
-   "chg_pct": 0.29
+   "close": 31.74,
+   "chg_pct": 0.16
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "德國擬數周內敲定更強硬的對中貿易方案 不排除加徵關稅",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6595187",
-   "ts": "09/02 15:40"
-  },
-  {
-   "title": "AI半導體專利5年暴增114%，三星、IBM領跑，雲端巨頭加速自研晶片重塑競爭版圖",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6595280",
-   "ts": "09/02 15:30"
-  },
-  {
-   "title": "2030年投運！藍色起源獲NASA約7億美元大單 將開發高性能火星通訊網絡",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6595214",
-   "ts": "09/02 15:20"
-  },
-  {
-   "title": "一詮擴大新北雙基地產能 明年底散熱片月產值拚提升2.5倍",
+   "title": "市場震盪避風港！遠銀Bankee首創「靈活存」 活存2.435%罕見超越定存",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6595241",
-   "ts": "09/02 15:12"
+   "url": "https://news.cnyes.com/news/id/6595619",
+   "ts": "09/02 20:03"
   },
   {
-   "title": "半導體展高峰論壇有這些廠商參與 AI基建聚焦三大方向",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6595235",
-   "ts": "09/02 15:11"
-  },
-  {
-   "title": "〈SEMICON〉華立：半導體材料調漲10-15% 需求看到2028年底",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6595229",
-   "ts": "09/02 15:10"
-  },
-  {
-   "title": "台灣美光工會醞釀罷工 對公司股價有何影響？",
+   "title": "日債殖利率破3%也不怕！波克夏續押日本五大商社",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6594640",
-   "ts": "09/02 15:00"
+   "url": "https://news.cnyes.com/news/id/6595540",
+   "ts": "09/02 20:00"
   },
   {
-   "title": "〈SEMICON〉立碁1.6T光模組已送出驗證 董座童義興：明年下半年迎營收貢獻",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6595236",
-   "ts": "09/02 14:51"
-  },
-  {
-   "title": "植田和男釋放9月升息強烈訊號！日銀升息預期近100%、日債殖利率飆近30年高",
+   "title": "太空AI資料中心何時能商業化？建置成本仍是地面6.7倍2030年前可以先看太空邊緣運算",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6595161",
-   "ts": "09/02 14:50"
+   "url": "https://news.cnyes.com/news/id/6595632",
+   "ts": "09/02 20:00"
   },
   {
-   "title": "國際遊艇展11/13登場  貿協：已邀歐美、東南亞國際買主來台採購",
+   "title": "無懼大盤回檔！00406A除息逆勢吸金 掩護性買權策略發揮優勢",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6595185",
-   "ts": "09/02 14:16"
+   "url": "https://news.cnyes.com/news/id/6595623",
+   "ts": "09/02 19:52"
+  },
+  {
+   "title": "鴻海劉揚偉：MIT思維應轉向「Made with Taiwan」 與全球市場共同製造",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6595576",
+   "ts": "09/02 19:41"
+  },
+  {
+   "title": "特斯拉中國8月銷量增速大幅放緩至3.6%",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6595530",
+   "ts": "09/02 19:40"
+  },
+  {
+   "title": "〈台幣〉熱錢撤出股匯雙殺 放量貶近1角收31.728元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6595528",
+   "ts": "09/02 19:39"
+  },
+  {
+   "title": "貿協率團訪沙國「LEAP」科技展 鏈結雙方AI供應鏈互接合作",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6595522",
+   "ts": "09/02 19:35"
+  },
+  {
+   "title": "美債殖利率急升逼近警戒線！10年期衝近4.8% 破5%恐成市場最後一根稻草",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6594628",
+   "ts": "09/02 19:30"
+  },
+  {
+   "title": "美股警報響了？美債殖利率若破5% 恐掀5%至8%修正",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6595538",
+   "ts": "09/02 19:19"
   }
  ],
  "inst": {
   "date": "09/02",
-  "total_yi": -1150.3,
+  "total_yi": -1152.4,
   "foreign_yi": -913.5,
-  "trust_yi": -33.2
+  "trust_yi": -35.3
  }
 }
