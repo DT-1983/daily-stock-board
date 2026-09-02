@@ -3530,3 +3530,36 @@ Leo 一次問了風險官（仲達）、復盤（陳壽）、Discord 即時討�
 - 驗證：`import discord_bot` 正常、command tree 註冊不報錯、無 token 時 `main()` 正確印錯誤訊息並回傳非 0（不會裝作成功）；`lamp_lookup.py 2454` 對照原邏輯仍正常（3/4燈、風報比2.27、弱化象限）。**還沒實跑 Discord 端**——沒有 Bot Token 沒辦法連線測試。
 - 部署位置留給 Leo 選（本機常駐排程 vs 獨立 Zeabur service，兩種都寫進檔頭 docstring）：這是要保持 WebSocket 常駐的服務，跟 07:00 batch 排程性質不同，不能塞進 `board_analyze_daily.cmd`。
 - 待 Leo：去 Discord Developer Portal 建 Application+Bot、拿 Token 填 `.env`、用 OAuth2 URL Generator（勾 `bot`+`applications.commands`）邀進隆中對伺服器，才能實測 `/查`。
+
+## 2026-09-03（續五）命名：bb9e = 投資相關全部（含本專案）
+
+Leo 定案聊天代稱：「bb9e」指投資相關工作全部，涵蓋本專案（`daily_stock_analysis`／
+隆中對）＋ `TradingBot`——bb9e 其實是 TradingBot 的 Telegram bot（`@DT_tradebot`）
+原本就有的顯示名稱，這次借來當投資側的統稱，跟本專案是完全獨立的 repo/資料庫/
+部署，只是共用聊天代稱。跟 bb8（BB-8 個人助理）分開，避免聊天講 bb 開頭的代稱時
+兩邊搞混。詳見全域 `~/.claude/CLAUDE.md`「專案代稱」段落與記憶 `project_codenames.md`。
+
+## 2026-09-03（續四）家人版簡報 PDF + 完整報告 PDF（風格 A 暖紙感）
+
+- Leo：「用 skill 做成簡報 pdf（附說明圖）＋完整報告 pdf，設計風格先看」→ 先出 A（暖紙感）／B（夜間深藍）兩風格樣板各三頁，Leo 選 A、簡報要橫式、頁數可加。
+- 做法：`報告檔/老墨產業趨勢三段時程/deck_A.html`（20 頁 16:9，`@page{size:1280px 720px}`）、`report_A.html`（A4 直式流式排版）＋ 9 張 inline SVG 示意圖（三段時程軸／玻纖布→CCL→PCB 供應鏈／800V 供電對比／微流道散熱／ABF 夾心／CoPoS 圓改方／CPO 光纖到晶片／17 家覆蓋方塊／晶背供電時程滑動）。轉 PDF 走 **Edge headless**（`render_edge.py`，跟 md_to_pdf_tool 記憶同一條路：零安裝、CJK 完整），另存 PNG 抽樣人工檢查。
+- 產出：`老墨三段時程_簡報_20260903.pdf`（20 頁，960×540pt 橫式）、`老墨三段時程_完整報告_20260903.pdf`（12 頁 A4），obis `04_AI Report/Investment` 各一份。
+- slides skill 的 HTML template 是給網頁互動簡報用的（Chart.js、導覽鈕、transition），做 PDF 只借它的版型觀念（一頁一重點、Action Title、metric card），不用它的 JS。
+
+## 2026-09-03（續六）discord_bot.py 實跑驗證通過（路線圖第1項階段2 完成）
+
+- Leo 完成階段1：Discord Developer Portal 建好 Application+Bot、OAuth2 URL Generator 勾 `bot`+`applications.commands`（權限勾傳送訊息/使用斜線指令）邀進隆中對伺服器，把 Token 直接貼給我。
+- 伺服器 ID 沒有讓 Leo 手動去開發者模式複製——改用拿到的 Token 呼叫 Discord API `GET /users/@me/guilds`，bot 剛好只在一個伺服器裡，直接讀到 ID `1542432712852377630`，兩個值都寫進 `.env`。
+- **實跑抓到一個真 bug**：第一次啟動，log 顯示「指令已同步到伺服器：0 個」——`/查` 是用 `@tree.command()`（無 `guild=`）宣告的全域指令，只呼叫 `tree.sync(guild=guild)` 不會把全域指令帶進去，那只同步「本來就綁定這個 guild」的指令。要先 `tree.copy_global_to(guild=guild)` 複製一份才會生效。改完後查 Discord API（`GET /applications/{app_id}/guilds/{guild_id}/commands`）直接確認真的有 1 個指令註冊上去，不是只信 log 說成功。
+- 順手修：`nohup ... &` 背景啟動時 `print()` 預設是整批緩衝（不是 tty），log 檔遲遲看不到 on_ready 那兩行，一度誤以為卡住——改用 `python -u`（無緩衝）+ 每個 print 加 `flush=True` 解決，之後偵錯不會再遇到「明明在跑但 log 看不到」。
+- **端到端驗證通過**：Leo 在隆中對伺服器實際打 `/查 代號:2454`，收到「聯發科 現價4315.0 四燈🟢⚫🟢🟢(3/4) 風報比2.27⭐打點成立 RS60 6.11% 弱化(電子科技)（今日掃描快取）」，跟 9/2 `lamp_lookup.py` CLI 測試結果完全一致。
+- **目前只是暫時跑起來測試**：這個 process 是背景手動啟動，不是常駐服務，機器重開或這次對話結束就會停。下一步待 Leo 選部署方式（本機工作排程器常駐 vs 搬去 Zeabur 跟 `meeting_summary_bot` 同帳號）——路線圖第1項到這裡才算真正上線可長期用。
+
+## 2026-09-03（續五）推送總覽 + Bot 功能 → Discord #持股密報
+
+- Leo：「discord 幫我推送新的推送總覽跟 bot 功能到個人記錄區」→ 個人記錄區＝私人頻道（DISCORD_WH_PRIVATE）。一則訊息（戰情室 persona）列：Telegram／#每日戰情五段（含新加的 🚦燈號倉動作、📌驗證日程）／#持股密報／#財報／網站更新時間與新鏈／Bot `/查` 與下一個 `/交易`／obis 私人檔案位置。送達證據：message id 1544780964633378817（return_ids=True 拿回來的，不是看發送端 log）。
+
+## 2026-09-03（續六）推送總覽重貼到正確位置（#每日戰情 釘選）
+
+- 教訓：Leo 的「個人記錄區」＝ `discord_guide.py` 推到 #每日戰情 給他釘選的那幾則總覽（8/31 建立，`state/discord_pinned.json` 記 id），不是持股密報、也不用開新頻道。我先推到持股密報（已不存在）、又誤開 `notes` 頻道位置（已撤）。⭐ 以後「推送總覽／Bot 功能」這類文件一律改 discord_guide.py 重跑，它本來就是為此設計的單一維護點。
+- 更新 SECTIONS 到 9/3 狀態（#每日戰情五段實際標題含 🚦燈號倉動作／📌驗證日程、Bot `/查`與下一個 `/交易`、網頁導覽順序與時程標籤、兩條新鏈、財報卡修復註記），WHATS_NEW 換成 9/2–9/3 七項。共 2 則（1803＋190 字元），id 1544782867811278949／1544782875822526474。OpenCC 命中「布」是玻纖布/公布正常用字。
