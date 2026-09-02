@@ -864,7 +864,7 @@ def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdi
     hdr = header("rotation", "產業輪動雷達",
                  f"RRG（Relative Rotation Graph）· 美股{len(snap_us_index)}個 + 台股{len(snap_tw_index)}個"
                  "TradingView產業籃子"
-                 f" · 更新 {esc(date)}（每週六隨全市場重掃）", NAV, "rotation")
+                 f" · 更新 {esc(date)}（每個交易日 07:00 更新，週六隨全市場重掃）", NAV, "rotation")
     # 2026-08-25：說明區塊搬到圖表下面（原本卡在 header 跟控制面板中間，
     # 用戶一打開頁面要先滑過一大段文字才看得到圖，反饋「產業說明可以放下面」）。
     # 2026-08-25：整段重做卡片化——原本是一大坨用 <br> 接起來的灰色小字，
@@ -895,7 +895,7 @@ def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdi
         '切到「等權類股」可以排除這個扭曲，兩種基準可以切換著看，同一個產業在兩邊排名差很多'
         '就代表它的強弱主要是被大盤本身的結構影響，不是真的相對同儕轉強或轉弱。</div>'
         f'<div class="rrgnoteitem rrgnotedim">軌跡與「▶ 播放資金移動軌跡」已回填近 {BACKFILL_POINTS} 個交易日歷史'
-        '（用既有3年價格資料反推，不是等出來的）；之後每週六會再多疊一幀「現在」。'
+        '（用既有3年價格資料反推，不是等出來的）；之後每個交易日會再多疊一幀「現在」。'
         '回填歷史的資金規模是用當時真實股價×股數算的（股數視為這段期間大致不變，'
         '沒有歷史股數資料源可查），不是套用今天的數字；位置(RS-Ratio/Momentum)本身也是當時的真實值。'
         '美股 2026-08-26 換算法那一週，拖尾軌跡會出現一次不連續的跳動——舊資料(SPDR ETF)'
