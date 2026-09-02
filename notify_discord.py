@@ -32,6 +32,10 @@ CHANNELS = {
     # 2026-08-27：私人頻道（只有 Leo 看得到）——持股相關內容專用。
     # 背景：#每日戰情/#財報 之後可能開放家人看，持股明細不該出現在公開頻道。
     "private": _env.get("DISCORD_WH_PRIVATE", ""),
+    # 2026-09-03：#個人記錄區（channel 1542610510875328582）——推播總覽/Bot 說明這類「給 Leo 看的紀錄」。
+    # 查證：它跟 #持股密報 是兩個頻道；Bot 沒被放進去（403），三個既有 webhook 都不綁它。
+    # 需要 Leo 在該頻道「整合→Webhook→新增」拿 URL 填 DISCORD_WH_NOTES；空著就發不出去（send_discord 會回 False）。
+    "notes": _env.get("DISCORD_WH_NOTES", ""),
 }
 
 # 三國軍師團（2026-08-27 Leo 定案）：伺服器=隆中對。
