@@ -15,7 +15,12 @@ import os
 import json
 import yfinance as yf
 import tw_symbol
-from board_html import supertrend, TW_NAME
+# 2026-09-02：策略層統一改用 SMA 版 ATR（與顯示層／老墨畫面一致）。
+# 不統一的話會出現「網站顯示翻空、但不發翻空警示」這種前後矛盾——
+# 三年回測兩版差在雜訊內（Wilder +5.83%/勝率31%、SMA +6.74%/勝率29%），
+# 沒有績效理由維持兩套。
+from board_html import TW_NAME
+from technical_indicators import supertrend_sma as supertrend
 
 ST_STATE = "state/st_state.json"
 
