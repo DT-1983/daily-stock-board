@@ -162,6 +162,7 @@ def collect(code, name, chain):
         "closes": closes[-60:],
         "highs": [x["max"] for x in price[-60:]],
         "lows": [x["min"] for x in price[-60:]],
+        "opens": [x["open"] for x in price[-60:]],   # 2026-09-02：board.html 蠟燭圖要開盤價
     }
     return ctx, meta
 
