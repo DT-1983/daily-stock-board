@@ -1,13 +1,161 @@
 {
-"date": "2026-09-01",
-"flips_hold": [],
-"flips_watch": [
+"date": "2026-09-02",
+"flips_hold": [
 {
-"code": "3055",
-"name": "蔚華科",
+"code": "ARKQ",
+"name": "",
+"word": "🟢→🔴 翻空",
+"dir": -1
+},
+{
+"code": "CLS",
+"name": "",
 "word": "🔴→🟢 翻多",
 "dir": 1
+},
+{
+"code": "HPE",
+"name": "",
+"word": "🟢→🔴 翻空",
+"dir": -1
 }
 ],
-"ai_alerts": []
+"flips_watch": [
+{
+"code": "ALAB",
+"name": "",
+"word": "🟢→🔴 翻空",
+"dir": -1
+},
+{
+"code": "ASTS",
+"name": "",
+"word": "🟢→🔴 翻空",
+"dir": -1
+},
+{
+"code": "CCJ",
+"name": "",
+"word": "🟢→🔴 翻空",
+"dir": -1
+},
+{
+"code": "EMR",
+"name": "",
+"word": "🟢→🔴 翻空",
+"dir": -1
+},
+{
+"code": "TER",
+"name": "",
+"word": "🟢→🔴 翻空",
+"dir": -1
+}
+],
+"ai_alerts": [
+{
+"chain": "AI 伺服器",
+"market": "US",
+"sig": "🟢",
+"code": "MSFT",
+"name": "Microsoft Corp",
+"reason": "觀望→買進"
+},
+{
+"chain": "低軌衛星",
+"market": "US",
+"sig": "🟢",
+"code": "SPCX",
+"name": "Space Exploration Technologies Corp Class A",
+"reason": "觀望→買進"
+},
+{
+"chain": "低軌衛星",
+"market": "US",
+"sig": "🔴",
+"code": "RTX",
+"name": "RTX Corp",
+"reason": "觀望→賣出"
+},
+{
+"chain": "低軌衛星",
+"market": "US",
+"sig": "🔴",
+"code": "KTOS",
+"name": "Kratos Defense & Security Solutions Inc",
+"reason": "觀望→賣出"
+},
+{
+"chain": "Bitcoin→AI 機房",
+"market": "US",
+"sig": "🔴",
+"code": "RIOT",
+"name": "Riot Platforms Inc",
+"reason": "觀望→賣出"
+},
+{
+"chain": "矽光子/光通訊",
+"market": "US",
+"sig": "🔴",
+"code": "TXN",
+"name": "Texas Instruments Inc",
+"reason": "觀望→賣出"
+},
+{
+"chain": "低軌衛星",
+"market": "US",
+"sig": "🔴",
+"code": "LMT",
+"name": "Lockheed Martin Corp",
+"reason": "觀望→賣出"
+},
+{
+"chain": "低軌衛星",
+"market": "US",
+"sig": "🔴",
+"code": "ASTS",
+"name": "AST SpaceMobile Inc Ordinary Shares - Class A",
+"reason": "觀望→賣出"
+},
+{
+"chain": "低軌衛星",
+"market": "US",
+"sig": "🔴",
+"code": "AVAV",
+"name": "AeroVironment Inc",
+"reason": "觀望→賣出"
+},
+{
+"chain": "太陽能",
+"market": "US",
+"sig": "🔴",
+"code": "RUN",
+"name": "Sunrun Inc",
+"reason": "觀望→賣出"
+},
+{
+"chain": "AI 伺服器",
+"market": "TW",
+"sig": "🟢",
+"code": "2330",
+"name": "台積電",
+"reason": "觀望→買進"
+},
+{
+"chain": "矽光子/光通訊",
+"market": "TW",
+"sig": "🟢",
+"code": "3363",
+"name": "上詮",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 電力/核能",
+"market": "TW",
+"sig": "🟢",
+"code": "1503",
+"name": "士電",
+"reason": "觀望→買進"
+}
+]
 }
