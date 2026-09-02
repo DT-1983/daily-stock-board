@@ -264,11 +264,17 @@ def make_infographic(ticker: str) -> str | None:
     2026-08-31 修：台股統一用**純代號**當檔名。之前兩條路徑對同一檔給不同代號形式
     （8/28 批次重產用 "2881" → earnings_2881.html；每日跟催的 universe 是
     "2881.TW" → earnings_2881_TW.html），結果同一家公司在財報網站上出現兩張卡，
-    舊那張還永遠不會再更新。earnings_infographic 兩種代號都吃得下，差別只在檔名。"""
+    舊那張還永遠不會再更新。
+
+    🔴 2026-09-02 修：8/31 那版把「純代號」同時當成**傳給子程序的 ticker**，不只是
+    檔名——但 earnings_infographic.fetch() 直接 yf.Ticker(ticker) 沒有補後綴，
+    純數字台股代號 yfinance 根本查不到（實測 yf.Ticker("2412") 是空的，"2412.TW"
+    才有資料）。8/31 docstring 那句「兩種代號都吃得下」是沒查證的錯誤假設。
+    結果：8/31 起台股財報卡片的自動更新**每次都失敗**，且失敗被 return None 吞掉、
+    不影響排程繼續跑，靜默壞了好幾天沒人發現（今天重跑 17 檔全部 0/17 才抓到）。
+    修法：檔名跟傳給子程序的 ticker 分開——檔名去掉後綴，子程序仍吃完整 .TW/.TWO。"""
     import re as _re
-    if _re.match(r"^\d{4,6}[A-Z]?\.TWO?$", str(ticker)):
-        ticker = str(ticker).split(".")[0]
-    safe = ticker.replace(".", "_")
+    safe = _re.sub(r"\.TWO?$", "", str(ticker).upper()).replace(".", "_")
     out = f"docs/earnings_{safe}.html"
     try:
         r = subprocess.run([sys.executable, "earnings_infographic.py", ticker, "-o", out],
