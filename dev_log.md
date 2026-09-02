@@ -3570,3 +3570,24 @@ Leo 定案聊天代稱：「bb9e」指投資相關工作全部，涵蓋本專案
 - #個人記錄區 是私密頻道：Bot 讀取/列 webhook 都 403，沒有任何既有 webhook 綁它，所以 Leo 說「研究員先前推過 Telegram 專屬清單」那則我從程式端查不到——可能是 8/28 當時的 webhook 在 9/1 憑證輪替時被撤了，或是手動貼的。查不到就說查不到。
 - 處理：notify_discord 放回 `notes` 位置（讀 DISCORD_WH_NOTES），discord_guide 預設改發 notes、沒填時退回 daily 並印警告。待 Leo 在 #個人記錄區 建 webhook 填 .env。
 - ⭐ 教訓：頻道歸屬要用 webhook 的 channel_id／Bot 的 guild channels 查，不要用「私人的＝private」這種名字推論；今天為此來回三次。
+
+## 2026-09-03（續八）discord_bot.py 部署定案：本機常駐，不放 Zeabur
+
+- Leo 問「Zeabur 先前才外流過我的 api key，搬上去有什麼風險？」——查了 `security_incident_2026-08-28` 記憶完整內容：8/27 根因是 **Zeabur 平台自己內部服務憑證被偷，攻擊者連進他們資料庫一次撈走所有客戶的環境變數**（不是 Leo 的憑證管理問題），且 Zeabur 官方揭露不完整（信只列 2 把 key，實際外流範圍更大）。評估這次要放的 `DISCORD_BOT_TOKEN` 跟 Anthropic key 風險量級不同：查證過 `lamp_lookup.py` 整條依賴鏈不吃任何 API key，且 Discord bot token 範圍限定（只能在隆中對一個伺服器冒充發言，沒給讀訊息/管理伺服器權限），外洩可自助 2 分鐘重置，跟能直接燒錢的 Anthropic key 不同量級。給了「有條件可用」的評估，但 Leo 最終選**本機常駐**（規避這個風險類別，不用再評估）。
+- 同時討論了「查任意股票」能不能做成純網頁——結論：179 檔內（今日快取）可以做成純靜態網頁零風險，但**任意輸入的股票一定要有後端即時算**（yfinance+combo_scan 算 3-8 秒，瀏覽器 JS 做不到），跟 Discord bot 面臨同一個「要有常駐後端」的問題，換介面沒有解掉需求。Leo 決定：查詢功能維持 Discord+本機，HTML 資訊頁面先擱置（提到「現有 XQ 付費就有類似的」，優先度降低，之後要做只是還沒排上）。
+- **本機常駐落地**：
+  - `start_discord_bot.ps1`（跟 talentxtrend/assets-dashboard/Sonia 同款式），`-u`（無緩衝）避免踩到 9/3 稍早那個「明明在跑但 log 看不到」的緩衝坑，log 分流 `logs/discord_bot.log`/`.err.log`
+  - `discord_bot.py` 加內建健康檢查端點（aiohttp，`127.0.0.1:8030`，`client.is_ready()`），改用 `asyncio.run()` 讓 discord.py client 跟這個小 web server 在同一個事件迴圈跑，取代原本的 `client.run(TOKEN)`
+  - `service_health_check.py` 的 `SERVICES` 清單加「隆中對DiscordBot」一列，掛掉會自動跑 `start_discord_bot.ps1` 重啟，跟另外三個本機服務同一套「掛了先救、狀態改變才通知」機制——不然這支 Discord 連線斷了會沒人知道
+  - `register_autostart_tasks.ps1` 加 `AutoStart_DiscordBot`（開機自動啟動）
+  - ⚠️ **卡在權限**：`Register-ScheduledTask` 需要系統管理員權限，我的工具環境跑不動（`Access is denied`，HRESULT 0x80070005），待 Leo 自己用系統管理員身分跑一次 `register_autostart_tasks.ps1` 才會真的開機自啟；目前先手動背景啟動頂著，`/查` 現在能用，但機器重開會停
+  - 順手修一個小坑：`register_autostart_tasks.ps1` 新增的註解裡用了全形括號（），PowerShell 5.1 用 `-File` 讀檔時解析成別的位置導致 parse error（"Missing expression after ','"，錯誤指到的行號跟實際內容對不上，是編碼誤讀的典型癥狀）——改用半形括號後解決，之後這個檔案裡的中文註解要避免全形符號
+
+## 2026-09-03（續九）電金比「只有 2.5 個月」是誤判，重新回補到 241 個交易日，100MA 當場上線
+
+- Leo 問「電金比可以做 60MA 嗎？沒有其它資料可以用了嗎？」——沒有直接回答 60MA，先去查「真的沒有其它資料」是不是站得住。
+- 用 curl 單獨測證交所 `MI_INDEX` 這支 API 的多個舊日期（2026-04-01、2025-01-02、2023-01-03、2020-01-02、2018-01-02），**每一個都查得到電子工業類指數／金融保險類指數**，測到 2018 年都還在。這跟 8/31 記憶寫的「只提供近 2.5 個月」直接矛盾。
+- 查原始程式碼才發現真因：8/27 那次 `--backfill 200` 一次打太多請求中途被限流（HTTP 307），只補到 53 個交易日就停在 2026-06-12；而 `run()` 的每日回補只在「既有資料範圍內」找缺口，不會主動往更早的日期擴展——53 天的邊界就這樣被誤認成 API 上限，卡了快一週沒人發現。
+- 直接重跑 `python market_thermometer.py --backfill 400`（code 裡本來就有的函式，只是沒人再跑過），逐日打（`pause=0.4`）不會整批被擋，一次補到 **241 個交易日、回溯到 2025-08-01**。100MA 當場算出來：電金比 0.8573／100MA 0.9584／🔴 連 41 日低於均線。24 天暫時限流擋住，`run()` 每天自動重試，不影響已有的 241 天。
+- 結論：不用做 60MA，也不用退而求其次用 ETF 代理近似（8/27 因誤差 0.85-2.3% 已否決過）——官方資料本來就夠，只是舊批次腳本的限流 bug 被誤讀成資料源限制。已接進 `daily_warroom.sec1_market()`，明天 08:45 每日戰情會顯示這行。
+- 記憶 `market_thermometer_ef_ratio.md` 已更正；⭐ 通則：「資料源不夠」這種結論要用同一支 API 自己重新單獨測過，不能只看舊批次腳本跑出來的殘缺結果——批次腳本自己的限流/範圍 bug，很容易被誤讀成資料源限制。
