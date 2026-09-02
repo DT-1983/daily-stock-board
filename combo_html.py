@@ -359,6 +359,14 @@ def main():
             #    版面看起來正常但圖表區永遠空白（財報卡有載，這頁原本漏了）。
             "<script src=" + chr(34) + "https://cdn.jsdelivr.net/npm/chart.js@4"
             + chr(34) + "></script>"
+            # 2026-09-02：雙重颱風改真的蠟燭圖，要靠這個外掛（Chart.js 官方組織維護，MIT）
+            "<script src=" + chr(34)
+            + "https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.2.1/dist/chartjs-chart-financial.min.js"
+            + chr(34) + "></script>"
+            "<script src=" + chr(34) + "https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js" + chr(34) + "></script>"
+            "<script src=" + chr(34)
+            + "https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.2.0/dist/chartjs-plugin-zoom.min.js"
+            + chr(34) + "></script>"
             "<style>" + BASE_CSS + CSS + _ti_css() + "</style></head><body>"
             # header 必須包在 .wrap 裡（首頁就是這樣做的），否則標題會貼齊視窗
             # 左緣、跟下面的內容對不齊——.wrap 才有 max-width:1100px + 置中。

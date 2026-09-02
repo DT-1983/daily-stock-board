@@ -3423,3 +3423,17 @@ prompt 寫了不等於做到），所以實跑 2330 驗證：
 - 實測：250 幀 ×（粗 20+17 籃、細 109+76 籃）× 2 基準，整頁 6.32MB（原 5.99MB）。瀏覽器實開：250 幀、物件格式正確、圖表正常、console 0 錯誤。
 - 排程：原本只有週六 Actions 跑，「現在」泡泡最多舊 6 天。加進 `board_analyze_daily.cmd` 07:00，排在 researcher_industry 之前，兩個 history json 一起 git add。頁面副標改「每個交易日 07:00 更新」（明早重產後生效）。
 - 9/1 每日化的原始碼（step 5→1、250 點、tailDays、速度/直線度）之前一直沒 commit，線上頁面卻已是它產的；已補 commit 8f054e0。
+
+## 2026-09-02（續五）圖表統一到全站 + 對齊配對式排版 + 縮放平移
+
+- 背景：Leo「圖表格式樣式可以統一嗎？產業鏈、燈號、財報分析」——board.html（產業鏈看板）原本自己另寫一套簡化版圖表（純收盤線＋Wilder SuperTrend紅/綠），跟燈號/財報頁共用的 technical_indicators.py（今天已改蠟燭圖+黃紫配色）長得不一樣。
+- 統一做法：board_html_legacy.fetch_us_charts 加開盤價、SuperTrend 改 SMA（跟顯示層對齊）、算雙重颱風三態；board_html.py 台股段同步；board.html 的 JS drawChart() 改真的蠟燭圖，沒有開盤價（tw_analysis.json 這次才補，要等下次排程）時優雅退回原本收盤線，不會整段掛掉。tw_analyze.py 補 opens 欄位。
+- 實測：board.html 美股（MSFT）蠟燭圖成功；台股（2382，還沒有 opens）正確退回收盤線、無錯誤。財報卡（--no-llm 測 MRVL，零成本，只是本機 headless claude 上網查法說會摘要，走 Max plan 額度不算現金支出）蠟燭圖與並排字卡都正常。
+- Leo 追加：「文字可以跟圖表上下對齊嗎？可以做放大縮小功能？調整橫軸？」——
+  - 對齊：原本左邊 5 張字卡整欄疊、右邊 4 張圖整欄疊，各自堆疊行數不同步、越往下越錯位。改成配對式 `.techrow`（SUPER TREND+雙重颱風K線 對 價格圖、成交量卡 對 成交量圖、EXCEED CHARGE卡 對 動能柱圖、RS卡 對 RS圖），一組一列，兩欄永遠對齊。
+  - 縮放/平移：四張圖統一改成同一個 linear index x 軸（原本 cv/c2/c3 是 category 軸），用 chartjs-plugin-zoom（Chart.js 官方組織維護，跟已用的 chartjs-chart-financial 同信任層級）加滾輪縮放＋拖曳平移，`onZoom`/`onPanComplete` 互相同步其餘三張圖的 x.min/max，加「重置縮放」按鈕。
+  - 踩坑：拖曳平移完全沒反應——chartjs-plugin-zoom 的 pan 其實是靠 Hammer.js 辨識手勢（peer dependency），沒載入它 pan 那條路徑根本沒啟動（滾輪縮放不受影響，那條路徑不經過 Hammer）。補 hammerjs@2.0.8 CDN（MIT，2016年最後一版但月下載740萬次，Chart.js 官方 zoom 外掛指定依賴，純前端手勢辨識不碰資料）後拖曳同步正常。
+  - 驗證：滾輪縮放（真實 wheel 事件）、拖曳平移（真實 mousedown/mousemove/mouseup 序列）、重置縮放，四張圖 x.min/max 全程一致，逐一測過。
+- 順手：portfolio_html(_legacy).py 不 import technical_indicators、用不到蠟燭圖外掛，先加了又移除，維持精簡。
+- 全部載外掛的頁面：board_html.py / board_html_legacy.py / combo_html.py / earnings_infographic.py，CDN 順序 chart.js → chartjs-chart-financial → hammerjs → chartjs-plugin-zoom。
+- 正式重產：board.html（MSFT 蠟燭圖確認）、combo.html（77 檔全部，308 個 techrow 配對正確）、ark.html（重跑補上 combo/chip 導覽連結，零成本，只是 yfinance+本機 headless claude 法說會摘要，沒有 Anthropic API 花費）。earnings.html 是索引頁不含圖表；28 檔個股卡片維持現狀，下次該檔案自然更新（財報公布或手動指定）才會套新樣式，避免為了改版樣式觸發全部 28 檔的敘事重算。

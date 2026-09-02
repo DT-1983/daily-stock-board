@@ -23,6 +23,7 @@ from datetime import datetime
 import yfinance as yf
 from tw_report import convert
 from technical_indicators import double_typhoon as _st_sma  # SMA 版 SuperTrend（顯示層用）
+from technical_indicators import typhoon_state_series  # 雙重颱風三態（給蠟燭圖上色）
 from board_html_legacy import (parse_report, oneliner, CHAIN_ORDER, CHAIN_MAP,
                         CHAIN_THEMES, CHAIN_REPORTS, ma_series, supertrend,
                         fetch_us_charts, esc_tw, TW_JSON, OBIS,
@@ -255,16 +256,37 @@ $$('.row').forEach(r=>r.onclick=()=>{
  if(!open&&!d.dataset.drawn){d.dataset.drawn=1;drawChart(r.dataset.id);}});
 function drawChart(id){const c=CHARTS[id];if(!c)return;
  const el=document.getElementById('cv'+id);if(!el)return;
- const ds=[{label:'收盤',data:c.close,borderColor:'#3B82F6',borderWidth:2,pointRadius:0,tension:.25}];
- if(c.ma20)ds.push({label:'MA20',data:c.ma20,borderColor:'#94A3B8',borderWidth:1,pointRadius:0,borderDash:[4,3]});
+ // 2026-09-02 Leo：跟燈號/財報頁的圖表樣式統一——雙重颱風畫真的蠟燭圖（三態上色）、
+ // SuperTrend 改黃(多方)/紫(空方)，不再是紅/綠（原本跟蠟燭的紅偏多/綠偏空撞色）。
+ // 有開盤價才畫蠟燭；台股資料還沒補到 open 之前（見 fetch_us_charts/tw_data 那段）
+ // 自動退回原本的收盤線，不會整段掛掉。
+ const hasCandle=c.open&&c.open.length===c.close.length&&typeof Chart.registry.controllers.get==='function'
+   &&!!Chart.registry.controllers.get('candlestick');
+ const TY_COL={1:'#ef4444','-1':'#22c55e',0:'#eab308'};
+ const ds=[];
+ if(hasCandle){
+  const tyColorFn=ctx=>{const v=(c.ty||[])[ctx.dataIndex];const col=TY_COL[v]||'#8FA8C8';
+   return{up:col,down:col,unchanged:col};};
+  ds.push({type:'candlestick',label:'K線（雙重颱風三色）',
+   data:c.dates.map((dt,i)=>({x:i,o:c.open[i],h:c.high[i],l:c.low[i],c:c.close[i]}))
+     .filter(pt=>pt.o!=null&&pt.h!=null&&pt.l!=null&&pt.c!=null),
+   backgroundColors:tyColorFn,borderColors:tyColorFn,borderWidth:1});
+ }else{
+  ds.push({type:'line',label:'收盤',data:c.close.map((v,i)=>({x:i,y:v})),
+   borderColor:'#3B82F6',borderWidth:2,pointRadius:0,tension:.25});
+ }
+ if(c.ma20)ds.push({type:'line',label:'MA20',data:c.ma20.map((v,i)=>({x:i,y:v})),
+  borderColor:'#94A3B8',borderWidth:1,pointRadius:0,borderDash:[4,3]});
  if(c.supertrend){const dir=c.supertrend.dir;
-  ds.push({label:'SuperTrend',data:c.supertrend.st,borderWidth:1.6,pointRadius:0,
+  ds.push({type:'line',label:'SuperTrend',data:c.supertrend.st.map((v,i)=>({x:i,y:v})),borderWidth:1.6,pointRadius:0,
    segment:{borderColor:ctx=>{const i=ctx.p1DataIndex;
-    return dir[i]===-1?'#EF4444':(dir[i]===1?'#22C55E':'#94A3B8');}}});}
- new Chart(el,{type:'line',data:{labels:c.dates,datasets:ds},
+    return dir[i]===1?'#facc15':(dir[i]===-1?'#c084fc':'#94A3B8');}}});}
+ new Chart(el,{type:hasCandle?'candlestick':'line',data:{datasets:ds},
   options:{responsive:true,maintainAspectRatio:false,interaction:{intersect:false,mode:'index'},
    plugins:{legend:{labels:{color:'#94A3B8',boxWidth:11,font:{size:10}}}},
-   scales:{x:{ticks:{color:'#64748B',maxTicksLimit:6,font:{size:9}},grid:{color:'#1E293B'}},
+   scales:{x:{type:'linear',min:0,max:c.dates.length-1,offset:true,
+     ticks:{color:'#64748B',maxTicksLimit:6,font:{size:9},
+       callback:v=>c.dates[Math.round(v)]||''},grid:{color:'#1E293B'}},
            y:{ticks:{color:'#64748B',font:{size:9}},grid:{color:'#1E293B'}}}}});
  drawExtra(id,c);}
 function drawExtra(id,c){
@@ -389,11 +411,18 @@ def main():
         cl = r.get("closes")
         if cl:
             highs, lows = r.get("highs"), r.get("lows")
+            # 2026-09-02：opens 是這次才加進 tw_analyze.py 輸出——沒有的話（要等下次排程）
+            # 蠟燭圖前端會自動退回原本的收盤線，不會因為缺欄位整段掛掉。
+            opens = r.get("opens")
+            st = _st_sma(highs, lows, cl) if highs else None
+            ty = typhoon_state_series(cl, None, st["dir"]) if st else None
             sq = squeeze_momentum(highs, lows, cl) if highs and lows else None
             rs_s = mansfield_rs_series(cl, tw_bench_closes, 30) if tw_bench_closes else None
             charts[r["code"]] = {
-                "dates": r.get("dates", []), "close": cl, "ma20": ma_series(cl, 20),
-                "supertrend": _st_sma(highs, lows, cl) if highs else None,   # SMA 版，見檔頭說明
+                "dates": r.get("dates", []), "close": cl,
+                "open": opens, "high": highs, "low": lows, "ty": ty,
+                "ma20": ma_series(cl, 20),
+                "supertrend": st,
                 "mom": [None if (v is None or v != v) else round(float(v), 2) for v in sq["momentum"]] if sq else [],
                 "sq_on": [None if (isinstance(v, float) and v != v) else bool(v) for v in sq["squeeze_on"]] if sq else [],
                 "rs_s": _align_rs(rs_s, len(cl)) if rs_s is not None else [], "rs_l": []}
@@ -474,7 +503,7 @@ def main():
     html = f"""<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex"><title>{date} 產業鏈看板</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script><script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.2.1/dist/chartjs-chart-financial.min.js"></script><script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.2.0/dist/chartjs-plugin-zoom.min.js"></script>
 <style>{CSS}</style></head><body><div class="wrap">
 {theme_header("board", "產業鏈看板",
     f"{date} · {len(nav)} 條產業鏈 · 美股 yfinance／台股 FinMind · 判讀 Claude（本機）"
