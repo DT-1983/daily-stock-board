@@ -26,7 +26,7 @@ from technical_indicators import double_typhoon as _st_sma  # SMA 版 SuperTrend
 from technical_indicators import typhoon_state_series  # 雙重颱風三態（給蠟燭圖上色）
 from board_html_legacy import (parse_report, oneliner, CHAIN_ORDER, CHAIN_MAP,
                         CHAIN_THEMES, CHAIN_REPORTS, ma_series, supertrend,
-                        fetch_us_charts, esc_tw, TW_JSON, OBIS,
+                        fetch_us_charts, esc_tw, TW_JSON, OBIS, CHAIN_PHASE,
                         CHAIN_ICON, TW_NAME, _align_rs)  # alert_telegram.py 從本模組 import，要 re-export
 from technical_indicators import squeeze_momentum, mansfield_rs_series
 from board_theme import NAV, header as theme_header
@@ -47,6 +47,8 @@ ICONS = {
     "Bitcoin→AI 機房": '<path d="M11 7h4a3 3 0 0 1 0 6h-4zM11 13h5a3 3 0 0 1 0 6h-5zM11 7V4M11 20v-3M15 7V4M15 20v-3M7 7h4M7 13h4M7 19h4"/>',
     "玻璃基板/TGV": '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 8h.01M12 8h.01M16 8h.01M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01"/>',
     "關鍵金屬/原物料": '<path d="M6 3h12l4 6-10 12L2 9Z"/><path d="M11 3 8 9l4 12 4-12-3-6"/><path d="M2 9h20"/>',
+    "AI 材料/被動元件": '<rect x="3" y="4" width="18" height="6" rx="1"/><rect x="3" y="14" width="18" height="6" rx="1"/><path d="M8 4v6M16 14v6"/>',
+    "AI 電源/散熱": '<path d="M9 2v6M15 2v6M7 8h10v4a5 5 0 0 1-10 0z"/><path d="M12 17v5"/>',
 }
 SIG = {"🟢": ("buy", "買進", "#22C55E"), "🔴": ("sell", "賣出", "#EF4444"),
        "🔵": ("hold", "持有", "#3B82F6"), "🟡": ("watch", "觀望", "#EAB308"),
@@ -146,6 +148,7 @@ h1 svg{flex-shrink:0}
 .tcreset{background:none;border:1px solid var(--line);border-radius:7px;color:var(--muted);
  font-size:11px;font-weight:600;padding:5px 11px;cursor:pointer;font-family:inherit;margin-left:auto}
 .tcreset:hover{border-color:var(--accent);color:#93C5FD}
+.phase{font-size:11px;color:#F5B841;background:#2a2410;border:1px solid #5a4a1a;padding:2px 9px;border-radius:14px;white-space:nowrap}
 .dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:8px;margin-top:10px}
 .dcell{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 9px}
 .dcell .k{color:var(--dim);font-size:10px;letter-spacing:.3px}
@@ -523,7 +526,9 @@ def main():
         body.append(
             f'<section class="chain" id="c{i}" data-chain="{i}">'
             f'<div class="chd"><span class="ico">{_icon(c, 17)}</span>'
-            f'<h2>{esc_tw(c)}</h2><span class="cnt">美 {len(us)} · 台 {len(tw)}</span></div>'
+            f'<h2>{esc_tw(c)}</h2><span class="cnt">美 {len(us)} · 台 {len(tw)}</span>'
+            + (f'<span class="phase" title="老墨三段時程：這條鏈的主行情落在哪一段（見報告）">⏱ {esc_tw(CHAIN_PHASE[c])}</span>'
+               if CHAIN_PHASE.get(c) else "") + '</div>'
             f'{_theme_html(CHAIN_THEMES.get(c))}{rptbtn}'
             f'<div class="rows">{"".join(rows)}</div></section>')
 
