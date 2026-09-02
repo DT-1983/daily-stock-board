@@ -20,9 +20,14 @@ from paper_portfolio import chain_select_union
 from technical_indicators import squeeze_momentum, mansfield_rs_series, _benchmark
 
 
-def simulate(ticker, start_date):
+def simulate(ticker, start_date, atr="wilder"):
     try:
-        hist = yf.Ticker(ticker).history(period="1y")
+        # 2026-09-02：原本寫死 period="1y"，所以再怎麼設 --start 都只能回測一年
+        # ——預設起點 2026-06-30 只有 64 天、3~7 檔觸發，樣本小到不能下結論。
+        # 改成依 start_date 往前多抓一年暖機（指標要 210 根以上才算得出來）。
+        _need = (datetime.now().date() - start_date).days + 400
+        _per = "2y" if _need <= 730 else ("5y" if _need <= 1825 else "10y")
+        hist = yf.Ticker(ticker).history(period=_per)
         if hist.empty or len(hist) < 210:
             return None
         highs, lows, closes = hist["High"].tolist(), hist["Low"].tolist(), hist["Close"].tolist()
@@ -33,7 +38,14 @@ def simulate(ticker, start_date):
     if not bench_closes:
         return None
 
-    st = L.supertrend(highs, lows, closes)
+    # 2026-09-02：加 atr 切換。老墨的 SUPER TREND 實測是 SMA 版 ATR（3037 對得上
+    # 到小數），我們的顯示層已改用 SMA；策略層要不要跟著換，取決於這支回測的結論
+    # 會不會變——所以做成參數，兩版都能跑、可重複驗證，而不是改完就回不去。
+    if atr == "sma":
+        from technical_indicators import double_typhoon as _st_sma
+        st = _st_sma(highs, lows, closes)
+    else:
+        st = L.supertrend(highs, lows, closes)
     if not st:
         return None
     dr = st["dir"]
@@ -109,6 +121,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--start", default="2026-06-30")
     ap.add_argument("--universe", default=None, help="逗號分隔ticker清單，預設用產業鏈全(七鏈聯集)")
+    ap.add_argument("--atr", default="sma", choices=["wilder", "sma"],
+                    help="SuperTrend 的 ATR 平滑法。預設 sma（2026-09-02 起策略層的實際算法）；wilder=換算法前的舊基準，留著對照用")
     args = ap.parse_args()
     start_date = datetime.strptime(args.start, "%Y-%m-%d").date()
 
@@ -117,7 +131,7 @@ def main():
 
     results = []
     for i, tk in enumerate(tickers, 1):
-        r = simulate(tk, start_date)
+        r = simulate(tk, start_date, atr=args.atr)
         if r is None:
             continue
         results.append(r)
@@ -133,7 +147,14 @@ def main():
 
     traded = [r for r in results if r["trades"]]
     strat_rets = [r["realized_pct"] + r["unrealized_pct"] for r in results]
-    bh_rets = [r["buyhold_pct"] for r in results]
+    # 2026-09-02：yfinance 的 closes 偶爾夾 nan，算出的 buyhold_pct 也是 nan，
+    # 一筆 nan 就會把整個平均汙染成 nan——對照組整欄變成 "+nan%"，等於沒有對照。
+    # 過濾掉並印出排除幾筆，不要靜默丟資料。
+    _bh_all = [r["buyhold_pct"] for r in results]
+    bh_rets = [x for x in _bh_all if x == x]        # x != x 抓 NaN
+    _bad = len(_bh_all) - len(bh_rets)
+    if _bad:
+        print(f"（買進持有對照排除 {_bad} 筆 NaN——來源資料有缺值）")
 
     print(f"\n===== 彙總（{len(results)}檔納入，{len(traded)}檔有觸發交易）=====")
     print(f"三訊號策略  平均報酬 {sum(strat_rets)/len(strat_rets):+.2f}%　"

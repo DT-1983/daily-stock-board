@@ -141,9 +141,11 @@ def _supertrend_dir(highs, lows, closes, period=10, mult=3.0):
     for i in range(1, n):
         tr.append(max(highs[i] - lows[i], abs(highs[i] - closes[i - 1]), abs(lows[i] - closes[i - 1])))
     atr = [None] * n
-    atr[period - 1] = sum(tr[:period]) / period
-    for i in range(period, n):
-        atr[i] = (atr[i - 1] * (period - 1) + tr[i]) / period
+    # 2026-09-02：Wilder RMA → SMA。策略層統一改用 SMA 版 ATR（見 st_alert 說明）。
+    # 這支刻意不 import technical_indicators（會拉進 numpy/markdown 依賴鏈），
+    # 所以是就地改算法，不是換 import。
+    for i in range(period - 1, n):
+        atr[i] = sum(tr[i - period + 1:i + 1]) / period
     hl2 = [(highs[i] + lows[i]) / 2 for i in range(n)]
     up = lo = None
     dr = 1
@@ -219,7 +221,9 @@ def combo_signal_events(tickers, held_frac):
             continue
         if not bench_closes:
             continue
-        st = _L.supertrend(highs, lows, closes)
+        # 2026-09-02：策略層統一改 SMA 版 ATR（見 st_alert 說明）
+        from technical_indicators import supertrend_sma as _st_sma
+        st = _st_sma(highs, lows, closes)
         if not st:
             continue
         dr = st["dir"]

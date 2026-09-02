@@ -22,6 +22,7 @@ from datetime import datetime
 
 import yfinance as yf
 from tw_report import convert
+from technical_indicators import double_typhoon as _st_sma  # SMA 版 SuperTrend（顯示層用）
 from board_html_legacy import (parse_report, oneliner, CHAIN_ORDER, CHAIN_MAP,
                         CHAIN_THEMES, CHAIN_REPORTS, ma_series, supertrend,
                         fetch_us_charts, esc_tw, TW_JSON, OBIS,
@@ -392,7 +393,7 @@ def main():
             rs_s = mansfield_rs_series(cl, tw_bench_closes, 30) if tw_bench_closes else None
             charts[r["code"]] = {
                 "dates": r.get("dates", []), "close": cl, "ma20": ma_series(cl, 20),
-                "supertrend": supertrend(highs, lows, cl) if highs else None,
+                "supertrend": _st_sma(highs, lows, cl) if highs else None,   # SMA 版，見檔頭說明
                 "mom": [None if (v is None or v != v) else round(float(v), 2) for v in sq["momentum"]] if sq else [],
                 "sq_on": [None if (isinstance(v, float) and v != v) else bool(v) for v in sq["squeeze_on"]] if sq else [],
                 "rs_s": _align_rs(rs_s, len(cl)) if rs_s is not None else [], "rs_l": []}

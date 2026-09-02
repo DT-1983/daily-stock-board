@@ -170,7 +170,12 @@ def compute_chain(members, market, bench_closes, with_rrg=True, prev=None):
 
     # ② SuperTrend（用上面算出來的合成高低價，ATR 才有意義）
     try:
-        st = _L.supertrend(hi, lo, c)
+        # 2026-09-02：改用 SMA 版 ATR，跟進出燈號頁/財報卡一致。
+        # 老墨的 SUPER TREND 實測是 SMA 版（3037 @ 09-02 空方壓力 1223.7 對到小數，
+        # Wilder 版 964.2 且方向相反）。不改的話同一檔股票在兩個頁面會顯示不同方向。
+        # ⚠️ 策略層（st_alert / paper_portfolio / trade_plan）仍是 Wilder，不受影響。
+        from technical_indicators import double_typhoon as _st_sma
+        st = _st_sma(hi, lo, c)
         if st and st.get("dir"):
             d = [x for x in st["dir"] if x is not None]
             if d:
