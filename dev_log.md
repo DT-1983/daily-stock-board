@@ -3395,3 +3395,14 @@ prompt 寫了不等於做到），所以實跑 2330 驗證：
 - 修的坑：`yf.download([單一代號], group_by="ticker")` 仍是 MultiIndex，不能用 `len(pool)>1` 判斷；`global` 宣告晚於使用 SyntaxError（8 個背景工作全死，20 秒後才看到）。
 - 順帶發現：`chain_select_union` 給 5483/3081 接 `.TW` 404（上櫃股），沒走 `tw_symbol.py`——待修。
 - 回測 json 輸出移到 scratch，不進公開 repo。
+
+## 2026-09-02（續二）三指標合流倉 → 進出燈號倉
+
+- 為什麼換：三指標合流要 ST 翻多＋RS30>0＋擠壓剛噴出「同一天」發生，8/18 開倉到 9/2 零觸發、10000 現金全趴著。換成老墨 COMBO 四燈的「狀態」判斷。
+- 做法：`rebalance-combo` 不再自己算指標，直接讀 `state/combo_result.json`（combo_scan 07:00 產出、push 後 Actions 09:00 讀），跟 docs/combo.html 同一份資料，頁面與倉不會漂移。超過 4 天沒更新就不動作。
+- 規則：進場＝≥3 燈成立且風報比≥1，依「亮燈數↓、風報比↓」排序吃現金，每檔 1/8 倉；出場沿用老墨不對稱兩階段＝ST 翻空賣半（狀態判斷、不重複）、RS60 跌破 60MA（rs_short<0）全出，全出後 7 天冷卻。
+- 倉名「三指標合流」→「進出燈號」由 load() 自動改，$10,000 與歷史線沿用（14 個點都是 10000）。舊 combo_signal_events 留著不呼叫。
+- 順手修：`is_tw` 只認 .TW，上櫃 .TWO 會被當美金——combo_result 的 symbol 是走 tw_symbol 的，會有 .TWO；`STORE` 可用 PORTFOLIO_STATE 環境變數改，旁邊真跑不碰正式檔。
+- 驗證：scratch 複本真跑 → 正式檔 md5 不變、買到 UEC/PAAS/UHS/TM/BAYRY/SSUMY/1504.TW/MSFT 正是打點清單前 8、各 12.5%。之後正式跑一次、產賽馬頁、推上去。
+- 沒有歷史回測：目標價沒有歷史，風報比算不回去。這個倉跟原本一樣是累積樣本的器材。
+- 注意：風報比排序偏好「ST 線貼近現價」的標的（分母小，UEC rr=15 就是這樣），這是規則本身的性質。

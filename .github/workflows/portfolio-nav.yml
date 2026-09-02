@@ -28,7 +28,7 @@ jobs:
       # 完全看不出來（8/17 數字凍結 7 天就是這樣被蓋過去的）。
       # 現在：失敗累積成 FAILED，頁面照樣產生（portfolio_html 會自己標「資料停在 X 日」），
       # 但步驟會紅燈 + 推 Telegram，不再無聲降級。
-      - name: 趨勢倉/合流倉調倉 + 記淨值 + 出賽馬頁
+      - name: 趨勢倉/燈號倉調倉 + 記淨值 + 出賽馬頁
         id: rebal
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
@@ -36,7 +36,7 @@ jobs:
         run: |
           FAILED=""
           python paper_portfolio.py rebalance-trend || FAILED="$FAILED 趨勢倉調倉"
-          python paper_portfolio.py rebalance-combo || FAILED="$FAILED 合流倉調倉"
+          python paper_portfolio.py rebalance-combo || FAILED="$FAILED 燈號倉調倉"
           python paper_portfolio.py nav            || FAILED="$FAILED 淨值更新"
           # 頁面還是要產生：它會自己偵測資料日期並在頁面上標示過期，
           # 不產生的話反而變成「頁面停在更舊的版本」，更難判斷。
