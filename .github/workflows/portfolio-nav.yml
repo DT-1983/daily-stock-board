@@ -58,7 +58,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add portfolios.json docs/portfolios.html
+          git add portfolios.json docs/portfolios.html state/lamp_trades_today.json
           git commit -m "chore: 模擬倉每日淨值更新 [skip ci]" || echo "無變化（沒有檔案異動）"
           # push 失敗＝整趟白跑且不會自我修復，必須讓人知道，不能只 echo 一句。
           # 2026-09-01 修：8/27 給 tw-board/market-home/weekly-screen 加的 rebase 重試

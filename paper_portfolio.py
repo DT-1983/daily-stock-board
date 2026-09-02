@@ -743,8 +743,17 @@ def main():
         if res is not None:
             exits = state.setdefault("lamp_exits", {})
             buy, half_sell, full_exit = lamp_signal_events(res["rows"], combo_frac, exits, date)
+            # 2026-09-03：動作寫成檔給 Discord 日報第②段讀（daily_warroom.sec2_signals）。
+            # 無動作也寫（空清單）——「今天沒交易」跟「Actions 沒跑」在檔案上才分得出來。
+            def _dump_trades(bought, hs, fe):
+                json.dump({"date": date, "lamp_date": res["date"], "buy": bought,
+                           "half_sell": hs, "full_exit": fe,
+                           "held": len(pf["holdings"]), "cash": round(pf.get("cash", 0.0), 2)},
+                          open("state/lamp_trades_today.json", "w", encoding="utf-8"),
+                          ensure_ascii=False, indent=1)
             if not buy and not half_sell and not full_exit:
                 print(f"進出燈號倉無動作（燈號日期 {res['date']}，現持 {len(pf['holdings'])} 檔）")
+                _dump_trades([], [], [])
             else:
                 allt = _all_tickers(state) | set(buy) | set(half_sell) | set(full_exit)
                 prices = fetch_prices(allt)
@@ -754,6 +763,7 @@ def main():
                 for tk in full_exit:
                     exits[tk] = date
                 save(state)
+                _dump_trades(bought, half_sell, full_exit)
                 print(f"✅ 進出燈號倉 {date}（燈號 {res['date']}，匯率 {fx:.2f}）：買進+{bought or '無'}"
                       f"（打點候選 {len(buy)} 檔，現金吃完為止） / 賣一半{half_sell or '無'} / "
                       f"全出{full_exit or '無'} → 現持 {len(pf['holdings'])} 檔，現金 ${pf['cash']:,.0f}")
