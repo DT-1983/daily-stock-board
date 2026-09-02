@@ -571,7 +571,7 @@ def build(ticker, disp_days=756):
 
     html = f"""<div class="technical"><h3>技術面四指標</h3>
 <div class="posnote">近一年日線計算，基準指數：{_BENCHMARK_NAME.get(_benchmark(ticker), _benchmark(ticker))}</div>
-<div class="techgrid">{tiles}</div>{panels}
+<div class="techgrid">{tiles}</div>
 <button class="techtoggle" onclick="ti_toggle_{uid}()" id="ti_btn_{uid}">展開圖表 ▾</button>
 <div class="techcharts" id="ti_charts_{uid}" style="display:none">
   <div class="tcwin" id="ti_win_{uid}">
@@ -580,6 +580,9 @@ def build(ticker, disp_days=756):
     <button data-w="365" aria-pressed="false">1年</button>
     <button data-w="1095" aria-pressed="false">3年</button>
   </div>
+  <div class="techwrap">
+  <div class="techside">{panels}</div>
+  <div class="techmain">
   <div class="tclabel">價格 + SuperTrend + 雙重颱風K線</div>
   <div class="tcbox"><canvas id="ti_c1_{uid}"></canvas></div>
   <div class="tclabel">成交量（青線＝20 日均量）</div>
@@ -588,6 +591,7 @@ def build(ticker, disp_days=756):
   <div class="tcbox tcbox-sm"><canvas id="ti_c2_{uid}"></canvas></div>
   <div class="tclabel">RS 相對強弱（短線30日／長線1年，紅線＝與大盤同步基準線）</div>
   <div class="tcbox tcbox-sm"><canvas id="ti_c3_{uid}"></canvas></div>
+  </div></div>
 </div>
 <script>
 window.TI_DATA_{uid} = {json.dumps(chart_data, ensure_ascii=False)};
@@ -727,7 +731,14 @@ CSS = """
 .techtoggle:hover{border-color:#4a9eff}
 .techcharts{margin-top:10px}
 .tclabel{font-size:11px;color:#8a8f98;margin:10px 0 4px}
-.tpanel{background:#1a1d23;border:1px solid #2a2e35;border-radius:9px;padding:8px 11px;margin-top:8px}
+/* 2026-09-02 Leo：資訊欄改放圖表左邊（跟老墨的版面一樣）。
+   290px 固定欄寬——面板是「標籤：數值」的對齊列，欄寬浮動會讓數值左右跳。
+   860px 以下疊回上下：手機並排會把圖表壓到看不清楚。 */
+.techwrap{display:grid;grid-template-columns:290px minmax(0,1fr);gap:14px;align-items:start;margin-top:6px}
+.techside{display:flex;flex-direction:column;gap:8px}
+.techmain{min-width:0}
+@media(max-width:860px){.techwrap{grid-template-columns:1fr}}
+.tpanel{background:#1a1d23;border:1px solid #2a2e35;border-radius:9px;padding:8px 11px}
 .tph{font-size:11px;color:#F5B841;font-weight:700;margin-bottom:5px}
 .tprow{display:flex;justify-content:space-between;gap:10px;padding:2px 0;font-size:12px}
 .tprow>span{color:#8a8f98}
