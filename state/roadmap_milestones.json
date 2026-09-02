@@ -1,0 +1,127 @@
+{
+ "created": "2026-09-03",
+ "source": "報告檔/老墨產業趨勢三段時程_完整報告_20260903.md",
+ "milestones": [
+  {
+   "id": "hvdc-3q26",
+   "due": "2026-09-30",
+   "chain": "AI 電源/散熱",
+   "claim": "NVIDIA 800V HVDC 首批設備 3Q26 出貨（台達電/光寶科）",
+   "verify": "台達電、光寶科 Q3 法說對 800V 出貨的口徑；TrendForce 追蹤",
+   "src": "TrendForce 2026-06-15",
+   "status": "pending",
+   "note": "",
+   "checked": ""
+  },
+  {
+   "id": "n2-100k",
+   "due": "2026-12-31",
+   "chain": "AI 伺服器",
+   "claim": "TSMC N2 月產能年底達 10 萬片",
+   "verify": "TSMC Q4 法說產能數字",
+   "src": "TweakTown / TechNode 2026-04",
+   "status": "pending",
+   "note": "",
+   "checked": ""
+  },
+  {
+   "id": "a16-ready",
+   "due": "2026-12-31",
+   "chain": "AI 伺服器",
+   "claim": "A16 晶背供電 2026 準備好（量產已改口 2027）",
+   "verify": "TSMC 技術論壇／法說；再滑一次就是時程失效",
+   "src": "Tom's Hardware 2026-04",
+   "status": "pending",
+   "note": "",
+   "checked": ""
+  },
+  {
+   "id": "hbm4-h1",
+   "due": "2027-06-30",
+   "chain": "AI 材料/被動元件",
+   "claim": "HBM4 缺貨延續到 2027 上半年",
+   "verify": "SK Hynix、美光 財報對 HBM 供需的說法",
+   "src": "EnkiAI / Tech Insider 2026-07",
+   "status": "pending",
+   "note": "",
+   "checked": ""
+  },
+  {
+   "id": "copos-pilot",
+   "due": "2027-06-30",
+   "chain": "玻璃基板/TGV",
+   "claim": "TSMC CoPoS 2027 試產",
+   "verify": "TrendForce／TSMC 法說",
+   "src": "TrendForce 2026-04-13",
+   "status": "pending",
+   "note": "",
+   "checked": ""
+  },
+  {
+   "id": "a16-hvm",
+   "due": "2027-12-31",
+   "chain": "AI 伺服器",
+   "claim": "A16 量產（2027）",
+   "verify": "TSMC 法說；首批產品是否為 HPC",
+   "src": "Tom's Hardware 2026-04",
+   "status": "pending",
+   "note": "",
+   "checked": ""
+  },
+  {
+   "id": "npo-3p2t",
+   "due": "2027-12-31",
+   "chain": "矽光子/光通訊",
+   "claim": "3.2T NPO 進入出貨（Broadcom OFC 2026 展出）",
+   "verify": "Broadcom／Coherent 財報 scale-out 光學營收",
+   "src": "Tom's Hardware / wccftech",
+   "status": "pending",
+   "note": "",
+   "checked": ""
+  },
+  {
+   "id": "spacex-1gw",
+   "due": "2027-12-31",
+   "chain": "低軌衛星",
+   "claim": "SpaceX 兩顆 AI 原型衛星 2027 初發射、年底 1GW 軌道算力",
+   "verify": "SpaceX 發射紀錄；NVIDIA 聲明",
+   "src": "Light Reading",
+   "status": "pending",
+   "note": "",
+   "checked": ""
+  },
+  {
+   "id": "copos-hvm",
+   "due": "2028-12-31",
+   "chain": "玻璃基板/TGV",
+   "claim": "CoPoS 2028 下半年量產",
+   "verify": "TSMC 法說",
+   "src": "TrendForce 2026-04/06",
+   "status": "pending",
+   "note": "",
+   "checked": ""
+  },
+  {
+   "id": "feynman-cpo",
+   "due": "2028-12-31",
+   "chain": "矽光子/光通訊",
+   "claim": "NVIDIA Feynman GPU 帶 CPO（2028）",
+   "verify": "NVIDIA GTC 路線圖",
+   "src": "IDTechEx / wccftech",
+   "status": "pending",
+   "note": "",
+   "checked": ""
+  },
+  {
+   "id": "orbit-scale",
+   "due": "2028-12-31",
+   "chain": "低軌衛星",
+   "claim": "SpaceX 軌道 AI 資料中心 2028 達顯著規模",
+   "verify": "SpaceX／NVIDIA 公告",
+   "src": "Light Reading",
+   "status": "pending",
+   "note": "",
+   "checked": ""
+  }
+ ]
+}
