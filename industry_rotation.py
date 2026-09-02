@@ -60,7 +60,10 @@ HIST_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "industry_r
 # 兩個檔各自獨立，粗細分類的軌跡歷史互不干擾。
 HIST_PATH_IND = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                              "industry_rotation_history_industry.json")
-HIST_KEEP_WEEKS = 52          # 回放範圍最長給「一年」，對齊老墨控制面板的選項
+HIST_KEEP_POINTS = 250        # 回放範圍最長「一年」≈250 個交易日。
+# 2026-09-01：原本是 HIST_KEEP_POINTS=52（週頻時代 52 筆剛好一年）。回填改每日後
+# 52 筆只剩兩個半月，會直接砍掉老墨那種 60 日回放所需的深度，所以一起調大。
+# 名字從 WEEKS 改成 POINTS——留著 WEEKS 會讓下一個人以為單位還是週。
 
 US_BENCHMARK = "^GSPC"          # 跟 technical_indicators._benchmark 美股基準一致
 TW_BENCHMARK = "^TWII"
@@ -277,7 +280,11 @@ QUADRANT_COLOR = {"leading": "#3987e5", "improving": "#2fbf71", "lagging": "#e54
 # 2026-08-26：拿掉 _spdr_aum()——美股不再用 SPDR ETF 當籃子，AUM 這個概念不適用了
 # （資金規模改用成分股市值加總，見 _basket_size_series）。
 
-BACKFILL_WEEKS = 52   # 動畫回填幾週歷史，對齊「回放範圍：一年」。3年資料本來就抓了，回填不用多打任何API
+BACKFILL_POINTS = 250  # 動畫回填幾個「交易日」，對齊控制面板「回放範圍：一年」。
+# 2026-09-01：原本是 BACKFILL_POINTS=52（週頻時代 52 點＝一年）。_backfill_points 的
+# step 改成 1（每日）之後，52 點只剩 52 個交易日≈兩個半月——「回放範圍：一年」那個
+# 選項會變成名不副實。單位既然改成交易日，數字就要一起換算，不能只改一半。
+# 三年價格資料本來就抓了，回填不多打任何 API，成本只反映在頁面體積上。
 
 def _periods_at(rm, ts):
     """從已經算好的 rm（{period: {ratio,momentum}} 的 Series）取某個時間點的座標。
@@ -300,7 +307,10 @@ def _backfill_points(idx, weeks):
     """從共同日期索引挑週頻回看點（近似每5個交易日=1週，不強求對到日曆週—
     遇到假期本來就會有落差，這裡求「大致每週一格」不是精確對日曆）。
     回傳 [(Timestamp, 'YYYY-MM-DD'), ...] 由舊到新，不含最後一筆（那是「現在」，外面另外處理）。"""
-    step = 5
+    # 2026-09-01：step 5→1，回填改成**每個交易日**一格（原本每 5 個交易日＝週頻）。
+    # 老墨的版本是每日、60 日回放。我們的三年價格資料本來就抓了，回填不多打任何
+    # API——所以「做每天」的成本是 0，差別只在這個取點間隔的數字。
+    step = 1
     if len(idx) < step + 1:
         return []
     positions = list(range(len(idx) - 1 - step, -1, -step))[:weeks]
@@ -643,8 +653,8 @@ def append_history(hist, market, benchmark, snapshot, date_str):
     rows = [row for row in rows if row.get("date") != date_str]
     rows.append({"date": date_str, "snapshot": snapshot})
     rows.sort(key=lambda r: r["date"])
-    if len(rows) > HIST_KEEP_WEEKS:
-        rows = rows[-HIST_KEEP_WEEKS:]
+    if len(rows) > HIST_KEEP_POINTS:
+        rows = rows[-HIST_KEEP_POINTS:]
     hist[market][benchmark] = rows
     return hist
 
@@ -745,7 +755,10 @@ def _frames_data(hist_rows, snapshot, period, radius_fn, max_frames=52):
 
 
 PERIOD_LABEL = {20: "短線", 60: "波段", 120: "中期", 240: "長期"}
-RANGE_WEEKS = [("1m", "1個月", 4), ("3m", "3個月", 13), ("6m", "半年", 26), ("1y", "一年", 52)]
+# 2026-09-01：數字單位從「週」換成「交易日」（回填改每日後，4/13/26/52 會變成
+# 只播 4~52 幀，「3個月」剩 13 天）。台股一個月約 20 個交易日，換算 20/60/120/250。
+# 變數名一起改掉——留著 WEEKS 會讓下一個人以為單位還是週。
+RANGE_DAYS = [("1m", "1個月", 20), ("3m", "3個月", 60), ("6m", "半年", 120), ("1y", "一年", 250)]
 
 
 def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdings_ind=None):
@@ -836,7 +849,7 @@ def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdi
     )
     range_btns = "".join(
         f'<button data-r="{k}" aria-pressed="{"true" if k == "3m" else "false"}">{label}</button>'
-        for k, label, _ in RANGE_WEEKS
+        for k, label, _ in RANGE_DAYS
     )
 
     head_html = ('<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">'
@@ -876,7 +889,7 @@ def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdi
         '用大盤當基準時，某個產業可能「看起來弱」只是大盤被拉高，不是它真的比其他產業差；'
         '切到「等權類股」可以排除這個扭曲，兩種基準可以切換著看，同一個產業在兩邊排名差很多'
         '就代表它的強弱主要是被大盤本身的結構影響，不是真的相對同儕轉強或轉弱。</div>'
-        f'<div class="rrgnoteitem rrgnotedim">軌跡與「▶ 播放資金移動軌跡」已回填近 {BACKFILL_WEEKS} 週歷史'
+        f'<div class="rrgnoteitem rrgnotedim">軌跡與「▶ 播放資金移動軌跡」已回填近 {BACKFILL_POINTS} 個交易日歷史'
         '（用既有3年價格資料反推，不是等出來的）；之後每週六會再多疊一幀「現在」。'
         '回填歷史的資金規模是用當時真實股價×股數算的（股數視為這段期間大致不變，'
         '沒有歷史股數資料源可查），不是套用今天的數字；位置(RS-Ratio/Momentum)本身也是當時的真實值。'
@@ -929,9 +942,9 @@ def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdi
         '</div>'
         '<div class="ctrlrow">'
         '<span class="ctrllbl">尾巴長度</span>'
-        '<input type="range" id="tailSlider" min="0" max="20" value="8" class="tailslider">'
-        '<span id="tailVal" class="tailval">8 週</span>'
-        '<div class="ctrlnote">每顆泡泡身後拖著幾週前的殘影軌跡（不只播放時，平常靜態畫面也會顯示）</div>'
+        '<input type="range" id="tailSlider" min="0" max="60" value="10" class="tailslider">'
+        '<span id="tailVal" class="tailval">10 日</span>'
+        '<div class="ctrlnote">每顆泡泡身後拖著幾個交易日前的殘影軌跡（不只播放時，平常靜態畫面也會顯示）。右邊排行榜的「朝右上速度」「直線度」也跟著這個長度走</div>'
         '</div>'
         '<div class="ctrlrow">'
         '<button id="playBtn" class="playbtn">▶ 播放資金移動軌跡</button>'
@@ -965,7 +978,10 @@ def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdi
         # 不然表頭跟資料列欄數對不上，兩邊的直欄會全部錯位（這正是這次「名字消失」
         # 的根因：資料列少了一欄，8欄格線硬套在7個元素上，每欄全部往前錯位一格）。
         '<div class="rrgrankhd"><span>產業</span><span>象限</span>'
-        '<span>RS-Ratio</span><span>RS-Momentum</span><span>資金規模</span>'
+        '<span>RS-Ratio</span><span>RS-Momentum</span>'
+        '<span title="這條尾巴平均每天往右上角（又變強、動能又加速）推進多少；往左下走是負的，箭頭是實際移動方向">朝右上速度</span>'
+        '<span title="頭尾直線距離÷實際走過的路徑長。1＝一路直衝，越小＝原地繞圈。速度快又直線度高才是真的在衝；速度快但直線度低多半只是震盪">直線度</span>'
+        '<span>資金規模</span>'
         '<span title="由左至右＝短線(20日)/波段(60日)/中期(120日)/長期(240日)，'
         '顏色是該週期的象限——短中長期顏色一致代表趨勢一致，不一致代表正在轉折">多週期</span>'
         '<span title="RS-Ratio(相對強弱)在座標軸範圍內的位置，越右邊代表比大盤越強">強弱位置</span></div>'
@@ -1041,14 +1057,14 @@ def _rrg_script(payload, holdings, payload_ind=None, holdings_ind=None):
     lines.append("function RRGD(){return (curGran==='industry'&&window.RRG_DATA_IND)?window.RRG_DATA_IND:window.RRG_DATA;}")
     lines.append("function RRGH(){return (curGran==='industry'&&window.RRG_DATA_IND)?(window.RRG_HOLDINGS_IND||{}):window.RRG_HOLDINGS;}")
     # 2026-08-26：預設週期改 60 日（Leo 指定）；回放範圍3個月／尾巴8週本來就已經是預設值。
-    lines.append("var rrgChart = null, curM = 'us', curP = '60', curBench = 'index', curRange = '3m', tailWeeks = 8;")
+    lines.append("var rrgChart = null, curM = 'us', curP = '60', curBench = 'index', curRange = '3m', tailDays = 10;")
     lines.append("var hoveredKey = null, _lastFullFrames = [], _lastUptoIdx = -1, _lastAllPts = [];")
     lines.append("var selectedKeys = new Set();")  # 2026-08-26：只看勾選的幾個產業
     lines.append("var expandedKeys = new Set();")  # 2026-08-26：展開看前幾大成分股的籃子
     lines.append(f"var TOP_HOLDINGS_N_JS = {TOP_HOLDINGS_N};")
     lines.append("var QCOLOR = " + _json.dumps(QUADRANT_COLOR, ensure_ascii=False) + ";")
     lines.append("var QLABEL = " + _json.dumps(QUADRANT_LABEL, ensure_ascii=False) + ";")
-    lines.append("var RANGE_WEEKS = " + _json.dumps(dict((k, w) for k, _, w in RANGE_WEEKS)) + ";")
+    lines.append("var RANGE_DAYS = " + _json.dumps(dict((k, w) for k, _, w in RANGE_DAYS)) + ";")
     # 2026-08-26：改回固定 94~106（Leo 指定），不再用 _axis_bounds() 百分位數動態算。
     # 前兩輪先收緊到 p2~p98(span7.2)、又收到 p5~p95(span5.7)，範圍越縮，
     # 同樣的真實價格波動在畫面上占的比例越大，播放動畫看起來反而「移動太劇烈」——
@@ -1404,7 +1420,7 @@ function filteredPts(pts) {
 // （資料已經在 _lastAllPts/_lastFullFrames 裡，篩選/hover都只是換一種切法）。
 function renderChart() {
   var pts = filteredPts(_lastAllPts);
-  var trailDs = buildTrailDs(_lastFullFrames, _lastUptoIdx, tailWeeks, hoveredKey, selectedKeys);
+  var trailDs = buildTrailDs(_lastFullFrames, _lastUptoIdx, tailDays, hoveredKey, selectedKeys);
   updateChartPoints(pts, trailDs);
 }
 
@@ -1430,6 +1446,37 @@ function _escHtml(s) {
 // 反饋「圖的顏色跟下面產業的顏色不一致」，根因是圖表泡泡填色是分類色、
 // 排行榜圓點卻是象限色，兩套不同編碼當然對不起來。象限資訊本來就有文字欄
 // （「象限」那一欄）顯示，改用分類色不會少掉任何資訊。
+// 2026-09-01：老墨戰情室排行榜那兩個欄位（Leo 提供截圖），他的定義：
+//   朝右上速度＝這條尾巴平均每天往右上角（又變強、動能又加速）推進多少。
+//               同時考慮走多遠和走的方向——往左下走是負的。
+//   直線度  ＝頭尾直線距離 ÷ 實際走過的路徑長。1＝一路直衝，越小＝原地繞圈。
+// ⭐ 他的用法：「速度快又直線度高，才是真的在衝；速度快但直線度低，多半只是震盪」
+//    ——這是假訊號過濾器，我們原本的『★轉強』只看象限翻轉，沒有這層。
+// 兩者都跟著左邊的尾巴長度走，所以跟 buildTrailDs 取同一段切片，不另外取樣。
+function trailMetrics(key) {
+  if (tailDays <= 0 || _lastUptoIdx < 1 || !_lastFullFrames.length) return null;
+  var start = Math.max(0, _lastUptoIdx - tailDays + 1);
+  var pts = [];
+  _lastFullFrames.slice(start, _lastUptoIdx + 1).forEach(function(f) {
+    f.points.forEach(function(p) { if (p.key === key) pts.push(p); });
+  });
+  if (pts.length < 2) return null;
+  var a = pts[0], b = pts[pts.length - 1];
+  var dR = b.ratio - a.ratio, dM = b.momentum - a.momentum;
+  var straightDist = Math.sqrt(dR * dR + dM * dM);
+  var path = 0;
+  for (var i = 1; i < pts.length; i++) {
+    var x = pts[i].ratio - pts[i-1].ratio, y = pts[i].momentum - pts[i-1].momentum;
+    path += Math.sqrt(x * x + y * y);
+  }
+  // 往右上角(1,1)方向的位移投影 ÷ 天數。除以 sqrt(2) 讓它是真正的『沿 45 度前進距離』
+  var speed = (dR + dM) / Math.SQRT2 / (pts.length - 1);
+  // 路徑長為 0（完全沒動）時直線度沒有意義，回 null 讓 UI 顯示 --，不要硬給 1
+  var straight = path > 1e-9 ? straightDist / path : null;
+  var arrow = dR >= 0 ? (dM >= 0 ? '↗' : '↘') : (dM >= 0 ? '↖' : '↙');
+  return {speed: speed, straight: straight, arrow: arrow};
+}
+
 function renderRankList() {
   // 2026-08-26：改用資金規模（市值）由大到小排，原本是RS-Ratio+RS-Momentum強弱排序。
   var rank = _lastAllPts.slice().sort(function(a,b){ return (b.size||0)-(a.size||0); });
@@ -1445,6 +1492,8 @@ function renderRankList() {
       '<span class="qv">'+QLABEL[p.quadrant]+'</span>'+
       '<span class="num ratioval">'+p.ratio.toFixed(1)+'</span>'+
       '<span class="num momval">'+p.momentum.toFixed(1)+'</span>'+
+      '<span class="num spdval">' + (function(){var m=trailMetrics(p.key);return m===null?'--':(m.speed>=0?'+':'')+m.speed.toFixed(3)+' '+m.arrow;})() + '</span>'+
+      '<span class="num strval">' + (function(){var m=trailMetrics(p.key);return (m===null||m.straight===null)?'--':m.straight.toFixed(2);})() + '</span>'+
       '<span class="sz">'+fmtSize(p.size)+'</span>'+
       '<span class="mp">'+mpDots(p.key)+'</span>'+
       '<span class="posbar"><span class="posbartrack">'+
@@ -1520,12 +1569,12 @@ function draw() {
   var hint = document.getElementById('playHint');
   if (fullFrames.length < 2) {
     btn.disabled = true;
-    hint.textContent = '（資料還在累積，需要至少2週歷史才能播放）';
+    hint.textContent = '（資料還在累積，需要至少 2 個交易日的歷史才能播放）';
   } else {
-    var rangeW = RANGE_WEEKS[curRange] || fullFrames.length;
+    var rangeW = RANGE_DAYS[curRange] || fullFrames.length;
     var n = Math.min(rangeW, fullFrames.length);
     btn.disabled = false;
-    hint.textContent = '（回放 ' + n + ' 週，共累積 ' + fullFrames.length + ' 週歷史）';
+    hint.textContent = '（回放 ' + n + ' 個交易日，共累積 ' + fullFrames.length + ' 個交易日歷史）';
   }
 }
 
@@ -1535,7 +1584,7 @@ document.getElementById('playBtn').addEventListener('click', function() {
   if (isPlaying) { isPlaying = false; stopPlay(); return; }
   var fullFrames = rrgGet('frames');
   if (fullFrames.length < 2) return;
-  var rangeW = RANGE_WEEKS[curRange] || fullFrames.length;
+  var rangeW = RANGE_DAYS[curRange] || fullFrames.length;
   var startOffset = Math.max(0, fullFrames.length - rangeW);
   var playFrames = fullFrames.slice(startOffset);
   if (playFrames.length < 2) return;
@@ -1595,7 +1644,7 @@ document.getElementById('playBtn').addEventListener('click', function() {
     if (i !== segIdx) {
       // 跨週邊界：重算軌跡+日期標籤（一週一次），走完整 update 路徑
       segIdx = i;
-      curTrailDs = buildTrailDs(fullFrames, startOffset + i + 1, tailWeeks, null, selectedKeys);
+      curTrailDs = buildTrailDs(fullFrames, startOffset + i + 1, tailDays, null, selectedKeys);
       lbl.textContent = playFrames[i + 1].date;
       updateChartPoints(pts, curTrailDs);
     } else {
@@ -1605,7 +1654,7 @@ document.getElementById('playBtn').addEventListener('click', function() {
     else { playRAF = null; isPlaying = false; stopPlay(); draw(); }
   }
   lbl.textContent = playFrames[0].date;
-  updateChartPoints(filteredPts(playFrames[0].points), buildTrailDs(fullFrames, startOffset, tailWeeks, null, selectedKeys));
+  updateChartPoints(filteredPts(playFrames[0].points), buildTrailDs(fullFrames, startOffset, tailDays, null, selectedKeys));
   playRAF = requestAnimationFrame(frame);
 });
 
@@ -1645,8 +1694,8 @@ document.getElementById('rangeSeg').addEventListener('click', function(e) {
   curRange = b.dataset.r; draw();
 });
 document.getElementById('tailSlider').addEventListener('input', function(e) {
-  tailWeeks = parseInt(e.target.value, 10);
-  document.getElementById('tailVal').textContent = tailWeeks + ' 週';
+  tailDays = parseInt(e.target.value, 10);
+  document.getElementById('tailVal').textContent = tailDays + ' 日';
   if (!isPlaying) draw();   // 播放中先不重畫，跨週邊界會自然套用新尾巴長度
 });
 // 排行榜某一列 hover 也能高亮該籃子的軌跡（跟直接 hover 泡泡同一套邏輯），
@@ -1709,7 +1758,7 @@ CSS_EXTRA = """
  每個籃子一張卡，欄位改上下堆疊＋文字標籤（用 ::before 加標籤，不用另外寫HTML），
  不用橫向捲動就能看完整資訊。表頭列(.rrgrankhd)手機版直接隱藏——卡片自己帶標籤，
  不需要對齊的表頭了。 */
-.rrgrankhd{display:grid;grid-template-columns:1fr 52px 64px 86px 72px 130px 180px;gap:18px;
+.rrgrankhd{display:grid;grid-template-columns:1fr 52px 64px 86px 84px 58px 72px 130px 180px;gap:18px;
  grid-template-areas:"name qv ratio mom size mp pos";
  padding:2px 4px 8px;border-bottom:1px solid #2a3550;font-size:10.5px;color:#5f80a6}
 .rrgrankhd span:nth-child(2){text-align:center}
@@ -1718,7 +1767,7 @@ CSS_EXTRA = """
 .rrgrankhd span:nth-child(3){grid-area:ratio}.rrgrankhd span:nth-child(4){grid-area:mom}
 .rrgrankhd span:nth-child(5){grid-area:size}.rrgrankhd span:nth-child(6){grid-area:mp}
 .rrgrankhd span:nth-child(7){grid-area:pos}
-.rrgrow{display:grid;grid-template-columns:1fr 52px 64px 86px 72px 130px 180px;gap:18px;align-items:center;
+.rrgrow{display:grid;grid-template-columns:1fr 52px 64px 86px 84px 58px 72px 130px 180px;gap:18px;align-items:center;
  grid-template-areas:"name qv ratio mom size mp pos";
  padding:7px 4px;border-bottom:1px solid #131c30;font-size:12.5px;cursor:pointer;transition:background .15s}
 .rrgrow .nm{grid-area:name}.rrgrow .qv{grid-area:qv}.rrgrow .ratioval{grid-area:ratio}
@@ -1833,8 +1882,8 @@ def build(group_by="sector", hist_path=None):
     snaps = {"us": {}, "tw": {}}
     for m, baskets, index_bench in (("us", us_baskets, us_index_bench), ("tw", tw_baskets, tw_index_bench)):
         for bench in ("index", "equal"):
-            snap, backfill = compute_snapshot(baskets, index_bench, benchmark=bench, backfill_weeks=BACKFILL_WEEKS)
-            print(f"  {m}/{bench}: {len(snap)} 個籃子算出結果，回填 {len(backfill)} 週歷史")
+            snap, backfill = compute_snapshot(baskets, index_bench, benchmark=bench, backfill_weeks=BACKFILL_POINTS)
+            print(f"  {m}/{bench}: {len(snap)} 個籃子算出結果，回填 {len(backfill)} 個交易日歷史")
             snaps[m][bench] = snap
             # 2026-08-26：先清掉跟現在籃子完全對不上的舊歷史列（例如美股從 SPDR ETF
             # 換成 TV 產業分類前留下的 XLB/XLC/... 那些列）——這些舊列的日期常常跟
