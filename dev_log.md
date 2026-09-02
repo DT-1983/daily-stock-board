@@ -3512,3 +3512,11 @@ Leo 一次問了風險官（仲達）、復盤（陳壽）、Discord 即時討�
 - **行動 5 驗證日程**：`state/roadmap_milestones.json` 11 筆（id/due/chain/claim/verify/src/status），`roadmap_milestones.py` 列出／更新狀態（pending/confirmed/slipped/broken）；daily_warroom 第⑤段到期前 21 天列「📌 驗證日程」、逾期未驗持續提醒。**行事曆型、零成本、不自動上網查證**（那是付費呼叫）——驗證在對談中做完用工具記回去。跟風險官 P1 是同一個「每天對照條件」機制，等 P1 做時把這份併進去。
 - **D 觀察名單去向（查證）**：研究員/投資長的母體＝①守備清單與持股的訊號翻面（來自 screen_result 的鏈成分）②產業層翻象限時該鏈成分（非持股只收轉入改善/領先）③巴菲特到俗價；**自訂觀察清單只餵進出燈號頁/燈號倉，不進研究員/投資長**。所以「加進鏈」才是讓研究員/投資長看得到的路——今天加的每檔都已落在某條鏈。
 - 家人版報告：`老墨產業趨勢三段時程_家人版_20260903.md`（7,600 字，完整證據＋白話，obis 也有）。
+
+## 2026-09-03（續三）交易記錄 v1：trade_journal.py（路線圖第 2 項 decisions 表）
+
+- Leo：「想寫交易記錄，html 還是 discord 方便？」＋給了今天四筆（IB 買 MSFT/MRVL/CEG、統一掛單 2454×5）。結論：**輸入用打字**（現在跟我講、Bot 上線後 Discord `!trade`），**檢視用私人 HTML**（obis `04_AI Report/Investment/交易紀錄.html`，手機開得了、不在公開網站）。
+- `trade_journal.py quick "<券商> <buy|sell|order> <代號> [量] [@價] | 理由、理由"`：每筆自動附**系統當時的看法**（燈號數/亮哪幾燈/風報比/RS60/類股象限/最近 3 天投資長判斷）——沒有這個快照，三個月後復盤只剩「當時覺得不錯」。`fill <id> --qty --price` 對帳單回填、`cancel`、`list`、`html`。
+- 🔒 `state/trade_journal.jsonl` 進 .gitignore（跟 advisor_verdicts 同一批），`git check-ignore` 驗過；HTML 不進 docs/。
+- IB 截圖回推成本（P&L÷股數）：MSFT 1@497.03、MRVL 3@210.46、CEG 2@280.28，跟系統快照價對得上；標「回推」，Leo 對帳單確認後可 fill 覆蓋。2454 掛單 pending。
+- 快照已經看得出復盤素材：MRVL 理由「產業鏈評分高」但當下象限落後、RS60 −11.6、投資長無判斷；MSFT 四燈全亮＋象限領先＋投資長續抱。這不是現在下結論，是留給陳壽 B 型比對。
