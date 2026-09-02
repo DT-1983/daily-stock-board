@@ -141,6 +141,11 @@ h1 svg{flex-shrink:0}
 .chartbox{height:180px;margin-top:4px}
 .chartbox-sm{height:100px}
 .tclabel{font-size:11px;color:#8a8f98;margin:10px 0 4px}
+.cbtools{display:flex;align-items:center;gap:10px;margin:10px 0 4px;flex-wrap:wrap}
+.cbhint{font-size:10.5px;color:var(--dim)}
+.tcreset{background:none;border:1px solid var(--line);border-radius:7px;color:var(--muted);
+ font-size:11px;font-weight:600;padding:5px 11px;cursor:pointer;font-family:inherit;margin-left:auto}
+.tcreset:hover{border-color:var(--accent);color:#93C5FD}
 .dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:8px;margin-top:10px}
 .dcell{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 9px}
 .dcell .k{color:var(--dim);font-size:10px;letter-spacing:.3px}
@@ -281,14 +286,31 @@ function drawChart(id){const c=CHARTS[id];if(!c)return;
   ds.push({type:'line',label:'SuperTrend',data:c.supertrend.st.map((v,i)=>({x:i,y:v})),borderWidth:1.6,pointRadius:0,
    segment:{borderColor:ctx=>{const i=ctx.p1DataIndex;
     return dir[i]===1?'#facc15':(dir[i]===-1?'#c084fc':'#94A3B8');}}});}
- new Chart(el,{type:hasCandle?'candlestick':'line',data:{datasets:ds},
+ const main=new Chart(el,{type:hasCandle?'candlestick':'line',data:{datasets:ds},
   options:{responsive:true,maintainAspectRatio:false,interaction:{intersect:false,mode:'index'},
-   plugins:{legend:{labels:{color:'#94A3B8',boxWidth:11,font:{size:10}}}},
+   plugins:{legend:{labels:{color:'#94A3B8',boxWidth:11,font:{size:10}}},zoom:zoomOpt(id,c)},
    scales:{x:{type:'linear',min:0,max:c.dates.length-1,offset:true,
      ticks:{color:'#64748B',maxTicksLimit:6,font:{size:9},
        callback:v=>c.dates[Math.round(v)]||''},grid:{color:'#1E293B'}},
            y:{ticks:{color:'#64748B',font:{size:9}},grid:{color:'#1E293B'}}}}});
+ ZOOM_GROUP[id]=[main];
  drawExtra(id,c);}
+// 2026-09-02 Leo：「產業鏈也能做縮放嗎」——跟進出燈號/財報卡同一套：滾輪縮放、
+// 拖曳平移（拖曳要 hammerjs，CDN 已載），三張圖共用同一段 x 範圍，量價才對得上。
+// ZOOM_GROUP[id] 收同一檔的三張圖；syncing 旗標防 A 同步 B、B 再回頭同步 A 的迴圈。
+const ZOOM_GROUP={};
+let zoomSyncing=false;
+function syncZoom(id,src){
+ if(zoomSyncing)return; zoomSyncing=true;
+ const xs=src.scales.x;
+ (ZOOM_GROUP[id]||[]).forEach(ch=>{if(ch!==src)ch.zoomScale('x',{min:xs.min,max:xs.max},'none');});
+ zoomSyncing=false;}
+function zoomOpt(id,c){
+ return {pan:{enabled:true,mode:'x',onPanComplete:({chart})=>syncZoom(id,chart)},
+  zoom:{wheel:{enabled:true},pinch:{enabled:true},mode:'x',
+   onZoom:({chart})=>syncZoom(id,chart),onZoomComplete:({chart})=>syncZoom(id,chart)},
+  limits:{x:{min:0,max:c.dates.length-1,minRange:5}}};}
+function resetZoomFor(id){(ZOOM_GROUP[id]||[]).forEach(ch=>ch.resetZoom());}
 function drawExtra(id,c){
  const elSq=document.getElementById('cvsq'+id),elRs=document.getElementById('cvrs'+id);
  if(elSq&&c.mom&&c.mom.length){
@@ -296,24 +318,29 @@ function drawExtra(id,c){
    if(v>=0)return v>=prev?'#4ade80':'#1e7a45';return v<=prev?'#ff8a8a':'#8a2e2e';});
   const dotColor=(c.sq_on||[]).map((on,i)=>{if(on)return'#EAB308';const m=c.mom[i];
    return m==null?'#6b7280':(m>=0?'#4ade80':'#ff8a8a');});
-  new Chart(elSq,{type:'bar',data:{labels:c.dates,datasets:[
-    {label:'動能',data:c.mom,backgroundColor:momColor,order:2},
-    {label:'擠壓/釋放',type:'line',data:c.mom.map(()=>0),showLine:false,
+  const sq=new Chart(elSq,{type:'bar',data:{datasets:[
+    {label:'動能',data:c.mom.map((v,i)=>({x:i,y:v})),backgroundColor:momColor,order:2},
+    {label:'擠壓/釋放',type:'line',data:c.mom.map((_,i)=>({x:i,y:0})),showLine:false,
      pointRadius:2.6,pointBackgroundColor:dotColor,pointBorderWidth:0,order:1}]},
-   options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
-    scales:{x:{ticks:{display:false},grid:{display:false}},
-     y:{ticks:{color:'#64748B',font:{size:9}},grid:{color:'#1E293B'}}}}});}
+   options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},zoom:zoomOpt(id,c)},
+    scales:{x:{type:'linear',min:0,max:c.dates.length-1,offset:true,
+      ticks:{display:false},grid:{display:false}},
+     y:{ticks:{color:'#64748B',font:{size:9}},grid:{color:'#1E293B'}}}}});
+  if(ZOOM_GROUP[id])ZOOM_GROUP[id].push(sq);}
  if(elRs&&((c.rs_s&&c.rs_s.length)||(c.rs_l&&c.rs_l.length))){
-  const base=(c.rs_s&&c.rs_s.length?c.rs_s:c.rs_l).map(()=>0);
+  const base=(c.rs_s&&c.rs_s.length?c.rs_s:c.rs_l).map((_,i)=>({x:i,y:0}));
   const rsds=[{label:'基準線(0%)',data:base,borderColor:'#EF4444',borderWidth:2,pointRadius:0,order:3}];
-  if(c.rs_s&&c.rs_s.length)rsds.push({label:'短線30日',data:c.rs_s,borderColor:'#EAB308',borderWidth:1.4,pointRadius:0,tension:.15,order:1});
-  if(c.rs_l&&c.rs_l.length)rsds.push({label:'長線1年',data:c.rs_l,borderColor:'#4a9eff',borderWidth:1.4,pointRadius:0,tension:.15,order:2});
-  new Chart(elRs,{type:'line',data:{labels:c.dates,datasets:rsds},
+  if(c.rs_s&&c.rs_s.length)rsds.push({label:'短線30日',data:c.rs_s.map((v,i)=>({x:i,y:v})),borderColor:'#EAB308',borderWidth:1.4,pointRadius:0,tension:.15,order:1});
+  if(c.rs_l&&c.rs_l.length)rsds.push({label:'長線1年',data:c.rs_l.map((v,i)=>({x:i,y:v})),borderColor:'#4a9eff',borderWidth:1.4,pointRadius:0,tension:.15,order:2});
+  const rsc=new Chart(elRs,{type:'line',data:{datasets:rsds},
    options:{responsive:true,maintainAspectRatio:false,
     plugins:{legend:{labels:{color:'#9aa0a6',boxWidth:11,font:{size:10},
-     filter:item=>item.text!=='基準線(0%)'}}},
-    scales:{x:{ticks:{display:false},grid:{display:false}},
-     y:{ticks:{color:'#64748B',font:{size:9}},grid:{color:'#1E293B'}}}}});}}
+     filter:item=>item.text!=='基準線(0%)'}},zoom:zoomOpt(id,c)},
+    scales:{x:{type:'linear',min:0,max:c.dates.length-1,offset:true,
+      ticks:{display:false},grid:{display:false}},
+     y:{ticks:{color:'#64748B',font:{size:9}},grid:{color:'#1E293B'}}}}});
+  if(ZOOM_GROUP[id])ZOOM_GROUP[id].push(rsc);}}
 function openM(i){$('#m'+i).classList.add('on');document.body.style.overflow='hidden';}
 function closeM(i){$('#m'+i).classList.remove('on');document.body.style.overflow='';}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')
@@ -358,6 +385,15 @@ def _extra_charts(rid):
             f'<div class="chartbox chartbox-sm"><canvas id="cvsq{rid}"></canvas></div>'
             f'<div class="tclabel">RS 相對強弱</div>'
             f'<div class="chartbox chartbox-sm"><canvas id="cvrs{rid}"></canvas></div>')
+
+
+def _chart_block(rid):
+    """整組圖表（工具列＋主圖＋動能柱＋RS）。2026-09-02 Leo：「產業鏈也能做縮放嗎」——
+    工具列放主圖上面，展開就看得到；onclick 不帶引號問題所以 rid 直接內插（都是代號，
+    只有英數與點，_row 那邊已經當 id 用了）。"""
+    return (f'<div class="cbtools"><span class="cbhint">滾輪縮放／拖曳平移，三張圖同步</span>'
+            f'<button class="tcreset" onclick="resetZoomFor(\'{rid}\')">↺ 重置縮放</button></div>'
+            f'<div class="chartbox"><canvas id="cv{rid}"></canvas></div>{_extra_charts(rid)}')
 
 
 def _row(rid, mkt, sig, tk, nm, score, one, detail_html):
@@ -444,8 +480,7 @@ def main():
         rows = []
         for sig, tk, nm, blk in us:
             det = mdc.convert(re.sub(r"(?s)^##.*?\n", "", blk, count=1)); mdc.reset()
-            ch = (f'<div class="chartbox"><canvas id="cv{tk}"></canvas></div>{_extra_charts(tk)}'
-                  if tk in charts else "")
+            ch = _chart_block(tk) if tk in charts else ""
             rows.append(_row(tk, "US", sig, tk, nm, us_score.get(tk, "—"),
                              oneliner(blk), ch + f'<div class="mdbody">{det}</div>'))
         for r in tw:
@@ -460,8 +495,7 @@ def main():
                 for lab, key in [("理由", "reason"), ("風險", "risk"),
                                  ("買點", "buy_point"), ("停損", "stop_loss")]
                 if r.get(key))
-            ch = (f'<div class="chartbox"><canvas id="cv{code}"></canvas></div>{_extra_charts(code)}'
-                  if code in charts else "")
+            ch = _chart_block(code) if code in charts else ""
             # 2026-08-11：台股名字一律優先查 TW_NAME（中文），report_*.md 裡的 name
             # 是本機判讀當天自己查yfinance寫的、常常是英文——只當TW_NAME沒收錄時的備援
             nm = TW_NAME.get(code) or r.get("name", code)
