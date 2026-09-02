@@ -142,10 +142,20 @@ def scan_one(tk, sym, df, bench_closes):
     H = df["High"].round(2).tolist()
     L = df["Low"].round(2).tolist()
     C = df["Close"].round(2).tolist()
-    st = supertrend(H, L, C)
+    # ⚠️ 顯示層一律用 **SMA 版 ATR**（＝ double_typhoon 那條線），因為老墨的
+    # 「SUPER TREND PRO MAX」實測就是 SMA 版：
+    #   3037 @ 2026-09-02 他顯示空方壓力 1223.7 → 我們 SMA 版 1223.7（分毫不差）、
+    #   Wilder 版 964.2 而且方向相反；9939 @ 08-26 他 141.40 → SMA 141.40 / Wilder 141.66。
+    #   （他的方法說明寫「SUPER TREND 採 Wilder's RMA」，與實際數字矛盾，採信數字。）
+    # ⚠️ **策略層不動**：trade_plan.supertrend_invalidation / st_alert / paper_portfolio
+    #   仍用 Wilder——Leo 的出場規則是拿 Wilder 版回測出來的。
+    #   實測兩版長期特性接近（3037 三年翻轉 23 vs 24 次、平均段長 31.3 vs 30.0 根），
+    #   差別在個別訊號的時點，不是策略的統計特性。
+    st_w = supertrend(H, L, C)          # Wilder 版：保留備查，不進顯示
+    st = ti.double_typhoon(H, L, C)     # SMA 版＝老墨的 SUPER TREND
     if not st or st["dir"][-1] is None:
         return None
-    dt = ti.double_typhoon(H, L, C)
+    dt = st
     vols_k = [None if v is None else (v / 1000 if _is_tw(tk) else v)
               for v in df["Volume"].tolist()]
     ty_state = ti.typhoon_state(C, vols_k, dt["dir"][-1]) if dt else None

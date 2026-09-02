@@ -393,7 +393,16 @@ def build(ticker, disp_days=756):
         print(f"  [technical_indicators] {ticker} 抓取失敗：{e}")
         return "", ""
 
-    st = supertrend(highs, lows, closes)
+    # 2026-09-02：顯示層改用 SMA 版 ATR（＝ double_typhoon 那條線），因為老墨的
+    # 「SUPER TREND PRO MAX」實測就是 SMA 版：3037 @ 09-02 他顯示空方壓力 1223.7，
+    # 我們 SMA 版算 1223.7（分毫不差）、Wilder 版 964.2 且方向相反；
+    # 9939 @ 08-26 他 141.40 → SMA 141.40 / Wilder 141.66。
+    # 他的方法說明寫「SUPER TREND 採 Wilder's RMA」，與實際數字矛盾，採信數字。
+    # ⚠️ 策略層（trade_plan / st_alert / paper_portfolio）仍用 Wilder，不受這裡影響——
+    #    Leo 的出場規則是拿 Wilder 版回測出來的。實測兩版長期特性接近
+    #    （3037 三年翻轉 23 vs 24 次、平均段長 31.3 vs 30.0 根），差在個別訊號時點。
+    st_wilder = supertrend(highs, lows, closes)   # 保留備查，不進顯示
+    st = double_typhoon(highs, lows, closes)
     dt = double_typhoon(highs, lows, closes)
     sq = squeeze_momentum(highs, lows, closes)
     rs = mansfield_rs(closes, bench_closes) if bench_closes else {"short": None, "long": None}
