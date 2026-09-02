@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-02 08:46",
+ "updated": "2026-09-02 12:46",
  "indices": [
   {
    "sym": "^GSPC",
@@ -37,17 +37,17 @@
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "08/31",
-   "close": 46128.47,
-   "chg_pct": 0.33
+   "date": "09/02",
+   "close": 46245.61,
+   "chg_pct": -1.5
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/02",
-   "close": 31.69,
-   "chg_pct": 0.01
+   "close": 31.78,
+   "chg_pct": 0.29
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "馬斯克：AI催動全球經濟成長30% 未來十年人形機器人10億台",
+   "title": "挑戰台積電！英特爾14A製程進展加速、缺陷密度改善創22奈米以來最快",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6594720",
-   "ts": "09/02 08:36"
+   "url": "https://news.cnyes.com/news/id/6595116",
+   "ts": "09/02 12:32"
   },
   {
-   "title": "AI token跌破1美元創新低 OpenAI、Anthropic商業模式面臨壓力",
+   "title": "〈SEMICON〉Google連DDR4都撿回來用！疾呼DRAM廠擴產 南亞科、華邦電受惠",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6595108",
+   "ts": "09/02 12:31"
+  },
+  {
+   "title": "Dyson不只賣吹風機 首款AI牙刷在台開賣要價16990元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6594659",
-   "ts": "09/02 08:30"
+   "url": "https://news.cnyes.com/news/id/6595005",
+   "ts": "09/02 12:30"
   },
   {
-   "title": "美伊衝突升溫推升油價，美股全面走低、那斯達克跌0.9%",
+   "title": "馬斯克：明年底AI能「完成所有數位領域工作」、10年內機器人超越人類生產力總和",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6594759",
-   "ts": "09/02 08:30"
+   "url": "https://news.cnyes.com/news/id/6595008",
+   "ts": "09/02 12:20"
   },
   {
-   "title": "AI資料中心缺電推升現場發電需求，斗山燃料電池拿下5,014億韓元美國大單",
+   "title": "鉅亨速報 - Factset 最新調查：矽力-KY(6415-TW)EPS預估上修至11.87元，預估目標價為610元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6595139",
+   "ts": "09/02 12:10"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：技嘉(2376-TW)EPS預估上修至33.63元，預估目標價為490元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6595138",
+   "ts": "09/02 12:10"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：台化(1326-TW)EPS預估下修至3.75元，預估目標價為80元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6595137",
+   "ts": "09/02 12:10"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：緯穎(6669-TW)EPS預估上修至361.05元，預估目標價為7847.5元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6595136",
+   "ts": "09/02 12:10"
+  },
+  {
+   "title": "博通財報要回答這些問題 股價才有望重啟漲勢",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6594757",
-   "ts": "09/02 08:30"
+   "url": "https://news.cnyes.com/news/id/6594658",
+   "ts": "09/02 12:10"
   },
   {
-   "title": "Anthropic推企業AI安全防護AI Agent安全治理成新戰場",
+   "title": "美債崩、日元潰！滙豐：當前亞洲金融環境與1997年危機前夕驚人相似",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6594756",
-   "ts": "09/02 08:30"
-  },
-  {
-   "title": "5檔9月除息ETF怎麼選？破解高年化配息率迷思 含息總報酬才是王道！",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6594462",
-   "ts": "09/02 08:17"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：華通(2313-TW)EPS預估下修至7.64元，預估目標價為317.5元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6594722",
-   "ts": "09/02 08:10"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：國泰金(2882-TW)EPS預估上修至8.88元，預估目標價為125元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6594721",
-   "ts": "09/02 08:10"
-  },
-  {
-   "title": "營收速報 - 2026年9月2日台股中小型公司8月營收一覽（新增14家）",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6594707",
-   "ts": "09/02 07:55"
-  },
-  {
-   "title": "〈能源盤後〉美伊戰火再起！原油暴漲逾5% Brent創5周新高 WTI重返90美元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6594646",
-   "ts": "09/02 05:18"
+   "url": "https://news.cnyes.com/news/id/6595092",
+   "ts": "09/02 12:00"
   }
  ],
  "inst": {
