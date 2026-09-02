@@ -114,6 +114,33 @@ def double_typhoon(highs, lows, closes, period=10, mult=3.0):
 
 # ── EXCEED CHARGE：擠壓動能（TTM Squeeze） ───────────────────────────
 
+# 2026-09-02：double_typhoon 算的其實就是「SMA 版 ATR 的 SuperTrend」。
+# 在策略層用 double_typhoon 這個名字會看不懂在做什麼，所以給一個語意清楚的別名。
+# 老墨的 SUPER TREND PRO MAX 實測就是這一版（3037 @ 09-02 空方壓力 1223.7 對到小數）。
+supertrend_sma = double_typhoon
+
+def typhoon_state_series(closes, vols, dt_dir, n=20):
+    """每日的雙重颱風三態序列：1=紅(偏多) / -1=綠(偏空) / 0=黃(不明) / None=算不出。
+
+    2026-09-02：雙重颱風**本來就是 K 棒著色，不是一條線**（老墨 README：
+    紅=偏多、綠=偏空、黃=不明）。我們原本把它當第二條 SuperTrend 畫在圖上，
+    只是因為兩版 ATR 算法不同才「看起來像兩條線」；顯示層統一成 SMA 之後
+    兩條 100% 重疊，Leo 一眼看出「雙重颱風沒畫成功」——其實是畫法從頭就錯。
+    改用這個序列去替收盤線分段上色，才是它真正的樣子。
+    """
+    ma = _sma(closes, n)
+    out = []
+    for i in range(len(closes)):
+        d = dt_dir[i] if i < len(dt_dir) else None
+        if d is None or i < 1 or ma[i] is None or ma[i-1] is None:
+            out.append(None)
+            continue
+        second = 1 if ma[i] > ma[i-1] else -1
+        out.append(d if d == second else 0)
+    return out
+
+
+
 def squeeze_momentum(highs, lows, closes, length=20, bb_mult=2.0, kc_mult=1.5):
     n = len(closes)
     if n < length + 1:
@@ -573,7 +600,9 @@ def build(ticker, disp_days=756):
         # 2026-09-01 Leo：補上老墨圖上有、我們沒有的兩層——
         #   ma20＝20 日平均成本（主圖那條橘虛線），vol/vol_ma20＝成交量與 20 日均量。
         #   兩者只要 OHLCV，零額外資料源。
-        "ma20": _clean(_vwap(closes, vols, 20))[cut:],   # 量加權，不是 SMA
+        "ma20": _clean(_vwap(closes, vols, 20))[cut:],
+        # 雙重颱風三態（給收盤線分段上色用），不是線
+        "ty": (typhoon_state_series(closes, vols, dt["dir"]) if dt else [])[cut:],   # 量加權，不是 SMA
         "vol": [None if v is None else int(v) for v in vols][cut:],
         "vol_ma20": _clean(_sma(vols, 20))[cut:],
     }
@@ -592,7 +621,7 @@ def build(ticker, disp_days=756):
   <div class="techwrap">
   <div class="techside">{panels}</div>
   <div class="techmain">
-  <div class="tclabel">價格 + SuperTrend + 雙重颱風K線</div>
+  <div class="tclabel">價格（線色＝雙重颱風三態：🔴偏多 🟢偏空 🟡不明）+ SuperTrend</div>
   <div class="tcbox"><canvas id="ti_c1_{uid}"></canvas></div>
   <div class="tclabel">成交量（青線＝20 日均量）</div>
   <div class="tcbox tcbox-sm"><canvas id="ti_cv_{uid}"></canvas></div>
@@ -630,7 +659,8 @@ function ti_draw_{uid}(){{
   const d = {{dates: slice(full.dates), closes: slice(full.closes), st: slice(full.st),
     st_dir: slice(full.st_dir), dt: slice(full.dt), dt_dir: slice(full.dt_dir),
     mom: slice(full.mom), sq_on: slice(full.sq_on), rs_s: slice(full.rs_s), rs_l: slice(full.rs_l),
-    ma20: slice(full.ma20), vol: slice(full.vol), vol_ma20: slice(full.vol_ma20)}};
+    ma20: slice(full.ma20), vol: slice(full.vol), vol_ma20: slice(full.vol_ma20),
+    ty: slice(full.ty)}};
   if (ti_charts_{uid}) {{ ti_charts_{uid}.forEach(c => c.destroy()); }}
   const segColor = dir => ctx => {{
     const i = ctx.p1DataIndex; const v = dir[i];
@@ -638,11 +668,15 @@ function ti_draw_{uid}(){{
   }};
   const c1 = new Chart(document.getElementById('ti_c1_{uid}'), {{type:'line',
     data:{{labels:d.dates,datasets:[
-      {{label:'收盤',data:d.closes,borderColor:'#8FA8C8',borderWidth:1.2,pointRadius:0,tension:.15}},
+      // 雙重颱風＝K 棒著色（紅偏多/綠偏空/黃不明），不是一條線——
+      // 所以拿它替收盤線分段上色，而不是再畫一條跟 SuperTrend 重疊的線。
+      {{label:'收盤（雙重颱風三色）',data:d.closes,borderWidth:1.6,pointRadius:0,tension:.15,
+        segment:{{borderColor:function(c){{
+          var t=(d.ty||[])[c.p1DataIndex];
+          return t===1?'#ef4444':(t===-1?'#22c55e':(t===0?'#eab308':'#8FA8C8'));
+        }}}}}},
       {{label:'SuperTrend',data:d.st,borderWidth:1.6,pointRadius:0,
         segment:{{borderColor:segColor(d.st_dir)}}}},
-      {{label:'雙重颱風',data:d.dt,borderWidth:1.6,pointRadius:0,borderDash:[4,3],
-        segment:{{borderColor:segColor(d.dt_dir)}}}},
       // 20 日平均成本＝量加權(VWAP) 不是 SMA——實測對上老墨的 135.95
       {{label:'20日平均成本',data:d.ma20,borderColor:'#F59E0B',borderWidth:1.2,
         pointRadius:0,borderDash:[2,2],tension:.15}}]}},
