@@ -177,7 +177,8 @@ def fetch_us_charts(tickers, bench="^GSPC", disp_days=252):
     多抓一年當「暖機」：長線RS要250個交易日的均線，只抓1年的話前面一整年都算不出值、
     圖幾乎是空的——抓2年、算完指標後只裁回近1年(disp_days)顯示，圖表時間範圍不變，
     但長線RS從顯示範圍第一天就有值。"""
-    from technical_indicators import squeeze_momentum, mansfield_rs_series
+    from technical_indicators import (squeeze_momentum, mansfield_rs_series,
+                                     double_typhoon as _st_sma, typhoon_state_series)
     charts = {}
     if not tickers:
         return charts
@@ -198,17 +199,23 @@ def fetch_us_charts(tickers, bench="^GSPC", disp_days=252):
                 continue
             highs = h["High"].round(2).tolist()
             lows = h["Low"].round(2).tolist()
+            opens = h["Open"].round(2).tolist() if "Open" in h else None
             dates = [d.strftime("%m/%d") for d in h.index]
             n = len(closes)
             sq = squeeze_momentum(highs, lows, closes)
             rs_s = mansfield_rs_series(closes, bench_closes, 30) if bench_closes else None
             rs_l = mansfield_rs_series(closes, bench_closes, 250) if bench_closes else None
-            st = supertrend(highs, lows, closes)
+            # 2026-09-02：顯示層統一用 SMA 版 ATR（跟燈號/財報頁對齊，見 technical_indicators
+            # 檔頭「顯示層改用 SMA」的說明）；原本這裡是 Wilder 版，是唯一還沒跟上的地方。
+            st = _st_sma(highs, lows, closes)
+            ty = typhoon_state_series(closes, None, st["dir"]) if st else None
             mom = [None if (v is None or v != v) else round(float(v), 2) for v in sq["momentum"]] if sq else [None] * n
             sq_on = [None if (isinstance(v, float) and v != v) else bool(v) for v in sq["squeeze_on"]] if sq else [None] * n
             rs_s_a, rs_l_a = _align_rs(rs_s, n), _align_rs(rs_l, n)
             cut = max(0, n - disp_days)
             charts[t] = {"dates": dates[cut:], "close": closes[cut:],
+                         "open": (opens[cut:] if opens else None), "high": highs[cut:], "low": lows[cut:],
+                         "ty": (ty[cut:] if ty else None),
                          "ma5": ma_series(closes, 5)[cut:], "ma10": ma_series(closes, 10)[cut:],
                          "ma20": ma_series(closes, 20)[cut:], "last": closes[-1],
                          "supertrend": {"st": st["st"][cut:], "dir": st["dir"][cut:]} if st else None,
@@ -556,7 +563,7 @@ def main():
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
 <title>{date} 美台股看板</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script><script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.2.1/dist/chartjs-chart-financial.min.js"></script><script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.2.0/dist/chartjs-plugin-zoom.min.js"></script>
 <style>{CSS}</style></head><body><div class="wrap" id="top">
 <h1>🎯 {date} 產業鏈看板</h1>
 <div class="sub">7 條產業鏈 · 美股(AI決策)＋台股(籌碼+AI決策) · 點卡片展開、點走勢圖載入<br>

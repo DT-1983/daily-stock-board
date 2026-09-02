@@ -412,7 +412,8 @@ def build(ticker, disp_days=756):
         hist = t.history(period="2y")
         if hist.empty or len(hist) < 60:
             return "", ""
-        highs, lows, closes = hist["High"].tolist(), hist["Low"].tolist(), hist["Close"].tolist()
+        opens, highs, lows, closes = (hist["Open"].tolist(), hist["High"].tolist(),
+                              hist["Low"].tolist(), hist["Close"].tolist())
 
         bench = yf.Ticker(_benchmark(ticker)).history(period="2y")
         bench_closes = bench["Close"].tolist() if not bench.empty else []
@@ -533,7 +534,10 @@ def build(ticker, disp_days=756):
         if _isw:
             return f"{v:,.0f} 張"
         return f"{v/1e6:,.1f}M" if v >= 1e6 else (f"{v/1e3:,.0f}K" if v >= 1e3 else f"{v:,.0f}")
-    panels = (
+    # 2026-09-02 Leo：「文字可以跟圖表上下對齊嗎」——原本 5 張卡整欄疊、4 張圖整欄疊，
+    # 各自堆疊互不對齊（卡片行數跟圖表高度不一樣，越往下錯位越多）。改成配對：
+    # 哪張卡對應哪張圖，就跟哪張圖同一列（見下面 HTML 組裝的 _techrow）。
+    panel_price = (
         _rows("SUPER TREND PRO MAX", [
             ("多方支撐", _n(_stl) if _bull else "N/A"),
             ("空方壓力", "N/A" if _bull else _n(_stl)),
@@ -551,22 +555,30 @@ def build(ticker, disp_days=756):
             ("20 日平均成本", _n(_ma20)),
             ("收盤相對成本", ("在成本之上" if closes[-1] >= _ma20 else "在成本之下") if _ma20 else None),
         ])
-        + _rows("成交量", [
-            ("成交量", _vfmt(_v)),
-            ("20 日均量", _vfmt(_vm)),
-            ("量能", ("高於均量" if (_v or 0) >= (_vm or 0) else "低於均量") if _vm else None),
-        ])
-        + _rows("EXCEED CHARGE 充能爆發", [
-            ("動能", sq_mom_s),
-            ("動能方向", (sq_mlabel or "").replace("動能", "") or None),
-            ("擠壓等級", (sq_level or "擠壓中") if sq_on else "無"),
-        ])
-        + _rows("RS STRONGER 相對強弱", [
-            (f"短線 RS（{30} 日）", f"{rs_s:+.2f}%" if rs_s is not None else None),
-            (f"長線 RS（{250} 日）", f"{rs_l:+.2f}%" if rs_l is not None else None),
-            ("加值訊號", rs_sub or None),
-        ])
     )
+    panel_vol = _rows("成交量", [
+        ("成交量", _vfmt(_v)),
+        ("20 日均量", _vfmt(_vm)),
+        ("量能", ("高於均量" if (_v or 0) >= (_vm or 0) else "低於均量") if _vm else None),
+    ])
+    panel_sq = _rows("EXCEED CHARGE 充能爆發", [
+        ("動能", sq_mom_s),
+        ("動能方向", (sq_mlabel or "").replace("動能", "") or None),
+        ("擠壓等級", (sq_level or "擠壓中") if sq_on else "無"),
+    ])
+    panel_rs = _rows("RS STRONGER 相對強弱", [
+        (f"短線 RS（{30} 日）", f"{rs_s:+.2f}%" if rs_s is not None else None),
+        (f"長線 RS（{250} 日）", f"{rs_l:+.2f}%" if rs_l is not None else None),
+        ("加值訊號", rs_sub or None),
+    ])
+
+    def _techrow(panel_html, label_html, canvas_id, box_cls="tcbox"):
+        """一組「文字卡 + 圖」配對成一列，兩欄跟卡片本身寬度無關永遠對齊。
+        卡片數用 count("tpanel") 判斷單卡/雙卡，單卡不留空的第二欄（css techside.single）。"""
+        side_cls = "techside" if panel_html.count("tpanel") >= 2 else "techside single"
+        return (f'<div class="techrow"><div class="{side_cls}">{panel_html}</div>'
+                f'<div class="techmain">{label_html}<div class="{box_cls}">'
+                f'<canvas id="{canvas_id}"></canvas></div></div></div>')
 
     # ── 展開圖表：全部一年份資料都送到前端，90天/1年是前端切片切換，
     # 不用重抓資料（2026-08-11：原本寫死近120個交易日，用戶要求可切換90天/一年）
@@ -601,35 +613,36 @@ def build(ticker, disp_days=756):
         #   ma20＝20 日平均成本（主圖那條橘虛線），vol/vol_ma20＝成交量與 20 日均量。
         #   兩者只要 OHLCV，零額外資料源。
         "ma20": _clean(_vwap(closes, vols, 20))[cut:],
-        # 雙重颱風三態（給收盤線分段上色用），不是線
+        # 雙重颱風三態：2026-09-02 起用來畫真的 K 線（蠟燭紅/綠/黃），不再是收盤線分段上色
         "ty": (typhoon_state_series(closes, vols, dt["dir"]) if dt else [])[cut:],   # 量加權，不是 SMA
+        "opens": _clean(opens)[cut:], "highs": _clean(highs)[cut:], "lows": _clean(lows)[cut:],
         "vol": [None if v is None else int(v) for v in vols][cut:],
         "vol_ma20": _clean(_sma(vols, 20))[cut:],
     }
 
+    _row_price = _techrow(panel_price,
+        '<div class="tclabel">價格（線色＝雙重颱風三態：🔴偏多 🟢偏空 🟡不明）+ SuperTrend</div>', f"ti_c1_{uid}")
+    _row_vol = _techrow(panel_vol,
+        '<div class="tclabel">成交量（青線＝20 日均量）</div>', f"ti_cv_{uid}", "tcbox tcbox-sm")
+    _row_sq = _techrow(panel_sq,
+        '<div class="tclabel">EXCEED CHARGE 動能柱（金點＝擠壓中，綠/紅點＝已釋放）</div>', f"ti_c2_{uid}", "tcbox tcbox-sm")
+    _row_rs = _techrow(panel_rs,
+        '<div class="tclabel">RS 相對強弱（短線30日／長線1年，紅線＝與大盤同步基準線）</div>', f"ti_c3_{uid}", "tcbox tcbox-sm")
     html = f"""<div class="technical"><h3>技術面四指標</h3>
 <div class="posnote">近一年日線計算，基準指數：{_BENCHMARK_NAME.get(_benchmark(ticker), _benchmark(ticker))}</div>
 <div class="techgrid">{tiles}</div>
 <button class="techtoggle" onclick="ti_toggle_{uid}()" id="ti_btn_{uid}">展開圖表 ▾</button>
 <div class="techcharts" id="ti_charts_{uid}" style="display:none">
+  <div class="tctools">
   <div class="tcwin" id="ti_win_{uid}">
     <button data-w="90" aria-pressed="true">90天</button>
     <button data-w="180" aria-pressed="false">半年</button>
     <button data-w="365" aria-pressed="false">1年</button>
     <button data-w="1095" aria-pressed="false">3年</button>
   </div>
-  <div class="techwrap">
-  <div class="techside">{panels}</div>
-  <div class="techmain">
-  <div class="tclabel">價格（線色＝雙重颱風三態：🔴偏多 🟢偏空 🟡不明）+ SuperTrend</div>
-  <div class="tcbox"><canvas id="ti_c1_{uid}"></canvas></div>
-  <div class="tclabel">成交量（青線＝20 日均量）</div>
-  <div class="tcbox tcbox-sm"><canvas id="ti_cv_{uid}"></canvas></div>
-  <div class="tclabel">EXCEED CHARGE 動能柱（金點＝擠壓中，綠/紅點＝已釋放）</div>
-  <div class="tcbox tcbox-sm"><canvas id="ti_c2_{uid}"></canvas></div>
-  <div class="tclabel">RS 相對強弱（短線30日／長線1年，紅線＝與大盤同步基準線）</div>
-  <div class="tcbox tcbox-sm"><canvas id="ti_c3_{uid}"></canvas></div>
-  </div></div>
+  <button class="tcreset" onclick="ti_reset_{uid}()" title="滾輪縮放／拖曳平移橫軸，四張圖同步；按這裡復原">↺ 重置縮放</button>
+  </div>
+  <div class="techwrap">{_row_price}{_row_vol}{_row_sq}{_row_rs}</div>
 </div>
 <script>
 window.TI_DATA_{uid} = {json.dumps(chart_data, ensure_ascii=False)};
@@ -660,43 +673,74 @@ function ti_draw_{uid}(){{
     st_dir: slice(full.st_dir), dt: slice(full.dt), dt_dir: slice(full.dt_dir),
     mom: slice(full.mom), sq_on: slice(full.sq_on), rs_s: slice(full.rs_s), rs_l: slice(full.rs_l),
     ma20: slice(full.ma20), vol: slice(full.vol), vol_ma20: slice(full.vol_ma20),
-    ty: slice(full.ty)}};
+    ty: slice(full.ty), opens: slice(full.opens), highs: slice(full.highs), lows: slice(full.lows)}};
   if (ti_charts_{uid}) {{ ti_charts_{uid}.forEach(c => c.destroy()); }}
-  const segColor = dir => ctx => {{
-    const i = ctx.p1DataIndex; const v = dir[i];
-    return v === -1 ? '#ff8a8a' : (v === 1 ? '#4ade80' : '#6b7280');
+  // 2026-09-02 Leo：「可以做放大縮小功能？調整橫軸？」——四張圖都用同一個 index x 軸
+  // （不再是各自的 category 軸），滾輪縮放／拖曳平移一張，其餘三張跟著動，量價才對得上。
+  // syncing 旗標防止 A 同步 B 時，B 的 onZoom/onPan 回頭又同步 A 造成無窮迴圈。
+  let ti_syncing_{uid} = false;
+  function ti_sync_{uid}(src){{
+    if (ti_syncing_{uid}) return;
+    ti_syncing_{uid} = true;
+    const xs = src.scales.x;
+    (ti_charts_{uid} || []).forEach(c => {{
+      if (c !== src) c.zoomScale('x', {{min: xs.min, max: xs.max}}, 'none');
+    }});
+    ti_syncing_{uid} = false;
+  }}
+  const ZOOM_OPT = {{
+    pan: {{enabled: true, mode: 'x', onPanComplete: ({{chart}}) => ti_sync_{uid}(chart)}},
+    zoom: {{wheel: {{enabled: true}}, pinch: {{enabled: true}}, mode: 'x',
+      // onZoom：滾輪縮放當下就同步（離散觸發，不頻繁，不會卡）；onZoomComplete 當保險。
+      onZoom: ({{chart}}) => ti_sync_{uid}(chart), onZoomComplete: ({{chart}}) => ti_sync_{uid}(chart)}},
+    limits: {{x: {{min: 0, max: d.dates.length - 1, minRange: 5}}}}
   }};
-  const c1 = new Chart(document.getElementById('ti_c1_{uid}'), {{type:'line',
-    data:{{labels:d.dates,datasets:[
-      // 雙重颱風＝K 棒著色（紅偏多/綠偏空/黃不明），不是一條線——
-      // 所以拿它替收盤線分段上色，而不是再畫一條跟 SuperTrend 重疊的線。
-      {{label:'收盤（雙重颱風三色）',data:d.closes,borderWidth:1.6,pointRadius:0,tension:.15,
-        segment:{{borderColor:function(c){{
-          var t=(d.ty||[])[c.p1DataIndex];
-          return t===1?'#ef4444':(t===-1?'#22c55e':(t===0?'#eab308':'#8FA8C8'));
-        }}}}}},
-      {{label:'SuperTrend',data:d.st,borderWidth:1.6,pointRadius:0,
-        segment:{{borderColor:segColor(d.st_dir)}}}},
+  // 2026-09-02 Leo：SuperTrend 改黃(多方支撐)/紫(空方壓力)——原本紅/綠跟雙重颱風K線的
+  // 紅偏多/綠偏空撞色，兩條線意義完全不同（一個是支撐壓力，一個是三態偏向），撞色會誤讀。
+  const segColor = (dir, up, down, none) => ctx => {{
+    const v = dir[ctx.p1DataIndex];
+    return v === 1 ? (up || '#4ade80') : (v === -1 ? (down || '#ff8a8a') : (none || '#6b7280'));
+  }};
+  // 2026-09-02 Leo：「雙重颱風只能做線不能做K線嗎？」——原本是收盤線分段上色，改成真的
+  // 蠟燭圖（開高低收都畫），顏色仍是雙重颱風三態（紅偏多/綠偏空/黃不明），不是傳統漲跌配色。
+  // chartjs-chart-financial／chartjs-plugin-zoom 都是 Chart.js 官方組織的外掛（同一個
+  // GitHub org，MIT），純前端渲染，沒有任何資料外流——跟已經在用的 Chart.js 本身同信任層級。
+  const TY_COL = {{1: '#ef4444', '-1': '#22c55e', 0: '#eab308'}};
+  const tyColorFn = ctx => {{
+    var c = TY_COL[(d.ty || [])[ctx.dataIndex]] || '#8FA8C8';
+    return {{up: c, down: c, unchanged: c}};   // 三個都給同一色：不管開高低收怎麼比，一律照颱風三態上色
+  }};
+  const xAxis = {{type:'linear',min:0,max:d.dates.length-1,offset:true,
+    ticks:{{color:'#6b7280',font:{{size:9}},maxRotation:0,autoSkip:true,maxTicksLimit:8,
+      callback:function(v){{return d.dates[Math.round(v)]||'';}}}},grid:{{display:false}}}};
+  const xAxisHidden = {{type:'linear',min:0,max:d.dates.length-1,offset:true,
+    ticks:{{display:false}},grid:{{display:false}}}};
+  const c1 = new Chart(document.getElementById('ti_c1_{uid}'), {{type:'candlestick',
+    data:{{datasets:[
+      {{label:'K線（雙重颱風三色）',
+        data:d.dates.map((dt,i)=>({{x:i,o:d.opens[i],h:d.highs[i],l:d.lows[i],c:d.closes[i]}}))
+          .filter(p=>p.o!=null&&p.h!=null&&p.l!=null&&p.c!=null),
+        backgroundColors:tyColorFn, borderColors:tyColorFn, borderWidth:1}},
+      {{type:'line',label:'SuperTrend',data:d.st.map((v,i)=>({{x:i,y:v}})),borderWidth:1.6,pointRadius:0,
+        segment:{{borderColor:segColor(d.st_dir,'#facc15','#c084fc','#6b7280')}}}},
       // 20 日平均成本＝量加權(VWAP) 不是 SMA——實測對上老墨的 135.95
-      {{label:'20日平均成本',data:d.ma20,borderColor:'#F59E0B',borderWidth:1.2,
-        pointRadius:0,borderDash:[2,2],tension:.15}}]}},
+      {{type:'line',label:'20日平均成本',data:d.ma20.map((v,i)=>({{x:i,y:v}})),borderColor:'#F59E0B',
+        borderWidth:1.2,pointRadius:0,borderDash:[2,2],tension:.15}}]}},
     options:{{responsive:true,maintainAspectRatio:false,interaction:{{mode:'index',intersect:false}},
-      plugins:{{legend:{{labels:{{color:'#9aa0a6',boxWidth:14,font:{{size:10}}}}}}}},
-      scales:{{x:{{ticks:{{color:'#6b7280',font:{{size:9}},maxRotation:0,autoSkip:true,maxTicksLimit:8}},grid:{{display:false}}}},
-        y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
+      plugins:{{legend:{{labels:{{color:'#9aa0a6',boxWidth:14,font:{{size:10}}}}}}, zoom:ZOOM_OPT}},
+      scales:{{x:xAxis, y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
   // 成交量：紅漲綠跌（台股慣例），疊 20 日均量線——老墨圖上有、我們原本漏了
   const volColor = d.closes.map(function(c, i) {{
     const prev = i > 0 ? d.closes[i - 1] : c;
     return (c == null || prev == null) ? '#2a2e35' : (c >= prev ? '#ef4444' : '#22c55e');
   }});
   const cv = new Chart(document.getElementById('ti_cv_{uid}'), {{
-    data:{{labels:d.dates,datasets:[
-      {{type:'bar',label:'成交量',data:d.vol,backgroundColor:volColor,order:2}},
-      {{type:'line',label:'20日均量',data:d.vol_ma20,borderColor:'#22d3ee',
+    data:{{datasets:[
+      {{type:'bar',label:'成交量',data:d.vol.map((v,i)=>({{x:i,y:v}})),backgroundColor:volColor,order:2}},
+      {{type:'line',label:'20日均量',data:d.vol_ma20.map((v,i)=>({{x:i,y:v}})),borderColor:'#22d3ee',
         borderWidth:1.3,pointRadius:0,tension:.2,order:1}}]}},
-    options:{{responsive:true,maintainAspectRatio:false,plugins:{{legend:{{display:false}}}},
-      scales:{{x:{{ticks:{{display:false}},grid:{{display:false}}}},
-        y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
+    options:{{responsive:true,maintainAspectRatio:false,plugins:{{legend:{{display:false}}, zoom:ZOOM_OPT}},
+      scales:{{x:xAxisHidden, y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
   // 動能柱：多頭轉強亮綠/轉弱暗綠，空頭轉強亮紅/轉弱暗紅（TTM Squeeze 慣例）；
   // sq_on 點陣列（擠壓中金色、已釋放依動能方向上色）疊在 y=0 當擠壓/釋放標記
   const momColor = d.mom.map((v, i) => {{
@@ -711,26 +755,27 @@ function ti_draw_{uid}(){{
     return m == null ? '#6b7280' : (m >= 0 ? '#4ade80' : '#ff8a8a');
   }});
   const c2 = new Chart(document.getElementById('ti_c2_{uid}'), {{type:'bar',
-    data:{{labels:d.dates,datasets:[
-      {{label:'動能',data:d.mom,backgroundColor:momColor,order:2}},
-      {{label:'擠壓/釋放',type:'line',data:d.mom.map(()=>0),showLine:false,
+    data:{{datasets:[
+      {{label:'動能',data:d.mom.map((v,i)=>({{x:i,y:v}})),backgroundColor:momColor,order:2}},
+      {{label:'擠壓/釋放',type:'line',data:d.mom.map((_,i)=>({{x:i,y:0}})),showLine:false,
         pointRadius:2.6,pointBackgroundColor:dotColor,pointBorderWidth:0,order:1}}]}},
-    options:{{responsive:true,maintainAspectRatio:false,plugins:{{legend:{{display:false}}}},
-      scales:{{x:{{ticks:{{display:false}},grid:{{display:false}}}},
-        y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
+    options:{{responsive:true,maintainAspectRatio:false,plugins:{{legend:{{display:false}}, zoom:ZOOM_OPT}},
+      scales:{{x:xAxisHidden, y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
   const c3 = new Chart(document.getElementById('ti_c3_{uid}'), {{type:'line',
-    data:{{labels:d.dates,datasets:[
-      {{label:'基準線(0%)',data:d.mom.map(()=>0),borderColor:'#EF4444',borderWidth:2,
+    data:{{datasets:[
+      {{label:'基準線(0%)',data:d.mom.map((_,i)=>({{x:i,y:0}})),borderColor:'#EF4444',borderWidth:2,
         pointRadius:0,order:3}},
-      {{label:'短線30日',data:d.rs_s,borderColor:'#EAB308',borderWidth:1.4,pointRadius:0,tension:.15,order:1}},
-      {{label:'長線1年',data:d.rs_l,borderColor:'#4a9eff',borderWidth:1.4,pointRadius:0,tension:.15,order:2}}]}},
+      {{label:'短線30日',data:d.rs_s.map((v,i)=>({{x:i,y:v}})),borderColor:'#EAB308',borderWidth:1.4,
+        pointRadius:0,tension:.15,order:1}},
+      {{label:'長線1年',data:d.rs_l.map((v,i)=>({{x:i,y:v}})),borderColor:'#4a9eff',borderWidth:1.4,
+        pointRadius:0,tension:.15,order:2}}]}},
     options:{{responsive:true,maintainAspectRatio:false,
       plugins:{{legend:{{labels:{{color:'#9aa0a6',boxWidth:14,font:{{size:10}},
-        filter:item=>item.text!=='基準線(0%)'}}}}}},
-      scales:{{x:{{ticks:{{display:false}},grid:{{display:false}}}},
-        y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
+        filter:item=>item.text!=='基準線(0%)'}}}}, zoom:ZOOM_OPT}},
+      scales:{{x:xAxisHidden, y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
   ti_charts_{uid} = [c1, cv, c2, c3];
 }}
+function ti_reset_{uid}(){{ (ti_charts_{uid} || []).forEach(c => c.resetZoom()); }}
 </script>
 </div>"""
 
@@ -774,13 +819,15 @@ CSS = """
 .techtoggle:hover{border-color:#4a9eff}
 .techcharts{margin-top:10px}
 .tclabel{font-size:11px;color:#8a8f98;margin:10px 0 4px}
-/* 2026-09-02 Leo：資訊欄改放圖表左邊（跟老墨的版面一樣）。
-   290px 固定欄寬——面板是「標籤：數值」的對齊列，欄寬浮動會讓數值左右跳。
-   860px 以下疊回上下：手機並排會把圖表壓到看不清楚。 */
-.techwrap{display:grid;grid-template-columns:290px minmax(0,1fr);gap:14px;align-items:start;margin-top:6px}
-.techside{display:flex;flex-direction:column;gap:8px}
+/* 2026-09-02 Leo：「文字可以跟圖表上下對齊嗎」——原本左邊 5 張卡整欄疊、右邊 4 張圖
+   整欄疊，各自堆疊、行數跟圖高不同步，越往下錯位越多。改成「一組卡配一張圖」成一列
+   （techrow），哪張卡對應哪張圖就在同一列，兩欄永遠對齊，不看下面的內容多寡。 */
+.techwrap{display:flex;flex-direction:column;gap:14px;margin-top:6px}
+.techrow{display:grid;grid-template-columns:340px minmax(0,1fr);gap:14px;align-items:start}
+.techside{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-content:start}
+.techside.single{grid-template-columns:1fr}
 .techmain{min-width:0}
-@media(max-width:860px){.techwrap{grid-template-columns:1fr}}
+@media(max-width:860px){.techrow{grid-template-columns:1fr}}
 .tpanel{background:#1a1d23;border:1px solid #2a2e35;border-radius:9px;padding:8px 11px}
 .tph{font-size:11px;color:#F5B841;font-weight:700;margin-bottom:5px}
 .tprow{display:flex;justify-content:space-between;gap:10px;padding:2px 0;font-size:12px}
@@ -788,11 +835,17 @@ CSS = """
 .tprow>b{color:#e8eaed;font-weight:600}
 .tcbox{height:180px}
 .tcbox-sm{height:100px}
-.tcwin{display:inline-flex;background:#1a1d23;border:1px solid #2a2e35;border-radius:8px;
- padding:2px;margin-bottom:6px}
+.tctools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.tcwin{display:inline-flex;background:#1a1d23;border:1px solid #2a2e35;border-radius:8px;padding:2px}
 .tcwin button{border:0;background:transparent;color:#8a8f98;font-size:11px;font-weight:600;
  padding:5px 12px;border-radius:6px;cursor:pointer;font-family:inherit}
 .tcwin button[aria-pressed=true]{background:#334155;color:#e8eaed}
+/* 2026-09-02 Leo：「可以做放大縮小功能？調整橫軸？」——chartjs-plugin-zoom（Chart.js
+   官方組織維護），滾輪縮放＋拖曳平移，四張圖同步；這顆按鈕復原成 90天/半年/1年/3年 按鈕給的範圍。 */
+.tcreset{background:none;border:1px solid #2a2e35;border-radius:7px;color:#8a8f98;
+ font-size:11px;font-weight:600;padding:6px 12px;cursor:pointer;font-family:inherit}
+.tcreset:hover{border-color:#4a9eff;color:#93C5FD}
+.tchint{font-size:10.5px;color:#4b5563}
 """
 
 
