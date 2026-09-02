@@ -3520,3 +3520,13 @@ Leo 一次問了風險官（仲達）、復盤（陳壽）、Discord 即時討�
 - 🔒 `state/trade_journal.jsonl` 進 .gitignore（跟 advisor_verdicts 同一批），`git check-ignore` 驗過；HTML 不進 docs/。
 - IB 截圖回推成本（P&L÷股數）：MSFT 1@497.03、MRVL 3@210.46、CEG 2@280.28，跟系統快照價對得上；標「回推」，Leo 對帳單確認後可 fill 覆蓋。2454 掛單 pending。
 - 快照已經看得出復盤素材：MRVL 理由「產業鏈評分高」但當下象限落後、RS60 −11.6、投資長無判斷；MSFT 四燈全亮＋象限領先＋投資長續抱。這不是現在下結論，是留給陳壽 B 型比對。
+
+## 2026-09-03（續四）discord_bot.py：路線圖第1項階段2（即時查股殼）
+
+- 背景：Leo 開另一個視窗要做隆中對的 Discord bot，要「可以即時送出我想查的股票」——正是 `advisor_next_phase_roadmap` 記憶排定的「Discord Bot」第1項階段2（`lamp_lookup.py` 已於 9/2 寫好測試過，等 Bot Token）。
+- 做了：`discord_bot.py`——`/查 代號:2454` slash command，呼叫既有 `lamp_lookup.lookup()`+`format_discord()`，不重造判定邏輯。`interaction.response.defer()`+`asyncio.to_thread()` 處理即時抓算 3-8 秒（lamp_lookup 文件明講不能同步等），拿到 15 分鐘 followup 窗口而非 Discord 互動預設的 3 秒逾時。
+- 刻意只用 slash command、不讀一般訊息：`discord.Intents.default()` 就夠，不用申請 `MESSAGE_CONTENT` 這個 privileged intent，Leo 階段1（申請 Bot）可以少勾一步。
+- `requirements.txt` 補回 `discord.py`——⚠️ 9/1 才把上游帶的 discord.py 當死依賴移掉，這次是真的在用，之後清依賴前要先 grep `discord_bot.py`。`.env` 補 `DISCORD_BOT_TOKEN`/`DISCORD_GUILD_ID` 兩個空值佔位（都還沒填，階段1還沒做）。
+- 驗證：`import discord_bot` 正常、command tree 註冊不報錯、無 token 時 `main()` 正確印錯誤訊息並回傳非 0（不會裝作成功）；`lamp_lookup.py 2454` 對照原邏輯仍正常（3/4燈、風報比2.27、弱化象限）。**還沒實跑 Discord 端**——沒有 Bot Token 沒辦法連線測試。
+- 部署位置留給 Leo 選（本機常駐排程 vs 獨立 Zeabur service，兩種都寫進檔頭 docstring）：這是要保持 WebSocket 常駐的服務，跟 07:00 batch 排程性質不同，不能塞進 `board_analyze_daily.cmd`。
+- 待 Leo：去 Discord Developer Portal 建 Application+Bot、拿 Token 填 `.env`、用 OAuth2 URL Generator（勾 `bot`+`applications.commands`）邀進隆中對伺服器，才能實測 `/查`。

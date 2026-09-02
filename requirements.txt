@@ -27,6 +27,11 @@ python-dotenv>=1.0.0                 # .env 讀取
 # AI
 litellm>=1.80.10,!=1.82.7,!=1.82.8,<2.0.0   # chain_themes.py / llm_board.py
 
+# Discord bot（discord_bot.py，2026-09-03 新增，路線圖第1項階段2）
+# ⚠️ 2026-09-01 才把上游帶的 discord.py 當死依賴移除，這次是真的在用，
+#   之後任何「清掉沒人 import 的套件」都要先 grep discord_bot.py 再刪。
+discord.py>=2.4.0,<3.0.0
+
 # 文字處理
 markdown>=3.5.0                      # board_html.py 解析報告用
 opencc-python-reimplemented>=0.1.7   # llm_board.py 簡體字驗收、tw_report.py 簡繁轉換
