@@ -14,16 +14,21 @@ MIN_SLOTS = 8
 FEE = 0.001          # 單邊 0.1% 交易成本（含手續費+滑價，保守）
 
 
-def supertrend_dir(h, l, c, period=10, mult=3.0):
+def supertrend_dir(h, l, c, period=10, mult=3.0, atr_mode="wilder"):
     n = len(c)
     if n < period + 1:
         return [None]*n
     tr = [h[0]-l[0]]
     for i in range(1, n):
         tr.append(max(h[i]-l[i], abs(h[i]-c[i-1]), abs(l[i]-c[i-1])))
-    atr=[None]*n; atr[period-1]=sum(tr[:period])/period
-    for i in range(period, n):
-        atr[i]=(atr[i-1]*(period-1)+tr[i])/period
+    atr=[None]*n
+    if atr_mode == "sma":                       # 老墨版：SMA(TR,10)
+        for i in range(period-1, n):
+            atr[i]=sum(tr[i-period+1:i+1])/period
+    else:                                       # Wilder RMA（5.5 年回測的原版）
+        atr[period-1]=sum(tr[:period])/period
+        for i in range(period, n):
+            atr[i]=(atr[i-1]*(period-1)+tr[i])/period
     hl2=[(h[i]+l[i])/2 for i in range(n)]
     up=[None]*n; lo=[None]*n; dr=[None]*n
     for i in range(period-1, n):
@@ -40,22 +45,55 @@ def supertrend_dir(h, l, c, period=10, mult=3.0):
 
 
 def main():
-    pool = json.load(open("pool.json", encoding="utf-8"))
-    data = yf.download(pool, start=START, end=END, progress=False, threads=False,
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--start", default=START)
+    ap.add_argument("--end", default=END)
+    ap.add_argument("--trade-start", default=TRADE_START)
+    ap.add_argument("--atr", default="wilder", choices=["wilder","sma"],
+                    help="wilder=5.5年回測原版；sma=老墨版（2026-09-02 策略層改用）")
+    ap.add_argument("--weekly", action="store_true", help="週線判斷（趨勢倉 TREND_WEEKLY=True 的做法）")
+    ap.add_argument("--pool", default="chain", help="qqq / chain（現行守備清單聯集）/ 逗號分隔代號")
+    a = ap.parse_args()
+    start, end, trade_start = a.start, a.end, a.trade_start
+
+    if a.pool == "qqq":
+        pool = ["QQQ"]
+    elif a.pool == "chain":
+        from paper_portfolio import chain_select_union
+        pool = chain_select_union()
+    else:
+        pool = [x.strip() for x in a.pool.split(",") if x.strip()]
+    print(f"設定：atr={a.atr}  {'週線' if a.weekly else '日線'}  池={a.pool}({len(pool)})  {start}→{end}")
+
+    data = yf.download(pool, start=start, end=end, progress=False, threads=False,
                        auto_adjust=True, group_by="ticker")
     close, dirs = {}, {}
     for t in pool:
         try:
-            df = data[t].dropna()
+            # yf.download 只要傳的是 list（哪怕長度 1）配 group_by="ticker" 就是 MultiIndex，
+            # 不能用 len(pool) 判斷；直接試 data[t]，抓不到才退回整張表
+            try:
+                df = data[t].dropna()
+            except KeyError:
+                df = data.dropna()
             if len(df) < 60: continue
             close[t] = df["Close"]
-            dirs[t] = pd.Series(supertrend_dir(df["High"].tolist(), df["Low"].tolist(),
-                                               df["Close"].tolist()), index=df.index)
-        except Exception:
-            pass
+            if a.weekly:
+                # 跟 paper_portfolio._to_weekly 同一套：週五收，公式與參數不動只換週期；
+                # 算完把週訊號 reindex 回日線 ffill，日線模擬照舊
+                w = df.resample("W-FRI").agg({"High":"max","Low":"min","Close":"last"}).dropna()
+                wd = pd.Series(supertrend_dir(w["High"].tolist(), w["Low"].tolist(),
+                                              w["Close"].tolist(), atr_mode=a.atr), index=w.index)
+                dirs[t] = wd.reindex(df.index, method="ffill")
+            else:
+                dirs[t] = pd.Series(supertrend_dir(df["High"].tolist(), df["Low"].tolist(),
+                                                   df["Close"].tolist(), atr_mode=a.atr), index=df.index)
+        except Exception as e:
+            print(f"  skip {t}: {str(e)[:50]}")
     px = pd.DataFrame(close).dropna(how="all").ffill()
     dr = pd.DataFrame(dirs).reindex(px.index).ffill()
-    days = px.index[px.index >= TRADE_START]
+    days = px.index[px.index >= trade_start]
     tickers = list(px.columns)
     print(f"池子 {len(tickers)} 檔，回測 {days[0].date()} → {days[-1].date()}（{len(days)} 交易日）")
 
@@ -110,7 +148,7 @@ def main():
         print(f"  {m:<10} 報酬 {(nav-1)*100:+7.2f}%  換股 {flips:>3} 次  最大回撤 {mdd*100:6.1f}%")
 
     # 基準
-    bm = yf.download(["SPY","QQQ","^TWII"], start=TRADE_START, end=END, progress=False,
+    bm = yf.download(["SPY","QQQ","^TWII"], start=trade_start, end=end, progress=False,
                      threads=False, auto_adjust=True, group_by="ticker")
     for b in ["SPY","QQQ","^TWII"]:
         try:
@@ -123,7 +161,7 @@ def main():
             print(f"  {b:<10} 報酬 {res[b]['ret']:+7.2f}%              最大回撤 {mdd*100:6.1f}%")
         except Exception as e:
             print(b, "ERR", e)
-    json.dump(res, open("bt_result.json","w"), default=str)
+    json.dump(res, open(f"bt_result_{a.pool}_{a.atr}_{'w' if a.weekly else 'd'}.json","w"), default=str)
 
 
 if __name__ == "__main__":

@@ -3231,3 +3231,167 @@ git+https://github.com/ZhuLinsen/alphasift.git@377049...#egg=alphasift
    `portfolios.json`（模擬倉）都公開可見。GitHub Pages 免費方案需要 public，
    算是必要代價，但 Leo 應該知道範圍。
 
+---
+
+### 2026-09-01 18:30　復盤官前置：判斷補記基準價 ＋ 臨時單檔評估
+
+Leo：「先做 1、2」。
+
+#### 1. `advisor_verdicts` 補記判斷當下的收盤價
+
+**查出來的洞**：`advisor_verdicts.jsonl` 有 `judgment`／`ts`／`held`／`triggers`／
+甚至 `invalidation_price`，**就是沒有判斷當下的股價**。沒有基準價就算不出
+「照這個判斷做會賺賠多少」，陳壽無從做起。
+
+⭐ 而且**事後補不回來**：回頭抓歷史收盤價，等於把盤中做成的判斷用收盤價重新定錨。
+同一個坑已經踩過兩次（RRG 資金規模、`analyst_price_targets` 都只有現在沒有歷史）。
+目前才 89 筆，趁早補。
+
+新增 `price` / `price_asof` / `price_symbol`；抓不到明確寫 `None`
+（分得出「當天沒抓到」與「舊版沒這欄位」）。
+
+兩個實作陷阱：
+
+- ⚠️ **`period` 必須維持 `3y`**：`price_store._write_cached` 是 `to_pickle`
+  **直接覆蓋不合併**，為了省事寫 `5d` 會把 `industry_rotation`(RRG) 依賴的
+  三年快取洗掉。
+- ⚠️ **代號格式是混的**（`1229` / `1580.TWO` / `1615.TW` / `NVDA` 並存），
+  一律過 `tw_symbol.resolve()`，否則上櫃股靜默抓不到。四種格式全實測通過：
+  `1229→1229.TW`、`1580.TWO` 原樣、`2330→2330.TW`、`NVDA` 原樣。
+
+⭐ 實測還驗證了一件事：**NVDA 的 `asof` 是 08-31、台股是 09-01**——
+各市場最後收盤日不同，這正是要記 `price_asof` 而不是只記執行日的原因。
+
+#### 2. `ask_advisor.py`：臨時把任一檔丟給軍師團
+
+    python ask_advisor.py 9914           # 台股裸代號自動補後綴
+    python ask_advisor.py NVDA --push    # 同時推 Discord
+    python ask_advisor.py 9914 --watch   # 登錄失效條件，進每日日檢
+
+⚠️ **不能直接呼叫 `investment_chief.gather_material`**：它的材料全部從既有
+state 檔讀（signals / valuation_state / buffett_watch / screen_result），對不在
+追蹤清單的標的會一路回「查無」——**看起來有跑，實際沒有判斷價值**。
+所以這支**當場算**四個角度再餵同一套雙角度 prompt。
+
+判斷帶 `source="ad-hoc"`：臨時問的（我挑的）跟每日自動觸發的（系統挑的）性質不同，
+復盤混在一起統計會失真。
+
+開發時踩到三個，都是實測抓出來的：
+
+1. `fetch_fundamentals("9914")` 裸代號直接 **404**，要傳 `9914.TW`
+2. `mansfield_rs` 回的是 `{"short":…, "long":…}` **dict 不是單一數字**
+3. `evaluate` 的欄位是 `cheap_price` / `exp_price` / `quality_ok` / `trap_flags`，
+   不是我猜的 `cheap` / `expensive`
+4. 🔴 **我自己把 `price_asof` 寫死成執行日**——正是同一則訊息裡才剛強調過的錯，
+   美股會差一天。已改用實際收盤日。
+
+#### 實測 9914 美利達（Leo 朋友推薦）
+
+    俗價 41.92｜貴價 128.23｜現價 82.1（中段）　品質關 ⬜ 未通過 SKIP
+    ROE 近四年 6.2% / -3.6% / 8.2% / 16.5%（現 5.1%）
+    EPS 近四年 4.01 / -2.34 / 5.66 / 11.34（TTM 3.44，常利 4.27）
+    配息率 116.4%（高於當期獲利）　盈再率 8.6%（ideal）
+    毛利率位階 67%（中段）
+    SuperTrend 多頭（綠）　RS 30日 -4.46%、250日 -29.78%
+
+兩角度皆「觀望」。趨勢角度點出的矛盾值得記：**SuperTrend 翻多但 RS 長期落後
+大盤近 30 個百分點 → 可能只是跟著大盤漲，不是資金偏好的強勢股。**
+
+---
+
+### 2026-09-01 19:30　陳壽-復盤官骨架（A：判斷準確度）
+
+`verdict_review.py`。回答「**這套系統的判斷有沒有價值**」，不是「Leo 有沒有
+照著做」——後者要逐筆成交紀錄（Firstrade/IB/台股），Leo 說之後看怎麼匯出。
+
+四個評估設計借鑑上游 `backtest_engine`：評估窗口用**交易日**不是日曆天、
+中性帶 ±2%、`first_hit`（失效價有沒有真被摸到，用當日高低點）、對照組。
+
+⚠️ `EVAL_DAYS=20` / `BAND=2.0` **沿用上游預設，還沒校準**，程式碼裡已註明。
+累積夠樣本後要照 `chip_scan_thresholds` / `margin_cycle` 的紀律重訂——
+先看實際分布的天然斷點。台美股波動不同，最後可能要分開設。
+
+`--backfill` 回填舊判斷的基準價，一律標 `price_src="backfilled"`
+（判斷是盤中做的、回填只能取當日收盤，混進統計會讓結果看起來比實際精確）。
+實跑 89/89，系統性驗證 0 異常。
+
+**現況：151 筆可評估、0 筆到期、最快還要 17 個交易日。**
+樣本不足時仍輸出累積狀況與浮動分布並明講「這不是準確度」——
+只印一句「樣本不足」看起來跟壞掉沒兩樣。
+
+#### 🔴 順手抓到第四個「上線但從沒真的執行」
+
+`invalidation_price`（趨勢角度的失效價位）**90/90 全是字串，而且內容是
+「無法給出失效價」的說明文字，沒有一筆是數字**。
+
+不是 AI 的錯——schema 定義就是 `{"type": "string"}`，而且孔明自己講了原因：
+
+> 「材料未提供 SuperTrend 的具體翻空價位或 RS 基準線價位，無法給出精確失效價位數字。」
+
+`gather_material` 給的趨勢材料只有**文字描述**（「SuperTrend 多頭」），
+沒有那條線的**數值**。所以這個欄位從上線到現在**從沒產出過可用的價格**，
+而 `first_hit` 這個評估設計正好依賴它 → 目前 0 筆能算。
+
+**修法很小**：`board_html.supertrend()` 回傳的 `st` 就是線的數值
+（實測 2330 現價 2440、線在 2293.77），餵進材料即可。
+
+前三個同型案例見 memory `investment_advisor_architecture`。
+
+#### ⚠️ 外流評估的補漏
+
+今天做 PUBLIC repo 外流盤查時**漏查了 `state/advisor_verdicts.jsonl` 與
+`research_notes.jsonl`**——兩個都在版控裡，內容比 `holdings.json` 詳細得多：
+90 筆判斷含完整推理，其中 **14 筆 `held=True` 明確標示持有哪些**。
+
+實查：**GitHub Actions 完全沒用到這兩個檔**，只有本機 8 支 .py 在讀
+→ 技術上可以移出版控。
+
+⚠️ 但光加 `.gitignore` 沒用：`board_analyze_daily.cmd` 是
+`git add -f reports tw_analysis.json state docs`，**`-f` 會繞過 .gitignore**。
+兩邊都要改，否則就是「加了 ignore 但沒作用」的靜默失效。
+（歷史已公開，移除只能防未來。）
+
+---
+
+### 2026-09-01 20:00　修好 invalidation_price（第四個「上線但從沒執行」）
+
+**根因不是 AI 亂寫**：schema 定義就是 `{"type":"string"}`，而 `gather_material`
+給的趨勢材料只有文字（「SuperTrend 多頭」）沒有那條線的**數值**——孔明不是不肯寫，
+是真的沒有數字可寫。而 `trade_plan.supertrend_invalidation` 內部
+**早就算出 `st["st"]`**（SuperTrend 線的數值序列），只是沒回傳。
+
+改四處：
+
+1. `supertrend_invalidation` 多回 `st_line` / `price` / `gap_pct` / `rs60`
+   ⚠️ 一律轉 Python 原生型別——原本回的是 numpy `bool_`/`float64`，
+   直接 `json.dumps` 會 TypeError（實測時抓到）
+2. `gather_material`：「SuperTrend 多頭」→「**線在 2293.77，現價 2440.0，距離 +5.99%**」
+3. `SCHEMA` 新增 `invalidation_level`（`number|null`）＋ prompt 明講只填數字。
+   **保留原本的 string 欄位**：兩者用途不同——string 講「為什麼是這個價、跌破代表
+   什麼」，number 給程式做 first_hit 比對
+4. `verdict_review` 改讀新欄位，保留舊欄位相容
+
+⭐ **schema 改了不等於 AI 會照填**（跟 [[simplified_chinese_guard]] 同一條教訓：
+prompt 寫了不等於做到），所以實跑 2330 驗證：
+
+    invalidation_level: 2293.77   型別 float   ← 正是 SuperTrend 線值
+    invalidation_price: 「SuperTrend線目前在2293.77，是個股趨勢多空的分界；
+                         若價格跌破此線…趨勢角度應直接視為失效轉空。」
+
+順帶確認簡體字驗收機制正常運作（log 出現「⚠️ 2330 判斷含簡體字 价减，重寫一次」）。
+
+⭐ **這個 bug 的形狀值得記**：兩邊都「正常」——`supertrend_invalidation` 算對了、
+孔明也誠實說了「材料不足」，**沒有任何一端報錯**。壞在中間那段沒把數值傳過去，
+而且欄位型別是 string 所以填什麼都合法。
+要不是做復盤官去用這個欄位，不會有人發現它 90/90 都是廢話。
+
+
+## 2026-09-02（續）趨勢倉 ATR 定案：Wilder vs SMA 5.7 年回測
+
+- 背景：同日顯示層/進出燈號/st_alert 為對齊老墨改成 SMA 版 ATR，順手把 `paper_portfolio._supertrend_dir`（週線趨勢倉）也改了——**沒先讀 `supertrend_backtest_findings`（標「動前必讀」）**。
+- 重算：`backtest_trend_2026.py` 參數化（`--start/--end/--trade-start/--atr/--weekly/--pool`），先用 Wilder 重現 2026-07 證據四（QQQ 週線 MDD −17.6%/9 次、日線 −15.5%/45 次，一致），再跑 {QQQ, 守備清單99檔} × {wilder, sma} × {日, 週} 共 8 組。
+- 結果：週線趨勢倉設定下 Wilder 報酬略優（QQQ +79.4 vs +75.6；守備清單 +364.6 vs +315.8），SMA 沒有優勢，差距在雜訊範圍。
+- 定案：趨勢倉改回 Wilder，做成 `TREND_ATR` 常數（一行可切）；顯示層/燈號維持 SMA。等價測試 200 組隨機序列 `paper_portfolio._supertrend_dir` 與回測腳本 wilder 版方向全一致。
+- 修的坑：`yf.download([單一代號], group_by="ticker")` 仍是 MultiIndex，不能用 `len(pool)>1` 判斷；`global` 宣告晚於使用 SyntaxError（8 個背景工作全死，20 秒後才看到）。
+- 順帶發現：`chain_select_union` 給 5483/3081 接 `.TW` 404（上櫃股），沒走 `tw_symbol.py`——待修。
+- 回測 json 輸出移到 scratch，不進公開 repo。
