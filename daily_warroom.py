@@ -186,6 +186,21 @@ def sec2_signals(date, scope="public"):
             items.append(f"🎯 {tkname(f['code'])} SuperTrend{f['word']}{tag}")
         for a in st.get("ai_alerts", []):
             items.append(f"{a['sig']} {tkname(a['code'])} AI訊號 {a.get('reason','')}{tag}")
+        # 2026-09-03：進出燈號倉（模擬倉，非持股 → public）昨日動作。Actions 09:00 寫檔、
+        # 本機 08:45 隔天讀，所以是「昨天做了什麼」，日期標在句尾不假裝即時。超過 3 天不列。
+        lt = _load("state/lamp_trades_today.json", {}) or {}
+        try:
+            age = (datetime.date.fromisoformat(date) - datetime.date.fromisoformat(lt.get("date", ""))).days
+        except Exception:
+            age = 99
+        if age <= 3:
+            when = f"（{lt['date']}）" if age else ""
+            for tk in lt.get("buy", []):
+                items.append(f"🚦 燈號倉 打點買進 {tkname(tk)}{when}")
+            for tk in lt.get("half_sell", []):
+                items.append(f"🚦 燈號倉 ST翻空賣半 {tkname(tk)}{when}")
+            for tk in lt.get("full_exit", []):
+                items.append(f"🚦 燈號倉 RS跌破全出 {tkname(tk)}{when}")
     if items:
         lines += ["・" + x for x in items[:12]]
         if len(items) > 12:
