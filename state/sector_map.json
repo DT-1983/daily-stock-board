@@ -1072,5 +1072,167 @@
     "industry": "Semiconductors",
     "exchange": "NASDAQ",
     "asof": "2026-09-02"
+  },
+  "COST": {
+    "sector": "Retail Trade",
+    "industry": "Specialty Stores",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-02"
+  },
+  "BRK-B": {
+    "sector": null,
+    "industry": null,
+    "exchange": null,
+    "asof": "2026-09-02"
+  },
+  "2376": {
+    "sector": "Electronic Technology",
+    "industry": "Computer Peripherals",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "6664": {
+    "sector": "Electronic Technology",
+    "industry": "Electronic Production Equipment",
+    "exchange": "TPEX",
+    "asof": "2026-09-03"
+  },
+  "3673": {
+    "sector": "Electronic Technology",
+    "industry": "Telecommunications Equipment",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "3481": {
+    "sector": "Electronic Technology",
+    "industry": "Electronic Components",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "2408": {
+    "sector": "Electronic Technology",
+    "industry": "Semiconductors",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "2383": {
+    "sector": "Producer Manufacturing",
+    "industry": "Electrical Products",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "2344": {
+    "sector": "Electronic Technology",
+    "industry": "Semiconductors",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "6213": {
+    "sector": "Electronic Technology",
+    "industry": "Electronic Components",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "1815": {
+    "sector": "Electronic Technology",
+    "industry": "Electronic Components",
+    "exchange": "TPEX",
+    "asof": "2026-09-03"
+  },
+  "6274": {
+    "sector": "Electronic Technology",
+    "industry": "Electronic Components",
+    "exchange": "TPEX",
+    "asof": "2026-09-03"
+  },
+  "2327": {
+    "sector": "Electronic Technology",
+    "industry": "Electronic Production Equipment",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "8358": {
+    "sector": "Non-Energy Minerals",
+    "industry": "Other Metals/Minerals",
+    "exchange": "TPEX",
+    "asof": "2026-09-03"
+  },
+  "3653": {
+    "sector": "Electronic Technology",
+    "industry": "Computer Peripherals",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "2308": {
+    "sector": "Electronic Technology",
+    "industry": "Electronic Production Equipment",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "2301": {
+    "sector": "Electronic Technology",
+    "industry": "Computer Peripherals",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "3665": {
+    "sector": "Producer Manufacturing",
+    "industry": "Electrical Products",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "8028": {
+    "sector": "Producer Manufacturing",
+    "industry": "Industrial Machinery",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "2409": {
+    "sector": "Electronic Technology",
+    "industry": "Computer Peripherals",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "3008": {
+    "sector": "Electronic Technology",
+    "industry": "Electronic Components",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "6442": {
+    "sector": "Electronic Technology",
+    "industry": "Electronic Components",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "3595": {
+    "sector": "Consumer Durables",
+    "industry": "Electronics/Appliances",
+    "exchange": "TPEX",
+    "asof": "2026-09-03"
+  },
+  "AMT": {
+    "sector": "Finance",
+    "industry": "Real Estate Investment Trusts",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "PEG": {
+    "sector": "Utilities",
+    "industry": "Electric Utilities",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "VRT": {
+    "sector": "Electronic Technology",
+    "industry": "Electronic Production Equipment",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "NVTS": {
+    "sector": "Electronic Technology",
+    "industry": "Semiconductors",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-03"
   }
 }
