@@ -26,9 +26,13 @@ import os
 if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
     sys.stdout.reconfigure(encoding="utf-8")
 
+from urllib.parse import quote as _quote
+
 import combo_scan as CS
 
 RESULT_PATH = CS.RESULT_PATH
+# 視覺化查股頁（lookup_page.py，掛在 discord_bot.py 的本機服務、經 Cloudflare Tunnel 對外）
+PAGE_URL = "https://stock.talentxtrend.com/lookup"
 CACHE_MAX_AGE_DAYS = 4   # 跟 paper_portfolio.LAMP_MAX_AGE_DAYS 同標準——快取太舊就不用，直接即時算
 
 
@@ -113,6 +117,10 @@ def format_discord(row):
     quad_line = f"類股象限（60日）：{QLAB.get(q60, '—')}" + (f"（{row.get('sector_zh')}）" if row.get("sector_zh") else "")
     src_note = "（今日掃描快取）" if row.get("src") == "cache" else "（即時查詢）"
     name = row.get("name") or ""
+    # 2026-09-03：附視覺化頁連結（K線/成交量/動能/RS 四張圖）。
+    # ⚠️ 網址**不帶 key**——Discord 訊息會存在對方伺服器上，token 不放進去。
+    # 已授權過的裝置點了就進得去；沒授權的會看到「這台裝置還沒授權」的說明頁。
+    page = f"{PAGE_URL}?ticker={_quote(str(row['ticker']))}"
     return (
         f"**{row['ticker']}** {name}\n"
         f"現價 {row.get('price')}　{'🔴多方' if row.get('bull') else '🟢空方'}\n"
@@ -120,7 +128,8 @@ def format_discord(row):
         f"{rr_line}\n"
         f"RS60 {row.get('rs_short')}%\n"
         f"{quad_line}\n"
-        f"{src_note}"
+        f"{src_note}\n"
+        f"📊 [看圖表版]({page})"
     )
 
 
