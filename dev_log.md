@@ -3698,4 +3698,42 @@ Leo 指示做路線圖的 3、4 兩項，這是第 4 項。按平行對話（續
 
 重啟：`start_discord_bot.ps1`（bot 不會 hot-reload，改完一定要重啟才生效）。
 
+## 2026-09-03（續十一）決定：`/lookup` 對外開放，用 token+cookie 門檻
+
+**背景**：`/lookup` 上線後問 Leo 手機存取要不要走 Cloudflare Tunnel 對外開——這代表把無驗證頁面放上公網，兩個 AI session 都刻意沒自己決定。**Leo 拍板：要開**，但要有門檻，不能真的完全公開。
+
+**設計（`.env` 已加 `LOOKUP_TOKEN`）**：手機第一次用 `?key=<LOOKUP_TOKEN值>` 開頁面，成功後種 90 天 cookie，之後開不用再帶 key；沒帶 key 也沒 cookie 一律回 404（不是 403——不透露「這裡有東西但你沒權限」，查無此頁面更安全）。`LOOKUP_TOKEN` 留空＝不設防（只有本機/區網用才可以留空）。
+
+**現況**：`.env` 設定已加好，`discord_bot.py`／`lookup_page.py` 的 gate 邏輯正在改（另一個 session 進行中，尚未 commit）——這篇先記決策本身，實作細節與 Cloudflare Tunnel 路由設定等那邊做完再補。
+
 🔜 未做（要 Leo 決定）：手機存取要不要走 Cloudflare Tunnel 對外開——那是把一個無驗證的頁面放到公網，屬於對外曝險決定，不自己動。
+
+## 2026-09-03（續十三）查股頁對外開放，手機可用
+
+Leo：「希望手機能開，幫我推上線（投資html 有這個分頁嗎? 還是做一格輸入欄在燈號?）」
+
+### 為什麼不能做成投資站的一個分頁
+
+投資站是 **GitHub Pages 靜態託管**，只能放事先產好的檔案。查任意代號要即時抓 3 年 OHLC＋算指標，一定要有後端在跑，靜態頁做不到（只有把 179 檔預先產好才辦得到，但那就不是「任意股票」了）。所以採用 Leo 提的第二個做法：**入口放燈號頁、運算留在本機服務**。
+
+### 上線內容
+
+- **Cloudflare Tunnel 加 `stock.talentxtrend.com` → `127.0.0.1:8030`**，沿用既有 tunnel（原本只有 sonia/assets 兩條），config.yml 已備份成 `config.yml.bak-20260903`，DNS CNAME 用 `cloudflared tunnel route dns` 建。
+- **`LOOKUP_TOKEN` 門檻**：`?key=<token>` 進來一次種 90 天 cookie（HttpOnly/Secure/SameSite=Lax），之後手機直接開。沒 key 也沒 cookie **一律回 404 不是 403**——403 等於告訴對方「這裡有東西只是你沒權限」。
+  - 為什麼要設防：頁面本身沒個資（只有公開市場資料），但**每次查詢都會在 Leo 的電腦上抓 3 年資料＋算指標**，完全不設防等於把運算資源開放給任何掃到這個網域的人。
+- **健康檢查端點一併擋掉對外**：`/` 本來會回 bot 名稱，接上 tunnel 後就跟著曝光了。判斷方式是 **`CF-Connecting-IP` 標頭有沒有**——不能用來源 IP，因為 cloudflared 也是從 127.0.0.1 連進來的，用 IP 判斷會把外部請求誤判成本機。
+- **燈號頁加輸入欄**（`combo_html.py` 的 `LOOKUP_BOX`）：網址寫在公開頁面上等於公開，但服務端有 token，沒 cookie 的人點進去只會拿到 404。
+
+### 驗證（全部打真實對外網址，不是本機）
+
+| 情境 | 結果 |
+|---|---|
+| 沒帶 key | 404 ✅ |
+| 帶正確 key | 200 + `Set-Cookie: lk=…; HttpOnly; Secure; SameSite=Lax; Max-Age=7776000` ✅ |
+| 只帶 cookie（模擬手機第二次開） | 200 ✅ |
+| cookie 值錯 | 404 ✅ |
+| 對外打健康檢查 | 404（不再露 bot 名稱）✅ |
+| 本機打健康檢查 | 200（service_health_check 自動重啟不受影響）✅ |
+| 手機尺寸（375×812）實測 | 卡片自動排成兩欄、無橫向捲動 ✅ |
+
+⚠️ 服務跑在 Leo 的電腦上——**電腦關機或 bot 沒跑時這個連結會連不上**，這是本機常駐部署的必然取捨（見路線圖第 1 項的 Zeabur vs 本機評估）。
