@@ -67,6 +67,15 @@ table.cb tr:hover td{background:rgba(255,255,255,.03)}
 tr.detail>td{padding:0 6px 14px;background:rgba(255,255,255,.02)}
 @media(max-width:760px){table.cb th:nth-child(n+9),table.cb td:nth-child(n+9){display:none}
   .qsec{display:none}}
+/* 2026-09-03 Leo：工具欄太寬擋住圖 → 本頁專屬縮窄（不動 board_theme 全站標準）。
+   主因是 .seg button min-height:38px、.sc 34px，四列疊起來很高。*/
+.ctrl{padding:6px 0 5px;margin-bottom:2px}
+.cbctrl{gap:4px}
+.frow{gap:5px}
+.flab{min-width:26px}
+.seg{padding:2px}
+.seg button{padding:3px 11px;min-height:26px;font-size:12px}
+.sc{padding:2px 10px;min-height:24px;font-size:11.5px}
 """
 
 # 象限四色與中文——優先從輪動頁 import，兩頁永遠同色；import 不到（缺套件）才用這份副本
