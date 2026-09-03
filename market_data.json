@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-03 19:16",
+ "updated": "2026-09-03 20:03",
  "indices": [
   {
    "sym": "^GSPC",
@@ -46,8 +46,8 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/03",
-   "close": 31.67,
-   "chg_pct": -0.01
+   "close": 31.69,
+   "chg_pct": 0.04
   },
   {
    "sym": "^TNX",
@@ -61,34 +61,52 @@
  ],
  "news": [
   {
-   "title": "亞德客8月營收創同期新高 氣動市場需求上升循環看至2027",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6596588",
-   "ts": "09/03 19:15"
+   "title": "美債大跌另有元凶！「神祕利率」升高暗示高利率恐成新常態",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6596626",
+   "ts": "09/03 20:00"
   },
   {
-   "title": "台北航太展重塑產業轉型版圖 9/23南港登場今啟動徵展",
+   "title": "全新8月營收年增71.16％再寫單月新高 磷化銦產品出貨訂單滿載已至年底",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6596570",
-   "ts": "09/03 19:11"
+   "url": "https://news.cnyes.com/news/id/6596638",
+   "ts": "09/03 19:55"
   },
   {
-   "title": "安碁資訊8月營收創同期高 樂看AI快速發展帶動資安需求",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6596566",
-   "ts": "09/03 19:10"
+   "title": "支持美國蓋資料中心不再吸引選民 連共和黨人也反了",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6596555",
+   "ts": "09/03 19:40"
   },
   {
-   "title": "中信投信與韓國指數公司Akros簽署MOU 共拓台灣ETF市場",
+   "title": "4萬6失守 外資續賣481億元砍殺記憶體族群 逆勢加碼面板雙雄及航運股",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6596569",
-   "ts": "09/03 19:07"
+   "url": "https://news.cnyes.com/news/id/6596622",
+   "ts": "09/03 19:38"
   },
   {
-   "title": "〈台幣〉與亞幣脫鉤！股匯齊挫 量縮連2黑收31.755元",
+   "title": "Cyber​​cab今晚正式發布！大摩：這次活動意義遠超以往 Robotaxi車隊擴張為最大看點",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6596528",
+   "ts": "09/03 19:30"
+  },
+  {
+   "title": "TISA上路滿周年！資產規模突破210億元 金管會跨部會推進第二階段",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6596547",
-   "ts": "09/03 19:04"
+   "url": "https://news.cnyes.com/news/id/6596614",
+   "ts": "09/03 19:28"
+  },
+  {
+   "title": "營收速報  - 聯穎(3550)8月營收3.73億元年增率高達33.66％",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6596620",
+   "ts": "09/03 19:20"
+  },
+  {
+   "title": "營收速報  - 艾姆勒(2241)8月營收8,716萬元年增率高達47.33％",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6596619",
+   "ts": "09/03 19:20"
   },
   {
    "title": "輝達將砸140億美元收購Hugging Face？分析師：全球AI開源體系恐面臨重構",
@@ -101,30 +119,12 @@
    "mkt": "US",
    "url": "https://news.cnyes.com/news/id/6596368",
    "ts": "09/03 17:30"
-  },
-  {
-   "title": "傳川普幕僚試圖控制美伊戰爭規模 伊朗再度發起空襲致局勢升溫",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6596300",
-   "ts": "09/03 17:10"
-  },
-  {
-   "title": "特斯拉Cybercab今登場無方向盤、踏板首度載客上路，商業營運許可成焦點",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6596433",
-   "ts": "09/03 17:00"
-  },
-  {
-   "title": "特斯拉Cybercab今迎商業化考驗百度Apollo Go已在杜拜全無人載客",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6596432",
-   "ts": "09/03 17:00"
   }
  ],
  "inst": {
   "date": "09/03",
-  "total_yi": -637.1,
+  "total_yi": -641.6,
   "foreign_yi": -481.5,
-  "trust_yi": 11.4
+  "trust_yi": 6.9
  }
 }
