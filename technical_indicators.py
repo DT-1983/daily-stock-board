@@ -348,6 +348,48 @@ def rs_signals(rs_s_series, rs_l_series, closes, newhigh_lookback=120):
     return out
 
 
+def rs_signal_series(rs_s_series, rs_l_series, closes, newhigh_lookback=120):
+    """把 rs_signals 的三個訊號算成「整段時間序列」供圖上標點（老墨的黃/藍/粉紅點）。
+    回傳 (turn, newh, lead)，各為與 rs_s_series 等長的陣列；有訊號的位置放該點 y 值，否則 None。
+      turn 🟡＝長線RS 由 ≤0 上穿 >0（Weinstein 轉強，畫在長線上）
+      newh 🔵＝短線RS 創 N 日新高（畫在短線上，只標「上升緣」避免連續新高整片點）
+      lead 🩷＝新高但股價未創同期新高＝資金比股價先動（老墨稱最有價值；與 newh 互斥）
+    訊號定義完全沿用 rs_signals()，只是改成算整段而非只算最新一根。"""
+    n = len(rs_s_series) if rs_s_series is not None else 0
+    turn = [None] * n
+    newh = [None] * n
+    lead = [None] * n
+    if n == 0:
+        return turn, newh, lead
+
+    def _num(a, i):
+        return (a is not None and i < len(a) and a[i] is not None
+                and not (isinstance(a[i], float) and np.isnan(a[i])))
+
+    prev_nh = False
+    for i in range(1, n):
+        if _num(rs_l_series, i) and _num(rs_l_series, i - 1) and rs_l_series[i - 1] <= 0 < rs_l_series[i]:
+            turn[i] = rs_l_series[i]
+        cur_nh = False
+        if i >= newhigh_lookback and _num(rs_s_series, i):
+            window = [x for x in rs_s_series[i - newhigh_lookback:i + 1]
+                      if x is not None and not (isinstance(x, float) and np.isnan(x))]
+            if len(window) >= newhigh_lookback // 2 and rs_s_series[i] >= max(window):
+                cur_nh = True
+        if cur_nh and not prev_nh:   # 只標上升緣
+            is_lead = False
+            if closes is not None and i >= newhigh_lookback and _num(closes, i):
+                pw = [x for x in closes[i - newhigh_lookback:i + 1]
+                      if x is not None and not (isinstance(x, float) and np.isnan(x))]
+                is_lead = bool(pw) and closes[i] < max(pw)
+            if is_lead:
+                lead[i] = rs_s_series[i]
+            else:
+                newh[i] = rs_s_series[i]
+        prev_nh = cur_nh
+    return turn, newh, lead
+
+
 # ── 綜合：抓資料＋算四指標＋渲染 ──────────────────────────────────────
 
 def _flip_bars(dr):
@@ -609,6 +651,9 @@ def build(ticker, disp_days=756):
                   for v in (sq["squeeze_on"] if sq is not None else [])][cut:],
         "rs_s": (_clean(rs_s_series) if rs_s_series is not None else [])[cut:],
         "rs_l": (_clean(rs_l_series) if rs_l_series is not None else [])[cut:],
+        # 老墨 RS 三訊號標點（黃=長線翻正／藍=短線創新高／粉紅=資金比股價先動），整段算好再切窗
+        **(lambda tr, nh, ld: {"rs_turn": tr[cut:], "rs_newh": nh[cut:], "rs_lead": ld[cut:]})(
+            *rs_signal_series(rs_s_series, rs_l_series, closes)),
         # 2026-09-01 Leo：補上老墨圖上有、我們沒有的兩層——
         #   ma20＝20 日平均成本（主圖那條橘虛線），vol/vol_ma20＝成交量與 20 日均量。
         #   兩者只要 OHLCV，零額外資料源。
@@ -625,9 +670,9 @@ def build(ticker, disp_days=756):
     _row_vol = _techrow(panel_vol,
         '<div class="tclabel">成交量（青線＝20 日均量）</div>', f"ti_cv_{uid}", "tcbox tcbox-sm")
     _row_sq = _techrow(panel_sq,
-        '<div class="tclabel">EXCEED CHARGE 動能柱（金點＝擠壓中，綠/紅點＝已釋放）</div>', f"ti_c2_{uid}", "tcbox tcbox-sm")
+        '<div class="tclabel">EXCEED CHARGE 動能柱（金點＝擠壓中，綠/紅點＝已釋放，★＝釋放瞬間）</div>', f"ti_c2_{uid}", "tcbox tcbox-sm")
     _row_rs = _techrow(panel_rs,
-        '<div class="tclabel">RS 相對強弱（短線30日／長線1年，紅線＝與大盤同步基準線）</div>', f"ti_c3_{uid}", "tcbox tcbox-sm")
+        '<div class="tclabel">RS 相對強弱（短線30日／長線1年，紅線＝基準；🟡長線翻正 🔵短線創新高 🩷資金比股價先動）</div>', f"ti_c3_{uid}", "tcbox tcbox-sm")
     html = f"""<div class="technical"><h3>技術面四指標</h3>
 <div class="posnote">近一年日線計算，基準指數：{_BENCHMARK_NAME.get(_benchmark(ticker), _benchmark(ticker))}</div>
 <div class="techgrid">{tiles}</div>
@@ -672,6 +717,7 @@ function ti_draw_{uid}(){{
   const d = {{dates: slice(full.dates), closes: slice(full.closes), st: slice(full.st),
     st_dir: slice(full.st_dir), dt: slice(full.dt), dt_dir: slice(full.dt_dir),
     mom: slice(full.mom), sq_on: slice(full.sq_on), rs_s: slice(full.rs_s), rs_l: slice(full.rs_l),
+    rs_turn: slice(full.rs_turn), rs_newh: slice(full.rs_newh), rs_lead: slice(full.rs_lead),
     ma20: slice(full.ma20), vol: slice(full.vol), vol_ma20: slice(full.vol_ma20),
     ty: slice(full.ty), opens: slice(full.opens), highs: slice(full.highs), lows: slice(full.lows)}};
   if (ti_charts_{uid}) {{ ti_charts_{uid}.forEach(c => c.destroy()); }}
@@ -758,7 +804,10 @@ function ti_draw_{uid}(){{
     data:{{datasets:[
       {{label:'動能',data:d.mom.map((v,i)=>({{x:i,y:v}})),backgroundColor:momColor,order:2}},
       {{label:'擠壓/釋放',type:'line',data:d.mom.map((_,i)=>({{x:i,y:0}})),showLine:false,
-        pointRadius:2.6,pointBackgroundColor:dotColor,pointBorderWidth:0,order:1}}]}},
+        pointRadius:2.6,pointBackgroundColor:dotColor,pointBorderWidth:0,order:1}},
+      {{label:'釋放★',type:'line',data:d.sq_on.map((on,i)=>({{x:i,y:(i>0&&d.sq_on[i-1]&&!on)?0:null}})),
+        showLine:false,pointStyle:'star',pointRadius:6.5,pointBorderColor:'#ffffff',pointBorderWidth:0.8,
+        pointBackgroundColor:d.mom.map(m=>m==null?'#9aa0a6':(m>=0?'#4ade80':'#ff8a8a')),order:0}}]}},
     options:{{responsive:true,maintainAspectRatio:false,plugins:{{legend:{{display:false}}, zoom:ZOOM_OPT}},
       scales:{{x:xAxisHidden, y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
   const c3 = new Chart(document.getElementById('ti_c3_{uid}'), {{type:'line',
@@ -768,7 +817,13 @@ function ti_draw_{uid}(){{
       {{label:'短線30日',data:d.rs_s.map((v,i)=>({{x:i,y:v}})),borderColor:'#EAB308',borderWidth:1.4,
         pointRadius:0,tension:.15,order:1}},
       {{label:'長線1年',data:d.rs_l.map((v,i)=>({{x:i,y:v}})),borderColor:'#4a9eff',borderWidth:1.4,
-        pointRadius:0,tension:.15,order:2}}]}},
+        pointRadius:0,tension:.15,order:2}},
+      {{label:'🟡翻正',data:d.rs_turn.map((v,i)=>({{x:i,y:v}})),showLine:false,pointRadius:4,
+        pointBackgroundColor:'#FACC15',pointBorderColor:'#1a1d23',pointBorderWidth:1,order:0}},
+      {{label:'🔵創新高',data:d.rs_newh.map((v,i)=>({{x:i,y:v}})),showLine:false,pointRadius:4,
+        pointBackgroundColor:'#38BDF8',pointBorderColor:'#1a1d23',pointBorderWidth:1,order:0}},
+      {{label:'🩷資金領先',data:d.rs_lead.map((v,i)=>({{x:i,y:v}})),showLine:false,pointRadius:4.5,
+        pointBackgroundColor:'#F472B6',pointBorderColor:'#1a1d23',pointBorderWidth:1,order:0}}]}},
     options:{{responsive:true,maintainAspectRatio:false,
       plugins:{{legend:{{labels:{{color:'#9aa0a6',boxWidth:14,font:{{size:10}},
         filter:item=>item.text!=='基準線(0%)'}}}}, zoom:ZOOM_OPT}},
