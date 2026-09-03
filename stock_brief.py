@@ -110,6 +110,47 @@ def _price(d):
     return None
 
 
+
+# 投資長 reasoning 的分段標記。它寫的時候本來就有分「事實／推論／資料缺口」，
+# 但原樣輸出會變成一整片文字牆（2026-09-04 Leo：「段落不清楚，幫我重排一下」）。
+# 兩種寫法都會出現：`【事實】` 與 `事實：`。
+_MARKS = [("事實", "f"), ("推論/假設", "i"), ("推論", "i"), ("假設", "i"),
+          ("提醒", "w"), ("資料缺口", "w"), ("綜合以上", "s"), ("結論", "s")]
+_MARK_LABEL = {"f": "事實", "i": "推論", "w": "注意", "s": "結論"}
+
+
+def fmt_reasoning(txt, esc):
+    """把一整段 reasoning 拆成有標籤的段落。
+
+    做法：找出所有標記出現的位置切段，每段前面掛一個彩色標籤。
+    找不到任何標記就退回「照句號斷行」——**不硬套格式**，
+    寧可維持原樣也不要切錯句子。
+    """
+    import re as _re
+    t = (txt or "").strip()
+    if not t:
+        return ""
+    pat = "|".join(_re.escape(m) for m, _ in _MARKS)
+    hits = list(_re.finditer(rf"(?:【({pat})】|({pat})[：:])", t))
+    if not hits:
+        # 沒有標記：每 2 句斷一段，至少讓它不是一整片
+        sents = [x for x in _re.split(r"(?<=。)", t) if x.strip()]
+        return "".join(f'<p class="rz">{esc(x.strip())}</p>' for x in sents)
+    out = []
+    if hits[0].start() > 0:
+        out.append(f'<p class="rz">{esc(t[:hits[0].start()].strip())}</p>')
+    for i, m in enumerate(hits):
+        name = m.group(1) or m.group(2)
+        kind = next(k for lbl, k in _MARKS if lbl == name)
+        end = hits[i + 1].start() if i + 1 < len(hits) else len(t)
+        seg = t[m.end():end].strip().lstrip("：:").strip()
+        if not seg:
+            continue
+        out.append(f'<p class="rz {kind}"><span class="rzl">{_MARK_LABEL[kind]}</span>'
+                   f'{esc(seg)}</p>')
+    return "".join(out)
+
+
 CSS = """
 .sb{background:var(--surface);border:1px solid var(--line);border-radius:12px;
  padding:14px 16px;margin:12px 0}
@@ -123,6 +164,21 @@ CSS = """
 .kv .v.zh{font-family:inherit;font-size:14px}
 .kv .s{font-size:10.5px;color:var(--muted);margin-top:2px;line-height:1.5}
 .txt{font-size:13px;color:var(--muted);line-height:1.85;margin-top:8px}
+/* 投資長 reasoning 分段（2026-09-04）：原本一整片牆，改成每個「事實/推論/注意」
+   各自一段、左邊一條色帶。色帶顏色只表示**段落性質**不是多空訊號。 */
+.rz{font-size:13px;line-height:1.9;color:var(--muted);margin:7px 0 0;
+ padding:7px 0 7px 11px;border-left:2px solid var(--line2)}
+.rz .rzl{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.5px;
+ padding:1px 7px;border-radius:5px;margin-right:8px;vertical-align:1px;
+ background:var(--line);color:var(--muted)}
+.rz.f{border-left-color:#475569}
+.rz.f .rzl{background:#334155;color:#CBD5E1}
+.rz.i{border-left-color:var(--accent)}
+.rz.i .rzl{background:#1E3A5F;color:#BFDBFE}
+.rz.w{border-left-color:var(--warn)}
+.rz.w .rzl{background:#3A2E10;color:#FCD34D}
+.rz.s{border-left-color:var(--up)}
+.rz.s .rzl{background:#14311F;color:#86EFAC}
 .txt b{color:#CBD5E1}
 .ang{border-left:3px solid var(--line);padding-left:12px;margin:12px 0}
 .ang.buy{border-left-color:var(--up)}
@@ -135,6 +191,27 @@ CSS = """
  border-radius:10px;padding:12px 15px;margin:12px 0;font-size:13px;line-height:1.85;color:var(--muted)}
 .warn b{color:#FCD34D}
 .pos{color:var(--up)}.neg{color:var(--down)}
+/* 摘要層 */
+.sm{font-size:13.5px;line-height:1.95;color:#CBD5E1;margin:2px 0 0;padding-left:18px}
+.sm li{margin:5px 0}
+.kp{font-size:12.5px;line-height:1.8;color:var(--muted);padding:7px 0;
+ border-top:1px solid var(--line2)}
+.kp .tag{display:inline-block;font-size:10px;font-weight:700;padding:1px 7px;
+ border-radius:5px;margin-right:8px;vertical-align:1px}
+.kp .tag.nc{background:#1E3A5F;color:#BFDBFE}
+.kp .tag.cl{background:#334155;color:#CBD5E1}
+.kp .tag.cv{background:#3A2E10;color:#FCD34D}
+/* 查核表 */
+.fc{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:6px}
+.fc th{text-align:left;padding:7px 8px;color:var(--dim);font-weight:600;font-size:11.5px;
+ border-bottom:1px solid var(--line);white-space:nowrap}
+.fc td{padding:9px 8px;border-bottom:1px solid var(--line2);vertical-align:top;
+ line-height:1.75;color:var(--muted)}
+.fc td.k{white-space:nowrap;color:var(--ink);font-weight:600}
+.fc td.v{white-space:nowrap;font-weight:700}
+.fc .ok{color:var(--up)}.fc .warn{color:var(--warn)}.fc .wait{color:var(--dim)}
+.fc .note{display:block;margin-top:4px;color:var(--dim);font-size:11.5px;line-height:1.7}
+@media(max-width:700px){.fc td.k,.fc td.v{white-space:normal}}
 """
 
 
@@ -189,6 +266,33 @@ def render(d, extra_notes=None):
 
     # ── 券商報告 ────────────────────────────────────────────
     if d["reports"]:
+        # ── 多家對照表（2026-09-04 Leo：「同一隻股票的報告請整合在一起」）──
+        # 同一檔有多份時，最有資訊量的不是逐份讀，是**把假設並排看差在哪**。
+        # 7750 新代實測：5 家在 10 天內出報告、目標價差 35%，而差異幾乎全來自
+        # 「倍數」與「用哪一年的 EPS」，不是基本面分歧。
+        cmp_ = ""
+        if len(d["reports"]) > 1:
+            tgs = [r["target"] for r in d["reports"] if r.get("target")]
+            def _row(r):
+                tg = f'{r["target"]:,.0f}' if r.get("target") else "—"
+                mu = (f'{r["valuation_multiple"]:g} 倍'
+                      if r.get("valuation_multiple") else "—")
+                return (f'<tr><td class="k">{esc(r.get("broker"))}</td>'
+                        f'<td>{esc(r.get("date"))}</td>'
+                        f'<td>{esc(r.get("rating") or "—")}</td>'
+                        f'<td class="v">{tg}</td><td class="v">{mu}</td>'
+                        f'<td>{esc(r.get("valuation_eps_label") or "—")}</td></tr>')
+            trs = "".join(_row(r) for r in d["reports"])
+            spread = ""
+            if len(tgs) >= 2:
+                spread = (f'目標價 {min(tgs):,.0f}～{max(tgs):,.0f}'
+                          f'（差 {(max(tgs) / min(tgs) - 1) * 100:.0f}%）')
+            cmp_ = ('<table class="fc"><tr><th>券商</th><th>日期</th><th>評等</th>'
+                    '<th>目標價</th><th>倍數</th><th>乘在哪一期</th></tr>'
+                    + trs + '</table>'
+                    + (f'<div class="txt">⚠️ <b>{spread}</b>——差異多半來自'
+                       f'<b>倍數與用哪一年 EPS</b>，不是基本面分歧。'
+                       f'多家同時出報告代表這個看法已經擁擠。</div>' if spread else ""))
         rp = []
         for r in d["reports"]:
             tg = r.get("target")
@@ -215,7 +319,49 @@ def render(d, extra_notes=None):
                 + "</div>")
         body.append('<div class="sb"><h2>券商研究報告</h2>'
                     f'<div class="sub">{len(d["reports"])} 份，各家自己的推導，'
-                    f'不是市場共識平均</div>' + "".join(rp) + "</div>")
+                    f'不是市場共識平均</div>' + cmp_ + "".join(rp) + "</div>")
+
+    # ── 摘要層（2026-09-04 Leo：「我希望可以等於是一份摘要」）─────────
+    top = d["reports"][0] if d["reports"] else None
+    if top and (top.get("summary") or top.get("key_points")):
+        li = "".join(f"<li>{esc(x)}</li>" for x in (top.get("summary") or []))
+        TAG = {"nonconsensus": ("nc", "非共識"), "claim": ("cl", "可查核宣稱"),
+               "caveat": ("cv", "報告自己的保留")}
+        kps = "".join(
+            f'<div class="kp"><span class="tag {TAG.get(k.get("type"), ("cl", "重點"))[0]}">'
+            f'{TAG.get(k.get("type"), ("cl", "重點"))[1]}</span>{esc(k.get("text"))}</div>'
+            for k in (top.get("key_points") or []))
+        body.append('<div class="sb"><h2>這份報告在講什麼</h2>'
+                    f'<div class="sub">{esc(top.get("broker"))}　{esc(top.get("date"))}'
+                    '　摘要由本機 claude 從原文抽出，不是我的評論</div>'
+                    + (f'<ul class="sm">{li}</ul>' if li else "")
+                    + kps + "</div>")
+
+    # ── 查核層（Leo：「像老墨的 html 檢查報告商寫的是不是事實」）──────
+    if top:
+        try:
+            import report_factcheck as fcm
+            rows = fcm.check(top, px, d.get("base_rate"), d.get("margin"))
+        except Exception as e:                              # noqa: BLE001
+            rows = []
+            print(f"  查核層失敗：{str(e)[:80]}")
+        if rows:
+            V = {"ok": ("ok", "✅ 對得上"), "warn": ("warn", "⚠️ 有落差"),
+                 "wait": ("wait", "⏳ 還不能驗")}
+            trs = "".join(
+                f'<tr><td class="k">{esc(r["kind"])}</td>'
+                f'<td>{esc(r["claim"])}</td>'
+                f'<td>{esc(r["ours"])}<span class="note">{esc(r["note"])}</span></td>'
+                f'<td class="v {V[r["verdict"]][0]}">{V[r["verdict"]][1]}</td></tr>'
+                for r in rows)
+            body.append('<div class="sb"><h2>查核：報告的假設 vs 我們算的</h2>'
+                        f'<div class="sub">{esc(fcm.summary(rows))}　'
+                        '⭐ 重點不是抓券商說謊——他們寫的多半是預估。'
+                        '是把「他假設什麼」跟「這檔自己的歷史做得到什麼」擺在一起，'
+                        '讓落差自己現形</div>'
+                        '<table class="fc"><tr><th>查核項</th><th>報告說</th>'
+                        '<th>我們算的</th><th>判定</th></tr>'
+                        + trs + "</table></div>")
 
     # ── 我們算的、報告沒有的 ─────────────────────────────────
     cross = []
@@ -261,7 +407,7 @@ def render(d, extra_notes=None):
             angs.append(
                 f'<div class="ang {cls}"><div class="t">{esc(nm)}：{esc(j)}</div>'
                 f'<div class="b">{esc(a.get("brief") or "")}</div>'
-                f'<div class="txt">{esc(a.get("reasoning") or "")}</div></div>')
+                + fmt_reasoning(a.get("reasoning"), esc) + '</div>')
         conds = []
         for key, nm in (("trend_conditions", "趨勢"), ("value_conditions", "價值")):
             for c in v.get(key) or []:
