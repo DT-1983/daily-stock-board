@@ -60,11 +60,16 @@ def _from_cache(ticker):
     return None
 
 
-def lookup(raw_ticker):
+def lookup(raw_ticker, live=False):
     """回一筆跟 combo_result.json 同格式的 dict（含 sector_zh/quad），查不到回 None。
-    附加 "src": "cache" 或 "live" 供呼叫端判斷是不是秒回。"""
+    附加 "src": "cache" 或 "live" 供呼叫端判斷是不是秒回。
+
+    `live=True` 跳過快取強制即時算。什麼時候需要：**快取是早上 07:00 掃的，那時當天
+    還沒收盤**，所以它拿到的一定是前一個交易日的收盤價——跟看盤軟體的即時報價
+    天生差一天。想看最新收盤就要 live（慢，要抓 3 年資料重算）。
+    """
     ticker = _norm(raw_ticker)
-    cached = _from_cache(ticker)
+    cached = None if live else _from_cache(ticker)
     if cached:
         cached = dict(cached)
         cached["src"] = "cache"
@@ -75,11 +80,13 @@ def lookup(raw_ticker):
     is_tw = CS._is_tw(ticker)
     sym = tw_symbol.resolve(ticker) if is_tw else ticker
     bench = "^TWII" if is_tw else "^GSPC"
-    closes = price_store.get_closes([bench], period="3y")
+    # live=True 時連價格也重抓（不只重算指標）——見 price_store.get_ohlc 的 force 說明：
+    # 07:45 掃描把快取標成新鮮，但那時台股還沒收盤，不 force 就永遠是前一交易日。
+    closes = price_store.get_closes([bench], period="3y", force=live)
     b = closes.get(bench)
     if b is None or b.empty:
         return None
-    ohlc = price_store.get_ohlc([sym], period="3y")
+    ohlc = price_store.get_ohlc([sym], period="3y", force=live)
     df = ohlc.get(sym)
     if df is None or df.empty:
         return None
