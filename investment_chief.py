@@ -301,6 +301,9 @@ def norm_ticker(tk):
     return t.replace(".", "-")
 
 
+REEVAL_DAYS = 3      # 里程碑驗證後幾天內把該鏈持股丟給投資長重評（避免天天重推）
+
+
 def today_tickers():
     """掃今天新增的 research_notes + 買進機會來源，收集「值得投資長看一眼」的股票。
 
@@ -385,6 +388,42 @@ def today_tickers():
                       ensure_ascii=False)
     except Exception as e:
         print(f"巴菲特到俗價檢查失敗（不影響其他觸發）：{e}")
+
+    # ── 老墨三段時程里程碑失效 → 該鏈持股重評（2026-09-03）─────────────
+    # Leo 要求「驗證結果接回決策」。原本 roadmap_milestones.py 驗完只是改個狀態，
+    # **沒有任何後果**——某條鏈的立論前提被打破了，持股照抱、看板照顯示，
+    # 那驗證就只是記帳。這裡把 slipped/broken 接成投資長的觸發源。
+    #
+    # 只在「剛驗證完」的 REEVAL_DAYS 天內觸發一次，否則每天都會重推同一批。
+    try:
+        # ⚠️ 這個函式裡的 `date` 是字串（time.strftime），不是 datetime.date——
+        # 直接寫 date.fromisoformat 會炸。用另一個名字。
+        from datetime import date as _date
+        rm = _load_json("state/roadmap_milestones.json", {}) or {}
+        sr = _load_json("screen_result.json", {}) or {}
+        today_d = _date.today()
+        for m in rm.get("milestones", []):
+            if m.get("status") not in ("slipped", "broken"):
+                continue
+            ck = m.get("checked") or ""
+            try:
+                if (today_d - _date.fromisoformat(ck)).days > REEVAL_DAYS:
+                    continue
+            except ValueError:
+                continue
+            chain = m.get("chain") or ""
+            members = []
+            for mk in ("tw", "us"):
+                for row in (sr.get(mk) or {}).get(chain, []) or []:
+                    c = row.get("code")
+                    if c:
+                        members.append(c)
+            state = "前提被打破" if m["status"] == "broken" else "時程延後"
+            for tk in members:
+                if norm_ticker(tk) in {norm_ticker(x) for x in holdings}:
+                    add(tk, f"時程里程碑{state}（{chain}：{m['claim'][:40]}）")
+    except Exception as e:                                  # noqa: BLE001
+        print(f"里程碑失效檢查失敗（不影響其他觸發）：{e}")
 
     return targets, notes
 

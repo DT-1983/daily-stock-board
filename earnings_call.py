@@ -24,6 +24,9 @@ The Motley Fool（fool.com，公開免費逐字稿，備援 GuruFocus）+ 摘要
     from earnings_call import build
     html, summary_text = build(ticker, company_name, quarter_label)
 """
+import io
+import os
+import json
 import llm_board
 
 _SCHEMA_HINT = """只能回傳一個 JSON 陣列，不要包在其他物件裡，不要有陣列以外的文字。
@@ -71,6 +74,60 @@ def _prompt(ticker, company_name, quarter_label):
 _TYPE_LABEL = {"guidance": "展望", "quote": "引述"}
 
 
+
+# ── 結構化保存（2026-09-03）────────────────────────────────────────
+# **這些項目原本產完就丟**：build() 只回 HTML 嵌進財報卡，程式沒辦法回頭查
+# 「台積電上一季法說對 N2 產能講了什麼」。而 guidance 型項目裡正好就有
+# 「新產能/新廠爬坡時程」——那是 state/roadmap_milestones.json 那 11 條
+# 驗證日程唯一的免費結構化來源（法說會逐字稿走本機 claude，Max plan 不花現金）。
+# 抓都抓了卻不存，等於每季重付一次時間成本又拿不回來。
+NOTES = "state/earnings_call_notes.json"
+
+
+def _persist(ticker, quarter_label, items):
+    """把這次抓到的項目存進 NOTES，key = ticker，同一季覆蓋、不同季累積。"""
+    import datetime
+    try:
+        d = json.load(io.open(NOTES, encoding="utf-8")) if os.path.exists(NOTES) else {}
+    except Exception:                                       # noqa: BLE001
+        d = {}
+    q = str(quarter_label or "").strip() or datetime.date.today().isoformat()
+    d.setdefault(ticker, {})[q] = {
+        "fetched": datetime.date.today().isoformat(),
+        "items": items,
+    }
+    try:
+        os.makedirs("state", exist_ok=True)
+        json.dump(d, io.open(NOTES, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    except Exception as e:                                  # noqa: BLE001
+        print(f"  [earnings_call] {ticker} 展望存檔失敗（不影響卡片）：{e}")
+
+
+def guidance(ticker=None, contains=None):
+    """讀回存下來的管理層展望。contains 給關鍵字就只回含該字的項目。
+
+    回 [(ticker, quarter, item)]，新的季在前。給 roadmap_milestones 驗證用。
+    """
+    try:
+        d = json.load(io.open(NOTES, encoding="utf-8"))
+    except Exception:                                       # noqa: BLE001
+        return []
+    out = []
+    for tk, qs in d.items():
+        if ticker and tk != ticker:
+            continue
+        for q, blk in sorted(qs.items(), reverse=True):
+            for it in blk.get("items", []):
+                if it.get("type") != "guidance":
+                    continue
+                if contains:
+                    txt = f"{it.get('label','')}{it.get('value','')}"
+                    if not any(k in txt for k in contains):
+                        continue
+                out.append((tk, q, it))
+    return out
+
+
 def build(ticker, company_name="", quarter_label=""):
     """回 (html, summary_text)。抓不到逐字稿或解析失敗都回 ("", "")，不中斷主流程。"""
     try:
@@ -93,6 +150,8 @@ def build(ticker, company_name="", quarter_label=""):
     items = [x for x in data if isinstance(x, dict) and x.get("label") and x.get("value")][:15]
     if not items:
         return "", ""
+
+    _persist(ticker, quarter_label, items)
 
     metrics = [x for x in items if x.get("type", "metric") == "metric"]
     guidance = [x for x in items if x.get("type") == "guidance"]
