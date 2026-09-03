@@ -251,6 +251,56 @@ def _basket_quadrant(market, basket, period="60"):
             "ratio": p.get("ratio") if p else None, "momentum": p.get("momentum") if p else None}
 
 
+def held_universe():
+    """「算持有」的代號集合。**單一來源**——2026-09-03 從 today_tickers() 抽出來，
+    因為 thesis_check 的持股監控涵蓋率檢查需要同一份定義，各自拼一份必然會漂移
+    （今天才因為「兩套系統做同一件事」吃過虧）。
+
+    2026-08-27 修：held 判斷不能只看 holdings.json（61檔）——跟 trade_plan.load_holdings()
+    的 Firstrade 實際持股（66檔）是兩個不同來源，首測 MU/LITE 明明持有卻被標非持股。
+    兩個來源聯集，任一來源說有就算持有（寧可多算持股，也不要把持股當進場機會評）。
+
+    ⚠️ 這個集合**刻意含同一檔的多種寫法**（2303 與 2303.TW、BRK-B 與 BRK.B），
+    因為它的用途是「比對進來的代號算不算持股」，多一種寫法只會讓比對更寬鬆。
+    但拿它來**數有幾檔**會高估——要數量請用 norm_ticker() 正規化後再去重。
+    """
+    holdings = set(_load_json("holdings.json", []) or [])
+    try:
+        from trade_plan import load_holdings
+        active, _legacy = load_holdings()
+        holdings |= {r.get("ticker") for r in active if r.get("ticker")}
+    except Exception as e:
+        print(f"trade_plan.load_holdings 讀取失敗（退回只用holdings.json）：{e}")
+    try:
+        # 2026-08-31：小孩的券商帳戶持股也算「持有」——否則會被當成進場機會評估，
+        # 語意完全錯（那些已經在手上了）。load_holdings 是風控母體不含小孩，
+        # 所以另外從監控母體補進來。
+        from trade_plan import monitored_holdings
+        import re as _re
+        for tk, ow, _nm in monitored_holdings():
+            if ow == "Leo":
+                continue
+            holdings.add(tk)
+            if _re.match(r"^\d{4,6}[A-Z]?$", str(tk)):
+                holdings.add(f"{tk}.TW")
+    except Exception as e:
+        print(f"小孩持股讀取失敗（不影響 Leo 的判定）：{e}")
+    return holdings
+
+
+def norm_ticker(tk):
+    """同一檔的不同寫法收斂成一個 key，用來去重與比對涵蓋率。
+
+    2303 / 2303.TW / 2303.TWO 是同一檔；BRK-B / BRK.B 也是（yfinance 用 -，
+    券商報表用 .）。不做這層的話涵蓋率會被灌水：71 個「沒監控的代號」裡有一半
+    是同一批股票的第二種寫法。
+    """
+    import re as _re
+    t = str(tk).strip().upper()
+    t = _re.sub(r"\.(TW|TWO)$", "", t)
+    return t.replace(".", "-")
+
+
 def today_tickers():
     """掃今天新增的 research_notes + 買進機會來源，收集「值得投資長看一眼」的股票。
 
@@ -279,30 +329,7 @@ def today_tickers():
             if n.get("ts") == date:
                 notes.append(n)
 
-    # 2026-08-27 修：held 判斷不能只看 holdings.json（61檔）——跟 trade_plan.load_holdings()
-    # 的 Firstrade 實際持股（66檔）是兩個不同來源，首測 MU/LITE 明明持有卻被標非持股。
-    # 兩個來源聯集，任一來源說有就算持有（寧可多算持股，也不要把持股當進場機會評）。
-    holdings = set(_load_json("holdings.json", []) or [])
-    try:
-        from trade_plan import load_holdings
-        active, _legacy = load_holdings()
-        holdings |= {r.get("ticker") for r in active if r.get("ticker")}
-    except Exception as e:
-        print(f"trade_plan.load_holdings 讀取失敗（退回只用holdings.json）：{e}")
-    try:
-        # 2026-08-31：小孩的券商帳戶持股也算「持有」——否則會被當成進場機會評估，
-        # 語意完全錯（那些已經在手上了）。load_holdings 是風控母體不含小孩，
-        # 所以另外從監控母體補進來。
-        from trade_plan import monitored_holdings
-        import re as _re
-        for tk, ow, _nm in monitored_holdings():
-            if ow == "Leo":
-                continue
-            holdings.add(tk)
-            if _re.match(r"^\d{4,6}[A-Z]?$", str(tk)):
-                holdings.add(f"{tk}.TW")
-    except Exception as e:
-        print(f"小孩持股讀取失敗（不影響 Leo 的判定）：{e}")
+    holdings = held_universe()
     targets = {}
 
     def add(tk, trigger):

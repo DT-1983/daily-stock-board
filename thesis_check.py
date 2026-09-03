@@ -83,6 +83,46 @@ def _st_state(tk):
     return v
 
 
+def coverage_gap(reg):
+    """哪些持股**根本沒有任何條件在被檢查**——這支每天回報的「✅健康 N 條」只涵蓋
+    有登錄條件的股票，沒登錄的不會出現在任何一個數字裡，是徹底的靜默盲區。
+
+    2026-09-03 首次量測：持股母體 87 個代號（含多種寫法），去重後仍有一大半
+    **從來沒被投資長判斷過**，所以沒有失效條件，所以每天的日檢完全碰不到它們。
+    原因不是 bug 是設計——投資長是事件驅動，沒事件就不判；但「沒被判過」跟
+    「判過而且沒事」在日報上長得一模一樣，這才是問題。
+
+    ⚠️ 這裡只**回報**不自動重判。強制重判要花 AI 錢（實測每檔約 $0.14），
+    要花多少、補哪些是 Leo 的決定，見 [[feedback_no_auto_paid_provider]]。
+
+    回 (未覆蓋清單, 已覆蓋數)。清單元素 (正規化代號, 顯示用原代號)。
+    """
+    try:
+        from investment_chief import held_universe, norm_ticker
+    except Exception as e:                                      # noqa: BLE001
+        print(f"  ⚠️ 持股涵蓋率檢查略過（讀不到持股母體）：{e}")
+        return [], 0
+    # 登錄簿裡「至少有一條每天檢查得動的 active 條件」才算真的有在監控——
+    # 只剩 metric（待財報檢）的等於每天什麼都沒檢查，不能算覆蓋。
+    covered = set()
+    for tk, e in reg.items():
+        if any(c.get("status") == "active" and c.get("type") in TREND_TYPES
+               or (c.get("status") == "active"
+                   and c.get("type") in ("price_below", "price_above") and c.get("value"))
+               for c in e.get("conditions", [])):
+            covered.add(norm_ticker(tk))
+
+    seen, gap = {}, []
+    for raw in held_universe():
+        n = norm_ticker(raw)
+        if n in seen:
+            continue                    # 同一檔的第二種寫法，不重複算
+        seen[n] = raw
+        if n not in covered:
+            gap.append((n, raw))
+    return sorted(gap), len([n for n in seen if n in covered])
+
+
 def run():
     reg = {}
     if os.path.exists(REG_PATH):
@@ -187,9 +227,12 @@ def run():
                     healthy["held" if _h else "watch"] += 1
 
     json.dump(reg, open(REG_PATH, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    gap, n_cov = coverage_gap(reg)
     out = {"date": date, "triggered": [list(x) for x in triggered],
            "near": [list(x) for x in near],
-           "pending_metric": [list(x) for x in pending_metric], "healthy": healthy}
+           "pending_metric": [list(x) for x in pending_metric], "healthy": healthy,
+           # 2026-09-03：沒有任何條件在被檢查的持股。**「沒檢查」不能長得像「沒事」**。
+           "uncovered": [g[0] for g in gap], "covered_count": n_cov}
     json.dump(out, open(OUT_PATH, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
     n_tr = sum(1 for v in reg.values() for c in v.get("conditions", [])
@@ -198,6 +241,10 @@ def run():
                if c.get("angle", "value") == "value")
     print(f"失效條件日檢：🚫新觸發 {len(triggered)}｜⚠️逼近 {len(near)}｜"
           f"✅健康 {healthy}｜📋待檢 {len(pending_metric)}")
+    if gap:
+        print(f"　🔕 持股涵蓋率 {n_cov}/{n_cov + len(gap)}——"
+              f"{len(gap)} 檔持股沒有任何條件在被檢查：{', '.join(g[0] for g in gap[:12])}"
+              + ("…" if len(gap) > 12 else ""))
     print(f"　登錄簿角度分佈：趨勢 {n_tr} 條｜價值 {n_va} 條")
     # 原本寫 `for tk, msg in triggered`——8/31 加 held 後 tuple 變 3 元素，
     # 這行只要有任何一條真的觸發就會 ValueError。沒炸過只是因為一直沒觸發。
