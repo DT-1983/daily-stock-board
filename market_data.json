@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-03 08:46",
+ "updated": "2026-09-03 12:42",
  "indices": [
   {
    "sym": "^GSPC",
@@ -37,17 +37,17 @@
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/01",
-   "close": 46948.72,
-   "chg_pct": 1.78
+   "date": "09/03",
+   "close": 46272.94,
+   "chg_pct": 0.23
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/03",
-   "close": 31.74,
-   "chg_pct": 0.21
+   "close": 31.7,
+   "chg_pct": 0.09
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "Google推出兩款Gemini 3.8 編程、推理能力升級",
+   "title": "SpaceX的AI優勢有多大？分析師看好股價翻倍",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6595933",
-   "ts": "09/03 08:43"
+   "url": "https://news.cnyes.com/news/id/6595882",
+   "ts": "09/03 12:30"
   },
   {
-   "title": "正文攜Dixon擴大印度光通訊布局產品直攻800G、1.6T AI資料中心需求",
+   "title": "台印CEO論壇首戰印度矽谷 貿協：近10年已有386家台企於當地發展",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6595982",
-   "ts": "09/03 08:30"
+   "url": "https://news.cnyes.com/news/id/6596148",
+   "ts": "09/03 12:17"
   },
   {
-   "title": "Snowflake盤後飆逾20%AI股財報行情分歧、特斯拉Cybercab接棒登場",
+   "title": "雀巢瘦身計畫加速 10億美元打包出售7個保健品品牌",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6595983",
-   "ts": "09/03 08:30"
+   "url": "https://news.cnyes.com/news/id/6595967",
+   "ts": "09/03 12:16"
   },
   {
-   "title": "商務部長：Anthropic已與川普政府「修復關係」",
+   "title": "〈焦點股〉台積電水冷新藍圖激勵 奇鋐衝3525元再創歷史新天價",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6596150",
+   "ts": "09/03 12:11"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：弘塑(3131-TW)EPS預估上修至67.75元，預估目標價為4000元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6596167",
+   "ts": "09/03 12:11"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：富邦金(2881-TW)EPS預估上修至10.95元，預估目標價為141元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6596166",
+   "ts": "09/03 12:11"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：億豐(8464-TW)EPS預估下修至24.24元，預估目標價為460.5元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6596165",
+   "ts": "09/03 12:11"
+  },
+  {
+   "title": "雪佛龍宣布未來五年投資70億美元 委內瑞拉石油產量翻倍",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6595857",
-   "ts": "09/03 08:30"
+   "url": "https://news.cnyes.com/news/id/6595940",
+   "ts": "09/03 11:57"
   },
   {
-   "title": "二度躲過強制分拆資產命運！美法官駁回司法部分拆AdX要求 但下令谷歌調整商業模式",
+   "title": "博通財報優、AI營收強勁 為何仍一度重挫5%？",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6595931",
-   "ts": "09/03 08:15"
+   "url": "https://news.cnyes.com/news/id/6596112",
+   "ts": "09/03 11:47"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：健策(3653-TW)目標價調升至6725元，幅度約8.47%",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6595949",
-   "ts": "09/03 08:10"
-  },
-  {
-   "title": "Palantir重挫5.8% 債券殖利率、Google雙重利空？",
+   "title": "全球長債重定價風向球！日本今發行30年國債 分析師：若需求愈冷恐加劇全球債市拋售",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6595881",
-   "ts": "09/03 08:10"
-  },
-  {
-   "title": "營收速報 - 2026年9月3日台股中小型公司8月營收一覽（新增51家）",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6595938",
-   "ts": "09/03 07:55"
-  },
-  {
-   "title": "營收速報 - 2026年9月3日台股大型公司8月營收一覽（新增3家）",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6595937",
-   "ts": "09/03 07:55"
-  },
-  {
-   "title": "台達電、奇鋐等供應鏈吃香！AI資料中心狂擴建  變壓器、液冷需求爆發",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6594702",
-   "ts": "09/03 07:10"
+   "url": "https://news.cnyes.com/news/id/6596080",
+   "ts": "09/03 11:25"
   }
  ],
  "inst": {

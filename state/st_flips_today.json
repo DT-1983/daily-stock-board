@@ -2,88 +2,18 @@
 "date": "2026-09-03",
 "flips_hold": [
 {
-"code": "AAPL",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1
-},
-{
-"code": "BEN",
-"name": "",
-"word": "🟢→🔴 翻空",
-"dir": -1
-}
-],
-"flips_watch": [
-{
-"code": "ALAB",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1
-},
-{
-"code": "ISRG",
+"code": "CLS",
 "name": "",
 "word": "🟢→🔴 翻空",
 "dir": -1
 },
 {
-"code": "2330",
-"name": "台積電",
-"word": "🟢→🔴 翻空",
-"dir": -1
-},
-{
-"code": "3037",
-"name": "欣興",
-"word": "🟢→🔴 翻空",
-"dir": -1
-},
-{
-"code": "4768",
-"name": "晶呈科技",
-"word": "🟢→🔴 翻空",
-"dir": -1
-},
-{
-"code": "6182",
-"name": "合晶",
+"code": "IX",
+"name": "",
 "word": "🔴→🟢 翻多",
 "dir": 1
 }
 ],
-"ai_alerts": [
-{
-"chain": "關鍵金屬/原物料",
-"market": "US",
-"sig": "🟢",
-"code": "FCX",
-"name": "Freeport-McMoRan, Inc.",
-"reason": "觀望→買進"
-},
-{
-"chain": "Bitcoin→AI 機房",
-"market": "US",
-"sig": "🟢",
-"code": "XYZ",
-"name": "Block Inc Class A",
-"reason": "觀望→買進"
-},
-{
-"chain": "玻璃基板/TGV",
-"market": "US",
-"sig": "🔴",
-"code": "GLW",
-"name": "Corning Incorporated",
-"reason": "觀望→賣出"
-},
-{
-"chain": "機器人",
-"market": "TW",
-"sig": "🟢",
-"code": "3023",
-"name": "信邦",
-"reason": "觀望→買進"
-}
-]
+"flips_watch": [],
+"ai_alerts": []
 }
