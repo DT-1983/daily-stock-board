@@ -1744,5 +1744,11 @@
     "industry": "Household/Personal Care",
     "exchange": "NYSE",
     "asof": "2026-09-03"
+  },
+  "3017.TW": {
+    "sector": "Electronic Technology",
+    "industry": "Electronic Production Equipment",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
   }
 }
