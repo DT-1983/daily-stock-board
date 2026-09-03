@@ -159,6 +159,19 @@ PAGE_CSS = """
 .lk-pick:hover{border-color:var(--accent);background:#152238}
 .lk-pick b{font-size:15px;color:#93C5FD}
 .lk-pick span{font-size:12.5px;color:var(--muted)}
+
+/* 電腦版：7 張小卡排成一排（Leo 9/3）。board_theme 的 .wrap 是 1100px，
+   7 張 minmax(150px) 只差幾像素塞不下就換行，變成 6+1 很難看。
+   這頁本來就該比列表頁寬（有四張圖），所以連 .wrap 一起放寬。 */
+@media(min-width:1180px){
+  .wrap{max-width:1440px}
+  .lk-grid{grid-template-columns:repeat(7,minmax(0,1fr))}
+  .lk-c{padding:10px 11px}
+  .lk-s{font-size:11px}
+}
+@media(min-width:900px) and (max-width:1179px){
+  .lk-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
 """
 
 
@@ -390,7 +403,8 @@ def render(ticker, live=False):
     tech = ""
     try:
         import technical_indicators as ti
-        tech = ti.build_html(row.get("symbol") or row["ticker"]) or ""
+        # expanded=True：這頁一次只有一檔，收放鈕只是多一次點擊（Leo 9/3）
+        tech = ti.build_html(row.get("symbol") or row["ticker"], expanded=True) or ""
     except Exception as e:                                  # noqa: BLE001
         tech = (f'<div class="lk-err">技術面圖表產生失敗（上面的數字仍然有效）：'
                 f'{esc(str(e)[:160])}</div>')
