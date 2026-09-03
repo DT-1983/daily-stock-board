@@ -286,6 +286,39 @@ def attach_charts(rows, limit=None):
     return rows
 
 
+# 2026-09-03：查任意股票的入口（Leo：「做一格輸入欄在燈號」）。
+#
+# ⚠️ **為什麼是連出去而不是做在這頁**：這個投資站是 GitHub Pages 靜態託管，
+# 只能放事先產好的檔案。查任意代號要即時抓 3 年 OHLC ＋算指標，一定要有後端在跑，
+# 靜態頁做不到。所以入口在這裡、運算在本機服務（stock.talentxtrend.com）。
+#
+# ⚠️ 這頁是公開的，所以**網址寫在這裡等於公開**，但服務端有 token 門檻：
+# 沒有 cookie 的人點進去只會拿到 404。Leo 的手機第一次用 ?key= 開過就會種
+# 90 天 cookie，之後從這裡點就直接進得去。
+# ⚠️ 服務跑在 Leo 的電腦上——電腦關機或 bot 沒在跑時，這個連結會連不上。
+LOOKUP_URL = "https://stock.talentxtrend.com/lookup"
+LOOKUP_BOX = (
+    '<form class="lkbox" method="get" action="' + LOOKUP_URL + '" target="_blank">'
+    '<span class="lkl">🔍 查任意股票</span>'
+    '<input name="ticker" placeholder="代號：2454 / COST / BRK.B" '
+    'autocomplete="off" autocapitalize="characters">'
+    '<button type="submit">查燈號＋圖表</button>'
+    '<span class="lkn">不限這頁的掃描母體；即時計算約 3–8 秒</span>'
+    '</form>')
+
+LOOKUP_CSS = """
+.lkbox{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:14px 0 4px;
+ background:#12151b;border:1px solid #2a2e35;border-radius:11px;padding:11px 13px}
+.lkbox .lkl{font-size:13px;font-weight:700;color:#93C5FD}
+.lkbox input{flex:1 1 190px;min-width:0;padding:8px 11px;border-radius:8px;
+ border:1px solid #2a2e35;background:#0d1016;color:#e8eaed;font-size:14px;font-family:inherit}
+.lkbox button{padding:8px 15px;border-radius:8px;border:1px solid #2a2e35;background:#1a1d23;
+ color:#93C5FD;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
+.lkbox button:hover{border-color:#4a9eff}
+.lkbox .lkn{flex:1 1 100%;font-size:11px;color:#6b7280}
+"""
+
+
 def build(d):
     rows = d["rows"]
     ok = [r for r in rows if r["combo"]]
@@ -299,6 +332,7 @@ def build(d):
                 f'<div><b style="color:#22C55E">{len(hit)}</b><span>⭐ 打點成立（且風報比 ≥ 1）</span></div>'
                 f'<div><b style="color:#EF4444">{sum(1 for r in ok if (r.get("rr") or 0) < 0)}</b>'
                 '<span>現價已超過共識目標</span></div></div>')
+    body.append(LOOKUP_BOX)
     body.append(filter_html())
     body.append(f'<div class="cbsec">⭐ 打點成立<small>亮 ≥{d["combo_min"]} 燈且風報比 ≥ 1，'
                 f'共 {len(hit)} 檔</small></div>' + _table(hit))
@@ -367,7 +401,7 @@ def main():
             "<script src=" + chr(34)
             + "https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.2.0/dist/chartjs-plugin-zoom.min.js"
             + chr(34) + "></script>"
-            "<style>" + BASE_CSS + CSS + _ti_css() + "</style></head><body>"
+            "<style>" + BASE_CSS + CSS + LOOKUP_CSS + _ti_css() + "</style></head><body>"
             # header 必須包在 .wrap 裡（首頁就是這樣做的），否則標題會貼齊視窗
             # 左緣、跟下面的內容對不齊——.wrap 才有 max-width:1100px + 置中。
             "<div class=" + chr(34) + "wrap" + chr(34) + ">"

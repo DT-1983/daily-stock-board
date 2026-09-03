@@ -49,6 +49,40 @@ from board_theme import BASE_CSS, esc                       # noqa: E402
 
 Q = chr(34)
 
+# ── 對外開放的門檻（2026-09-03，Leo 要手機能開）──────────────────────
+# 這頁本身沒有個資（只有公開市場資料），但**每次查詢都會在 Leo 的電腦上抓 3 年
+# 資料＋算指標**——完全不設防等於把運算資源開放給任何掃到這個網域的人。
+#
+# 作法：`?key=<LOOKUP_TOKEN>` 進來一次就種 90 天 cookie，之後手機直接開。
+# 沒有 token 也沒有 cookie 一律回 **404**（不是 403）——403 等於告訴對方
+# 「這裡有東西只是你沒權限」，404 什麼都不透露。
+#
+# `LOOKUP_TOKEN` 空白＝不設防。這是給「只在本機用、沒對外開」的情況；
+# 服務本來就只綁 127.0.0.1，沒接 tunnel 的話外面連不到。
+COOKIE = "lk"
+COOKIE_DAYS = 90
+
+
+def _token():
+    from dotenv import dotenv_values
+    here = os.path.dirname(os.path.abspath(__file__))
+    return (dotenv_values(os.path.join(here, ".env")) or {}).get("LOOKUP_TOKEN", "") or ""
+
+
+def gate(key, cookie_val):
+    """回 (是否放行, 要不要種 cookie)。token 沒設就一律放行。"""
+    tk = _token()
+    if not tk:
+        return True, False
+    if key and key == tk:
+        return True, True          # 帶對 key → 放行並種 cookie
+    return (cookie_val == tk), False
+
+
+def not_found_html():
+    """擋下來時回的東西。刻意跟一般 404 長一樣，不提示這裡有服務。"""
+    return "<!doctype html><meta charset=utf-8><title>404</title><h1>404 Not Found</h1>"
+
 # 缺任何一個圖表都畫不出來——technical_indicators 產的是「畫圖的程式碼」不是圖片。
 # hammerjs 是 chartjs-plugin-zoom 的 peer dep，少了它滾輪縮放能動但**拖曳完全沒反應**
 # （9/2 踩過，見 investment_site_ui_standard 記憶）。順序不能換。

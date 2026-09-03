@@ -96,6 +96,14 @@ async def cmd_lookup(interaction: discord.Interaction, 代號: str):
 
 
 async def _health(request):
+    # 2026-09-03：這個 port 接上 Cloudflare Tunnel 對外開放查股頁之後，健康檢查也
+    # 跟著曝光了，外面打一下就看得到 bot 名稱。健檢只有本機的 service_health_check
+    # 在用，所以**經由 tunnel 進來的一律 404**——cloudflared 轉發時會帶
+    # CF-Connecting-IP，本機直接打不會有這個標頭（不能用來源 IP 判斷：tunnel 也是
+    # 從 127.0.0.1 連進來的）。
+    if request.headers.get("CF-Connecting-IP"):
+        return web.Response(text=lookup_page.not_found_html(), status=404,
+                            content_type="text/html", charset="utf-8")
     ready = client.is_ready()
     return web.json_response({"ok": ready, "user": str(client.user) if ready else None},
                               status=200 if ready else 503)
@@ -111,6 +119,14 @@ async def _lookup_page(request):
     CPU/IO 工作，直接在事件迴圈裡跑會**把整個 bot 卡住**（連 Discord 心跳都停），
     那會害 service_health_check 判定失聯然後重啟這支。
     """
+    # 對外開放後的門檻：?key=<LOOKUP_TOKEN> 進來一次種 90 天 cookie。
+    # 沒通過一律 404（不是 403——403 等於告訴對方這裡有東西）。詳見 lookup_page.gate。
+    ok, set_cookie = lookup_page.gate(request.query.get("key", ""),
+                                      request.cookies.get(lookup_page.COOKIE, ""))
+    if not ok:
+        return web.Response(text=lookup_page.not_found_html(), status=404,
+                            content_type="text/html", charset="utf-8")
+
     tk = request.query.get("ticker", "")
     try:
         html, status = await asyncio.to_thread(lookup_page.render, tk)
@@ -118,7 +134,14 @@ async def _lookup_page(request):
         traceback.print_exc()
         return web.Response(text=f"查詢失敗：{e}", status=500,
                             content_type="text/plain", charset="utf-8")
-    return web.Response(text=html, status=status, content_type="text/html", charset="utf-8")
+    resp = web.Response(text=html, status=status, content_type="text/html", charset="utf-8")
+    if set_cookie:
+        # Secure＋SameSite=Lax：只走 https（tunnel 那端本來就是 https），
+        # 且不會被第三方網站帶著送出去。
+        resp.set_cookie(lookup_page.COOKIE, lookup_page._token(),
+                        max_age=lookup_page.COOKIE_DAYS * 86400,
+                        httponly=True, samesite="Lax", secure=True)
+    return resp
 
 
 async def _run():
