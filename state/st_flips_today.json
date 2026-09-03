@@ -1,19 +1,19 @@
 {
 "date": "2026-09-03",
-"flips_hold": [
+"flips_hold": [],
+"flips_watch": [
 {
-"code": "CLS",
-"name": "",
-"word": "🟢→🔴 翻空",
-"dir": -1
-},
-{
-"code": "IX",
+"code": "BTDR",
 "name": "",
 "word": "🔴→🟢 翻多",
 "dir": 1
+},
+{
+"code": "2383",
+"name": "",
+"word": "🟢→🔴 翻空",
+"dir": -1
 }
 ],
-"flips_watch": [],
 "ai_alerts": []
 }
