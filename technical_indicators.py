@@ -442,7 +442,7 @@ def _sma(arr, n):
     return out
 
 
-def build(ticker, disp_days=756):
+def build(ticker, disp_days=756, expanded=False):
     """算一次，回 (html, summary_text)。理由同 fundamentals_reality.build()：
     避免財報卡渲染跟 narrative() 的 LLM prompt 各自重抓一次價量資料。
     2026-08-11：RS窗改30日/1年、抓2年資料當暖機（原本抓1年配200日長線窗，暖機不夠，
@@ -459,7 +459,22 @@ def build(ticker, disp_days=756):
                               hist["Low"].tolist(), hist["Close"].tolist())
 
         bench = yf.Ticker(_benchmark(ticker)).history(period="2y")
-        bench_closes = bench["Close"].tolist() if not bench.empty else []
+        # 🔴 2026-09-03：**基準要用日期對齊，不能只把兩串 list 丟進去**。
+        # 個股與指數的交易日不會完全一樣（停牌、指數有值而個股無、抓取邊界差一天），
+        # 實測 3017.TW 729 根 vs ^TWII 728 根。`mansfield_rs_series` 是**右對齊**
+        # 回傳 min(len) 長度，接著 `rs_signal_series` 拿 rs[i] 去比 closes[i]
+        # ——兩邊 i 指的不是同一天，整段位移一根，
+        # 🩷資金領先/🔵創新高 的判定（RS 新高但股價未創新高）因此會標錯或漏標。
+        # 這是 `board_html_legacy._align_rs` 與 `backtest_position_sim` 早就修過的
+        # 同一個坑，這支漏掉了（同「修一個模式要掃全部同類」）。
+        # 用 reindex 對齊到個股的交易日：長度必然相同，而且 i 保證是同一天。
+        bench_closes = []
+        if not bench.empty:
+            bs = bench["Close"]
+            if bs.index.tz is not None:
+                bs.index = bs.index.tz_localize(None)
+            hidx = hist.index.tz_localize(None) if hist.index.tz is not None else hist.index
+            bench_closes = bs.reindex(hidx).ffill().bfill().tolist()
     except Exception as e:
         print(f"  [technical_indicators] {ticker} 抓取失敗：{e}")
         return "", ""
@@ -674,11 +689,24 @@ def build(ticker, disp_days=756):
         '<div class="tclabel">EXCEED CHARGE 動能柱（金點＝擠壓中，綠/紅點＝已釋放，★＝釋放瞬間）</div>', f"ti_c2_{uid}", "tcbox tcbox-sm")
     _row_rs = _techrow(panel_rs,
         '<div class="tclabel">RS 相對強弱（短線20日／長線1年，紅線＝基準；🟡長線翻正 🔵短線創新高 🩷資金比股價先動）</div>', f"ti_c3_{uid}", "tcbox tcbox-sm")
+    _toggle_btn = ("" if expanded else
+                   f'<button class="techtoggle" onclick="ti_toggle_{uid}()" '
+                   f'id="ti_btn_{uid}">展開圖表 ▾</button>')
+    _charts_style = "" if expanded else ' style="display:none"'
+    # expanded 模式：沒有收放鈕，所以要自己在載入後畫一次。
+    # Chart.js 由頁面在 <head> 載入，這段 script 在 canvas 之後才執行，
+    # 所以 DOM 已經在了；但外掛（chartjs-chart-financial / zoom）註冊順序保險起見
+    # 還是掛 DOMContentLoaded，已載完就直接跑。
+    _autodraw = ("" if not expanded else
+                 "if (!ti_drawn_" + uid + ") { ti_drawn_" + uid + " = true; "
+                 "if (document.readyState === 'loading') "
+                 "document.addEventListener('DOMContentLoaded', ti_draw_" + uid + "); "
+                 "else ti_draw_" + uid + "(); }")
     html = f"""<div class="technical"><h3>技術面四指標</h3>
 <div class="posnote">近一年日線計算，基準指數：{_BENCHMARK_NAME.get(_benchmark(ticker), _benchmark(ticker))}</div>
 <div class="techgrid">{tiles}</div>
-<button class="techtoggle" onclick="ti_toggle_{uid}()" id="ti_btn_{uid}">展開圖表 ▾</button>
-<div class="techcharts" id="ti_charts_{uid}" style="display:none">
+{_toggle_btn}
+<div class="techcharts" id="ti_charts_{uid}"{_charts_style}>
   <div class="tctools">
   <div class="tcwin" id="ti_win_{uid}">
     <button data-w="90" aria-pressed="true">90天</button>
@@ -700,7 +728,7 @@ function ti_toggle_{uid}(){{
   const btn = document.getElementById('ti_btn_{uid}');
   const open = box.style.display !== 'none';
   box.style.display = open ? 'none' : 'block';
-  btn.textContent = open ? '展開圖表 ▾' : '收合圖表 ▴';
+  if (btn) btn.textContent = open ? '展開圖表 ▾' : '收合圖表 ▴';
   if (!open && !ti_drawn_{uid}) {{ ti_drawn_{uid} = true; ti_draw_{uid}(); }}
 }}
 document.getElementById('ti_win_{uid}').addEventListener('click', function(e){{
@@ -832,6 +860,7 @@ function ti_draw_{uid}(){{
   ti_charts_{uid} = [c1, cv, c2, c3];
 }}
 function ti_reset_{uid}(){{ (ti_charts_{uid} || []).forEach(c => c.resetZoom()); }}
+{_autodraw}
 </script>
 </div>"""
 
@@ -852,9 +881,14 @@ function ti_reset_{uid}(){{ (ti_charts_{uid} || []).forEach(c => c.resetZoom());
     return html, summary
 
 
-def build_html(ticker):
-    """CLI／向下相容用：只要 HTML。"""
-    return build(ticker)[0]
+def build_html(ticker, expanded=False):
+    """CLI／向下相容用：只要 HTML。
+
+    expanded=True：圖表**預設展開、不放收放鈕**。給單一個股頁用（lookup_page）——
+    那種頁面一次只有一檔，收放鈕只是多一次點擊。看板/燈號/財報卡一頁很多檔，
+    全部展開會爆掉，那邊維持預設收合。
+    """
+    return build(ticker, expanded=expanded)[0]
 
 
 def _tile(name, main, sub):
