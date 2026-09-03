@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-03 12:42",
+ "updated": "2026-09-03 19:16",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,16 +38,16 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "09/03",
-   "close": 46272.94,
-   "chg_pct": 0.23
+   "close": 45857.66,
+   "chg_pct": -0.67
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/03",
-   "close": 31.7,
-   "chg_pct": 0.09
+   "close": 31.67,
+   "chg_pct": -0.01
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "SpaceX的AI優勢有多大？分析師看好股價翻倍",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6595882",
-   "ts": "09/03 12:30"
-  },
-  {
-   "title": "台印CEO論壇首戰印度矽谷 貿協：近10年已有386家台企於當地發展",
+   "title": "亞德客8月營收創同期新高 氣動市場需求上升循環看至2027",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6596148",
-   "ts": "09/03 12:17"
+   "url": "https://news.cnyes.com/news/id/6596588",
+   "ts": "09/03 19:15"
   },
   {
-   "title": "雀巢瘦身計畫加速 10億美元打包出售7個保健品品牌",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6595967",
-   "ts": "09/03 12:16"
-  },
-  {
-   "title": "〈焦點股〉台積電水冷新藍圖激勵 奇鋐衝3525元再創歷史新天價",
+   "title": "台北航太展重塑產業轉型版圖 9/23南港登場今啟動徵展",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6596150",
-   "ts": "09/03 12:11"
+   "url": "https://news.cnyes.com/news/id/6596570",
+   "ts": "09/03 19:11"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：弘塑(3131-TW)EPS預估上修至67.75元，預估目標價為4000元",
+   "title": "安碁資訊8月營收創同期高 樂看AI快速發展帶動資安需求",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6596167",
-   "ts": "09/03 12:11"
+   "url": "https://news.cnyes.com/news/id/6596566",
+   "ts": "09/03 19:10"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：富邦金(2881-TW)EPS預估上修至10.95元，預估目標價為141元",
+   "title": "中信投信與韓國指數公司Akros簽署MOU 共拓台灣ETF市場",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6596166",
-   "ts": "09/03 12:11"
+   "url": "https://news.cnyes.com/news/id/6596569",
+   "ts": "09/03 19:07"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：億豐(8464-TW)EPS預估下修至24.24元，預估目標價為460.5元",
+   "title": "〈台幣〉與亞幣脫鉤！股匯齊挫 量縮連2黑收31.755元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6596165",
-   "ts": "09/03 12:11"
+   "url": "https://news.cnyes.com/news/id/6596547",
+   "ts": "09/03 19:04"
   },
   {
-   "title": "雪佛龍宣布未來五年投資70億美元 委內瑞拉石油產量翻倍",
+   "title": "輝達將砸140億美元收購Hugging Face？分析師：全球AI開源體系恐面臨重構",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6595940",
-   "ts": "09/03 11:57"
+   "url": "https://news.cnyes.com/news/id/6596329",
+   "ts": "09/03 19:00"
   },
   {
-   "title": "博通財報優、AI營收強勁 為何仍一度重挫5%？",
+   "title": "不走傳統私有化 GoPro保留上市地位 獲Starman 2.85億美元借殼注資",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6596112",
-   "ts": "09/03 11:47"
+   "url": "https://news.cnyes.com/news/id/6596368",
+   "ts": "09/03 17:30"
   },
   {
-   "title": "全球長債重定價風向球！日本今發行30年國債 分析師：若需求愈冷恐加劇全球債市拋售",
+   "title": "傳川普幕僚試圖控制美伊戰爭規模 伊朗再度發起空襲致局勢升溫",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6596080",
-   "ts": "09/03 11:25"
+   "url": "https://news.cnyes.com/news/id/6596300",
+   "ts": "09/03 17:10"
+  },
+  {
+   "title": "特斯拉Cybercab今登場無方向盤、踏板首度載客上路，商業營運許可成焦點",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6596433",
+   "ts": "09/03 17:00"
+  },
+  {
+   "title": "特斯拉Cybercab今迎商業化考驗百度Apollo Go已在杜拜全無人載客",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6596432",
+   "ts": "09/03 17:00"
   }
  ],
  "inst": {
-  "date": "09/02",
-  "total_yi": -1152.4,
-  "foreign_yi": -913.5,
-  "trust_yi": -35.3
+  "date": "09/03",
+  "total_yi": -637.1,
+  "foreign_yi": -481.5,
+  "trust_yi": 11.4
  }
 }
