@@ -58,6 +58,37 @@ CHAIN_PHASE = {
 }
 
 
+def chain_phase(chain):
+    """回這條鏈的 ⏱ 時程標籤，**帶上驗證日程的實際結果**（2026-09-03）。
+
+    原本這個標籤是靜態字典——老墨怎麼講就永遠怎麼顯示。但 `roadmap_milestones.py`
+    驗證完之後如果某條里程碑 slipped/broken，看板還在照原本的時程宣傳，
+    **驗證等於沒有後果**（Leo：「驗證結果接回決策」）。
+    這裡把最嚴重的那一條狀態接上去：broken 一律優先顯示。
+    """
+    base = CHAIN_PHASE.get(chain)
+    if not base:
+        return None
+    try:
+        d = json.load(open("state/roadmap_milestones.json", encoding="utf-8"))
+    except Exception:                                       # noqa: BLE001
+        return base
+    worst = None
+    for m in d.get("milestones", []):
+        if m.get("chain") != chain:
+            continue
+        if m.get("status") == "broken":
+            worst = "broken"
+            break
+        if m.get("status") == "slipped" and worst is None:
+            worst = "slipped"
+    if worst == "broken":
+        return base + "　❌ 前提已被打破"
+    if worst == "slipped":
+        return base + "　⏳ 已延後"
+    return base
+
+
 def _load_chain_themes():
     """讀 chain_themes.py 產的 {chain: 一句題材}；沒有就回空 dict（題材層可選）。"""
     try:

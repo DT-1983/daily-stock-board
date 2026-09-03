@@ -26,7 +26,7 @@ from technical_indicators import double_typhoon as _st_sma  # SMA 版 SuperTrend
 from technical_indicators import typhoon_state_series  # 雙重颱風三態（給蠟燭圖上色）
 from board_html_legacy import (parse_report, oneliner, CHAIN_ORDER, CHAIN_MAP,
                         CHAIN_THEMES, CHAIN_REPORTS, ma_series, supertrend,
-                        fetch_us_charts, esc_tw, TW_JSON, OBIS, CHAIN_PHASE,
+                        fetch_us_charts, esc_tw, TW_JSON, OBIS, chain_phase,
                         CHAIN_ICON, TW_NAME, _align_rs)  # alert_telegram.py 從本模組 import，要 re-export
 from technical_indicators import squeeze_momentum, mansfield_rs_series, rs_signal_series
 from board_theme import NAV, header as theme_header
@@ -538,8 +538,9 @@ def main():
             f'<section class="chain" id="c{i}" data-chain="{i}">'
             f'<div class="chd"><span class="ico">{_icon(c, 17)}</span>'
             f'<h2>{esc_tw(c)}</h2><span class="cnt">美 {len(us)} · 台 {len(tw)}</span>'
-            + (f'<span class="phase" title="老墨三段時程：這條鏈的主行情落在哪一段（見報告）">⏱ {esc_tw(CHAIN_PHASE[c])}</span>'
-               if CHAIN_PHASE.get(c) else "") + '</div>'
+            + (f'<span class="phase" title="老墨三段時程：這條鏈的主行情落在哪一段（見報告）；'
+               f'驗證日程若判定延後/打破會直接標在這裡">⏱ {esc_tw(chain_phase(c))}</span>'
+               if chain_phase(c) else "") + '</div>'
             f'{_theme_html(CHAIN_THEMES.get(c))}{rptbtn}'
             f'<div class="rows">{"".join(rows)}</div></section>')
 
