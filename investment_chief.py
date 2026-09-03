@@ -500,6 +500,35 @@ def gather_material(ticker, notes):
     except Exception as e:
         value_material += f"\n（預估前提檢查查詢失敗：{e}）"
 
+    # 券商研究報告（2026-09-03，路線圖第 5 項）。**這一層是我們自己算不出來的**：
+    # 系統本來只有 yfinance 的「市場共識目標價」（一個平均數），沒有「券商憑什麼
+    # 給這個數字」的推導過程。報告裡寫的是「2027 年底 PBR 1.1 倍」「30 倍 2026 EPS」
+    # 這種可以被證偽的假設——那才是能盯的東西。
+    # ⚠️ 當材料不當門檻：只把假設攤開給投資長看，不擋任何訊號（同產業鏈技術面的處理）。
+    try:
+        import advisor_reports
+        _store = advisor_reports._load(advisor_reports.STORE, {}) or {}
+        _rs = [r for r in _store.values()
+               if norm_ticker(r.get("ticker")) == norm_ticker(ticker)]
+        if _rs:
+            _rs.sort(key=lambda r: str(r.get("date")), reverse=True)
+            value_material += f"\n券商研究報告（{len(_rs)} 份，非市場共識，是各家自己的推導）："
+            for _r in _rs[:4]:
+                _tg = f"目標價{_r['target']}" if _r.get("target") else "無目標價（Note類）"
+                value_material += (f"\n  {_r.get('date')} {_r.get('broker')}"
+                                   f"｜{_r.get('rating') or '無評等'}｜{_tg}")
+                if _r.get("valuation_basis"):
+                    value_material += f"\n    依據：{_r['valuation_basis'][:90]}"
+            _tg = [r["target"] for r in _rs if r.get("target")]
+            if len(_rs) >= 3 and len(_tg) >= 2:
+                value_material += (f"\n  ⚠️ 同一檔有 {len(_rs)} 家券商同時出報告，"
+                                   f"目標價 {min(_tg):,.0f}～{max(_tg):,.0f}"
+                                   f"（差 {(max(_tg) / min(_tg) - 1) * 100:.0f}%）"
+                                   f"——差異多半來自倍數與用哪一年 EPS，不是基本面；"
+                                   f"多家同時推代表這個看法已經擁擠。")
+    except Exception as e:                                  # noqa: BLE001
+        value_material += f"\n（券商研究報告查詢失敗：{e}）"
+
     trend_material = ""
     # 2026-08-27：所屬七鏈的技術面（chain_technicals.py 每日算）——**當參考不當門檻**，
     # 只是多一份背景材料給投資長，不擋任何個股訊號（Leo 明確決定，維持多鏡頭獨立原則）。

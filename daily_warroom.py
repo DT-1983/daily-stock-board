@@ -386,6 +386,15 @@ def sec5_watch(date):
                 lines.append(f"　　📄 {tk} {q}｜{str(it.get('value',''))[:60]}")
         except Exception:                                   # noqa: BLE001
             pass
+    # 投顧報告失效線（2026-09-03，路線圖第 5 項）。零成本：只比對現價，
+    # 資料由 advisor_reports.check() 寫進 state/advisor_reports_today.json。
+    # 全健康時也給一行計數——沒有那行的話「健康」跟「壞掉」長得一樣
+    # （同 silent_failure_pattern：沒被檢查 ≠ 檢查過沒事）。
+    try:
+        import advisor_reports
+        lines += advisor_reports.summary_lines()
+    except Exception as e:                                  # noqa: BLE001
+        lines.append(f"・📑 投顧報告失效線讀取失敗：{str(e)[:60]}")
     if len(lines) == 1:
         lines.append("近10天無排定事件/財報。")
     return lines
