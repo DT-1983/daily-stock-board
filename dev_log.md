@@ -3652,3 +3652,21 @@ Leo 定案聊天代稱：「bb9e」指投資相關工作全部，涵蓋本專案
 - 動之前先查過：只有本機 4 支 .py 讀它，GitHub Actions 沒用到，各 .cmd 的 `git add -f` 清單也沒有它 → 移出版控不影響管線
 - ⚠️ **歷史仍在公開 repo 的 commit 紀錄裡**，要不要改寫歷史強推是 Leo 的決定（而且 repo 公開過，第三方可能已有快取，改寫不保證清乾淨）
 - ⭐ 同 9/1「撤憑證漏掉消費端」的模式：**做隱私移除時要 grep 全部帶同類欄位的檔案，不是只處理想到的那兩個**
+
+## 2026-09-03（續十）🔴 discord_bot.py 掛掉、自動重啟也失敗：`start_discord_bot.ps1` 從沒被真的跑過一次
+
+**觸發**：Leo 轉來 `service_health_check.py` 的 Telegram 通知——「🔴 隆中對DiscordBot 掛了…重啟後仍失敗…需人工介入」。
+
+**查證**：`ps -W` 沒有任何 discord_bot.py 行程、`curl 127.0.0.1:8030` connection refused。`logs/discord_bot.err.log` **根本不存在**——照 `start_discord_bot.ps1` 的邏輯，只要 `Start-Process` 真的被執行到，這個檔案（就算內容是空的）就一定會被建出來。檔案不存在＝這支 `.ps1` 從頭到尾沒有真正跑起來過。
+
+**根因**：`start_discord_bot.ps1` 裡的中文註解用了全形括號（），跟今天稍早 `register_autostart_tasks.ps1` 撞到的**同一種**坑——Windows PowerShell 5.1 用 `-File`讀沒有 UTF-8 BOM 的 .ps1 檔案時，會用系統的 Big5 內碼去解，某些全形符號的位元組序列剛好被誤讀成引號/終止符，導致整支腳本**在執行任何一行之前就 parse error 死掉**，而且**不會產生任何 log**（因為連 log 都還沒寫就死了）——看起來就像「什麼都沒發生」，比顯性錯誤更難抓。
+
+**⭐ 我自己的判斷失誤**：稍早改完這支 `.ps1` 之後，我只用 `python -u discord_bot.py` **直接測試底層 Python 腳本**（有效），從沒真的執行過 `start_discord_bot.ps1` 這個檔案本身——這正是自動化重啟真正會呼叫的東西。等於「驗證了引擎，沒驗證真正會被開的那把鑰匙」，同一天在 `register_autostart_tasks.ps1` 才踩過同一種全形符號的坑，卻沒有回頭去檢查 `start_discord_bot.ps1` 是不是也有同樣風險——沒有把「這類坑」類推到同類檔案。
+
+**修法**：`start_discord_bot.ps1` 整支改成純 ASCII（註解也是），不再靠猜哪個符號安全——這次直接用 `-File` **實際執行**這支腳本驗證（不是只測底層 python），確認 log/err.log 正常產生、health endpoint 回 `{"ok": true}`。
+
+**現況**：bot 已手動重新啟動，`/查` 應該恢復正常。**開機自動啟動仍卡在同一個待辦**：`register_autostart_tasks.ps1` 需要 Leo 用系統管理員身分跑一次才會登記；但這次修完之後，就算沒登記，`service_health_check.py` 下次跑（每 2 小時）也能**真的成功**自動重啟，不會再靜默失敗。
+
+**通用教訓**：這系列 `.ps1` 檔案（本機常駐服務的啟動腳本）今後一律避免全形標點，寧可用純 ASCII 或英文註解；改完自動化腳本要**執行腳本本身**驗證，不能只驗證它呼叫的底層程式——兩者是不同的失效面。已寫進通用記憶 `powershell_fullwidth_parse_bug`。
+
+**✅ 收尾（同日稍晚）**：Leo 用系統管理員身分跑過 `register_autostart_tasks.ps1`，`Get-ScheduledTask AutoStart_DiscordBot` 確認狀態 Ready——開機自啟登記成功，路線圖第1項（Discord Bot）到這裡才算真正落地：`/查` 能查、掛了會被健檢真的救回來、開機也會自動起來。
