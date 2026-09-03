@@ -3624,3 +3624,31 @@ Leo 定案聊天代稱：「bb9e」指投資相關工作全部，涵蓋本專案
 - ⚠️ 有講清楚界線（不是勸改，是讓 Leo 知道取捨）：一次幾十筆（補整年歷史）才需要檔案匯入——逐筆用眼睛抄數字抄錯不會有任何地方報錯，是典型靜默錯誤；「我記的股數 vs 券商實際成交股數」的對帳落差檢查（老墨那套）也只有檔案做得到。有量之後再說。
 - 最終形態：**IB 自動、元大手動截圖，兩邊進同一張 executions 表**。
 - ⚠️ 附帶查證：Leo 訊息裡附的路徑 `C:\Users\Mophy\Desktop\證券_庫存損益.xlsx` **實際不存在**（Desktop 上只有 `91848754-positions.xlsx`，內容是 IB 持倉快照不是統一/元大的交易明細，且是「庫存」不是「逐筆成交」）。已回報請 Leo 確認，沒有拿唯一存在的那個檔案硬當成他要給的東西。
+
+## 2026-09-03（續十一）我重複造輪子：風險官 P1 早就存在——但查出兩個真問題
+
+**我的錯**：路線圖記憶寫「仲達（風險官）完全沒做，P1 失效條件日檢還沒開始」，我照著它動手寫了 `risk_officer.py`（含條件判定、public/private 分流、新舊觸發比對，還做了驗證測試），寫完接排程時才看到 `researcher_stock_sync.cmd` 裡早就有 `python thesis_check.py`，註解寫明「P1: daily check of thesis invalidation conditions」。
+
+`thesis_check.py`（8/27 上線）做的就是同一件事，而且比我寫的成熟：同樣的條件型別、同樣的 held/watch 分流、同樣「登錄當天就成立不算新觸發」的判斷（我當成自己的發現寫進註解，人家 9/1 就處理過了），還多了我沒做的「⚠️ 逼近失效線 2% 內」提醒。**已刪除 `risk_officer.py` 並還原 `daily_warroom.py`**——不留兩套會漂移的系統。
+
+⭐ 教訓：**動工前要查的是程式碼，不是記憶檔**。記憶是寫下當時的觀察，會過期；「查得到的事別用推論代替」這條規則我有，但這次是「用記憶代替查證」，同一個坑的變形。正確順序是先 grep 專案有沒有現成的，再看記憶怎麼說。
+
+### 真問題 A：21 檔有判斷但沒有失效條件，其中 4 檔是持股
+
+| | 檔數 |
+|---|---|
+| 孔明有下判斷（advisor_verdicts） | 137 |
+| 進了登錄簿（thesis_check 檢查得到） | 116 |
+| **有判斷卻沒進登錄簿** | **21** |
+| 其中**持股**：BAYRY／COHR／LITE／MU | 4 |
+
+原因查證：這 21 檔（除 9914 外）的 verdict **本身就沒有任何 conditions**（trend=0 value=0 old=0），大多停在 2026-08-27——那是 conditions 欄位剛上線的時間點。`_register_conditions` 的 `if not conds: continue` 正確地跳過它們，不是 bug。真正的問題是**投資長是事件驅動才重判，這 4 檔持股從 8/27 起沒被任何事件觸發過，於是它們的失效條件永遠是空的、永遠不會被檢查，而且沒有任何地方會講**。9914 是另一種：9/1 的判斷有 4 條條件卻沒進登錄簿，原因未查清（不是 .TW 後綴問題，登錄簿裡完全沒有含 9914 的 key）。
+
+### 真問題 B：持股清單一直留在公開 repo（已止血）
+
+9/1 為隱私把 `advisor_verdicts.jsonl` / `research_notes.jsonl` 移出版控時，**漏掉 `state/thesis_conditions.json`**——它同樣每檔帶 `held: true`。實查遠端 `board/main` 的版本確有 12 檔 held=true，也就是持股清單一直公開著。
+
+- 處理：`git rm --cached` + 加進 .gitignore，已 push，實查 `git show board/main:state/thesis_conditions.json` 回 does not exist ✅
+- 動之前先查過：只有本機 4 支 .py 讀它，GitHub Actions 沒用到，各 .cmd 的 `git add -f` 清單也沒有它 → 移出版控不影響管線
+- ⚠️ **歷史仍在公開 repo 的 commit 紀錄裡**，要不要改寫歷史強推是 Leo 的決定（而且 repo 公開過，第三方可能已有快取，改寫不保證清乾淨）
+- ⭐ 同 9/1「撤憑證漏掉消費端」的模式：**做隱私移除時要 grep 全部帶同類欄位的檔案，不是只處理想到的那兩個**
