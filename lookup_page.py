@@ -45,6 +45,8 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
     sys.stdout.reconfigure(encoding="utf-8")
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+from urllib.parse import quote as _q                        # noqa: E402
+
 from board_theme import BASE_CSS, esc                       # noqa: E402
 
 Q = chr(34)
@@ -209,10 +211,17 @@ def _summary(row):
     q_s = esc(row.get("sector_zh") or "") or "類股未對應到輪動圖"
 
     price = row.get("price")
+    # 資料日提示：**掃描是早上 07:00 跑的，當天還沒收盤**，所以快取拿到的一定是
+    # 前一個交易日的收盤——跟看盤軟體的即時報價天生差一天。落後兩天以上（假日除外）
+    # 通常代表那一檔在 yfinance 缺資料，要明講而不是讓人自己發現數字對不上。
+    asof = str(row.get("asof") or "")
+    days = _stale_days(asof)
+    sub = f"資料日 {esc(asof or '—')}"
+    if days is not None and days >= 2:
+        sub += f'　<span style="color:#EAB308">⚠️ 落後 {days} 天</span>'
     return (
         '<div class="lk-grid">'
-        + _card("現價", f"{price:,.2f}" if price is not None else "—",
-                f"資料日 {esc(str(row.get('asof') or '—'))}")
+        + _card("現價", f"{price:,.2f}" if price is not None else "—", sub)
         + _card("SuperTrend", st_v, st_s)
         + _card("四燈", f'<span class="lk-lamps">{lamp_str}</span>',
                 f"{lit}/4　{esc(lamp_names)}")
@@ -307,15 +316,25 @@ def _pick_list(q, cands):
             f'你要查哪一檔？</div><div class="lk-picks">{items}</div>')
 
 
-def render(ticker):
-    """回 (html, status)。ticker 空字串就只給搜尋框。"""
+def _stale_days(asof):
+    """資料日距今幾個「日曆天」。只做粗略提示，不算交易日——分不出假日不影響
+    「這個數字是不是今天的」這個判斷。"""
+    import datetime as _dt
+    try:
+        return (_dt.date.today() - _dt.date.fromisoformat(str(asof)[:10])).days
+    except Exception:                                       # noqa: BLE001
+        return None
+
+
+def render(ticker, live=False):
+    """回 (html, status)。ticker 空字串就只給搜尋框。live=True 跳過快取即時算。"""
     ticker = (ticker or "").strip()
     if not ticker:
         return _shell("查股", "<h1>查股</h1>" + _form() + NOTE), 200
 
     import lamp_lookup
     try:
-        row = lamp_lookup.lookup(ticker)
+        row = lamp_lookup.lookup(ticker, live=live)
     except Exception as e:                                  # noqa: BLE001
         body = ("<h1>查股</h1>" + _form(ticker)
                 + f'<div class="lk-err">查詢時出錯：{esc(str(e)[:200])}</div>')
@@ -355,7 +374,14 @@ def render(ticker):
                 f'{esc(str(e)[:160])}</div>')
 
     name = esc(row.get("name") or "")
-    src = "今日掃描快取" if row.get("src") == "cache" else "即時計算"
+    if row.get("src") == "cache":
+        # 快取＝今天早上 07:00 掃的，內容是前一交易日收盤。給一個強制即時重算的入口，
+        # 否則使用者對照看盤軟體發現數字不一樣時，沒有辦法自己確認是不是資料舊了。
+        src = ('今日掃描快取（前一交易日收盤）　'
+               f'<a href="/lookup?ticker={_q(row["ticker"])}&amp;live=1" '
+               'style="color:#93C5FD">🔄 即時重算</a>')
+    else:
+        src = "即時計算"
     # 有做過名稱→代號的換算就一定要講，不能安靜地端出另一檔的數字
     rf = row.get("_resolved_from")
     rf_html = f'<div class="lk-rf">🔁 {esc(rf)}</div>' if rf else ""

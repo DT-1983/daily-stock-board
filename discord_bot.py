@@ -130,8 +130,9 @@ async def _lookup_page(request):
                             content_type="text/html", charset="utf-8")
 
     tk = request.query.get("ticker", "")
+    live = request.query.get("live") in ("1", "true", "yes")
     try:
-        html, status = await asyncio.to_thread(lookup_page.render, tk)
+        html, status = await asyncio.to_thread(lookup_page.render, tk, live)
     except Exception as e:                                # noqa: BLE001
         traceback.print_exc()
         return web.Response(text=f"查詢失敗：{e}", status=500,
