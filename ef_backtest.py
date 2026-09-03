@@ -128,6 +128,22 @@ def main():
 
     dates, ratios = load_ratio()
     print(f"電金比樣本：{len(dates)} 個交易日（{dates[0]} ~ {dates[-1]}）")
+    # 🔴 連續性檢查（2026-09-03 加）：回補被證交所限流擋掉時，資料會變成「範圍很長
+    # 但中間全是洞」。100 日均線是**連續 100 筆**算出來的，餵給它一段跨越幾個月空洞的
+    # 序列，它照樣會算出一個數字——**看起來正常但完全沒有意義**。寧可不跑也不要跑出
+    # 假的結論（同 silent_failure_pattern：算得出來不等於算對）。
+    import datetime as _dt
+    d0, d1 = _dt.date.fromisoformat(dates[0]), _dt.date.fromisoformat(dates[-1])
+    span_days = (d1 - d0).days
+    expect = span_days * 5 / 7 * 0.96          # 扣週末，再扣約 4% 國定假日
+    cover = len(dates) / expect if expect else 0
+    print(f"連續性：期間 {span_days} 天應有約 {expect:.0f} 個交易日，"
+          f"實際 {len(dates)} 筆（涵蓋率 {cover*100:.0f}%）")
+    if cover < 0.9:
+        print("🔴 資料有大量空洞，100 日均線會算在不連續的序列上——**結果沒有意義，拒絕回測**。")
+        print("   先把歷史補齊：python market_thermometer.py --backfill 1200 --pause 2")
+        print("   （被證交所限流擋掉的日期，每天的排程也會自動慢慢重補）")
+        return 1
     bench = load_bench(dates)
     if not bench:
         print("抓不到台股加權指數，無法回測")
