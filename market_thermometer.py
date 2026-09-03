@@ -152,13 +152,18 @@ def _fill(dates, h, closed, pause=0.4):
     return got, blocked
 
 
-def backfill(days):
-    """往回補 N 個日曆日。首次執行用。"""
+def backfill(days, pause=0.4):
+    """往回補 N 個日曆日。首次執行用。
+
+    ⚠️ `pause` 是**避開證交所限流**的節流間隔。2026-09-03 實測：0.4 秒打 1200 天
+    時補到第 45 天就被擋，**528 天全部拿不到**（回 HTTP 307 安全性頁不是 JSON）。
+    要補深歷史就把 pause 調大（1.5 秒約 13 分鐘補 500 天），慢但拿得到。
+    """
     h, closed = load_hist(), load_closed()
     today = dt.date.today()
     ds = [today - dt.timedelta(days=i) for i in range(days)]
     ds = [d for d in ds if d.weekday() < 5]     # 週末不用打，省一半請求
-    got, blocked = _fill(ds, h, closed)
+    got, blocked = _fill(ds, h, closed, pause=pause)
     print(f"✅ 補到 {got} 個交易日，歷史共 {len(h)} 筆"
           + (f"（{blocked} 天被證交所限流擋掉，之後會自動重補）" if blocked else ""))
     return h
@@ -236,7 +241,9 @@ def run(window=14):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--backfill", type=int, default=0, help="往回補幾個日曆日")
+    ap.add_argument("--pause", type=float, default=0.4,
+                    help="每次請求間隔秒數；補深歷史用 1.5 以上避開證交所限流")
     a = ap.parse_args()
     if a.backfill:
-        backfill(a.backfill)
+        backfill(a.backfill, pause=a.pause)
     run()
