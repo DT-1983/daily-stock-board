@@ -1,0 +1,196 @@
+{
+ "2308.TW": {
+  "2026Q3": {
+   "fetched": "2026-09-03",
+   "items": [
+    {
+     "type": "metric",
+     "label": "Infrastructure事業群單季營收與獲利成長",
+     "value": "第四季營收年增94%、季增12%;獲利年增287%、季增25%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Infrastructure事業群全年營收與獲利成長",
+     "value": "全年營收年增82%、獲利年增413%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Power Electronics事業群全年營收與獲利成長",
+     "value": "全年營收年增25%、獲利年增37%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Automation自動化事業群獲利衰退",
+     "value": "第四季獲利年衰退83%,全年獲利年衰退39%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Mobility行動事業群營收由盈轉虧",
+     "value": "第四季營收年衰退31%、季衰退15%;全年營收年衰退16%,由盈轉虧",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "液冷業務營收占比",
+     "value": "液冷相關營收占公司2025年全年總營收約9%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "第四季毛利率",
+     "value": "毛利率34.6%,較去年同期30.8%提升",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "2026年資本支出展望",
+     "value": "預期今年資本支出將略高於2025年水準",
+     "speaker": "Po-Wen Yu(財務長)"
+    },
+    {
+     "type": "guidance",
+     "label": "新產能布局計畫",
+     "value": "泰國三座新廠已於2025年底投產;公司正評估在墨西哥擴產,以就近供應美洲地區客戶",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "PowerRacks出貨時程",
+     "value": "預期2026年開始初期出貨,實際貢獻程度取決於客戶需求與供應鏈協調狀況,能見度仍有限",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "氫燃料電池出貨時程",
+     "value": "預期2026年底有初期出貨,更有意義的營收貢獻可能要等到2027年或更久之後",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "液冷業務成長展望",
+     "value": "不提供2026年具體財測數字,但預期AI資料中心擴張將帶動液冷業務維持強勁成長",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "2026年財測態度",
+     "value": "管理層明確表示尚未提供2026年正式財測(原文:\"We are not in a position to provide guidance for 2026\")",
+     "speaker": "Po-Wen Yu(財務長)"
+    },
+    {
+     "type": "quote",
+     "label": "AI需求動能來源",
+     "value": "AI布建的主要需求動能,目前仍主要來自美國的大型雲端服務業者(hyperscalers)。",
+     "speaker": "鄭平(Cheng Ping,董事長暨執行長)"
+    },
+    {
+     "type": "quote",
+     "label": "全年業績創新高基調",
+     "value": "第四季暨全年營收與獲利雙雙創下歷史新高。",
+     "speaker": "Rodney Liu"
+    }
+   ]
+  }
+ },
+ "2301.TW": {
+  "2026Q3": {
+   "fetched": "2026-09-03",
+   "items": [
+    {
+     "type": "metric",
+     "label": "雲端與物聯網(Cloud & AIoT)事業群本季營收",
+     "value": "新台幣289億元,季增26%,年增超過70%,占集團總營收55%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "雲端與AIoT事業群上半年營收年增",
+     "value": "年增60%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "新增北美雲端服務供應商(CSP)客戶",
+     "value": "新拿下兩家北美CSP客戶,目前出貨為現有世代電源供應器與機架產品,出貨量尚小但目標一年內建立信用紀錄;單一關鍵客戶兩年內營收目標上看10億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "最大客戶出貨時程",
+     "value": "最大客戶原訂第一季出貨遞延至第二季認列",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "本季與上半年毛利率",
+     "value": "上半年毛利率24.7%,第二季單季毛利率27.2%,管理層強調27.2%非常態、應以上半年24.7%為觀察基準",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "雲端與AIoT事業群營收占比變化",
+     "value": "占上半年集團營收比重從2022年上半年的32%提升至2026年上半年的54%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "AI相關產品營收占比(本季)",
+     "value": "第二季AI相關產品營收占比已超過25%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "中長期毛利率目標",
+     "value": "財務副總經理K.T. Lim表示,未來幾季毛利率的合理目標區間為24%至25%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "2026年資本支出上修",
+     "value": "2026年資本支出上修至新台幣180億元(原估130億元),其中約30%用於土地與廠房建置(含美國德州擴廠),約70%用於設備、研發、自動化及產能測試",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "2027年資本支出展望",
+     "value": "總裁Anson Chiu表示2027年資本支出應不會超過2026年水準",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "新產能量產時程",
+     "value": "高雄二廠預計2026年第三季量產,越南廣寧廠預計2026年第四季量產;非中國產能2025至2026年成長162%,預估2026至2027年再年增63%,目標非中國產能占比2026年底達60%、2027年達70%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "AI相關產品營收占比全年目標",
+     "value": "管理層預期2026全年AI相關產品營收占比將超過30%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "新產品線量產爬坡時程",
+     "value": "110kW電源機架與D2D磚模組預計2026下半年進入認證/量產;800V HVDC電源機架8月開始送樣,經13週認證後預計11月小量產、2027年第一季擴大量產;120kW液冷CDU/側車已進入量產,下半年將放量",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "本季基調代表發言",
+     "value": "光寶已不再是遵循ODM或OEM模式的公司,我們已轉型成為解決方案供應商。",
+     "speaker": "Anson Chiu(總裁)"
+    },
+    {
+     "type": "quote",
+     "label": "對長期投資成果的定調",
+     "value": "各位看到的營收與獲利,並非來自短期的市場機會,而是來自長期的投資累積。",
+     "speaker": "Anson Chiu(總裁)"
+    }
+   ]
+  }
+ }
+}

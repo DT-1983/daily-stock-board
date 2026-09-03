@@ -375,6 +375,17 @@ def sec5_watch(date):
     for dd, m in sorted(due_soon, key=lambda x: x[0])[:4]:
         tag = f"逾期 {-dd} 天未驗證" if dd < 0 else f"{m['due'][5:]} 前"
         lines.append(f"・📌 驗證日程｜{m['claim']}（{tag}）")
+        # 2026-09-03：只列宣稱等於還是要自己去翻——把「算過的標準」跟「已經抓到的
+        # 法說會線索」一起端出來，看到提醒當下就能判斷，不用再開檔案。
+        c = (m.get("criteria") or {}).get("confirmed")
+        if c:
+            lines.append(f"　　✅ 算過：{c[:60]}")
+        try:
+            import roadmap_milestones
+            for tk, q, it in roadmap_milestones.clues(m)[:2]:
+                lines.append(f"　　📄 {tk} {q}｜{str(it.get('value',''))[:60]}")
+        except Exception:                                   # noqa: BLE001
+            pass
     if len(lines) == 1:
         lines.append("近10天無排定事件/財報。")
     return lines

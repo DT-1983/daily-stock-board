@@ -91,7 +91,13 @@ def _persist(ticker, quarter_label, items):
         d = json.load(io.open(NOTES, encoding="utf-8")) if os.path.exists(NOTES) else {}
     except Exception:                                       # noqa: BLE001
         d = {}
-    q = str(quarter_label or "").strip() or datetime.date.today().isoformat()
+    # 沒給季別就用「年+季」當 key，**不要用今天的日期**（2026-09-03 發現）——
+    # roadmap_milestones --fetch 不帶 quarter_label，用日期當 key 的話每跑一次
+    # 就多一筆同內容的紀錄，一季跑四次就有四份重複，guidance() 會把同一句話回四遍。
+    q = str(quarter_label or "").strip()
+    if not q:
+        t = datetime.date.today()
+        q = f"{t.year}Q{(t.month - 1) // 3 + 1}"
     d.setdefault(ticker, {})[q] = {
         "fetched": datetime.date.today().isoformat(),
         "items": items,
