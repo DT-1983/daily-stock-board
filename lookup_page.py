@@ -47,7 +47,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from urllib.parse import quote as _q                        # noqa: E402
 
-from board_theme import BASE_CSS, esc                       # noqa: E402
+from board_theme import (BASE_CSS, LOOKUP_CSS, esc, header,   # noqa: E402
+                         nav_abs)
 
 Q = chr(34)
 
@@ -108,7 +109,7 @@ def not_found_html():
         "作法：用帶 <code>?key=</code> 的網址開一次這個頁面就好——"
         "那串 key 在 <code>daily_stock_analysis/.env</code> 的 <code>LOOKUP_TOKEN</code>，"
         "或直接問 Claude 要。<br><br>"
-        "<span style=" + Q + "color:#9aa0a6;font-size:12.5px" + Q + ">"
+        "<span style=" + Q + "color:var(--muted);font-size:12.5px" + Q + ">"
         "為什麼要授權：這頁每次查詢都會在家裡那台電腦上抓三年資料、算指標。"
         "不設防的話任何掃到這個網域的人都能叫它算。</span>"
         "</div></div></body></html>")
@@ -127,46 +128,57 @@ QLAB = {"leading": ("🔵", "領先"), "improving": ("🟢", "改善"),
         "weakening": ("🟡", "弱化"), "lagging": ("🔴", "落後")}
 
 PAGE_CSS = """
-.lk-form{display:flex;gap:8px;margin:14px 0 18px;flex-wrap:wrap}
-.lk-form input{flex:1 1 200px;min-width:0;padding:10px 12px;border-radius:9px;
- border:1px solid #2a2e35;background:#12151b;color:#e8eaed;font-size:15px;font-family:inherit}
-.lk-form button{padding:10px 18px;border-radius:9px;border:1px solid #2a2e35;
- background:#1a1d23;color:#93C5FD;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
-.lk-form button:hover{border-color:#4a9eff}
-.lk-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:2px}
-.lk-tk{font-size:26px;font-weight:800;color:#e8eaed}
-.lk-nm{font-size:15px;color:#9aa0a6}
-.lk-src{font-size:11px;color:#6b7280;margin-left:auto}
-.lk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px;margin:12px 0 4px}
-.lk-c{background:#1a1d23;border:1px solid #2a2e35;border-radius:10px;padding:10px 12px}
-.lk-k{font-size:10.5px;color:#6b7280;font-weight:600;letter-spacing:.3px}
-.lk-v{font-size:17px;font-weight:700;color:#e8eaed;margin-top:3px}
-.lk-s{font-size:11.5px;color:#9aa0a6;margin-top:2px}
+/* 2026-09-03 Leo：「查任意股風格不一致，請改成跟燈號風格一致」。
+   原本這頁自己寫了一組灰褐色系（#1a1d23 / #2a2e35），跟投資站的深藍
+   （--surface #0F172A / --line #1E293B）並排一看就是兩個網站。
+   規則：**這頁不准出現寫死的色碼**，一律用 BASE_CSS 的變數；
+   搜尋框直接沿用站上的 .lkbox（LOOKUP_CSS），兩邊必定一致。 */
+.lk-form{margin:12px 0 16px}
+.lk-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:14px 0 2px}
+.lk-tk{font-size:26px;font-weight:800;color:var(--ink);
+ font-family:'Fira Code',monospace;font-variant-numeric:tabular-nums;letter-spacing:-.5px}
+.lk-nm{font-size:15px;color:var(--muted)}
+.lk-src{font-size:11.5px;color:var(--dim);margin-left:auto}
+.lk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:12px 0 4px}
+.lk-c{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.lk-k{font-size:10.5px;color:var(--dim);font-weight:600;letter-spacing:.3px}
+.lk-v{font-size:18px;font-weight:700;color:var(--ink);margin-top:3px;line-height:1.25;
+ font-family:'Fira Code',monospace;font-variant-numeric:tabular-nums}
+.lk-v.zh{font-family:inherit}          /* 「🟢 空方」這種中文值不要用等寬字 */
+.lk-s{font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.5}
 .lk-lamps{font-size:19px;letter-spacing:2px}
-.lk-note{font-size:12px;color:#6b7280;margin-top:14px;line-height:1.7;
- border-top:1px solid #16223A;padding-top:10px}
-.lk-err{background:#1a1d23;border:1px solid #3a2a2a;border-radius:10px;padding:16px;
- color:#e8b4b4;font-size:14px;line-height:1.7}
+.lk-note{font-size:12px;color:var(--dim);margin-top:18px;line-height:1.7;
+ border-top:1px solid var(--line);padding-top:11px}
+.lk-err{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--down);
+ border-radius:10px;padding:15px 17px;color:#FCA5A5;font-size:13.5px;line-height:1.75;margin:12px 0}
 .lk-rf{font-size:12.5px;color:#93C5FD;margin:2px 0 6px}
 .lk-picks{display:flex;flex-direction:column;gap:7px;margin-top:10px}
 .lk-pick{display:flex;gap:10px;align-items:baseline;padding:11px 13px;border-radius:9px;
- background:#1a1d23;border:1px solid #2a2e35;text-decoration:none;color:#e8eaed}
-.lk-pick:hover{border-color:#4a9eff}
+ background:var(--surface);border:1px solid var(--line);text-decoration:none;color:var(--ink);
+ transition:border-color .18s,background .18s}
+.lk-pick:hover{border-color:var(--accent);background:#152238}
 .lk-pick b{font-size:15px;color:#93C5FD}
-.lk-pick span{font-size:12.5px;color:#9aa0a6}
+.lk-pick span{font-size:12.5px;color:var(--muted)}
 """
 
 
-def _card(k, v, s=""):
+def _card(k, v, s="", zh=False):
+    """zh=True 代表值是中文/文字（「🟢 空方」「🟡 弱化」），不套等寬數字字體——
+    等寬字體是給數字對齊用的，套在中文上字距會很怪。"""
     return (f'<div class="lk-c"><div class="lk-k">{esc(k)}</div>'
-            f'<div class="lk-v">{v}</div><div class="lk-s">{s}</div></div>')
+            f'<div class="lk-v{" zh" if zh else ""}">{v}</div>'
+            f'<div class="lk-s">{s}</div></div>')
 
 
 def _form(ticker=""):
-    return (f'<form class="lk-form" method="get" action="/lookup">'
-            f'<input name="ticker" value="{esc(ticker)}" placeholder="輸入代號：2454 / COST / BRK.B" '
+    """搜尋框＝投資站首頁／進出燈號頁上那一顆（board_theme 的 .lkbox），
+    只是 action 指回自己。兩邊各寫一份必然會漂移，所以連 class 都沿用。"""
+    return (f'<form class="lkbox lk-form" method="get" action="/lookup">'
+            f'<span class="lkl">🔍 查任意股票</span>'
+            f'<input name="ticker" value="{esc(ticker)}" '
+            f'placeholder="代號或名稱：2454 / 台積電 / COST" '
             f'autocomplete="off" autocapitalize="characters">'
-            f'<button type="submit">查</button></form>')
+            f'<button type="submit">查燈號＋圖表</button></form>')
 
 
 def _summary(row):
@@ -222,13 +234,13 @@ def _summary(row):
     return (
         '<div class="lk-grid">'
         + _card("現價", f"{price:,.2f}" if price is not None else "—", sub)
-        + _card("SuperTrend", st_v, st_s)
+        + _card("SuperTrend", st_v, st_s, zh=True)
         + _card("四燈", f'<span class="lk-lamps">{lamp_str}</span>',
-                f"{lit}/4　{esc(lamp_names)}")
+                f"{lit}/4　{esc(lamp_names)}", zh=True)
         + _card("分析師共識目標價", tg_v, tg_s)
         + _card("風報比", rr_v, rr_s)
         + _card("RS60 乖離", rs_v, rs_s)
-        + _card("類股象限（60日）", f"{qi} {ql}", q_s)
+        + _card("類股象限（60日）", f"{qi} {ql}", q_s, zh=True)
         + "</div>")
 
 
@@ -243,8 +255,18 @@ def _shell(title, body):
             "<meta name=" + Q + "viewport" + Q + " content=" + Q
             + "width=device-width,initial-scale=1" + Q + ">"
             f"<title>{esc(title)}</title>" + scripts
-            + "<style>" + BASE_CSS + PAGE_CSS + ti_css + "</style></head><body>"
-            "<div class=" + Q + "wrap" + Q + ">" + body + "</div></body></html>")
+            + "<style>" + BASE_CSS + LOOKUP_CSS + PAGE_CSS + ti_css
+            + "</style></head><body>"
+            "<div class=" + Q + "wrap" + Q + ">" + _HEADER + body + "</div></body></html>")
+
+
+# 頁首＝全站共用的 board_theme.header()，導覽列用 nav_abs()（絕對網址）——
+# 這頁跑在 stock.talentxtrend.com，用 NAV 的相對路徑會連到自己那台的
+# /combo.html（不存在）。current=None：這頁不在 NAV 裡，不亮任何一顆。
+_HEADER = header(
+    "search", "查任意股票",
+    "不限掃描母體 · 燈號與 <b>Discord /查</b> 同一個來源 · 台股可打中文名",
+    nav_abs())
 
 
 NOTE = (
@@ -330,13 +352,13 @@ def render(ticker, live=False):
     """回 (html, status)。ticker 空字串就只給搜尋框。live=True 跳過快取即時算。"""
     ticker = (ticker or "").strip()
     if not ticker:
-        return _shell("查股", "<h1>查股</h1>" + _form() + NOTE), 200
+        return _shell("查股", _form() + NOTE), 200
 
     import lamp_lookup
     try:
         row = lamp_lookup.lookup(ticker, live=live)
     except Exception as e:                                  # noqa: BLE001
-        body = ("<h1>查股</h1>" + _form(ticker)
+        body = (_form(ticker)
                 + f'<div class="lk-err">查詢時出錯：{esc(str(e)[:200])}</div>')
         return _shell("查股", body), 500
     if row is None:
@@ -352,10 +374,10 @@ def render(ticker, live=False):
             if row is not None:
                 row["_resolved_from"] = f"{ticker} → {sym}　{cands[0][1]}"
         elif len(cands) > 1:
-            return _shell("查股", "<h1>查股</h1>" + _form(ticker)
+            return _shell("查股", _form(ticker)
                           + _pick_list(ticker, cands)), 200
     if row is None:
-        body = ("<h1>查股</h1>" + _form(ticker)
+        body = (_form(ticker)
                 + '<div class="lk-err">查無資料——代號或公司名查不到。<br>'
                   '· 美股請用代號或完整公司名（<b>P&amp;G 這種縮寫查不到，請打 PG '
                   '或 Procter Gamble</b>）<br>'
@@ -388,7 +410,9 @@ def render(ticker, live=False):
     head = (f'<div class="lk-head"><span class="lk-tk">{esc(row["ticker"])}</span>'
             f'<span class="lk-nm">{name}</span>'
             f'<span class="lk-src">{src}</span></div>' + rf_html)
-    body = head + _form(ticker) + _summary(row) + tech + NOTE
+    # 搜尋框擺在標的名稱**之前**：這頁的第一動作是查下一檔，
+    # 跟進出燈號頁「工具列在上、內容在下」的節奏一致。
+    body = _form(ticker) + head + _summary(row) + tech + NOTE
     return _shell(f'{row["ticker"]} 查股', body), 200
 
 

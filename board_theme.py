@@ -27,6 +27,8 @@ ICONS = {
     "lamp": '<rect x="7" y="2" width="10" height="20" rx="5"/><circle cx="12" cy="7" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="17" r="1.6"/>',
     # 籌碼異動＝疊起來的籌碼／代幣
     "chip": '<ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v5c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 11v5c0 1.7 3.6 3 8 3s8-1.3 8-3v-5"/>',
+    # 查任意股票（lookup_page 用）：放大鏡
+    "search": '<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>',
     "back": '<path d="M19 12H5M12 19l-7-7 7-7"/>',
     "chevron": '<path d="M9 18l6-6-6-6"/>',
     "close": '<path d="M18 6 6 18M6 6l12 12"/>',
@@ -61,15 +63,23 @@ LOOKUP_BOX = (
     '</form>')
 
 LOOKUP_CSS = """
+/* 2026-09-03：這顆框原本用寫死的 #12151b / #2a2e35 / #0d1016 / #e8eaed，
+   跟同一排的統計卡（--surface #0F172A / --line #1E293B）並排就是兩個色系。
+   查股頁沿用這顆框時把偏差一起帶過去，Leo 才會覺得「風格不一致」。
+   改成全部走變數——燈號頁、首頁、查股頁三處同時修正。 */
 .lkbox{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:14px 0 4px;
- background:#12151b;border:1px solid #2a2e35;border-radius:11px;padding:11px 13px}
-.lkbox .lkl{font-size:13px;font-weight:700;color:#93C5FD}
+ background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:11px 13px}
+.lkbox .lkl{font-size:13px;font-weight:700;color:#93C5FD;white-space:nowrap}
 .lkbox input{flex:1 1 190px;min-width:0;padding:8px 11px;border-radius:8px;
- border:1px solid #2a2e35;background:#0d1016;color:#e8eaed;font-size:14px;font-family:inherit}
-.lkbox button{padding:8px 15px;border-radius:8px;border:1px solid #2a2e35;background:#1a1d23;
- color:#93C5FD;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
-.lkbox button:hover{border-color:#4a9eff}
-.lkbox .lkn{flex:1 1 100%;font-size:11px;color:#6b7280}
+ border:1px solid var(--line);background:var(--bg);color:var(--ink);font-size:14px;
+ font-family:inherit}
+.lkbox input:focus{outline:none;border-color:var(--accent)}
+.lkbox input::placeholder{color:var(--dim)}
+.lkbox button{padding:8px 15px;border-radius:8px;border:1px solid var(--line);
+ background:var(--card);color:#BFDBFE;font-size:13px;font-weight:600;cursor:pointer;
+ font-family:inherit;white-space:nowrap;transition:border-color .18s,background .18s}
+.lkbox button:hover,.lkbox button:focus-visible{border-color:var(--accent);background:#152238}
+.lkbox .lkn{flex:1 1 100%;font-size:11px;color:var(--dim)}
 """
 
 NAV = [
@@ -84,6 +94,24 @@ NAV = [
     ("ark", "ark", "ARK 追蹤", "ark.html"),
     ("buffett", "buffett", "巴菲特清單", "buffett.html"),
 ]
+
+
+# 投資站的公開網址。**單一來源**——2026-09-03 查出來全專案有 8 個檔案各自寫死
+# 一份（alert_telegram / board_html / buffett_html_legacy / buy_digest /
+# daily_warroom / discord_guide / earnings_watch / portfolio_html_legacy），
+# 網域改一次就要改八個地方。新的地方一律 import 這個常數。
+PAGES_URL = "https://dt-1983.github.io/daily-stock-board"
+
+
+def nav_abs():
+    """NAV 的絕對網址版。
+
+    給**跑在別的網域**的頁面用（lookup_page 在 stock.talentxtrend.com，
+    直接用 NAV 的相對路徑 `combo.html` 會變成查自己那台的 /combo.html → 404）。
+    """
+    return [(k, ic, lab,
+             PAGES_URL + "/" + ("" if href == "./" else href))
+            for k, ic, lab, href in NAV]
 
 
 def esc(s):
