@@ -633,8 +633,34 @@ def _overview_lines(notes):
 
 # 2026-08-28 Leo：TG 精簡，投資長判斷這則已拿掉——內容跟 Discord 日報③段完全重複（同一份 state/advisor_verdicts.jsonl，daily_warroom 讀出來合成日報）。原本的 _send_telegram()（含格式化+分段+推播邏輯）整段刪除，不留半死不活的函式。
 
-def run():
-    targets, notes = today_tickers()
+def missing_condition_holdings(limit=None):
+    """持股裡**沒有任何「每天檢查得動」的失效條件**的那些。
+
+    為什麼需要這支（2026-09-03 查出來的缺口）：投資長是**事件驅動**——有新聞、
+    產業翻象限、到俗價才判斷。沒被任何事件碰到的持股就一直沒有失效條件，
+    於是 `thesis_check.py` 的日檢**永遠檢查不到它們**，而且日報上「✅健康 N 條」
+    只算有登錄條件的，沒登錄的連出現的機會都沒有——**「沒被檢查」長得跟「檢查過沒事」
+    一模一樣**。實測 78 檔持股只有 16 檔有條件在被檢查。
+
+    這支把缺口列出來餵回 run()，補完就有條件可以每天檢查了。
+    回 [(代號, 顯示名)]，照代號排序。
+    """
+    try:
+        import thesis_check
+        reg = _load_json("state/thesis_conditions.json", {}) or {}
+        gap, _cov = thesis_check.coverage_gap(reg)
+    except Exception as e:                                  # noqa: BLE001
+        print(f"讀不到監控缺口：{e}")
+        return []
+    return gap[:limit] if limit else gap
+
+
+def run(targets=None, notes=None):
+    """targets 給定時就判斷那些（補建監控用）；不給就照原本的事件驅動。"""
+    if targets is None:
+        targets, notes = today_tickers()
+    if notes is None:
+        notes = []
     if not targets:
         print("今天沒有任何觸發（持股事件/產業轉強/巴菲特到俗價），投資長沒東西可判斷")
         return []
@@ -753,5 +779,31 @@ def _register_conditions(verdicts):
         print(f"已登錄 {n} 條失效條件（{n_stock} 檔）｜登錄簿趨勢類 {nt} 條")
 
 
+def fill_missing(limit=None):
+    """補建「沒有失效條件在監控」的持股判斷。
+
+    ⚠️ 走的是本機 `claude` CLI（Max plan 訂閱額度，**不是付費 API、不產生帳單**），
+    但會吃額度也要時間（實測每檔數十秒），所以預設可以用 limit 分批。
+    """
+    gap = missing_condition_holdings(limit)
+    if not gap:
+        print("所有持股都有失效條件在監控，沒東西要補")
+        return []
+    tickers = [g[1] for g in gap]        # 用原始寫法（2303.TW 而不是正規化後的 2303）
+    print(f"補建 {len(tickers)} 檔持股的失效條件：{tickers}")
+    targets = {tk: {"held": True, "triggers": ["補建失效條件（此前無任何條件在監控）"]}
+               for tk in tickers}
+    return run(targets=targets, notes=[])
+
+
 if __name__ == "__main__":
-    run()
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--fill-missing", nargs="?", type=int, const=0, default=None,
+                    metavar="N",
+                    help="補建沒有失效條件的持股判斷；給數字就只補前 N 檔（分批用）")
+    a = ap.parse_args()
+    if a.fill_missing is not None:
+        fill_missing(a.fill_missing or None)
+    else:
+        run()
