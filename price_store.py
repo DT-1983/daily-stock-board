@@ -92,21 +92,41 @@ def _write_cached(ticker, df):
         return False
 
 
+def _yf_symbol(tk):
+    """券商報表寫法 → yfinance 寫法。
+
+    2026-09-03 查出來的靜默缺口：`BRK.B` 在 yfinance 一律回「possibly delisted,
+    no price data」——它的 B 股要寫成 `BRK-B`。而我們的持股來源（trade_plan 讀
+    Firstrade 報表）寫的是 `BRK.B`，於是**這檔一年來從來沒抓到過價格**，
+    下游只會看到「抓不到也沒有快取」一行，長得跟「這檔真的下市了」一模一樣。
+
+    只動美股：台股的 .TW/.TWO 後綴是 yfinance 自己的寫法，不能碰。
+    """
+    t = str(tk).strip().upper()
+    if t.endswith((".TW", ".TWO")) or t.startswith("^"):
+        return t
+    return t.replace(".", "-")
+
+
 def _download(tickers, period):
     """批次下載。回 {ticker: DataFrame}。失敗的不在回傳裡（呼叫端自己判斷缺誰）。"""
     import yfinance as yf
     out = {}
     for i in range(0, len(tickers), BATCH_SIZE):
         chunk = tickers[i:i + BATCH_SIZE]
+        # 下載用 yfinance 寫法，回存用**呼叫端給的原始寫法**當 key——
+        # 否則要 BRK.B 的人拿到 BRK-B 這個 key，等於還是查不到。
+        alias = {tk: _yf_symbol(tk) for tk in chunk}
+        req = list(dict.fromkeys(alias.values()))
         try:
-            data = yf.download(chunk, period=period, progress=False, threads=False,
+            data = yf.download(req, period=period, progress=False, threads=False,
                                auto_adjust=True, group_by="ticker")
         except Exception as e:
             print(f"  [price_store] 批次 {i//BATCH_SIZE+1} 失敗：{str(e)[:60]}")
             continue
         for tk in chunk:
             try:
-                df = data[tk] if len(chunk) > 1 else data
+                df = data[alias[tk]] if len(req) > 1 else data
                 # 2026-08-29：yfinance 批次下載偶爾回 MultiIndex 欄位
                 # （('STRF','Close') 而不是 'Close'）——實測 1,246 檔裡有 1 檔這樣，
                 # 沒攤平會讓下游 df["Close"] 直接 KeyError，而且因為只有一檔，

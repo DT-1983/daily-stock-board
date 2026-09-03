@@ -116,3 +116,6 @@ state/thesis_conditions.json
 
 # 2026-09-03 交易記錄（私人，跟 advisor_verdicts 同一批不進公開 repo）
 state/trade_journal.jsonl
+
+# 個人持股清單（公開 repo 不可入庫，2026-09-03）
+holdings.json

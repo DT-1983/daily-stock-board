@@ -1234,5 +1234,515 @@
     "industry": "Semiconductors",
     "exchange": "NASDAQ",
     "asof": "2026-09-03"
+  },
+  "1229": {
+    "sector": "Process Industries",
+    "industry": "Agricultural Commodities/Milling",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "1301": {
+    "sector": "Process Industries",
+    "industry": "Chemicals: Specialty",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "1303": {
+    "sector": "Process Industries",
+    "industry": "Chemicals: Major Diversified",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "1326": {
+    "sector": "Process Industries",
+    "industry": "Chemicals: Specialty",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "1402": {
+    "sector": "Process Industries",
+    "industry": "Chemicals: Specialty",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "1560": {
+    "sector": "Process Industries",
+    "industry": "Industrial Specialties",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "1580.TWO": {
+    "sector": "Producer Manufacturing",
+    "industry": "Industrial Machinery",
+    "exchange": "TPEX",
+    "asof": "2026-09-03"
+  },
+  "1615.TW": {
+    "sector": "Producer Manufacturing",
+    "industry": "Electrical Products",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "1717": {
+    "sector": "Process Industries",
+    "industry": "Chemicals: Major Diversified",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "1802": {
+    "sector": "Process Industries",
+    "industry": "Industrial Specialties",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "2258": {
+    "sector": "Commercial Services",
+    "industry": "Miscellaneous Commercial Services",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "2404": {
+    "sector": "Industrial Services",
+    "industry": "Engineering & Construction",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "2449": {
+    "sector": "Commercial Services",
+    "industry": "Miscellaneous Commercial Services",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "2597": {
+    "sector": "Industrial Services",
+    "industry": "Engineering & Construction",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "2618.TW": {
+    "sector": "Transportation",
+    "industry": "Airlines",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "2704": {
+    "sector": "Consumer Services",
+    "industry": "Hotels/Resorts/Cruise lines",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "2707": {
+    "sector": "Consumer Services",
+    "industry": "Hotels/Resorts/Cruise lines",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "2727": {
+    "sector": "Consumer Services",
+    "industry": "Restaurants",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "2731": {
+    "sector": "Consumer Services",
+    "industry": "Other Consumer Services",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "2731.TW": {
+    "sector": "Consumer Services",
+    "industry": "Other Consumer Services",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "2753": {
+    "sector": "Consumer Services",
+    "industry": "Restaurants",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "3264": {
+    "sector": "Commercial Services",
+    "industry": "Miscellaneous Commercial Services",
+    "exchange": "TPEX",
+    "asof": "2026-09-03"
+  },
+  "3265": {
+    "sector": "Commercial Services",
+    "industry": "Miscellaneous Commercial Services",
+    "exchange": "TPEX",
+    "asof": "2026-09-03"
+  },
+  "3633.TWO": {
+    "sector": "Electronic Technology",
+    "industry": "Electronic Components",
+    "exchange": "TPEX",
+    "asof": "2026-09-03"
+  },
+  "4105.TWO": {
+    "sector": "Health Technology",
+    "industry": "Pharmaceuticals: Major",
+    "exchange": "TPEX",
+    "asof": "2026-09-03"
+  },
+  "4441.TW": {
+    "sector": "Consumer Non-Durables",
+    "industry": "Apparel/Footwear",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "4763.TW": {
+    "sector": "Process Industries",
+    "industry": "Chemicals: Major Diversified",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "5287.TWO": {
+    "sector": "Technology Services",
+    "industry": "Internet Software/Services",
+    "exchange": "TPEX",
+    "asof": "2026-09-03"
+  },
+  "5520.TWO": {
+    "sector": "Non-Energy Minerals",
+    "industry": "Construction Materials",
+    "exchange": "TPEX",
+    "asof": "2026-09-03"
+  },
+  "5522": {
+    "sector": "Industrial Services",
+    "industry": "Engineering & Construction",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "5530": {
+    "sector": "Consumer Services",
+    "industry": "Other Consumer Services",
+    "exchange": "TPEX",
+    "asof": "2026-09-03"
+  },
+  "5609.TWO": {
+    "sector": "Transportation",
+    "industry": "Air Freight/Couriers",
+    "exchange": "TPEX",
+    "asof": "2026-09-03"
+  },
+  "6139": {
+    "sector": "Industrial Services",
+    "industry": "Engineering & Construction",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "6257": {
+    "sector": "Commercial Services",
+    "industry": "Miscellaneous Commercial Services",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "6670.TW": {
+    "sector": "Consumer Durables",
+    "industry": "Recreational Products",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "6691": {
+    "sector": "Industrial Services",
+    "industry": "Engineering & Construction",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "6830": {
+    "sector": "Commercial Services",
+    "industry": "Miscellaneous Commercial Services",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "6944": {
+    "sector": "Industrial Services",
+    "industry": "Engineering & Construction",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "8462": {
+    "sector": "Consumer Services",
+    "industry": "Other Consumer Services",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "8926": {
+    "sector": "Industrial Services",
+    "industry": "Engineering & Construction",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "9917": {
+    "sector": "Commercial Services",
+    "industry": "Miscellaneous Commercial Services",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "9933": {
+    "sector": "Industrial Services",
+    "industry": "Engineering & Construction",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
+  },
+  "ABNB": {
+    "sector": "Consumer Services",
+    "industry": "Hotels/Resorts/Cruise lines",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-03"
+  },
+  "ADM": {
+    "sector": "Process Industries",
+    "industry": "Agricultural Commodities/Milling",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "APD": {
+    "sector": "Process Industries",
+    "industry": "Chemicals: Specialty",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "BKNG": {
+    "sector": "Consumer Services",
+    "industry": "Other Consumer Services",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-03"
+  },
+  "BMY": {
+    "sector": "Health Technology",
+    "industry": "Pharmaceuticals: Major",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "CMCSA": {
+    "sector": "Consumer Services",
+    "industry": "Cable/Satellite TV",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-03"
+  },
+  "CNC": {
+    "sector": "Health Services",
+    "industry": "Managed Health Care",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "CTAS": {
+    "sector": "Commercial Services",
+    "industry": "Miscellaneous Commercial Services",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-03"
+  },
+  "CTVA": {
+    "sector": "Process Industries",
+    "industry": "Agricultural Commodities/Milling",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "DAL": {
+    "sector": "Transportation",
+    "industry": "Airlines",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "DGX": {
+    "sector": "Health Services",
+    "industry": "Services to the Health Industry",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "DIS": {
+    "sector": "Consumer Services",
+    "industry": "Movies/Entertainment",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "ECL": {
+    "sector": "Process Industries",
+    "industry": "Chemicals: Specialty",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "ELV": {
+    "sector": "Health Services",
+    "industry": "Managed Health Care",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "ENB": {
+    "sector": "Industrial Services",
+    "industry": "Oil & Gas Pipelines",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "EPD": {
+    "sector": "Industrial Services",
+    "industry": "Oil & Gas Pipelines",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "ET": {
+    "sector": "Industrial Services",
+    "industry": "Oil & Gas Pipelines",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "HCA": {
+    "sector": "Health Services",
+    "industry": "Hospital/Nursing Management",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "HUM": {
+    "sector": "Health Services",
+    "industry": "Managed Health Care",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "KMI": {
+    "sector": "Industrial Services",
+    "industry": "Oil & Gas Pipelines",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "LIN": {
+    "sector": "Process Industries",
+    "industry": "Chemicals: Specialty",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-03"
+  },
+  "MAR": {
+    "sector": "Consumer Services",
+    "industry": "Hotels/Resorts/Cruise lines",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-03"
+  },
+  "MCD": {
+    "sector": "Consumer Services",
+    "industry": "Restaurants",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "MCO": {
+    "sector": "Commercial Services",
+    "industry": "Financial Publishing/Services",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "MSCI": {
+    "sector": "Commercial Services",
+    "industry": "Financial Publishing/Services",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "NTR": {
+    "sector": "Process Industries",
+    "industry": "Chemicals: Agricultural",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "PPG": {
+    "sector": "Process Industries",
+    "industry": "Industrial Specialties",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "PSX": {
+    "sector": "Energy Minerals",
+    "industry": "Oil Refining/Marketing",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "PYPL": {
+    "sector": "Commercial Services",
+    "industry": "Miscellaneous Commercial Services",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-03"
+  },
+  "RCL": {
+    "sector": "Consumer Services",
+    "industry": "Hotels/Resorts/Cruise lines",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "RELX": {
+    "sector": "Commercial Services",
+    "industry": "Miscellaneous Commercial Services",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "SBUX": {
+    "sector": "Consumer Services",
+    "industry": "Restaurants",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-03"
+  },
+  "SHOP": {
+    "sector": "Commercial Services",
+    "industry": "Miscellaneous Commercial Services",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-03"
+  },
+  "SHW": {
+    "sector": "Process Industries",
+    "industry": "Industrial Specialties",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "SLB": {
+    "sector": "Industrial Services",
+    "industry": "Contract Drilling",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "SPGI": {
+    "sector": "Commercial Services",
+    "industry": "Financial Publishing/Services",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "TROW": {
+    "sector": "Finance",
+    "industry": "Investment Managers",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-03"
+  },
+  "UNH": {
+    "sector": "Health Services",
+    "industry": "Managed Health Care",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "VZ": {
+    "sector": "Communications",
+    "industry": "Wireless Telecommunications",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "WBD": {
+    "sector": "Consumer Services",
+    "industry": "Cable/Satellite TV",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-03"
+  },
+  "WM": {
+    "sector": "Industrial Services",
+    "industry": "Environmental Services",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "WMB": {
+    "sector": "Industrial Services",
+    "industry": "Oil & Gas Pipelines",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
+  },
+  "PG": {
+    "sector": "Consumer Non-Durables",
+    "industry": "Household/Personal Care",
+    "exchange": "NYSE",
+    "asof": "2026-09-03"
   }
 }
