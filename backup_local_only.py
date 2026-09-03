@@ -33,6 +33,24 @@ KEEP_LAST = 8          # 每檔保留幾份歷史
 # 這些 ignore 規則擋掉的是暫時檔，不是正式原始碼，不用備份
 THROWAWAY_PREFIXES = ("test_", "verify_")
 
+# 2026-09-03：**被 .gitignore 保護的資料檔也要備份**，而且比 .py 更急——
+# .py 至少還在我腦袋裡可以重寫，這幾個是累積出來的紀錄，弄丟就沒了。
+#
+# 這條是踩到才加的：9/3 把 `state/thesis_conditions.json` 移出版控（它帶
+# held=true，等於持股清單留在公開 repo）之後，接著的 rebase/stash 流程把它從
+# 磁碟上也弄掉了，只能從 git 上一版還原，**中間 28 條觸發標記永久遺失**。
+# 移出版控＝失去 git 這層意外保險，那就必須補一層備份，否則等於用隱私換備份。
+#
+# ⚠️ 這裡刻意**列舉而不是自動掃 state/**：state/ 底下絕大多數是每天重跑就會
+# 重建的快取（price_store、combo_result…），全掃會把 Drive 灌爆而且沒意義。
+# 判準是「弄丟了能不能重建」，不是「是不是被 ignore」。
+DATA_FILES = [
+    "state/trade_journal.jsonl",       # Leo 的交易紀錄——完全無法重建，最優先
+    "state/advisor_verdicts.jsonl",    # 孔明歷來所有判斷＋推理，重跑要花錢且結果不同
+    "state/research_notes.jsonl",      # 龐統歷來研究筆記，同上
+    "state/thesis_conditions.json",    # 失效條件登錄簿＋累積的觸發狀態
+]
+
 
 def ignored_sources():
     """回傳「被 git 忽略、但屬於正式原始碼」的 .py 清單。"""
@@ -46,10 +64,28 @@ def ignored_sources():
     return out
 
 
-def rotate(name):
+def data_files():
+    """回傳實際存在、且確實被 git 忽略的資料檔。
+
+    **被忽略才備份**是刻意的檢查：如果哪天某個檔案不小心又進了版控，這裡會少印
+    一行，而不是安靜地雙份備著讓人以為沒事——那正是 9/3 那次外洩沒被發現的原因。
+    """
+    out = []
+    for p in DATA_FILES:
+        if not os.path.exists(p):
+            print(f"⚠️ {p} 不存在（是不是被誤刪了？）")
+            continue
+        r = subprocess.run(["git", "check-ignore", "-q", p], capture_output=True)
+        if r.returncode != 0:
+            print(f"⚠️ {p} **沒有被 .gitignore 擋住**——它含私人資料，請檢查 .gitignore")
+        out.append(p)
+    return out
+
+
+def rotate(name, ext):
     """同一支檔案只留最近 KEEP_LAST 份（檔名含時間戳，字典序＝時間序）。"""
-    stem = os.path.splitext(name)[0]
-    olds = sorted(glob.glob(os.path.join(DEST, f"{stem}.*.py")))
+    stem = os.path.splitext(os.path.basename(name))[0]
+    olds = sorted(glob.glob(os.path.join(DEST, f"{stem}.*{ext}")))
     for f in olds[:-KEEP_LAST] if len(olds) > KEEP_LAST else []:
         try:
             os.remove(f)
@@ -59,9 +95,9 @@ def rotate(name):
 
 
 def main():
-    files = ignored_sources()
+    files = ignored_sources() + data_files()
     if not files:
-        print("沒有需要備份的本機專屬原始碼")
+        print("沒有需要備份的本機專屬檔案")
         return 0
     try:
         os.makedirs(DEST, exist_ok=True)
@@ -72,16 +108,17 @@ def main():
     stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
     ok = 0
     for name in files:
-        stem = os.path.splitext(name)[0]
-        latest = os.path.join(DEST, name)              # 永遠是最新版，好找
+        base = os.path.basename(name)                  # state/x.json → x.json
+        stem, ext = os.path.splitext(base)
+        latest = os.path.join(DEST, base)              # 永遠是最新版，好找
         # 內容沒變就不新增歷史版本，免得輪替被無意義的每日副本洗掉
         same = os.path.exists(latest) and \
             open(latest, "rb").read() == open(name, "rb").read()
         try:
             shutil.copy2(name, latest)
             if not same:
-                shutil.copy2(name, os.path.join(DEST, f"{stem}.{stamp}.py"))
-                rotate(name)
+                shutil.copy2(name, os.path.join(DEST, f"{stem}.{stamp}{ext}"))
+                rotate(name, ext)
             ok += 1
             print(f"✅ {name} → Drive{'（內容未變，只更新最新版）' if same else f'（新增 {stamp} 版）'}")
         except OSError as e:
