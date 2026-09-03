@@ -11,7 +11,24 @@
    "src": "TrendForce 2026-06-15",
    "status": "pending",
    "note": "",
-   "checked": ""
+   "checked": "",
+   "criteria": {
+    "confirmed": "台達電或光寶科在 Q3/Q4 法說明確說 800V HVDC 已出貨（不是「送樣」「認證中」）",
+    "slipped": "官方說延到 4Q26 或 2027 且給得出新時點",
+    "broken": "改口不做 800V／NVIDIA 改規格／問到沒人提"
+   },
+   "criteria_note": "兩家有一家出貨就算 confirmed——宣稱是「首批設備出貨」不是「兩家都出」",
+   "watch": [
+    "2308.TW",
+    "2301.TW"
+   ],
+   "kw": [
+    "800V",
+    "HVDC",
+    "高壓直流",
+    "電源",
+    "機櫃"
+   ]
   },
   {
    "id": "n2-100k",
@@ -22,7 +39,24 @@
    "src": "TweakTown / TechNode 2026-04",
    "status": "pending",
    "note": "",
-   "checked": ""
+   "checked": "",
+   "criteria": {
+    "confirmed": "TSMC Q4 法說或年報講 N2 月產能 ≥ 10 萬片",
+    "slipped": "7–10 萬片之間（有進展但未達宣稱）",
+    "broken": "< 7 萬片，或台積電不再給 N2 產能數字"
+   },
+   "criteria_note": "⚠️ 7 萬這條中間線是我訂的（宣稱值的 70%），不是外部來源。要改跟我說",
+   "watch": [
+    "TSM"
+   ],
+   "kw": [
+    "N2",
+    "2奈米",
+    "2nm",
+    "產能",
+    "capacity",
+    "月產能"
+   ]
   },
   {
    "id": "a16-ready",
@@ -33,7 +67,22 @@
    "src": "Tom's Hardware 2026-04",
    "status": "pending",
    "note": "",
-   "checked": ""
+   "checked": "",
+   "criteria": {
+    "confirmed": "TSMC 2026 內公開說 A16 已 risk production／技術定案",
+    "slipped": "官方把 A16 再往後推但仍在路線圖上",
+    "broken": "**再滑一次就是 broken**——2026→2027 已經滑過一次，第二次代表這條時程軸本身不可信"
+   },
+   "criteria_note": "這條是整份三段時程的骨幹，broken 的話 2026-27 那一段要整段重評",
+   "watch": [
+    "TSM"
+   ],
+   "kw": [
+    "A16",
+    "晶背供電",
+    "backside",
+    "Super Power Rail"
+   ]
   },
   {
    "id": "hbm4-h1",
@@ -44,7 +93,23 @@
    "src": "EnkiAI / Tech Insider 2026-07",
    "status": "pending",
    "note": "",
-   "checked": ""
+   "checked": "",
+   "criteria": {
+    "confirmed": "SK Hynix 或美光財報/法說說 HBM4 仍供不應求（sold out／supply tight）延續到 2027H1",
+    "slipped": "說法轉為「供需趨於平衡」但未見降價",
+    "broken": "出現 HBM 報價下跌或客戶砍單的官方說法"
+   },
+   "criteria_note": "有市場代理可先看（MU 毛利率位階）",
+   "watch": [
+    "MU"
+   ],
+   "kw": [
+    "HBM",
+    "供不應求",
+    "sold out",
+    "供需",
+    "產能"
+   ]
   },
   {
    "id": "copos-pilot",
@@ -55,7 +120,23 @@
    "src": "TrendForce 2026-04-13",
    "status": "pending",
    "note": "",
-   "checked": ""
+   "checked": "",
+   "criteria": {
+    "confirmed": "TSMC 或 TrendForce 確認 CoPoS 在 2027 內進入試產（pilot line 跑片）",
+    "slipped": "官方確認延到 2028 但仍在路線圖",
+    "broken": "TSMC 改走別的面板級封裝路線／不再提 CoPoS"
+   },
+   "criteria_note": "broken 會直接打到玻璃基板/TGV 那條鏈的整個立論",
+   "watch": [
+    "TSM"
+   ],
+   "kw": [
+    "CoPoS",
+    "面板級",
+    "panel",
+    "玻璃基板",
+    "試產"
+   ]
   },
   {
    "id": "a16-hvm",
@@ -66,7 +147,21 @@
    "src": "Tom's Hardware 2026-04",
    "status": "pending",
    "note": "",
-   "checked": ""
+   "checked": "",
+   "criteria": {
+    "confirmed": "TSMC 法說宣布 A16 已量產（HVM）",
+    "slipped": "延到 2028 但有官方新時點",
+    "broken": "取消 A16／併入別的節點"
+   },
+   "watch": [
+    "TSM"
+   ],
+   "kw": [
+    "A16",
+    "量產",
+    "HVM",
+    "risk production"
+   ]
   },
   {
    "id": "npo-3p2t",
@@ -77,7 +172,25 @@
    "src": "Tom's Hardware / wccftech",
    "status": "pending",
    "note": "",
-   "checked": ""
+   "checked": "",
+   "criteria": {
+    "confirmed": "Broadcom 或 Coherent 財報揭露 3.2T NPO 已出貨或列入營收",
+    "slipped": "仍在展出/送樣階段，未進出貨",
+    "broken": "產品線取消或客戶轉向純電互連"
+   },
+   "criteria_note": "有市場代理可先看（AVGO/COHR 毛利率位階）",
+   "watch": [
+    "AVGO",
+    "COHR"
+   ],
+   "kw": [
+    "NPO",
+    "3.2T",
+    "CPO",
+    "光學",
+    "optics",
+    "scale-out"
+   ]
   },
   {
    "id": "spacex-1gw",
@@ -88,7 +201,15 @@
    "src": "Light Reading",
    "status": "pending",
    "note": "",
-   "checked": ""
+   "checked": "",
+   "criteria": {
+    "confirmed": "2027 內兩顆 AI 原型衛星確實發射，且年底有 1GW 軌道算力的官方說法",
+    "slipped": "衛星發射了但 1GW 目標延後",
+    "broken": "原型未發射，或 SpaceX/NVIDIA 不再提這個計畫"
+   },
+   "criteria_note": "⚠️ SpaceX 非上市，只能靠發射紀錄與官方聲明，沒有財報可查　⚠️ 無法說會可讀（標的非上市），只能靠公開發射/發表紀錄，到期時一定要人工判斷",
+   "watch": [],
+   "kw": []
   },
   {
    "id": "copos-hvm",
@@ -99,7 +220,21 @@
    "src": "TrendForce 2026-04/06",
    "status": "pending",
    "note": "",
-   "checked": ""
+   "checked": "",
+   "criteria": {
+    "confirmed": "2028 下半年內 TSMC 宣布 CoPoS 量產",
+    "slipped": "延到 2029 但仍在路線圖",
+    "broken": "取消"
+   },
+   "criteria_note": "前置條件是 copos-pilot；pilot broken 的話這條自動 broken",
+   "watch": [
+    "TSM"
+   ],
+   "kw": [
+    "CoPoS",
+    "量產",
+    "面板級"
+   ]
   },
   {
    "id": "feynman-cpo",
@@ -110,7 +245,21 @@
    "src": "IDTechEx / wccftech",
    "status": "pending",
    "note": "",
-   "checked": ""
+   "checked": "",
+   "criteria": {
+    "confirmed": "NVIDIA GTC 路線圖確認 Feynman 世代帶 CPO",
+    "slipped": "Feynman 有出但不帶 CPO，CPO 推到下一代",
+    "broken": "NVIDIA 放棄 CPO 路線"
+   },
+   "watch": [
+    "NVDA"
+   ],
+   "kw": [
+    "Feynman",
+    "CPO",
+    "共同封裝",
+    "光學"
+   ]
   },
   {
    "id": "orbit-scale",
@@ -121,7 +270,16 @@
    "src": "Light Reading",
    "status": "pending",
    "note": "",
-   "checked": ""
+   "checked": "",
+   "criteria": {
+    "confirmed": "2028 內有官方說法指軌道 AI 資料中心達到「商業規模」（不是原型）",
+    "slipped": "仍在原型/示範階段",
+    "broken": "計畫中止"
+   },
+   "criteria_note": "⚠️ 「達商業規模」原本就沒有量化定義——這條**天生難判**，我傾向到期直接標 slipped 除非有明確的商轉宣布　⚠️ 無法說會可讀（標的非上市），只能靠公開發射/發表紀錄，到期時一定要人工判斷",
+   "watch": [],
+   "kw": []
   }
- ]
+ ],
+ "criteria_set": "2026-09-03"
 }
