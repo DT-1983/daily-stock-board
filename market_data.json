@@ -1,124 +1,124 @@
 {
- "updated": "2026-09-02 20:04",
+ "updated": "2026-09-03 08:46",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "09/01",
-   "close": 7631.47,
-   "chg_pct": -0.71
+   "date": "09/02",
+   "close": 7666.6,
+   "chg_pct": 0.46
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "09/01",
-   "close": 26099.77,
-   "chg_pct": -1.03
+   "date": "09/02",
+   "close": 26217.83,
+   "chg_pct": 0.45
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "09/01",
-   "close": 52766.88,
-   "chg_pct": -0.79
+   "date": "09/02",
+   "close": 53061.95,
+   "chg_pct": 0.56
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "09/01",
-   "close": 11288.61,
-   "chg_pct": -2.14
+   "date": "09/02",
+   "close": 11339.25,
+   "chg_pct": 0.45
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/02",
-   "close": 46164.72,
-   "chg_pct": -1.67
+   "date": "09/01",
+   "close": 46948.72,
+   "chg_pct": 1.78
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/02",
+   "date": "09/03",
    "close": 31.74,
-   "chg_pct": 0.16
+   "chg_pct": 0.21
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "09/01",
+   "date": "09/02",
    "close": 4.8,
    "fmt": "yield",
-   "chg_bp": 3.8
+   "chg_bp": 0.0
   }
  ],
  "news": [
   {
-   "title": "市場震盪避風港！遠銀Bankee首創「靈活存」 活存2.435%罕見超越定存",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6595619",
-   "ts": "09/02 20:03"
-  },
-  {
-   "title": "日債殖利率破3%也不怕！波克夏續押日本五大商社",
+   "title": "Google推出兩款Gemini 3.8 編程、推理能力升級",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6595540",
-   "ts": "09/02 20:00"
+   "url": "https://news.cnyes.com/news/id/6595933",
+   "ts": "09/03 08:43"
   },
   {
-   "title": "太空AI資料中心何時能商業化？建置成本仍是地面6.7倍2030年前可以先看太空邊緣運算",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6595632",
-   "ts": "09/02 20:00"
-  },
-  {
-   "title": "無懼大盤回檔！00406A除息逆勢吸金 掩護性買權策略發揮優勢",
+   "title": "正文攜Dixon擴大印度光通訊布局產品直攻800G、1.6T AI資料中心需求",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6595623",
-   "ts": "09/02 19:52"
+   "url": "https://news.cnyes.com/news/id/6595982",
+   "ts": "09/03 08:30"
   },
   {
-   "title": "鴻海劉揚偉：MIT思維應轉向「Made with Taiwan」 與全球市場共同製造",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6595576",
-   "ts": "09/02 19:41"
-  },
-  {
-   "title": "特斯拉中國8月銷量增速大幅放緩至3.6%",
+   "title": "Snowflake盤後飆逾20%AI股財報行情分歧、特斯拉Cybercab接棒登場",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6595530",
-   "ts": "09/02 19:40"
+   "url": "https://news.cnyes.com/news/id/6595983",
+   "ts": "09/03 08:30"
   },
   {
-   "title": "〈台幣〉熱錢撤出股匯雙殺 放量貶近1角收31.728元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6595528",
-   "ts": "09/02 19:39"
-  },
-  {
-   "title": "貿協率團訪沙國「LEAP」科技展 鏈結雙方AI供應鏈互接合作",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6595522",
-   "ts": "09/02 19:35"
-  },
-  {
-   "title": "美債殖利率急升逼近警戒線！10年期衝近4.8% 破5%恐成市場最後一根稻草",
+   "title": "商務部長：Anthropic已與川普政府「修復關係」",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6594628",
-   "ts": "09/02 19:30"
+   "url": "https://news.cnyes.com/news/id/6595857",
+   "ts": "09/03 08:30"
   },
   {
-   "title": "美股警報響了？美債殖利率若破5% 恐掀5%至8%修正",
+   "title": "二度躲過強制分拆資產命運！美法官駁回司法部分拆AdX要求 但下令谷歌調整商業模式",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6595538",
-   "ts": "09/02 19:19"
+   "url": "https://news.cnyes.com/news/id/6595931",
+   "ts": "09/03 08:15"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：健策(3653-TW)目標價調升至6725元，幅度約8.47%",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6595949",
+   "ts": "09/03 08:10"
+  },
+  {
+   "title": "Palantir重挫5.8% 債券殖利率、Google雙重利空？",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6595881",
+   "ts": "09/03 08:10"
+  },
+  {
+   "title": "營收速報 - 2026年9月3日台股中小型公司8月營收一覽（新增51家）",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6595938",
+   "ts": "09/03 07:55"
+  },
+  {
+   "title": "營收速報 - 2026年9月3日台股大型公司8月營收一覽（新增3家）",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6595937",
+   "ts": "09/03 07:55"
+  },
+  {
+   "title": "台達電、奇鋐等供應鏈吃香！AI資料中心狂擴建  變壓器、液冷需求爆發",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6594702",
+   "ts": "09/03 07:10"
   }
  ],
  "inst": {
