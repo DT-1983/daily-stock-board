@@ -3670,3 +3670,32 @@ Leo 定案聊天代稱：「bb9e」指投資相關工作全部，涵蓋本專案
 **通用教訓**：這系列 `.ps1` 檔案（本機常駐服務的啟動腳本）今後一律避免全形標點，寧可用純 ASCII 或英文註解；改完自動化腳本要**執行腳本本身**驗證，不能只驗證它呼叫的底層程式——兩者是不同的失效面。已寫進通用記憶 `powershell_fullwidth_parse_bug`。
 
 **✅ 收尾（同日稍晚）**：Leo 用系統管理員身分跑過 `register_autostart_tasks.ps1`，`Get-ScheduledTask AutoStart_DiscordBot` 確認狀態 Ready——開機自啟登記成功，路線圖第1項（Discord Bot）到這裡才算真正落地：`/查` 能查、掛了會被健檢真的救回來、開機也會自動起來。
+
+## 2026-09-03（續十二）/lookup 視覺化查股頁上線
+
+Leo 指示做路線圖的 3、4 兩項，這是第 4 項。按平行對話（續九）寫好的規劃做，沒有重新規劃。
+
+- **新檔 `lookup_page.py`**：`render(ticker)` → (html, status)。數字全部來自 `lamp_lookup.lookup()`（跟 Discord `/查` 同一支，網頁與 Discord 不可能給出不同燈號），圖表用 `technical_indicators.build_html()`（跟看板/燈號頁/財報卡同一套產生器）。頁面樣式用 `board_theme.BASE_CSS`，不自己寫一套。
+- **`discord_bot.py` 只加最小掛載**：`app.router.add_get("/lookup", _lookup_page)`，跑在既有的 127.0.0.1:8030 aiohttp server 上（不另開服務）。用 `asyncio.to_thread` 包住 render——那是同步的抓資料+算指標，直接在事件迴圈跑會把整個 bot 卡住連 Discord 心跳都停，反而害健檢判定失聯重啟。
+- 檔案衝突處理：先用 SendMessage 通知平行對話我要接手，對方 commit 完 discord_bot.py（577297e）並回覆不再動它，我 rebase 後才改。
+
+### 刻意沒做：投顧目標價與 3倍/4倍停損
+
+參考畫面（`8996_高力_3家券商共識.html`）左側那塊，**實查整個 `C:\Users\Mophy\AI` 沒有任何 .py 產生 `stop3`/`stop4`/`to_flip_pct`**，`trade_plan.supertrend_invalidation()` 也只回 `st_bearish`/`rs60_broken`。確認是那份報告的客製內容，不是通用功能 → 這頁不畫，也在頁尾明講「本系統沒有對應資料源，不做假的欄位」。
+
+頁面能給的目標價是 `combo_scan.price_targets()` 的**市場共識**（yfinance analyst_price_targets 均值），語意不同，所以標籤寫「分析師共識目標價」不寫「投顧目標」。要做 ATR 倍數停損是另一個功能，倍數要 Leo 訂（不自行發明投資門檻）。
+
+### 驗證（四條路徑都實跑，不是只驗成功那條）
+
+| 路徑 | 結果 |
+|---|---|
+| 守備清單內（2454） | 200，走今日快取，現價 4,275／四燈 4/4／風報比 2.71 ⭐打點成立 |
+| **圖表真的畫出來** | 瀏覽器實測：4 個 canvas 都有像素、Chart.js/candlestick/zoom/Hammer 全載入、**零 console 錯誤** |
+| 非清單內美股（WM） | 200，走即時計算，1.6 秒（price_store 快取有資料時很快） |
+| 亂打代號 | 404 + 友善說明，不是白畫面 |
+| 空代號 | 200，只給搜尋框 |
+| 健康檢查沒被弄壞 | 200，`ok:true` |
+
+重啟：`start_discord_bot.ps1`（bot 不會 hot-reload，改完一定要重啟才生效）。
+
+🔜 未做（要 Leo 決定）：手機存取要不要走 Cloudflare Tunnel 對外開——那是把一個無驗證的頁面放到公網，屬於對外曝險決定，不自己動。
