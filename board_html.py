@@ -27,7 +27,7 @@ from technical_indicators import typhoon_state_series  # 雙重颱風三態（�
 from board_html_legacy import (parse_report, oneliner, CHAIN_ORDER, CHAIN_MAP,
                         CHAIN_THEMES, CHAIN_REPORTS, ma_series, supertrend,
                         fetch_us_charts, esc_tw, TW_JSON, OBIS, chain_phase,
-                        CHAIN_ICON, TW_NAME, _align_rs)  # alert_telegram.py 從本模組 import，要 re-export
+                        CHAIN_ICON, TW_NAME, tw_name, _align_rs)  # alert_telegram.py 從本模組 import，要 re-export
 from technical_indicators import squeeze_momentum, mansfield_rs_series, rs_signal_series
 from board_theme import NAV, header as theme_header
 
@@ -439,11 +439,25 @@ def main():
 
     tw_data = json.load(open(TW_JSON, encoding="utf-8")) if os.path.exists(TW_JSON) else []
     us_by, tw_by = {c: [] for c in CHAIN_ORDER}, {c: [] for c in CHAIN_ORDER}
+    # 🔴 2026-09-03 Leo 問「無法分類的股票現在會放哪裡？」——查出來的答案是
+    # **會靜默消失**：美股原本 `if CHAIN_MAP.get(tk)` 查不到就直接不 append，
+    # 台股 setdefault 會建桶但下面的渲染迴圈只跑 CHAIN_ORDER。兩邊都不會報錯、
+    # 不會有任何痕跡（同 silent_failure_pattern：沒出現 ≠ 沒有）。
+    # 實測當下是 0 檔（美股 60 檔、台股 61 檔全部有鏈），但機制不能靠「剛好都有」。
+    # 改成收進「其他（未分鏈）」，並在產生時印出來。
+    OTHER = "其他（未分鏈）"
+    us_by[OTHER], tw_by[OTHER] = [], []
     for sig, tk, nm, blk in stocks:
-        if CHAIN_MAP.get(tk):
-            us_by[CHAIN_MAP[tk]].append((sig, tk, nm, blk))
+        us_by.setdefault(CHAIN_MAP.get(tk) or OTHER, []).append((sig, tk, nm, blk))
     for r in tw_data:
-        tw_by.setdefault(r["chain"], []).append(r)
+        ch = r.get("chain")
+        tw_by.setdefault(ch if ch in CHAIN_ORDER else OTHER, []).append(r)
+    _n_other = len(us_by[OTHER]) + len(tw_by[OTHER])
+    if _n_other:
+        print(f"⚠️ {_n_other} 檔不屬於任何產業鏈，收進「{OTHER}」區塊："
+              f"美股 {[t for _, t, _, _ in us_by[OTHER]]}、"
+              f"台股 {[r.get('code') for r in tw_by[OTHER]]}")
+    render_order = list(CHAIN_ORDER) + ([OTHER] if _n_other else [])
 
     charts = fetch_us_charts([tk for _, tk, _, _ in stocks])
     # 2026-08-11：台股 EXCEED CHARGE / RS 圖表要跟財報卡一樣多兩張圖（用戶要求）。
@@ -481,7 +495,7 @@ def main():
     mdc = md.Markdown(extensions=["tables", "sane_lists", "nl2br"])
 
     body, modals, nav = [], [], []
-    for i, c in enumerate(CHAIN_ORDER):
+    for i, c in enumerate(render_order):
         us, tw = us_by.get(c, []), tw_by.get(c, [])
         # 2026-08-25 修：兩邊都是照原始清單順序疊進去的，從沒依分數排序——
         # 使用者截圖看到台股 76/30/65/62/40/28/43/47 完全打散，
@@ -512,7 +526,7 @@ def main():
             ch = _chart_block(code) if code in charts else ""
             # 2026-08-11：台股名字一律優先查 TW_NAME（中文），report_*.md 裡的 name
             # 是本機判讀當天自己查yfinance寫的、常常是英文——只當TW_NAME沒收錄時的備援
-            nm = TW_NAME.get(code) or r.get("name", code)
+            nm = tw_name(code, r.get("name", code))
             rows.append(_row(code, "TW", r.get("emoji", "⚪"), code, nm,
                              r.get("score", "—"), r.get("oneliner", ""),
                              ch + f'<div class="dgrid">{grid}</div><div class="mdbody">{extra}</div>'))

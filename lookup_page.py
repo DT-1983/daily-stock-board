@@ -159,6 +159,16 @@ PAGE_CSS = """
 .lk-pick:hover{border-color:var(--accent);background:#152238}
 .lk-pick b{font-size:15px;color:#93C5FD}
 .lk-pick span{font-size:12.5px;color:var(--muted)}
+.bk{background:var(--surface);border:1px solid var(--line);border-radius:11px;
+ padding:12px 14px;margin:14px 0}
+.bk-h{font-size:13.5px;font-weight:700;color:#F5B841}
+.bk-n{font-size:11.5px;font-weight:400;color:var(--dim)}
+.bk-r{font-size:12.5px;color:var(--muted);line-height:1.7;padding:7px 0;
+ border-top:1px solid var(--line)}
+.bk-r b{color:var(--ink)}
+.bk-t{font-family:'Fira Code',monospace;color:var(--ink);font-weight:700}
+.bk-b{font-size:11.5px;color:var(--dim);margin-top:2px;line-height:1.6}
+.bk-w{font-size:12px;color:#FCD34D;line-height:1.7;margin-top:7px}
 
 /* 電腦版：7 張小卡排成一排（Leo 9/3）。board_theme 的 .wrap 是 1100px，
    7 張 minmax(150px) 只差幾像素塞不下就換行，變成 6+1 很難看。
@@ -255,6 +265,54 @@ def _summary(row):
         + _card("RS60 乖離", rs_v, rs_s)
         + _card("類股象限（60日）", f"{qi} {ql}", q_s, zh=True)
         + "</div>")
+
+
+
+def _broker(row):
+    """券商研究報告卡（2026-09-03）。
+
+    ⚠️ 為什麼放在查股頁：Leo 問「這個是要幹嘛？投資長會看到嗎？個股資訊看得到嗎？」
+    ——原本兩個都看不到，那份資料就會是沒人經過的死路（同
+    tide_learnings_and_chip_layer 的「覆蓋擴大≠決策增益」）。
+    所以接了兩個真正會被走到的出口：投資長的判斷材料、以及這裡。
+
+    這頁本來只有「分析師共識目標價」（yfinance 的一個平均數）。券商報告多的是
+    **推導過程**——同一檔不同家用不同倍數、不同年份 EPS，答案可以差三成。
+    """
+    try:
+        import advisor_reports
+        store = advisor_reports._load(advisor_reports.STORE, {}) or {}
+    except Exception:                                       # noqa: BLE001
+        return ""
+    import re as _re
+    want = _re.sub(r"\.(TW|TWO)$", "", str(row.get("ticker", "")).upper()).replace(".", "-")
+    rs = [r for r in store.values()
+          if str(r.get("ticker", "")).upper().replace(".", "-") == want]
+    if not rs:
+        return ""
+    rs.sort(key=lambda r: str(r.get("date")), reverse=True)
+    px = row.get("price")
+    items = []
+    for r in rs:
+        tg = r.get("target")
+        up = f"（距現價 {(tg / px - 1) * 100:+.1f}%）" if tg and px else ""
+        head_ = (f'<b>{esc(r.get("broker"))}</b>　{esc(r.get("date"))}　'
+                 f'{esc(r.get("rating") or "無評等")}　'
+                 + (f'目標 <span class="bk-t">{tg:,.0f}</span>{esc(up)}'
+                    if tg else "無目標價（Note 類）"))
+        basis = (f'<div class="bk-b">依據：{esc(r["valuation_basis"])}</div>'
+                 if r.get("valuation_basis") else "")
+        items.append(f'<div class="bk-r">{head_}{basis}</div>')
+    warn = ""
+    tgs = [r["target"] for r in rs if r.get("target")]
+    if len(rs) >= 3 and len(tgs) >= 2:
+        warn = (f'<div class="bk-w">⚠️ {len(rs)} 家券商同時出報告，目標價 '
+                f'{min(tgs):,.0f}～{max(tgs):,.0f}（差 {(max(tgs) / min(tgs) - 1) * 100:.0f}%）'
+                f'——差異多半來自<b>倍數與用哪一年 EPS</b>，不是基本面。'
+                f'多家同時推代表這個看法已經擁擠。</div>')
+    return (f'<div class="bk"><div class="bk-h">券商研究報告　'
+            f'<span class="bk-n">{len(rs)} 份，各家自己的推導，不是市場共識平均</span>'
+            f'</div>{warn}{"".join(items)}</div>')
 
 
 def _shell(title, body):
@@ -426,7 +484,7 @@ def render(ticker, live=False):
             f'<span class="lk-src">{src}</span></div>' + rf_html)
     # 搜尋框擺在標的名稱**之前**：這頁的第一動作是查下一檔，
     # 跟進出燈號頁「工具列在上、內容在下」的節奏一致。
-    body = _form(ticker) + head + _summary(row) + tech + NOTE
+    body = _form(ticker) + head + _summary(row) + _broker(row) + tech + NOTE
     return _shell(f'{row["ticker"]} 查股', body), 200
 
 

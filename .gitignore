@@ -122,3 +122,7 @@ holdings.json
 
 # 本機預覽用暫存頁
 docs/_lk_preview.html
+
+# 券商研究報告解析結果（第三方付費研究內容，公開 repo 不可入庫，2026-09-03）
+state/advisor_reports.json
+state/advisor_reports_today.json

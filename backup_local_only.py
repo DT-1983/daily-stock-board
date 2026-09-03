@@ -49,6 +49,10 @@ DATA_FILES = [
     "state/advisor_verdicts.jsonl",    # 孔明歷來所有判斷＋推理，重跑要花錢且結果不同
     "state/research_notes.jsonl",      # 龐統歷來研究筆記，同上
     "state/thesis_conditions.json",    # 失效條件登錄簿＋累積的觸發狀態
+    # 2026-09-03：券商研究報告結構化結果。原始 PDF 在 Documents/Investment 不會
+    # 消失，但這份是本機 claude 逐份解析的產物（每份數十秒），重跑成本高、
+    # 而且是 gitignore 檔（第三方付費研究內容不進公開 repo）→ 只有備份救得回來。
+    "state/advisor_reports.json",
 ]
 
 
