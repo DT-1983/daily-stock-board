@@ -863,18 +863,28 @@ def _tile(name, main, sub):
 
 
 CSS = """
-.technical{margin-top:16px;padding-top:14px;border-top:1px solid #16223A}
+/* 2026-09-03 Leo：「查任意股風格不一致，請改成跟燈號風格一致」。
+   這組卡片原本用寫死的灰褐色（#1a1d23 / #2a2e35 / #e8eaed），跟 board_theme 的
+   深藍色票（--surface / --line / --ink）並排就是兩個色系——而這個元件同時出現在
+   產業鏈看板、進出燈號、財報分析、查股四個頁面，等於四頁都帶著同一個偏差。
+   改成全部走變數，四頁一起正。
+   ⚠️ 每個變數都帶 fallback（`var(--line,#1E293B)`）——**earnings_infographic.py
+   用了這份 CSS 但沒有載入 BASE_CSS，也沒自己定義這些變數**。不帶預設值的話
+   財報卡的卡片背景會整個變透明，而且不會報錯（CSS 找不到變數就當沒設定）。
+   ⚠️ 圖表 canvas 裡的色碼（軸刻度/格線/K棒）**刻意不動**：那是 Chart.js 的 JS
+   設定，讀不到 CSS 變數，硬改只會變成字串 "var(--dim,#64748B)" 而畫不出來。 */
+.technical{margin-top:16px;padding-top:14px;border-top:1px solid var(--line,#1E293B)}
 .technical h3{font-size:14px;font-weight:700;color:#F5B841;margin-bottom:4px}
 .techgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:10px}
-.ttile{background:#1a1d23;border:1px solid #2a2e35;border-radius:9px;padding:9px 11px}
-.tn{font-size:10px;color:#6b7280;letter-spacing:.3px;font-weight:600}
-.tv{font-size:14px;font-weight:700;margin-top:4px;color:#e8eaed}
-.ts{font-size:11px;color:#9aa0a6;margin-top:2px}
-.techtoggle{margin-top:12px;width:100%;padding:9px;background:#1a1d23;border:1px solid #2a2e35;
+.ttile{background:var(--surface,#0F172A);border:1px solid var(--line,#1E293B);border-radius:9px;padding:9px 11px}
+.tn{font-size:10px;color:var(--dim,#64748B);letter-spacing:.3px;font-weight:600}
+.tv{font-size:14px;font-weight:700;margin-top:4px;color:var(--ink,#F8FAFC)}
+.ts{font-size:11px;color:var(--muted,#94A3B8);margin-top:2px}
+.techtoggle{margin-top:12px;width:100%;padding:9px;background:var(--surface,#0F172A);border:1px solid var(--line,#1E293B);
  border-radius:8px;color:#93C5FD;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
-.techtoggle:hover{border-color:#4a9eff}
+.techtoggle:hover{border-color:var(--accent,#3B82F6)}
 .techcharts{margin-top:10px}
-.tclabel{font-size:11px;color:#8a8f98;margin:10px 0 4px}
+.tclabel{font-size:11px;color:var(--muted,#94A3B8);margin:10px 0 4px}
 /* 2026-09-02 Leo：「文字可以跟圖表上下對齊嗎」——原本左邊 5 張卡整欄疊、右邊 4 張圖
    整欄疊，各自堆疊、行數跟圖高不同步，越往下錯位越多。改成「一組卡配一張圖」成一列
    （techrow），哪張卡對應哪張圖就在同一列，兩欄永遠對齊，不看下面的內容多寡。 */
@@ -884,24 +894,24 @@ CSS = """
 .techside.single{grid-template-columns:1fr}
 .techmain{min-width:0}
 @media(max-width:860px){.techrow{grid-template-columns:1fr}}
-.tpanel{background:#1a1d23;border:1px solid #2a2e35;border-radius:9px;padding:8px 11px}
+.tpanel{background:var(--surface,#0F172A);border:1px solid var(--line,#1E293B);border-radius:9px;padding:8px 11px}
 .tph{font-size:11px;color:#F5B841;font-weight:700;margin-bottom:5px}
 .tprow{display:flex;justify-content:space-between;gap:10px;padding:2px 0;font-size:12px}
-.tprow>span{color:#8a8f98}
-.tprow>b{color:#e8eaed;font-weight:600}
+.tprow>span{color:var(--muted,#94A3B8)}
+.tprow>b{color:var(--ink,#F8FAFC);font-weight:600}
 .tcbox{height:180px}
 .tcbox-sm{height:100px}
 .tctools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
-.tcwin{display:inline-flex;background:#1a1d23;border:1px solid #2a2e35;border-radius:8px;padding:2px}
-.tcwin button{border:0;background:transparent;color:#8a8f98;font-size:11px;font-weight:600;
+.tcwin{display:inline-flex;background:var(--surface,#0F172A);border:1px solid var(--line,#1E293B);border-radius:8px;padding:2px}
+.tcwin button{border:0;background:transparent;color:var(--muted,#94A3B8);font-size:11px;font-weight:600;
  padding:5px 12px;border-radius:6px;cursor:pointer;font-family:inherit}
-.tcwin button[aria-pressed=true]{background:#334155;color:#e8eaed}
+.tcwin button[aria-pressed=true]{background:#334155;color:var(--ink,#F8FAFC)}
 /* 2026-09-02 Leo：「可以做放大縮小功能？調整橫軸？」——chartjs-plugin-zoom（Chart.js
    官方組織維護），滾輪縮放＋拖曳平移，四張圖同步；這顆按鈕復原成 90天/半年/1年/3年 按鈕給的範圍。 */
-.tcreset{background:none;border:1px solid #2a2e35;border-radius:7px;color:#8a8f98;
+.tcreset{background:none;border:1px solid var(--line,#1E293B);border-radius:7px;color:var(--muted,#94A3B8);
  font-size:11px;font-weight:600;padding:6px 12px;cursor:pointer;font-family:inherit}
-.tcreset:hover{border-color:#4a9eff;color:#93C5FD}
-.tchint{font-size:10.5px;color:#4b5563}
+.tcreset:hover{border-color:var(--accent,#3B82F6);color:#93C5FD}
+.tchint{font-size:10.5px;color:var(--dim,#64748B)}
 """
 
 
