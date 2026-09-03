@@ -62,6 +62,11 @@ Q = chr(34)
 COOKIE = "lk"
 COOKIE_DAYS = 90
 
+# 健康檢查端點被外部打到時回這個——那個端點是給本機 service_health_check 用的，
+# 對外沒有任何用途，所以維持「什麼都不透露」的乾 404（跟查股頁不同：查股頁的
+# 入口已經公開寫在投資站上了，藏它只會害真正的使用者以為壞掉）。
+BARE_404 = "<!doctype html><meta charset=utf-8><title>404</title><h1>404 Not Found</h1>"
+
 
 def _token():
     from dotenv import dotenv_values
@@ -80,8 +85,31 @@ def gate(key, cookie_val):
 
 
 def not_found_html():
-    """擋下來時回的東西。刻意跟一般 404 長一樣，不提示這裡有服務。"""
-    return "<!doctype html><meta charset=utf-8><title>404</title><h1>404 Not Found</h1>"
+    """擋下來時回的頁面。
+
+    2026-09-03 改版：原本刻意回一個乾巴巴的 404「不提示這裡有服務」。但入口已經
+    公開寫在投資站的燈號頁上了，**存在與否早就不是秘密**，藏它只會害真正的使用者
+    以為壞掉——Leo 從手機點進來就是看到這個空白 404，回報「跑不出來」。
+    真正的保護是 token 本身，不是隱藏。所以改成講清楚怎麼授權。
+
+    ⚠️ 仍然**不顯示 token**（那是 .env 裡的東西），只說明去哪拿。
+    """
+    return (
+        "<!doctype html><html lang=" + Q + "zh-Hant" + Q + "><head><meta charset=" + Q + "utf-8" + Q + ">"
+        "<meta name=" + Q + "viewport" + Q + " content=" + Q + "width=device-width,initial-scale=1" + Q + ">"
+        "<title>需要授權</title><style>" + BASE_CSS + PAGE_CSS +
+        "body{padding:0}.wrap{max-width:560px}" + "</style></head><body><div class=" + Q + "wrap" + Q + ">"
+        "<h1>🔒 這台裝置還沒授權</h1>"
+        "<div class=" + Q + "lk-err" + Q + ">"
+        "查股頁需要一次性授權，<b>每台裝置各授權一次</b>（手機、平板、桌機分開算），"
+        "之後記住 90 天。<br><br>"
+        "作法：用帶 <code>?key=</code> 的網址開一次這個頁面就好——"
+        "那串 key 在 <code>daily_stock_analysis/.env</code> 的 <code>LOOKUP_TOKEN</code>，"
+        "或直接問 Claude 要。<br><br>"
+        "<span style=" + Q + "color:#9aa0a6;font-size:12.5px" + Q + ">"
+        "為什麼要授權：這頁每次查詢都會在家裡那台電腦上抓三年資料、算指標。"
+        "不設防的話任何掃到這個網域的人都能叫它算。</span>"
+        "</div></div></body></html>")
 
 # 缺任何一個圖表都畫不出來——technical_indicators 產的是「畫圖的程式碼」不是圖片。
 # hammerjs 是 chartjs-plugin-zoom 的 peer dep，少了它滾輪縮放能動但**拖曳完全沒反應**
