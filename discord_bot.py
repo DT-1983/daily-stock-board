@@ -102,7 +102,7 @@ async def _health(request):
     # CF-Connecting-IP，本機直接打不會有這個標頭（不能用來源 IP 判斷：tunnel 也是
     # 從 127.0.0.1 連進來的）。
     if request.headers.get("CF-Connecting-IP"):
-        return web.Response(text=lookup_page.not_found_html(), status=404,
+        return web.Response(text=lookup_page.BARE_404, status=404,
                             content_type="text/html", charset="utf-8")
     ready = client.is_ready()
     return web.json_response({"ok": ready, "user": str(client.user) if ready else None},
