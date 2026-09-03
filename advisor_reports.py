@@ -83,7 +83,15 @@ SCHEMA_HINT = """只回傳一個 JSON 物件，不要包在其他文字裡，不
  "bps": 報告寫的每股淨值數字；有「預估X年底每股淨值」就用那個預估值，只有「目前每股淨值」就用它（沒有填 null）,
  "bps_year": "上面那個淨值是哪一年的，例 2027F 或 目前（沒有填空字串）",
  "risks": ["報告寫的風險因子，逐條，繁體中文"],
- "thesis": "這份報告的核心論點，一句話，繁體中文"
+ "thesis": "這份報告的核心論點，一句話，繁體中文",
+
+ "summary": ["這份報告在講什麼，3-5 點，每點一句完整的話，繁體中文。寫「它主張什麼」不是「它有哪些章節」"],
+ "key_points": [{"type": "nonconsensus 或 claim 或 caveat", "text": "一句話，繁體中文"}],
+
+ "forecast": [{"year": "2026E", "revenue": 營收數字, "eps": EPS數字, "pe": 本益比數字, "gross_margin": 毛利率百分比數字}],
+ "revenue_unit": "營收數字的單位，例 NT$百萬 / NT$十億 / 億元（照報告寫的）",
+ "eps_quarterly": [{"q": "3Q26E", "value": EPS數字}],
+ "target_history": [{"date": "YYYY-MM-DD", "target": 目標價數字, "close": 當日收盤數字}]
 }
 
 規則：
@@ -93,6 +101,19 @@ SCHEMA_HINT = """只回傳一個 JSON 物件，不要包在其他文字裡，不
   編出來的數字比缺漏更糟。
 - 這份 PDF 的文字是程式抽出來的，**欄位可能交錯穿插**（例如兩欄的字互相夾雜）。
   遇到看起來錯亂的段落，以數字本身的合理性判斷，判斷不了就填 null。
+- **`summary` / `key_points`**：這兩個是給人看的摘要層。
+  summary＝這份報告主張什麼（3-5 點）。
+  key_points 的 type：`nonconsensus`＝報告自己說是市場低估/被忽略的觀點
+  （例如「custom HBM base-die 是被低估的潛在新業務」）；
+  `claim`＝可以被事實檢驗的具體宣稱（有數字、有時程的那種）；
+  `caveat`＝報告自己講的保留（例如「近期獲利貢獻有限、未揭露營收時程」）。
+  **caveat 特別重要——券商自己講的保留最容易被讀者略過。**
+- **`forecast` / `eps_quarterly` / `target_history`**：把報告裡的**表格**抄下來。
+  外資報告的 `GS Forecast`（12/25 12/26E 12/27E 12/28E 那張）填 forecast；
+  底下那排 6/26 9/26E 12/26E 3/27E 的季度 EPS 填 eps_quarterly；
+  揭露頁的 `Target price history table`（每次改目標價的日期/目標價/當日收盤）
+  填 target_history。**沒有那張表就給空陣列，不要自己編。**
+  revenue 照報告的原始數字抄，單位寫在 revenue_unit，不要自己換算。
 - **報告可能是英文的（外資券商）**，欄位名稱會長這樣，一樣要抽出來：
   `12m Price Target` / `Target price` → target；`Price:` / `Closing price` →
   close_at_report；`Buy / Neutral / Sell / Overweight` → rating；
@@ -119,11 +140,20 @@ def _save(p, o):
 
 
 # 關鍵欄位在哪一頁：中文券商放前兩頁，外資報告放在後面的 Valuation/Disclosure 區
-_KEY_HINTS = ("目標價", "Price Target", "price target", "Valuation:",
-              "Key risks", "前次目標價", "潛在漲幅", "12m TP")
+# ⚠️ 順序＝優先序：前面的先被收進 prompt，後面的在額度用完時被犧牲。
+# 2026-09-04 加 "Target price history"——高盛那份的目標價調整史在**第 8 頁**，
+# 原本 extra_pages=3 只收到第 5-7 頁就滿了，於是 target_history 一直是空的，
+# 而那正是「目標價領先股價還是追著跑」唯一的資料來源。
+# 「Target price history」排第一：它只出現在揭露頁（高盛那份在第 8 頁），
+# 而且是**唯一**能算出「目標價領先股價還是追著跑」的來源。排第五時被前面
+# 五頁佔滿額度，實測第 8 頁根本沒被收進 prompt。中文報告不會有這個字串，
+# 所以放第一不會排擠到中文券商的首頁。
+_KEY_HINTS = ("Target price history", "目標價", "12m TP", "Price Target",
+              "price target", "Valuation:", "Key risks",
+              "前次目標價", "潛在漲幅")
 
 
-def pdf_text(path, pages=2, extra_pages=3):
+def pdf_text(path, pages=2, extra_pages=5):
     """抽前 N 頁 ＋ 「含關鍵字的頁」。
 
     🔴 2026-09-03 修：原本只抽前 2 頁，因為中文券商（中信/元大…）的評等、目標價、
@@ -145,8 +175,14 @@ def pdf_text(path, pages=2, extra_pages=3):
     with pdfplumber.open(path) as pdf:
         texts = [(pg.extract_text() or "") for pg in pdf.pages]
     head = list(range(min(pages, len(texts))))
-    key = [i for i, t in enumerate(texts)
-           if i not in head and any(h in t for h in _KEY_HINTS)][:extra_pages]
+    def _rank(t):
+        for j, h in enumerate(_KEY_HINTS):
+            if h in t:
+                return j
+        return 99
+    key = sorted((i for i, t in enumerate(texts)
+                  if i not in head and _rank(texts[i]) < 99),
+                 key=lambda i: _rank(texts[i]))[:extra_pages]
     out = []
     for i in key:                      # 關鍵頁先放，確保不被截斷吃掉
         out.append(f"（第 {i + 1} 頁，含目標價/估值方法段落）\n{texts[i]}")
