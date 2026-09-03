@@ -454,6 +454,17 @@ def sec_thesis(date, scope="private"):
     if trig or near:
         tail += "　📉趨勢／💰價值"
     lines.append(f"-# {tail}{tag}")
+
+    # 2026-09-03：**「沒被檢查」不能長得像「沒事」**。上面的健康/觸發數字只涵蓋
+    # 有登錄失效條件的股票；沒被投資長判斷過的持股連出現的機會都沒有，是靜默盲區。
+    # 只出現在持股密報（private），因為它會列出持股代號。
+    if want_held:
+        unc = d.get("uncovered") or []
+        if unc:
+            cov = d.get("covered_count", 0)
+            head = ", ".join(unc[:8]) + ("…" if len(unc) > 8 else "")
+            lines.append(f"-# 🔕 監控涵蓋率 {cov}/{cov + len(unc)}　"
+                         f"{len(unc)} 檔持股沒有任何失效條件在檢查：{head}")
     return lines if len(lines) > 1 else []
 
 
