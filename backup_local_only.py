@@ -53,6 +53,9 @@ DATA_FILES = [
     # 消失，但這份是本機 claude 逐份解析的產物（每份數十秒），重跑成本高、
     # 而且是 gitignore 檔（第三方付費研究內容不進公開 repo）→ 只有備份救得回來。
     "state/advisor_reports.json",
+    # 2026-09-03：目標價異動表的解析結果。同上——原始截圖不會消失，但這份是
+    # 本機 claude 逐張影像辨識的產物，而且是 gitignore 檔，只有備份救得回來。
+    "state/target_changes.json",
 ]
 
 

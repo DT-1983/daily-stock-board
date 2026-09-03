@@ -260,6 +260,10 @@ def held_universe():
     的 Firstrade 實際持股（66檔）是兩個不同來源，首測 MU/LITE 明明持有卻被標非持股。
     兩個來源聯集，任一來源說有就算持有（寧可多算持股，也不要把持股當進場機會評）。
 
+    2026-09-03 加**第三個來源**：`state/trade_journal.jsonl` 裡已成交的買進。
+    見下方那段註解——Leo 剛買的部位原本要等券商對帳來源更新才會進監控，
+    中間那段空窗期它沒有任何失效條件在被檢查，而且看起來跟正常一樣。
+
     ⚠️ 這個集合**刻意含同一檔的多種寫法**（2303 與 2303.TW、BRK-B 與 BRK.B），
     因為它的用途是「比對進來的代號算不算持股」，多一種寫法只會讓比對更寬鬆。
     但拿它來**數有幾檔**會高估——要數量請用 norm_ticker() 正規化後再去重。
@@ -285,6 +289,42 @@ def held_universe():
                 holdings.add(f"{tk}.TW")
     except Exception as e:
         print(f"小孩持股讀取失敗（不影響 Leo 的判定）：{e}")
+    # 🔴 2026-09-03 第三個來源：`state/trade_journal.jsonl` 裡**已成交**的部位。
+    #
+    # 為什麼要加：Leo 9/3 在元大買了聯發科 5 股 @4275，`trade_journal` 有紀錄，
+    # 但 `holdings.json`（手動清單）與 `trade_plan`（券商對帳來源）都還沒有
+    # → held_universe 不含 2454 → **沒有任何失效條件在監控它**。
+    # 而當天我還回報「持股覆蓋 76/76、缺口 0」——那個 0 是對**舊母體**而言，
+    # 新買的那筆完全在計數之外，**沒跟上的樣子跟正常一樣**（同
+    # silent_failure_pattern 的「手動清單與自動來源並存 → 手動那份默默過期」）。
+    #
+    # Leo 選的治本做法：以後記一筆就自動納入監控，不必再手動維護 holdings.json。
+    # ⚠️ 只收 status=filled 的 buy；sell 不從這裡扣（部位歸零要靠券商對帳來源，
+    # 這份是「決策紀錄」不是「庫存表」，用它做加減會失真）。寧可多算持股，
+    # 也不要把持股當進場機會評——跟上面兩個來源同一個取捨。
+    try:
+        import io as _io
+        import re as _re2
+        p = "state/trade_journal.jsonl"
+        if os.path.exists(p):
+            for ln in _io.open(p, encoding="utf-8"):
+                ln = ln.strip()
+                if not ln:
+                    continue
+                try:
+                    d = json.loads(ln)
+                except ValueError:
+                    continue
+                if d.get("action") != "buy" or d.get("status") != "filled":
+                    continue
+                tk = str(d.get("ticker") or "").strip().upper()
+                if not tk:
+                    continue
+                holdings.add(tk)
+                if _re2.match(r"^\d{4,6}[A-Z]?$", tk):
+                    holdings.add(f"{tk}.TW")      # 多一種寫法只會讓比對更寬鬆
+    except Exception as e:                                  # noqa: BLE001
+        print(f"交易紀錄持股讀取失敗（不影響其他來源）：{e}")
     return holdings
 
 
@@ -507,7 +547,7 @@ def gather_material(ticker, notes):
     # ⚠️ 當材料不當門檻：只把假設攤開給投資長看，不擋任何訊號（同產業鏈技術面的處理）。
     try:
         import advisor_reports
-        _store = advisor_reports._load(advisor_reports.STORE, {}) or {}
+        _store = advisor_reports.active()
         _rs = [r for r in _store.values()
                if norm_ticker(r.get("ticker")) == norm_ticker(ticker)]
         if _rs:
@@ -517,8 +557,31 @@ def gather_material(ticker, notes):
                 _tg = f"目標價{_r['target']}" if _r.get("target") else "無目標價（Note類）"
                 value_material += (f"\n  {_r.get('date')} {_r.get('broker')}"
                                    f"｜{_r.get('rating') or '無評等'}｜{_tg}")
+                # 目標價調升/調降本身是訊息：同一家改了看法，方向與幅度都要講
+                if _r.get("target") and _r.get("target_prev"):
+                    _d = (_r["target"] / _r["target_prev"] - 1) * 100
+                    value_material += (f"（前次 {_r['target_prev']}，"
+                                       f"{'調升' if _d > 0 else '調降'} {abs(_d):.0f}%）")
                 if _r.get("valuation_basis"):
                     value_material += f"\n    依據：{_r['valuation_basis'][:90]}"
+                # 估值前提檢查：市場現在給幾倍 vs 報告假設幾倍。
+                # 這一層跟貴俗價、跟 base_rate 的預估前提檢查都不同：
+                # 它量的是「這份報告自己的假設還剩多少空間」。
+                try:
+                    _im = advisor_reports.implied_multiple(_r, v.get("price") if v else None)
+                except Exception:                           # noqa: BLE001
+                    _im = None
+                if _im:
+                    _now, _want, _how = _im
+                    value_material += (
+                        f"\n    估值前提：市場現在給 {_now:.1f} 倍"
+                        f"{(_r.get('valuation_kind') or '').upper()}、報告假設 {_want:.1f} 倍"
+                        + ("——**前提已用完**（市場給的倍數已追上報告假設）"
+                           if _now >= _want else f"（還差 {(_want / _now - 1) * 100:.0f}%）"))
+                if _r.get("thesis"):
+                    value_material += f"\n    報告論點：{_r['thesis'][:110]}"
+                if _r.get("risks"):
+                    value_material += f"\n    報告自列風險：{'、'.join(_r['risks'][:3])}"
             _tg = [r["target"] for r in _rs if r.get("target")]
             if len(_rs) >= 3 and len(_tg) >= 2:
                 value_material += (f"\n  ⚠️ 同一檔有 {len(_rs)} 家券商同時出報告，"

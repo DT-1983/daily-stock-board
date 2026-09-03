@@ -169,6 +169,9 @@ PAGE_CSS = """
 .bk-t{font-family:'Fira Code',monospace;color:var(--ink);font-weight:700}
 .bk-b{font-size:11.5px;color:var(--dim);margin-top:2px;line-height:1.6}
 .bk-w{font-size:12px;color:#FCD34D;line-height:1.7;margin-top:7px}
+.bk-up{color:var(--up);font-weight:600}
+.bk-dn{color:var(--down);font-weight:600}
+.bk-o{color:var(--dim);font-weight:400;font-size:11px}
 
 /* 電腦版：7 張小卡排成一排（Leo 9/3）。board_theme 的 .wrap 是 1100px，
    7 張 minmax(150px) 只差幾像素塞不下就換行，變成 6+1 很難看。
@@ -287,22 +290,54 @@ def _broker(row):
     import re as _re
     want = _re.sub(r"\.(TW|TWO)$", "", str(row.get("ticker", "")).upper()).replace(".", "-")
     rs = [r for r in store.values()
-          if str(r.get("ticker", "")).upper().replace(".", "-") == want]
+          if str(r.get("ticker", "")).upper().replace(".", "-") == want
+          and not r.get("_notreport")]
     if not rs:
         return ""
+    # 已被同一家新版取代的舊報告仍然顯示，但標明「已被取代」——目標價的調整軌跡
+    # 本身有資訊（國泰金 93 → 117），只是不該再拿它的假設當現行判斷。
     rs.sort(key=lambda r: str(r.get("date")), reverse=True)
     px = row.get("price")
     items = []
     for r in rs:
         tg = r.get("target")
         up = f"（距現價 {(tg / px - 1) * 100:+.1f}%）" if tg and px else ""
+        # 目標價調升/調降軌跡
+        tp = r.get("target_prev")
+        mv = ""
+        if tg and tp:
+            d = (tg / tp - 1) * 100
+            mv = (f'　<span class="bk-{"up" if d > 0 else "dn"}">'
+                  f'{"↑調升" if d > 0 else "↓調降"} {abs(d):.0f}%（前次 {tp:,.0f}）</span>')
+        old = ('　<span class="bk-o">已被同一家新版取代</span>'
+               if r.get("_superseded_by") else "")
         head_ = (f'<b>{esc(r.get("broker"))}</b>　{esc(r.get("date"))}　'
                  f'{esc(r.get("rating") or "無評等")}　'
                  + (f'目標 <span class="bk-t">{tg:,.0f}</span>{esc(up)}'
-                    if tg else "無目標價（Note 類）"))
+                    if tg else "無目標價（Note 類）") + mv + old)
         basis = (f'<div class="bk-b">依據：{esc(r["valuation_basis"])}</div>'
                  if r.get("valuation_basis") else "")
-        items.append(f'<div class="bk-r">{head_}{basis}</div>')
+        # 估值前提檢查：市場現在給幾倍 vs 報告假設幾倍
+        vm = ""
+        try:
+            im = advisor_reports.implied_multiple(r, px)
+            if im:
+                now, want_, how = im
+                kind = (r.get("valuation_kind") or "").upper()
+                cls = "bk-dn" if now >= want_ else "bk-up"
+                vm = (f'<div class="bk-b">估值前提：市場現在給 '
+                      f'<span class="{cls}">{now:.1f} 倍{esc(kind)}</span>，'
+                      f'報告假設 {want_:.1f} 倍'
+                      + (f'——<b>前提已用完</b>' if now >= want_
+                         else f'（還差 {(want_ / now - 1) * 100:.0f}%）')
+                      + f'　<span class="bk-o">{esc(how)}</span></div>')
+        except Exception:                                   # noqa: BLE001
+            pass
+        thesis = (f'<div class="bk-b">論點：{esc(r["thesis"])}</div>'
+                  if r.get("thesis") else "")
+        risks = (f'<div class="bk-b">報告自列風險：{esc("、".join(r["risks"]))}</div>'
+                 if r.get("risks") else "")
+        items.append(f'<div class="bk-r">{head_}{basis}{vm}{thesis}{risks}</div>')
     warn = ""
     tgs = [r["target"] for r in rs if r.get("target")]
     if len(rs) >= 3 and len(tgs) >= 2:

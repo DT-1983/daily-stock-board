@@ -126,3 +126,7 @@ docs/_lk_preview.html
 # 券商研究報告解析結果（第三方付費研究內容，公開 repo 不可入庫，2026-09-03）
 state/advisor_reports.json
 state/advisor_reports_today.json
+
+# 券商目標價異動表解析結果（第三方研究內容，同 advisor_reports，2026-09-03）
+state/target_changes.json
+state/target_changes_today.json

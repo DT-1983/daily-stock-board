@@ -395,6 +395,14 @@ def sec5_watch(date):
         lines += advisor_reports.summary_lines()
     except Exception as e:                                  # noqa: BLE001
         lines.append(f"・📑 投顧報告失效線讀取失敗：{str(e)[:60]}")
+    # 券商目標價／評等異動（2026-09-03，Leo：「做異動提醒」）。
+    # **只推 target_changes.TRUSTED 名單內的券商 ∩ 我們母體內**——Leo 明講
+    # 那份異動表裡他只信高盛。其餘只給一行計數，數字未經覆核不進判斷。
+    try:
+        import target_changes
+        lines += target_changes.summary_lines()
+    except Exception as e:                                  # noqa: BLE001
+        lines.append(f"・🎯 券商異動讀取失敗：{str(e)[:60]}")
     if len(lines) == 1:
         lines.append("近10天無排定事件/財報。")
     return lines
