@@ -149,20 +149,43 @@ def render(d, extra_notes=None):
     # ── 燈號 ───────────────────────────────────────────────
     L = d.get("lamp")
     if L:
-        cells = [("現價", f"{L.get('price'):,.2f}" if L.get("price") else "—", f"資料日 {L.get('asof','—')}"),
-                 ("四燈", f"{L.get('lit')}/4", "COMBO 成立" if L.get("combo") else "未成立"),
-                 ("SuperTrend", "多方" if L.get("bull") else "空方",
-                  f"線 {L.get('st_line'):,.1f}／距 {L.get('gap_pct'):+.1f}%"
-                  if L.get("st_line") else ""),
-                 ("風報比", f"{L.get('rr'):.2f}" if L.get("rr") else "—", ""),
-                 ("RS 短/長", f"{L.get('rs_short'):+.1f}% / {L.get('rs_long'):+.1f}%"
-                  if L.get("rs_short") is not None else "—", "對自身 60 日均線")]
+        # 2026-09-04 Leo：「這幾個字卡可以像燈號那樣顏色呈現嗎」
+        # → 用**跟查股頁/燈號頁完全同一套符號**，不另外發明一套：
+        #   🔴 多方 / 🟢 空方（老墨的用法，跟一般紅綠相反，但站上早就統一了）
+        #   🟢/⚫ 四顆燈、⭐ 打點成立
+        # ⚠️ board_theme 的規則是「顏色只給訊號用，數字類不上色」，
+        #   所以現價、風報比這種純數字維持白色；只有 RS 是有方向語意的百分比，
+        #   跟 technical_indicators 的 RS 卡一致上綠/紅。
+        lam = L.get("lamps") or {}
+        lamp_str = "".join("🟢" if v else "⚫" for v in lam.values()) or "—"
+        bull = L.get("bull")
+        st_v = ("🔴 多方" if bull else "🟢 空方") if bull is not None else "—"
+        st_s = ((f"停損參考線 {L['st_line']:,.1f}"
+                 + (f"（現價高於 {L['gap_pct']:+.1f}%）" if L.get("gap_pct") is not None else ""))
+                if bull and L.get("st_line") else
+                (f"站上 {L['st_line']:,.1f} 才翻多" if L.get("st_line") else ""))
+        rr = L.get("rr")
+        rr_s = ("⭐ 打點成立（≥3燈且風報比≥1）" if L.get("combo") and rr and rr >= 1
+                else ("空方不計風報比" if bull is False else "無目標價則不計"))
+        rs_h = "—"
+        if L.get("rs_short") is not None:
+            def _c(x):
+                return f'<span class="{"pos" if x > 0 else "neg"}">{x:+.1f}%</span>'
+            rs_h = f'{_c(L["rs_short"])} / {_c(L.get("rs_long") or 0)}'
+        cells = [("現價", f"{L['price']:,.2f}" if L.get("price") else "—",
+                  f"資料日 {L.get('asof','—')}", False),
+                 ("四燈", f'<span style="font-size:19px;letter-spacing:2px">{lamp_str}</span>',
+                  f"{L.get('lit')}/4　{'COMBO 成立' if L.get('combo') else '未成立'}", True),
+                 ("SuperTrend", st_v, st_s, True),
+                 ("風報比", f"{rr:.2f}" if rr else "—", rr_s, False),
+                 ("RS 短/長", rs_h, "對自身 60 日均線", True)]
         body.append('<div class="sb"><h2>技術面（進出燈號）</h2>'
-                    '<div class="sub">來源：每日掃描 combo_result</div><div class="kv">'
+                    '<div class="sub">來源：每日掃描 combo_result；'
+                    '符號跟查股頁／進出燈號頁同一套</div><div class="kv">'
                     + "".join(f'<div class="c"><div class="k">{esc(k)}</div>'
-                              f'<div class="v{" zh" if not re.match(r"^[-+0-9]", str(v)) else ""}">'
-                              f'{esc(v)}</div><div class="s">{esc(s)}</div></div>'
-                              for k, v, s in cells) + "</div></div>")
+                              f'<div class="v{" zh" if zh else ""}">{v}</div>'
+                              f'<div class="s">{esc(sub_)}</div></div>'
+                              for k, v, sub_, zh in cells) + "</div></div>")
 
     # ── 券商報告 ────────────────────────────────────────────
     if d["reports"]:
