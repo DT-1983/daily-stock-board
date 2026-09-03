@@ -345,7 +345,32 @@ def _broker(row):
                 f'{min(tgs):,.0f}～{max(tgs):,.0f}（差 {(max(tgs) / min(tgs) - 1) * 100:.0f}%）'
                 f'——差異多半來自<b>倍數與用哪一年 EPS</b>，不是基本面。'
                 f'多家同時推代表這個看法已經擁擠。</div>')
-    return (f'<div class="bk"><div class="bk-h">券商研究報告　'
+    # 券商目標價異動（2026-09-04，Leo：「那兩張圖的其他券商目標價不參考嗎？」）
+    # ⚠️ 分清楚兩件事：**「不主動吵你」不等於「看不到」**。
+    #   日報推播只推可信名單（Leo 指定只信高盛）——那是「要不要當訊號叫你」的判斷；
+    #   但你主動查一檔的時候，看得到全部才有分布可看。所以這裡**全部列出**，
+    #   可信名單的標 ★。
+    # ⚠️ 數字未經覆核：那份異動表的 TP Old 欄有明顯錯位（PANW 0→390、奇鋐 78→4500），
+    #   所以只當參考、不建判斷條件。
+    chg = ""
+    try:
+        import target_changes
+        cs = [c for c in target_changes.all_rows()
+              if str(c.get("ticker", "")).upper().replace(".", "-") == want]
+        if cs:
+            rows_ = "".join(
+                f'<div class="bk-r">{"★ " if target_changes.is_trusted(c.get("broker")) else ""}'
+                f'{esc(c.get("date"))}｜<b>{esc(c.get("broker"))}</b>｜{esc(c.get("rating"))}'
+                f'｜{"▲ 調升" if c.get("direction") == "up" else ("▼ 調降" if c.get("direction") == "down" else "－")}'
+                f'　{esc(str(c.get("tp_old")))} → {esc(str(c.get("tp_new")))}</div>'
+                for c in cs[:6])
+            chg = (f'<div class="bk"><div class="bk-h">近期券商目標價異動　'
+                   f'<span class="bk-n">{len(cs)} 筆　★＝可信名單（日報只推這些）；'
+                   f'數字未經覆核，只看方向</span></div>{rows_}</div>')
+    except Exception:                                       # noqa: BLE001
+        pass
+
+    return (chg + f'<div class="bk"><div class="bk-h">券商研究報告　'
             f'<span class="bk-n">{len(rs)} 份，各家自己的推導，不是市場共識平均</span>'
             f'</div>{warn}{"".join(items)}</div>')
 
