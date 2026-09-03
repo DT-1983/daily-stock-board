@@ -136,10 +136,15 @@ def _download(tickers, period):
     return out
 
 
-def get_ohlc(tickers, period="3y", refresh=True):
+def get_ohlc(tickers, period="3y", refresh=True, force=False):
     """回 {ticker: DataFrame(OHLCV)}。用快取，過期才重抓。
 
     refresh=False 純吃快取不連網——API 掛掉時的降級模式（有舊資料總比沒有好）。
+
+    `force=True` 無視 STALE_HOURS 直接重抓。什麼時候需要（2026-09-03 踩到）：
+    每天 07:45 的掃描會把快取標成「新鮮」，而 STALE_HOURS=12 表示到 19:45 前都不重抓——
+    但 07:45 時台股還沒收盤，快取裡是**前一交易日**的收盤。使用者下午對照看盤軟體
+    會發現數字差一天，這時「即時重算」如果只重算指標不重抓價格就是騙人的。
     """
     tickers = [str(t) for t in tickers]
     meta = _meta()
@@ -152,7 +157,7 @@ def get_ohlc(tickers, period="3y", refresh=True):
             continue
         ts = meta.get(tk, {}).get("updated")
         fresh = False
-        if ts:
+        if ts and not force:
             try:
                 fresh = (now - dt.datetime.fromisoformat(ts)).total_seconds() < STALE_HOURS * 3600
             except Exception:
@@ -178,9 +183,9 @@ def get_ohlc(tickers, period="3y", refresh=True):
     return out
 
 
-def get_closes(tickers, period="3y", refresh=True):
+def get_closes(tickers, period="3y", refresh=True, force=False):
     """只要收盤價。回 {ticker: Series}。"""
-    return {tk: df["Close"] for tk, df in get_ohlc(tickers, period, refresh).items()
+    return {tk: df["Close"] for tk, df in get_ohlc(tickers, period, refresh, force).items()
             if "Close" in df.columns and len(df["Close"].dropna())}
 
 
