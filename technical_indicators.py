@@ -8,7 +8,7 @@
   EXCEED CHARGE   TTM Squeeze／擠壓動能：布林帶(樣本標準差) vs 凱特納通道(SMA of TR)，
                    擠壓＝布林帶縮進凱特納通道內；動能＝對 value 序列做線性迴歸取末端值
   RS 相對強弱     Weinstein/Mansfield：(股價/大盤 比值) 對其自身均線的乖離%，
-                   短線(30日)＋長線(1年)兩組
+                   短線(20日)＋長線(1年)兩組
 
 2026-08-25：對照老墨 XQ 官方指標（mophyfei/MOFI_XQ）的說明頁後補上三層，
 原本這三個指標只有「基礎線」，缺了官方版真正拿來判斷的加值層——
@@ -19,8 +19,9 @@
   EXCEED CHARGE + 擠壓三級強度（微/中/極，見 squeeze_intensity）
                 + 動能四色文字標籤（見 momentum_label，圖表本來就有四色只是tile沒講出來）
   RS 相對強弱   + RS創新高偵測 + 「RS領先股價」背離訊號 + 短長RS交叉訊號（見 rs_signals）
-⚠️ 沒有動 RS 短30日/長1年這兩個窗口——那是先前跟財報卡對齊的決定，不是老墨的預設(60/240)，
-   加值層的訊號計算直接套用在既有序列上，不重新定義基礎指標。
+⚠️ RS 顯示窗口：2026-09-03 短線 30→20（對齊老墨螢幕上的短線 RS 數值，MSFT 實測 0.98 對 0.82），
+   長線維持 250。這是**顯示層**；燈四的 RS 在 combo_scan 是另一組 60/240（RS_SHORT/RS_LONG），
+   兩者刻意不同、互不影響。老墨確切公式未公開，數值以單檔對齊，別檔可能有出入（方向會對）。
 
 用法：
     python technical_indicators.py 3037.TW
@@ -190,7 +191,7 @@ def squeeze_momentum(highs, lows, closes, length=20, bb_mult=2.0, kc_mult=1.5):
 
 # ── RS 相對強弱（Mansfield） ──────────────────────────────────────────
 
-def mansfield_rs(closes, bench_closes, short=30, long=250):
+def mansfield_rs(closes, bench_closes, short=20, long=250):  # 2026-09-03 短線 30→20 對齊老墨螢幕值(顯示層;燈四的 RS 在 combo_scan 是 60,不受此影響)
     n = min(len(closes), len(bench_closes))
     c = np.array(closes[-n:], dtype=float)
     b = np.array(bench_closes[-n:], dtype=float)
@@ -524,7 +525,7 @@ def build(ticker, disp_days=756):
                f'{f"{rs_l:+.1f}%" if rs_l is not None else "—"}</b>')
 
     # RS 加值訊號：需要完整序列（不只最新一值），搬到這裡先算，圖表資料那段直接複用同一份
-    rs_s_series = mansfield_rs_series(closes, bench_closes, 30) if bench_closes else None
+    rs_s_series = mansfield_rs_series(closes, bench_closes, 20) if bench_closes else None
     rs_l_series = mansfield_rs_series(closes, bench_closes, 250) if bench_closes else None
     rs_sig = rs_signals(rs_s_series, rs_l_series, closes) if rs_s_series is not None else None
     rs_sub = ""
@@ -609,7 +610,7 @@ def build(ticker, disp_days=756):
         ("擠壓等級", (sq_level or "擠壓中") if sq_on else "無"),
     ])
     panel_rs = _rows("RS STRONGER 相對強弱", [
-        (f"短線 RS（{30} 日）", f"{rs_s:+.2f}%" if rs_s is not None else None),
+        (f"短線 RS（{20} 日）", f"{rs_s:+.2f}%" if rs_s is not None else None),
         (f"長線 RS（{250} 日）", f"{rs_l:+.2f}%" if rs_l is not None else None),
         ("加值訊號", rs_sub or None),
     ])
@@ -672,7 +673,7 @@ def build(ticker, disp_days=756):
     _row_sq = _techrow(panel_sq,
         '<div class="tclabel">EXCEED CHARGE 動能柱（金點＝擠壓中，綠/紅點＝已釋放，★＝釋放瞬間）</div>', f"ti_c2_{uid}", "tcbox tcbox-sm")
     _row_rs = _techrow(panel_rs,
-        '<div class="tclabel">RS 相對強弱（短線30日／長線1年，紅線＝基準；🟡長線翻正 🔵短線創新高 🩷資金比股價先動）</div>', f"ti_c3_{uid}", "tcbox tcbox-sm")
+        '<div class="tclabel">RS 相對強弱（短線20日／長線1年，紅線＝基準；🟡長線翻正 🔵短線創新高 🩷資金比股價先動）</div>', f"ti_c3_{uid}", "tcbox tcbox-sm")
     html = f"""<div class="technical"><h3>技術面四指標</h3>
 <div class="posnote">近一年日線計算，基準指數：{_BENCHMARK_NAME.get(_benchmark(ticker), _benchmark(ticker))}</div>
 <div class="techgrid">{tiles}</div>
@@ -814,7 +815,7 @@ function ti_draw_{uid}(){{
     data:{{datasets:[
       {{label:'基準線(0%)',data:d.mom.map((_,i)=>({{x:i,y:0}})),borderColor:'#EF4444',borderWidth:2,
         pointRadius:0,order:3}},
-      {{label:'短線30日',data:d.rs_s.map((v,i)=>({{x:i,y:v}})),borderColor:'#EAB308',borderWidth:1.4,
+      {{label:'短線20日',data:d.rs_s.map((v,i)=>({{x:i,y:v}})),borderColor:'#EAB308',borderWidth:1.4,
         pointRadius:0,tension:.15,order:1}},
       {{label:'長線1年',data:d.rs_l.map((v,i)=>({{x:i,y:v}})),borderColor:'#4a9eff',borderWidth:1.4,
         pointRadius:0,tension:.15,order:2}},

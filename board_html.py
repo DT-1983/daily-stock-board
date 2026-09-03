@@ -337,7 +337,7 @@ function drawExtra(id,c){
  if(elRs&&((c.rs_s&&c.rs_s.length)||(c.rs_l&&c.rs_l.length))){
   const base=(c.rs_s&&c.rs_s.length?c.rs_s:c.rs_l).map((_,i)=>({x:i,y:0}));
   const rsds=[{label:'基準線(0%)',data:base,borderColor:'#EF4444',borderWidth:2,pointRadius:0,order:3}];
-  if(c.rs_s&&c.rs_s.length)rsds.push({label:'短線30日',data:c.rs_s.map((v,i)=>({x:i,y:v})),borderColor:'#EAB308',borderWidth:1.4,pointRadius:0,tension:.15,order:1});
+  if(c.rs_s&&c.rs_s.length)rsds.push({label:'短線20日',data:c.rs_s.map((v,i)=>({x:i,y:v})),borderColor:'#EAB308',borderWidth:1.4,pointRadius:0,tension:.15,order:1});
   if(c.rs_l&&c.rs_l.length)rsds.push({label:'長線1年',data:c.rs_l.map((v,i)=>({x:i,y:v})),borderColor:'#4a9eff',borderWidth:1.4,pointRadius:0,tension:.15,order:2});
   if(c.rs_turn&&c.rs_turn.length)rsds.push({label:'🟡翻正',data:c.rs_turn.map((v,i)=>({x:i,y:v})),showLine:false,pointRadius:4,pointBackgroundColor:'#FACC15',pointBorderColor:'#1a1d23',pointBorderWidth:1,order:0});
   if(c.rs_newh&&c.rs_newh.length)rsds.push({label:'🔵創新高',data:c.rs_newh.map((v,i)=>({x:i,y:v})),showLine:false,pointRadius:4,pointBackgroundColor:'#38BDF8',pointBorderColor:'#1a1d23',pointBorderWidth:1,order:0});
@@ -462,7 +462,7 @@ def main():
             st = _st_sma(highs, lows, cl) if highs else None
             ty = typhoon_state_series(cl, None, st["dir"]) if st else None
             sq = squeeze_momentum(highs, lows, cl) if highs and lows else None
-            rs_s = mansfield_rs_series(cl, tw_bench_closes, 30) if tw_bench_closes else None
+            rs_s = mansfield_rs_series(cl, tw_bench_closes, 20) if tw_bench_closes else None
             rs_l = mansfield_rs_series(cl, tw_bench_closes, 250) if tw_bench_closes else None  # 2026-09-03 補長線RS(黃點需要)
             _rss = _align_rs(rs_s, len(cl)) if rs_s is not None else []
             _rsl = _align_rs(rs_l, len(cl)) if rs_l is not None else []
