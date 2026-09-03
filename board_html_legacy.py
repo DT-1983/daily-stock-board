@@ -185,7 +185,7 @@ def _align_rs(rs, n):
 
 def fetch_us_charts(tickers, bench="^GSPC", disp_days=252):
     """yf.download 批次抓美股走勢（比逐檔 Ticker.history 穩、不易限流）
-    2026-08-11：期間 3mo→2y，附帶算 EXCEED CHARGE(squeeze) + RS(相對強弱，短線30日/長線1年)，
+    2026-08-11：期間 3mo→2y，附帶算 EXCEED CHARGE(squeeze) + RS(相對強弱，短線20日/長線1年)，
     供看板產業鏈明細跟財報卡一樣多兩張圖（用戶要求）。
     多抓一年當「暖機」：長線RS要250個交易日的均線，只抓1年的話前面一整年都算不出值、
     圖幾乎是空的——抓2年、算完指標後只裁回近1年(disp_days)顯示，圖表時間範圍不變，
@@ -216,7 +216,7 @@ def fetch_us_charts(tickers, bench="^GSPC", disp_days=252):
             dates = [d.strftime("%m/%d") for d in h.index]
             n = len(closes)
             sq = squeeze_momentum(highs, lows, closes)
-            rs_s = mansfield_rs_series(closes, bench_closes, 30) if bench_closes else None
+            rs_s = mansfield_rs_series(closes, bench_closes, 20) if bench_closes else None
             rs_l = mansfield_rs_series(closes, bench_closes, 250) if bench_closes else None
             # 2026-09-02：顯示層統一用 SMA 版 ATR（跟燈號/財報頁對齊，見 technical_indicators
             # 檔頭「顯示層改用 SMA」的說明）；原本這裡是 Wilder 版，是唯一還沒跟上的地方。
