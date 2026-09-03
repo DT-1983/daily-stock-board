@@ -38,6 +38,40 @@ ICONS = {
 # 2026-09-03 Leo 指定順序：產業輪動 → 進出燈號 → 籌碼異動 → 策略賽馬 → 產業鏈 →
 # 財報分析 → GDP → ARK。首頁維持第一個（站台慣例）；巴菲特清單 Leo 沒列到，
 # 先擺在指定的八項之後，要拿掉或插回中間再說。
+# ── 查任意股票的入口（2026-09-03）──────────────────────────────
+#
+# ⚠️ **為什麼是連出去而不是做在站內**：這個投資站是 GitHub Pages 靜態託管，
+# 只能放事先產好的檔案。查任意代號要即時抓 3 年 OHLC ＋算指標，一定要有後端在跑。
+# 所以入口在站內（首頁＋進出燈號頁）、運算在本機服務（lookup_page.py）。
+#
+# ⚠️ 這站是公開的，網址寫在這裡等於公開，但服務端有 token 門檻：沒授權過的裝置
+# 點進去只會看到「這台裝置還沒授權」的說明頁。Leo 每台裝置用 ?key= 開一次即可。
+# ⚠️ 服務跑在 Leo 的電腦上——電腦關機或 bot 沒跑時連結會連不上。
+#
+# 放在 board_theme 而不是各頁自己寫：兩個頁面（首頁、進出燈號）都要用，
+# 複製兩份必然會漂移（見 investment_site_ui_standard 記憶的原則）。
+LOOKUP_URL = "https://stock.talentxtrend.com/lookup"
+LOOKUP_BOX = (
+    '<form class="lkbox" method="get" action="' + LOOKUP_URL + '" target="_blank">'
+    '<span class="lkl">🔍 查任意股票</span>'
+    '<input name="ticker" placeholder="代號或名稱：2454 / 台積電 / COST" '
+    'autocomplete="off" autocapitalize="characters">'
+    '<button type="submit">查燈號＋圖表</button>'
+    '<span class="lkn">不限掃描母體；台股可打中文名。即時計算約 3–8 秒</span>'
+    '</form>')
+
+LOOKUP_CSS = """
+.lkbox{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:14px 0 4px;
+ background:#12151b;border:1px solid #2a2e35;border-radius:11px;padding:11px 13px}
+.lkbox .lkl{font-size:13px;font-weight:700;color:#93C5FD}
+.lkbox input{flex:1 1 190px;min-width:0;padding:8px 11px;border-radius:8px;
+ border:1px solid #2a2e35;background:#0d1016;color:#e8eaed;font-size:14px;font-family:inherit}
+.lkbox button{padding:8px 15px;border-radius:8px;border:1px solid #2a2e35;background:#1a1d23;
+ color:#93C5FD;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap}
+.lkbox button:hover{border-color:#4a9eff}
+.lkbox .lkn{flex:1 1 100%;font-size:11px;color:#6b7280}
+"""
+
 NAV = [
     ("home", "home", "首頁", "./"),
     ("rotation", "rotation", "產業輪動", "rotation.html"),
