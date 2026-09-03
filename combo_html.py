@@ -29,11 +29,15 @@ Q = chr(39)
 
 CSS = """
 .cbwrap{padding:0}   /* 外層已經有 .wrap 限寬置中，這裡不要再限一次 */
-.cbstat{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0 6px}
-.cbstat div{background:var(--card);border:1px solid var(--line);border-radius:10px;
-  padding:10px 14px;min-width:120px}
-.cbstat b{display:block;font-size:22px;line-height:1.2}
-.cbstat span{font-size:12px;color:var(--dim)}
+/* 2026-09-03 Leo：統計卡縮小 + 跟搜尋框做在同一排（.cbtop 併排,窄螢幕自動換行）*/
+.cbtop{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap;margin:12px 0 6px}
+.cbtop .lkbox{margin:0;flex:1 1 300px}
+.cbstat{display:flex;gap:6px;flex-wrap:wrap;margin:0}
+.cbstat div{background:var(--card);border:1px solid var(--line);border-radius:8px;
+  padding:5px 10px;min-width:auto}
+.cbstat b{display:block;font-size:15px;line-height:1.15}
+.cbstat span{font-size:10px;color:var(--dim)}
+.flab2{margin-left:14px}
 .cbnote{background:var(--card);border:1px solid var(--line);border-left:3px solid #EAB308;
   border-radius:8px;padding:11px 14px;margin:12px 0;font-size:13px;line-height:1.75;color:var(--dim)}
 .cbsec{margin:26px 0 8px;font-size:15px;font-weight:700}
@@ -96,19 +100,20 @@ def _sc(f, v, label, dot=None, pressed=False):
 
 def filter_html():
     quad = "".join(_sc("quad", q, QLAB[q], QCOL[q]) for q in QORDER)
+    # 2026-09-03 Leo：篩選列做成兩排——第一排 市場+燈號、第二排 象限+來源。
     return ('<div class="ctrl cbctrl">'
             '<div class="frow"><span class="flab">市場</span>'
             '<div class="seg" role="group" aria-label="切換市場">'
             '<button data-f="mkt" data-v="all" aria-pressed="true">全部</button>'
             '<button data-f="mkt" data-v="tw" aria-pressed="false">台股</button>'
             '<button data-f="mkt" data-v="us" aria-pressed="false">美股</button></div>'
-            '<span class="fcount" id="fcount"></span></div>'
-            '<div class="frow"><span class="flab">燈號</span>'
+            '<span class="flab flab2">燈號</span>'
             + _sc("lit", "all", "全部", pressed=True) + _sc("lit", "3", "3 燈以上")
             + _sc("lit", "4", "4 燈") + _sc("lit", "hit", "⭐ 打點（3 燈 + 風報比 ≥ 1）")
-            + '</div><div class="frow"><span class="flab">象限</span>'
+            + '<span class="fcount" id="fcount"></span></div>'
+            '<div class="frow"><span class="flab">象限</span>'
             + _sc("quad", "all", "全部", pressed=True) + quad + _sc("quad", "none", "無分類")
-            + '</div><div class="frow"><span class="flab">來源</span>'
+            + '<span class="flab flab2">來源</span>'
             + _sc("src", "all", "全部", pressed=True) + _sc("src", "守備清單", "守備清單")
             + _sc("src", "持股", "持股") + _sc("src", "自訂", "自訂")
             + '</div></div>')
@@ -302,13 +307,13 @@ def build(d):
     weak = [r for r in ok if r.get("rr") is not None and r["rr"] < 1]
     notgt = [r for r in ok if r.get("rr") is None]
     body = [f'<div class="cbwrap">']
-    body.append('<div class="cbstat">'
+    body.append('<div class="cbtop"><div class="cbstat">'
                 f'<div><b>{len(rows)}</b><span>掃描母體</span></div>'
                 f'<div><b>{len(ok)}</b><span>COMBO 成立（≥{d["combo_min"]} 燈）</span></div>'
                 f'<div><b style="color:#22C55E">{len(hit)}</b><span>⭐ 打點成立（且風報比 ≥ 1）</span></div>'
                 f'<div><b style="color:#EF4444">{sum(1 for r in ok if (r.get("rr") or 0) < 0)}</b>'
-                '<span>現價已超過共識目標</span></div></div>')
-    body.append(LOOKUP_BOX)
+                '<span>現價已超過共識目標</span></div></div>'
+                + LOOKUP_BOX + '</div>')
     body.append(filter_html())
     body.append(f'<div class="cbsec">⭐ 打點成立<small>亮 ≥{d["combo_min"]} 燈且風報比 ≥ 1，'
                 f'共 {len(hit)} 檔</small></div>' + _table(hit))
