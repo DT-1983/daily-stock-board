@@ -80,11 +80,23 @@ def _read_cached(ticker):
 
 
 def _write_cached(ticker, df):
+    """寫快取。**短區間的抓取不可以覆蓋長歷史**（2026-09-03 加）。
+
+    起因：驗證 BRK.B 時用 `period="1mo", force=True` 打了 2330/NVDA，
+    直接把它們 3 年的快取蓋成 1 個月——**沒有任何錯誤訊息**，下游要 3 年資料時
+    只會拿到 1 個月，SuperTrend/RS 全部算在太短的序列上。
+    快取的用途就是保存歷史，讓短查詢把它砍掉是本末倒置。
+    """
+    import pandas as pd
     try:
         os.makedirs(STORE_DIR, exist_ok=True)
         if df.index.tz is not None:
             df = df.copy()
             df.index = df.index.tz_localize(None)
+        old = _read_cached(ticker)
+        if old is not None and len(old) > len(df):
+            merged = pd.concat([df, old]).sort_index()
+            df = merged[~merged.index.duplicated(keep="first")]   # 新抓的優先
         df.to_pickle(_path(ticker))
         return True
     except Exception as e:
