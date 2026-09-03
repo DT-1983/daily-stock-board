@@ -21,15 +21,15 @@
        ID，需先在 Discord 設定開發者模式）——填了指令幾秒內生效；不填則走全域註冊，
        Discord 那邊最多要等 1 小時才會出現，僅建議測試期間先填
 
-部署：這支要保持 WebSocket 連線常駐（跟 lookup() 共用 combo_scan/price_store/
-tw_symbol 等本專案模組，需要在這個 repo 環境下跑），跟每日 07:00 的 batch 排程是
-兩回事——不要掛進 board_analyze_daily.cmd。建議跑法二選一：
-    - 本機常駐：跟現有 .cmd 排程同機器，用工作排程器設「開機時啟動、使用者登出也繼續跑」
-    - 獨立 Zeabur service：跟 meeting_summary_bot 同帳號另開一個服務，
-      指到這個 repo，start command 用 `python discord_bot.py`。
-      state/combo_result.json 每天 07:00 本機排程算完會 git push，Zeabur 每次
-      push 會自動重部署（見 zeabur_server 記憶），等於順便撿到當天新快取；
-      查不到快取的代號一律走即時抓算，不受這個影響。
+部署（2026-09-03 Leo 定案）：本機常駐（`start_discord_bot.ps1`，工作排程器開機啟動），
+不放 Zeabur——8/27 Zeabur 平台被入侵洩露過環境變數（見 security_incident_2026-08-28
+記憶），本機常駐可以完全不把 Bot Token 交給第三方平台保管。跟每日 07:00 的 batch
+排程是兩回事，不要掛進 board_analyze_daily.cmd。
+
+內建一個本機 HTTP 健康檢查端點（`HEALTH_PORT`，預設 8030），只回這支自己活不活著，
+不對外開放（127.0.0.1）——目的是掛進 `service_health_check.py` 的 `SERVICES` 清單，
+跟 talentxtrend/資產中控台/Sonia 用同一套「掛了自動重啟＋狀態改變才通知」機制，
+不然這支 Discord 連線斷了會沒人知道（跟其他三個本機服務一樣的靜默失效風險）。
 """
 import os
 import sys
@@ -42,6 +42,7 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
 
 import discord
 from discord import app_commands
+from aiohttp import web
 from dotenv import dotenv_values
 
 import lamp_lookup
@@ -49,6 +50,7 @@ import lamp_lookup
 _env = {**dotenv_values(Path(__file__).parent / ".env"), **os.environ}
 TOKEN = _env.get("DISCORD_BOT_TOKEN", "")
 GUILD_ID = _env.get("DISCORD_GUILD_ID", "")
+HEALTH_PORT = int(_env.get("DISCORD_BOT_HEALTH_PORT", "8030"))
 
 # 只需要 slash command，不讀一般訊息內容 → 用預設 intents 就夠，
 # 不用申請 MESSAGE CONTENT 這個 privileged intent（Leo 階段1可以少做一步）。
@@ -92,11 +94,28 @@ async def cmd_lookup(interaction: discord.Interaction, 代號: str):
     await interaction.followup.send(msg)
 
 
+async def _health(request):
+    ready = client.is_ready()
+    return web.json_response({"ok": ready, "user": str(client.user) if ready else None},
+                              status=200 if ready else 503)
+
+
+async def _run():
+    app = web.Application()
+    app.router.add_get("/", _health)
+    runner = web.AppRunner(app)
+    await runner.setup()
+    site = web.TCPSite(runner, "127.0.0.1", HEALTH_PORT)
+    await site.start()
+    print(f"[discord_bot] 健康檢查端點：http://127.0.0.1:{HEALTH_PORT}/", flush=True)
+    await client.start(TOKEN)
+
+
 def main():
     if not TOKEN:
         print("[discord_bot] 缺 DISCORD_BOT_TOKEN——請先完成階段1（見 advisor_next_phase_roadmap 記憶）")
         return 1
-    client.run(TOKEN)
+    asyncio.run(_run())
     return 0
 
 
