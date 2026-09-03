@@ -1,5 +1,5 @@
 {
- "date": "2026-09-02",
+ "date": "2026-09-03",
  "period": 60,
  "mode": "daily",
  "chains": {
@@ -29,11 +29,11 @@
    "rrg_from": null,
    "supertrend": "空頭",
    "squeeze": {
-    "on": false,
-    "level": null,
+    "on": true,
+    "level": "微壓",
     "momentum_up": false
    },
-   "summary": "落後象限(RS 98.33/動能 98.56)｜SuperTrend空頭｜未擠壓"
+   "summary": "落後象限(RS 98.33/動能 98.56)｜SuperTrend空頭｜微壓蓄力中，動能偏空"
   },
   "us:低軌衛星": {
    "members_used": 7,
@@ -93,11 +93,11 @@
    "rrg_from": null,
    "supertrend": "多頭",
    "squeeze": {
-    "on": false,
-    "level": null,
+    "on": true,
+    "level": "中壓",
     "momentum_up": false
    },
-   "summary": "改善象限(RS 99.45/動能 101.05)｜SuperTrend多頭｜未擠壓"
+   "summary": "改善象限(RS 99.45/動能 101.05)｜SuperTrend多頭｜中壓蓄力中，動能偏空"
   },
   "us:機器人": {
    "members_used": 8,
@@ -147,6 +147,21 @@
    },
    "summary": "領先象限(RS 102.11/動能 101.79)｜SuperTrend多頭｜未擠壓"
   },
+  "us:AI 電源/散熱": {
+   "members_used": 4,
+   "rrg": {
+    "ratio": 98.56,
+    "momentum": 98.62,
+    "quadrant": "落後"
+   },
+   "supertrend": "空頭",
+   "squeeze": {
+    "on": false,
+    "level": null,
+    "momentum_up": false
+   },
+   "summary": "落後象限(RS 98.56/動能 98.62)｜SuperTrend空頭｜未擠壓"
+  },
   "tw:AI 伺服器": {
    "members_used": 8,
    "rrg": {
@@ -190,10 +205,10 @@
    "supertrend": "多頭",
    "squeeze": {
     "on": true,
-    "level": "微壓",
+    "level": "中壓",
     "momentum_up": true
    },
-   "summary": "領先象限(RS 100.89/動能 100.15)｜SuperTrend多頭｜微壓蓄力中，動能偏多"
+   "summary": "領先象限(RS 100.89/動能 100.15)｜SuperTrend多頭｜中壓蓄力中，動能偏多"
   },
   "tw:低軌衛星": {
    "members_used": 6,
@@ -258,6 +273,36 @@
     "momentum_up": true
    },
    "summary": "弱化象限(RS 100.52/動能 99.01)｜SuperTrend多頭｜微壓蓄力中，動能偏多"
+  },
+  "tw:AI 材料/被動元件": {
+   "members_used": 8,
+   "rrg": {
+    "ratio": 100.94,
+    "momentum": 99.16,
+    "quadrant": "弱化"
+   },
+   "supertrend": "多頭",
+   "squeeze": {
+    "on": false,
+    "level": null,
+    "momentum_up": true
+   },
+   "summary": "弱化象限(RS 100.94/動能 99.16)｜SuperTrend多頭｜未擠壓"
+  },
+  "tw:AI 電源/散熱": {
+   "members_used": 6,
+   "rrg": {
+    "ratio": 102.53,
+    "momentum": 102.0,
+    "quadrant": "領先"
+   },
+   "supertrend": "多頭",
+   "squeeze": {
+    "on": false,
+    "level": null,
+    "momentum_up": true
+   },
+   "summary": "領先象限(RS 102.53/動能 102.0)｜SuperTrend多頭｜未擠壓"
   }
  }
 }
