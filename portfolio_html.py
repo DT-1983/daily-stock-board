@@ -37,6 +37,21 @@ DESKTOP_CSS = """
   .row .one{margin-top:0;flex:1;text-align:left}
   #race{max-height:250px}
 }
+table.rules{width:100%;border-collapse:collapse;font-size:12.5px;line-height:1.65}
+table.rules th{text-align:left;padding:7px 9px;color:var(--dim);font-weight:600;font-size:11.5px;
+ border-bottom:1px solid var(--line);white-space:nowrap}
+table.rules td{padding:9px;border-bottom:1px solid var(--line2);vertical-align:top}
+table.rules td:first-child{white-space:nowrap;color:#93C5FD}
+table.rules td:last-child{white-space:nowrap;color:var(--muted)}
+table.rules tr:last-child td{border-bottom:0}
+@media(max-width:720px){
+  table.rules,table.rules tbody,table.rules tr,table.rules td{display:block;width:100%}
+  table.rules thead{display:none}
+  table.rules tr{border-bottom:1px solid var(--line);padding:6px 0}
+  table.rules td{border:0;padding:3px 0}
+  table.rules td:first-child{font-weight:700;font-size:13.5px}
+  table.rules td:last-child{color:var(--dim);font-size:11.5px}
+}
 """
 
 import sys
@@ -170,7 +185,38 @@ def build(state):
   <div class="rows">{"".join(rows)}</div>
 </section>
 
-<section class="sec explain"><div class="sechd"><h2>兩套買股方法怎麼決定的</h2></div>
+<section class="sec explain"><div class="sechd"><h2>各倉選股與進出方式（總表）</h2></div>
+<div class="card">
+<table class="rules">
+<tr><th>倉別</th><th>選什麼股</th><th>什麼時候買、什麼時候賣</th><th>頻率</th></tr>
+<tr><td><b>產業鏈全</b></td>
+    <td>7 條 AI 產業鏈守備清單<b>全買</b>，等權重</td>
+    <td>不擇時。清單有什麼就抱什麼，換清單才換股</td>
+    <td>每週六 08:00 重篩</td></tr>
+<tr><td><b>產業鏈+趨勢</b></td>
+    <td>同上那批股，但只留 <b>週線 SuperTrend 多頭</b>的</td>
+    <td>翻多才進、翻空就出（<b>翻燈才動，不天天重配</b>）。最少切 8 份，綠燈不足的部分留現金</td>
+    <td>每日 09:00 檢查</td></tr>
+<tr><td><b>巴菲特價值</b></td>
+    <td>洪瑞泰法：品質關過關 且 <b>現價 ≤ 俗價</b>，取品質分前 30</td>
+    <td>便宜才買、貴了就不在清單裡。<b>沒有停損</b>，靠估值本身進出</td>
+    <td>每週六 08:00 重篩</td></tr>
+<tr><td><b>進出燈號</b></td>
+    <td>四燈掃描結果：<b>≥3 燈且風報比 ≥ 1</b>（打點成立），每檔 1/8 倉</td>
+    <td>① SuperTrend 翻空 → <b>賣一半</b>　② RS60 跌破自身均線 → <b>剩餘全出</b>，
+        全出後 7 天內不再進場</td>
+    <td>每日 09:00</td></tr>
+<tr><td><b>8 條產業鏈明細</b></td>
+    <td>各鏈自己的守備清單，等權重</td>
+    <td>同「產業鏈全」，不擇時</td>
+    <td>每週六 08:00 重篩</td></tr>
+</table>
+<p class="sub" style="margin-top:10px">四個主倉各獨立 {usd(base)}，8 條鏈明細倉也各 {usd(base)}
+（明細倉只是拆開看哪條鏈強，不併入主倉對決）。台股價格用當時匯率換成美元後才加總。
+掃描結果超過 4 天沒更新，燈號倉當天就不動作——不拿舊燈號下單。</p>
+</div></section>
+
+<section class="sec explain"><div class="sechd"><h2>每套方法背後的邏輯</h2></div>
 <div class="card">
 <h3 style="color:#F5B841">產業鏈全（動能／成長派）</h3>
 <p>鎖定 7 條 AI 題材產業鏈，每條鏈用<b>三因子客觀篩選</b>選最強標的（非人工挑）：<br>
@@ -203,6 +249,18 @@ Bitcoin→AI 機房該鏈合計限重 10%（回測 MDD −94%）。</span></p>
 不是公司變差，是原本有不少是靠寬鬆舊線買進的。曲線刻意保留不歸零，但**跨 8/27 的報酬率
 等於跨了兩套規則**，看的時候要知道這件事。（產業鏈全／產業鏈+趨勢兩倉不受影響，
 它們讀的是守備清單不是巴菲特清單。）</p>
+<hr>
+<h3 style="color:#F5B841">進出燈號（技術面共振 · 2026-09-02 起）</h3>
+<p>跟 <a href="combo.html" style="color:#6db3ff">進出燈號頁</a><b>讀同一份資料</b>——頁面看到什麼，倉就照什麼進出，兩邊不會漂移。<br>
+四燈＝① SuperTrend 多方　② 動能 &gt; 0　③ 雙重颱風不為綠　④ RS60 日乖離 &gt; +3%。<br>
+<b>進場</b>：亮 ≥3 燈<b>且風報比 ≥ 1</b>（燈號給勝率、風報比給賠率，只有一半沒有意義）。
+排序：亮燈數多的先、同燈數風報比高的先，每檔 1/8 倉直到現金用完。<br>
+<b>出場（不對稱兩階段）</b>：SuperTrend 翻空先賣一半（趨勢轉弱但還沒確認轉空），
+RS60 跌破自身均線才剩餘全出（相對強度也丟了）；全出後 7 天內不重新進場，避免出了隔天又買回。</p>
+<p style="color:#F5B841;border-left:3px solid #F5B841;padding-left:10px">
+⚠️ <b>這個倉沒有歷史回測</b>——風報比要用目標價，而目標價只有現在的快照、沒有歷史，回不了頭。
+它取代的「三指標合流」8/18 開倉到 9/2 一次都沒觸發（三件事要同一天發生，機率太低），
+改成狀態判斷後 9/2 首日就買進 8 檔。<b>這個倉本身就是拿來累積樣本的器材，不是已驗證的策略。</b></p>
 <hr>
 <h3 style="color:#F5B841">各買多少？（等金額，不是等股數）</h3>
 <p>每個倉獨立 <b>{usd(base)}</b>，平均分給該倉持股：<b>每檔配額 = {usd(base)} ÷ 檔數，股數 = 配額 ÷ 股價</b>。
