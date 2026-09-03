@@ -496,6 +496,25 @@ def gather_material(ticker, notes):
     signals = _load_json("state/signals.json", {})
     ai_sig = signals.get(sig_key, "（查無AI綜合訊號，可能不在追蹤清單裡）")
 
+    # 現價：**獨立來源，不跟著貴俗價一起查**（2026-09-03 修）。
+    # 原本現價只從 valuation_state.json 拿，而那份**只涵蓋既有持股**——2454 是剛
+    # 透過交易紀錄進來的新持股，於是投資長材料裡現價變成 nan，趨勢角度寫
+    # 「現價資料缺失，無法算出與 SuperTrend 線的實際距離」、價值角度直接判「資料不足」。
+    # 一個查詢失敗把兩個角度一起拖下水，而且看起來像「這檔真的沒資料」。
+    cur_px = None
+    try:
+        import price_store as _ps
+        import tw_symbol as _tws
+        _sym = (_tws.resolve(ticker) if re.match(r"^\d{4,6}[A-Z]?$", str(ticker))
+                else str(ticker).replace(".", "-"))
+        _s = _ps.get_closes([_sym], period="1y").get(_sym)
+        if _s is not None and not _s.empty:
+            _s = _s.dropna()
+            if len(_s):
+                cur_px = float(_s.iloc[-1])
+    except Exception as e:                                  # noqa: BLE001
+        print(f"  現價查詢失敗（{ticker}）：{str(e)[:60]}")
+
     val_state = _load_json("state/valuation_state.json", {})
     v = val_state.get(ticker)
     if v:
@@ -508,7 +527,7 @@ def gather_material(ticker, notes):
                           f"俗價${w['cheap']:,.2f}，貴價${w['expensive']:,.2f}，"
                           f"ROE {w.get('roe', 0)*100:.0f}%，盈再率{w.get('reinvest', 0)*100:.0f}%"
                           f"（{w.get('reinvest_grade','')}），產業龍頭排名#{w.get('rank','?')}"
-                          if w else "查無貴俗價資料")
+                          if w else "查無貴俗價資料（這檔不在持股估值表也不在巴菲特候選池）")
     try:
         from trade_plan import buffett_targets
         bt = buffett_targets(ticker)
@@ -545,6 +564,8 @@ def gather_material(ticker, notes):
     # 給這個數字」的推導過程。報告裡寫的是「2027 年底 PBR 1.1 倍」「30 倍 2026 EPS」
     # 這種可以被證偽的假設——那才是能盯的東西。
     # ⚠️ 當材料不當門檻：只把假設攤開給投資長看，不擋任何訊號（同產業鏈技術面的處理）。
+    if cur_px is not None:
+        value_material = f"最新收盤價：{cur_px:,.2f}\n" + value_material
     try:
         import advisor_reports
         _store = advisor_reports.active()
@@ -568,7 +589,7 @@ def gather_material(ticker, notes):
                 # 這一層跟貴俗價、跟 base_rate 的預估前提檢查都不同：
                 # 它量的是「這份報告自己的假設還剩多少空間」。
                 try:
-                    _im = advisor_reports.implied_multiple(_r, v.get("price") if v else None)
+                    _im = advisor_reports.implied_multiple(_r, cur_px)
                 except Exception:                           # noqa: BLE001
                     _im = None
                 if _im:
@@ -625,8 +646,25 @@ def gather_material(ticker, notes):
             # 2026-09-01：這裡原本只給「已翻空/多頭」這種文字、沒有給**數值**，
             # 導致 invalidation_price 90/90 全是「材料未提供具體價位，無法給出
             # 失效價」。孔明不是不肯寫，是真的沒有數字可寫。
-            _lv = (f"（SuperTrend 線在 {sti['st_line']}，現價 {sti['price']}，距離 {sti['gap_pct']:+.2f}%）"
-                   if sti.get("st_line") and sti.get("gap_pct") is not None else "")
+            # 🔴 2026-09-03 修：原本判斷式寫 `gap_pct is not None`，但
+            # **`nan is not None` 是 True**——2454 的 supertrend_invalidation 回
+            # price=nan / gap_pct=nan（st_line 3821.5 算得出來），於是材料裡直接印出
+            # 「現價 nan，距離 nan%」，投資長趨勢角度只好寫「無法確認實際乖離幅度」。
+            # 修法兩層：① 用 math.isfinite 擋 nan（不是只擋 None）
+            #          ② price 是 nan 時改用上面獨立查到的 cur_px 自己算距離。
+            import math as _m
+            _p = sti.get("price")
+            _g = sti.get("gap_pct")
+            if not (isinstance(_p, (int, float)) and _m.isfinite(_p)):
+                _p = cur_px
+                _g = ((_p / sti["st_line"] - 1) * 100
+                      if _p and sti.get("st_line") else None)
+            _ok = (sti.get("st_line") and _p and isinstance(_g, (int, float))
+                   and _m.isfinite(_g))
+            _lv = (f"（SuperTrend 線在 {sti['st_line']}，現價 {_p:,.2f}，距離 {_g:+.2f}%）"
+                   if _ok else
+                   (f"（SuperTrend 線在 {sti['st_line']}，但現價查不到，無法算乖離）"
+                    if sti.get("st_line") else ""))
             _rs = (f"（RS 現值 {sti['rs60']}）" if sti.get("rs60") is not None else "")
             trend_material += (f"SuperTrend：{'已翻空' if sti['st_bearish'] else '多頭'}{_lv}／"
                                f"RS(60日)：{'已跌破' if sti['rs60_broken'] else '未跌破'}{_rs}／"
