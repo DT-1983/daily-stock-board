@@ -192,5 +192,96 @@
     }
    ]
   }
+ },
+ "AVGO": {
+  "Q2 2026": {
+   "fetched": "2026-09-04",
+   "items": [
+    {
+     "type": "metric",
+     "label": "AI半導體本季營收",
+     "value": "108億美元，季度年增143%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "AI半導體訂單金額(bookings)",
+     "value": "超過300億美元，遠高於本季實際出貨的108億美元",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "全年AI半導體營收展望(FY2026)",
+     "value": "重申560億美元，年增約180%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "AI半導體營收中期展望(FY2027)",
+     "value": "重申超過1000億美元，由與Google、Anthropic、OpenAI、Meta等客戶簽訂的多年期供貨合約支撐",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "下季(Q3 FY2026)AI半導體營收展望",
+     "value": "160億美元，年增超過200%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "半導體解決方案部門本季營收",
+     "value": "150億美元，年增79%，占總營收68%；毛利率約70%，營業利益率62%(年增460個基點)",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "基礎設施軟體部門本季營收與ARR",
+     "value": "營收72億美元，年增9%，占總營收32%；年度經常性收入(ARR)年增17%；毛利率93%，營業利益率79%(年增310個基點)",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "本季自由現金流",
+     "value": "103億美元，占營收46%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "季底現金餘額",
+     "value": "196億美元，較上季(Q1)的142億美元增加",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "網通業務占本季AI營收比重",
+     "value": "接近40%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "網通業務占AI營收長期比重展望",
+     "value": "管理層預期未來將回落至約30%的長期水準",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "下季(Q3 FY2026)合併營收展望",
+     "value": "294億美元，年增84%；營業利益率約67%(與上季持平)；調整後EBITDA約占營收68%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "2027年AI晶片出貨(運算容量)目標",
+     "value": "維持10 GW目標不變；管理層表示能見度已延伸至2028年(三個月前僅看到2027年)",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "AI XPU平台建置與資本合作計畫",
+     "value": "與Apollo、Blackstone等投資人合作，目標在2028年前部署超過20 GW運算容量；首批規模350億美元，目前由Apollo主導launch",
+     "speaker": ""
+    }
+   ]
+  }
  }
 }

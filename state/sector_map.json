@@ -1750,5 +1750,11 @@
     "industry": "Electronic Production Equipment",
     "exchange": "TWSE",
     "asof": "2026-09-03"
+  },
+  "7750": {
+    "sector": "Electronic Technology",
+    "industry": "Electronic Equipment/Instruments",
+    "exchange": "TWSE",
+    "asof": "2026-09-03"
   }
 }
