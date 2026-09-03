@@ -159,6 +159,39 @@ TW_NAME = {
 }
 
 
+# ── 台股中文名解析（2026-09-03）──────────────────────────────────
+# 🔴 Leo：「台股可以加上中文嗎？」——看板上 2301/3653/3665/2408… 顯示英文全名。
+# 原因不是抓不到，是這裡查的 `TW_NAME` 是**手動維護的 62 筆字典**，而 9/3 新增的
+# 兩條鏈成分沒人補進去。同時 `state/tw_names_cache.json` 已經有 **1,986 筆**
+# 官方（證交所＋櫃買）中文簡稱，那 12 檔全部查得到。
+#
+# ⭐ 這就是今天記過的模式：**手動清單與自動來源並存 → 手動那份會默默過期，
+#    而且過期的樣子跟「資料源沒有」一樣**。改成自動來源當主、手動字典只當覆寫。
+_TWN_CACHE = None
+
+
+def tw_name(code, fallback=""):
+    """代號 → 中文簡稱。順序：手動覆寫 TW_NAME → 官方快取（1,986 筆）→ fallback。
+
+    手動字典留著是因為少數幾檔的簡稱我們刻意用別的寫法；但它**不再是唯一來源**，
+    新增鏈成分不用再手動補。
+    """
+    global _TWN_CACHE
+    c = str(code).strip()
+    if c in TW_NAME:
+        return TW_NAME[c]
+    if _TWN_CACHE is None:
+        try:
+            _TWN_CACHE = json.load(open("state/tw_names_cache.json", encoding="utf-8"))
+        except Exception:                                   # noqa: BLE001
+            _TWN_CACHE = {}
+    for k in (c, c + ".TW", c + ".TWO"):
+        v = _TWN_CACHE.get(k)
+        if v:
+            return v
+    return fallback or c
+
+
 import html as _html
 
 
@@ -511,7 +544,7 @@ def card_tw(r, has_chart):
               f'<p><b>理由</b>：{esc_tw(r.get("reason",""))}</p>'
               f'<p class="sub"><b>風險</b>：{esc_tw(r.get("risk",""))}</p>'
               f'{plan}{fin}{chk}')
-    nm = TW_NAME.get(r["code"], r.get("name", r["code"]))
+    nm = tw_name(r["code"], r.get("name", r["code"]))
     return (f'<details class="card {cls}" data-mkt="TW"><summary>'
             f'<span class="tk">{sig} {r["code"]}</span><span class="nm">{nm}</span>'
             f'<span class="badge">評分 {r.get("score","—")}</span>'
