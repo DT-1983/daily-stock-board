@@ -17,7 +17,7 @@ import glob
 import argparse
 from datetime import datetime
 
-from board_theme import BASE_CSS, header, icon, esc, NAV
+from board_theme import BASE_CSS, header, icon, esc, NAV, LOOKUP_BOX, LOOKUP_CSS
 
 if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
     sys.stdout.reconfigure(encoding="utf-8")
@@ -196,7 +196,7 @@ def build():
     return f"""<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex"><title>投資資訊首頁</title>
-<style>{BASE_CSS}{CSS_EXTRA}</style></head><body><div class="wrap">
+<style>{BASE_CSS}{CSS_EXTRA}{LOOKUP_CSS}</style></head><body><div class="wrap">
 {header("home", "投資資訊首頁", f"行情更新 {esc(m['updated'])} · 平日 09:00／15:10 自動更新", NAV, "home")}
 {stale_note}
 <div class="hsec"><h2>{icon("board", 16, "#3B82F6")}大盤行情</h2>
@@ -205,6 +205,10 @@ def build():
 <div class="hsec"><h2>{icon("earnings", 16, "#3B82F6")}今日頭條</h2>
 <div class="hnote">鉅亨網 台股 5 條＋國際 5 條，依發布時間排序</div>
 <div class="newsbox">{news_html}</div></div>
+<div class="hsec"><h2>{icon("chevron", 16, "#3B82F6")}查任意股票</h2>
+<div class="hnote">不限本站掃描母體；台股可直接打中文名（台積電）。
+每台裝置第一次要用帶 key 的網址授權一次，之後記住 90 天</div>
+{LOOKUP_BOX}</div>
 <div class="hsec"><h2>{icon("chevron", 16, "#3B82F6")}分頁入口</h2>
 <div class="entries">{entries_html}</div></div>
 <p class="sub" style="margin-top:20px">產生於 {datetime.now():%Y-%m-%d %H:%M} ·
