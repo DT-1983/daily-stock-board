@@ -117,6 +117,13 @@ PAGE_CSS = """
  border-top:1px solid #16223A;padding-top:10px}
 .lk-err{background:#1a1d23;border:1px solid #3a2a2a;border-radius:10px;padding:16px;
  color:#e8b4b4;font-size:14px;line-height:1.7}
+.lk-rf{font-size:12.5px;color:#93C5FD;margin:2px 0 6px}
+.lk-picks{display:flex;flex-direction:column;gap:7px;margin-top:10px}
+.lk-pick{display:flex;gap:10px;align-items:baseline;padding:11px 13px;border-radius:9px;
+ background:#1a1d23;border:1px solid #2a2e35;text-decoration:none;color:#e8eaed}
+.lk-pick:hover{border-color:#4a9eff}
+.lk-pick b{font-size:15px;color:#93C5FD}
+.lk-pick span{font-size:12.5px;color:#9aa0a6}
 """
 
 
@@ -213,6 +220,65 @@ NOTE = (
     '</div>')
 
 
+def _tw_by_name(q):
+    """中文公司名 → 台股代號。用 `combo_scan._tw_names()`（證交所＋櫃買的官方中文名），
+    不另外接查詢服務——那份資料本來就在，而且 Yahoo 的搜尋對中文幾乎查不到
+    （實測「台積電」回空清單）。
+
+    先找完全相同，再找包含（「台積」也要找得到台積電）。
+    """
+    try:
+        import combo_scan as CS
+        names = CS._tw_names() or {}
+    except Exception:                                       # noqa: BLE001
+        return []
+    q = q.strip()
+    exact = [(c, n) for c, n in names.items() if n == q]
+    if exact:
+        return exact[:5]
+    return [(c, n) for c, n in names.items() if q and q in n][:5]
+
+
+def resolve(q):
+    """輸入 → 候選 [(代號, 顯示名)]。輸入本來就是代號時回空清單（不用解析）。
+
+    ⚠️ **解析出來的結果一定要顯示給使用者看**（「P&G → PG」），不能安靜地換一檔
+    然後把數字端上去——那會變成「看起來查了 A、其實給你 B 的數字」。
+
+    實測（2026-09-03）Yahoo 搜尋的能力邊界：`Procter Gamble`／`apple`／`AT&T`／
+    `Johnson & Johnson` 都查得到；**`P&G` 這種太短的縮寫查不到**（回一堆匯率/期貨）；
+    中文名一律查不到 → 中文走本地 `_tw_names()`。
+    """
+    q = (q or "").strip()
+    if not q:
+        return []
+    # 中文（含任何非 ASCII）先走本地台股名冊
+    if any(ord(c) > 127 for c in q):
+        return _tw_by_name(q)
+    try:
+        import yfinance as yf
+        quotes = yf.Search(q, max_results=8).quotes or []
+    except Exception:                                       # noqa: BLE001
+        return []
+    out = []
+    for x in quotes:
+        if x.get("quoteType") not in ("EQUITY", "ETF"):
+            continue                                        # 排掉匯率/期貨/指數
+        sym = x.get("symbol")
+        nm = (x.get("shortname") or x.get("longname") or "").strip()
+        if sym:
+            out.append((sym, nm))
+    return out[:5]
+
+
+def _pick_list(q, cands):
+    items = "".join(
+        f'<a class="lk-pick" href="/lookup?ticker={esc(c)}">'
+        f'<b>{esc(c)}</b> <span>{esc(n)}</span></a>' for c, n in cands)
+    return (f'<div class="lk-err">「{esc(q)}」看起來是公司名不是代號。'
+            f'你要查哪一檔？</div><div class="lk-picks">{items}</div>')
+
+
 def render(ticker):
     """回 (html, status)。ticker 空字串就只給搜尋框。"""
     ticker = (ticker or "").strip()
@@ -227,9 +293,27 @@ def render(ticker):
                 + f'<div class="lk-err">查詢時出錯：{esc(str(e)[:200])}</div>')
         return _shell("查股", body), 500
     if row is None:
+        # 當成代號查不到 → 可能本來就是打公司名（Leo 實際輸入過 "P&G"）。
+        # 找得到唯一一檔就直接查它並在畫面上標明換算過；多檔就讓人自己選。
+        cands = resolve(ticker)
+        if len(cands) == 1:
+            sym = cands[0][0]
+            try:
+                row = lamp_lookup.lookup(sym)
+            except Exception:                               # noqa: BLE001
+                row = None
+            if row is not None:
+                row["_resolved_from"] = f"{ticker} → {sym}　{cands[0][1]}"
+        elif len(cands) > 1:
+            return _shell("查股", "<h1>查股</h1>" + _form(ticker)
+                          + _pick_list(ticker, cands)), 200
+    if row is None:
         body = ("<h1>查股</h1>" + _form(ticker)
-                + '<div class="lk-err">查無資料——代號打錯，或這檔資料量不足'
-                  '（新掛牌／太冷門，算不出 60 日以上的指標）。</div>')
+                + '<div class="lk-err">查無資料——代號或公司名查不到。<br>'
+                  '· 美股請用代號或完整公司名（<b>P&amp;G 這種縮寫查不到，請打 PG '
+                  '或 Procter Gamble</b>）<br>'
+                  '· 台股可以直接打中文名（台積電）或代號（2330）<br>'
+                  '· 也可能是新掛牌／太冷門，算不出 60 日以上的指標</div>')
         return _shell("查股", body), 404
 
     # 技術面卡片＋四張圖。抓不到就整區省略，不要讓整頁掛掉——上面那排數字
@@ -244,9 +328,12 @@ def render(ticker):
 
     name = esc(row.get("name") or "")
     src = "今日掃描快取" if row.get("src") == "cache" else "即時計算"
+    # 有做過名稱→代號的換算就一定要講，不能安靜地端出另一檔的數字
+    rf = row.get("_resolved_from")
+    rf_html = f'<div class="lk-rf">🔁 {esc(rf)}</div>' if rf else ""
     head = (f'<div class="lk-head"><span class="lk-tk">{esc(row["ticker"])}</span>'
             f'<span class="lk-nm">{name}</span>'
-            f'<span class="lk-src">{src}</span></div>')
+            f'<span class="lk-src">{src}</span></div>' + rf_html)
     body = head + _form(ticker) + _summary(row) + tech + NOTE
     return _shell(f'{row["ticker"]} 查股', body), 200
 

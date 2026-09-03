@@ -124,6 +124,8 @@ async def _lookup_page(request):
     ok, set_cookie = lookup_page.gate(request.query.get("key", ""),
                                       request.cookies.get(lookup_page.COOKIE, ""))
     if not ok:
+        print(f"[lookup] 擋下（無 key／cookie）ticker={request.query.get('ticker','')!r}",
+              flush=True)
         return web.Response(text=lookup_page.not_found_html(), status=404,
                             content_type="text/html", charset="utf-8")
 
@@ -134,6 +136,10 @@ async def _lookup_page(request):
         traceback.print_exc()
         return web.Response(text=f"查詢失敗：{e}", status=500,
                             content_type="text/plain", charset="utf-8")
+    # 存取紀錄：9/3 Leo 回報「沒辦法用」時我完全查不到他打了什麼、被擋在哪一關
+    # （aiohttp 預設不記請求）。只記代號與結果，不記 IP/UA。
+    print(f"[lookup] ticker={tk!r} status={status} "
+          f"{'外部' if request.headers.get('CF-Connecting-IP') else '本機'}", flush=True)
     resp = web.Response(text=html, status=status, content_type="text/html", charset="utf-8")
     if set_cookie:
         # Secure＋SameSite=Lax：只走 https（tunnel 那端本來就是 https），
