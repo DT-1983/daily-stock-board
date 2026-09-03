@@ -1,124 +1,124 @@
 {
- "updated": "2026-09-03 20:03",
+ "updated": "2026-09-04 05:49",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "09/02",
-   "close": 7666.6,
-   "chg_pct": 0.46
+   "date": "09/03",
+   "close": 7747.71,
+   "chg_pct": 1.06
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "09/02",
-   "close": 26217.83,
-   "chg_pct": 0.45
+   "date": "09/03",
+   "close": 26584.06,
+   "chg_pct": 1.4
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "09/02",
-   "close": 53061.95,
-   "chg_pct": 0.56
+   "date": "09/03",
+   "close": 53686.11,
+   "chg_pct": 1.18
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "09/02",
-   "close": 11339.25,
-   "chg_pct": 0.45
+   "date": "09/03",
+   "close": 11352.13,
+   "chg_pct": 0.11
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/03",
-   "close": 45857.66,
-   "chg_pct": -0.67
+   "date": "09/02",
+   "close": 46164.72,
+   "chg_pct": -1.67
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/03",
-   "close": 31.69,
-   "chg_pct": 0.04
+   "close": 31.71,
+   "chg_pct": 0.12
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "09/02",
-   "close": 4.8,
+   "date": "09/03",
+   "close": 4.76,
    "fmt": "yield",
-   "chg_bp": 0.0
+   "chg_bp": -3.4
   }
  ],
  "news": [
   {
-   "title": "美債大跌另有元凶！「神祕利率」升高暗示高利率恐成新常態",
+   "title": "范斯：對伊朗「未進行大規模作戰」但保留所有施壓選項",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6596626",
-   "ts": "09/03 20:00"
+   "url": "https://news.cnyes.com/news/id/6596977",
+   "ts": "09/04 05:49"
   },
   {
-   "title": "全新8月營收年增71.16％再寫單月新高 磷化銦產品出貨訂單滿載已至年底",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6596638",
-   "ts": "09/03 19:55"
-  },
-  {
-   "title": "支持美國蓋資料中心不再吸引選民 連共和黨人也反了",
+   "title": "〈紐約匯市〉美元下跌 債市拋售降溫 日元飆至1個月高點",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6596555",
-   "ts": "09/03 19:40"
+   "url": "https://news.cnyes.com/news/id/6596589",
+   "ts": "09/04 05:41"
   },
   {
-   "title": "4萬6失守 外資續賣481億元砍殺記憶體族群 逆勢加碼面板雙雄及航運股",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6596622",
-   "ts": "09/03 19:38"
-  },
-  {
-   "title": "Cyber​​cab今晚正式發布！大摩：這次活動意義遠超以往 Robotaxi車隊擴張為最大看點",
+   "title": "神仙打架！Gemini 3.8 Flash才登頂就被超車 Meta、Mostik接連出招 競爭聚焦「成本」",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6596528",
-   "ts": "09/03 19:30"
+   "url": "https://news.cnyes.com/news/id/6596942",
+   "ts": "09/04 05:31"
   },
   {
-   "title": "TISA上路滿周年！資產規模突破210億元 金管會跨部會推進第二階段",
+   "title": "〈台股盤前要聞〉台指期夜盤站回4萬6、200億美元加碼赴美投資聚焦半導體及AI伺服器",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6596614",
-   "ts": "09/03 19:28"
+   "url": "https://news.cnyes.com/news/id/6596926",
+   "ts": "09/04 05:10"
   },
   {
-   "title": "營收速報  - 聯穎(3550)8月營收3.73億元年增率高達33.66％",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6596620",
-   "ts": "09/03 19:20"
-  },
-  {
-   "title": "營收速報  - 艾姆勒(2241)8月營收8,716萬元年增率高達47.33％",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6596619",
-   "ts": "09/03 19:20"
-  },
-  {
-   "title": "輝達將砸140億美元收購Hugging Face？分析師：全球AI開源體系恐面臨重構",
+   "title": "〈美股盤後〉華勒釋暫緩升息訊號 美債殖利率回落 三大指數齊漲逾1%",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6596329",
-   "ts": "09/03 19:00"
+   "url": "https://news.cnyes.com/news/id/6596945",
+   "ts": "09/04 04:50"
   },
   {
-   "title": "不走傳統私有化 GoPro保留上市地位 獲Starman 2.85億美元借殼注資",
+   "title": "鉅亨速報 - Factset 最新調查：歐特培(UGP-US)EPS預估上修至0.8元，預估目標價為6.81元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6596368",
-   "ts": "09/03 17:30"
+   "url": "https://news.cnyes.com/news/id/6596953",
+   "ts": "09/04 04:15"
+  },
+  {
+   "title": "輝達把Blackwell塞進電腦！聯想、宏碁10月首發RTX Spark",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6596924",
+   "ts": "09/04 02:30"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：來億-KY(6890-TW)EPS預估下修至11.45元，預估目標價為230元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6596808",
+   "ts": "09/03 22:11"
+  },
+  {
+   "title": "上詮斥資15.38億擴產FAU生產線 Q3起依客戶需求交貨3.2T產品",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6596699",
+   "ts": "09/03 20:27"
+  },
+  {
+   "title": "智寶《Lollipop Chainsaw電鋸甜心》系列新作 將於東京電玩展首次公開",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6596698",
+   "ts": "09/03 20:25"
   }
  ],
  "inst": {
