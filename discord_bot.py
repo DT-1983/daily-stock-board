@@ -46,6 +46,7 @@ from aiohttp import web
 from dotenv import dotenv_values
 
 import lamp_lookup
+import lookup_page
 
 _env = {**dotenv_values(Path(__file__).parent / ".env"), **os.environ}
 TOKEN = _env.get("DISCORD_BOT_TOKEN", "")
@@ -100,9 +101,30 @@ async def _health(request):
                               status=200 if ready else 503)
 
 
+async def _lookup_page(request):
+    """視覺化查股頁 `/lookup?ticker=2454`（2026-09-03）。
+
+    跟 `/查` 同一個資料來源（lamp_lookup），只是把結果畫成網頁＋技術面四張圖。
+    頁面產生邏輯全在 `lookup_page.py`，這裡只負責掛路由。
+
+    ⚠️ 用 `to_thread`：`lookup_page.render()` 內部會抓 3 年 OHLC＋算指標，是同步的
+    CPU/IO 工作，直接在事件迴圈裡跑會**把整個 bot 卡住**（連 Discord 心跳都停），
+    那會害 service_health_check 判定失聯然後重啟這支。
+    """
+    tk = request.query.get("ticker", "")
+    try:
+        html, status = await asyncio.to_thread(lookup_page.render, tk)
+    except Exception as e:                                # noqa: BLE001
+        traceback.print_exc()
+        return web.Response(text=f"查詢失敗：{e}", status=500,
+                            content_type="text/plain", charset="utf-8")
+    return web.Response(text=html, status=status, content_type="text/html", charset="utf-8")
+
+
 async def _run():
     app = web.Application()
     app.router.add_get("/", _health)
+    app.router.add_get("/lookup", _lookup_page)
     runner = web.AppRunner(app)
     await runner.setup()
     site = web.TCPSite(runner, "127.0.0.1", HEALTH_PORT)
