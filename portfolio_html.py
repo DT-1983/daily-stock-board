@@ -13,6 +13,32 @@ from datetime import datetime
 from portfolio_html_legacy import usd, cls, holding_rows, OBIS
 from board_theme import BASE_CSS, header, icon, esc, NAV
 
+# 2026-09-03（Leo：「電腦版圖版占太多地方，空白太多」）：桌機版緊湊化。
+#
+# **只在這一頁蓋、不改 board_theme**——.row/.wrap/.vsgrid 是全站共用的，改主題會
+# 動到看板、燈號、財報等每一頁，風險跟收益不成比例。這頁的問題是它自己的資訊密度
+# （四張大卡片各只有 4 行字、產業鏈列中間一大片空白），頁面層級處理就夠。
+#
+# 三個改動：① 寬螢幕放寬到 1280（1100 在 1440 螢幕上兩側留白過多）
+# ② 卡片與列的內距、字級縮一階 ③ 產業鏈列改三欄，把市值/損益移到中間補空白。
+DESKTOP_CSS = """
+@media(min-width:1080px){
+  .wrap{max-width:1280px}
+  .stat{padding:12px;margin:8px 0}
+  .stat .big{font-size:25px}
+  .vsgrid{gap:9px;margin:8px 0}
+  .vsgrid .box{padding:11px 12px}
+  .vsgrid .val{font-size:19px;margin:3px 0}
+  .vsgrid .pnl{font-size:12.5px}
+  .vsgrid details{margin-top:6px}
+  .row{min-height:44px;padding:9px 12px;align-items:center}
+  .row .info{display:flex;align-items:center;gap:18px;flex:1;min-width:0}
+  .row .t1{flex:0 0 250px}
+  .row .one{margin-top:0;flex:1;text-align:left}
+  #race{max-height:250px}
+}
+"""
+
 import sys
 if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
     sys.stdout.reconfigure(encoding="utf-8")  # Windows cp950 印 emoji 會炸
@@ -117,7 +143,7 @@ def build(state):
 <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
 <title>策略賽馬 · 模擬倉</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
-<style>{BASE_CSS}</style></head><body><div class="wrap">
+<style>{BASE_CSS}{DESKTOP_CSS}</style></head><body><div class="wrap">
 {header("portfolio", "策略賽馬模擬倉",
   f"起始 {esc(inception)}（第 {days} 天）· <b>資料日期 {esc(updated)}</b>"
   f" · 每倉 {usd(base)} · 匯率 1美元={fx}台幣"
