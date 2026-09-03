@@ -107,6 +107,12 @@ state/price_store/
 #    都已一併改掉。改動這三處要一起看。
 state/advisor_verdicts.jsonl
 state/research_notes.jsonl
+# 2026-09-03 補漏：9/1 那次只移了上面兩個，**漏掉這個登錄簿**——它同樣每檔帶
+# `held: true`，等於持股清單一直留在公開 repo 裡（實查遠端 board/main 版本確有
+# 12 檔 held=true）。它是 investment_chief 登錄、thesis_check 每天讀的失效條件簿。
+# 實查只有本機 4 支 .py 讀它（ask_advisor/investment_chief/thesis_check），
+# GitHub Actions 沒用到，移出版控不影響管線。歷史已公開，移除只能防未來。
+state/thesis_conditions.json
 
 # 2026-09-03 交易記錄（私人，跟 advisor_verdicts 同一批不進公開 repo）
 state/trade_journal.jsonl
