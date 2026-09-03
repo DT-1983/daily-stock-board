@@ -39,8 +39,11 @@
   "NVDA@2026-08-26": "sent",
   "2881.TW@2026-08-28": "sent",
   "2882.TW@2026-08-27": "sent",
-  "MRVL@2026-08-27": "sent"
+  "MRVL@2026-08-27": "sent",
+  "AVGO@2026-09-02": "sent"
  },
  "last_quarter_run": "2026-08",
- "infographic_pending": {}
+ "infographic_pending": {
+  "AVGO@2026-09-02": "2026-09-02"
+ }
 }
