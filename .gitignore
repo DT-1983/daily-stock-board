@@ -119,3 +119,6 @@ state/trade_journal.jsonl
 
 # 個人持股清單（公開 repo 不可入庫，2026-09-03）
 holdings.json
+
+# 本機預覽用暫存頁
+docs/_lk_preview.html
