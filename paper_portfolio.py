@@ -581,6 +581,29 @@ def _value(pf, prices, fx):
     return round(v, 2)
 
 
+def _check_basis(pf, name, fx):
+    """檢查進場成本的幣別跟現價一致——**只警告不自動改**，改要人看過。
+
+    🔴 2026-09-03 踩過：9/2 修 `is_tw()` 讓 `.TWO` 被認出來後，**現價**開始正確
+    換成美元，但**儲存的進場價 `eu` 還是舊制的台幣數字**（8/18 建倉時寫的）。
+    於是 1580.TWO / 5520.TWO 的市值一夜之間變成原本的 1/32，巴菲特倉顯示
+    -37.36%（真實是 +0.30%），而且**沒有任何地方報錯**——數字看起來就只是「跌很多」。
+
+    ⭐ 通則：改了「怎麼算」的規則，要一併檢查**已經用舊規則存起來的資料**。
+    只改計算不遷移資料＝改了一半，而且壞掉的樣子會偽裝成正常的市場波動。
+    （同 [[otc_suffix_coverage_gap]]、[[derived_files_stale_after_correction]]）
+    """
+    for tk, h in pf["holdings"].items():
+        en, eu = h.get("en"), h.get("eu")
+        if not (is_tw(tk) and en and eu and fx):
+            continue
+        expect = en / fx
+        if abs(eu - expect) / max(expect, 1e-9) > 0.2:
+            print(f"  🔴 {name} / {tk} 進場成本幣別不一致："
+                  f"eu={eu}（台幣 {en} ÷ {fx} 應為 {expect:.4f}，差 {eu/expect:.0f} 倍）"
+                  f"——這檔的損益是假的，要先修 portfolios.json 再看數字")
+
+
 def _refresh_current(pf, prices, fx):
     """把每股現價(原幣)寫回 holdings，html 直接讀。"""
     for tk, h in pf["holdings"].items():
@@ -597,7 +620,8 @@ def _all_tickers(state):
 
 
 def update_nav(state, prices, fx, date):
-    for pf in state["portfolios"].values():
+    for name, pf in state["portfolios"].items():
+        _check_basis(pf, name, fx)          # 幣別一致性，只警告不自動改
         _refresh_current(pf, prices, fx)
         v = _value(pf, prices, fx)
         pf["value"] = v
