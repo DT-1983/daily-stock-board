@@ -170,6 +170,11 @@ def _one_stock_block(code, nm=""):
     import re as _re
     label = f"{nm}（{code}）" if nm else code
     lines = [f"【問題裡提到的個股：{label}】"]
+    # 🔴 2026-09-04：**公司在做什麼一定要給**。首次軍議時仲達說「高力是連接器/
+    # 線纜廠」——實際是熱交換器廠。他沒有公司資料就用自己的知識補了一個，
+    # 跟「問高力答成 HIG」同一類錯：材料缺一塊，他就填一塊，而且填得很自然。
+    # 龐統當時答對，只是因為我只給了龐統 profile。
+    lines.append("  " + _profile(code).replace("\n", "\n  "))
     held = _re.sub(r"\.(TW|TWO)$", "", str(code).upper()) in _held_set()
     lines.append(f"  是不是持股：{'是' if held else '否'}")
     cr = _load("state/combo_result.json", {}) or {}
@@ -443,7 +448,9 @@ def material_kongming(question=""):
     if isinstance(mat, (list, tuple)):
         keys = ("AI綜合訊號", "價值角度材料", "趨勢角度材料", "今日研究員筆記")
         mat = "\n\n".join(f"【{k}】\n{v}" for k, v in zip(keys, mat))
-    return f"【判斷標的：{nm}（{code}）】\n\n{mat}"
+    # 公司在做什麼也要給——investment_chief 的材料全是數字，沒有業務描述，
+    # 少了它 AI 會自己補（見 _one_stock_block 的註解）。
+    return f"【判斷標的：{nm}（{code}）】\n{_profile(code)}\n\n{mat}"
 
 
 # ── 龐統：查這一檔的新聞 ──────────────────────────────────────────
@@ -623,6 +630,29 @@ DEFAULT_Q = {
 }
 
 
+def council_roles(question=""):
+    """一次問四位時，決定叫誰。**規則判斷，不用 AI 分派。**
+
+    🔴 2026-09-04 Leo 問「不能四位一起回答嗎？由孔明統一分派？還是加一位角色？」
+    三個都不做，理由：
+
+    · **不用孔明分派**——分派是規則問題（有沒有指定個股），不是判斷問題；
+      而且他的職責是「對一檔給兩個獨立角度」，兼任調度會混淆角色。
+    · **不加第五位**——四位已涵蓋「找材料／下判斷／看風險／看紀錄」。
+      第五位只會是「轉述前四位講的話」的人，那正是 Leo 剛嫌過的囉嗦。
+    · **不用 AI 分派**——多一層 AI 就多一次會錯的機會（同日才踩過答錯股票）；
+      而且分派者要猜使用者想問什麼，猜錯的成本比省下的時間高。
+
+    規則很簡單，因為問題本來就只有兩種：
+      有指定個股 → 龐統（發生什麼事）→ 孔明（怎麼看）→ 仲達（有沒有在監控/風險）
+      沒指定個股 → 龐統（主題新聞）→ 仲達（今天的風險）→ 陳壽（我們的紀錄）
+    ⚠️ 陳壽的材料是**全局**的（判斷準確度、交易紀錄），不是個股層，
+      所以問個股時不叫他——叫了也只會重複講全局統計。
+    """
+    return (["龐統", "孔明", "仲達"] if _tickers_in_question(question)
+            else ["龐統", "仲達", "陳壽"])
+
+
 def ask(role, question=None, limit=MAX_CHARS):
     r = ROLES.get(role)
     if not r:
@@ -664,13 +694,22 @@ def ask(role, question=None, limit=MAX_CHARS):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("role", choices=list(ROLES))
+    ap.add_argument("role", choices=list(ROLES) + ["軍議"])
     ap.add_argument("question", nargs="?", default="")
     ap.add_argument("--material-only", action="store_true",
                     help="只印材料不呼叫 AI（除錯用）")
     a = ap.parse_args()
+    if a.role == "軍議":
+        roles = council_roles(a.question)
+        print(f"—— 軍議：{'、'.join(roles)} ——")
+        for r in roles:
+            print(f"{os.linesep}—— {ROLES[r]['name']} ——")
+            print(ask(r, a.question))
+        return 0
     if a.material_only:
-        print(ROLES[a.role]["material"]())
+        m = ROLES[a.role]
+        print(m["material"](a.question) if m.get("needs_question")
+              else m["material"]())
         return 0
     print(f"—— {ROLES[a.role]['name']} ——")
     print(ask(a.role, a.question))
