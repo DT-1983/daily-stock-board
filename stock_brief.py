@@ -35,7 +35,8 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
     sys.stdout.reconfigure(encoding="utf-8")
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-OBIS = r"C:\Users\Mophy\Documents\Google drive\BB-8 工作區\04_AI Report\Investment"
+# 2026-09-05 資料夾整理：路徑一律走 obis_paths，不再各自寫死。
+from obis_paths import BRIEFS as OBIS
 
 
 def _load(p, d=None):

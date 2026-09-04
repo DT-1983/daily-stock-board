@@ -1,7 +1,9 @@
 """把 daily_stock_analysis 的簡體報告 → 繁體台灣用語 + 修表格 + 存進 obis AI Report/Investment
 
 用法:python tw_report.py <input.md> [-o output.md]
-不指定 -o 時自動存到 obis 04_AI Report/Investment/YYYY-MM-DD_美股晨會看板.md
+不指定 -o 時自動存到 obis 04_AI Report/Investment/存檔/YYYY-MM-DD_美股晨會看板.md
+（放「存檔」是因為它是一次性報告——產出後不會再被任何程式覆寫，跟每日看板那些
+會被覆寫的儀表板混在一起的話，「過期了」跟「本來就是那天的」就分不出來。）
 """
 import sys
 import os
@@ -10,7 +12,8 @@ import argparse
 from datetime import datetime
 from opencc import OpenCC
 
-OBIS_INVEST = r"C:\Users\Mophy\Documents\Google drive\BB-8 工作區\04_AI Report\Investment"
+# 2026-09-05 資料夾整理：路徑一律走 obis_paths，不再各自寫死。
+from obis_paths import ARCHIVE as OBIS_INVEST
 
 cc = OpenCC("s2twp")  # 簡→繁 + 台灣慣用詞
 
