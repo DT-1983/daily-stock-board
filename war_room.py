@@ -70,6 +70,22 @@ def _jsonl(p, limit=None):
     return out[-limit:] if limit else out
 
 
+
+_HELD_CACHE = None
+
+
+def _held_set():
+    """Leo 實際持有的代號（正規化）。一次執行內快取，材料組裝要用好幾次。"""
+    global _HELD_CACHE
+    if _HELD_CACHE is None:
+        try:
+            import investment_chief
+            _HELD_CACHE = {investment_chief.norm_ticker(t)
+                           for t in investment_chief.held_universe()}
+        except Exception:                                   # noqa: BLE001
+            _HELD_CACHE = set()
+    return _HELD_CACHE
+
 # ── 仲達：現在有什麼風險 ────────────────────────────────────────
 def material_sima():
     m = []
@@ -97,10 +113,11 @@ def material_sima():
              f"**觸發 {len(fired)} 條**、逼近 {len(near)} 條、"
              f"等財報才驗 {len(pend)} 條"
              + (f"；未覆蓋 {tc['uncovered']}" if tc.get("uncovered") else ""))
+    # 「非持股」也要寫出來——留空會讓讀的人不確定是漏標還是真的不是持股
     for tk, desc, held, ang in fired[:10]:
-        m.append(f"  🚫 {tk}{'（持股）' if held else ''}[{ang}] {desc}")
+        m.append(f"  🚫 {tk}{'（持股）' if held else '（非持股）'}[{ang}] {desc}")
     for tk, desc, held, ang in near[:6]:
-        m.append(f"  ⚠️ {tk}{'（持股）' if held else ''}[{ang}] 逼近：{desc}")
+        m.append(f"  ⚠️ {tk}{'（持股）' if held else '（非持股）'}[{ang}] 逼近：{desc}")
 
     cr = _load("state/combo_result.json", {}) or {}
     crows = cr.get("rows") or cr.get("items") or []
@@ -134,16 +151,21 @@ def material_sima():
             m.append(f"  🚫 {r.get('name')}({r.get('ticker')}) {r.get('broker')}："
                      f"{(r['fired'][0] or {}).get('desc','')}")
 
+    # ⚠️ 2026-09-04：每一列都要標「是不是持股」。首測仲達自己點出這個缺口——
+    # 「材料未標注 WM 是否為持股，我不確定」「券商異動沒標注是否為你的持股」。
+    # 他答得誠實，但那是我沒給資料，不該讓他猜。
     tch = _load("state/target_changes_today.json", {}) or {}
     hits, oth = tch.get("alerts") or [], tch.get("ours_untrusted") or []
     if hits or oth:
-        m.append(f"【券商異動】可信券商 × 我們母體內 {len(hits)} 筆；"
-                 f"母體內但券商不在可信名單 {len(oth)} 筆")
-        for r in (hits + oth)[:6]:
+        m.append(f"【券商異動】要推播 {len(hits)} 筆；母體內但不推播 {len(oth)} 筆")
+        for r in (hits + oth)[:8]:
             d_ = {"up": "▲調升", "down": "▼調降"}.get(r.get("direction"), "－")
-            m.append(f"  {d_} {r.get('name')}({r.get('ticker')}) {r.get('broker')} "
-                     f"{r.get('rating')}　{r.get('tp_old')}→{r.get('tp_new')}"
-                     f"（數字未經覆核）")
+            tk = re.sub(r"\.(TW|TWO)$", "", str(r.get("ticker") or "").upper())
+            m.append(f"  {d_} {r.get('name')}({r.get('ticker')})"
+                     f"{'（持股）' if tk in _held_set() else '（非持股）'} "
+                     f"{r.get('broker')} {r.get('rating')}　"
+                     f"{r.get('tp_old')}→{r.get('tp_new')}（數字未經覆核）"
+                     + (f"　←{r['_why']}" if r.get("_why") else ""))
 
     rm = _load("state/roadmap_milestones.json", {}) or {}
     today = dt.date.today()
