@@ -132,6 +132,29 @@ async def cmd_chen(interaction: discord.Interaction, 問題: str = ""):
     await _ask_war_room(interaction, "陳壽", 問題)
 
 
+@tree.command(name="軍議", description="一次問三位（依有沒有指定個股自動決定叫誰），約 2-3 分鐘")
+@app_commands.describe(問題="要議什麼；指定個股→龐統/孔明/仲達，沒指定→龐統/仲達/陳壽")
+async def cmd_council(interaction: discord.Interaction, 問題: str = ""):
+    # ⚠️ **一位答完就先送一則**，不要等三位都跑完——一位約 40-60 秒，
+    # 三位就是 2-3 分鐘，全部跑完才送的話中間完全沒有回饋，看起來像掛了。
+    await interaction.response.defer(thinking=True)
+    try:
+        import war_room
+        roles = war_room.council_roles(問題)
+        head = f"**🏛️ 軍議**　{'、'.join(roles)}"
+        if 問題:
+            head += f"\n> {問題}"
+        await interaction.followup.send(head)
+        for role in roles:
+            msg = await asyncio.to_thread(war_room.ask, role, 問題)
+            msg = f"**{war_room.ROLES[role]['name']}**\n{msg}"
+            for i in range(0, len(msg), 1900):
+                await interaction.followup.send(msg[i:i + 1900])
+    except Exception as e:                                # noqa: BLE001
+        traceback.print_exc()
+        await interaction.followup.send(f"⚠️ 軍議出錯：{e}")
+
+
 @tree.command(name="孔明", description="投資長：對一檔給趨勢/價值兩個獨立角度的判斷＋失效條件")
 @app_commands.describe(問題="要判斷哪一檔，例：2454 / 輝達怎麼看（一定要指定股票）")
 async def cmd_kongming(interaction: discord.Interaction, 問題: str):
