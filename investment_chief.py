@@ -505,7 +505,15 @@ def gather_material(ticker, notes):
     try:
         import price_store as _ps
         import tw_symbol as _tws
-        _sym = (_tws.resolve(ticker) if re.match(r"^\d{4,6}[A-Z]?$", str(ticker))
+        # 🔴 2026-09-05：原本的判斷是 `^\d{4,6}[A-Z]?$`，**只認裸代號**。
+        # 事件驅動那條路進來的是 2303，走台股分支沒事；但 `fill_missing()` 刻意
+        # 傳原始寫法 2303.TW（註解裡有寫「用原始寫法」），於是落到美股分支被
+        # 當成 BRK.B 那種寫法 → `2303-TW` → yfinance 404 → 現價靜默變 None，
+        # 材料印「查無現價」，投資長兩個角度一起被拖成資料不足。
+        # ⭐ 同一件事今晚踩第二次：**帶不帶 .TW 是同一檔**，任何分辨台股/美股的
+        # 判斷都要兩種寫法都認（另一次是失效條件登錄簿的 key）。
+        _sym = (_tws.resolve(ticker)
+                if re.match(r"^\d{4,6}[A-Z]?(\.TWO?)?$", str(ticker), re.I)
                 else str(ticker).replace(".", "-"))
         _s = _ps.get_closes([_sym], period="1y").get(_sym)
         if _s is not None and not _s.empty:

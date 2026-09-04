@@ -34,7 +34,8 @@ import fundamentals_reality as FR  # 2026-08-06：財報與營收實況（BEST M
 import technical_indicators as TI  # 2026-08-06：技術面四指標（BEST MATCH 拆解功能之四）
 import earnings_call as EC  # 2026-08-09：管理層口頭重點（法說會逐字稿，補財報三表沒有的公司自訂KPI）
 
-OBIS = r"C:\Users\Mophy\Documents\Google drive\BB-8 工作區\04_AI Report\Investment"
+# 2026-09-05 資料夾整理：路徑一律走 obis_paths，不再各自寫死。
+from obis_paths import EARNINGS as OBIS
 # 台股中文名的第二來源（board_html_legacy.TW_NAME 只有七鏈守備清單的 62 檔，
 # Leo 的持股台泥/正新/台灣大/中華電不在裡面，卡片標題會退成 yfinance 的英文長名）
 HOLDINGS_JSON = r"C:\Users\Mophy\AI\assets-dashboard\data\holdings.json"
