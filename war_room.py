@@ -86,6 +86,151 @@ def _held_set():
             _HELD_CACHE = set()
     return _HELD_CACHE
 
+
+def resolve_in_question(q):
+    """從問題裡認出使用者在問哪一檔，並回一段「這檔的實際資料」加進材料。
+
+    🔴 2026-09-04 加，起因是一次**答錯股票**：Leo 問「高力怎麼看？」，
+    仲達回答的是 **HIG（The Hartford Insurance Group）**——完全不同的公司。
+    高力是 **8996**，而 8996 根本不在材料裡（不是持股、不在燈號母體），
+    於是他在材料中找了個看起來最像的代號套上去，還講得頭頭是道。
+
+    ⭐ **這是最危險的一種錯**：格式正確、語氣謹慎、甚至誠實標了「材料沒給的部分」，
+    但整段講的是另一家公司。靠 prompt 叫他「不要猜」擋不住——他不覺得自己在猜。
+
+    修法兩層：
+      ① 這裡先做**名稱→代號**的硬解析（中文名走 combo_scan._tw_names，
+         英文/數字直接當代號），把那一檔的真實資料撈進材料。
+      ② 解析不到、或解析到但我們沒有資料時，材料裡**明寫**這件事，
+         prompt 再加一條硬規則禁止代換。
+    """
+    q = (q or "").strip()
+    if not q:
+        return ""
+    import re as _re
+    cands = []
+    # 中文公司名
+    try:
+        import combo_scan
+        names = combo_scan._tw_names() or {}
+        for code, nm in names.items():
+            nm = str(nm)
+            if len(nm) >= 2 and nm in q:
+                cands.append((code, nm))
+    except Exception:                                       # noqa: BLE001
+        pass
+    # 直接寫代號
+    # ⚠️ 這個 regex **不要用 詞邊界**：跨工具寫檔時反斜線會被吃掉，變成真的
+    # 退格字元 0x08，regex 就成了「找退格字元包住的代號」——永遠匹配不到，
+    # 而且 grep/sed 顯示不出來，只有 repr() 看得見（2026-09-04 踩了第四次）。
+    # 改用字元類自己界定，不依賴反斜線。
+    # ⚠️ 在**原文**找、不要先 .upper()：代號本來就是用大寫寫的（COST、NVDA），
+    # 先轉大寫的話「Palo Alto Networks」會被切成 PALO/ALTO 當成代號，
+    # 而且因為 cands 有東西了，下面的公司名解析（③）就再也不會執行。
+    for tk in _re.findall(r"(?:^|[^0-9A-Za-z])([0-9]{4,6}[A-Z]?|[A-Z]{2,5})"
+                          r"(?:[^0-9A-Za-z]|$)", " " + q + " "):
+        if tk.isdigit() or (tk.isalpha() and len(tk) >= 2):
+            cands.append((tk, ""))
+    # ③ 中英文公司名（lookup_page.resolve：中文查本地台股名冊、
+    #    英文走 yfinance Search 並濾到 EQUITY/ETF）。
+    #    只在①②都沒認出東西時才做——英文名要打網路查詢（約 1-2 秒）。
+    if not cands:
+        try:
+            import lookup_page
+            # ⚠️ 不能整句丟進去：lookup_page.resolve 看到**任何**非 ASCII 字元就
+            # 判定「這是中文」轉去查台股名冊。「Palo Alto Networks 如何」因為結尾
+            # 那兩個中文字，整句被當中文查 → 回空。所以英文部分要另外抽出來再試一次。
+            tries = [q]
+            eng = "".join(c if ord(c) < 128 else " " for c in q).strip()
+            if eng and eng != q and len(eng) >= 3:
+                tries.append(eng)
+            for t in tries:
+                # 只取**第一個**候選。Yahoo 搜尋會回一串海外次級掛牌
+                # （5AP.F / COST.TO / NVDC34.SA…），第一個才是主要掛牌；
+                # 多取只會白白多跑幾次抓價然後 404。
+                for code, nm in (lookup_page.resolve(t) or [])[:1]:
+                    cands.append((code, nm))
+                if cands:
+                    break
+        except Exception:                                   # noqa: BLE001
+            pass
+    if not cands:
+        return ""
+    seen, out = set(), []
+    for code, nm in cands:
+        if code in seen:
+            continue
+        seen.add(code)
+        out.append(_one_stock_block(code, nm))
+    return "\n".join(x for x in out if x)
+
+
+def _one_stock_block(code, nm=""):
+    """單檔的實際資料。**查不到就明說查不到**，不要回空字串讓人以為沒問過。"""
+    import re as _re
+    label = f"{nm}（{code}）" if nm else code
+    lines = [f"【問題裡提到的個股：{label}】"]
+    held = _re.sub(r"\.(TW|TWO)$", "", str(code).upper()) in _held_set()
+    lines.append(f"  是不是持股：{'是' if held else '否'}")
+    cr = _load("state/combo_result.json", {}) or {}
+    row = next((r for r in (cr.get("rows") or [])
+                if _re.sub(r"\.(TW|TWO)$", "", str(r.get("ticker", "")).upper())
+                == _re.sub(r"\.(TW|TWO)$", "", str(code).upper())), None)
+    if row:
+        lines.append(f"  燈號：{row.get('lit')}/4"
+                     f"｜SuperTrend {'多方' if row.get('bull') else '空方'}"
+                     f"（線 {row.get('st_line')}）｜現價 {row.get('price')}"
+                     f"｜風報比 {row.get('rr')}｜目標價 {row.get('target')}"
+                     f"｜資料日 {row.get('asof')}")
+    else:
+        lines.append("  ⚠️ **不在每日燈號掃描母體**——我們沒有這檔的技術面資料。")
+    st = _load("state/advisor_reports.json", {}) or {}
+    reps = [r for r in st.values()
+            if not r.get("_notreport")
+            and _re.sub(r"\.(TW|TWO)$", "", str(r.get("ticker", "")).upper())
+            == _re.sub(r"\.(TW|TWO)$", "", str(code).upper())]
+    if reps:
+        for r in sorted(reps, key=lambda x: str(x.get("date")), reverse=True)[:3]:
+            lines.append(f"  券商報告：{r.get('date')} {r.get('broker')} "
+                         f"{r.get('rating')} 目標價 {r.get('target')}"
+                         f"｜依據 {(r.get('valuation_basis') or '')[:60]}")
+    else:
+        lines.append("  券商研究報告：無")
+    reg = _load("state/thesis_conditions.json", {}) or {}
+    hit = next((v for k, v in reg.items()
+                if _re.sub(r"\.(TW|TWO)$", "", k.upper())
+                == _re.sub(r"\.(TW|TWO)$", "", str(code).upper())), None)
+    lines.append(f"  失效條件：{len(hit.get('conditions', [])) if hit else 0} 條在監控")
+    # 🆕 2026-09-04：系統外的股票**即時算一次**（Leo：「都做」）。
+    # 走 lamp_lookup.lookup()——跟 Discord `/查` 與查股頁完全同一支，
+    # 所以軍議跟那兩處不可能給出不一樣的燈號。實測約 3-8 秒。
+    # ⚠️ 即時算的結果要**明確標示**是「臨時算的、不在每日監控裡」，
+    # 否則讀的人會以為這檔跟持股一樣有人在盯。
+    if not row:
+        try:
+            import lamp_lookup
+            live = lamp_lookup.lookup(code)
+            if live:
+                lines.append(
+                    f"  🔍 **即時計算**（不在每日掃描母體，為了回答這個問題臨時算的）："
+                    f"現價 {live.get('price')}｜燈號 {live.get('lit')}/4"
+                    f"｜SuperTrend {'多方' if live.get('bull') else '空方'}"
+                    f"（線 {live.get('st_line')}）｜風報比 {live.get('rr')}"
+                    f"｜目標價 {live.get('target')}｜RS60 {live.get('rs_short')}"
+                    f"｜資料日 {live.get('asof')}")
+                row = live
+        except Exception as e:                              # noqa: BLE001
+            lines.append(f"  （即時計算失敗：{str(e)[:80]}）")
+    if not row and not reps and not hit:
+        lines.append("  🔴 **這檔完全查不到**——連即時計算都算不出來（可能是新掛牌、"
+                     "太冷門、或代號不對）。要回答只能說『查不到這檔』，"
+                     "**絕對不可以拿材料裡別的代號來代替**。")
+    elif not hit:
+        lines.append("  ⚠️ 這檔**沒有失效條件在監控**——沒有人在盯它的判斷基礎，"
+                     "上面的數字只是這一刻的快照。")
+    return "\n".join(lines)
+
+
 # ── 仲達：現在有什麼風險 ────────────────────────────────────────
 def material_sima():
     m = []
@@ -277,7 +422,17 @@ Leo 的問題：{question}
 - 會貼在 Discord，**{limit} 字以內**，用短段落或條列，不要長篇。
 - 把**事實**（材料裡寫的）跟**推論**（你的判讀）分開標示。
 - 材料裡沒有的就說沒有，不要補。
-- 開頭直接講結論，不要「好的，讓我來分析」這種開場。"""
+- 開頭直接講結論，不要「好的，讓我來分析」這種開場。
+
+🔴 **代號鐵律（違反這條比答不出來嚴重得多）**：
+Leo 問哪一檔，就只能回答那一檔。**絕對不可以**因為材料裡沒有它，
+就拿一個「看起來像」或「名字接近」的代號來代替。
+2026-09-04 實際發生過：問「高力（8996）」，回答的是「HIG（The Hartford
+Insurance Group）」——完全不同的公司，而且整段講得很有條理。
+材料開頭若有「問題裡提到的個股」區塊，**以那個區塊為準**；
+它若寫著「這檔完全查不到」，唯一正確的回答就是**照講**，不要用別的標的填空。
+它若標「🔍 即時計算」，那是為了回答這個問題臨時算的——**要講明這檔不在每日監控裡**，
+數字只是這一刻的快照，不像持股那樣有人在盯。"""
 
 DEFAULT_Q = {
     "仲達": "今天我該注意什麼風險？照重要性排序，講最關鍵的三件。",
@@ -291,6 +446,11 @@ def ask(role, question=None, limit=MAX_CHARS):
         return f"沒有這位軍師：{role}（可用：{'、'.join(ROLES)}）"
     q = (question or "").strip() or DEFAULT_Q[role]
     mat = r["material"]()
+    # 問題裡點名的個股，把它的**真實資料**加在材料最前面（見 resolve_in_question
+    # 的註解：2026-09-04 答錯股票那次）。放最前面是因為材料會被截斷。
+    named = resolve_in_question(question)
+    if named:
+        mat = named + "\n\n" + mat
     import llm_board
     base = PROMPT.format(persona=r["persona"],
                          date=dt.date.today().isoformat(),
