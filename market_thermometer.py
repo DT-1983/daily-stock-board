@@ -165,7 +165,13 @@ def backfill(days, pause=0.4):
     ds = [d for d in ds if d.weekday() < 5]     # 週末不用打，省一半請求
     got, blocked = _fill(ds, h, closed, pause=pause)
     print(f"✅ 補到 {got} 個交易日，歷史共 {len(h)} 筆"
-          + (f"（{blocked} 天被證交所限流擋掉，之後會自動重補）" if blocked else ""))
+          + (f"（{blocked} 天被證交所限流擋掉）" if blocked else ""))
+    if blocked:
+        # ⚠️ 這裡原本寫「之後會自動重補」——**那是假的**：每日 run() 只掃最近
+        # window=14 天，2026-02~07 那種舊缺口永遠不在窗口內，再等一年也補不到。
+        # 訊息寫得像會自己好，實際上不會（2026-09-04 查出）。
+        print("   ⚠️ 每日排程只掃最近 14 天，**舊缺口不會自己補**——"
+              "用 `--fill-gaps` 一次補幾天，慢慢磨掉")
     return h
 
 
@@ -209,6 +215,43 @@ def summary_line(st=None):
             f"（電子 {st['elec']:,.0f} / 金融 {st['fin']:,.0f}）")
 
 
+def fill_gaps(limit=6, pause=3.0, since=None):
+    """專補**歷史舊缺口**，一次只補幾天。
+
+    🔴 2026-09-04 加，起因是一個假訊息：`backfill` 印「⚠️ N 天被證交所限流擋掉，
+    **下次執行會再試**」——但每日 `run()` 只掃最近 14 天（window=14），
+    2026-02~07 那批缺口**永遠不在窗口內，再等一年也補不到**。
+    訊息寫得像會自己好，實際上不會。
+
+    設計成「一次只補幾天、間隔拉長」：證交所的限流是**短時間內請求太密**觸發的，
+    實測連打 1200 天會在第 45 天被擋；一天補 6 天則幾乎不會踩到。
+    掛進每日排程之後，13 天的缺口約兩三天就補完，不用一次硬幹。
+
+    since 給日期字串就只補那天之後的缺口（例如只想補「能延長最長連續段」的那幾天）。
+    """
+    h, closed = load_hist(), load_closed()
+    today = dt.date.today()
+    start = (dt.date.fromisoformat(since) if since
+             else min(dt.date.fromisoformat(k) for k in h) if h else today)
+    miss = []
+    cur = start
+    while cur <= today:
+        k = cur.isoformat()
+        if cur.weekday() < 5 and k not in h and k not in closed:
+            miss.append(cur)
+        cur += dt.timedelta(days=1)
+    if not miss:
+        print("沒有歷史缺口要補")
+        return h
+    take = miss[:limit]
+    print(f"歷史缺口共 {len(miss)} 天，這次補最舊的 {len(take)} 天："
+          f"{take[0].isoformat()} ~ {take[-1].isoformat()}")
+    got, blocked = _fill(take, h, closed, pause=pause)
+    print(f"✅ 補到 {got} 天，{blocked} 天被擋（下次排程再試）；歷史共 {len(h)} 筆")
+    print(f"   剩餘缺口 {len(miss) - got} 天")
+    return h
+
+
 def run(window=14):
     """每日跑：補最近 window 天的缺口（不是只抓「今天」）。
 
@@ -243,7 +286,13 @@ if __name__ == "__main__":
     ap.add_argument("--backfill", type=int, default=0, help="往回補幾個日曆日")
     ap.add_argument("--pause", type=float, default=0.4,
                     help="每次請求間隔秒數；補深歷史用 1.5 以上避開證交所限流")
+    ap.add_argument("--fill-gaps", nargs="?", type=int, const=6, default=None,
+                    metavar="N", help="補歷史舊缺口，一次 N 天（預設 6）")
+    ap.add_argument("--since", default="", help="--fill-gaps 只補這個日期之後的缺口")
     a = ap.parse_args()
+    if a.fill_gaps is not None:
+        fill_gaps(a.fill_gaps, pause=max(a.pause, 3.0), since=a.since or None)
+        raise SystemExit(0)
     if a.backfill:
         backfill(a.backfill, pause=a.pause)
     run()
