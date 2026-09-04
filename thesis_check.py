@@ -134,6 +134,17 @@ def run():
         print("沒有登錄任何失效條件（投資長還沒產出過帶conditions的判斷）")
         return None
 
+    # 🔴 2026-09-04：同一檔曾同時以 2454 與 2454.TW 兩個 key 存在（投資長那邊
+    # key 沒正規化 → 新判斷沒覆蓋掉舊判斷），我們這裡是逐筆走 reg.items()，
+    # 等於**拿投資長已經換掉的舊條件**去報失效。讀取端也收斂一次，這樣就算
+    # 登錄簿還是舊的（例如從備份還原），今天的日檢也不會用到過期的論點。
+    n_before = len(reg)
+    from investment_chief import normalize_registry
+    reg = normalize_registry(reg)
+    if len(reg) != n_before:
+        print(f"  登錄簿收斂重複代號：{n_before} → {len(reg)} 檔"
+              f"（同一檔的舊論點已被較新的那份取代）")
+
     price_tks = sorted({tk for tk, e in reg.items()
                         if any(c.get("type") in ("price_below", "price_above")
                                and c.get("status") == "active"
