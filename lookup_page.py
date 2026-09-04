@@ -227,7 +227,10 @@ def _summary(row):
 
     tgt, rr = row.get("target"), row.get("rr")
     if tgt is None:
-        tg_v, tg_s = "—", "查無分析師共識目標價"
+        # ⚠️ 這裡真的是查無才寫「查無」。2026-09-04 之前空方時 combo_scan 連
+        # target 都不填，於是 75 檔明明有目標價卻被說成「查無」——
+        # 把「我們刻意不算」講成「外面沒有資料」是兩件完全不同的事。
+        tg_v, tg_s = "—", "查無分析師共識目標價（ETF／ADR 常見）"
     else:
         lo, hi = row.get("target_low"), row.get("target_high")
         rng = f"區間 {lo:,.0f}–{hi:,.0f}" if lo and hi else ""
@@ -237,7 +240,8 @@ def _summary(row):
 
     rr_v = f"{rr:.2f}" if rr is not None else "—"
     rr_s = ("⭐ 打點成立（≥3燈且風報比≥1）" if row.get("combo") and rr and rr >= 1
-            else ("空方不計風報比" if not bull else "無目標價則不計"))
+            else ("空方不計風報比（沒有持有中的停損可言）" if not bull
+                  else "無目標價則不計"))
 
     rs = row.get("rs_short")
     rs_v = f"{rs:+.2f}%" if rs is not None else "—"
