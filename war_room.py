@@ -377,6 +377,109 @@ def material_chen():
     return "\n".join(m)
 
 
+def _tickers_in_question(q):
+    """回 [(代號, 名稱)]。跟 resolve_in_question 用同一套解析邏輯的精簡版。"""
+    q = (q or "").strip()
+    if not q:
+        return []
+    out = []
+    try:
+        import combo_scan
+        for code, nm in (combo_scan._tw_names() or {}).items():
+            if len(str(nm)) >= 2 and str(nm) in q:
+                out.append((code, str(nm)))
+    except Exception:                                       # noqa: BLE001
+        pass
+    for tk in re.findall(r"(?:^|[^0-9A-Za-z])([0-9]{4,6}[A-Z]?|[A-Z]{2,5})"
+                         r"(?:[^0-9A-Za-z]|$)", " " + q + " "):
+        out.append((tk, ""))
+    if not out:
+        try:
+            import lookup_page
+            eng = "".join(c if ord(c) < 128 else " " for c in q).strip()
+            tries = [q] + ([eng] if eng and eng != q and len(eng) >= 3 else [])
+            for t in tries:
+                for code, nm in (lookup_page.resolve(t) or [])[:1]:
+                    out.append((code, nm))
+                if out:
+                    break
+        except Exception:                                   # noqa: BLE001
+            pass
+    seen, uniq = set(), []
+    for code, nm in out:
+        if code in seen:
+            continue
+        seen.add(code)
+        uniq.append((code, nm))
+    return uniq
+
+
+# ── 孔明：對某一檔給兩個獨立角度的判斷 ──────────────────────────────
+def material_kongming(question=""):
+    """孔明不是「讀既有資料的人」，是**產生判斷的人**——材料就是
+    `investment_chief.gather_material()` 那一整包（AI 綜合訊號／貴俗價／
+    預估前提檢查／毛利率位階／券商報告／SuperTrend＋RS／產業輪動／今日研究員筆記）。
+
+    ⚠️ **不重寫一份材料**：直接呼叫 investment_chief，所以 `/孔明` 跟每日排程
+    產出的判斷吃的是同一包東西，不可能出現「兩邊講法不一樣」。
+    ⚠️ 一定要有標的——沒點名股票時明講「要指定一檔」，不要瞎給大盤評論。
+    """
+    picks = _tickers_in_question(question)
+    if not picks:
+        return ("（沒有指定股票）孔明是個股判斷的角色，一次判一檔。"
+                "請告訴使用者：要問哪一檔？例如「孔明 2454」「孔明 輝達怎麼看」。"
+                "不要自己挑一檔來評論，也不要改成講大盤。")
+    code, nm = picks[0]
+    try:
+        import investment_chief as ic
+        mat = ic.gather_material(code, [])
+    except Exception as e:                                  # noqa: BLE001
+        return f"（investment_chief.gather_material({code}) 失敗：{str(e)[:150]}）"
+    if isinstance(mat, (list, tuple)):
+        keys = ("AI綜合訊號", "價值角度材料", "趨勢角度材料", "今日研究員筆記")
+        mat = "\n\n".join(f"【{k}】\n{v}" for k, v in zip(keys, mat))
+    return f"【判斷標的：{nm}（{code}）】\n\n{mat}"
+
+
+# ── 龐統：查這一檔的新聞 ──────────────────────────────────────────
+def material_pangtong(question=""):
+    """龐統是**找材料**的角色。重用 `researcher_industry._search_one()`
+    ——鉅亨網關鍵字搜尋（公開免 key、零成本），跟每日研究員同一個來源。
+
+    ⚠️ 只給新聞，**不做判斷**——判斷是孔明的事，prompt 也這樣寫。
+    """
+    picks = _tickers_in_question(question)
+    kws = []
+    if picks:
+        for code, name in picks[:2]:
+            kws.append(code)
+            if name:
+                kws.append(name)
+    else:
+        kws = [question.strip()[:30]] if question.strip() else []
+    if not kws:
+        return "（沒有可查的關鍵字）請使用者說要查哪一檔或哪個主題。"
+    out = []
+    try:
+        import researcher_industry as ri
+        for kw in kws:
+            for it in ri._search_one(kw, n=6):
+                out.append(f"  · [{it['kw']}] {it['ts']}　{it['title']}\n"
+                           f"    {it['url']}")
+    except Exception as e:                                  # noqa: BLE001
+        return f"（新聞查詢失敗：{str(e)[:120]}）"
+    if not out:
+        return f"（用關鍵字 {kws} 查鉅亨網，**沒有找到任何新聞**）"
+    seen, uniq = set(), []
+    for line in out:
+        if line in seen:
+            continue
+        seen.add(line)
+        uniq.append(line)
+    return ("【鉅亨網新聞搜尋】關鍵字：" + "、".join(kws) + "\n"
+            + "\n".join(uniq[:14]))
+
+
 ROLES = {
     "仲達": {
         "name": "司馬懿 仲達（風險官）",
@@ -391,6 +494,42 @@ ROLES = {
             "電金比那個指標目前只量測不下指令，不要把它講成出場訊號。\n"
             "3. 材料裡標「數字未經覆核」的，引用時要一起講。\n"
             "4. 沒有資料就說沒有，不要用推論填空。"),
+    },
+    "孔明": {
+        "name": "諸葛亮 孔明（投資長）",
+        "material": material_kongming,
+        "needs_question": True,
+        "persona": (
+            "你是隆中對的投資長「孔明」。你對**一檔股票**給兩個獨立角度的判斷。\n"
+            "鐵律：\n"
+            "1. **兩個角度要獨立判斷、不要互相影響**——長期價值角度（洪瑞泰：看估值、"
+            "年為單位）不看短線趨勢好壞；中短期趨勢角度（SuperTrend＋RS＋產業輪動）"
+            "不因為長期便宜就樂觀。**就算兩邊給出相反的建議也照實寫，"
+            "不要為了看起來一致而修改任一邊。**\n"
+            "2. 每個角度都要給：判斷（續抱可買／觀望／考慮出場／資料不足）"
+            "＋一句話結論＋理由（事實與推論分開標）＋**失效條件**"
+            "（什麼情況代表這個角度錯了）。\n"
+            "3. **不要替 Leo 執行交易**——你的判斷是建議不是指令。\n"
+            "4. 資料不足就填「資料不足」並說缺什麼，不要硬掰。\n"
+            "5. 材料裡若有「預估前提檢查」，它量的是**市場對這檔的期待被堆到多高**，"
+            "是容錯空間的刻度，不是公司好壞的評價。"),
+    },
+    "龐統": {
+        "name": "龐統（研究員）",
+        "material": material_pangtong,
+        "needs_question": True,
+        "persona": (
+            "你是隆中對的研究員「龐統」。你的職責是**把找到的材料整理成可讀的研究筆記**，"
+            "不是下投資判斷。\n"
+            "鐵律：\n"
+            "1. **不給買賣建議、不給目標價、不判斷貴便宜**——那是孔明的事。"
+            "你只負責「發生了什麼、跟什麼有關」。\n"
+            "2. **只根據下面的新聞材料寫**，不要自己補背景知識當事實。"
+            "要補脈絡就標明「這是我的補充，不在材料裡」。\n"
+            "3. 新聞有日期，**要講哪一則是什麼時候的**——舊聞當新聞是研究員最嚴重的錯。\n"
+            "4. 材料是關鍵字搜尋來的，**可能有不相關的**。判斷不相關就直接說不相關，"
+            "不要硬湊進敘事。\n"
+            "5. 最後給一句「這對持有這檔的人意味著什麼」——描述性的，不是建議。"),
     },
     "陳壽": {
         "name": "陳壽（復盤官）",
@@ -437,6 +576,8 @@ Insurance Group）」——完全不同的公司，而且整段講得很有條�
 DEFAULT_Q = {
     "仲達": "今天我該注意什麼風險？照重要性排序，講最關鍵的三件。",
     "陳壽": "現在的復盤結果告訴我們什麼？哪些還不能下結論？",
+    "孔明": "這檔現在怎麼看？兩個角度各給判斷與失效條件。",
+    "龐統": "這檔最近有什麼消息？",
 }
 
 
@@ -445,7 +586,9 @@ def ask(role, question=None, limit=MAX_CHARS):
     if not r:
         return f"沒有這位軍師：{role}（可用：{'、'.join(ROLES)}）"
     q = (question or "").strip() or DEFAULT_Q[role]
-    mat = r["material"]()
+    # 孔明/龐統要看問題才知道查哪一檔；仲達/陳壽的材料跟問題無關（是當日全貌）
+    mat = (r["material"](question) if r.get("needs_question")
+           else r["material"]())
     # 問題裡點名的個股，把它的**真實資料**加在材料最前面（見 resolve_in_question
     # 的註解：2026-09-04 答錯股票那次）。放最前面是因為材料會被截斷。
     named = resolve_in_question(question)
