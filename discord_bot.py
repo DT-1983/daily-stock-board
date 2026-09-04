@@ -132,6 +132,18 @@ async def cmd_chen(interaction: discord.Interaction, 問題: str = ""):
     await _ask_war_room(interaction, "陳壽", 問題)
 
 
+@tree.command(name="孔明", description="投資長：對一檔給趨勢/價值兩個獨立角度的判斷＋失效條件")
+@app_commands.describe(問題="要判斷哪一檔，例：2454 / 輝達怎麼看（一定要指定股票）")
+async def cmd_kongming(interaction: discord.Interaction, 問題: str):
+    await _ask_war_room(interaction, "孔明", 問題)
+
+
+@tree.command(name="龐統", description="研究員：查這一檔或這個主題最近的新聞（鉅亨網，只給材料不下判斷）")
+@app_commands.describe(問題="要查哪一檔或什麼主題，例：2454 / HBM 最近有什麼消息")
+async def cmd_pangtong(interaction: discord.Interaction, 問題: str):
+    await _ask_war_room(interaction, "龐統", 問題)
+
+
 async def _health(request):
     # 2026-09-03：這個 port 接上 Cloudflare Tunnel 對外開放查股頁之後，健康檢查也
     # 跟著曝光了，外面打一下就看得到 bot 名稱。健檢只有本機的 service_health_check
