@@ -15,7 +15,8 @@ import markdown as md
 import yfinance as yf
 from tw_report import convert
 
-OBIS = r"C:\Users\Mophy\Documents\Google drive\BB-8 工作區\04_AI Report\Investment"
+# 2026-09-05 資料夾整理：路徑一律走 obis_paths，不再各自寫死。
+from obis_paths import DAILY as OBIS
 TW_JSON = "tw_analysis.json"
 
 def _load_chain_map():

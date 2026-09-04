@@ -17,7 +17,8 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
 from board_theme import BASE_CSS, header, NAV  # noqa: E402  統一頁首（2026-08-04 首頁改版）
 
-OBIS = r"C:\Users\Mophy\Documents\Google drive\BB-8 工作區\04_AI Report\Investment"
+# 2026-09-05 資料夾整理：路徑一律走 obis_paths，不再各自寫死。
+from obis_paths import DAILY as OBIS
 
 
 def parse_card(path: str) -> dict:

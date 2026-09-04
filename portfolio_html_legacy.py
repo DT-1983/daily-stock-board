@@ -9,7 +9,8 @@ import html as _html
 import argparse
 from datetime import datetime
 
-OBIS = r"C:\Users\Mophy\Documents\Google drive\BB-8 工作區\04_AI Report\Investment"
+# 2026-09-05 資料夾整理：路徑一律走 obis_paths，不再各自寫死。
+from obis_paths import DAILY as OBIS
 PAGES_URL = "https://dt-1983.github.io/daily-stock-board/"
 ICON = {
     "產業鏈全": "🏭", "產業鏈+趨勢": "📈", "巴菲特價值": "🏛️",
