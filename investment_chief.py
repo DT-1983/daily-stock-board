@@ -906,6 +906,29 @@ def _snapshot_prices(tickers):
                    "price_symbol": s}
     return out
 
+def normalize_registry(reg):
+    """失效條件登錄簿一律用正規化代號當 key（2313.TW → 2313、BRK.B → BRK-B）。
+
+    🔴 2026-09-04：`_register_conditions` 原本直接拿 `v["ticker"]` 當 key，而同一檔
+    在不同天可能被寫成 `2454` 或 `2454.TW`（取決於那天材料是從哪個來源進來的）
+    → **新判斷沒有覆蓋舊判斷，兩份同時 active**。
+    實際後果：2303／2454／2731 各留著一份 9/3 的舊論點，而 `thesis_check` 是逐筆
+    走 `reg.items()`，等於**拿投資長已經換掉的舊條件**去報「你的判斷基礎不成立」。
+    ⭐ 覆蓋寫入只在 key 完全相同時才叫覆蓋——key 的正規化沒做，覆蓋就是新增。
+
+    同一檔留 `source_date` 較新的那份。寫入端與讀取端都呼叫這個函式，
+    所以不需要一次性搬遷腳本，跑一次就自己收斂。
+    """
+    out = {}
+    for k, v in (reg or {}).items():
+        n = norm_ticker(k)
+        old = out.get(n)
+        if (old is None
+                or str(v.get("source_date") or "") >= str(old.get("source_date") or "")):
+            out[n] = v
+    return out
+
+
 def _register_conditions(verdicts):
     """P1（2026-08-27）：把投資長給的失效條件登錄進 state/thesis_conditions.json。
     同一檔新判斷=新論點=覆蓋舊條件（狀態重置 active）；thesis_check.py 每天對照。
@@ -914,7 +937,7 @@ def _register_conditions(verdicts):
     `angle` 欄（trend/value），下游 thesis_check 與日報才分得開是哪個角度失效。
     仍相容舊的單一 conditions 欄位——歷史 verdicts 重跑時不會整批掉條件。"""
     path = "state/thesis_conditions.json"
-    reg = _load_json(path, {}) or {}
+    reg = normalize_registry(_load_json(path, {}) or {})
     n = n_stock = 0
     for v in verdicts:
         conds = []
@@ -934,7 +957,7 @@ def _register_conditions(verdicts):
                               "status": "active"})
         if not conds:
             continue
-        reg[v["ticker"]] = {
+        reg[norm_ticker(v["ticker"])] = {
             "source_date": v.get("ts"),
             "held": v.get("held", True),
             "conditions": conds,
