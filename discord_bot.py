@@ -95,6 +95,43 @@ async def cmd_lookup(interaction: discord.Interaction, 代號: str):
     await interaction.followup.send(msg)
 
 
+# ── #軍議：仲達（風險官）／陳壽（復盤官）─────────────────────────
+# 路線圖第 1 項階段 3。材料組裝＋提問都在 war_room.py，這裡只負責 Discord 的殼。
+#
+# ⚠️ 為什麼是 slash command 不是 @提及：讀一般訊息要 message_content 這個
+# **特權 intent**，得 Leo 去 Developer Portal 開；slash command 用
+# Intents.default() 就夠，不用他動手。功能上沒差——一樣可以打字問問題。
+#
+# ⚠️ 兩位都走本機 claude（Max plan 訂閱額度，**不是付費 API**），一次問答數十秒，
+# 所以跟 /查 一樣先 defer()。
+async def _ask_war_room(interaction, role, 問題):
+    await interaction.response.defer(thinking=True)
+    try:
+        import war_room
+        msg = await asyncio.to_thread(war_room.ask, role, 問題)
+        head = f"**{war_room.ROLES[role]['name']}**\n"
+        if 問題:
+            head += f"> {問題}\n\n"
+        msg = head + msg
+    except Exception as e:                                # noqa: BLE001
+        traceback.print_exc()
+        msg = f"⚠️ {role} 出錯：{e}"
+    for i in range(0, len(msg), 1900):        # Discord 單則上限 2000
+        await interaction.followup.send(msg[i:i + 1900])
+
+
+@tree.command(name="仲達", description="風險官：現在有什麼風險（失效條件/燈號/大盤溫度/券商異動）")
+@app_commands.describe(問題="想問什麼；留空＝要一份今日風險摘要")
+async def cmd_sima(interaction: discord.Interaction, 問題: str = ""):
+    await _ask_war_room(interaction, "仲達", 問題)
+
+
+@tree.command(name="陳壽", description="復盤官：回頭看判斷準不準、交易紀律（樣本不足會明講）")
+@app_commands.describe(問題="想問什麼；留空＝要一份復盤現況")
+async def cmd_chen(interaction: discord.Interaction, 問題: str = ""):
+    await _ask_war_room(interaction, "陳壽", 問題)
+
+
 async def _health(request):
     # 2026-09-03：這個 port 接上 Cloudflare Tunnel 對外開放查股頁之後，健康檢查也
     # 跟著曝光了，外面打一下就看得到 bot 名稱。健檢只有本機的 service_health_check
