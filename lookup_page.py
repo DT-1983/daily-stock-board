@@ -433,6 +433,39 @@ def _tw_by_name(q):
     return [(c, n) for c, n in names.items() if q and q in n][:5]
 
 
+# ── 美股中文名對照（2026-09-04，Leo：「建吧」）──────────────────────
+#
+# 為什麼要手動維護：台股中文名有官方來源（證交所＋櫃買，2,000 檔自動抓），
+# **美股沒有**——Yahoo 搜尋不認中文，我們的名冊也只有台股。
+# 於是問「輝達怎麼看」會回「沒解析到」，問「NVDA」或「Nvidia」才行。
+#
+# ⚠️ **只收台灣財經媒體確實通用的譯名**。不確定的寧可留空——
+# 回「沒解析到」是誠實的；對錯股票就是 2026-09-04 剛修掉的那個 bug
+# （問「高力」答成「HIG」）。加新的請先確認那是媒體慣用譯名，不是自己翻的。
+#
+# ⚠️ **不要收會跟台股撞名的**：「台積電」是 2330（台股掛牌），不是 TSM（ADR）。
+# 解析順序是台股名冊優先，所以這裡收「台積電ADR」而不是「台積電」。
+US_ZH_NAMES = {
+    # 半導體 / AI
+    "輝達": "NVDA", "英伟達": "NVDA", "超微": "AMD", "超微半導體": "AMD",
+    "美光": "MU", "博通": "AVGO", "英特爾": "INTC", "邁威爾": "MRVL",
+    "應用材料": "AMAT", "泰瑞達": "TER", "台積電ADR": "TSM", "台積電adr": "TSM",
+    # 科技 / 平台
+    "蘋果": "AAPL", "微軟": "MSFT", "特斯拉": "TSLA", "康寧": "GLW",
+    "慧與": "HPE", "直覺手術": "ISRG",
+    # 金融
+    "摩根大通": "JPM", "美國銀行": "BAC", "花旗": "C", "匯豐": "HSBC",
+    "巴克萊": "BCS", "波克夏": "BRK-B", "紐約梅隆": "BNY", "信諾": "CI",
+    # 工業 / 能源 / 原物料
+    "波音": "BA", "洛克希德馬丁": "LMT", "艾默生": "EMR", "伊頓": "ETN",
+    "江森自控": "JCI", "自由港": "FCX", "南方銅業": "SCCO", "卡梅科": "CCJ",
+    "第一太陽能": "FSLR", "星座能源": "CEG",
+    # 其他
+    "豐田": "TM", "克羅格": "KR", "嘉年華": "CCL", "葛蘭素史克": "GSK",
+    "麥克森": "MCK",
+}
+
+
 def resolve(q):
     """輸入 → 候選 [(代號, 顯示名)]。輸入本來就是代號時回空清單（不用解析）。
 
@@ -446,9 +479,17 @@ def resolve(q):
     q = (q or "").strip()
     if not q:
         return []
-    # 中文（含任何非 ASCII）先走本地台股名冊
+    # 中文（含任何非 ASCII）：先查台股名冊，再查美股中文名對照
     if any(ord(c) > 127 for c in q):
-        return _tw_by_name(q)
+        hit = _tw_by_name(q)
+        if hit:
+            return hit
+        # 台股查不到 → 試美股中文名（手動表，見 US_ZH_NAMES 上方說明）。
+        # 由長到短比對：避免「超微」先命中而蓋掉「超微半導體」。
+        for zh in sorted(US_ZH_NAMES, key=len, reverse=True):
+            if zh in q:
+                return [(US_ZH_NAMES[zh], zh)]
+        return []
     try:
         import yfinance as yf
         quotes = yf.Search(q, max_results=8).quotes or []
