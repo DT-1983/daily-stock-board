@@ -133,17 +133,57 @@ def main():
     # 序列，它照樣會算出一個數字——**看起來正常但完全沒有意義**。寧可不跑也不要跑出
     # 假的結論（同 silent_failure_pattern：算得出來不等於算對）。
     import datetime as _dt
+    import json as _json
+    import io as _io
+    # 🔴 2026-09-04 修：原本用「期間天數 × 5/7 × 0.96」推估應有交易日數，再看
+    # 實際筆數的比例。這個估法**把國定假日當成資料缺口**——2026 農曆年假連休
+    # 7 個工作日、清明/端午/勞動節各再幾天，估出來的涵蓋率被系統性低估。
+    # 實測：這樣算「最長連續段 215 天、涵蓋率 75%」→ 判定資料不足拒絕回測；
+    # 但**扣掉已知休市日之後其實有 533 個連續交易日**，早就過門檻。
+    # ⭐ 量測工具本身錯了，而它的輸出看起來完全正常（同 grep -c 數行不數次那次）。
+    #
+    # 正解：讀 `ef_ratio_closed.json`（證交所正常回應但無指數＝非交易日，
+    # 抓取時就記下來了），週末與已知休市**跳過不算斷**，真的缺一個交易日才算斷。
+    try:
+        closed = set(_json.load(_io.open("state/ef_ratio_closed.json", encoding="utf-8")))
+    except Exception:                                       # noqa: BLE001
+        closed = set()
+    have = set(dates)
     d0, d1 = _dt.date.fromisoformat(dates[0]), _dt.date.fromisoformat(dates[-1])
-    span_days = (d1 - d0).days
-    expect = span_days * 5 / 7 * 0.96          # 扣週末，再扣約 4% 國定假日
-    cover = len(dates) / expect if expect else 0
-    print(f"連續性：期間 {span_days} 天應有約 {expect:.0f} 個交易日，"
-          f"實際 {len(dates)} 筆（涵蓋率 {cover*100:.0f}%）")
-    if cover < 0.9:
-        print("🔴 資料有大量空洞，100 日均線會算在不連續的序列上——**結果沒有意義，拒絕回測**。")
-        print("   先把歷史補齊：python market_thermometer.py --backfill 1200 --pause 2")
-        print("   （被證交所限流擋掉的日期，每天的排程也會自動慢慢重補）")
+    best = cur = 0
+    bs = be = cs = None
+    d = d0
+    while d <= d1:
+        k = d.isoformat()
+        if d.weekday() >= 5 or k in closed:
+            d += _dt.timedelta(days=1)
+            continue
+        if k in have:
+            if cur == 0:
+                cs = k
+            cur += 1
+            if cur > best:
+                best, bs, be = cur, cs, k
+        else:
+            cur = 0
+        d += _dt.timedelta(days=1)
+    print(f"連續性：扣掉週末與 {len(closed)} 個已知休市日後，"
+          f"最長連續交易日 {best} 天（{bs} ~ {be}）")
+    NEED = MA_DAYS + 250          # 100 天暖身 + 至少一年
+    if best < NEED:
+        print(f"🔴 最長連續段 {best} 天 < 需要的 {NEED} 天（{MA_DAYS} 暖身＋250 回測）"
+              "——100 日均線會算在不連續的序列上，**結果沒有意義，拒絕回測**。")
+        print("   補歷史：python market_thermometer.py --backfill 1200 --pause 2")
+        print("   補舊缺口：python market_thermometer.py --fill-gaps 6")
+        print("   ⚠️ 每日排程只掃最近 14 天，舊缺口不會自己補")
         return 1
+    # 只拿**最長連續段**去回測，前面那些有洞的歷史不要混進來
+    if bs and be:
+        dates2 = [d_ for d_ in dates if bs <= d_ <= be]
+        if len(dates2) < len(dates):
+            print(f"   → 只用這一段回測：{len(dates2)}/{len(dates)} 筆")
+            ratios = [ratios[dates.index(d_)] for d_ in dates2]
+            dates = dates2
     bench = load_bench(dates)
     if not bench:
         print("抓不到台股加權指數，無法回測")
