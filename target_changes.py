@@ -206,16 +206,52 @@ def _our_universe():
     return uni
 
 
+def _held():
+    """Leo **實際持有**的代號（不含守備清單/觀察清單）——降評提醒只針對這一圈。"""
+    try:
+        import investment_chief
+        return {investment_chief.norm_ticker(t)
+                for t in investment_chief.held_universe()}
+    except Exception:                                       # noqa: BLE001
+        return set()
+
+
 def alerts(store=None):
-    """要提醒的異動＝**可信券商** ∩ **我們母體內**。回 (要提醒的, 其餘統計)。"""
+    """分三層。回 (要推的, 母體內但不推的, 母體外筆數)。
+
+    🔴 2026-09-04 改（Leo 追問才發現的設計錯誤）：
+    原本只推「可信券商 ∩ 母體內」＝只推高盛，結果首跑 **0 筆**——高盛動的
+    PANW/緯穎6669/台新新光金2887 我們都沒追蹤；**但持股裡真的有一筆被降評
+    （AAPL → Downgrade to Sell）卻不會通知**，只因為降的是 Morningstar。
+
+    ⭐ **券商可不可信是「判斷內容」的事，不是「要不要讓你知道」的事。**
+    對持股的人來說「有人降我」才是要知道的事，調升是錦上添花。
+
+    三層：
+      1. 🔴 **持股被任何券商調降或降評** → 一律推（不看可信名單）
+      2. ⭐ 可信名單（TRUSTED，Leo 指定只信高盛）的任何異動 ∩ 我們母體內 → 推
+      3. 📋 其餘（調升、非持股、不可信券商）→ 只記不推，查股頁與整合報告看得到
+    """
     rows = all_rows(store)
     uni = _our_universe()
+    held = _held()
     hit, other_ours, untrusted = [], [], 0
     for r in rows:
         tk = re.sub(r"\.(TW|TWO)$", "", str(r.get("ticker") or "").upper())
         ours = tk in uni
+        is_held = tk in held
         trust = is_trusted(r.get("broker"))
-        if trust and ours:
+        # 降評／調降的判定：箭頭往下，或評等文字含 downgrade/賣出/減碼/中立以下
+        rating = str(r.get("rating") or "").lower()
+        down = (r.get("direction") == "down"
+                or "downgrade" in rating
+                or any(w in rating for w in ("sell", "underweight", "underperform",
+                                             "reduce", "賣出", "減碼", "調降")))
+        if is_held and down:
+            r = dict(r, _why="持股被調降")
+            hit.append(r)
+        elif trust and ours:
+            r = dict(r, _why="可信券商")
             hit.append(r)
         elif ours:
             other_ours.append(r)
@@ -244,8 +280,9 @@ def summary_lines():
     if not hit and not oth:
         return []
     out = []
-    for r in hit[:5]:
-        out.append(f"・🎯 券商異動｜{_line(r)}")
+    for r in hit[:6]:
+        tag = "🔻 持股被調降" if r.get("_why") == "持股被調降" else "🎯 券商異動"
+        out.append(f"・{tag}｜{_line(r)}")
     if oth:
         out.append(f"　　（另有 {len(oth)} 筆我們母體內的異動來自其他券商，"
                    f"未列入提醒；數字未經覆核）")
@@ -265,9 +302,10 @@ def main():
             print(("★ " if is_trusted(r.get("broker")) else "  ") + _line(r))
         return 0
     hit, oth, outside = alerts()
-    print(f"可信券商 × 我們母體內：{len(hit)} 筆")
+    print(f"要推播：{len(hit)} 筆")
     for r in hit:
-        print("  ★ " + _line(r))
+        print(("  🔻 " if r.get("_why") == "持股被調降" else "  ★ ") + _line(r)
+              + f"　←{r.get('_why','')}")
     print(f"\n我們母體內但券商不在可信名單：{len(oth)} 筆（存檔可查，不推播）")
     for r in oth[:10]:
         print("  · " + _line(r))
