@@ -22,6 +22,7 @@
 用法:
     python stock_brief.py 2454
     python stock_brief.py 2454 -o out.html
+    python stock_brief.py --all       # 重產所有有券商報告的個股（每日 08:45 排程）
 """
 import io
 import os
@@ -445,20 +446,73 @@ def render(d, extra_notes=None):
             + "".join(body) + "</div></body></html>")
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("ticker")
-    ap.add_argument("-o", "--output", default="")
-    a = ap.parse_args()
-    d = gather(a.ticker)
+def briefed_tickers():
+    """有券商報告的代號集合——`--all` 的母體。
+
+    ⚠️ 母體刻意只取「有券商報告的」，不取全部持股：沒有報告的話這一頁的
+    上半部（券商怎麼說、估值前提）整段是空的，產出來只會是一頁我們自己
+    系統的數字，跟燈號頁重複。
+    """
+    st = _load("state/advisor_reports.json", {}) or {}
+    out = []
+    for v in st.values():
+        if v.get("_notreport"):
+            continue
+        tk = v.get("ticker")
+        if tk and str(tk) not in out:
+            out.append(str(tk))
+    return sorted(out)
+
+
+def build_one(ticker, output=""):
+    """產一檔，回 (輸出路徑, gather 結果)。"""
+    d = gather(ticker)
     html = render(d)
-    out = a.output or os.path.join(OBIS, f"{d['ticker']}_整合報告.html")
+    out = output or os.path.join(OBIS, f"{d['ticker']}_整合報告.html")
     os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
     io.open(out, "w", encoding="utf-8").write(html)
-    print(f"✅ 已存 {out}（{len(html):,} bytes）")
-    print(f"   燈號 {'有' if d['lamp'] else '無'}｜券商報告 {len(d['reports'])} 份"
-          f"｜異動 {len(d['changes'])} 筆｜投資長判斷 {'有' if d['verdict'] else '無'}"
-          f"｜毛利率位階 {'有' if d['margin'] else '無'}｜預估前提 {'有' if d['base_rate'] else '無'}")
+    return out, d, len(html)
+
+
+def _stat(d):
+    return (f"燈號 {'有' if d['lamp'] else '無'}｜券商報告 {len(d['reports'])} 份"
+            f"｜異動 {len(d['changes'])} 筆｜投資長判斷 {'有' if d['verdict'] else '無'}"
+            f"｜毛利率位階 {'有' if d['margin'] else '無'}"
+            f"｜預估前提 {'有' if d['base_rate'] else '無'}")
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("ticker", nargs="?", default="")
+    ap.add_argument("-o", "--output", default="")
+    ap.add_argument("--all", action="store_true",
+                    help="重產所有「有券商報告」的個股（每日排程用）")
+    a = ap.parse_args()
+
+    if a.all:
+        tks = briefed_tickers()
+        if not tks:
+            print("沒有任何已解析的券商報告，不產出。")
+            return 0
+        ok = fail = 0
+        for tk in tks:
+            try:
+                out, d, n = build_one(tk)
+                ok += 1
+                print(f"  ✅ {d['ticker']:8} {os.path.basename(out)}  ({n:,} bytes)  {_stat(d)}")
+            except Exception as e:                          # noqa: BLE001
+                fail += 1
+                # 一檔壞掉不能讓其餘 N-1 檔跟著不產出（排程裡尤其重要）。
+                print(f"  ❌ {tk:8} 失敗：{str(e)[:120]}")
+        print()
+        print(f"完成 {ok} 檔，失敗 {fail} 檔｜存放 {OBIS}")
+        return 1 if fail and not ok else 0
+
+    if not a.ticker:
+        ap.error("要給代號，或用 --all 重產全部")
+    out, d, n = build_one(a.ticker, a.output)
+    print(f"✅ 已存 {out}（{n:,} bytes）")
+    print(f"   {_stat(d)}")
     return 0
 
 

@@ -161,13 +161,33 @@ def is_trusted(broker):
     return False
 
 
+def _dedup_key(r):
+    """同一列異動的身分。
+
+    🔴 2026-09-04：每天的截圖**都會帶到前一天的資料**（9/4 那張表裡同時有
+    9/4 和 9/3 的列），所以連續兩天丟圖，重疊的那幾列會被算成兩筆。首次發生時
+    「AAPL 被 Morningstar 降評為賣出」在提醒裡**印了兩次一模一樣的行**。
+    用「日期＋代號＋券商＋評等＋新目標價」當身分去重，不看來源檔名。
+    """
+    def n(x):
+        return str(x or "").strip().lower()
+    return (n(r.get("date")), n(r.get("ticker")), n(r.get("broker")),
+            n(r.get("rating")), n(r.get("tp_new")))
+
+
 def all_rows(store=None):
     store = store if store is not None else _load(STORE, {})
-    out = []
+    out, seen = [], {}
     for k, v in store.items():
         for r in v.get("rows", []):
             r = dict(r)
             r["_src"] = k
+            key = _dedup_key(r)
+            if key in seen:
+                # 留第一次讀到的那份，只把後來的來源檔名記上去（可回溯是哪幾張圖）。
+                seen[key].setdefault("_dup_src", []).append(k)
+                continue
+            seen[key] = r
             out.append(r)
     out.sort(key=lambda r: (str(r.get("date")), str(r.get("ticker"))), reverse=True)
     return out
