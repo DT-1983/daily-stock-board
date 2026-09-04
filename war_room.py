@@ -254,9 +254,14 @@ def material_sima():
     fired = [_row(x) for x in (tc.get("triggered") or [])]
     near = [_row(x) for x in (tc.get("near") or [])]
     pend = tc.get("pending_metric") or []
+    # ⚠️ 2026-09-04：分組數字**先算好給他**，不要只給總數讓他自己數——
+    # 首測仲達寫「共 7 檔（另 2 檔非持股）」又寫「這 6 檔（…共7檔）」，
+    # 同一段裡數字自己打架。算數不是 AI 的強項，能算好的就不要留給他算。
+    f_held = [x for x in fired if x[2]]
+    f_not = [x for x in fired if not x[2]]
     m.append(f"【失效條件日檢】{tc.get('date','—')}：覆蓋 {tc.get('covered_count','?')} 檔，"
-             f"**觸發 {len(fired)} 條**、逼近 {len(near)} 條、"
-             f"等財報才驗 {len(pend)} 條"
+             f"**觸發 {len(fired)} 條（持股 {len(f_held)} 條、非持股 {len(f_not)} 條）**、"
+             f"逼近 {len(near)} 條、等財報才驗 {len(pend)} 條"
              + (f"；未覆蓋 {tc['uncovered']}" if tc.get("uncovered") else ""))
     # 「非持股」也要寫出來——留空會讓讀的人不確定是漏標還是真的不是持股
     for tk, desc, held, ang in fired[:10]:
@@ -468,16 +473,41 @@ def material_pangtong(question=""):
                            f"    {it['url']}")
     except Exception as e:                                  # noqa: BLE001
         return f"（新聞查詢失敗：{str(e)[:120]}）"
-    if not out:
-        return f"（用關鍵字 {kws} 查鉅亨網，**沒有找到任何新聞**）"
     seen, uniq = set(), []
     for line in out:
         if line in seen:
             continue
         seen.add(line)
         uniq.append(line)
-    return ("【鉅亨網新聞搜尋】關鍵字：" + "、".join(kws) + "\n"
-            + "\n".join(uniq[:14]))
+    body = (("【鉅亨網新聞搜尋】關鍵字：" + "、".join(kws) + "\n"
+             + "\n".join(uniq[:14])) if uniq else
+            f"【鉅亨網新聞搜尋】關鍵字 {kws}：**沒有找到任何新聞**")
+    # 🔴 2026-09-04 Leo：「高力在做什麼的」——龐統回答不了，因為材料只有新聞快訊，
+    # 沒有公司基本資料。那是**材料缺口不是他的問題**：問「這家在做什麼」是研究員
+    # 最基本的職責之一，而我沒給他資料。
+    # yfinance 的 longBusinessSummary/sector/industry 免費且台美股都有，補進來。
+    prof = "\n".join(_profile(code) for code, _ in picks[:2]) if picks else ""
+    return (prof + "\n\n" + body) if prof else body
+
+
+def _profile(code):
+    """公司基本資料（yfinance，免費）。查不到就明說，不要留空。"""
+    import re as _re
+    try:
+        import yfinance as yf
+        import tw_symbol
+        sym = (tw_symbol.resolve(code)
+               if _re.match(r"^[0-9]{4,6}[A-Z]?$", str(code)) else str(code))
+        i = yf.Ticker(sym).info or {}
+    except Exception as e:                                  # noqa: BLE001
+        return f"【{code} 公司資料】查詢失敗：{str(e)[:80]}"
+    if not i.get("longName") and not i.get("longBusinessSummary"):
+        return f"【{code} 公司資料】查無（yfinance 沒有這檔的基本資料）"
+    mc = i.get("marketCap")
+    return (f"【{code} 公司資料】{i.get('longName') or ''}"
+            f"｜產業：{i.get('sector') or '—'} / {i.get('industry') or '—'}"
+            + (f"｜市值 {mc / 1e8:,.0f} 億" if mc else "")
+            + f"\n  業務：{(i.get('longBusinessSummary') or '（無簡介）')[:600]}")
 
 
 ROLES = {
@@ -562,6 +592,18 @@ Leo 的問題：{question}
 - 把**事實**（材料裡寫的）跟**推論**（你的判讀）分開標示。
 - 材料裡沒有的就說沒有，不要補。
 - 開頭直接講結論，不要「好的，讓我來分析」這種開場。
+
+🔴 **精簡規則（2026-09-04 Leo：「有一段囉嗦不太像軍師，可以簡單一點，
+多給一些有用的資訊」）**：
+1. **第一句就回答他問的那件事**。問「在做什麼的」就先講這家公司做什麼，
+   不要先花一段講「這檔不是持股、數字是臨時算的」——那種話放最後一行，一句話帶過。
+2. **同類的雜訊合併成一句，不要逐條加註**。三則大盤新聞就寫
+   「另有 3 則是大盤新聞，跟這檔本身無關」，不要每一則後面都掛一個
+   「（這是大盤新聞，非個股專屬）」。
+3. **不要固定段落**。「沒有的部分」「這對持有的人意味著什麼」這種欄位，
+   **有話講才寫**；沒有實質內容就整段不要出現。
+4. **同一件事只講一次**。前面說過的限制，後面不要再覆述一遍。
+5. 寧可**少講幾句廢話、多給一個具體數字**。
 
 🔴 **代號鐵律（違反這條比答不出來嚴重得多）**：
 Leo 問哪一檔，就只能回答那一檔。**絕對不可以**因為材料裡沒有它，
