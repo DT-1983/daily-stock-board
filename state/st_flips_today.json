@@ -3,108 +3,11 @@
 "flips_hold": [],
 "flips_watch": [
 {
-"code": "BTDR",
-"name": "",
+"code": "8046",
+"name": "南電",
 "word": "🟢→🔴 翻空",
 "dir": -1
 }
 ],
-"ai_alerts": [
-{
-"chain": "AI 伺服器",
-"market": "US",
-"sig": "🟢",
-"code": "MU",
-"name": "Micron Technology Inc",
-"reason": "觀望→買進"
-},
-{
-"chain": "矽光子/光通訊",
-"market": "US",
-"sig": "🔴",
-"code": "MPWR",
-"name": "Monolithic Power Systems Inc",
-"reason": "觀望→賣出"
-},
-{
-"chain": "矽光子/光通訊",
-"market": "TW",
-"sig": "🟢",
-"code": "3363",
-"name": "上詮",
-"reason": "觀望→買進"
-},
-{
-"chain": "機器人",
-"market": "TW",
-"sig": "🔴",
-"code": "2359",
-"name": "所羅門",
-"reason": "觀望→賣出"
-},
-{
-"chain": "低軌衛星",
-"market": "TW",
-"sig": "🟢",
-"code": "2454",
-"name": "聯發科",
-"reason": "觀望→買進"
-},
-{
-"chain": "太陽能",
-"market": "TW",
-"sig": "🔴",
-"code": "6443",
-"name": "元晶",
-"reason": "觀望→賣出"
-},
-{
-"chain": "玻璃基板/TGV",
-"market": "TW",
-"sig": "🔴",
-"code": "3189",
-"name": "景碩",
-"reason": "觀望→賣出"
-},
-{
-"chain": "玻璃基板/TGV",
-"market": "TW",
-"sig": "🟢",
-"code": "6664",
-"name": "群翊",
-"reason": "觀望→買進"
-},
-{
-"chain": "玻璃基板/TGV",
-"market": "TW",
-"sig": "🔴",
-"code": "8046",
-"name": "南電",
-"reason": "觀望→賣出"
-},
-{
-"chain": "AI 材料/被動元件",
-"market": "TW",
-"sig": "🔴",
-"code": "2408",
-"name": "NANYA TECHNOLOGY CORPORATION",
-"reason": "觀望→賣出"
-},
-{
-"chain": "AI 材料/被動元件",
-"market": "TW",
-"sig": "🔴",
-"code": "2344",
-"name": "WINBOND ELECTRONIC CORP",
-"reason": "觀望→賣出"
-},
-{
-"chain": "AI 材料/被動元件",
-"market": "TW",
-"sig": "🔴",
-"code": "2327",
-"name": "YAGEO CORP",
-"reason": "觀望→賣出"
-}
-]
+"ai_alerts": []
 }
