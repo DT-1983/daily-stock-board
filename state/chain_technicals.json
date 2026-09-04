@@ -1,5 +1,5 @@
 {
- "date": "2026-09-03",
+ "date": "2026-09-04",
  "period": 60,
  "mode": "daily",
  "chains": {
@@ -93,11 +93,11 @@
    "rrg_from": null,
    "supertrend": "多頭",
    "squeeze": {
-    "on": true,
-    "level": "中壓",
+    "on": false,
+    "level": null,
     "momentum_up": false
    },
-   "summary": "改善象限(RS 99.45/動能 101.05)｜SuperTrend多頭｜中壓蓄力中，動能偏空"
+   "summary": "改善象限(RS 99.45/動能 101.05)｜SuperTrend多頭｜未擠壓"
   },
   "us:機器人": {
    "members_used": 8,
@@ -154,6 +154,7 @@
     "momentum": 98.62,
     "quadrant": "落後"
    },
+   "rrg_from": null,
    "supertrend": "空頭",
    "squeeze": {
     "on": false,
@@ -205,10 +206,10 @@
    "supertrend": "多頭",
    "squeeze": {
     "on": true,
-    "level": "中壓",
+    "level": "極壓",
     "momentum_up": true
    },
-   "summary": "領先象限(RS 100.89/動能 100.15)｜SuperTrend多頭｜中壓蓄力中，動能偏多"
+   "summary": "領先象限(RS 100.89/動能 100.15)｜SuperTrend多頭｜極壓蓄力中，動能偏多"
   },
   "tw:低軌衛星": {
    "members_used": 6,
@@ -252,11 +253,11 @@
    "rrg_from": null,
    "supertrend": "多頭",
    "squeeze": {
-    "on": false,
-    "level": null,
+    "on": true,
+    "level": "微壓",
     "momentum_up": true
    },
-   "summary": "領先象限(RS 101.01/動能 101.76)｜SuperTrend多頭｜未擠壓"
+   "summary": "領先象限(RS 101.01/動能 101.76)｜SuperTrend多頭｜微壓蓄力中，動能偏多"
   },
   "tw:玻璃基板/TGV": {
    "members_used": 8,
@@ -281,6 +282,7 @@
     "momentum": 99.16,
     "quadrant": "弱化"
    },
+   "rrg_from": null,
    "supertrend": "多頭",
    "squeeze": {
     "on": false,
@@ -296,6 +298,7 @@
     "momentum": 102.0,
     "quadrant": "領先"
    },
+   "rrg_from": null,
    "supertrend": "多頭",
    "squeeze": {
     "on": false,

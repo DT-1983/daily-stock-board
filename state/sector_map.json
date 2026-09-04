@@ -1756,5 +1756,11 @@
     "industry": "Electronic Equipment/Instruments",
     "exchange": "TWSE",
     "asof": "2026-09-03"
+  },
+  "6669": {
+    "sector": "Technology Services",
+    "industry": "Data Processing Services",
+    "exchange": "TWSE",
+    "asof": "2026-09-04"
   }
 }

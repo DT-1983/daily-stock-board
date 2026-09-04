@@ -107,31 +107,56 @@ def price_targets(tickers, force=False):
     的坑）。要做歷史比較就得從今天開始存。
     """
     import yfinance as yf
+    import tw_symbol as _tws
     cache = _load(TARGETS_CACHE, {})
     today = time.strftime("%Y-%m-%d")
     fresh_before = time.time() - TARGET_CACHE_DAYS * 86400
+
+    # 🔴 2026-09-04：快取 key 原本是「呼叫端傳什麼就存什麼」——掃描端傳 `2330`、
+    # 查股頁傳 `2330.TW`，**同一檔存兩份、互相不認**，實測 295 筆快取裡就有這種重複。
+    # 統一用 tw_symbol.resolve() 當 key；查詢時兩種寫法都試，舊資料不用重抓。
+    def _key(tk):
+        try:
+            return _tws.resolve(tk)
+        except Exception:                              # noqa: BLE001
+            return str(tk)
+
+    def _get(tk):
+        import re as _re
+        for k in (_key(tk), str(tk),
+                  _re.sub(r"\.(TW|TWO)$", "", str(tk))):
+            c = cache.get(k)
+            if c:
+                return c
+        return None
+
     need = []
     for tk in tickers:
-        c = cache.get(tk)
+        c = _get(tk)
         if force or not c or c.get("ts", 0) < fresh_before:
             need.append(tk)
     if need:
         print(f"  目標價：快取命中 {len(tickers)-len(need)}/{len(tickers)}，需更新 {len(need)} 檔…")
-        import tw_symbol
         for i, tk in enumerate(need, 1):
-            sym = tw_symbol.resolve(tk)
+            sym = _key(tk)
             try:
                 d = yf.Ticker(sym).analyst_price_targets or {}
                 mean = d.get("mean")
-                cache[tk] = {"mean": mean, "low": d.get("low"), "high": d.get("high"),
-                             "asof": today, "ts": time.time()}
+                cache[sym] = {"mean": mean, "low": d.get("low"), "high": d.get("high"),
+                              "asof": today, "ts": time.time()}
             except Exception:                          # noqa: BLE001
                 # 抓失敗不寫快取，避免一次逾時被永久記成「沒有目標價」
                 pass
             if i % 40 == 0:
                 print(f"    …{i}/{len(need)}")
         _save(TARGETS_CACHE, cache)
-    return cache
+    # 回傳時把兩種寫法都指到同一筆，呼叫端用哪種 key 查都拿得到
+    out = dict(cache)
+    for tk in tickers:
+        c = _get(tk)
+        if c is not None:
+            out[str(tk)] = c
+    return out
 
 
 # ── 燈號 ────────────────────────────────────────────────────────
@@ -200,18 +225,31 @@ def scan_one(tk, sym, df, bench_closes):
 
 
 def add_rr(row, tgt):
-    """補風報比。沒有目標價就明確標 None——不要拿貴價之類的東西硬湊，
-    那會做出一個看起來像但意義不同的數字。"""
+    """補目標價與風報比。沒有目標價就明確標 None——不要拿貴價之類的東西硬湊，
+    那會做出一個看起來像但意義不同的數字。
+
+    🔴 2026-09-04 修（Leo 問「查股票看得到目標價嗎」查出來的）：
+    原本**空方時直接 return，連 `target` 都不填**，下游看到 None 就顯示
+    「查無分析師共識目標價」。實測 194 檔裡有 **75 檔是這種情況——快取裡明明有
+    目標價**（MU 1513.41／2330 台積電 3229.33／CCJ 129.76…），卻被說成「查無」。
+    ⭐ 那是把「我們刻意不算」講成「外面沒有資料」，兩件事完全不同。
+
+    改成：**目標價一律填**（有就填），**風報比才維持空方不算**——
+    空方沒有「持有中的停損」可言，談賠率無意義，這個原始設計是對的，不動。
+    """
     row["target"] = None
     row["rr"] = None
     row["target_n"] = None
-    # 空方不給風報比：沒有「持有中的停損」可言，這時談賠率是無意義的
-    if not row.get("bull") or not tgt or tgt.get("mean") is None or not row.get("st_line"):
+    if not tgt or tgt.get("mean") is None:
         return row
-    mean, px, sl = float(tgt["mean"]), row["price"], row["st_line"]
-    row["target"] = round(mean, 2)
+    # 目標價本身跟多空無關，先填
+    row["target"] = round(float(tgt["mean"]), 2)
     row["target_low"] = tgt.get("low")
     row["target_high"] = tgt.get("high")
+    # 風報比：空方不給（沒有持有中的停損）；沒有 SuperTrend 線也算不出來
+    if not row.get("bull") or not row.get("st_line"):
+        return row
+    mean, px, sl = float(tgt["mean"]), row["price"], row["st_line"]
     if px > sl:
         row["rr"] = round((mean - px) / (px - sl), 2)
     return row

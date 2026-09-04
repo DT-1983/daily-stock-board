@@ -51,8 +51,8 @@
       "st_line": 1525.5,
       "gap_pct": 13.81,
       "momentum": 167.44,
-      "rs_short": 13.11,
-      "rs_long": -9.36,
+      "rs_short": 11.66,
+      "rs_long": -10.19,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -123,84 +123,6 @@
       "quad_date": "2026-09-04"
     },
     {
-      "ticker": "2313",
-      "symbol": "2313.TW",
-      "price": 236.0,
-      "bull": true,
-      "st_line": 215.75,
-      "gap_pct": 8.58,
-      "momentum": 25.84,
-      "rs_short": 4.07,
-      "rs_long": 7.21,
-      "lamps": {
-        "L1 SuperTrend 多方": true,
-        "L2 動能 > 0": true,
-        "L3 雙重颱風不為綠": true,
-        "L4 RS60日乖離 > +3%": true
-      },
-      "lit": 4,
-      "combo": true,
-      "typhoon": 1,
-      "asof": "2026-09-03",
-      "name": "華通",
-      "src": [
-        "持股"
-      ],
-      "target": 316.0,
-      "rr": 3.95,
-      "target_n": null,
-      "target_low": 256.0,
-      "target_high": 360.0,
-      "sector": "Electronic Technology",
-      "industry": "Electronic Components",
-      "sector_zh": "電子科技",
-      "quad": {
-        "20": "lagging",
-        "60": "lagging",
-        "120": "weakening"
-      },
-      "quad_date": "2026-09-04"
-    },
-    {
-      "ticker": "1519",
-      "symbol": "1519.TW",
-      "price": 722.0,
-      "bull": true,
-      "st_line": 688.7,
-      "gap_pct": 4.61,
-      "momentum": 38.05,
-      "rs_short": 3.87,
-      "rs_long": -23.78,
-      "lamps": {
-        "L1 SuperTrend 多方": true,
-        "L2 動能 > 0": true,
-        "L3 雙重颱風不為綠": true,
-        "L4 RS60日乖離 > +3%": true
-      },
-      "lit": 4,
-      "combo": true,
-      "typhoon": 1,
-      "asof": "2026-09-03",
-      "name": "華城",
-      "src": [
-        "守備清單"
-      ],
-      "target": 848.62,
-      "rr": 3.8,
-      "target_n": null,
-      "target_low": 727.2727,
-      "target_high": 950.4133,
-      "sector": "Producer Manufacturing",
-      "industry": "Electrical Products",
-      "sector_zh": "生產製造",
-      "quad": {
-        "20": "lagging",
-        "60": "leading",
-        "120": "leading"
-      },
-      "quad_date": "2026-09-04"
-    },
-    {
       "ticker": "TM",
       "symbol": "TM",
       "price": 199.87,
@@ -240,45 +162,6 @@
       "quad_date": "2026-09-04"
     },
     {
-      "ticker": "2408",
-      "symbol": "2408.TW",
-      "price": 477.5,
-      "bull": true,
-      "st_line": 452.2,
-      "gap_pct": 5.3,
-      "momentum": 25.48,
-      "rs_short": 4.12,
-      "rs_long": 45.36,
-      "lamps": {
-        "L1 SuperTrend 多方": true,
-        "L2 動能 > 0": true,
-        "L3 雙重颱風不為綠": true,
-        "L4 RS60日乖離 > +3%": true
-      },
-      "lit": 4,
-      "combo": true,
-      "typhoon": 1,
-      "asof": "2026-09-03",
-      "name": "南亞科",
-      "src": [
-        "守備清單"
-      ],
-      "target": 559.83,
-      "rr": 3.25,
-      "target_n": null,
-      "target_low": 150.0,
-      "target_high": 850.0,
-      "sector": "Electronic Technology",
-      "industry": "Semiconductors",
-      "sector_zh": "電子科技",
-      "quad": {
-        "20": "lagging",
-        "60": "lagging",
-        "120": "weakening"
-      },
-      "quad_date": "2026-09-04"
-    },
-    {
       "ticker": "3491",
       "symbol": "3491.TWO",
       "price": 1405.0,
@@ -286,8 +169,8 @@
       "st_line": 1205.0,
       "gap_pct": 14.23,
       "momentum": 113.94,
-      "rs_short": 5.67,
-      "rs_long": 0.54,
+      "rs_short": 4.27,
+      "rs_long": -0.34,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -320,13 +203,13 @@
     {
       "ticker": "CEG",
       "symbol": "CEG",
-      "price": 288.61,
+      "price": 285.05,
       "bull": true,
-      "st_line": 267.18,
-      "gap_pct": 7.43,
-      "momentum": 7.2,
-      "rs_short": 6.4,
-      "rs_long": -14.79,
+      "st_line": 262.74,
+      "gap_pct": 7.83,
+      "momentum": 5.14,
+      "rs_short": 4.95,
+      "rs_long": -15.78,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -342,7 +225,7 @@
         "守備清單"
       ],
       "target": 348.3,
-      "rr": 2.79,
+      "rr": 2.84,
       "target_n": null,
       "target_low": 290.0,
       "target_high": 441.0,
@@ -475,45 +358,6 @@
       "quad_date": "2026-09-04"
     },
     {
-      "ticker": "2454",
-      "symbol": "2454.TW",
-      "price": 4340.0,
-      "bull": true,
-      "st_line": 3821.5,
-      "gap_pct": 11.95,
-      "momentum": 35.74,
-      "rs_short": 7.6,
-      "rs_long": 47.13,
-      "lamps": {
-        "L1 SuperTrend 多方": true,
-        "L2 動能 > 0": true,
-        "L3 雙重颱風不為綠": true,
-        "L4 RS60日乖離 > +3%": true
-      },
-      "lit": 4,
-      "combo": true,
-      "typhoon": 1,
-      "asof": "2026-09-03",
-      "name": "聯發科",
-      "src": [
-        "守備清單"
-      ],
-      "target": 5502.92,
-      "rr": 2.24,
-      "target_n": null,
-      "target_low": 1751.0,
-      "target_high": 10369.0,
-      "sector": "Electronic Technology",
-      "industry": "Semiconductors",
-      "sector_zh": "電子科技",
-      "quad": {
-        "20": "lagging",
-        "60": "lagging",
-        "120": "weakening"
-      },
-      "quad_date": "2026-09-04"
-    },
-    {
       "ticker": "MSFT",
       "symbol": "MSFT",
       "price": 510.12,
@@ -593,15 +437,15 @@
       "quad_date": "2026-09-04"
     },
     {
-      "ticker": "3023",
-      "symbol": "3023.TW",
-      "price": 325.0,
+      "ticker": "2454",
+      "symbol": "2454.TW",
+      "price": 4415.0,
       "bull": true,
-      "st_line": 304.45,
-      "gap_pct": 6.32,
-      "momentum": 8.32,
-      "rs_short": 3.54,
-      "rs_long": -1.61,
+      "st_line": 3843.5,
+      "gap_pct": 12.94,
+      "momentum": 76.26,
+      "rs_short": 7.93,
+      "rs_long": 47.53,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -611,57 +455,18 @@
       "lit": 4,
       "combo": true,
       "typhoon": 1,
-      "asof": "2026-09-03",
-      "name": "信邦",
+      "asof": "2026-09-04",
+      "name": "聯發科",
       "src": [
         "守備清單"
       ],
-      "target": 358.29,
-      "rr": 1.62,
+      "target": 5502.92,
+      "rr": 1.9,
       "target_n": null,
-      "target_low": 235.0,
-      "target_high": 410.0,
-      "sector": "Distribution Services",
-      "industry": "Electronics Distributors",
-      "sector_zh": "流通服務",
-      "quad": {
-        "20": "lagging",
-        "60": "improving",
-        "120": "lagging"
-      },
-      "quad_date": "2026-09-04"
-    },
-    {
-      "ticker": "3017",
-      "symbol": "3017.TW",
-      "price": 3300.0,
-      "bull": true,
-      "st_line": 2821.0,
-      "gap_pct": 14.52,
-      "momentum": 307.18,
-      "rs_short": 23.64,
-      "rs_long": 33.72,
-      "lamps": {
-        "L1 SuperTrend 多方": true,
-        "L2 動能 > 0": true,
-        "L3 雙重颱風不為綠": true,
-        "L4 RS60日乖離 > +3%": true
-      },
-      "lit": 4,
-      "combo": true,
-      "typhoon": 1,
-      "asof": "2026-09-03",
-      "name": "奇鋐",
-      "src": [
-        "守備清單"
-      ],
-      "target": 3878.47,
-      "rr": 1.21,
-      "target_n": null,
-      "target_low": 3327.0,
-      "target_high": 4250.0,
+      "target_low": 1751.0,
+      "target_high": 10369.0,
       "sector": "Electronic Technology",
-      "industry": "Electronic Production Equipment",
+      "industry": "Semiconductors",
       "sector_zh": "電子科技",
       "quad": {
         "20": "lagging",
@@ -678,8 +483,8 @@
       "st_line": 196.7,
       "gap_pct": 14.85,
       "momentum": 3.2,
-      "rs_short": 7.97,
-      "rs_long": 14.54,
+      "rs_short": 6.56,
+      "rs_long": 13.5,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -827,15 +632,15 @@
       "quad_date": "2026-09-04"
     },
     {
-      "ticker": "3324",
-      "symbol": "3324.TWO",
-      "price": 1350.0,
+      "ticker": "3017",
+      "symbol": "3017.TW",
+      "price": 3570.0,
       "bull": true,
-      "st_line": 1189.2,
-      "gap_pct": 11.91,
-      "momentum": 175.64,
-      "rs_short": 31.63,
-      "rs_long": 2.35,
+      "st_line": 2878.0,
+      "gap_pct": 19.38,
+      "momentum": 322.5,
+      "rs_short": 31.03,
+      "rs_long": 42.5,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -845,18 +650,18 @@
       "lit": 4,
       "combo": true,
       "typhoon": 1,
-      "asof": "2026-09-03",
-      "name": "雙鴻",
+      "asof": "2026-09-04",
+      "name": "奇鋐",
       "src": [
         "守備清單"
       ],
-      "target": 1420.2,
-      "rr": 0.44,
+      "target": 3878.47,
+      "rr": 0.45,
       "target_n": null,
-      "target_low": 1025.0,
-      "target_high": 1840.0,
+      "target_low": 3327.0,
+      "target_high": 4250.0,
       "sector": "Electronic Technology",
-      "industry": "Computer Peripherals",
+      "industry": "Electronic Production Equipment",
       "sector_zh": "電子科技",
       "quad": {
         "20": "lagging",
@@ -912,8 +717,8 @@
       "st_line": 4819.0,
       "gap_pct": 14.18,
       "momentum": 950.38,
-      "rs_short": 35.02,
-      "rs_long": 29.78,
+      "rs_short": 33.33,
+      "rs_long": 28.62,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -952,8 +757,8 @@
       "st_line": 460.5,
       "gap_pct": 10.06,
       "momentum": 90.13,
-      "rs_short": 31.55,
-      "rs_long": 100.59,
+      "rs_short": 29.82,
+      "rs_long": 98.69,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -991,8 +796,8 @@
       "st_line": 646.5,
       "gap_pct": 16.47,
       "momentum": 101.73,
-      "rs_short": 23.97,
-      "rs_long": 8.31,
+      "rs_short": 22.35,
+      "rs_long": 7.34,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -1062,6 +867,45 @@
       "quad_date": "2026-09-04"
     },
     {
+      "ticker": "3324",
+      "symbol": "3324.TWO",
+      "price": 1445.0,
+      "bull": true,
+      "st_line": 1189.2,
+      "gap_pct": 17.7,
+      "momentum": 207.22,
+      "rs_short": 38.07,
+      "rs_long": 8.19,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": true
+      },
+      "lit": 4,
+      "combo": true,
+      "typhoon": 1,
+      "asof": "2026-09-04",
+      "name": "雙鴻",
+      "src": [
+        "守備清單"
+      ],
+      "target": 1420.2,
+      "rr": -0.1,
+      "target_n": null,
+      "target_low": 1025.0,
+      "target_high": 1840.0,
+      "sector": "Electronic Technology",
+      "industry": "Computer Peripherals",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-04"
+    },
+    {
       "ticker": "FCX",
       "symbol": "FCX",
       "price": 72.56,
@@ -1108,8 +952,8 @@
       "st_line": 256.75,
       "gap_pct": 14.13,
       "momentum": 33.15,
-      "rs_short": 24.29,
-      "rs_long": 22.63,
+      "rs_short": 22.73,
+      "rs_long": 21.47,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -1148,8 +992,8 @@
       "st_line": 2794.5,
       "gap_pct": 10.43,
       "momentum": 575.17,
-      "rs_short": 39.23,
-      "rs_long": 86.87,
+      "rs_short": 37.49,
+      "rs_long": 85.23,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -1260,13 +1104,13 @@
     {
       "ticker": "2882",
       "symbol": "2882.TW",
-      "price": 112.5,
+      "price": 114.0,
       "bull": true,
-      "st_line": 100.3,
-      "gap_pct": 10.84,
-      "momentum": 5.81,
-      "rs_short": 10.06,
-      "rs_long": 10.3,
+      "st_line": 102.01,
+      "gap_pct": 10.52,
+      "momentum": 6.86,
+      "rs_short": 9.79,
+      "rs_long": 10.42,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -1276,13 +1120,13 @@
       "lit": 4,
       "combo": true,
       "typhoon": 1,
-      "asof": "2026-09-03",
+      "asof": "2026-09-04",
       "name": "國泰金",
       "src": [
         "持股"
       ],
       "target": 105.0,
-      "rr": -0.61,
+      "rr": -0.75,
       "target_n": null,
       "target_low": 76.0,
       "target_high": 130.0,
@@ -1304,8 +1148,8 @@
       "st_line": 130.45,
       "gap_pct": 11.26,
       "momentum": 11.84,
-      "rs_short": 11.62,
-      "rs_long": 11.92,
+      "rs_short": 10.18,
+      "rs_long": 10.82,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -1343,8 +1187,8 @@
       "st_line": 38.61,
       "gap_pct": 10.64,
       "momentum": 1.87,
-      "rs_short": 16.85,
-      "rs_long": -0.66,
+      "rs_short": 15.36,
+      "rs_long": -1.6,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -1377,13 +1221,13 @@
     {
       "ticker": "4979",
       "symbol": "4979.TWO",
-      "price": 572.0,
+      "price": 611.0,
       "bull": true,
       "st_line": 483.9,
-      "gap_pct": 15.4,
-      "momentum": 56.5,
-      "rs_short": 15.59,
-      "rs_long": 17.41,
+      "gap_pct": 20.8,
+      "momentum": 48.86,
+      "rs_short": 21.35,
+      "rs_long": 23.71,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -1393,13 +1237,13 @@
       "lit": 4,
       "combo": true,
       "typhoon": 1,
-      "asof": "2026-09-03",
+      "asof": "2026-09-04",
       "name": "華星光",
       "src": [
         "守備清單"
       ],
       "target": 475.0,
-      "rr": -1.1,
+      "rr": -1.07,
       "target_n": null,
       "target_low": 250.0,
       "target_high": 700.0,
@@ -1421,8 +1265,8 @@
       "st_line": 388.2,
       "gap_pct": 13.06,
       "momentum": 54.92,
-      "rs_short": 8.83,
-      "rs_long": 20.31,
+      "rs_short": 7.44,
+      "rs_long": 19.27,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -1460,8 +1304,8 @@
       "st_line": 6314.5,
       "gap_pct": 11.69,
       "momentum": 1894.24,
-      "rs_short": 47.36,
-      "rs_long": 86.84,
+      "rs_short": 45.48,
+      "rs_long": 85.04,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -1538,8 +1382,8 @@
       "st_line": 497.3,
       "gap_pct": 10.23,
       "momentum": 70.34,
-      "rs_short": 7.73,
-      "rs_long": 25.26,
+      "rs_short": 6.29,
+      "rs_long": 24.04,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -1577,8 +1421,8 @@
       "st_line": 181.82,
       "gap_pct": 11.09,
       "momentum": 35.8,
-      "rs_short": 20.19,
-      "rs_long": 27.33,
+      "rs_short": 18.66,
+      "rs_long": 26.19,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -1614,8 +1458,8 @@
       "st_line": 650.5,
       "gap_pct": 9.65,
       "momentum": 42.81,
-      "rs_short": 4.51,
-      "rs_long": 6.67,
+      "rs_short": 3.17,
+      "rs_long": 5.79,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -1651,8 +1495,8 @@
       "st_line": 104.45,
       "gap_pct": 12.96,
       "momentum": 25.95,
-      "rs_short": 24.09,
-      "rs_long": -2.23,
+      "rs_short": 22.48,
+      "rs_long": -3.12,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -1867,8 +1711,8 @@
       "st_line": 1044.4,
       "gap_pct": 3.3,
       "momentum": 24.77,
-      "rs_short": -4.5,
-      "rs_long": 45.17,
+      "rs_short": -5.81,
+      "rs_long": 43.75,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -1906,8 +1750,8 @@
       "st_line": 441.75,
       "gap_pct": 6.01,
       "momentum": 95.06,
-      "rs_short": -2.27,
-      "rs_long": 9.22,
+      "rs_short": -3.53,
+      "rs_long": 8.2,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -1945,8 +1789,8 @@
       "st_line": 67.17,
       "gap_pct": 5.39,
       "momentum": 3.24,
-      "rs_short": 0.98,
-      "rs_long": -34.79,
+      "rs_short": -0.34,
+      "rs_long": -35.41,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -1984,8 +1828,8 @@
       "st_line": 156.25,
       "gap_pct": 7.54,
       "momentum": 5.17,
-      "rs_short": -5.61,
-      "rs_long": 25.28,
+      "rs_short": -6.83,
+      "rs_long": 24.04,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -2062,8 +1906,8 @@
       "st_line": 158.05,
       "gap_pct": 2.74,
       "momentum": 0.89,
-      "rs_short": -3.34,
-      "rs_long": -21.75,
+      "rs_short": -4.61,
+      "rs_long": -22.49,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -2101,8 +1945,8 @@
       "st_line": 315.35,
       "gap_pct": 5.87,
       "momentum": 23.63,
-      "rs_short": -2.19,
-      "rs_long": -15.29,
+      "rs_short": -3.51,
+      "rs_long": -16.1,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -2179,8 +2023,8 @@
       "st_line": 59.58,
       "gap_pct": 7.91,
       "momentum": 5.41,
-      "rs_short": -7.68,
-      "rs_long": -3.54,
+      "rs_short": -8.89,
+      "rs_long": -4.44,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -2251,6 +2095,84 @@
       "quad_date": "2026-09-04"
     },
     {
+      "ticker": "2313",
+      "symbol": "2313.TW",
+      "price": 236.0,
+      "bull": true,
+      "st_line": 215.75,
+      "gap_pct": 8.58,
+      "momentum": 25.84,
+      "rs_short": 2.7,
+      "rs_long": 6.25,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "typhoon": 1,
+      "asof": "2026-09-03",
+      "name": "華通",
+      "src": [
+        "持股"
+      ],
+      "target": 316.0,
+      "rr": 3.95,
+      "target_n": null,
+      "target_low": 256.0,
+      "target_high": 360.0,
+      "sector": "Electronic Technology",
+      "industry": "Electronic Components",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-04"
+    },
+    {
+      "ticker": "1519",
+      "symbol": "1519.TW",
+      "price": 722.0,
+      "bull": true,
+      "st_line": 688.7,
+      "gap_pct": 4.61,
+      "momentum": 38.05,
+      "rs_short": 2.54,
+      "rs_long": -24.49,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "typhoon": 1,
+      "asof": "2026-09-03",
+      "name": "華城",
+      "src": [
+        "守備清單"
+      ],
+      "target": 848.62,
+      "rr": 3.8,
+      "target_n": null,
+      "target_low": 727.2727,
+      "target_high": 950.4133,
+      "sector": "Producer Manufacturing",
+      "industry": "Electrical Products",
+      "sector_zh": "生產製造",
+      "quad": {
+        "20": "lagging",
+        "60": "leading",
+        "120": "leading"
+      },
+      "quad_date": "2026-09-04"
+    },
+    {
       "ticker": "AMT",
       "symbol": "AMT",
       "price": 177.75,
@@ -2297,8 +2219,8 @@
       "st_line": 189.6,
       "gap_pct": 5.67,
       "momentum": 5.5,
-      "rs_short": -6.01,
-      "rs_long": -21.96,
+      "rs_short": -7.23,
+      "rs_long": -22.7,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -2320,6 +2242,45 @@
       "target_high": 277.0,
       "sector": "Electronic Technology",
       "industry": "Electronic Equipment/Instruments",
+      "sector_zh": "電子科技",
+      "quad": {
+        "20": "lagging",
+        "60": "lagging",
+        "120": "weakening"
+      },
+      "quad_date": "2026-09-04"
+    },
+    {
+      "ticker": "2408",
+      "symbol": "2408.TW",
+      "price": 477.5,
+      "bull": true,
+      "st_line": 452.2,
+      "gap_pct": 5.3,
+      "momentum": 25.48,
+      "rs_short": 2.75,
+      "rs_long": 43.9,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "typhoon": 1,
+      "asof": "2026-09-03",
+      "name": "南亞科",
+      "src": [
+        "守備清單"
+      ],
+      "target": 559.83,
+      "rr": 3.25,
+      "target_n": null,
+      "target_low": 150.0,
+      "target_high": 850.0,
+      "sector": "Electronic Technology",
+      "industry": "Semiconductors",
       "sector_zh": "電子科技",
       "quad": {
         "20": "lagging",
@@ -2492,8 +2453,8 @@
       "st_line": 121.16,
       "gap_pct": 16.15,
       "momentum": 1.42,
-      "rs_short": 2.15,
-      "rs_long": 6.43,
+      "rs_short": 0.82,
+      "rs_long": 5.45,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -2524,6 +2485,45 @@
       "quad_date": "2026-09-04"
     },
     {
+      "ticker": "3023",
+      "symbol": "3023.TW",
+      "price": 325.0,
+      "bull": true,
+      "st_line": 304.45,
+      "gap_pct": 6.32,
+      "momentum": 8.32,
+      "rs_short": 2.21,
+      "rs_long": -2.54,
+      "lamps": {
+        "L1 SuperTrend 多方": true,
+        "L2 動能 > 0": true,
+        "L3 雙重颱風不為綠": true,
+        "L4 RS60日乖離 > +3%": false
+      },
+      "lit": 3,
+      "combo": true,
+      "typhoon": 1,
+      "asof": "2026-09-03",
+      "name": "信邦",
+      "src": [
+        "守備清單"
+      ],
+      "target": 358.29,
+      "rr": 1.62,
+      "target_n": null,
+      "target_low": 235.0,
+      "target_high": 410.0,
+      "sector": "Distribution Services",
+      "industry": "Electronics Distributors",
+      "sector_zh": "流通服務",
+      "quad": {
+        "20": "lagging",
+        "60": "improving",
+        "120": "lagging"
+      },
+      "quad_date": "2026-09-04"
+    },
+    {
       "ticker": "1605",
       "symbol": "1605.TW",
       "price": 37.6,
@@ -2531,8 +2531,8 @@
       "st_line": 35.32,
       "gap_pct": 6.05,
       "momentum": 1.02,
-      "rs_short": 2.46,
-      "rs_long": -14.28,
+      "rs_short": 1.16,
+      "rs_long": -15.09,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -2570,8 +2570,8 @@
       "st_line": 53.39,
       "gap_pct": 10.27,
       "momentum": 0.44,
-      "rs_short": 2.51,
-      "rs_long": -7.52,
+      "rs_short": 1.16,
+      "rs_long": -8.38,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -2609,8 +2609,8 @@
       "st_line": 112.4,
       "gap_pct": 4.75,
       "momentum": 5.3,
-      "rs_short": 2.62,
-      "rs_long": -17.76,
+      "rs_short": 1.28,
+      "rs_long": -18.55,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -2648,8 +2648,8 @@
       "st_line": 111.05,
       "gap_pct": 11.16,
       "momentum": 8.17,
-      "rs_short": -10.27,
-      "rs_long": 24.94,
+      "rs_short": -11.49,
+      "rs_long": 23.68,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -2687,8 +2687,8 @@
       "st_line": 62.35,
       "gap_pct": 7.63,
       "momentum": 0.0,
-      "rs_short": 0.59,
-      "rs_long": -1.64,
+      "rs_short": -0.71,
+      "rs_long": -2.58,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -2765,8 +2765,8 @@
       "st_line": 199.65,
       "gap_pct": 7.35,
       "momentum": 22.12,
-      "rs_short": -2.19,
-      "rs_long": 1.7,
+      "rs_short": -3.48,
+      "rs_long": 0.75,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -2843,8 +2843,8 @@
       "st_line": 94.67,
       "gap_pct": 9.41,
       "momentum": 9.79,
-      "rs_short": -14.95,
-      "rs_long": 46.32,
+      "rs_short": -16.2,
+      "rs_long": 44.71,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -2987,8 +2987,8 @@
       "st_line": 235.11,
       "gap_pct": 4.12,
       "momentum": 6.03,
-      "rs_short": 0.76,
-      "rs_long": 3.08,
+      "rs_short": -0.6,
+      "rs_long": 2.08,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -3020,8 +3020,8 @@
       "st_line": 31.23,
       "gap_pct": 3.15,
       "momentum": 1.08,
-      "rs_short": 2.06,
-      "rs_long": -20.41,
+      "rs_short": 0.71,
+      "rs_long": -21.17,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -3057,8 +3057,8 @@
       "st_line": 102.36,
       "gap_pct": 4.15,
       "momentum": 2.49,
-      "rs_short": 0.48,
-      "rs_long": 2.66,
+      "rs_short": -0.87,
+      "rs_long": 1.66,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -3085,13 +3085,13 @@
     {
       "ticker": "00981A",
       "symbol": "00981A.TW",
-      "price": 29.13,
+      "price": 29.77,
       "bull": true,
       "st_line": 27.79,
-      "gap_pct": 4.59,
-      "momentum": 0.65,
-      "rs_short": -2.27,
-      "rs_long": 6.21,
+      "gap_pct": 6.64,
+      "momentum": 0.38,
+      "rs_short": -1.44,
+      "rs_long": 7.15,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -3101,7 +3101,7 @@
       "lit": 3,
       "combo": true,
       "typhoon": 1,
-      "asof": "2026-09-03",
+      "asof": "2026-09-04",
       "name": "主動統一台股增長",
       "src": [
         "持股"
@@ -3123,8 +3123,8 @@
       "st_line": 1279.0,
       "gap_pct": 26.07,
       "momentum": 126.55,
-      "rs_short": -3.08,
-      "rs_long": 33.94,
+      "rs_short": -4.41,
+      "rs_long": 32.7,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": true,
@@ -3199,8 +3199,8 @@
       "st_line": 1306.5,
       "gap_pct": 2.86,
       "momentum": -99.36,
-      "rs_short": -10.94,
-      "rs_long": 31.5,
+      "rs_short": -12.08,
+      "rs_long": 30.28,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": false,
@@ -3434,8 +3434,8 @@
       "st_line": 237.25,
       "gap_pct": 4.14,
       "momentum": -10.52,
-      "rs_short": -2.54,
-      "rs_long": -19.45,
+      "rs_short": -3.79,
+      "rs_long": -20.21,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": false,
@@ -3474,8 +3474,8 @@
       "st_line": 754.7,
       "gap_pct": 2.62,
       "momentum": -5.04,
-      "rs_short": -2.45,
-      "rs_long": 62.89,
+      "rs_short": -3.72,
+      "rs_long": 61.3,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": false,
@@ -3513,8 +3513,8 @@
       "st_line": 223.15,
       "gap_pct": 4.43,
       "momentum": -2.07,
-      "rs_short": -7.5,
-      "rs_long": 1.28,
+      "rs_short": -8.71,
+      "rs_long": 0.34,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": false,
@@ -3592,8 +3592,8 @@
       "st_line": 1934.0,
       "gap_pct": 7.9,
       "momentum": -82.37,
-      "rs_short": -0.96,
-      "rs_long": -8.18,
+      "rs_short": -2.25,
+      "rs_long": -9.03,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": false,
@@ -3750,8 +3750,8 @@
       "st_line": 59.51,
       "gap_pct": 2.28,
       "momentum": -0.07,
-      "rs_short": -1.49,
-      "rs_long": -23.34,
+      "rs_short": -2.78,
+      "rs_long": -24.07,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": false,
@@ -3945,8 +3945,8 @@
       "st_line": 306.55,
       "gap_pct": 11.02,
       "momentum": -21.15,
-      "rs_short": -0.15,
-      "rs_long": -0.51,
+      "rs_short": -1.45,
+      "rs_long": -1.45,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": false,
@@ -3984,8 +3984,8 @@
       "st_line": 136.4,
       "gap_pct": 2.92,
       "momentum": -10.89,
-      "rs_short": -2.64,
-      "rs_long": -20.68,
+      "rs_short": -3.97,
+      "rs_long": -21.43,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": false,
@@ -4062,8 +4062,8 @@
       "st_line": 61.28,
       "gap_pct": 5.72,
       "momentum": -1.7,
-      "rs_short": -0.87,
-      "rs_long": -0.53,
+      "rs_short": -2.15,
+      "rs_long": -1.48,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": false,
@@ -4140,8 +4140,8 @@
       "st_line": 23.49,
       "gap_pct": 3.91,
       "momentum": -0.07,
-      "rs_short": 0.13,
-      "rs_long": -21.86,
+      "rs_short": -1.18,
+      "rs_long": -22.59,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": false,
@@ -4179,8 +4179,8 @@
       "st_line": 133.75,
       "gap_pct": 3.08,
       "momentum": -0.27,
-      "rs_short": -1.5,
-      "rs_long": -21.95,
+      "rs_short": -2.78,
+      "rs_long": -22.7,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": false,
@@ -4235,9 +4235,11 @@
         "守備清單",
         "持股"
       ],
-      "target": null,
+      "target": 1513.41,
       "rr": null,
       "target_n": null,
+      "target_low": 361.0,
+      "target_high": 2200.0,
       "sector": "Electronic Technology",
       "industry": "Semiconductors",
       "sector_zh": "電子科技",
@@ -4272,9 +4274,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 129.76,
       "rr": null,
       "target_n": null,
+      "target_low": 85.29395,
+      "target_high": 173.51659,
       "sector": "Non-Energy Minerals",
       "industry": "Other Metals/Minerals",
       "sector_zh": "非能源礦業",
@@ -4293,8 +4297,8 @@
       "st_line": 2453.5,
       "gap_pct": -2.66,
       "momentum": 22.5,
-      "rs_short": -2.05,
-      "rs_long": -2.92,
+      "rs_short": -3.32,
+      "rs_long": -3.83,
       "lamps": {
         "L1 SuperTrend 多方": false,
         "L2 動能 > 0": true,
@@ -4309,9 +4313,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 3229.33,
       "rr": null,
       "target_n": null,
+      "target_low": 2650.0,
+      "target_high": 4200.0,
       "sector": "Electronic Technology",
       "industry": "Semiconductors",
       "sector_zh": "電子科技",
@@ -4330,8 +4336,8 @@
       "st_line": 11.28,
       "gap_pct": 1.91,
       "momentum": -0.08,
-      "rs_short": -12.24,
-      "rs_long": -55.93,
+      "rs_short": -13.37,
+      "rs_long": -56.34,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": false,
@@ -4367,8 +4373,8 @@
       "st_line": 375.95,
       "gap_pct": -3.57,
       "momentum": 10.68,
-      "rs_short": -0.3,
-      "rs_long": -13.28,
+      "rs_short": -1.6,
+      "rs_long": -14.06,
       "lamps": {
         "L1 SuperTrend 多方": false,
         "L2 動能 > 0": true,
@@ -4383,9 +4389,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 510.0,
       "rr": null,
       "target_n": null,
+      "target_low": 510.0,
+      "target_high": 510.0,
       "sector": "Electronic Technology",
       "industry": "Electronic Production Equipment",
       "sector_zh": "電子科技",
@@ -4420,9 +4428,11 @@
       "src": [
         "持股"
       ],
-      "target": null,
+      "target": 111.87,
       "rr": null,
       "target_n": null,
+      "target_low": 95.0,
+      "target_high": 134.0,
       "sector": "Finance",
       "industry": "Multi-Line Insurance",
       "sector_zh": "金融",
@@ -4457,9 +4467,11 @@
       "src": [
         "持股"
       ],
-      "target": null,
+      "target": 341.42,
       "rr": null,
       "target_n": null,
+      "target_low": 290.0,
+      "target_high": 400.0,
       "sector": "Health Services",
       "industry": "Managed Health Care",
       "sector_zh": "健康服務",
@@ -4494,9 +4506,11 @@
       "src": [
         "持股"
       ],
-      "target": null,
+      "target": 70.45,
       "rr": null,
       "target_n": null,
+      "target_low": 58.0,
+      "target_high": 86.0,
       "sector": "Retail Trade",
       "industry": "Food Retail",
       "sector_zh": "零售貿易",
@@ -4548,8 +4562,8 @@
       "st_line": 154.85,
       "gap_pct": 2.61,
       "momentum": -1.19,
-      "rs_short": 2.4,
-      "rs_long": -2.97,
+      "rs_short": 1.08,
+      "rs_long": -3.9,
       "lamps": {
         "L1 SuperTrend 多方": true,
         "L2 動能 > 0": false,
@@ -4585,8 +4599,8 @@
       "st_line": 27.75,
       "gap_pct": -4.52,
       "momentum": 0.42,
-      "rs_short": -1.82,
-      "rs_long": 16.42,
+      "rs_short": -3.12,
+      "rs_long": 15.31,
       "lamps": {
         "L1 SuperTrend 多方": false,
         "L2 動能 > 0": true,
@@ -4601,9 +4615,11 @@
       "src": [
         "自訂"
       ],
-      "target": null,
+      "target": 22.81,
       "rr": null,
       "target_n": null,
+      "target_low": 15.0,
+      "target_high": 27.0,
       "sector": "Electronic Technology",
       "industry": "Computer Peripherals",
       "sector_zh": "電子科技",
@@ -4638,9 +4654,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 275.08,
       "rr": null,
       "target_n": null,
+      "target_low": 97.0,
+      "target_high": 390.0,
       "sector": "Electronic Technology",
       "industry": "Electronic Production Equipment",
       "sector_zh": "電子科技",
@@ -4675,9 +4693,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 3.55,
       "rr": null,
       "target_n": null,
+      "target_low": 0.75,
+      "target_high": 7.0,
       "sector": "Electronic Technology",
       "industry": "Electronic Production Equipment",
       "sector_zh": "電子科技",
@@ -4712,9 +4732,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 64.32,
       "rr": null,
       "target_n": null,
+      "target_low": 42.0,
+      "target_high": 85.0,
       "sector": "Producer Manufacturing",
       "industry": "Industrial Machinery",
       "sector_zh": "生產製造",
@@ -4733,8 +4755,8 @@
       "st_line": 383.55,
       "gap_pct": -9.43,
       "momentum": -13.37,
-      "rs_short": 2.17,
-      "rs_long": -4.41,
+      "rs_short": 0.85,
+      "rs_long": -5.31,
       "lamps": {
         "L1 SuperTrend 多方": false,
         "L2 動能 > 0": false,
@@ -4749,9 +4771,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 457.67,
       "rr": null,
       "target_n": null,
+      "target_low": 340.0,
+      "target_high": 595.0,
       "sector": "Electronic Technology",
       "industry": "Computer Peripherals",
       "sector_zh": "電子科技",
@@ -4770,8 +4794,8 @@
       "st_line": 18.86,
       "gap_pct": -10.59,
       "momentum": 0.28,
-      "rs_short": -4.4,
-      "rs_long": -3.12,
+      "rs_short": -5.62,
+      "rs_long": -4.06,
       "lamps": {
         "L1 SuperTrend 多方": false,
         "L2 動能 > 0": true,
@@ -4807,8 +4831,8 @@
       "st_line": 206.0,
       "gap_pct": -17.05,
       "momentum": 8.99,
-      "rs_short": -8.72,
-      "rs_long": -0.68,
+      "rs_short": -10.0,
+      "rs_long": -1.65,
       "lamps": {
         "L1 SuperTrend 多方": false,
         "L2 動能 > 0": true,
@@ -4823,9 +4847,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 209.67,
       "rr": null,
       "target_n": null,
+      "target_low": 169.0,
+      "target_high": 235.0,
       "sector": "Electronic Technology",
       "industry": "Semiconductors",
       "sector_zh": "電子科技",
@@ -4844,8 +4870,8 @@
       "st_line": 195.4,
       "gap_pct": -10.4,
       "momentum": 4.27,
-      "rs_short": -14.4,
-      "rs_long": -4.37,
+      "rs_short": -15.55,
+      "rs_long": -5.29,
       "lamps": {
         "L1 SuperTrend 多方": false,
         "L2 動能 > 0": true,
@@ -4860,9 +4886,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 98.0,
       "rr": null,
       "target_n": null,
+      "target_low": 98.0,
+      "target_high": 98.0,
       "sector": "Producer Manufacturing",
       "industry": "Industrial Machinery",
       "sector_zh": "生產製造",
@@ -4881,8 +4909,8 @@
       "st_line": 332.05,
       "gap_pct": -14.3,
       "momentum": 2.29,
-      "rs_short": -12.06,
-      "rs_long": -36.36,
+      "rs_short": -13.21,
+      "rs_long": -36.92,
       "lamps": {
         "L1 SuperTrend 多方": false,
         "L2 動能 > 0": true,
@@ -4897,9 +4925,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 960.0,
       "rr": null,
       "target_n": null,
+      "target_low": 960.0,
+      "target_high": 960.0,
       "sector": "Process Industries",
       "industry": "Chemicals: Major Diversified",
       "sector_zh": "製程工業",
@@ -4918,8 +4948,8 @@
       "st_line": 6348.81,
       "gap_pct": -20.02,
       "momentum": -200.0,
-      "rs_short": -1.95,
-      "rs_long": 39.75,
+      "rs_short": -3.21,
+      "rs_long": 38.45,
       "lamps": {
         "L1 SuperTrend 多方": false,
         "L2 動能 > 0": false,
@@ -4934,9 +4964,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 7517.81,
       "rr": null,
       "target_n": null,
+      "target_low": 6000.0,
+      "target_high": 10200.0,
       "sector": "Producer Manufacturing",
       "industry": "Electrical Products",
       "sector_zh": "生產製造",
@@ -4955,8 +4987,8 @@
       "st_line": 1901.5,
       "gap_pct": -8.04,
       "momentum": -0.02,
-      "rs_short": -6.86,
-      "rs_long": -5.52,
+      "rs_short": -8.05,
+      "rs_long": -6.38,
       "lamps": {
         "L1 SuperTrend 多方": false,
         "L2 動能 > 0": false,
@@ -4972,9 +5004,11 @@
         "守備清單",
         "自訂"
       ],
-      "target": null,
+      "target": 2474.18,
       "rr": null,
       "target_n": null,
+      "target_low": 1330.0,
+      "target_high": 4120.0,
       "sector": "Electronic Technology",
       "industry": "Electronic Production Equipment",
       "sector_zh": "電子科技",
@@ -5009,9 +5043,11 @@
       "src": [
         "持股"
       ],
-      "target": null,
+      "target": 5.9,
       "rr": null,
       "target_n": null,
+      "target_low": 5.0,
+      "target_high": 6.8,
       "sector": "Technology Services",
       "industry": "Packaged Software",
       "sector_zh": "科技服務",
@@ -5046,9 +5082,11 @@
       "src": [
         "持股"
       ],
-      "target": null,
+      "target": 68.77,
       "rr": null,
       "target_n": null,
+      "target_low": 62.0,
+      "target_high": 75.0,
       "sector": "Finance",
       "industry": "Major Banks",
       "sector_zh": "金融",
@@ -5083,9 +5121,11 @@
       "src": [
         "持股"
       ],
-      "target": null,
+      "target": 154.5,
       "rr": null,
       "target_n": null,
+      "target_low": 129.0,
+      "target_high": 176.0,
       "sector": "Finance",
       "industry": "Major Banks",
       "sector_zh": "金融",
@@ -5104,8 +5144,8 @@
       "st_line": 87.51,
       "gap_pct": -9.94,
       "momentum": -4.19,
-      "rs_short": 0.74,
-      "rs_long": -27.2,
+      "rs_short": -0.57,
+      "rs_long": -27.91,
       "lamps": {
         "L1 SuperTrend 多方": false,
         "L2 動能 > 0": false,
@@ -5120,9 +5160,11 @@
       "src": [
         "自訂"
       ],
-      "target": null,
+      "target": 101.55,
       "rr": null,
       "target_n": null,
+      "target_low": 78.0,
+      "target_high": 150.0,
       "sector": "Consumer Durables",
       "industry": "Motor Vehicles",
       "sector_zh": "耐久消費品",
@@ -5158,9 +5200,11 @@
         "守備清單",
         "持股"
       ],
-      "target": null,
+      "target": 554.45,
       "rr": null,
       "target_n": null,
+      "target_low": 440.0,
+      "target_high": 700.0,
       "sector": "Electronic Technology",
       "industry": "Semiconductors",
       "sector_zh": "電子科技",
@@ -5196,9 +5240,11 @@
         "守備清單",
         "持股"
       ],
-      "target": null,
+      "target": 613.84,
       "rr": null,
       "target_n": null,
+      "target_low": 365.0,
+      "target_high": 1250.0,
       "sector": "Electronic Technology",
       "industry": "Semiconductors",
       "sector_zh": "電子科技",
@@ -5233,9 +5279,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 114.88,
       "rr": null,
       "target_n": null,
+      "target_low": 75.0,
+      "target_high": 200.0,
       "sector": "Electronic Technology",
       "industry": "Semiconductors",
       "sector_zh": "電子科技",
@@ -5270,9 +5318,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 525.97,
       "rr": null,
       "target_n": null,
+      "target_low": 215.88,
+      "target_high": 675.0,
       "sector": "Electronic Technology",
       "industry": "Semiconductors",
       "sector_zh": "電子科技",
@@ -5307,9 +5357,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 1842.64,
       "rr": null,
       "target_n": null,
+      "target_low": 1575.0,
+      "target_high": 2100.0,
       "sector": "Electronic Technology",
       "industry": "Semiconductors",
       "sector_zh": "電子科技",
@@ -5344,9 +5396,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 78.48,
       "rr": null,
       "target_n": null,
+      "target_low": 42.5,
+      "target_high": 108.0,
       "sector": "Communications",
       "industry": "Specialty Telecommunications",
       "sector_zh": "通訊",
@@ -5381,9 +5435,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 339.5,
       "rr": null,
       "target_n": null,
+      "target_low": 269.0,
+      "target_high": 393.0,
       "sector": "Electronic Technology",
       "industry": "Aerospace & Defense",
       "sector_zh": "電子科技",
@@ -5418,9 +5474,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 234.82,
       "rr": null,
       "target_n": null,
+      "target_low": 200.0,
+      "target_high": 265.0,
       "sector": "Electronic Technology",
       "industry": "Aerospace & Defense",
       "sector_zh": "電子科技",
@@ -5455,9 +5513,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 105.62,
       "rr": null,
       "target_n": null,
+      "target_low": 60.0,
+      "target_high": 150.0,
       "sector": "Electronic Technology",
       "industry": "Aerospace & Defense",
       "sector_zh": "電子科技",
@@ -5492,9 +5552,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 632.95,
       "rr": null,
       "target_n": null,
+      "target_low": 503.0,
+      "target_high": 756.0,
       "sector": "Electronic Technology",
       "industry": "Aerospace & Defense",
       "sector_zh": "電子科技",
@@ -5529,9 +5591,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 275.3,
       "rr": null,
       "target_n": null,
+      "target_low": 150.0,
+      "target_high": 402.0,
       "sector": "Electronic Technology",
       "industry": "Semiconductors",
       "sector_zh": "電子科技",
@@ -5566,9 +5630,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 141.52,
       "rr": null,
       "target_n": null,
+      "target_low": 70.0,
+      "target_high": 175.0,
       "sector": "Electronic Technology",
       "industry": "Electronic Equipment/Instruments",
       "sector_zh": "電子科技",
@@ -5603,9 +5669,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 46.79,
       "rr": null,
       "target_n": null,
+      "target_low": 27.0,
+      "target_high": 85.0,
       "sector": "Producer Manufacturing",
       "industry": "Electrical Products",
       "sector_zh": "生產製造",
@@ -5640,9 +5708,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 15.97,
       "rr": null,
       "target_n": null,
+      "target_low": 10.0,
+      "target_high": 30.0,
       "sector": "Electronic Technology",
       "industry": "Semiconductors",
       "sector_zh": "電子科技",
@@ -5677,9 +5747,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 74.23,
       "rr": null,
       "target_n": null,
+      "target_low": 37.5,
+      "target_high": 109.0,
       "sector": "Technology Services",
       "industry": "Data Processing Services",
       "sector_zh": "科技服務",
@@ -5714,9 +5786,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 32.4,
       "rr": null,
       "target_n": null,
+      "target_low": 22.0,
+      "target_high": 45.0,
       "sector": "Technology Services",
       "industry": "Information Technology Services",
       "sector_zh": "科技服務",
@@ -5751,9 +5825,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 161.78,
       "rr": null,
       "target_n": null,
+      "target_low": 120.0,
+      "target_high": 273.0,
       "sector": "Technology Services",
       "industry": "Data Processing Services",
       "sector_zh": "科技服務",
@@ -5788,9 +5864,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 37.12,
       "rr": null,
       "target_n": null,
+      "target_low": 28.0,
+      "target_high": 55.0,
       "sector": "Technology Services",
       "industry": "Packaged Software",
       "sector_zh": "科技服務",
@@ -5825,9 +5903,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 475.57,
       "rr": null,
       "target_n": null,
+      "target_low": 333.0,
+      "target_high": 534.0,
       "sector": "Producer Manufacturing",
       "industry": "Electrical Products",
       "sector_zh": "生產製造",
@@ -5862,9 +5942,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 770.04,
       "rr": null,
       "target_n": null,
+      "target_low": 410.0,
+      "target_high": 976.0,
       "sector": "Industrial Services",
       "industry": "Engineering & Construction",
       "sector_zh": "工業服務",
@@ -5899,9 +5981,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 232.31,
       "rr": null,
       "target_n": null,
+      "target_low": 170.0,
+      "target_high": 290.0,
       "sector": "Electronic Technology",
       "industry": "Aerospace & Defense",
       "sector_zh": "電子科技",
@@ -5936,9 +6020,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 204.07,
       "rr": null,
       "target_n": null,
+      "target_low": 136.0,
+      "target_high": 240.0,
       "sector": "Electronic Technology",
       "industry": "Electronic Components",
       "sector_zh": "電子科技",
@@ -5973,9 +6059,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 163.11,
       "rr": null,
       "target_n": null,
+      "target_low": 129.0,
+      "target_high": 190.0,
       "sector": "Producer Manufacturing",
       "industry": "Industrial Machinery",
       "sector_zh": "生產製造",
@@ -6010,9 +6098,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 85.47,
       "rr": null,
       "target_n": null,
+      "target_low": 73.0,
+      "target_high": 96.0,
       "sector": "Utilities",
       "industry": "Electric Utilities",
       "sector_zh": "公用事業",
@@ -6047,9 +6137,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 478.01,
       "rr": null,
       "target_n": null,
+      "target_low": 324.0,
+      "target_high": 685.0,
       "sector": "Health Technology",
       "industry": "Medical Specialties",
       "sector_zh": "健康科技",
@@ -6084,9 +6176,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 446.47,
       "rr": null,
       "target_n": null,
+      "target_low": 350.0,
+      "target_high": 550.0,
       "sector": "Electronic Technology",
       "industry": "Electronic Production Equipment",
       "sector_zh": "電子科技",
@@ -6121,9 +6215,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 171.81,
       "rr": null,
       "target_n": null,
+      "target_low": 104.0,
+      "target_high": 205.0,
       "sector": "Electronic Technology",
       "industry": "Electronic Equipment/Instruments",
       "sector_zh": "電子科技",
@@ -6158,9 +6254,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 388.45,
       "rr": null,
       "target_n": null,
+      "target_low": 330.0,
+      "target_high": 450.0,
       "sector": "Electronic Technology",
       "industry": "Electronic Equipment/Instruments",
       "sector_zh": "電子科技",
@@ -6195,9 +6293,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 640.31,
       "rr": null,
       "target_n": null,
+      "target_low": 358.0,
+      "target_high": 900.0,
       "sector": "Producer Manufacturing",
       "industry": "Industrial Machinery",
       "sector_zh": "生產製造",
@@ -6232,9 +6332,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 185.45,
       "rr": null,
       "target_n": null,
+      "target_low": 160.0,
+      "target_high": 200.0,
       "sector": "Electronic Technology",
       "industry": "Electronic Components",
       "sector_zh": "電子科技",
@@ -6269,9 +6371,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 106.67,
       "rr": null,
       "target_n": null,
+      "target_low": 100.0,
+      "target_high": 115.0,
       "sector": "Producer Manufacturing",
       "industry": "Industrial Machinery",
       "sector_zh": "生產製造",
@@ -6306,9 +6410,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 338.15,
       "rr": null,
       "target_n": null,
+      "target_low": 236.0,
+      "target_high": 427.0,
       "sector": "Electronic Technology",
       "industry": "Electronic Production Equipment",
       "sector_zh": "電子科技",
@@ -6343,9 +6449,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 14.07,
       "rr": null,
       "target_n": null,
+      "target_low": 8.0,
+      "target_high": 21.0,
       "sector": "Electronic Technology",
       "industry": "Semiconductors",
       "sector_zh": "電子科技",
@@ -6364,8 +6472,8 @@
       "st_line": 1223.7,
       "gap_pct": -32.58,
       "momentum": -9.86,
-      "rs_short": -4.88,
-      "rs_long": 41.77,
+      "rs_short": -6.08,
+      "rs_long": 40.48,
       "lamps": {
         "L1 SuperTrend 多方": false,
         "L2 動能 > 0": false,
@@ -6380,9 +6488,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 1257.89,
       "rr": null,
       "target_n": null,
+      "target_low": 900.0,
+      "target_high": 1700.0,
       "sector": "Electronic Technology",
       "industry": "Electronic Components",
       "sector_zh": "電子科技",
@@ -6401,8 +6511,8 @@
       "st_line": 2345.5,
       "gap_pct": -12.22,
       "momentum": -138.59,
-      "rs_short": -10.02,
-      "rs_long": -0.12,
+      "rs_short": -11.18,
+      "rs_long": -1.04,
       "lamps": {
         "L1 SuperTrend 多方": false,
         "L2 動能 > 0": false,
@@ -6417,9 +6527,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 3138.77,
       "rr": null,
       "target_n": null,
+      "target_low": 1800.0,
+      "target_high": 3700.0,
       "sector": "Electronic Technology",
       "industry": "Telecommunications Equipment",
       "sector_zh": "電子科技",
@@ -6438,8 +6550,8 @@
       "st_line": 52.88,
       "gap_pct": -7.49,
       "momentum": -1.04,
-      "rs_short": -3.97,
-      "rs_long": -35.44,
+      "rs_short": -5.24,
+      "rs_long": -36.04,
       "lamps": {
         "L1 SuperTrend 多方": false,
         "L2 動能 > 0": false,
@@ -6454,9 +6566,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 40.0,
       "rr": null,
       "target_n": null,
+      "target_low": 40.0,
+      "target_high": 40.0,
       "sector": "Consumer Durables",
       "industry": "Motor Vehicles",
       "sector_zh": "耐久消費品",
@@ -6475,8 +6589,8 @@
       "st_line": 27.72,
       "gap_pct": -12.89,
       "momentum": -0.62,
-      "rs_short": -20.09,
-      "rs_long": -36.99,
+      "rs_short": -21.12,
+      "rs_long": -37.58,
       "lamps": {
         "L1 SuperTrend 多方": false,
         "L2 動能 > 0": false,
@@ -6512,8 +6626,8 @@
       "st_line": 52.32,
       "gap_pct": -8.77,
       "momentum": -0.05,
-      "rs_short": -12.74,
-      "rs_long": 31.04,
+      "rs_short": -13.92,
+      "rs_long": 29.73,
       "lamps": {
         "L1 SuperTrend 多方": false,
         "L2 動能 > 0": false,
@@ -6529,9 +6643,11 @@
         "守備清單",
         "自訂"
       ],
-      "target": null,
+      "target": 48.26,
       "rr": null,
       "target_n": null,
+      "target_low": 26.0,
+      "target_high": 85.3,
       "sector": "Electronic Technology",
       "industry": "Electronic Components",
       "sector_zh": "電子科技",
@@ -6550,8 +6666,8 @@
       "st_line": 629.4,
       "gap_pct": -23.17,
       "momentum": -23.51,
-      "rs_short": -32.24,
-      "rs_long": 3.8,
+      "rs_short": -33.15,
+      "rs_long": 2.74,
       "lamps": {
         "L1 SuperTrend 多方": false,
         "L2 動能 > 0": false,
@@ -6566,9 +6682,11 @@
       "src": [
         "守備清單"
       ],
-      "target": null,
+      "target": 1082.5,
       "rr": null,
       "target_n": null,
+      "target_low": 600.0,
+      "target_high": 1465.0,
       "sector": "Electronic Technology",
       "industry": "Electronic Production Equipment",
       "sector_zh": "電子科技",
@@ -6603,9 +6721,11 @@
       "src": [
         "持股"
       ],
-      "target": null,
+      "target": 163.4,
       "rr": null,
       "target_n": null,
+      "target_low": 109.0,
+      "target_high": 220.0,
       "sector": "Electronic Technology",
       "industry": "Semiconductors",
       "sector_zh": "電子科技",
@@ -6640,9 +6760,11 @@
       "src": [
         "持股"
       ],
-      "target": null,
+      "target": 90.33,
       "rr": null,
       "target_n": null,
+      "target_low": 80.0,
+      "target_high": 97.0,
       "sector": "Finance",
       "industry": "Specialty Insurance",
       "sector_zh": "金融",
@@ -6677,9 +6799,11 @@
       "src": [
         "持股"
       ],
-      "target": null,
+      "target": 274.09,
       "rr": null,
       "target_n": null,
+      "target_low": 176.0,
+      "target_high": 334.0,
       "sector": "Finance",
       "industry": "Multi-Line Insurance",
       "sector_zh": "金融",
@@ -6780,9 +6904,11 @@
       "src": [
         "持股"
       ],
-      "target": null,
+      "target": 274.85,
       "rr": null,
       "target_n": null,
+      "target_low": 246.0,
+      "target_high": 305.0,
       "sector": "Electronic Technology",
       "industry": "Aerospace & Defense",
       "sector_zh": "電子科技",
@@ -6817,9 +6943,11 @@
       "src": [
         "持股"
       ],
-      "target": null,
+      "target": 30.27,
       "rr": null,
       "target_n": null,
+      "target_low": 27.1,
+      "target_high": 33.5,
       "sector": "Finance",
       "industry": "Investment Banks/Brokers",
       "sector_zh": "金融",
@@ -6854,9 +6982,11 @@
       "src": [
         "持股"
       ],
-      "target": null,
+      "target": 35.18,
       "rr": null,
       "target_n": null,
+      "target_low": 26.0,
+      "target_high": 41.0,
       "sector": "Finance",
       "industry": "Investment Managers",
       "sector_zh": "金融",
@@ -6928,9 +7058,11 @@
       "src": [
         "持股"
       ],
-      "target": null,
+      "target": 35.3,
       "rr": null,
       "target_n": null,
+      "target_low": 28.7,
+      "target_high": 43.0,
       "sector": "Consumer Services",
       "industry": "Hotels/Resorts/Cruise lines",
       "sector_zh": "消費服務",
@@ -6965,9 +7097,11 @@
       "src": [
         "持股"
       ],
-      "target": null,
+      "target": 477.22,
       "rr": null,
       "target_n": null,
+      "target_low": 415.0,
+      "target_high": 550.0,
       "sector": "Electronic Technology",
       "industry": "Electronic Components",
       "sector_zh": "電子科技",
@@ -7002,9 +7136,11 @@
       "src": [
         "持股"
       ],
-      "target": null,
+      "target": 177.73,
       "rr": null,
       "target_n": null,
+      "target_low": 152.0,
+      "target_high": 205.0,
       "sector": "Transportation",
       "industry": "Airlines",
       "sector_zh": "運輸",
@@ -7039,9 +7175,11 @@
       "src": [
         "持股"
       ],
-      "target": null,
+      "target": 61.4,
       "rr": null,
       "target_n": null,
+      "target_low": 54.0,
+      "target_high": 70.0,
       "sector": "Finance",
       "industry": "Specialty Insurance",
       "sector_zh": "金融",
@@ -7113,9 +7251,11 @@
       "src": [
         "持股"
       ],
-      "target": null,
+      "target": 107.68,
       "rr": null,
       "target_n": null,
+      "target_low": 85.0,
+      "target_high": 150.0,
       "sector": "Electronic Technology",
       "industry": "Semiconductors",
       "sector_zh": "電子科技",
@@ -7150,9 +7290,11 @@
       "src": [
         "持股"
       ],
-      "target": null,
+      "target": 94.0,
       "rr": null,
       "target_n": null,
+      "target_low": 80.0,
+      "target_high": 105.0,
       "sector": "Producer Manufacturing",
       "industry": "Auto Parts: OEM",
       "sector_zh": "生產製造",
@@ -7187,9 +7329,11 @@
       "src": [
         "持股"
       ],
-      "target": null,
+      "target": 141.86,
       "rr": null,
       "target_n": null,
+      "target_low": 100.0,
+      "target_high": 166.0,
       "sector": "Consumer Durables",
       "industry": "Homebuilding",
       "sector_zh": "耐久消費品",
@@ -7224,9 +7368,11 @@
       "src": [
         "持股"
       ],
-      "target": null,
+      "target": 55.36,
       "rr": null,
       "target_n": null,
+      "target_low": 45.0,
+      "target_high": 62.0,
       "sector": "Finance",
       "industry": "Regional Banks",
       "sector_zh": "金融",
@@ -7245,8 +7391,8 @@
       "st_line": 29.52,
       "gap_pct": -3.4,
       "momentum": -0.3,
-      "rs_short": -2.33,
-      "rs_long": -26.81,
+      "rs_short": -3.61,
+      "rs_long": -27.51,
       "lamps": {
         "L1 SuperTrend 多方": false,
         "L2 動能 > 0": false,
@@ -7282,8 +7428,8 @@
       "st_line": 32.15,
       "gap_pct": -4.74,
       "momentum": -0.05,
-      "rs_short": -3.86,
-      "rs_long": -26.33,
+      "rs_short": -5.13,
+      "rs_long": -27.03,
       "lamps": {
         "L1 SuperTrend 多方": false,
         "L2 動能 > 0": false,
@@ -7298,9 +7444,11 @@
       "src": [
         "持股"
       ],
-      "target": null,
+      "target": 28.0,
       "rr": null,
       "target_n": null,
+      "target_low": 28.0,
+      "target_high": 28.0,
       "sector": "Consumer Durables",
       "industry": "Automotive Aftermarket",
       "sector_zh": "耐久消費品",
@@ -7319,8 +7467,8 @@
       "st_line": 268.5,
       "gap_pct": -13.53,
       "momentum": -8.31,
-      "rs_short": -18.5,
-      "rs_long": -15.31,
+      "rs_short": -19.62,
+      "rs_long": -16.12,
       "lamps": {
         "L1 SuperTrend 多方": false,
         "L2 動能 > 0": false,
@@ -7335,9 +7483,11 @@
       "src": [
         "自訂"
       ],
-      "target": null,
+      "target": 310.0,
       "rr": null,
       "target_n": null,
+      "target_low": 310.0,
+      "target_high": 310.0,
       "sector": "Producer Manufacturing",
       "industry": "Industrial Machinery",
       "sector_zh": "生產製造",
