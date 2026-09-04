@@ -1,53 +1,53 @@
 {
- "updated": "2026-09-04 08:46",
+ "updated": "2026-09-04 12:43",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "09/03",
-   "close": 7747.71,
-   "chg_pct": 1.06
+   "date": "09/02",
+   "close": 7666.6,
+   "chg_pct": 0.46
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "09/03",
-   "close": 26584.06,
-   "chg_pct": 1.4
+   "date": "09/02",
+   "close": 26217.83,
+   "chg_pct": 0.45
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "09/03",
-   "close": 53686.11,
-   "chg_pct": 1.18
+   "date": "09/02",
+   "close": 53061.95,
+   "chg_pct": 0.56
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "09/03",
-   "close": 11352.13,
-   "chg_pct": 0.11
+   "date": "09/02",
+   "close": 11339.25,
+   "chg_pct": 0.45
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/02",
-   "close": 46164.72,
-   "chg_pct": -1.67
+   "date": "09/04",
+   "close": 46371.29,
+   "chg_pct": 0.45
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/04",
-   "close": 31.68,
-   "chg_pct": -0.15
+   "close": 31.7,
+   "chg_pct": -0.08
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "2017年來頭一遭！大摩：今年全球銅礦產量恐下滑 銅價前景獲提振",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6597062",
-   "ts": "09/04 08:45"
-  },
-  {
-   "title": "ChatGPT、Claude、Grok一度集體當機 持續近4小時",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6597060",
-   "ts": "09/04 08:41"
-  },
-  {
-   "title": "【美股盤後】科技股領漲，那斯達克連二紅；市場聚焦聯準會政策與非農就業",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6597064",
-   "ts": "09/04 08:30"
-  },
-  {
-   "title": "【美股快訊】特斯拉Cybercab正式上路，股價漲5.4%，市場焦點轉向Robotaxi規模化",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6597063",
-   "ts": "09/04 08:30"
-  },
-  {
-   "title": "營收速報  - 巨虹(8084)8月營收8,778萬元年增率高達145.13％",
+   "title": "台泥旗下達和航通過ISO 50001驗證 船隊能源管理接軌國際標準",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6597059",
-   "ts": "09/04 08:21"
+   "url": "https://news.cnyes.com/news/id/6597302",
+   "ts": "09/04 12:41"
   },
   {
-   "title": "普丁稱俄烏仍有望達成協議 芝加哥小麥期貨急跌超2%",
+   "title": "AI記憶體戰爭升級！美光砸重金擴產HBM4 12層 拚年底月產能達10萬片",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6597036",
-   "ts": "09/04 08:17"
+   "url": "https://news.cnyes.com/news/id/6597269",
+   "ts": "09/04 12:40"
   },
   {
-   "title": "營收速報 - 2026年9月4日台股中小型公司8月營收一覽（新增111家）",
+   "title": "〈焦點股〉雙鴻7月賺逾半個股本 無懼關禁閉強攻漲停再創新高",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6597020",
-   "ts": "09/04 07:55"
+   "url": "https://news.cnyes.com/news/id/6587962",
+   "ts": "09/04 12:37"
   },
   {
-   "title": "營收速報 - 2026年9月4日台股大型公司8月營收一覽（新增6家）",
+   "title": "〈焦點股〉SpaceX星鏈升空加速部署 萊德光電-KY順風亮燈漲停",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6597019",
-   "ts": "09/04 07:55"
+   "url": "https://news.cnyes.com/news/id/6597282",
+   "ts": "09/04 12:36"
   },
   {
-   "title": "〈台股盤前要聞〉台指期夜盤站回4萬6、200億美元加碼赴美投資聚焦半導體及AI伺服器",
+   "title": "【優分析即時新聞】同欣電(6271)轉型成效浮現，800G光通訊量產帶動毛利率衝上31%，AI與車用雙軌並進",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6596926",
-   "ts": "09/04 05:10"
+   "url": "https://news.cnyes.com/news/id/6597299",
+   "ts": "09/04 12:30"
   },
   {
-   "title": "輝達把Blackwell塞進電腦！聯想、宏碁10月首發RTX Spark",
+   "title": "【優分析即時新聞】萊德光電-KY(7717)衛星訂單較去年同期翻倍，第二季毛利率衝上63.9%創新高",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6596924",
-   "ts": "09/04 02:30"
+   "url": "https://news.cnyes.com/news/id/6597298",
+   "ts": "09/04 12:30"
+  },
+  {
+   "title": "特斯拉改變策略？Cybercab車隊可能開放第三方營運",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6597017",
+   "ts": "09/04 12:30"
+  },
+  {
+   "title": "美國彈藥真見底？傳愛國者、戰斧兩大主力導彈最晚2031年才能補足",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6597006",
+   "ts": "09/04 12:10"
+  },
+  {
+   "title": "五家大行同喊多！法興銀行：重返金市良機已至 四股力量把金價底墊高",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6597208",
+   "ts": "09/04 11:50"
+  },
+  {
+   "title": "對抗升級！德國、俄羅斯相互關閉文化中心",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6597030",
+   "ts": "09/04 11:40"
   }
  ],
  "inst": {
