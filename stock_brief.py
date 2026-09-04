@@ -481,13 +481,227 @@ def _stat(d):
             f"｜預估前提 {'有' if d['base_rate'] else '無'}")
 
 
+INDEX_NAME = "整合報告索引.html"
+
+INDEX_CSS = """
+.ix{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+.ix th{text-align:left;padding:8px 9px;color:var(--dim);font-weight:600;font-size:11.5px;
+ border-bottom:1px solid var(--line);white-space:nowrap}
+.ix td{padding:11px 9px;border-bottom:1px solid var(--line2);vertical-align:top;
+ color:var(--muted);line-height:1.7}
+.ix tr.hot td{background:rgba(248,113,113,.06)}
+.ix a{color:var(--ink);font-weight:700;text-decoration:none;border-bottom:1px dotted var(--line2)}
+.ix a:hover{color:#93C5FD}
+.ix .code{font-family:'Fira Code',monospace;font-variant-numeric:tabular-nums;font-size:13.5px}
+.ix .nm{display:block;font-size:11.5px;color:var(--dim);font-weight:400;margin-top:2px}
+.ix .num{font-family:'Fira Code',monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ix .sub{display:block;font-size:11px;color:var(--dim);margin-top:2px;line-height:1.6}
+.ix .pos{color:var(--up)}.ix .neg{color:var(--down)}
+.ix .fire{color:var(--down);font-weight:700}
+.ix .quiet{color:var(--dim)}
+.pill{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 7px;
+ border-radius:5px;margin-right:5px;vertical-align:1px}
+.pill.ok{background:#14311F;color:#86EFAC}
+.pill.warn{background:#3A2E10;color:#FCD34D}
+.pill.wait{background:var(--line);color:var(--muted)}
+@media(max-width:700px){
+ .ix,.ix tbody,.ix tr,.ix td{display:block;width:100%}
+ .ix thead{display:none}
+ .ix tr{border:1px solid var(--line);border-radius:10px;padding:4px 2px;margin:9px 0;
+  background:var(--surface)}
+ .ix td{border-bottom:1px solid var(--line2);padding:8px 12px}
+ .ix tr td:last-child{border-bottom:none}
+ .ix td::before{content:attr(data-h);display:block;font-size:10px;color:var(--dim);
+  letter-spacing:.3px;margin-bottom:3px}
+ .ix td.main::before{content:none}
+}
+"""
+
+
+def index_rows():
+    """每一檔一行摘要。**只讀既有 state 檔＋跑查核，不呼叫 AI、不重算行情。**
+
+    ⚠️ 這裡刻意重跑一次 `gather()`／`report_factcheck.check()`，跟 `--all` 有重複
+    計算。換來的是「索引不依賴 --all 的內部狀態」——`--index` 單獨跑得起來，
+    而且改 render() 不會連帶弄壞索引。12 檔的成本是幾秒，不值得為此耦合。
+    """
+    today = _load("state/advisor_reports_today.json", {}) or {}
+    fired_by = {}
+    for r in today.get("rows", []):
+        tk = _norm(str(r.get("ticker") or ""))
+        for f in (r.get("fired") or []):
+            fired_by.setdefault(tk, []).append(f)
+
+    out = []
+    for tk in briefed_tickers():
+        d = gather(tk)
+        px = _price(d)
+        top = d["reports"][0] if d["reports"] else None
+        fc = []
+        if top:
+            try:
+                import report_factcheck as fcm
+                fc = fcm.check(top, px, d.get("base_rate"), d.get("margin"))
+            except Exception:                               # noqa: BLE001
+                fc = []
+        cnt = {"ok": 0, "warn": 0, "wait": 0}
+        for r in fc:
+            cnt[r["verdict"]] = cnt.get(r["verdict"], 0) + 1
+
+        # 目標價取最新一份「有給目標價」的報告——不是最高的那一份，也不平均。
+        tgt = tgt_src = None
+        for r in d["reports"]:
+            if r.get("target"):
+                tgt, tgt_src = float(r["target"]), r
+                break
+
+        lamp = d.get("lamp") or {}
+        out.append({
+            "ticker": d["ticker"],
+            "name": (top or {}).get("name") or lamp.get("name") or d["ticker"],
+            "n_reports": len(d["reports"]),
+            "brokers": sorted({str(r.get("broker") or "?") for r in d["reports"]}),
+            "last_date": (top or {}).get("date"),
+            "rating": (top or {}).get("rating"),
+            "price": px,
+            "target": tgt,
+            "target_broker": (tgt_src or {}).get("broker"),
+            "upside": (round((tgt / px - 1) * 100, 1)
+                       if tgt and px else None),
+            "fc": cnt,
+            "n_fc": len(fc),
+            "fired": fired_by.get(_norm(tk), []),
+            "lit": lamp.get("lit"),
+            "has_lamp": bool(lamp),
+            "verdict": bool(d.get("verdict")),
+            "n_changes": len(d.get("changes") or []),
+        })
+
+    # 要看的排前面：先失效線觸發、再落差條數、再報告份數。
+    out.sort(key=lambda r: (-len(r["fired"]), -r["fc"]["warn"],
+                            -r["n_reports"], r["ticker"]))
+    return out
+
+
+def render_index(rows):
+    from board_theme import BASE_CSS, esc, header, nav_abs
+
+    def cell_target(r):
+        if not r["target"]:
+            return '<span class="quiet">報告未給</span>'
+        s = f'<span class="num">{r["target"]:,.0f}</span>'
+        if r["upside"] is not None:
+            k = "pos" if r["upside"] >= 0 else "neg"
+            s += f' <span class="num {k}">{r["upside"]:+.1f}%</span>'
+        if r["target_broker"]:
+            s += f'<span class="sub">{esc(r["target_broker"])}</span>'
+        return s
+
+    def cell_fc(r):
+        if not r["n_fc"]:
+            return '<span class="quiet">未查核</span>'
+        c, p = r["fc"], []
+        if c["ok"]:
+            p.append(f'<span class="pill ok">{c["ok"]} 對得上</span>')
+        if c["warn"]:
+            p.append(f'<span class="pill warn">{c["warn"]} 有落差</span>')
+        if c["wait"]:
+            p.append(f'<span class="pill wait">{c["wait"]} 等財報</span>')
+        return "".join(p)
+
+    def cell_fired(r):
+        if not r["fired"]:
+            return '<span class="quiet">未觸發</span>'
+        first = str(r["fired"][0])[:60]
+        extra = (f'<span class="sub">另有 {len(r["fired"]) - 1} 條</span>'
+                 if len(r["fired"]) > 1 else "")
+        return f'<span class="fire">🔴 {esc(first)}</span>{extra}'
+
+    def cell_ours(r):
+        p = []
+        if r["has_lamp"]:
+            p.append(f'燈號 {r["lit"]}/4')
+        else:
+            p.append('<span class="quiet">不在燈號母體</span>')
+        if r["verdict"]:
+            p.append("有投資長判斷")
+        if r["n_changes"]:
+            p.append(f'異動 {r["n_changes"]} 筆')
+        return "　".join(p)
+
+    trs = []
+    for r in rows:
+        cls = ' class="hot"' if r["fired"] else ""
+        trs.append(
+            f"<tr{cls}>"
+            f'<td class="main" data-h="個股"><a class="code" '
+            f'href="{esc(r["ticker"])}_整合報告.html">{esc(r["ticker"])}</a>'
+            f'<span class="nm">{esc(r["name"])}</span></td>'
+            f'<td data-h="券商報告"><span class="num">{r["n_reports"]}</span> 份'
+            f'<span class="sub">{esc("、".join(r["brokers"][:3]))}'
+            f'{"…" if len(r["brokers"]) > 3 else ""}　最新 {esc(r["last_date"] or "-")}</span></td>'
+            f'<td data-h="報告目標價">{cell_target(r)}</td>'
+            f'<td data-h="查核">{cell_fc(r)}</td>'
+            f'<td data-h="失效線">{cell_fired(r)}</td>'
+            f'<td data-h="我們自己的資料">{cell_ours(r)}</td>'
+            "</tr>")
+
+    n_fire = sum(1 for r in rows if r["fired"])
+    n_warn = sum(r["fc"]["warn"] for r in rows)
+    sub = (f"{len(rows)} 檔有券商研究報告　"
+           f"{n_fire} 檔的失效線被觸發　共 {n_warn} 條假設與我們算的有落差")
+
+    head = ('<div class="sb"><h2>這頁是什麼</h2><div class="sub">'
+            '每一列是一檔**有券商研究報告**的個股，點代號進去看整合報告。'
+            '排序＝失效線被觸發的排最前，其次是查核落差多的。<br>'
+            '⚠️ 目標價是「最新一份報告」的數字，不是共識也不是最高的那份；'
+            '風報比用的仍然是共識目標價，兩者不同源，不要互相對照。<br>'
+            '⚠️ 沒有券商報告的持股不會出現在這裡——那些看燈號頁就好，'
+            '這一頁的價值在「報告說的 vs 我們算的」。'
+            '</div></div>')
+    head = head.replace("**有券商研究報告**", "<b>有券商研究報告</b>")
+
+    tbl = ('<div class="sb"><h2>個股一覽</h2>'
+           '<table class="ix"><thead><tr>'
+           "<th>個股</th><th>券商報告</th><th>報告目標價</th>"
+           "<th>查核</th><th>失效線</th><th>我們自己的資料</th>"
+           "</tr></thead><tbody>" + "".join(trs) + "</tbody></table></div>")
+
+    return ('<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">'
+            '<meta name="viewport" content="width=device-width,initial-scale=1">'
+            "<title>整合報告索引</title><style>" + BASE_CSS + CSS + INDEX_CSS
+            + '</style></head><body><div class="wrap">'
+            + header("earnings", "整合報告索引", sub, nav_abs())
+            + head + tbl + "</div></body></html>")
+
+
+def build_index():
+    rows = index_rows()
+    if not rows:
+        print("沒有任何已解析的券商報告，不產索引。")
+        return None, []
+    html = render_index(rows)
+    out = os.path.join(OBIS, INDEX_NAME)
+    os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
+    io.open(out, "w", encoding="utf-8").write(html)
+    return out, rows
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("ticker", nargs="?", default="")
     ap.add_argument("-o", "--output", default="")
     ap.add_argument("--all", action="store_true",
-                    help="重產所有「有券商報告」的個股（每日排程用）")
+                    help="重產所有「有券商報告」的個股＋索引（每日排程用）")
+    ap.add_argument("--index", action="store_true",
+                    help="只重產索引頁（不重產個股）")
     a = ap.parse_args()
+
+    if a.index and not a.all:
+        out, rows = build_index()
+        if out:
+            print(f"✅ 已存 {out}（{len(rows)} 檔）")
+        return 0
 
     if a.all:
         tks = briefed_tickers()
@@ -504,6 +718,17 @@ def main():
                 fail += 1
                 # 一檔壞掉不能讓其餘 N-1 檔跟著不產出（排程裡尤其重要）。
                 print(f"  ❌ {tk:8} 失敗：{str(e)[:120]}")
+        # 索引一定要在個股全部產完之後才產（它讀的是同一批 state，順序不影響
+        # 內容，但先產索引會讓「索引列了某檔、那檔的頁面卻沒更新」變得可能）。
+        try:
+            ip, irows = build_index()
+            if ip:
+                n_fire = sum(1 for r in irows if r["fired"])
+                print(f"  📇 索引 {os.path.basename(ip)}"
+                      f"（{len(irows)} 檔，其中 {n_fire} 檔失效線被觸發）")
+        except Exception as e:                              # noqa: BLE001
+            fail += 1
+            print(f"  ❌ 索引失敗：{str(e)[:120]}")
         print()
         print(f"完成 {ok} 檔，失敗 {fail} 檔｜存放 {OBIS}")
         return 1 if fail and not ok else 0
