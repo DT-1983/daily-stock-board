@@ -1,37 +1,37 @@
 {
- "updated": "2026-09-04 15:40",
+ "updated": "2026-09-04 20:05",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "09/02",
-   "close": 7666.6,
-   "chg_pct": 0.46
+   "date": "09/03",
+   "close": 7747.71,
+   "chg_pct": 1.06
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "09/02",
-   "close": 26217.83,
-   "chg_pct": 0.45
+   "date": "09/03",
+   "close": 26584.06,
+   "chg_pct": 1.4
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "09/02",
-   "close": 53061.95,
-   "chg_pct": 0.56
+   "date": "09/03",
+   "close": 53686.11,
+   "chg_pct": 1.18
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "09/02",
-   "close": 11339.25,
-   "chg_pct": 0.45
+   "date": "09/03",
+   "close": 11352.13,
+   "chg_pct": 0.11
   },
   {
    "sym": "^TWII",
@@ -39,92 +39,92 @@
    "grp": "TW",
    "date": "09/04",
    "close": 46551.13,
-   "chg_pct": 0.84
+   "chg_pct": 1.51
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/04",
-   "close": 31.65,
-   "chg_pct": -0.24
+   "close": 31.66,
+   "chg_pct": -0.21
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "09/02",
-   "close": 4.8,
+   "date": "09/03",
+   "close": 4.76,
    "fmt": "yield",
-   "chg_bp": 0.0
+   "chg_bp": -3.4
   }
  ],
  "news": [
   {
-   "title": "Lululemon二度下修財測，瑜伽褲銷售大減20%、盤後股價重挫17%",
+   "title": "AI真的開始串聯了？OpenAI代理人劫持德國網站 密謀躲避人類",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6597440",
-   "ts": "09/04 15:30"
+   "url": "https://news.cnyes.com/news/id/6597741",
+   "ts": "09/04 20:00"
   },
   {
-   "title": "曼谷暫緩資料中心開發熱潮 泰國政府緊急研擬監管新制",
+   "title": "被動資金準備大搬家！藥華藥晉升臺灣50 世芯-KY轉入中型100",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6597778",
+   "ts": "09/04 19:45"
+  },
+  {
+   "title": "台股漲693點外資轉買超562億元掃貨電子代工 狂敲國巨*逾百億元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6597780",
+   "ts": "09/04 19:43"
+  },
+  {
+   "title": "伺服器PCB龍頭金像電砸138億中壢擴廠 投資台灣3方案累計衝2.8兆",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6597779",
+   "ts": "09/04 19:41"
+  },
+  {
+   "title": "「末日博士」魯比尼不擔心債券拋售潮：殖利率主要是因AI榮景推升",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6597368",
-   "ts": "09/04 15:20"
+   "url": "https://news.cnyes.com/news/id/6597685",
+   "ts": "09/04 19:40"
   },
   {
-   "title": "尖點8月營收7.71億元再攀頂年增97% 1-8月營收已超越去年全年",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6597412",
-   "ts": "09/04 15:10"
-  },
-  {
-   "title": "全新(2455)營收連兩月創高！真正關鍵不是訂單，而是磷化銦「有沒有料」",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6597411",
-   "ts": "09/04 15:00"
-  },
-  {
-   "title": "野村：極端情境下 日本最快今年底前連三次升息",
+   "title": "川普想救晶片供應鏈卻害慘美國工廠？600人飯碗恐不保",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6597179",
-   "ts": "09/04 15:00"
+   "url": "https://news.cnyes.com/news/id/6597706",
+   "ts": "09/04 19:30"
   },
   {
-   "title": "騰輝電子-KY(6672)爆發！毛利衝上35.98%新高，高階CCL需求升溫，報價與稼動率齊揚",
+   "title": "營收速報  - 高力(8996)8月營收12.04億元年增率高達112.84％",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6597382",
-   "ts": "09/04 14:30"
+   "url": "https://news.cnyes.com/news/id/6597818",
+   "ts": "09/04 19:20"
   },
   {
-   "title": "微軟財報改版 Azure季營收首揭露 分析師這樣看",
+   "title": "營收速報  - 鏵友益(6877)8月營收5,515萬元年增率高達140.18％",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6597817",
+   "ts": "09/04 19:20"
+  },
+  {
+   "title": "川習會有戲了？傳習近平罕見帶企業高層赴美談生意",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6596973",
-   "ts": "09/04 14:30"
+   "url": "https://news.cnyes.com/news/id/6597763",
+   "ts": "09/04 19:01"
   },
   {
-   "title": "聯友金屬(7610)亮燈漲停！鎢價飆漲＋營收暴增722%，新產能接棒助攻",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6597381",
-   "ts": "09/04 14:30"
-  },
-  {
-   "title": "雙鴻(3324)大利多！Vera Rubin水冷板重返輝達推薦名單，2026年營收拚增70%",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6597380",
-   "ts": "09/04 14:30"
-  },
-  {
-   "title": "鼎龍股份半導體材料加速放量，CMP拋光墊月銷突破5萬片、高階光阻取得批量訂單",
+   "title": "歐股迎來秋季契機？花旗分析師：最壞時期已過 循環股浮現投資價值",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6597378",
-   "ts": "09/04 14:30"
+   "url": "https://news.cnyes.com/news/id/6597684",
+   "ts": "09/04 19:00"
   }
  ],
  "inst": {
   "date": "09/04",
-  "total_yi": 628.7,
+  "total_yi": 616.7,
   "foreign_yi": 562.1,
-  "trust_yi": 2.9
+  "trust_yi": -9.1
  }
 }
