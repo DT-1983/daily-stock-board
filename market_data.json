@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-04 12:43",
+ "updated": "2026-09-04 15:40",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,93 +38,93 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "09/04",
-   "close": 46371.29,
-   "chg_pct": 0.45
+   "close": 46551.13,
+   "chg_pct": 0.84
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/04",
-   "close": 31.7,
-   "chg_pct": -0.08
+   "close": 31.65,
+   "chg_pct": -0.24
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "09/03",
-   "close": 4.76,
+   "date": "09/02",
+   "close": 4.8,
    "fmt": "yield",
-   "chg_bp": -3.4
+   "chg_bp": 0.0
   }
  ],
  "news": [
   {
-   "title": "台泥旗下達和航通過ISO 50001驗證 船隊能源管理接軌國際標準",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6597302",
-   "ts": "09/04 12:41"
-  },
-  {
-   "title": "AI記憶體戰爭升級！美光砸重金擴產HBM4 12層 拚年底月產能達10萬片",
+   "title": "Lululemon二度下修財測，瑜伽褲銷售大減20%、盤後股價重挫17%",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6597269",
-   "ts": "09/04 12:40"
+   "url": "https://news.cnyes.com/news/id/6597440",
+   "ts": "09/04 15:30"
   },
   {
-   "title": "〈焦點股〉雙鴻7月賺逾半個股本 無懼關禁閉強攻漲停再創新高",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6587962",
-   "ts": "09/04 12:37"
-  },
-  {
-   "title": "〈焦點股〉SpaceX星鏈升空加速部署 萊德光電-KY順風亮燈漲停",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6597282",
-   "ts": "09/04 12:36"
-  },
-  {
-   "title": "【優分析即時新聞】同欣電(6271)轉型成效浮現，800G光通訊量產帶動毛利率衝上31%，AI與車用雙軌並進",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6597299",
-   "ts": "09/04 12:30"
-  },
-  {
-   "title": "【優分析即時新聞】萊德光電-KY(7717)衛星訂單較去年同期翻倍，第二季毛利率衝上63.9%創新高",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6597298",
-   "ts": "09/04 12:30"
-  },
-  {
-   "title": "特斯拉改變策略？Cybercab車隊可能開放第三方營運",
+   "title": "曼谷暫緩資料中心開發熱潮 泰國政府緊急研擬監管新制",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6597017",
-   "ts": "09/04 12:30"
+   "url": "https://news.cnyes.com/news/id/6597368",
+   "ts": "09/04 15:20"
   },
   {
-   "title": "美國彈藥真見底？傳愛國者、戰斧兩大主力導彈最晚2031年才能補足",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6597006",
-   "ts": "09/04 12:10"
+   "title": "尖點8月營收7.71億元再攀頂年增97% 1-8月營收已超越去年全年",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6597412",
+   "ts": "09/04 15:10"
   },
   {
-   "title": "五家大行同喊多！法興銀行：重返金市良機已至 四股力量把金價底墊高",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6597208",
-   "ts": "09/04 11:50"
+   "title": "全新(2455)營收連兩月創高！真正關鍵不是訂單，而是磷化銦「有沒有料」",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6597411",
+   "ts": "09/04 15:00"
   },
   {
-   "title": "對抗升級！德國、俄羅斯相互關閉文化中心",
+   "title": "野村：極端情境下 日本最快今年底前連三次升息",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6597030",
-   "ts": "09/04 11:40"
+   "url": "https://news.cnyes.com/news/id/6597179",
+   "ts": "09/04 15:00"
+  },
+  {
+   "title": "騰輝電子-KY(6672)爆發！毛利衝上35.98%新高，高階CCL需求升溫，報價與稼動率齊揚",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6597382",
+   "ts": "09/04 14:30"
+  },
+  {
+   "title": "微軟財報改版 Azure季營收首揭露 分析師這樣看",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6596973",
+   "ts": "09/04 14:30"
+  },
+  {
+   "title": "聯友金屬(7610)亮燈漲停！鎢價飆漲＋營收暴增722%，新產能接棒助攻",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6597381",
+   "ts": "09/04 14:30"
+  },
+  {
+   "title": "雙鴻(3324)大利多！Vera Rubin水冷板重返輝達推薦名單，2026年營收拚增70%",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6597380",
+   "ts": "09/04 14:30"
+  },
+  {
+   "title": "鼎龍股份半導體材料加速放量，CMP拋光墊月銷突破5萬片、高階光阻取得批量訂單",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6597378",
+   "ts": "09/04 14:30"
   }
  ],
  "inst": {
-  "date": "09/03",
-  "total_yi": -641.6,
-  "foreign_yi": -481.5,
-  "trust_yi": 6.9
+  "date": "09/04",
+  "total_yi": 628.7,
+  "foreign_yi": 562.1,
+  "trust_yi": 2.9
  }
 }
