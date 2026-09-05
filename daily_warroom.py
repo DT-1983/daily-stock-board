@@ -10,6 +10,7 @@
 五段結構（骨架借老墨戰情室，見 memory/mofi_warroom_structure.md）：
     ① 大盤/總經：指數兩行（美/台）+ 排定事件 + 警示關鍵字新聞
     ② 今日訊號異動：SuperTrend翻面/AI轉買賣/貴俗價翻貴——**有變的才列**
+    🔄 剛轉進領先象限的類股（2026-09-05 加）：連續 ≥2 天、轉進 ≤20 天，附母體內個股
     ⭐⭐ 四燈+風報比≥1（2026-09-05 加，老墨課堂第 3 條）：跟②段不同，
        **②是事件（今天變了什麼）、這段是存量（現在符合什麼）**
     ③ 投資長判斷：讀當天 advisor_verdicts.jsonl（含 held/triggers/兩角度brief）
@@ -319,6 +320,35 @@ def sec_setup(date, scope="public"):
                  "（回測顯示產業過濾是這裡面最有價值的一層）"
                  "　📑＝有券商報告")
     return lines
+
+
+def sec_rrg_turn(date, scope="public"):
+    """🔄 剛轉進 RRG 領先象限的類股（2026-09-05，Leo：「rrg 轉到領先（2-3天以上）」）。
+
+    只放**公開版**：講的是類股輪動與母體內的個股，不是持股資訊；持股用 💼 標。
+
+    ⚠️ 這一段**只列不判斷**。9/5 的回測只證明「產業在領先象限」當**過濾條件**
+    有幫助（12 格全改善但幅度不大）；**沒測過「剛轉進領先」本身是進場訊號**。
+    """
+    if scope != "public":
+        return []
+    try:
+        import rrg_turns
+        from investment_chief import held_universe, norm_ticker
+        try:
+            held = {norm_ticker(t) for t in held_universe()}
+        except Exception:                                   # noqa: BLE001
+            held = set()
+        body = rrg_turns.lines(period="60", min_days=2, max_days=20,
+                               top_stocks=4, held=held)
+    except Exception as e:                                  # noqa: BLE001
+        return [f"**🔄 剛轉進領先象限的類股**", f"・讀取失敗：{str(e)[:60]}"]
+    if not body:
+        return []
+    return (["**🔄 剛轉進領先象限的類股**（連續 ≥2 天、轉進 ≤20 天）"] + body
+            + ["-# 💼＝持股　⚠️ 只是「產業轉強」不是買進訊號——"
+               "回測證明的是「產業在領先象限」當過濾條件有幫助，"
+               "**沒測過「剛轉進去」本身**"])
 
 
 def sec3_chief(date, scope="public"):
@@ -716,7 +746,7 @@ def compose(date=None, scope="public", part="all"):
         chief = [sec3_chief(date, "private")]
     else:
         research = [sec1_market(notes), sec2_signals(date, "public"),
-                    sec_setup(date, "public"),
+                    sec_rrg_turn(date, "public"), sec_setup(date, "public"),
                     sec4_research(notes, "public", date), sec5_watch(date),
                     sec_thesis(date, "public")]
         chief = [sec3_chief(date, "public")]
