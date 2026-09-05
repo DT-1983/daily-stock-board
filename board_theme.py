@@ -10,6 +10,7 @@ CSS/SVG圖示/圖例/頁首，三頁都用同一套，不再各自維護一份 C
   避免同一頁出現「灰點但綠字」這種同色不同義的矛盾（2026-08-03 看板修過的坑）。
 """
 import html as _html
+import re as _re
 
 SIG_COLOR = {"buy": "#22C55E", "sell": "#EF4444", "hold": "#3B82F6", "watch": "#64748B"}
 SIG_LABEL = {"buy": "買進", "sell": "賣出", "hold": "持有", "watch": "觀望"}
@@ -116,6 +117,20 @@ def nav_abs():
 
 def esc(s):
     return _html.escape(str(s if s is not None else ""))
+
+
+def esc_b(s):
+    """跳脫 HTML，但把 `**粗體**` 轉成 <b>。
+
+    🔴 2026-09-05：`report_factcheck` 的 note 是給人讀的句子，裡面本來就用
+    `**…**` 標重點（例：「是說**沒有容錯空間**」）。整合報告與券商報告頁把它
+    直接 esc() 之後輸出，**星號原樣印在畫面上**，看起來像壞掉的排版。
+    ⭐ 產生文字的模組用 Markdown 標重點、渲染的模組只會跳脫——兩邊各自都合理，
+    接起來才出錯。要嘛統一不用 Markdown，要嘛渲染端認得它；選後者，因為那些
+    句子在 Discord 日報裡也會出現，而 Discord 本來就吃 Markdown。
+    """
+    out = _html.escape(str(s if s is not None else ""))
+    return _re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", out)
 
 
 def icon(name, size=17, color="currentColor", stroke=2):

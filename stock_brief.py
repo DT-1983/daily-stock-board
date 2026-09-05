@@ -218,7 +218,7 @@ CSS = """
 
 
 def render(d, extra_notes=None):
-    from board_theme import BASE_CSS, esc, header, nav_abs
+    from board_theme import BASE_CSS, esc, esc_b, header, nav_abs
     import advisor_reports as ar
     px = _price(d)
     name = (d.get("lamp") or {}).get("name") or (d["reports"][0].get("name")
@@ -353,7 +353,7 @@ def render(d, extra_notes=None):
             trs = "".join(
                 f'<tr><td class="k">{esc(r["kind"])}</td>'
                 f'<td>{esc(r["claim"])}</td>'
-                f'<td>{esc(r["ours"])}<span class="note">{esc(r["note"])}</span></td>'
+                f'<td>{esc_b(r["ours"])}<span class="note">{esc_b(r["note"])}</span></td>'
                 f'<td class="v {V[r["verdict"]][0]}">{V[r["verdict"]][1]}</td></tr>'
                 for r in rows)
             body.append('<div class="sb"><h2>查核：報告的假設 vs 我們算的</h2>'
@@ -415,7 +415,7 @@ def render(d, extra_notes=None):
             for c in v.get(key) or []:
                 conds.append(f'<div class="txt">· [{nm}] {esc(c.get("desc"))}</div>')
         body.append('<div class="sb"><h2>投資長判斷</h2>'
-                    '<div class="sub">兩個角度獨立判斷，**不強迫湊成一個結論**；'
+                    '<div class="sub">兩個角度獨立判斷，<b>不強迫湊成一個結論</b>；'
                     '相反的建議照實列出，最終決定是你的</div>'
                     + "".join(angs)
                     + ('<div class="txt" style="margin-top:12px"><b>失效條件（每天自動檢查）</b></div>'
@@ -585,7 +585,7 @@ def index_rows():
 
 
 def render_index(rows):
-    from board_theme import BASE_CSS, esc, header, nav_abs
+    from board_theme import BASE_CSS, esc, esc_b, header, nav_abs
 
     def cell_target(r):
         if not r["target"]:
