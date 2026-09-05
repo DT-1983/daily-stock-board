@@ -110,10 +110,21 @@ def build(state):
         def box(name):
             pf = pfs[name]
             w = "win" if pf["ret"] == best else ""
+            # 2026-09-06：起跑日跟其他倉不同就標出來——下面的單鏈列本來就有這個
+            # `late_tag`，但 MAIN 四倉沒有。進出燈號倉 9/6 重開（掃描母體 197→323），
+            # 報酬從 0% 起算，**跟旁邊 8/18 開始的三個倉並排會看起來可比但其實不可比**。
+            # 沿用同一個 inception 欄位與同一種標法，不另外發明一套。
+            late = pf.get("inception") and pf["inception"] != inception
+            tag = (f'<div class="sub2" style="color:#EAB308">⚠ {esc(pf["inception"])} 重開</div>'
+                   if late else "")
+            note = (f'<div class="sub2" style="color:var(--dim);font-size:10.5px;'
+                    f'line-height:1.5">{esc(pf["note"])}</div>'
+                    if late and pf.get("note") else "")
             return (f'<div class="box {w}"><div class="nm">{esc(name)}</div>'
                     f'<div class="val">{usd(pf["value"])}</div>'
                     f'<div class="pnl {cls(pf["pnl"])}">{usd(pf["pnl"],1)}（{pf["ret"]:+.2f}%）</div>'
                     f'<div class="sub2" style="color:var(--dim)">{len(pf["holdings"])} 檔</div>'
+                    f'{tag}{note}'
                     f'<details><summary>看持股</summary>{holding_rows(pf)}</details></div>')
         vs = '<div class="vsgrid">' + "".join(box(n) for n in main) + '</div>'
 

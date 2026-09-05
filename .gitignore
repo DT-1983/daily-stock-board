@@ -132,3 +132,4 @@ state/target_changes.json
 state/target_changes_today.json
 bt_sector_gics.json
 bt_mofi_*.json
+portfolios.*.before-*.json
