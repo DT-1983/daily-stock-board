@@ -1,9 +1,14 @@
 {
- "date": "2026-09-04",
+ "date": "2026-09-05",
  "lamp_date": "2026-09-04",
- "buy": [],
+ "buy": [
+  "6442.TW",
+  "NVDA"
+ ],
  "half_sell": [],
- "full_exit": [],
- "held": 8,
+ "full_exit": [
+  "1504.TW"
+ ],
+ "held": 9,
  "cash": 0.0
 }
