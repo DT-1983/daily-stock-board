@@ -19,7 +19,16 @@
 | 今年營收 | 預估的全年營收 | base_rate 的「剩下幾個月要 YoY 多少」 | ✅ 既有 |
 | 毛利率風險 | 報告自列「成本上升侵蝕毛利」 | margin_profile 的位階（已經在哪裡了）| ✅ 既有 |
 | **目標價軌跡** | 報告自己的 target_history | 同期**實際股價**漲幅——目標價是領先還是追著跑 | ✅ price_store |
+| **複合成長率** | 內文寫的 CAGR | 拿它**自己的預估表**開 n 次方重算，對不對得上 | ✅ 自己對帳 |
+| **有沒有空白年** | 只給 CAGR，看不到單一年 | 逐年拆 EPS YoY，找出「營收長、盈餘不長」那一年 | ✅ 自己對帳 |
+| **上檔來源** | 「上檔 +59%」 | 拆成「盈餘成長 × 倍數變化」兩項各貢獻多少 | ✅ 自己對帳 |
 | 季度 EPS | eps_quarterly | 下次財報公布時比對 | ⏳ 等財報 |
+
+⭐ 後面三條（2026-09-05 加，起因是高盛 2454 那份）**完全不需要外部資料**——
+只拿報告的兩個地方互相對帳就能抓出不一致，跟「倍數 × 基數 ≈ 目標價」同一招。
+高盛那份的實例：內文寫 CAGR 43%/59%，但它自己的表算出來是 60.9%/86.2%
+（差別在把三年當成四期複利）；2026E 營收 +14.5% 而 EPS 只有 +0.8%。
+**這兩件事讀內文都看不出來，要拿計算機重算才會現形。**
 
 ⚠️ **不做的**：不上網查新聞、不驗「NVIDIA 是不是真的認購 35 億」這種事件真偽——
 那要花錢，而且報告引用的是公開重訊，造假機率極低。我們查的是**推論與假設**，
@@ -78,6 +87,47 @@ def _sym(ticker):
         except Exception:                                   # noqa: BLE001
             return t + ".TW"
     return t.replace(".", "-")
+
+
+_CAGR_NEAR = re.compile(
+    r"(?:CAGR|複合成長|年複合|複合年增)[^。\n]{0,40}?"
+    r"((?:\d{1,3}(?:\.\d)?%[／/、與和及~-]?\s*){1,3})"
+    r"|((?:\d{1,3}(?:\.\d)?%[／/]){1,2}\d{1,3}(?:\.\d)?%)[^。\n]{0,20}?(?:CAGR|複合成長)",
+    re.I)
+
+
+def _claimed_cagr(report):
+    """報告**自己宣稱**的複合成長率，回 [百分比數字, ...]。
+
+    優先吃結構化欄位 `cagr_claim`（解析層 2026-09-05 起會抓）；沒有的話退回
+    從 summary／thesis 的文字裡找「CAGR」「複合成長率」附近的百分比。
+
+    ⚠️ 文字比對只是**過渡用的退路**——它讀的是本機模型寫的摘要不是原文，
+    抓不到就回空陣列，讓查核項顯示「還不能比對」。**寧可說不知道，
+    不要從不可靠的來源湊一個數字出來當事實。**
+    """
+    v = report.get("cagr_claim")
+    if isinstance(v, dict):
+        # 解析層 2026-09-05 起的格式：{"revenue": 43, "eps": 59, "period": "2025-28E"}
+        # ⚠️ 順序必須是 (營收, EPS)——下游是照順序配到欄位上的。
+        got = [_num(v.get("revenue")), _num(v.get("eps"))]
+        return got if all(got) else [x for x in got if x]
+    if isinstance(v, (list, tuple)):
+        got = [_num(x) for x in v]
+        return [x for x in got if x]
+    if _num(v):
+        return [_num(v)]
+
+    txt = " ".join(str(x) for x in ((report.get("summary") or [])
+                                    + [report.get("thesis") or ""]))
+    out = []
+    for m in _CAGR_NEAR.finditer(txt):
+        seg = m.group(1) or m.group(2) or ""
+        for p in re.findall(r"\d{1,3}(?:\.\d)?(?=%)", seg):
+            f = _num(p)
+            if f and 0 < f < 300 and f not in out:
+                out.append(f)
+    return out
 
 
 def check(report, price=None, base_rate=None, margin=None):
@@ -210,7 +260,168 @@ def check(report, price=None, base_rate=None, margin=None):
                          "目標價與股價漲幅相當，沒有明顯的追價形態"),
             })
 
-    # ── 6. 季度 EPS：等財報才驗 ──────────────────────────
+    # ── 6. 宣稱的 CAGR vs 從它自己的表算出來的 ──────────────
+    #
+    # 🔴 2026-09-05 加（起因：高盛 2454 那份）。報告內文寫「2025-28E 營收/獲利
+    # CAGR 43%/59%」，但拿它**自己表格**的 595,966 → 2,483,426 開三次方是 60.9%。
+    # 對得起來的算法是把三年當成**四期**複利（42.9%）——券商常見的期數寫法差異，
+    # 不是造假，但影響是：**只讀那句話沒看表的人會低估這份報告押了多大。**
+    # ⭐ 這條跟「倍數 × 基數 ≈ 目標價」是同一招：**拿報告的兩個地方互相對帳**，
+    # 不需要任何外部資料就能抓出不一致。
+    fcs = [f for f in (report.get("forecast") or [])
+           if _num(f.get("revenue")) or _num(f.get("eps"))]
+    if len(fcs) >= 2:
+        claimed = _claimed_cagr(report)
+        # 🔴 首測抓到的 bug：宣稱值是一組（[43, 59]），原本每個欄位都拿**整組**去比，
+        # 於是「營收 3 年複利 60.9%」被組裡的 59（那是 EPS 的）比中，變成假的 ✅對得上。
+        # ⭐ 一組數字要對應到多個欄位時，**必須先決定誰對誰**，不能讓它們互相亂配——
+        # 「有一個對得上」跟「對的那個對得上」是兩回事。
+        # 券商寫法一律是「營收/獲利 CAGR X%/Y%」，數量吻合時照順序配。
+        FIELDS = (("revenue", "營收"), ("eps", "EPS"))
+        pos = len(claimed) == len(FIELDS)
+        for idx, (field, label) in enumerate(FIELDS):
+            mine = [claimed[idx]] if pos else claimed
+            vals = [(f.get("year"), _num(f.get(field))) for f in fcs]
+            vals = [(y, v) for y, v in vals if v and v > 0]
+            if len(vals) < 2:
+                continue
+            (y0, v0), (y1, v1) = vals[0], vals[-1]
+            n = len(vals) - 1                       # 年數＝資料點數 − 1
+            c_n = ((v1 / v0) ** (1.0 / n) - 1) * 100
+            c_n1 = ((v1 / v0) ** (1.0 / (n + 1)) - 1) * 100
+            ours = (f"用表格 {y0} {v0:,.0f} → {y1} {v1:,.0f} 算："
+                    f"{n} 年複利 **{c_n:.1f}%**（{n+1} 期複利 {c_n1:.1f}%）")
+            hit = [c for c in mine if abs(c - c_n) <= 3]
+            hit1 = [c for c in mine if abs(c - c_n1) <= 3]
+            if not mine:
+                out.append({
+                    "kind": f"{label}複合成長率",
+                    "claim": "報告內文沒有結構化的 CAGR 可比對",
+                    "ours": ours,
+                    "verdict": WAIT,
+                    "note": "這是從預估表反推的，**先記著**；等解析層抓到報告自己宣稱的"
+                            "CAGR 就會自動比對兩者一不一致",
+                })
+            elif hit:
+                out.append({
+                    "kind": f"{label}複合成長率",
+                    "claim": f"報告宣稱 {hit[0]:.0f}%",
+                    "ours": ours,
+                    "verdict": OK,
+                    "note": "宣稱值與表格算出來的一致",
+                })
+            elif hit1:
+                out.append({
+                    "kind": f"{label}複合成長率",
+                    "claim": f"報告宣稱 {hit1[0]:.0f}%",
+                    "ours": ours,
+                    "verdict": WARN,
+                    "note": f"宣稱值對得上的是 **{n+1} 期**複利，但 {y0}→{y1} 只有 "
+                            f"**{n} 年**。真正的年複合成長率是 {c_n:.1f}%——"
+                            "**只讀內文那句話、沒看表，會低估這份報告押了多大**",
+                })
+            else:
+                out.append({
+                    "kind": f"{label}複合成長率",
+                    "claim": f"報告宣稱 {'／'.join(f'{c:.0f}%' for c in mine)}",
+                    "ours": ours,
+                    "verdict": WARN,
+                    "note": "宣稱值跟表格算出來的**兩種算法都對不上**——"
+                            "可能是期間不同（例如從前一年起算），也可能有一邊抄錯，"
+                            "引用前先回原文確認",
+                })
+
+    # ── 7. 有沒有「空白年」：營收成長但盈餘沒成長的那一年 ─────
+    #
+    # 🔴 2026-09-05 加。高盛 2454 的表：2026E 營收 +14.5%，EPS 只有 **+0.8%**，
+    # 爆發全押在 2027（EPS +177.6%）。
+    # ⭐ 這件事**看 CAGR 完全看不到**——平均會把空白年抹平。
+    # 對持有人的意義：那一年沒有盈餘成長可以撐股價，等於「先付錢、兩年後才拿貨」。
+    eps_rows = [(f.get("year"), _num(f.get("eps")), _num(f.get("revenue")))
+                for f in (report.get("forecast") or [])]
+    eps_rows = [(y, e, rv) for y, e, rv in eps_rows if e and e > 0]
+    flats = []
+    for i in range(1, len(eps_rows)):
+        (_, e0, r0), (y1_, e1, r1) = eps_rows[i - 1], eps_rows[i]
+        ge = e1 / e0 - 1
+        gr = (r1 / r0 - 1) if (r0 and r1 and r0 > 0) else None
+        if ge < 0.05:
+            flats.append((y1_, ge, gr))
+    if eps_rows and len(eps_rows) >= 2:
+        if flats:
+            y1_, ge, gr = flats[0]
+            rv = f"、營收卻 {gr:+.1%}" if gr is not None else ""
+            nxt = ""
+            j = [i for i, (y, _e, _r) in enumerate(eps_rows) if y == y1_]
+            if j and j[0] + 1 < len(eps_rows):
+                y2, e2, _ = eps_rows[j[0] + 1]
+                nxt = f"；隔年 {y2} 才跳 {e2/eps_rows[j[0]][1]-1:+.0%}"
+            out.append({
+                "kind": "有沒有空白年",
+                "claim": f"{y1_} EPS 年增 {ge:+.1%}{rv}{nxt}",
+                "ours": "逐年拆開預估表算出來的（報告只給複合成長率，看不到這一格）",
+                "verdict": WARN,
+                "note": f"**{y1_} 是空白年**——那一年沒有盈餘成長可以撐股價。"
+                        "買進理由不是「明年會賺更多」，而是**「以後會賺很多，"
+                        "而且現在就要先付這個價」**",
+            })
+        else:
+            out.append({
+                "kind": "有沒有空白年",
+                "claim": "每一年 EPS 年增都 ≥ 5%",
+                "ours": "逐年拆開預估表算出來的",
+                "verdict": OK,
+                "note": "成長是逐年遞進的，不是集中押在某一年之後",
+            })
+
+    # ── 8. 上檔空間拆解：多少來自盈餘成長、多少來自倍數變化 ────
+    #
+    # 🔴 2026-09-05 加。恆等式：目標價/現價 ＝ (目標倍數/現在倍數) × (目標年EPS/今年EPS)。
+    # ⭐ 「上檔 +59%」這個數字本身不告訴你**要相信什麼才會實現**。拆開之後才知道
+    # 是在賭盈餘、還是在賭市場願意付更高的倍數——這兩件事的失敗方式完全不同。
+    veps = _num(report.get("valuation_eps"))
+    # 「現在」的基數用**今年**那一列，不是表上第一列——第一列常常是去年的實際數。
+    # （首測就吃到這個：表是 2025/2026E/2027E/2028E，取第一列會拿 2025 的實際 EPS。）
+    import time as _time
+    _yr = _time.strftime("%Y")
+    cur_eps = cur_y = None
+    for f in (report.get("forecast") or []):
+        e = _num(f.get("eps"))
+        y = str(f.get("year", ""))
+        if not (e and e > 0):
+            continue
+        if y.rstrip("EAF") == _yr:
+            cur_eps, cur_y = e, y
+            break
+        if cur_eps is None:
+            cur_eps, cur_y = e, y                   # 退路：表上第一個有 EPS 的年度
+    if price and veps and veps > 0 and cur_eps and cur_eps > 0 and _num(report.get("target")):
+        tgt = _num(report["target"])
+        up = tgt / price - 1
+        g_eps = veps / cur_eps - 1                  # 盈餘成長貢獻
+        m_now, m_tgt = price / cur_eps, tgt / veps
+        g_mult = m_tgt / m_now - 1                  # 倍數變化貢獻
+        y0 = cur_y or "當年"
+        out.append({
+            "kind": "上檔空間的來源",
+            "claim": f"目標價 {tgt:,.0f} vs 現價 {price:,.0f}＝上檔 {up:+.1%}",
+            "ours": f"盈餘成長貢獻 {g_eps:+.0%}（{y0} EPS {cur_eps:g} → "
+                    f"{report.get('valuation_eps_label') or '目標年'} {veps:g}）"
+                    f"× 倍數變化貢獻 {g_mult:+.0%}"
+                    f"（現在 {m_now:.1f} 倍 → 目標 {m_tgt:.1f} 倍）",
+            "verdict": WARN if g_mult < -0.3 or g_mult > 0.3 else OK,
+            "note": ("⚠️ 這條跟上面「估值倍數」不衝突：那條是**同一個 EPS 基數**下"
+                     "還差幾倍，這條是**相對今年盈餘**拆成兩項。兩項相乘就是上檔。"
+                     "**倍數要壓縮這麼多還能有上檔，代表整段故事靠的是盈餘跳升**"
+                     "——盈餘沒跳，倍數壓縮就會變成下檔"
+                     if g_mult < -0.3 else
+                     "兩項相乘就是上檔。**上檔主要來自倍數擴張而不是盈餘**——"
+                     "這代表就算財報照預估走，市場不給那個倍數，股價也到不了目標價"
+                     if g_mult > 0.3 else
+                     "盈餘與倍數兩項的貢獻沒有偏向任何一邊"),
+        })
+
+    # ── 9. 季度 EPS：等財報才驗 ──────────────────────────
     eq = [e for e in (report.get("eps_quarterly") or []) if _num(e.get("value"))]
     if eq:
         out.append({

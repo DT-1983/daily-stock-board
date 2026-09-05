@@ -91,7 +91,11 @@ SCHEMA_HINT = """只回傳一個 JSON 物件，不要包在其他文字裡，不
  "forecast": [{"year": "2026E", "revenue": 營收數字, "eps": EPS數字, "pe": 本益比數字, "gross_margin": 毛利率百分比數字}],
  "revenue_unit": "營收數字的單位，例 NT$百萬 / NT$十億 / 億元（照報告寫的）",
  "eps_quarterly": [{"q": "3Q26E", "value": EPS數字}],
- "target_history": [{"date": "YYYY-MM-DD", "target": 目標價數字, "close": 當日收盤數字}]
+ "target_history": [{"date": "YYYY-MM-DD", "target": 目標價數字, "close": 當日收盤數字}],
+ "cagr_claim": {"revenue": 報告內文自己寫的營收年複合成長率數字（只要數字，例 43），
+                "eps": 同上但是獲利/EPS 的（例 59），
+                "period": "它說的期間，照抄，例 2025-28E"},
+ "cagr_claim_note": "⚠️ 只抄報告**內文自己宣稱**的那句話（例「revenue and earnings to increase by 43%/59% CAGRs in 2025-28E」）。不要自己從預估表算——我們會自己算，然後比對兩者一不一致。報告沒寫就整個填 null"
 }
 
 規則：
