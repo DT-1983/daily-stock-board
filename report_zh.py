@@ -153,6 +153,25 @@ def render(key, r, d=None, px=None, fc=None):
                  '⚠️ 沒查到落差不等於這份報告是對的——只代表我們<b>現有的九項規則</b>'
                  '沒抓到問題。</div>')
 
+    # ── 券商可信度註記（2026-09-05）──────────────────────────
+    # ⚠️ 這是老墨的經驗判斷不是我們的回測，所以**標明來源**、放在數字前面提醒，
+    # 但不改任何門檻、不過濾任何報告。
+    try:
+        import broker_credibility as bcred
+        _bn = bcred.note_for(r.get("broker"))
+    except Exception:                                       # noqa: BLE001
+        _bn = None
+    if _bn:
+        _c = "#86EFAC" if _bn["level"] == "good" else "#FCD34D"
+        B.append(f'<div class="sb"><h2>這家券商的已知偏誤</h2>'
+                 f'<div class="txt"><b style="color:{_c}">{esc(_bn["tag"])}</b>　'
+                 f'{esc_b(_bn["note"])}<br>'
+                 f'<span style="color:var(--dim);font-size:12px">'
+                 f'來源：{esc(_bn["source"])}——**這是他的經驗判斷，不是我們回測出來的**'
+                 f'</span></div></div>'.replace(
+                     "**這是他的經驗判斷，不是我們回測出來的**",
+                     "<b>這是他的經驗判斷，不是我們回測出來的</b>"))
+
     # ── 關鍵數字 ─────────────────────────────────────────────
     items = [("評等", esc(r.get("rating") or "—"),
               f"前次 {esc(r['rating_prev'])}" if r.get("rating_prev") else "", True)]
@@ -361,8 +380,11 @@ def main():
     k, r = rs[0]
     out, n = build(k, r, a.output)
     print(f"✅ 已存 {out}（{n:,} bytes）")
-    print(f"   {r.get('date')} {r.get('broker')}　"
-          f"{fcm.summary(fcm.check(r, stock_brief._price(stock_brief.gather(r['ticker']))))}")
+    # ⚠️ 這行原本自己重跑一次 check() 但**沒帶 base_rate / margin**，
+    # 印出來的統計跟頁面上那張表不一樣（5 條 vs 7 條落差）。同一份資料要走同一條路。
+    _d = stock_brief.gather(str(r.get("ticker")))
+    _fc = fcm.check(r, stock_brief._price(_d), _d.get("base_rate"), _d.get("margin"))
+    print(f"   {r.get('date')} {r.get('broker')}　{fcm.summary(_fc)}")
     return 0
 
 
