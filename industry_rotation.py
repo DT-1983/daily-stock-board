@@ -649,6 +649,27 @@ def append_history(hist, market, benchmark, snapshot, date_str):
     hist.setdefault(market, {"index": [], "equal": []})
     hist[market].setdefault(benchmark, [])
     rows = hist[market][benchmark]
+
+    # 🔴 2026-09-05：**不完整的快照不要疊進歷史。**
+    # 實例：美股 2026-09-03 那天只寫進 4 個籃子（正常 20 個）——大概是當天有一批
+    # 籃子抓不到資料，但程式照樣把「抓到的那幾個」存成一天的快照。
+    # 後果是靜默的：`rrg_turns` 往回數「連續在領先幾天」時，把「這天沒有這個籃子」
+    # 當成「這天不在領先」，於是 9/4 那天**有 8 個類股同時被算成剛轉進領先**，
+    # 看起來像市場級大事件，其實是資料缺漏。
+    # ⭐ **「沒有資料」不等於「條件不成立」**——這個專案踩過很多次的同一個形狀。
+    # 門檻用「最近 10 天的中位籃子數 × 0.7」而不是寫死數字：籃子數本來就會隨
+    # TradingView 分類調整而變，寫死會在正常變動時誤擋。
+    prev = [len(r.get("snapshot") or {}) for r in rows[-10:] if r.get("snapshot")]
+    if prev:
+        prev.sort()
+        typical = prev[len(prev) // 2]
+        n = len(snapshot or {})
+        if n < typical * 0.7:
+            print(f"  ⚠️ {market} {date_str} 只抓到 {n} 個籃子（近期中位 {typical}）——"
+                  "**不寫進歷史**，避免污染「連續幾天」這類跨日計算。"
+                  "今天的頁面照出，只是這一天不進歷史。")
+            return hist
+
     # 同一天重跑會產生重複點——先移除同一天的舊紀錄再疊新的，不是每次都無限累加
     rows = [row for row in rows if row.get("date") != date_str]
     rows.append({"date": date_str, "snapshot": snapshot})
