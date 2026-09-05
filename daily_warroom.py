@@ -297,14 +297,24 @@ def sec_setup(date, scope="public"):
         # ⚠️ 首測時把唯一有報告的那檔（2454，落後象限）排到第 9 名被截掉了——
         # 而「拿報告」是老墨那句話裡的**第一個**條件。產業象限有回測支持所以擺第一，
         # 但有報告的不能被擠出畫面。
+        # 🔴 2026-09-06：**停損很近的往後放。**
+        # 首版用風報比排序，結果前 10 檔有 7 檔帶「⚠️停損僅 x%」——
+        # 因為風報比 = 上檔 ÷（現價−停損線），停損越近分母越小、數字越大，
+        # **用它排序等於把被放大的那些排到最前面**，我親手把假象放在第一位。
+        # ⚠️ 這是**顯示排序**的取捨不是訊號門檻：停損近的仍然列出來、只是排後面
+        #    （停損近＝每股風險小，但也更容易被雜訊掃到，兩面都成立）。
+        #    5% 沿用燈號頁 ⚠️ 的同一條線，不另外發明一個數字。
+        gap = r.get("gap_pct")
+        tight = 1 if (gap is not None and gap < 5) else 0
         hit.append((0 if q == "leading" else 1,
                     0 if n in has_report else 1,
+                    tight,
                     -(r.get("rr") or 0), r, q, n))
     if not hit:
         return []
-    hit.sort(key=lambda x: (x[0], x[1], x[2]))
+    hit.sort(key=lambda x: (x[0], x[1], x[2], x[3]))
 
-    for _k, _rp, _rr, r, q, n in hit[:10]:
+    for _k, _rp, _tg, _rr, r, q, n in hit[:10]:
         mark = "📑" if n in has_report else "　"
         qs = ("🔵 " + QL[q]) if q == "leading" else (QL.get(q, "—"))
         gap = r.get("gap_pct")
@@ -316,9 +326,15 @@ def sec_setup(date, scope="public"):
         lines.append(f"-# 　…另有 {len(hit)-10} 檔，完整清單在進出燈號頁按"
                      "「⭐⭐ 4 燈 + 風報比 ≥ 1」")
     n_lead = sum(1 for x in hit if x[0] == 0)
+    try:
+        from board_theme import PAGES_URL as _P
+    except Exception:                                       # noqa: BLE001
+        _P = "https://dt-1983.github.io/daily-stock-board"
     lines.append(f"-# 共 {len(hit)} 檔，其中 {n_lead} 檔的產業在 🔵 領先象限"
                  "（回測顯示產業過濾是這裡面最有價值的一層）"
                  "　📑＝有券商報告")
+    lines.append(f"-# 🔗 [進出燈號頁]({_P}/combo.html)"
+                 "　按「⭐⭐ 4 燈 + 風報比 ≥ 1」看完整清單與個股圖表")
     return lines
 
 
@@ -345,8 +361,14 @@ def sec_rrg_turn(date, scope="public"):
         return [f"**🔄 剛轉進領先象限的類股**", f"・讀取失敗：{str(e)[:60]}"]
     if not body:
         return []
+    try:
+        from board_theme import PAGES_URL as _P
+    except Exception:                                       # noqa: BLE001
+        _P = "https://dt-1983.github.io/daily-stock-board"
     return (["**🔄 剛轉進領先象限的類股**（連續 ≥2 天、轉進 ≤20 天）"] + body
-            + ["-# 💼＝持股　⚠️ 只是「產業轉強」不是買進訊號——"
+            + [f"-# 🔗 [產業輪動雷達]({_P}/rotation.html)　"
+               f"[進出燈號]({_P}/combo.html)（可篩「4 燈」＋「領先」）",
+               "-# 💼＝持股　⚠️ 只是「產業轉強」不是買進訊號——"
                "回測證明的是「產業在領先象限」當過濾條件有幫助，"
                "**沒測過「剛轉進去」本身**"])
 
