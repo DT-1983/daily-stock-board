@@ -268,6 +268,48 @@ def material_sima():
              f"**觸發 {len(fired)} 條（持股 {len(f_held)} 條、非持股 {len(f_not)} 條）**、"
              f"逼近 {len(near)} 條、等財報才驗 {len(pend)} 條"
              + (f"；未覆蓋 {tc['uncovered']}" if tc.get("uncovered") else ""))
+    # 🔴 2026-09-05：持股的 SuperTrend 翻空／RS(60) 跌破**單獨先列**（Leo 指定）。
+    # 這兩型是唯二「型別本身就等於方向」的出場訊號；9/5 那天 40 條觸發裡有 32 條
+    # 意思是相反的（RS 站回均線＝疑慮解除），混在一起講仲達會抓錯輕重。
+    # ⚠️ price_above 不放進來——同型別兩種意思（漲破貴價＝出場／站回翻空點＝解除）。
+    try:
+        from thesis_check import EXIT_TYPES as _EXIT_TYPES
+    except Exception:                                       # noqa: BLE001
+        _EXIT_TYPES = ("supertrend_bear", "supertrend_flip", "rs_below")
+    _ct = {}
+    for x in (tc.get("triggered") or []):
+        if isinstance(x, (list, tuple)) and len(x) > 4:
+            _ct[(x[0], x[1])] = x[4]
+    f_exit = [x for x in fired if x[2] and _ct.get((x[0], x[1])) in _EXIT_TYPES]
+    if f_exit:
+        m.append(f"  🔴 **持股今天新出現的出場訊號 {len(f_exit)} 條**"
+                 f"（SuperTrend 翻空／RS 跌破 60MA，方向明確）：")
+        for tk, desc, _h, ang in f_exit:
+            m.append(f"    🔴 {tk} {desc}")
+
+    # 存量：現在處在哪一階段（跟上面「今天剛發生」是兩回事）。
+    # 多數翻空的持股是更早翻的、甚至登錄條件時就已是空方 → 永遠不會再被報成
+    # 新事件。只看事件流會回答成「今天沒事」，但實際上一半持股在訊號區。
+    es = tc.get("exit_state") or []
+    if es:
+        both = [r[0] for r in es if r[1] and r[2]]
+        st_only = [r[0] for r in es if r[1] and not r[2]]
+        rs_only = [r[0] for r in es if r[2] and not r[1]]
+        unk = [r[0] for r in es if r[1] is None]
+        m.append(f"【出場訊號現況（存量，不是今天才發生）】持股 {len(es)} 檔："
+                 f"ST翻空＋RS跌破 {len(both)}｜只有ST翻空 {len(st_only)}｜"
+                 f"只有RS跌破 {len(rs_only)}｜兩條都沒事 "
+                 f"{len(es)-len(both)-len(st_only)-len(rs_only)-len(unk)}"
+                 + (f"｜算不出來 {len(unk)}（**不等於沒事**）" if unk else ""))
+        if both:
+            m.append(f"  兩條都成立：{', '.join(both)}")
+        if st_only:
+            m.append(f"  只有 ST 翻空：{', '.join(st_only)}")
+        if rs_only:
+            m.append(f"  只有 RS 跌破：{', '.join(rs_only)}")
+        if unk:
+            m.append(f"  算不出來：{', '.join(unk)}")
+
     # 「非持股」也要寫出來——留空會讓讀的人不確定是漏標還是真的不是持股
     for tk, desc, held, ang in fired[:10]:
         m.append(f"  🚫 {tk}{'（持股）' if held else '（非持股）'}[{ang}] {desc}")
