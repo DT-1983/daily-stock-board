@@ -28,6 +28,7 @@
 import argparse
 import io
 import json
+import re
 import os
 import sys
 import time
@@ -91,6 +92,65 @@ def universe():
         print(f"  [warn] 讀不到持股：{str(e)[:70]}")
     for row in _load(WATCHLIST_PATH, []):
         add(row.get("ticker"), row.get("name"), "自訂")
+
+    # ── 產業輪動：在 RRG 領先象限的類股，把成分股拉進來掃 ──────────
+    #
+    # 2026-09-06 Leo 指定：「加所有在領先的」。這是照老墨的流程——他的第 1 步是
+    # 「由上而下挑出當下轉強的產業 → 再從裡面找領頭羊」，我們原本的母體只有
+    # 9 條 AI 產業鏈＋持股，**當某個類股轉強時我們根本沒有那一類的股票可以看**
+    # （實測：商業服務轉進領先 6 天，母體內 0 檔）。
+    #
+    # 為什麼是「所有在領先」而不是「剛轉進領先」（Leo 原本問的）：
+    # ① 9/5 的回測驗證的是「產業**在**領先象限」當過濾條件（12 格全改善），
+    #    **沒測過「剛轉進」本身**；② 剛轉進的定義會讓池子頻繁進出。
+    #
+    # 成分股＝該類股市值前 SECTOR_BASKET_SIZE(8) 大，跟 RRG 籃子用同一組，
+    # 不另外定義一套「這個產業有哪些股票」。
+    try:
+        import industry_rotation as _ir
+        hist = _load(_ir.HIST_PATH, {}) or {}
+        for mkt, tvm in (("tw", "taiwan"), ("us", "america")):
+            rows = (hist.get(mkt) or {}).get("index") or []
+            if not rows:
+                continue
+            snap = rows[-1].get("snapshot") or {}
+            lead = [k for k, v in snap.items()
+                    if ((v.get("periods") or {}).get("60") or {}).get("quadrant") == "leading"]
+            if not lead:
+                continue
+            mem = _ir._sector_members(tvm)
+            for sec in lead:
+                zh = (snap.get(sec) or {}).get("name") or sec
+                for tk, _sh in (mem.get(sec) or {}).get("members", []):
+                    # 台股統一收斂成裸代號，跟 screen_result 的寫法一致，
+                    # 否則 2105 與 2105.TW 會變成母體裡的兩檔。
+                    t = re.sub(r"\.(TW|TWO)$", "", str(tk)) if mkt == "tw" else str(tk)
+                    add(t, None, f"輪動領先·{zh}")
+    except Exception as e:                             # noqa: BLE001
+        print(f"  [warn] 輪動領先成分股拉取失敗（母體維持原樣）：{str(e)[:80]}")
+
+    # ── 模擬倉現有持股：**永遠留在母體** ─────────────────────────
+    #
+    # 🔴 這不是錦上添花，是上面那段的**前置條件**。
+    # `paper_portfolio.lamp_signal_events()` 是 `for r in rows` 跑 combo_result——
+    # 股票一旦掉出母體就不在 rows 裡，**永遠不會觸發賣出訊號**，變成沒有出場
+    # 邏輯的孤兒部位。母體改成輪動驅動之後會頻繁進出（實測平均每天約 18 檔），
+    # 沒有這段一定會發生。
+    # ⭐ **進場靠產業、出場靠個股訊號**——買進的東西永遠不會掉出監控。
+    # 🔴 首次實作時我讀錯檔：`state/combo_state.json` **不是**模擬倉持股，
+    # 那是 combo_scan 自己記的「上次每檔有沒有 combo 成立」（194 檔 True/False）。
+    # 照那個加會把所有掃過的股票永久黏在母體裡，池子只會漲不會退。
+    # 真正的持股在 `portfolios.json` 的 `combo_frac`（進出燈號倉的持倉比例）。
+    # ⭐ 檔名長得像不代表內容是那個——**開來看過再用**。
+    try:
+        pf = _load(os.environ.get("PORTFOLIO_STATE", "portfolios.json"), {}) or {}
+        for tk, frac in (pf.get("combo_frac") or {}).items():
+            if frac:                                   # 0 或不存在＝沒持倉
+                add(re.sub(r"\.(TW|TWO)$", "", str(tk))
+                    if re.match(r"^\d{4,6}", str(tk)) else str(tk),
+                    None, "模擬倉持股")
+    except Exception as e:                             # noqa: BLE001
+        print(f"  [warn] 讀不到模擬倉持股：{str(e)[:60]}")
     return uni
 
 
