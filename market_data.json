@@ -1,37 +1,37 @@
 {
- "updated": "2026-09-04 20:05",
+ "updated": "2026-09-05 12:40",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "09/03",
-   "close": 7747.71,
-   "chg_pct": 1.06
+   "date": "09/04",
+   "close": 7718.6,
+   "chg_pct": -0.38
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "09/03",
-   "close": 26584.06,
-   "chg_pct": 1.4
+   "date": "09/04",
+   "close": 26506.99,
+   "chg_pct": -0.29
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "09/03",
-   "close": 53686.11,
-   "chg_pct": 1.18
+   "date": "09/04",
+   "close": 53414.25,
+   "chg_pct": -0.51
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "09/03",
-   "close": 11352.13,
-   "chg_pct": 0.11
+   "date": "09/04",
+   "close": 11735.26,
+   "chg_pct": 3.37
   },
   {
    "sym": "^TWII",
@@ -45,80 +45,80 @@
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/04",
-   "close": 31.66,
-   "chg_pct": -0.21
+   "date": "09/05",
+   "close": 31.62,
+   "chg_pct": -0.24
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "09/03",
-   "close": 4.76,
+   "date": "09/04",
+   "close": 4.78,
    "fmt": "yield",
-   "chg_bp": -3.4
+   "chg_bp": 2.2
   }
  ],
  "news": [
   {
-   "title": "AI真的開始串聯了？OpenAI代理人劫持德國網站 密謀躲避人類",
+   "title": "美軍18人陣亡、戰費逾375億美元 川普仍稱伊朗戰爭「小菜一碟」",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6597741",
-   "ts": "09/04 20:00"
+   "url": "https://news.cnyes.com/news/id/6598252",
+   "ts": "09/05 12:40"
   },
   {
-   "title": "被動資金準備大搬家！藥華藥晉升臺灣50 世芯-KY轉入中型100",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6597778",
-   "ts": "09/04 19:45"
-  },
-  {
-   "title": "台股漲693點外資轉買超562億元掃貨電子代工 狂敲國巨*逾百億元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6597780",
-   "ts": "09/04 19:43"
-  },
-  {
-   "title": "伺服器PCB龍頭金像電砸138億中壢擴廠 投資台灣3方案累計衝2.8兆",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6597779",
-   "ts": "09/04 19:41"
-  },
-  {
-   "title": "「末日博士」魯比尼不擔心債券拋售潮：殖利率主要是因AI榮景推升",
+   "title": "川普：魏科夫、庫許納將出訪 推動俄烏和平談判",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6597685",
-   "ts": "09/04 19:40"
+   "url": "https://news.cnyes.com/news/id/6598421",
+   "ts": "09/05 12:31"
   },
   {
-   "title": "川普想救晶片供應鏈卻害慘美國工廠？600人飯碗恐不保",
+   "title": "記憶體股強彈 美光、SanDisk、SK海力士齊飆 AI需求成最大推手",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6597706",
-   "ts": "09/04 19:30"
+   "url": "https://news.cnyes.com/news/id/6598420",
+   "ts": "09/05 12:20"
   },
   {
-   "title": "營收速報  - 高力(8996)8月營收12.04億元年增率高達112.84％",
+   "title": "三星攜手Arm攻端側AI！2奈米客製晶片啟動 OpenAI傳成潛在客戶",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6598422",
+   "ts": "09/05 12:10"
+  },
+  {
+   "title": "8月非農強彈藏隱憂 分析師質疑美國就業數據失真",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6598341",
+   "ts": "09/05 12:10"
+  },
+  {
+   "title": "〈熱門股〉盟立大啖先進封裝商機 周漲11%創歷史新高",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6597818",
-   "ts": "09/04 19:20"
+   "url": "https://news.cnyes.com/news/id/6598377",
+   "ts": "09/05 11:28"
   },
   {
-   "title": "營收速報  - 鏵友益(6877)8月營收5,515萬元年增率高達140.18％",
+   "title": "〈熱門股〉松川精密獲AI需求助攻獲利挺 股價創收盤新天價335元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6597817",
-   "ts": "09/04 19:20"
+   "url": "https://news.cnyes.com/news/id/6598289",
+   "ts": "09/05 10:27"
   },
   {
-   "title": "川習會有戲了？傳習近平罕見帶企業高層赴美談生意",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6597763",
-   "ts": "09/04 19:01"
+   "title": "〈熱門股〉玉山金攻壽險版圖！投信狂掃貨 周漲12%衝破40元創新高",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6588875",
+   "ts": "09/05 10:26"
   },
   {
-   "title": "歐股迎來秋季契機？花旗分析師：最壞時期已過 循環股浮現投資價值",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6597684",
-   "ts": "09/04 19:00"
+   "title": "〈熱門股〉輝達RTX Spark預購告急 微星周漲逾11%外資連六買共2.3萬張",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6598242",
+   "ts": "09/05 10:22"
+  },
+  {
+   "title": "輝達砸35億美元認購聯發科ECB、SEMICON登場、0050換股名單出爐 本周大事回顧",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6598209",
+   "ts": "09/05 10:20"
   }
  ],
  "inst": {
