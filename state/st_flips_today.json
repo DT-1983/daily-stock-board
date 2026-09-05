@@ -1,12 +1,24 @@
 {
-"date": "2026-09-04",
+"date": "2026-09-05",
 "flips_hold": [],
 "flips_watch": [
 {
-"code": "8046",
-"name": "南電",
+"code": "BE",
+"name": "",
+"word": "🔴→🟢 翻多",
+"dir": 1
+},
+{
+"code": "HASI",
+"name": "",
 "word": "🟢→🔴 翻空",
 "dir": -1
+},
+{
+"code": "8046",
+"name": "南電",
+"word": "🔴→🟢 翻多",
+"dir": 1
 }
 ],
 "ai_alerts": []
