@@ -57,6 +57,16 @@ TREND_LABEL = {
     "supertrend_flip": "SuperTrend 翻空",
 }
 
+# 🔴 2026-09-05（Leo：「SuperTrend 翻空／RS(60) 跌破自身均線，可以幫我針對持股
+# 特別標示嗎？」）——這兩型是**唯二方向不會有歧義的出場訊號**。
+#
+# 為什麼要獨立成一組：9/5 當天日檢一次觸發 40 條，其中 32 條意思是**相反的**
+# （RS 站回均線＝之前的出場疑慮解除），版面上跟真正該看的兩條長得一模一樣。
+# ⚠️ `price_above` 不能放進來——同一個型別兩種意思：BEN 身上一條是「漲破貴價
+# 45.30 → 出場」，另一條是「站回翻空點 35.55 → 減碼訊號解除」。
+# ⭐ 只把「型別本身就等於方向」的兩型標紅，其餘維持原樣，寧可少標不要標錯。
+EXIT_TYPES = ("supertrend_bear", "supertrend_flip", "rs_below")
+
 
 def _yf_symbol(tk):
     # 2026-08-31：原本裸代號一律接 .TW，上櫃股（3264/3265 已在登錄名單裡）拿不到
@@ -210,7 +220,7 @@ def run():
                              _h, ang))
                         continue
                     c["status"], c["triggered_date"] = "triggered", date
-                    triggered.append((tk, f"{label}｜{desc}", _h, ang))
+                    triggered.append((tk, f"{label}｜{desc}", _h, ang, ctype))
                 else:
                     healthy["held" if _h else "watch"] += 1
                 continue
@@ -223,7 +233,7 @@ def run():
             if ctype == "price_below":
                 if px <= val:
                     c["status"], c["triggered_date"] = "triggered", date
-                    triggered.append((tk, f"跌破失效線 {val}（現價 {px:.2f}）｜{desc}", _h, ang))
+                    triggered.append((tk, f"跌破失效線 {val}（現價 {px:.2f}）｜{desc}", _h, ang, ctype))
                 elif (px - val) / val <= NEAR_PCT:
                     near.append((tk, f"距失效線 {val} 僅 {(px-val)/val*100:.1f}%（現價 {px:.2f}）", _h, ang))
                 else:
@@ -231,11 +241,27 @@ def run():
             elif ctype == "price_above":
                 if px >= val:
                     c["status"], c["triggered_date"] = "triggered", date
-                    triggered.append((tk, f"升破失效線 {val}（現價 {px:.2f}）｜{desc}", _h, ang))
+                    triggered.append((tk, f"升破失效線 {val}（現價 {px:.2f}）｜{desc}", _h, ang, ctype))
                 elif (val - px) / val <= NEAR_PCT:
                     near.append((tk, f"距失效線 {val} 僅 {(val-px)/val*100:.1f}%（現價 {px:.2f}）", _h, ang))
                 else:
                     healthy["held" if _h else "watch"] += 1
+
+    # ── 存量視角：持股「現在」的兩條出場訊號狀態 ──────────────────
+    # 🔴 2026-09-05 Leo 問「現在美股持股有哪些 SuperTrend 翻空？」——當時系統
+    # **沒有任何地方看得到這個**，只能一天一天從觸發事件裡拼回來。
+    # 因為上面的 triggered 是「今天剛發生的事件」，而多數翻空的持股是更早就翻的、
+    # 甚至**登錄條件時就已經是空方**（那種會被歸到 pending_metric，不算新觸發），
+    # 所以它們永遠不會再出現在事件流裡。
+    # ⭐ 事件（今天變了什麼）跟存量（現在是什麼）是兩個問題，只做事件會漏掉存量。
+    exit_state = []
+    for tk, entry in reg.items():
+        if not entry.get("held"):
+            continue
+        s = _st_state(tk)
+        exit_state.append([tk, None, None] if not s
+                          else [tk, bool(s.get("st_bearish")), bool(s.get("rs60_broken"))])
+    exit_state.sort(key=lambda r: (-(r[1] is True) - (r[2] is True), r[0]))
 
     json.dump(reg, open(REG_PATH, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     gap, n_cov = coverage_gap(reg)
@@ -243,7 +269,10 @@ def run():
            "near": [list(x) for x in near],
            "pending_metric": [list(x) for x in pending_metric], "healthy": healthy,
            # 2026-09-03：沒有任何條件在被檢查的持股。**「沒檢查」不能長得像「沒事」**。
-           "uncovered": [g[0] for g in gap], "covered_count": n_cov}
+           "uncovered": [g[0] for g in gap], "covered_count": n_cov,
+           # 2026-09-05：持股現在的出場訊號存量 [代號, ST翻空, RS跌破]，
+           # None 代表算不出來（**不等於沒事**）。
+           "exit_state": exit_state}
     json.dump(out, open(OUT_PATH, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
     n_tr = sum(1 for v in reg.values() for c in v.get("conditions", [])
@@ -257,10 +286,21 @@ def run():
               f"{len(gap)} 檔持股沒有任何條件在被檢查：{', '.join(g[0] for g in gap[:12])}"
               + ("…" if len(gap) > 12 else ""))
     print(f"　登錄簿角度分佈：趨勢 {n_tr} 條｜價值 {n_va} 條")
+    _b2 = sum(1 for _, b, r in exit_state if b and r)
+    _b1 = sum(1 for _, b, r in exit_state if b and not r)
+    _r1 = sum(1 for _, b, r in exit_state if r and not b)
+    _un = sum(1 for _, b, r in exit_state if b is None)
+    print(f"　🔻 持股出場訊號現況（存量，不是今天才發生）："
+          f"ST翻空+RS跌破 {_b2}｜只有ST翻空 {_b1}｜只有RS跌破 {_r1}"
+          f"｜沒事 {len(exit_state) - _b2 - _b1 - _r1 - _un}｜算不出來 {_un}")
     # 原本寫 `for tk, msg in triggered`——8/31 加 held 後 tuple 變 3 元素，
     # 這行只要有任何一條真的觸發就會 ValueError。沒炸過只是因為一直沒觸發。
-    for tk, msg, _h, ang in triggered:
-        print(f"  🚫 [{ang}] {tk}：{msg}")
+    for r in triggered:
+        tk, msg, _h, ang = r[0], r[1], r[2], r[3]
+        ctype = r[4] if len(r) > 4 else None
+        # 持股 + 方向不會歧義的兩型 → 單獨標紅（Leo 9/5）
+        mark = "🔴 出場訊號" if (_h and ctype in EXIT_TYPES) else "🚫"
+        print(f"  {mark} [{ang}] {tk}：{msg}")
     for tk, msg, _h, ang in near:
         print(f"  ⚠️ [{ang}] {tk}：{msg}")
     return out

@@ -434,14 +434,21 @@ def sec_thesis(date, scope="private"):
             tk, msg = r[0], r[1]
             held = r[2] if len(r) > 2 else True
             angle = r[3] if len(r) > 3 else "value"
+            # 第五代格式（2026-09-05）多帶條件型別，用來把持股的出場訊號標紅。
+            # 逼近/待檢那兩串沒有這一欄，缺就是 None——不猜。
+            ctype = r[4] if len(r) > 4 else None
             if bool(held) == want_held:
-                out.append((tk, msg, angle))
+                out.append((tk, msg, angle, ctype))
         return out
 
     # 2026-08-31（Leo：「失效條件也可以分兩個嗎，不是只有價值投資」）：
     # 每行掛角度符號而不是拆成兩個小節——拆節會讓行數翻倍，跟 8/31 才剛修好的
     # 「排版很難懂」衝突。趨勢排前面（它是每天會動的那類，價值是慢變數）。
     AI_ = {"trend": "📉", "value": "💰"}
+    try:
+        from thesis_check import EXIT_TYPES as _EXIT_TYPES
+    except Exception:                                       # noqa: BLE001
+        _EXIT_TYPES = ("supertrend_bear", "supertrend_flip", "rs_below")
 
     # 標記持有人（2026-08-31 Leo：「一起在持股密報裡，但幫我標明」）
     # 👦 小孩｜🏠 Leo 的繼承台股（監控但不參與風控）｜空＝Firstrade 核心部位
@@ -464,17 +471,51 @@ def sec_thesis(date, scope="private"):
     n_ok = (hz.get("held" if want_held else "watch", 0) if isinstance(hz, dict)
             else (hz if want_held else 0))
 
+    # 🔴 2026-09-05（Leo：「SuperTrend 翻空／RS(60) 跌破自身均線，可以幫我針對
+    # 持股特別標示嗎？」）——把持股的這兩型抽出來單獨放最前面。
+    # 起因：9/5 日檢一次觸發 40 條，其中 **32 條意思是相反的**（RS 站回均線＝
+    # 之前的出場疑慮解除），而真正該看的只有 TSLA、GOOG 兩條，排版上完全一樣。
+    # ⚠️ 只收 EXIT_TYPES 那兩型（型別本身就等於方向）；`price_above` 不收，
+    # 因為同一型別兩種意思（漲破貴價＝出場／站回翻空點＝解除）。
+    exit_rows, other = [], []
+    for r in trig:
+        (exit_rows if (want_held and r[3] in _EXIT_TYPES) else other).append(r)
+    for tk, msg, ang, _t in exit_rows[:5]:
+        lines.append(f"🔴 {_who(tk)}**{tkname(tk)}**　{msg[:34]}")
+    if len(exit_rows) > 5:
+        lines.append(f"-# 　…另有 {len(exit_rows)-5} 檔出場訊號")
+
     # 只列前 5 檔——8/31 那次持股密報一次噴出十幾檔🚫，每檔還帶一整句說明，
     # 手機上完全看不完（Leo：「排版很難懂不易閱讀」）。觸發的按「超過幅度」排序，
     # 最誇張的先看。
-    for tk, msg, ang in trig[:5]:
+    for tk, msg, ang, _t in other[:5]:
         lines.append(f"🚫{AI_.get(ang, '💰')} {_who(tk)}**{tkname(tk)}**　{msg[:34]}")
-    if len(trig) > 5:
-        lines.append(f"-# 　…另有 {len(trig)-5} 檔已觸發")
-    for tk, msg, ang in near[:3]:
+    if len(other) > 5:
+        lines.append(f"-# 　…另有 {len(other)-5} 檔已觸發")
+    for tk, msg, ang, _t in near[:3]:
         lines.append(f"⚠️{AI_.get(ang, '💰')} {_who(tk)}{tkname(tk)}　{msg[:34]}")
     if len(near) > 3:
         lines.append(f"-# 　…另有 {len(near)-3} 檔逼近")
+
+    # 存量：持股「現在」處在哪一階段（2026-09-05）。
+    # 上面那些是**今天剛發生的事件**；多數翻空的持股是更早翻的、甚至登錄條件時
+    # 就已經是空方，永遠不會再被報成新事件 → 只看事件流會以為沒事。
+    # ⭐ 只給計數＋最嚴重那一格的代號，不整串列出來（24 檔會把版面吃光）。
+    if want_held:
+        es = d.get("exit_state") or []
+        both = [r[0] for r in es if r[1] and r[2]]
+        st_only = [r[0] for r in es if r[1] and not r[2]]
+        rs_only = [r[0] for r in es if r[2] and not r[1]]
+        unk = [r[0] for r in es if r[1] is None]
+        if es:
+            lines.append(f"-# 🔻 **出場訊號現況（存量，非今日新增）**　"
+                         f"ST翻空＋RS跌破 {len(both)}｜只有ST翻空 {len(st_only)}｜"
+                         f"只有RS跌破 {len(rs_only)}｜沒事 "
+                         f"{len(es)-len(both)-len(st_only)-len(rs_only)-len(unk)}"
+                         + (f"｜⚪算不出來 {len(unk)}" if unk else ""))
+            if both:
+                head = "、".join(both[:14]) + ("…" if len(both) > 14 else "")
+                lines.append(f"-# 　兩條都成立：{head}")
 
     tail = f"✅ 健康 {n_ok} 條"
     if pend:
