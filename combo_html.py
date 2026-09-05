@@ -48,6 +48,7 @@ table.cb th{text-align:right;padding:8px 6px;color:var(--dim);font-weight:600;
   border-bottom:1px solid var(--line);white-space:nowrap;font-size:12px}
 table.cb th:nth-child(-n+4){text-align:left}
 table.cb td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+.rrwarn{margin-left:3px;font-size:11px;cursor:help}
 table.cb td:nth-child(-n+4){text-align:left}
 table.cb tr:hover td{background:rgba(255,255,255,.03)}
 .lamp{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:3px}
@@ -111,6 +112,7 @@ def filter_html():
             '<span class="flab flab2">燈號</span>'
             + _sc("lit", "all", "全部", pressed=True) + _sc("lit", "3", "3 燈以上")
             + _sc("lit", "4", "4 燈") + _sc("lit", "hit", "⭐ 打點（3 燈 + 風報比 ≥ 1）")
+            + _sc("lit", "hit4", "⭐⭐ 4 燈 + 風報比 ≥ 1")
             + '<span class="fcount" id="fcount"></span></div>'
             '<div class="frow"><span class="flab">象限</span>'
             + _sc("quad", "all", "全部", pressed=True) + quad + _sc("quad", "none", "無分類")
@@ -135,6 +137,9 @@ function match(tr, f, v){
     if (v === "3") return lit >= 3;
     if (v === "4") return lit >= 4;
     if (v === "hit") return lit >= 3 && tr.dataset.rr === "1";
+    // 2026-09-05：老墨說的「四燈且風報比>1」。跟上面那顆的差別只在 3 燈 vs 4 燈，
+    // 但原本要按兩顆籤再自己看第一區塊，多一顆省掉那個步驟。
+    if (v === "hit4") return lit >= 4 && tr.dataset.rr === "1";
   }
   return true;
 }
@@ -207,7 +212,16 @@ def _row_html(r):
         rrh = '<span class="dimv">無目標價</span>'
     else:
         cls = "pos" if rr >= 1 else ("neg" if rr < 0 else "")
+        # 🔴 2026-09-05：風報比的分母是「現價 − SuperTrend 線」＝跌到停損的損失。
+        # 停損很近時分母趨近 0，**數字會爆掉**：UEC 風報比 18.6 是因為離停損只有 3%，
+        # 跟 NVDA 的 4.2（離停損 10%）意義完全不同，但表上看起來只是大小差別。
+        # 兩欄本來就分開放（風報比／距停損），但要自己對著看才發現——直接標出來。
+        _g = r.get("gap_pct")
+        _tight = r.get("bull") and _g is not None and _g < 5.0
         rrh = f'<span class="{cls}">{rr:,.1f}</span>'
+        if _tight:
+            rrh += (f'<span class="rrwarn" title="離停損僅 {_g:.1f}%，分母很小，'
+                    f'風報比會被放大；這個數字要配著「距停損」一起看">⚠️</span>')
     # 空方時這條線是壓力不是停損：顯示「站上才翻多」而不是「距停損」，
     # 兩者方向相反、意義不同，混在同一欄會讓人誤讀（老墨的版本就分開講）。
     gap = r.get("gap_pct")
