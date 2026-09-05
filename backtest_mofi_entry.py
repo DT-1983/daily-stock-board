@@ -114,7 +114,7 @@ def entries(tk, years, rs_window, require_st=False):
 
     # ⭐ 一次算三個版本（同一次抓資料）：要回答「RS 那個點有沒有加分」，
     # 就必須有「拿掉它」的對照組，不然只知道整套有效、不知道哪一段有效。
-    v_full, v_nors, v_bare = [], [], []
+    v_full, v_nors, v_bare, v_pre = [], [], [], []
     n = len(closes)
     for i in range(1, n):
         # ① 閃電＝擠壓釋放：前一根在擠壓、這一根跳出來
@@ -133,10 +133,27 @@ def entries(tk, years, rs_window, require_st=False):
             continue
         v_nors.append(i)
         # ③ 之後 rs_window 個交易日內出現 🩷 或 🔵
+        #
+        # 🔴🔴 2026-09-05 首跑的重大方法論錯誤（自己抓到，數字已作廢）：
+        # 原本把**閃電那天 i** 當進場日，然後從 i 算報酬。但這條件用到了
+        # i+1..i+rs_window 的資訊——**閃電當天根本不知道後面會不會出現那個點**。
+        # 而且 🔵 的定義是「RS 創 120 日新高」，RS 要創新高股價通常已經先漲，
+        # 於是那段漲幅被算進「訊號後報酬」裡。→ 首跑得出 +5.01pp，是假的。
+        # ⭐ **用未來才知道的條件挑進場點，再從條件成立之前開始算報酬＝前視偏差。**
+        #    正解：進場日＝**RS 點出現那一天 j**，報酬也從 j 算起（那天你才知道）。
         j1 = min(n, i + rs_window + 1)
-        if any((newh[j] is not None) or (lead[j] is not None) for j in range(i, j1)):
-            v_full.append(i)
-    return {"full": v_full, "no_rs": v_nors, "bare": v_bare}, closes
+        for j in range(i, j1):
+            if (newh[j] is not None) or (lead[j] is not None):
+                v_full.append(j)
+                break
+        # ④ 反過來：RS 點**先出現**，之後 rs_window 內才閃電 → 進場日＝閃電日。
+        # ⭐ 這個版本**完全知道得到**（兩個條件在進場當下都已成立），是「資金先動、
+        # 然後爆發」的可交易版本。③ 修掉前視偏差後只能在點出現當天進場，
+        # 那時該漲的已經漲完；④ 問的是「先看到資金動、再等爆發」有沒有用。
+        if any((newh[j] is not None) or (lead[j] is not None)
+               for j in range(max(0, i - rs_window), i + 1)):
+            v_pre.append(i)
+    return {"full": v_full, "no_rs": v_nors, "bare": v_bare, "pre": v_pre}, closes
 
 
 def fwd(closes, i, k):
@@ -185,11 +202,13 @@ def main():
           f"樣本 {a.years} 年｜RS 窗 {a.rs_window} 個交易日"
           + ("｜加 SuperTrend 多方" if a.with_supertrend else ""))
     print("規則：擠壓釋放（閃電）→ 該根動能柱 > 0（紅柱）→ 窗內出現 🩷 或 🔵")
+    print("⭐ 版本③ 的**進場日是 RS 點出現那天**，不是閃電那天——從閃電算會用到未來資訊（前視偏差）")
     print()
 
     VAR = [("bare", "① 只有閃電（擠壓釋放）"),
            ("no_rs", "② 閃電 + 動能紅柱"),
-           ("full", "③ 閃電 + 紅柱 + RS 點  <- 老墨全套")]
+           ("full", "③ 閃電→紅柱→RS點（在點那天進場）"),
+           ("pre", "④ RS點先→再閃電（在閃電日進場）")]
     sig = {v: {k: [] for k in evals} for v, _ in VAR}
     base = {k: [] for k in evals}
     cnt = {v: 0 for v, _ in VAR}
