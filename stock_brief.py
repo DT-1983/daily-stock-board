@@ -219,6 +219,15 @@ CSS = """
 
 def render(d, extra_notes=None):
     from board_theme import BASE_CSS, esc, esc_b, header, nav_abs
+
+    # 券商可信度標籤（2026-09-05，老墨課堂）。⚠️ 只標不濾，而且**跟目標價異動表的
+    # TRUSTED 名單是兩回事**——那個名單裡沒有中信，硬對過去會撞到 CITI（花旗）。
+    def _cred(b):
+        try:
+            import broker_credibility as _bc
+            return _bc.note_for(b)
+        except Exception:                                   # noqa: BLE001
+            return None
     import advisor_reports as ar
     px = _price(d)
     name = (d.get("lamp") or {}).get("name") or (d["reports"][0].get("name")
@@ -279,7 +288,9 @@ def render(d, extra_notes=None):
                 tg = f'{r["target"]:,.0f}' if r.get("target") else "—"
                 mu = (f'{r["valuation_multiple"]:g} 倍'
                       if r.get("valuation_multiple") else "—")
-                return (f'<tr><td class="k">{esc(r.get("broker"))}</td>'
+                _bn = _cred(r.get("broker"))
+                _t = (f'<span class="sub">{esc(_bn["tag"])}</span>' if _bn else "")
+                return (f'<tr><td class="k">{esc(r.get("broker"))}{_t}</td>'
                         f'<td>{esc(r.get("date"))}</td>'
                         f'<td>{esc(r.get("rating") or "—")}</td>'
                         f'<td class="v">{tg}</td><td class="v">{mu}</td>'
@@ -311,7 +322,9 @@ def render(d, extra_notes=None):
                          else f"（還差 {(want / now - 1) * 100:.0f}%）")
                       + f'　<span style="color:var(--dim);font-size:11px">{esc(how)}</span>')
             rp.append(
-                f'<div class="rp"><b>{esc(r.get("broker"))}</b>　{esc(r.get("date"))}　'
+                f'<div class="rp"><b>{esc(r.get("broker"))}</b>'
+                f'{(" " + _cred(r.get("broker"))["tag"]) if _cred(r.get("broker")) else ""}'
+                f'　{esc(r.get("date"))}　'
                 f'{esc(r.get("rating") or "無評等")}　'
                 + (f'目標 <b>{tg:,.0f}</b>{esc(up)}' if tg else "無目標價（Note 類）")
                 + (f'<br>依據：{esc(r["valuation_basis"])}' if r.get("valuation_basis") else "")
