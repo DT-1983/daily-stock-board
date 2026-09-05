@@ -75,7 +75,27 @@ FX_FALLBACK = 32.0              # USD/TWD 備援匯率
 
 
 def tw_yf(code):
-    return f"{code}.TW" if str(code).isdigit() else str(code)
+    """台股代號 → yfinance 代號。
+
+    🔴 2026-09-06：原本無條件接 `.TW`，**上櫃股（.TWO）全錯**。
+    `fetch_prices` 有一道「.TW 抓不到就retry .TWO」的退回，所以本機看起來沒事；
+    但 GitHub Actions 上 Yahoo 會擋 runner IP（8/28 記錄過），**退回那一步需要
+    第二次網路呼叫，被擋掉就永遠救不回來** → `_refresh_current` 因為 `prices.get(tk)`
+    是空的而跳過 → 那些股票的 `cur` **從進場那天起再也沒更新過**。
+    實測後果：產業鏈全/產業鏈+趨勢各有 13 檔上櫃股價格凍結，而它們 8/18→9/5
+    平均 **+16.2%**（3324 雙鴻 +51.8%、4908 +50.7%）被當成 0% →
+    **兩個倉的市值各被低估約 1.8pp**。
+    ⭐ 有退回機制不等於安全——**退回需要的資源（第二次呼叫）正好是失敗時最缺的**。
+    改成一開始就用 tw_symbol 解出正確後綴，不依賴退回。
+    """
+    c = str(code)
+    if not c.isdigit():
+        return c
+    try:
+        import tw_symbol
+        return tw_symbol.resolve(c)
+    except Exception:                                   # noqa: BLE001
+        return f"{c}.TW"
 
 
 def is_tw(tk):
