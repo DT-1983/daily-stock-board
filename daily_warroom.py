@@ -10,6 +10,8 @@
 五段結構（骨架借老墨戰情室，見 memory/mofi_warroom_structure.md）：
     ① 大盤/總經：指數兩行（美/台）+ 排定事件 + 警示關鍵字新聞
     ② 今日訊號異動：SuperTrend翻面/AI轉買賣/貴俗價翻貴——**有變的才列**
+    ⭐⭐ 四燈+風報比≥1（2026-09-05 加，老墨課堂第 3 條）：跟②段不同，
+       **②是事件（今天變了什麼）、這段是存量（現在符合什麼）**
     ③ 投資長判斷：讀當天 advisor_verdicts.jsonl（含 held/triggers/兩角度brief）
     ④ 研究員筆記：產業翻象限/持股事件新聞，一行一條
     ⑤ 近日要看：總經行事曆 + 未來7天要出的財報
@@ -233,6 +235,90 @@ def _vblock(v, entry=False):
             f"{J_ICON.get(va['judgment'],'')} 價值｜{va.get('brief') or va['judgment']}",
             ""]
     return out
+
+
+def sec_setup(date, scope="public"):
+    """⭐⭐ 四燈 + 風報比 ≥ 1（2026-09-05，老墨課堂第 3 條）。
+
+    老墨：「拿報告，然後四個燈且風報比大於 1，是需要觀察的股票」。
+
+    ## 為什麼不把「有券商報告」當必要條件
+
+    實查：194 檔 → 四燈 43 → 加風報比>1 剩 14 → **再加「有報告」只剩 1 檔**。
+    ⚠️ 卡住的是**我們的報告覆蓋率**（只有 16 份）不是市場——老墨手上有法人報告庫。
+    ⭐ 所以「有報告」做成**加分標記 📑**，不做成過濾條件，否則這段永遠只有一檔。
+
+    ## 為什麼要標產業象限
+
+    2026-09-05 回測（`backtest_mofi_rrg.py`，5 年 131 檔美股）：技術訊號單獨用
+    **四個版本全部輸給「隨便哪天買」**；只在**產業處於 RRG 領先象限**時才進場，
+    **4 版本 × 3 期間 = 12 格全部改善**（最好一格 +1.39pp、勝率 61.7% vs 57.8%）。
+    ⭐ 做工的是「先挑產業」，不是那三個技術指標 → 領先象限的排最前面並標 🔵。
+    ⚠️ 幅度不大（n=81），這是方向性證據不是聖杯，所以只排序不過濾。
+
+    ## 這一段不是「今天剛發生」是「現在符合」
+
+    跟②段的訊號異動不同——那段是事件，這段是**存量**。所以不會因為「昨天也符合」
+    就不顯示。
+
+    scope 分流同②段：持股的進🔒密報、非持股的進公開版（進場候選）。
+    """
+    priv = scope == "private"
+    lines = ["**⭐⭐ 四燈 + 風報比 ≥ 1**" if priv else "**⭐⭐ 四燈 + 風報比 ≥ 1（進場候選）**"]
+    cr = _load("state/combo_result.json", {}) or {}
+    rows = cr.get("rows") or cr.get("items") or []
+    if not rows:
+        return []
+
+    # 有券商報告的代號（📑 加分標記）
+    import re as _re
+    def _n(t):
+        return _re.sub(r"\.(TW|TWO)$", "", str(t).upper()).replace(".", "-")
+    st = _load("state/advisor_reports.json", {}) or {}
+    has_report = {_n(r.get("ticker")) for r in st.values()
+                  if not r.get("_notreport") and r.get("ticker")}
+    try:
+        from investment_chief import held_universe, norm_ticker
+        held = {norm_ticker(t) for t in held_universe()}
+    except Exception:                                       # noqa: BLE001
+        held = set()
+
+    QL = {"leading": "領先", "improving": "改善", "weakening": "弱化", "lagging": "落後"}
+    hit = []
+    for r in rows:
+        if r.get("lit") != 4 or (r.get("rr") or 0) < 1:
+            continue
+        n = _n(r.get("ticker"))
+        if (n in held) != priv:
+            continue
+        q = (r.get("quad") or {}).get("60")
+        # 排序：領先象限 → 有券商報告 → 風報比高。
+        # ⚠️ 首測時把唯一有報告的那檔（2454，落後象限）排到第 9 名被截掉了——
+        # 而「拿報告」是老墨那句話裡的**第一個**條件。產業象限有回測支持所以擺第一，
+        # 但有報告的不能被擠出畫面。
+        hit.append((0 if q == "leading" else 1,
+                    0 if n in has_report else 1,
+                    -(r.get("rr") or 0), r, q, n))
+    if not hit:
+        return []
+    hit.sort(key=lambda x: (x[0], x[1], x[2]))
+
+    for _k, _rp, _rr, r, q, n in hit[:10]:
+        mark = "📑" if n in has_report else "　"
+        qs = ("🔵 " + QL[q]) if q == "leading" else (QL.get(q, "—"))
+        gap = r.get("gap_pct")
+        # ⚠️ 停損很近時風報比的分母趨近 0，數字會被放大——標出來，不要只給大數字
+        warn = f"　⚠️停損僅 {gap:.1f}%" if (gap is not None and gap < 5) else ""
+        lines.append(f"{mark} **{tkname(r.get('ticker'))}**　風報比 {r.get('rr'):.1f}"
+                     f"　{qs}{warn}")
+    if len(hit) > 10:
+        lines.append(f"-# 　…另有 {len(hit)-10} 檔，完整清單在進出燈號頁按"
+                     "「⭐⭐ 4 燈 + 風報比 ≥ 1」")
+    n_lead = sum(1 for x in hit if x[0] == 0)
+    lines.append(f"-# 共 {len(hit)} 檔，其中 {n_lead} 檔的產業在 🔵 領先象限"
+                 "（回測顯示產業過濾是這裡面最有價值的一層）"
+                 "　📑＝有券商報告")
+    return lines
 
 
 def sec3_chief(date, scope="public"):
@@ -625,11 +711,12 @@ def compose(date=None, scope="public", part="all"):
     title = f"# {'🔒 持股密報' if priv else '📋 每日戰情'} · {date}（{wd}）"
 
     if priv:
-        research = [sec2_signals(date, "private"), sec4_research(notes, "private"),
-                    sec_thesis(date)]
+        research = [sec2_signals(date, "private"), sec_setup(date, "private"),
+                    sec4_research(notes, "private"), sec_thesis(date)]
         chief = [sec3_chief(date, "private")]
     else:
         research = [sec1_market(notes), sec2_signals(date, "public"),
+                    sec_setup(date, "public"),
                     sec4_research(notes, "public", date), sec5_watch(date),
                     sec_thesis(date, "public")]
         chief = [sec3_chief(date, "public")]
