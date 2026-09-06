@@ -138,6 +138,16 @@ def gather():
         except Exception as e:                              # noqa: BLE001
             print(f"  [warn] 補算失敗：{str(e)[:60]}")
 
+    # 🔴 2026-09-06 Leo：「可以幫我加貴價嗎？還有是否超過貴價」。
+    # 直接讀 `state/valuation_state.json`——那是每天 07:33 算好的俗/貴價快取
+    # （洪瑞泰法，美股用預期 EPS、台股用實績 EPS，見 hongruitai_method）。
+    # ⚠️ **不重算**：compute_valuation 要現抓每一檔的財報，慢而且會跟站上其他頁
+    #    算出不一樣的數字。同一個指標只能有一個來源。
+    # ⚠️ 貴價的幣別跟現價一致（美股美元、台股台幣）——這點 8/31 修過一次
+    #    （ADR 幣別錯位害 12 檔全錯），所以這裡可以直接跟 px 相除。
+    val = _load("state/valuation_state.json", {}) or {}
+    val = {ic.norm_ticker(k): v for k, v in val.items()}
+
     highs = {}
     try:
         import price_store
@@ -201,6 +211,12 @@ def gather():
             "hi3y": hi.get("hi3y"), "hi3y_d": hi.get("hi3y_d"),
             "dd52": ((px / hi["hi52"] - 1) * 100) if (px and hi.get("hi52")) else None,
             "dd3y": ((px / hi["hi3y"] - 1) * 100) if (px and hi.get("hi3y")) else None,
+            "exp": (val.get(n) or {}).get("expensive"),
+            "cheap": (val.get(n) or {}).get("cheap"),
+            "val_at": (val.get(n) or {}).get("updated_at"),
+            # 「超過貴價多少」——正數＝已經比貴價還貴。
+            "over": (((px / (val[n]["expensive"]) - 1) * 100)
+                     if (px and (val.get(n) or {}).get("expensive")) else None),
             "target": r.get("target"),
             "filled": bool(r.get("_filled")),
         })
@@ -232,9 +248,11 @@ CSS = """
 .fcount{margin-left:auto;font-size:12px;color:var(--dim)}
 .cur{font-size:9.5px;color:var(--dim);margin-right:3px}
 .exempty{padding:14px 4px;color:var(--dim);font-size:12.5px}
+/* 現價已經高過貴價（洪瑞泰法）——用底色標，比多一欄文字省版面 */
+.ex td.overexp{color:var(--neg,#f87171);background:rgba(248,113,113,.07)}
 .exwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px}
 .scrollhint{font-size:10.5px;color:var(--dim);text-align:right;margin-top:4px}
-.ex{width:100%;min-width:940px;border-collapse:collapse;font-size:12.5px}
+.ex{width:100%;min-width:1020px;border-collapse:collapse;font-size:12.5px}
 .ex th{text-align:right;padding:7px 7px;color:var(--dim);font-weight:600;font-size:11px;
  border-bottom:1px solid var(--line);white-space:nowrap}
 .ex th:first-child,.ex th:nth-child(2){text-align:left}
@@ -268,9 +286,20 @@ CSS = """
  .ex thead{display:none}
  .ex tr{border:1px solid var(--line);border-radius:10px;margin:9px 0;
   background:var(--surface);padding:3px 2px}
- .ex td{border-bottom:1px solid var(--line2);padding:7px 12px;text-align:right}
+ /* 🔴 2026-09-06 Leo：「手機閱讀空間有點大，可以改密集一點嗎？」
+    原本每個欄位各佔一整列（15 列），一檔就吃掉一整個螢幕，37 檔要滑很久。
+    改成**兩欄格線**：列數砍半，padding 7px→4px，字級 12.5→12。
+    代號與名稱跨滿整行當卡片標題；帶副行的欄位（歷史高點/貴價/ST線）也跨滿，
+    否則副行會把那一格撐高、兩欄高度對不齊。 */
+ .ex tr{display:grid;grid-template-columns:1fr 1fr;gap:0 8px;padding:4px 6px}
+ .ex td{border-bottom:1px solid var(--line2);padding:4px 6px;text-align:right;
+  display:flex;justify-content:space-between;align-items:baseline;gap:8px;
+  font-size:12px;line-height:1.45}
+ .ex td::before{float:none;flex:0 0 auto}
+ .ex td.tk,.ex td.exnm,.ex td[data-h="歷史高點"],.ex td[data-h="貴價"],
+ .ex td[data-h="SuperTrend線"]{grid-column:1/-1}
  .ex tr td:last-child{border-bottom:none}
- .ex td::before{content:attr(data-h);float:left;color:var(--dim);font-size:10.5px;
+ .ex td::before{content:attr(data-h);color:var(--dim);font-size:10.5px;
   font-family:inherit}
  /* 手機卡片版：解掉桌機版的截字寬度；代號與名稱不加欄位標籤（它們就是卡片標題，
     加了會變成「代號AMD」黏在一起），但「誰的」要留標籤，否則只看到一個「Leo」。 */
@@ -287,7 +316,7 @@ FILTER_JS = r'''
   // 篩選：四組按鈕（互斥）＋一個關鍵字框。
   // ⚠️ 只切 <tr> 的 display，不重排 DOM——桌機表格版與手機卡片版共用同一份列，
   //    重排會把卡片版的結構弄壞。
-  var F = {kind:"", mkt:"", who:"", pnl:""};
+  var F = {kind:"", mkt:"", who:"", pnl:"", val:""};
   var q = "";
   var rows = Array.prototype.slice.call(document.querySelectorAll(".ex tbody tr"));
 
@@ -299,6 +328,7 @@ FILTER_JS = r'''
             && (!F.mkt  || d.mkt  === F.mkt)
             && (!F.who  || d.who  === F.who)
             && (!F.pnl  || d.pnl  === F.pnl)
+            && (!F.val  || d.val  === F.val)
             && (!q      || (d.q || "").indexOf(q) >= 0);
       tr.hidden = !ok;
       if (ok){
@@ -340,7 +370,7 @@ FILTER_JS = r'''
   var box = document.getElementById("fq");
   box.addEventListener("input", function(){ q = box.value.trim().toLowerCase(); apply(); });
   document.getElementById("fclear").addEventListener("click", function(){
-    F = {kind:"", mkt:"", who:"", pnl:""};
+    F = {kind:"", mkt:"", who:"", pnl:"", val:""};
     q = ""; box.value = "";
     document.querySelectorAll(".fb[data-f]").forEach(function(o){
       o.classList.toggle("on", o.dataset.v === "");
@@ -354,7 +384,7 @@ FILTER_JS = r'''
 
 
 def render(rows, meta):
-    from board_theme import BASE_CSS, esc, header, nav_abs
+    from board_theme import BASE_CSS, esc, header
 
     def n(v, d=2, suf=""):
         return "—" if v is None else f"{v:,.{d}f}{suf}"
@@ -393,7 +423,8 @@ def render(rows, meta):
         # 合併成一欄「歷史高點」用 3 年高，52 週高不同時才在下面補一行。
         head = ("<tr><th>代號</th><th>名稱</th><th>誰的</th><th>股數</th><th>平均成本</th>"
                 "<th>現價</th><th>市值</th><th>損益</th><th>報酬</th><th>佔部位</th>"
-                "<th>歷史高點</th><th>距高點</th><th>RS60</th><th>ST線</th></tr>")
+                "<th>貴價</th><th>歷史高點</th><th>距高點</th>"
+                "<th>RS60</th><th>ST線</th></tr>")
         body = []
         for r in rs:
             cls = "big" if (r["w"] or 0) >= 3 else ""
@@ -403,6 +434,7 @@ def render(rows, meta):
                      f' data-mkt="{"tw" if r["cur"] == "NT$" else "us"}"'
                      f' data-who="{esc(who_tag(r["acct"])[1])}"'
                      f' data-pnl="{"up" if (r["pnl"] or 0) >= 0 else "down"}"'
+                     f' data-val="{"" if r.get("over") is None else ("over" if r["over"] > 0 else "under")}"'
                      f' data-q="{esc((str(r["tk"]) + " " + str(r["name"])).lower())}"')
             body.append(
                 f'<tr class="{cls}"{attrs}>'
@@ -426,6 +458,15 @@ def render(rows, meta):
                 f'{sgn(r["pnl_n"] if r["pnl_n"] is not None else r["pnl"], 0, "")}</td>'
                 f'<td data-h="報酬">{sgn(r["pnl_pct"])}</td>'
                 f'<td data-h="佔部位">{n(r["w"], 1, "%")}</td>'
+                # 貴價（洪瑞泰法）＋「現價比貴價貴多少」。
+                # 超過就整格標紅——這是 Leo 要的「是否超過貴價」，
+                # 用顏色講比多一欄文字省版面。
+                f'<td data-h="貴價" class="{"overexp" if (r.get("over") or 0) > 0 else ""}">'
+                f'{n(r["exp"])}'
+                + (f'<br><span class="dim" style="font-size:10px">'
+                   f'{"貴 +" if r["over"] > 0 else "低 "}{r["over"]:,.0f}%</span>'
+                   if r.get("over") is not None else "")
+                + "</td>"
                 f'<td data-h="歷史高點">{n(r["hi3y"])}'
                 + (f'<br><span class="dim" style="font-size:10px">{esc(r["hi3y_d"])}</span>'
                    if r.get("hi3y_d") else "")
@@ -455,6 +496,9 @@ def render(rows, meta):
     mv_b = sum(r["mv"] or 0 for r in both)
     mv_r = sum(r["mv"] or 0 for r in rs_only)
     tot = meta["total_mv"] or 1
+    n_over = sum(1 for r in rows if (r.get("over") or 0) > 0)
+    n_under = sum(1 for r in rows if r.get("over") is not None and r["over"] <= 0)
+    n_noval = sum(1 for r in rows if r.get("over") is None)
     pnl_b = sum(r["pnl"] or 0 for r in both)
     pnl_r = sum(r["pnl"] or 0 for r in rs_only)
 
@@ -495,6 +539,10 @@ def render(rows, meta):
            '<button class="fb on" data-f="pnl" data-v="">全部</button>'
            '<button class="fb" data-f="pnl" data-v="up">獲利</button>'
            '<button class="fb" data-f="pnl" data-v="down">虧損</button></div>'
+           '<div class="fg"><span class="fl">估值</span>'
+           '<button class="fb on" data-f="val" data-v="">全部</button>'
+           '<button class="fb" data-f="val" data-v="over">超過貴價</button>'
+           '<button class="fb" data-f="val" data-v="under">未超過</button></div>'
            '<div class="fg"><input class="fq" id="fq" type="search" '
            'placeholder="代號或名稱…" autocomplete="off">'
            '<button class="fb" id="fclear">清除</button></div>'
@@ -515,7 +563,14 @@ def render(rows, meta):
         f'<div class="v {"pos" if pnl_b+pnl_r >= 0 else "neg"}">{pnl_b+pnl_r:+,.0f}</div>'
         f'<div class="s">🔴 {pnl_b:+,.0f}　🟡 {pnl_r:+,.0f}</div></div>',
         '</div>',
-        '<div class="sub">⚠️ <b>表格裡每一列都是原幣</b>——美股標 US$、台股標 NT$，'
+        # 貴價涵蓋率要寫出來——**「沒有貴價」跟「沒超過貴價」是兩件事**，
+        # 不寫的話那幾檔在「超過/未超過」兩個篩選裡都不出現，看起來像不存在。
+        f'<div class="sub">📐 <b>貴價</b>用洪瑞泰法（美股預期 EPS、台股實績 EPS），'
+        f'讀每日 07:33 算好的快取，跟站上其他頁同一個來源。'
+        f'<b>{n_over} 檔已經超過貴價</b>，{n_under} 檔還沒，'
+        f'<b>{n_noval} 檔沒有貴價資料</b>（財報抓不到 EPS）——'
+        f'那幾檔在「超過／未超過」兩個篩選裡都不會出現。<br>'
+        '⚠️ <b>表格裡每一列都是原幣</b>——美股標 US$、台股標 NT$，'
         '成本、現價、市值、損益四欄同單位，可以直接比。<br>'
         '⚠️ <b>上面四格的合計是新台幣</b>（美股用報表自己的匯率換算過）——'
         '跨帳戶跨幣別要相加，只能用同一種單位。<br>'
@@ -562,10 +617,14 @@ def render(rows, meta):
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
             "<title>出場檢視表</title><style>" + BASE_CSS + CSS
             + '</style></head><body><div class="wrap">'
+            # 🔴 2026-09-06 Leo：「上面還是有欸？」——指那排導覽按鈕。
+            # 這頁**不上投資站**，nav_abs() 那些連結指向的是公開站的頁面，
+            # 在這裡點了只會跳出去，而且佔掉手機上整整三行。傳空清單＝不畫導覽。
+            # ⚠️ 仍然用 header()（站上元件），只是不給它 nav——版式一致但沒有連結。
             + header("lamp", "出場檢視表",
                      f"符合老墨出場條件的持股　{len(both)+len(rs_only)} 檔／"
                      f"佔部位 {(mv_b+mv_r)/tot*100:.1f}%　訊號日 {esc(meta['asof'])}",
-                     nav_abs())
+                     [])
             + "".join(B) + "</div>" + FILTER_JS + "</body></html>")
 
 
