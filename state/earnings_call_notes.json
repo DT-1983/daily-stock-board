@@ -282,6 +282,101 @@
      "speaker": ""
     }
    ]
+  },
+  "Q3 2026": {
+   "fetched": "2026-09-07",
+   "items": [
+    {
+     "type": "metric",
+     "label": "半導體業務營收與AI半導體營收",
+     "value": "半導體事業部營收208億美元，年增127%；其中AI半導體營收167億美元，年增221%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "基礎設施軟體營收與年度經常性營收(ARR)",
+     "value": "基礎設施軟體營收88億美元，年增29%，年度經常性營收(ARR)維持15%年增",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "第三季合併總營收",
+     "value": "第三季合併營收296億美元，年增86%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "第三季毛利率與營業利益率",
+     "value": "合併毛利率75%(半導體部門毛利率67%)，營業利益率67.9%，較去年同期提升240個基點",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "第三季資本支出",
+     "value": "資本支出5.32億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "XPU出貨量成長與佔比",
+     "value": "XPU出貨量年增3.5倍，占第三季AI營收73%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "AI網路營收成長",
+     "value": "AI網路營收年增超過2.5倍",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "AI客戶集中度",
+     "value": "目前有六家主要XPU客戶，Anthropic與OpenAI是其中兩家",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "下季合併營收與營業利益率展望",
+     "value": "預期第四季合併營收348億美元，年增93%，營業利益率約66%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "下季AI半導體營收展望",
+     "value": "預期第四季AI半導體營收217億美元，年增236%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "AI營收多年期展望(2027、2028財年)",
+     "value": "管理層預期AI營收於2027財年較2026財年翻倍至約1150億美元，2028財年再翻倍至約2300億美元",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "每GW美元含量與GW部署量展望",
+     "value": "每GW的美元含量維持在200億至300億美元區間並可跨世代延續；預期2027年部署約10GW(其中6GW來自Anthropic與OpenAI)，2028年部署約20GW(其中15GW來自Anthropic與OpenAI)",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "新加坡基板廠與磷化銦(InP)產能擴產計畫",
+     "value": "新加坡基板廠將於2027財年開始量產部署，磷化銦(InP)產能將較去年同期成長三倍",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "非AI半導體與基礎設施軟體下季展望",
+     "value": "預期第四季非AI半導體營收約43億美元，季增5%；基礎設施軟體營收約87億美元，年增25%",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "本季基調發言",
+     "value": "第三季的需求非常火熱，而我們才剛要開始。我們的六家XPU客戶正在加速採用客製化加速器。",
+     "speaker": "Hock Tan（執行長）"
+    }
+   ]
   }
  }
 }
