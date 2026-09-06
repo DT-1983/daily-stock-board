@@ -1762,5 +1762,617 @@
     "industry": "Data Processing Services",
     "exchange": "TWSE",
     "asof": "2026-09-04"
+  },
+  "8996": {
+    "sector": "Producer Manufacturing",
+    "industry": "Industrial Machinery",
+    "exchange": "TWSE",
+    "asof": "2026-09-04"
+  },
+  "PANW": {
+    "sector": "Technology Services",
+    "industry": "Packaged Software",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-04"
+  },
+  "8464": {
+    "sector": "Consumer Durables",
+    "industry": "Home Furnishings",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "9945": {
+    "sector": "Consumer Durables",
+    "industry": "Homebuilding",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "2371": {
+    "sector": "Consumer Durables",
+    "industry": "Electronics/Appliances",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "2206": {
+    "sector": "Consumer Durables",
+    "industry": "Motor Vehicles",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "2540": {
+    "sector": "Consumer Durables",
+    "industry": "Homebuilding",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "8932": {
+    "sector": "Consumer Durables",
+    "industry": "Other Consumer Specialties",
+    "exchange": "TPEX",
+    "asof": "2026-09-06"
+  },
+  "2887": {
+    "sector": "Finance",
+    "industry": "Financial Conglomerates",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "2885": {
+    "sector": "Finance",
+    "industry": "Investment Banks/Brokers",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "2886": {
+    "sector": "Finance",
+    "industry": "Major Banks",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "2890": {
+    "sector": "Finance",
+    "industry": "Regional Banks",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "6446": {
+    "sector": "Health Technology",
+    "industry": "Pharmaceuticals: Major",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "6919": {
+    "sector": "Health Technology",
+    "industry": "Biotechnology",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "6696": {
+    "sector": "Health Technology",
+    "industry": "Biotechnology",
+    "exchange": "TPEX",
+    "asof": "2026-09-06"
+  },
+  "6949": {
+    "sector": "Health Technology",
+    "industry": "Biotechnology",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "6472": {
+    "sector": "Health Technology",
+    "industry": "Pharmaceuticals: Other",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "1795": {
+    "sector": "Health Technology",
+    "industry": "Pharmaceuticals: Major",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "4123": {
+    "sector": "Health Technology",
+    "industry": "Pharmaceuticals: Major",
+    "exchange": "TPEX",
+    "asof": "2026-09-06"
+  },
+  "2059": {
+    "sector": "Producer Manufacturing",
+    "industry": "Metal Fabrication",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "6488": {
+    "sector": "Producer Manufacturing",
+    "industry": "Industrial Machinery",
+    "exchange": "TPEX",
+    "asof": "2026-09-06"
+  },
+  "1590": {
+    "sector": "Producer Manufacturing",
+    "industry": "Industrial Machinery",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "3293": {
+    "sector": "Technology Services",
+    "industry": "Packaged Software",
+    "exchange": "TPEX",
+    "asof": "2026-09-06"
+  },
+  "6214": {
+    "sector": "Technology Services",
+    "industry": "Packaged Software",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "7822": {
+    "sector": "Technology Services",
+    "industry": "Packaged Software",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "3693": {
+    "sector": "Technology Services",
+    "industry": "Packaged Software",
+    "exchange": "TPEX",
+    "asof": "2026-09-06"
+  },
+  "7781": {
+    "sector": "Technology Services",
+    "industry": "Packaged Software",
+    "exchange": "TPEX",
+    "asof": "2026-09-06"
+  },
+  "6643": {
+    "sector": "Technology Services",
+    "industry": "Packaged Software",
+    "exchange": "TPEX",
+    "asof": "2026-09-06"
+  },
+  "2603": {
+    "sector": "Transportation",
+    "industry": "Marine Shipping",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "2615": {
+    "sector": "Transportation",
+    "industry": "Marine Shipping",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "2618": {
+    "sector": "Transportation",
+    "industry": "Airlines",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "2609": {
+    "sector": "Transportation",
+    "industry": "Marine Shipping",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "2633": {
+    "sector": "Transportation",
+    "industry": "Other Transportation",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "2610": {
+    "sector": "Transportation",
+    "industry": "Airlines",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "2637": {
+    "sector": "Transportation",
+    "industry": "Marine Shipping",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "2606": {
+    "sector": "Transportation",
+    "industry": "Marine Shipping",
+    "exchange": "TWSE",
+    "asof": "2026-09-06"
+  },
+  "GOOGL": {
+    "sector": "Technology Services",
+    "industry": "Internet Software/Services",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-06"
+  },
+  "SWKS": {
+    "sector": "Electronic Technology",
+    "industry": "Semiconductors",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-06"
+  },
+  "QRVO": {
+    "sector": "Electronic Technology",
+    "industry": "Semiconductors",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-06"
+  },
+  "AMZN": {
+    "sector": "Retail Trade",
+    "industry": "Internet Retail",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-06"
+  },
+  "DE": {
+    "sector": "Producer Manufacturing",
+    "industry": "Trucks/Construction/Farm Machinery",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "SEDG": {
+    "sector": "Producer Manufacturing",
+    "industry": "Electrical Products",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-06"
+  },
+  "NBIS": {
+    "sector": "Technology Services",
+    "industry": "Packaged Software",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-06"
+  },
+  "CRWV": {
+    "sector": "Technology Services",
+    "industry": "Packaged Software",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-06"
+  },
+  "MP": {
+    "sector": "Non-Energy Minerals",
+    "industry": "Other Metals/Minerals",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "IOT": {
+    "sector": "Technology Services",
+    "industry": "Packaged Software",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "ILMN": {
+    "sector": "Health Technology",
+    "industry": "Medical Specialties",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-06"
+  },
+  "NDSN": {
+    "sector": "Producer Manufacturing",
+    "industry": "Industrial Machinery",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-06"
+  },
+  "AUR": {
+    "sector": "Technology Services",
+    "industry": "Packaged Software",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-06"
+  },
+  "TMUS": {
+    "sector": "Communications",
+    "industry": "Wireless Telecommunications",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-06"
+  },
+  "T": {
+    "sector": "Communications",
+    "industry": "Wireless Telecommunications",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "AMX": {
+    "sector": "Communications",
+    "industry": "Wireless Telecommunications",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "VOD": {
+    "sector": "Communications",
+    "industry": "Wireless Telecommunications",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-06"
+  },
+  "CHT": {
+    "sector": "Communications",
+    "industry": "Major Telecommunications",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "ECHO": {
+    "sector": "Communications",
+    "industry": "Specialty Telecommunications",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-06"
+  },
+  "RACE": {
+    "sector": "Consumer Durables",
+    "industry": "Motor Vehicles",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "GM": {
+    "sector": "Consumer Durables",
+    "industry": "Motor Vehicles",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "F": {
+    "sector": "Consumer Durables",
+    "industry": "Motor Vehicles",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "HMC": {
+    "sector": "Consumer Durables",
+    "industry": "Motor Vehicles",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "DHI": {
+    "sector": "Consumer Durables",
+    "industry": "Homebuilding",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "SN": {
+    "sector": "Consumer Durables",
+    "industry": "Electronics/Appliances",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "COR": {
+    "sector": "Distribution Services",
+    "industry": "Medical Distributors",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "GWW": {
+    "sector": "Distribution Services",
+    "industry": "Wholesale Distributors",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "CAH": {
+    "sector": "Distribution Services",
+    "industry": "Medical Distributors",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "FAST": {
+    "sector": "Distribution Services",
+    "industry": "Wholesale Distributors",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-06"
+  },
+  "FERG": {
+    "sector": "Distribution Services",
+    "industry": "Wholesale Distributors",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "SYY": {
+    "sector": "Distribution Services",
+    "industry": "Food Distributors",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "USFD": {
+    "sector": "Distribution Services",
+    "industry": "Food Distributors",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "XOM": {
+    "sector": "Energy Minerals",
+    "industry": "Integrated Oil",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "CVX": {
+    "sector": "Energy Minerals",
+    "industry": "Integrated Oil",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "SHEL": {
+    "sector": "Energy Minerals",
+    "industry": "Integrated Oil",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "TTE": {
+    "sector": "Energy Minerals",
+    "industry": "Integrated Oil",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "COP": {
+    "sector": "Energy Minerals",
+    "industry": "Oil & Gas Production",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "PBR": {
+    "sector": "Energy Minerals",
+    "industry": "Integrated Oil",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "PBR.A": {
+    "sector": "Energy Minerals",
+    "industry": "Integrated Oil",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "BP": {
+    "sector": "Energy Minerals",
+    "industry": "Integrated Oil",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "BRK.A": {
+    "sector": "Finance",
+    "industry": "Property/Casualty Insurance",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "V": {
+    "sector": "Finance",
+    "industry": "Finance/Rental/Leasing",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "MA": {
+    "sector": "Finance",
+    "industry": "Finance/Rental/Leasing",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "MS": {
+    "sector": "Finance",
+    "industry": "Investment Managers",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "LLY": {
+    "sector": "Health Technology",
+    "industry": "Pharmaceuticals: Major",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "JNJ": {
+    "sector": "Health Technology",
+    "industry": "Pharmaceuticals: Major",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "ABBV": {
+    "sector": "Health Technology",
+    "industry": "Pharmaceuticals: Major",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "MRK": {
+    "sector": "Health Technology",
+    "industry": "Pharmaceuticals: Major",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "NVS": {
+    "sector": "Health Technology",
+    "industry": "Pharmaceuticals: Major",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "AZN": {
+    "sector": "Health Technology",
+    "industry": "Pharmaceuticals: Major",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "AMGN": {
+    "sector": "Health Technology",
+    "industry": "Biotechnology",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-06"
+  },
+  "TMO": {
+    "sector": "Health Technology",
+    "industry": "Medical Specialties",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "TPL": {
+    "sector": "Miscellaneous",
+    "industry": "Investment Trusts/Mutual Funds",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "VNOM": {
+    "sector": "Miscellaneous",
+    "industry": "Investment Trusts/Mutual Funds",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-06"
+  },
+  "BXSL": {
+    "sector": "Miscellaneous",
+    "industry": "Investment Trusts/Mutual Funds",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "FSK": {
+    "sector": "Miscellaneous",
+    "industry": "Investment Trusts/Mutual Funds",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "BSM": {
+    "sector": "Miscellaneous",
+    "industry": "Investment Trusts/Mutual Funds",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "BHP": {
+    "sector": "Non-Energy Minerals",
+    "industry": "Steel",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "RIO": {
+    "sector": "Non-Energy Minerals",
+    "industry": "Other Metals/Minerals",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "NEM": {
+    "sector": "Non-Energy Minerals",
+    "industry": "Precious Metals",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "AEM": {
+    "sector": "Non-Energy Minerals",
+    "industry": "Precious Metals",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "B": {
+    "sector": "Non-Energy Minerals",
+    "industry": "Precious Metals",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "WPM": {
+    "sector": "Non-Energy Minerals",
+    "industry": "Precious Metals",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "META": {
+    "sector": "Technology Services",
+    "industry": "Internet Software/Services",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-06"
+  },
+  "ORCL": {
+    "sector": "Technology Services",
+    "industry": "Packaged Software",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
+  },
+  "PLTR": {
+    "sector": "Technology Services",
+    "industry": "Packaged Software",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-06"
   }
 }
