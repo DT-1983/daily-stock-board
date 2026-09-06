@@ -2374,5 +2374,11 @@
     "industry": "Packaged Software",
     "exchange": "NASDAQ",
     "asof": "2026-09-06"
+  },
+  "ONON": {
+    "sector": "Consumer Non-Durables",
+    "industry": "Apparel/Footwear",
+    "exchange": "NYSE",
+    "asof": "2026-09-06"
   }
 }
