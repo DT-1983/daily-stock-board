@@ -673,7 +673,10 @@ def gather_material(ticker, notes):
                    if _ok else
                    (f"（SuperTrend 線在 {sti['st_line']}，但現價查不到，無法算乖離）"
                     if sti.get("st_line") else ""))
-            _rs = (f"（RS 現值 {sti['rs60']}）" if sti.get("rs60") is not None else "")
+            # 資料日要跟著數字走：同一個 RS60，這條路是現抓的、lamp_lookup 是快取的，
+            # 不標日期就會變成「同一個指標兩個數字」（2026-09-06 ONON 實際發生）。
+            _as = f"，{sti['asof']} 收盤" if sti.get("asof") else ""
+            _rs = (f"（RS 現值 {sti['rs60']}{_as}）" if sti.get("rs60") is not None else "")
             trend_material += (f"SuperTrend：{'已翻空' if sti['st_bearish'] else '多頭'}{_lv}／"
                                f"RS(60日)：{'已跌破' if sti['rs60_broken'] else '未跌破'}{_rs}／"
                                f"{sti['note']}\n")
