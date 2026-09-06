@@ -191,46 +191,58 @@ def squeeze_momentum(highs, lows, closes, length=20, bb_mult=2.0, kc_mult=1.5):
 
 # ── RS 相對強弱（Mansfield） ──────────────────────────────────────────
 
-def mansfield_rs(closes, bench_closes, short=20, long=250):  # 2026-09-03 短線 30→20 對齊老墨螢幕值(顯示層;燈四的 RS 在 combo_scan 是 60,不受此影響)
-    n = min(len(closes), len(bench_closes))
-    c = np.array(closes[-n:], dtype=float)
-    b = np.array(bench_closes[-n:], dtype=float)
-    rs_raw = c / b
-    out = {}
-    for label, win in (("short", short), ("long", long)):
-        if n < win + 1:
-            out[label] = None
-            continue
-        rs_avg = rs_raw[-win:].mean()
-        out[label] = (rs_raw[-1] / rs_avg - 1) * 100
-    return out
-
-
 def mansfield_rs_series(closes, bench_closes, win):
-    """整段序列版（給畫圖用），不是只取最新一值。
+    """Mansfield 相對強度（整段序列）。RS 相對自己 win 日均值的乖離，單位 %。
 
-    🔴 2026-09-06 發現：這支跟上面的 `mansfield_rs()` **算的不是同一個東西**。
-      · `mansfield_rs`        平均窗口是 rs_raw[-win:]   → **含**當日
-      · `mansfield_rs_series` 平均窗口是 rs_raw[i-win:i] → **不含**當日
+    ## 🔴 2026-09-06：窗口定義統一成「**含當日**」
+
+    在這之前這支跟 `mansfield_rs()` **算的不是同一個東西**：
+      · `mansfield_rs`        窗口 rs_raw[-win:]      → 含當日
+      · `mansfield_rs_series` 窗口 rs_raw[i-win:i]    → **不含**當日
     同一檔同一天會給出兩個數字（ONON 2026-09-04：-21.38 vs -21.83）。
 
-    ⚠️ 這不是顯示問題，兩邊都在跑真的判斷：
-      · 燈四（RS60 乖離 > +3%）走 `mansfield_rs`（combo_scan）
-      · 出場訊號「RS(60) 跌破自身均線」走這一支（trade_plan）
-    也就是說**亮燈用的 RS 和判出場用的 RS 定義不同**。
+    而且兩邊都在跑真的判斷——**亮燈用的 RS 和判出場用的 RS 定義不同**：
+      · 燈四（RS60 乖離 > +3%）走 `mansfield_rs`
+      · 出場訊號「RS(60) 跌破自身均線」走這一支
+      · 圖上老墨的黃/藍/粉紅點也走這一支（`rs_signal_series`）
 
-    ⚠️ 還沒有統一——要用哪一個定義是投資方法的決定，不是實作細節，
-    照「不自行變更投資方法門檻」的鐵則，等 Leo 決定（2026-09-06 已回報）。
-    在那之前，兩邊維持原狀，這段註解就是給下一個看到數字對不上的人看的。
+    Leo 2026-09-06 定案**含當日**，理由：短線窗口那條註解寫著是為了對齊老墨
+    螢幕上的數字，那份數字就是含當日算的；判斷要跟他講的規則對得上。
+
+    ⭐ 現在只有這一個定義，`mansfield_rs()` 直接取這支的最後一值——
+    **兩支各寫一份數學式，就是遲早會分岔。**
+
+    ⚠️ 這個改動讓 2026-09-06 之前跑的回測數字**不可直接比較**
+    （backtest_combined_signal / backtest_position_sim / backtest_mofi_entry
+    三支都吃這個序列）。要比就整份重跑。
     """
     n = min(len(closes), len(bench_closes))
     c = np.array(closes[-n:], dtype=float)
     b = np.array(bench_closes[-n:], dtype=float)
     rs_raw = c / b
     out = np.full(n, np.nan)
-    for i in range(win, n):
-        avg = rs_raw[i - win:i].mean()
+    # i 從 win-1 起算：含當日的窗口是 rs_raw[i-win+1 : i+1]，剛好 win 根，
+    # 最早在 i = win-1 就湊得齊（舊版不含當日要 i = win 才湊得齊）。
+    for i in range(win - 1, n):
+        avg = rs_raw[i - win + 1:i + 1].mean()
         out[i] = (rs_raw[i] / avg - 1) * 100 if avg else np.nan
+    return out
+
+
+def mansfield_rs(closes, bench_closes, short=20, long=250):  # 2026-09-03 短線 30→20 對齊老墨螢幕值(顯示層;燈四的 RS 在 combo_scan 是 60,不受此影響)
+    """只要最新一值的版本。**數學式不自己寫一份**——直接取序列版的最後一根。
+
+    2026-09-06 之前這裡自己算，結果跟序列版差一格窗口（見上面）。
+    """
+    n = min(len(closes), len(bench_closes))
+    out = {}
+    for label, win in (("short", short), ("long", long)):
+        if n < win + 1:
+            out[label] = None
+            continue
+        ser = mansfield_rs_series(closes, bench_closes, win)
+        v = ser[-1] if len(ser) else np.nan
+        out[label] = None if (v != v) else float(v)
     return out
 
 
