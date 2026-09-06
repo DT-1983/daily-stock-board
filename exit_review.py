@@ -183,6 +183,19 @@ def gather():
             "pnl": (mv - cb) if (mv and cb) else None,
             "pnl_pct": (mv / cb - 1) * 100 if cb else None,
             "w": (mv / base_mv * 100) if base_mv else None,
+            # 🔴 2026-09-06 Leo：「美股可以用美金嗎」。
+            # 報表的 market_value／cost_basis 都是台幣，但 Leo 看美股部位是用美元想的
+            # （成本 114.32、現價 477.57 都是美元，市值卻是台幣＝腦袋要一直換算）。
+            # 匯率同樣用「市值÷股數÷現價」反推——**不引外部匯率表**：
+            # 這樣算出來的數字跟報表自己完全自洽，也不會因為匯率表過期而對不上。
+            # ⚠️ `mv`（台幣）保留不動：佔部位、排序、跨帳戶合計都需要共同單位。
+            "fx": ((mv / sh) / px) if (sh and mv and px) else None,
+            "mv_n": (mv / ((mv / sh) / px)) if (sh and mv and px) else None,
+            "pnl_n": ((mv - cb) / ((mv / sh) / px))
+                     if (sh and mv and cb and px) else None,
+            # 幣別看代號（純數字＝台股），跟系統其他地方同一把尺；
+            # 不用「fx 接近 1」去猜——那在匯率真的接近 1 的市場會判錯。
+            "cur": "NT$" if str(n)[:1].isdigit() else "US$",
             "owner": owner, "acct": acct,
             "hi52": hi.get("hi52"), "hi52_d": hi.get("hi52_d"),
             "hi3y": hi.get("hi3y"), "hi3y_d": hi.get("hi3y_d"),
@@ -203,6 +216,22 @@ CSS = """
 .sb h2{font-size:15px;font-weight:700;color:#F5B841;margin-bottom:4px}
 .sb .sub{font-size:11.5px;color:var(--dim);margin-bottom:9px;line-height:1.7}
 .sb .sub b{color:#CBD5E1}
+/* 篩選列。這頁不上站，所以不套 board_theme 的 .ctrl/.seg，自己寫最小一組。 */
+.fbar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;
+ margin:14px 0 4px;padding:10px 12px;border:1px solid var(--line);
+ border-radius:12px;background:var(--surface)}
+.fg{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.fl{font-size:11px;color:var(--dim);margin-right:2px}
+.fb{font:inherit;font-size:12px;padding:4px 10px;border-radius:999px;cursor:pointer;
+ border:1px solid var(--line);background:transparent;color:var(--dim)}
+.fb:hover{border-color:var(--accent,#93c5fd)}
+.fb.on{background:var(--accent,#3b82f6);border-color:var(--accent,#3b82f6);
+ color:#fff;font-weight:600}
+.fq{font:inherit;font-size:12px;padding:5px 10px;border-radius:8px;min-width:150px;
+ border:1px solid var(--line);background:transparent;color:var(--ink)}
+.fcount{margin-left:auto;font-size:12px;color:var(--dim)}
+.cur{font-size:9.5px;color:var(--dim);margin-right:3px}
+.exempty{padding:14px 4px;color:var(--dim);font-size:12.5px}
 .exwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px}
 .scrollhint{font-size:10.5px;color:var(--dim);text-align:right;margin-top:4px}
 .ex{width:100%;min-width:940px;border-collapse:collapse;font-size:12.5px}
@@ -252,6 +281,78 @@ CSS = """
 """
 
 
+FILTER_JS = r'''
+<script>
+(function(){
+  // 篩選：四組按鈕（互斥）＋一個關鍵字框。
+  // ⚠️ 只切 <tr> 的 display，不重排 DOM——桌機表格版與手機卡片版共用同一份列，
+  //    重排會把卡片版的結構弄壞。
+  var F = {kind:"", mkt:"", who:"", pnl:""};
+  var q = "";
+  var rows = Array.prototype.slice.call(document.querySelectorAll(".ex tbody tr"));
+
+  function apply(){
+    var shown = 0, mv = 0;
+    rows.forEach(function(tr){
+      var d = tr.dataset;
+      var ok = (!F.kind || d.kind === F.kind)
+            && (!F.mkt  || d.mkt  === F.mkt)
+            && (!F.who  || d.who  === F.who)
+            && (!F.pnl  || d.pnl  === F.pnl)
+            && (!q      || (d.q || "").indexOf(q) >= 0);
+      tr.hidden = !ok;
+      if (ok){
+        shown++;
+        var c = tr.querySelector("td[data-mv]");
+        if (c) mv += parseFloat(c.dataset.mv) || 0;
+      }
+    });
+    // 每個區塊（🔴/🟡）如果一列都不剩，整塊給一句話，不要留一張空表格
+    document.querySelectorAll(".exwrap").forEach(function(w){
+      var vis = w.querySelectorAll("tbody tr:not([hidden])").length;
+      w.style.display = vis ? "" : "none";
+      var hint = w.nextElementSibling;
+      if (hint && hint.classList.contains("scrollhint")) hint.style.display = vis ? "" : "none";
+      var em = w.parentNode.querySelector(".exempty");
+      if (!em){
+        em = document.createElement("div");
+        em.className = "exempty";
+        em.textContent = "這一組沒有符合篩選條件的標的。";
+        w.parentNode.insertBefore(em, w.nextSibling);
+      }
+      em.style.display = vis ? "none" : "";
+    });
+    document.getElementById("fcount").textContent =
+      "顯示 " + shown + " / " + rows.length + " 檔　市值合計 NT$ "
+      + Math.round(mv).toLocaleString();
+  }
+
+  document.querySelectorAll(".fb[data-f]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var f = b.dataset.f;
+      F[f] = b.dataset.v;
+      document.querySelectorAll('.fb[data-f="' + f + '"]').forEach(function(o){
+        o.classList.toggle("on", o === b);
+      });
+      apply();
+    });
+  });
+  var box = document.getElementById("fq");
+  box.addEventListener("input", function(){ q = box.value.trim().toLowerCase(); apply(); });
+  document.getElementById("fclear").addEventListener("click", function(){
+    F = {kind:"", mkt:"", who:"", pnl:""};
+    q = ""; box.value = "";
+    document.querySelectorAll(".fb[data-f]").forEach(function(o){
+      o.classList.toggle("on", o.dataset.v === "");
+    });
+    apply();
+  });
+  apply();
+})();
+</script>
+'''
+
+
 def render(rows, meta):
     from board_theme import BASE_CSS, esc, header, nav_abs
 
@@ -295,9 +396,16 @@ def render(rows, meta):
                 "<th>歷史高點</th><th>距高點</th><th>RS60</th><th>ST線</th></tr>")
         body = []
         for r in rs:
-            big = ' class="big"' if (r["w"] or 0) >= 3 else ""
+            cls = "big" if (r["w"] or 0) >= 3 else ""
+            # 篩選用的標籤。放在 <tr> 上，JS 只切 display，桌機表格版與手機卡片版
+            # 兩種排版都吃得到（卡片版的 tr 也是 display:block）。
+            attrs = (f' data-kind="{r["kind"]}"'
+                     f' data-mkt="{"tw" if r["cur"] == "NT$" else "us"}"'
+                     f' data-who="{esc(who_tag(r["acct"])[1])}"'
+                     f' data-pnl="{"up" if (r["pnl"] or 0) >= 0 else "down"}"'
+                     f' data-q="{esc((str(r["tk"]) + " " + str(r["name"])).lower())}"')
             body.append(
-                f"<tr{big}>"
+                f'<tr class="{cls}"{attrs}>'
                 f'<td class="tk" data-h="代號">{esc(r["tk"])}'
                 + ('<span class="dim" style="font-size:10px"> ⚠️補算</span>'
                    if r.get("filled") else "") + "</td>"
@@ -309,8 +417,13 @@ def render(rows, meta):
                 f'<td data-h="股數">{n(r["sh"], 2)}</td>'
                 f'<td data-h="平均成本">{n(r["avg"])}</td>'
                 f'<td data-h="現價">{n(r["px"])}</td>'
-                f'<td data-h="市值">{n(r["mv"], 0)}</td>'
-                f'<td data-h="損益">{sgn(r["pnl"], 0, "")}</td>'
+                # 市值/損益改用**原幣**（美股美元、台股台幣），跟同一列的成本與
+                # 現價同單位。台幣值仍留在 data-mv 供合計與排序用。
+                f'<td data-h="市值" data-mv="{r["mv"] or 0:.0f}">'
+                f'<span class="cur">{r["cur"]}</span>'
+                f'{n(r["mv_n"] if r["mv_n"] is not None else r["mv"], 0)}</td>'
+                f'<td data-h="損益">'
+                f'{sgn(r["pnl_n"] if r["pnl_n"] is not None else r["pnl"], 0, "")}</td>'
                 f'<td data-h="報酬">{sgn(r["pnl_pct"])}</td>'
                 f'<td data-h="佔部位">{n(r["w"], 1, "%")}</td>'
                 f'<td data-h="歷史高點">{n(r["hi3y"])}'
@@ -356,6 +469,39 @@ def render(rows, meta):
              '・所以這頁標的是「<b>規則說什麼</b>」，不是「<b>該不該賣</b>」。'
              '</div>')
 
+    # ── 篩選列（2026-09-06 Leo 指定）────────────────────────────────
+    # ⚠️ 這頁**不上投資站**，所以刻意不套 board_theme 的 .ctrl/.seg（那是站上頁面
+    # 的統一元件）。這裡自己寫一組最小的，少一層相依、也不會反過來影響站上樣式。
+    owners = []
+    for r in rows:
+        w = who_tag(r["acct"])[1]
+        if w not in owners:
+            owners.append(w)
+    seg = ('<div class="fbar">'
+           '<div class="fg"><span class="fl">訊號</span>'
+           '<button class="fb on" data-f="kind" data-v="">全部</button>'
+           '<button class="fb" data-f="kind" data-v="both">🔴 兩條都成立</button>'
+           '<button class="fb" data-f="kind" data-v="rs">🟡 只有 RS</button></div>'
+           '<div class="fg"><span class="fl">市場</span>'
+           '<button class="fb on" data-f="mkt" data-v="">全部</button>'
+           '<button class="fb" data-f="mkt" data-v="us">美股</button>'
+           '<button class="fb" data-f="mkt" data-v="tw">台股</button></div>'
+           '<div class="fg"><span class="fl">誰的</span>'
+           '<button class="fb on" data-f="who" data-v="">全部</button>'
+           + "".join(f'<button class="fb" data-f="who" data-v="{esc(o)}">{esc(o)}</button>'
+                     for o in owners)
+           + '</div>'
+           '<div class="fg"><span class="fl">損益</span>'
+           '<button class="fb on" data-f="pnl" data-v="">全部</button>'
+           '<button class="fb" data-f="pnl" data-v="up">獲利</button>'
+           '<button class="fb" data-f="pnl" data-v="down">虧損</button></div>'
+           '<div class="fg"><input class="fq" id="fq" type="search" '
+           'placeholder="代號或名稱…" autocomplete="off">'
+           '<button class="fb" id="fclear">清除</button></div>'
+           '<div class="fcount" id="fcount"></div>'
+           '</div>')
+    B.append(seg)
+
     B.append('<div class="sb"><h2>合計</h2>' + "".join([
         '<div class="kv">',
         f'<div class="c"><div class="k">🔴 兩條都成立</div><div class="v">{len(both)} 檔</div>'
@@ -369,9 +515,10 @@ def render(rows, meta):
         f'<div class="v {"pos" if pnl_b+pnl_r >= 0 else "neg"}">{pnl_b+pnl_r:+,.0f}</div>'
         f'<div class="s">🔴 {pnl_b:+,.0f}　🟡 {pnl_r:+,.0f}</div></div>',
         '</div>',
-        '<div class="sub">⚠️ <b>市值與損益的單位是新台幣</b>（美股已換算）；'
-        '<b>平均成本與現價則是原幣</b>（美股美元、台股台幣）——'
-        '這樣同一列的成本與現價才能直接比。<br>'
+        '<div class="sub">⚠️ <b>表格裡每一列都是原幣</b>——美股標 US$、台股標 NT$，'
+        '成本、現價、市值、損益四欄同單位，可以直接比。<br>'
+        '⚠️ <b>上面四格的合計是新台幣</b>（美股用報表自己的匯率換算過）——'
+        '跨帳戶跨幣別要相加，只能用同一種單位。<br>'
         '⚠️ 上面四格的百分比分母是<b>全部四個帳戶合計</b>；'
         '表格裡每一列的「佔部位」分母是<b>那一檔所屬帳戶自己的總市值</b>'
         '——四個帳戶是不同的錢與不同的決策權，混在一起算佔比會失真。<br>'
@@ -419,7 +566,7 @@ def render(rows, meta):
                      f"符合老墨出場條件的持股　{len(both)+len(rs_only)} 檔／"
                      f"佔部位 {(mv_b+mv_r)/tot*100:.1f}%　訊號日 {esc(meta['asof'])}",
                      nav_abs())
-            + "".join(B) + "</div></body></html>")
+            + "".join(B) + "</div>" + FILTER_JS + "</body></html>")
 
 
 def main():
