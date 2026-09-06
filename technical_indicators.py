@@ -207,7 +207,22 @@ def mansfield_rs(closes, bench_closes, short=20, long=250):  # 2026-09-03 短線
 
 
 def mansfield_rs_series(closes, bench_closes, win):
-    """整段序列版（給畫圖用），不是只取最新一值。"""
+    """整段序列版（給畫圖用），不是只取最新一值。
+
+    🔴 2026-09-06 發現：這支跟上面的 `mansfield_rs()` **算的不是同一個東西**。
+      · `mansfield_rs`        平均窗口是 rs_raw[-win:]   → **含**當日
+      · `mansfield_rs_series` 平均窗口是 rs_raw[i-win:i] → **不含**當日
+    同一檔同一天會給出兩個數字（ONON 2026-09-04：-21.38 vs -21.83）。
+
+    ⚠️ 這不是顯示問題，兩邊都在跑真的判斷：
+      · 燈四（RS60 乖離 > +3%）走 `mansfield_rs`（combo_scan）
+      · 出場訊號「RS(60) 跌破自身均線」走這一支（trade_plan）
+    也就是說**亮燈用的 RS 和判出場用的 RS 定義不同**。
+
+    ⚠️ 還沒有統一——要用哪一個定義是投資方法的決定，不是實作細節，
+    照「不自行變更投資方法門檻」的鐵則，等 Leo 決定（2026-09-06 已回報）。
+    在那之前，兩邊維持原狀，這段註解就是給下一個看到數字對不上的人看的。
+    """
     n = min(len(closes), len(bench_closes))
     c = np.array(closes[-n:], dtype=float)
     b = np.array(bench_closes[-n:], dtype=float)
