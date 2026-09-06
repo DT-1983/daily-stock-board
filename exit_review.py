@@ -222,7 +222,14 @@ def gather():
         })
     # 部位大的排前面——要動的話那才是真的影響總資產的
     rows.sort(key=lambda x: -(x["mv"] or 0))
+    # 「只有 ST 翻空」那組不列在這頁，但要**數出來寫在頁面上**——
+    # 有一盞「ST 翻空」的燈卻看不到那種情況，會以為它不存在。
+    st_only = sum(1 for n2 in held
+                  if (by.get(n2) and not by[n2].get("bull")
+                      and not (by[n2].get("rs_short") is not None
+                               and by[n2]["rs_short"] < 0)))
     return rows, {"asof": asof, "total_mv": total_mv, "n_pos": len(pos),
+                  "st_only": st_only,
                   "acct_mv": dict(acct_mv), "filled": filled}
 
 
@@ -250,23 +257,10 @@ CSS = """
 .exempty{padding:14px 4px;color:var(--dim);font-size:12.5px}
 /* 現價已經高過貴價（洪瑞泰法）——用底色標，比多一欄文字省版面 */
 .ex td.overexp{color:var(--neg,#f87171);background:rgba(248,113,113,.07)}
-.exwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px}
-.scrollhint{font-size:10.5px;color:var(--dim);text-align:right;margin-top:4px}
-.ex{width:100%;min-width:1020px;border-collapse:collapse;font-size:12.5px}
-.ex th{text-align:right;padding:7px 7px;color:var(--dim);font-weight:600;font-size:11px;
- border-bottom:1px solid var(--line);white-space:nowrap}
-.ex th:first-child,.ex th:nth-child(2){text-align:left}
-.ex td{padding:9px 7px;border-bottom:1px solid var(--line2);text-align:right;
- font-family:'Fira Code',monospace;font-variant-numeric:tabular-nums;
- color:var(--muted);white-space:nowrap}
-.ex td:first-child,.ex td:nth-child(2){text-align:left;font-family:inherit}
-.ex td.tk{color:var(--ink);font-weight:700}
-/* ⚠️ 不要叫 .nm——board_theme 的 .nm 是共用樣式，帶 max-width:190px＋ellipsis，
-   在手機卡片版（td 變 block）會把整列寬度鎖成 190px，右邊露出一塊空底色。
-   ⭐ 共用元件的 class 名不是中性的，取名前先 grep board_theme。 */
-.ex td.exnm,.ex td.exwho{color:var(--dim);font-size:11.5px;max-width:190px;
- overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.ex tr.big td{background:rgba(248,113,113,.05)}
+/* ⚠️ 2026-09-06：改成卡片列時我把 .exwrap 之後的樣式整段砍掉，
+   結果連**跟表格無關**的 .pos/.warnbox/.kv（合計那四格）也一起沒了，
+   合計區塊變成一堆裸文字。⭐ 用「從某個選擇器砍到區塊結尾」的方式刪 CSS，
+   刪掉的範圍會遠大於想刪的東西。以下是撿回來的部分。 */
 .pos{color:var(--up)}.neg{color:var(--down)}.dim{color:var(--dim)}
 .warnbox{background:var(--surface);border:1px solid var(--line);
  border-left:3px solid var(--warn);border-radius:10px;padding:12px 15px;margin:12px 0;
@@ -307,46 +301,103 @@ CSS = """
  .ex td.tk::before,.ex td.exnm::before{content:none}
  .ex td.tk{font-size:15px}
 }
+
+/* ── 三燈摘要 + 展開細節（2026-09-06 Leo：「可以做像燈號那樣？」）──
+   改成 <details> 之後**不再是表格**，所以沒有 min-width、沒有橫捲，
+   手機與桌機共用同一份版面，不用再維護兩套排版。 */
+.rows{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.row{border:1px solid var(--line);border-radius:10px;background:var(--surface);
+ overflow:hidden}
+.row.big{border-color:rgba(248,113,113,.45)}
+.row[open]{border-color:var(--accent,#3b82f6)}
+/* ⚠️ 要 width:100%+box-sizing：<summary> 設 display:grid 之後在 Chrome 上是
+   縮成內容寬（實測桌機 642px 塞在 1037px 的列裡，右邊空一大塊）。 */
+.sm{list-style:none;cursor:pointer;display:grid;align-items:center;gap:6px 10px;
+ width:100%;box-sizing:border-box;
+ padding:9px 12px;
+ grid-template-columns:minmax(120px,1.5fr) auto minmax(46px,.5fr)
+                       minmax(62px,.6fr) minmax(62px,.6fr) minmax(84px,.8fr)}
+.sm::-webkit-details-marker{display:none}
+.sm:hover{background:rgba(148,163,184,.06)}
+.c1{font-weight:700;font-size:14px;color:var(--ink);display:flex;
+ align-items:baseline;gap:7px;min-width:0}
+.nm2{font-weight:400;font-size:11px;color:var(--dim);overflow:hidden;
+ text-overflow:ellipsis;white-space:nowrap}
+.c2{display:flex;gap:5px;flex-wrap:wrap}
+.c3{font-size:11px;color:var(--dim);text-align:right}
+.c4,.c5,.c6{text-align:right;font-size:12.5px;
+ font-variant-numeric:tabular-nums}
+.c6{font-weight:600}
+.row[open] .sm{border-bottom:1px solid var(--line2)}
+
+/* 燈：亮的有底色，暗的只留輪廓——一眼掃得出哪幾檔三盞全亮 */
+.lamp{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;
+ padding:2px 8px 2px 6px;border-radius:999px;border:1px solid var(--line);
+ color:var(--dim);white-space:nowrap}
+.lamp i{width:7px;height:7px;border-radius:50%;background:var(--line);
+ flex:0 0 auto}
+.lamp.off{opacity:.42}
+.lamp.st.on{color:#fbbf24;border-color:rgba(251,191,36,.5);
+ background:rgba(251,191,36,.10)}
+.lamp.st.on i{background:#fbbf24}
+.lamp.all.on{color:#f87171;border-color:rgba(248,113,113,.5);
+ background:rgba(248,113,113,.10)}
+.lamp.all.on i{background:#f87171}
+.lamp.val.on{color:#c084fc;border-color:rgba(192,132,252,.5);
+ background:rgba(192,132,252,.10)}
+.lamp.val.on i{background:#c084fc}
+
+/* 展開的細節：自動排欄，寬螢幕四欄、手機兩欄，不用寫斷點 */
+.det{display:grid;gap:1px;background:var(--line2);
+ grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.d{background:var(--surface);padding:7px 11px;display:flex;
+ justify-content:space-between;align-items:baseline;gap:8px;font-size:12px}
+.d.wide{grid-column:1/-1}
+.d b{font-weight:400;color:var(--dim);font-size:10.5px}
+.d span{font-variant-numeric:tabular-nums}
+.d.overexp{background:rgba(248,113,113,.08)}
+.d.overexp span{color:var(--neg,#f87171)}
+.expandbar{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
+@media(max-width:620px){
+ /* 手機：燈自己一行，數字擠在第二行——欄位再細就讀不了了 */
+ .sm{grid-template-columns:1fr auto auto auto;gap:5px 8px}
+ .c1{grid-column:1/-1}
+ .c2{grid-column:1/-1}
+ .c3{text-align:left}
+}
 """
 
 
 FILTER_JS = r'''
 <script>
 (function(){
-  // 篩選：四組按鈕（互斥）＋一個關鍵字框。
-  // ⚠️ 只切 <tr> 的 display，不重排 DOM——桌機表格版與手機卡片版共用同一份列，
-  //    重排會把卡片版的結構弄壞。
+  // 篩選：五組按鈕（各組互斥）＋關鍵字。作用對象是 <details class="row">。
+  // ⚠️ 只切 hidden，不重排 DOM——展開狀態（open）才不會因為篩選而被重置。
   var F = {kind:"", mkt:"", who:"", pnl:"", val:""};
   var q = "";
-  var rows = Array.prototype.slice.call(document.querySelectorAll(".ex tbody tr"));
+  var rows = Array.prototype.slice.call(document.querySelectorAll("details.row"));
 
   function apply(){
     var shown = 0, mv = 0;
-    rows.forEach(function(tr){
-      var d = tr.dataset;
+    rows.forEach(function(el){
+      var d = el.dataset;
       var ok = (!F.kind || d.kind === F.kind)
             && (!F.mkt  || d.mkt  === F.mkt)
             && (!F.who  || d.who  === F.who)
             && (!F.pnl  || d.pnl  === F.pnl)
             && (!F.val  || d.val  === F.val)
             && (!q      || (d.q || "").indexOf(q) >= 0);
-      tr.hidden = !ok;
-      if (ok){
-        shown++;
-        var c = tr.querySelector("td[data-mv]");
-        if (c) mv += parseFloat(c.dataset.mv) || 0;
-      }
+      el.hidden = !ok;
+      if (ok){ shown++; mv += parseFloat(d.mv) || 0; }
     });
-    // 每個區塊（🔴/🟡）如果一列都不剩，整塊給一句話，不要留一張空表格
-    document.querySelectorAll(".exwrap").forEach(function(w){
-      var vis = w.querySelectorAll("tbody tr:not([hidden])").length;
+    // 某一組被篩空就換一句話，不要留一個空盒子
+    document.querySelectorAll(".rows").forEach(function(w){
+      var vis = w.querySelectorAll("details.row:not([hidden])").length;
       w.style.display = vis ? "" : "none";
-      var hint = w.nextElementSibling;
-      if (hint && hint.classList.contains("scrollhint")) hint.style.display = vis ? "" : "none";
-      var em = w.parentNode.querySelector(".exempty");
+      var em = w.parentNode.querySelector(".exempty.f");
       if (!em){
         em = document.createElement("div");
-        em.className = "exempty";
+        em.className = "exempty f";
         em.textContent = "這一組沒有符合篩選條件的標的。";
         w.parentNode.insertBefore(em, w.nextSibling);
       }
@@ -377,6 +428,18 @@ FILTER_JS = r'''
     });
     apply();
   });
+
+  // 全部展開／收合：只作用在**目前篩選後看得到的**那些，
+  // 不然按一下會把被隱藏的 30 幾檔也展開，收回去時一頭霧水。
+  var ex = document.getElementById("fexpand");
+  if (ex){
+    ex.addEventListener("click", function(){
+      var vis = rows.filter(function(r){ return !r.hidden; });
+      var anyClosed = vis.some(function(r){ return !r.open; });
+      vis.forEach(function(r){ r.open = anyClosed; });
+      ex.textContent = anyClosed ? "全部收合" : "全部展開";
+    });
+  }
   apply();
 })();
 </script>
@@ -415,87 +478,105 @@ def render(rows, meta):
                 return ic_, lab
         return "", acct or "—"
 
+    def lamps(r):
+        """三盞燈（Leo 2026-09-06 指定的三個條件）。回 (html, 亮了幾盞, 標籤list)。
+
+        ⚠️ ①②不是獨立事件而是**階段**：②成立時①一定也成立（②＝①再加 RS）。
+        照樣兩盞都畫出來，因為老墨的規則就是分兩段執行——
+        只亮①是「賣一半」，①②都亮才是「全出」。把②畫成③的樣子會看不出階段。
+        """
+        st_flip = r["kind"] == "both"          # 這頁只收 RS 已跌破的兩組
+        all_out = r["kind"] == "both"
+        over = (r.get("over") or 0) > 0
+        # 🟡 只有 RS 跌破那組：老墨規則裡它也是「全出」，但 SuperTrend 還沒翻空。
+        # 不能把①點亮（那是假的），也不能說它沒事——所以②用不同的字。
+        rs_only = r["kind"] == "rs"
+        L = [("st", st_flip, "ST 翻空", "賣一半"),
+             ("all", all_out or rs_only, "全出",
+              "ST＋RS 都到" if all_out else "RS 跌破"),
+             ("val", over, "超過貴價",
+              f'貴 +{r["over"]:,.0f}%' if over else
+              ("—" if r.get("over") is None else f'低 {r["over"]:,.0f}%'))]
+        html = "".join(
+            f'<span class="lamp {k} {"on" if on else "off"}" title="{esc(t)}：{esc(sub)}">'
+            f'<i></i>{esc(t)}</span>' for k, on, t, sub in L)
+        return html, sum(1 for _k, on, _t, _s in L if on)
+
     def table(rs):
         if not rs:
-            return '<div class="sub">這一組目前沒有標的。</div>'
-        # ⚠️ 原本 52 週高與 3 年高各佔兩欄（共四欄），但實測**多數股票兩者相同**
-        # （高點就在近一年內），只有少數不同（CI：305.80 vs 353.95）。
-        # 合併成一欄「歷史高點」用 3 年高，52 週高不同時才在下面補一行。
-        head = ("<tr><th>代號</th><th>名稱</th><th>誰的</th><th>股數</th><th>平均成本</th>"
-                "<th>現價</th><th>市值</th><th>損益</th><th>報酬</th><th>佔部位</th>"
-                "<th>貴價</th><th>歷史高點</th><th>距高點</th>"
-                "<th>RS60</th><th>ST線</th></tr>")
-        body = []
+            return '<div class="exempty">這一組目前沒有標的。</div>'
+        out = []
         for r in rs:
-            cls = "big" if (r["w"] or 0) >= 3 else ""
-            # 篩選用的標籤。放在 <tr> 上，JS 只切 display，桌機表格版與手機卡片版
-            # 兩種排版都吃得到（卡片版的 tr 也是 display:block）。
+            lam, lit = lamps(r)
             attrs = (f' data-kind="{r["kind"]}"'
                      f' data-mkt="{"tw" if r["cur"] == "NT$" else "us"}"'
                      f' data-who="{esc(who_tag(r["acct"])[1])}"'
                      f' data-pnl="{"up" if (r["pnl"] or 0) >= 0 else "down"}"'
                      f' data-val="{"" if r.get("over") is None else ("over" if r["over"] > 0 else "under")}"'
+                     f' data-mv="{r["mv"] or 0:.0f}"'
                      f' data-q="{esc((str(r["tk"]) + " " + str(r["name"])).lower())}"')
-            body.append(
-                f'<tr class="{cls}"{attrs}>'
-                f'<td class="tk" data-h="代號">{esc(r["tk"])}'
-                + ('<span class="dim" style="font-size:10px"> ⚠️補算</span>'
-                   if r.get("filled") else "") + "</td>"
-                f'<td class="exnm" data-h="名稱">{esc(r["name"])}</td>'
-                f'<td class="exwho" data-h="誰的">'
-                + ('<span class="dim">⚠️ 報表查無部位</span>' if r.get("nopos")
-                   else f'{who_tag(r["acct"])[0]} {esc(who_tag(r["acct"])[1])}')
-                + "</td>"
-                f'<td data-h="股數">{n(r["sh"], 2)}</td>'
-                f'<td data-h="平均成本">{n(r["avg"])}</td>'
-                f'<td data-h="現價">{n(r["px"])}</td>'
-                # 市值/損益改用**原幣**（美股美元、台股台幣），跟同一列的成本與
-                # 現價同單位。台幣值仍留在 data-mv 供合計與排序用。
-                f'<td data-h="市值" data-mv="{r["mv"] or 0:.0f}">'
-                f'<span class="cur">{r["cur"]}</span>'
-                f'{n(r["mv_n"] if r["mv_n"] is not None else r["mv"], 0)}</td>'
-                f'<td data-h="損益">'
-                f'{sgn(r["pnl_n"] if r["pnl_n"] is not None else r["pnl"], 0, "")}</td>'
-                f'<td data-h="報酬">{sgn(r["pnl_pct"])}</td>'
-                f'<td data-h="佔部位">{n(r["w"], 1, "%")}</td>'
-                # 貴價（洪瑞泰法）＋「現價比貴價貴多少」。
-                # 超過就整格標紅——這是 Leo 要的「是否超過貴價」，
-                # 用顏色講比多一欄文字省版面。
-                f'<td data-h="貴價" class="{"overexp" if (r.get("over") or 0) > 0 else ""}">'
-                f'{n(r["exp"])}'
-                + (f'<br><span class="dim" style="font-size:10px">'
-                   f'{"貴 +" if r["over"] > 0 else "低 "}{r["over"]:,.0f}%</span>'
-                   if r.get("over") is not None else "")
-                + "</td>"
-                f'<td data-h="歷史高點">{n(r["hi3y"])}'
-                + (f'<br><span class="dim" style="font-size:10px">{esc(r["hi3y_d"])}</span>'
-                   if r.get("hi3y_d") else "")
-                + (f'<br><span class="dim" style="font-size:10px">52週 {r["hi52"]:,.2f}</span>'
-                   if (r.get("hi52") and r.get("hi3y")
-                       and abs(r["hi52"] - r["hi3y"]) > 0.01) else "")
-                + "</td>"
-                f'<td data-h="距高點">{sgn(r["dd3y"])}</td>'
-                f'<td data-h="RS60">{sgn(r["rs"], 2)}</td>'
-                f'<td data-h="SuperTrend線">{n(r["st_line"])}'
-                + (f'<br><span class="dim" style="font-size:10px">'
-                   f'距 {r["gap"]:+.1f}%</span>' if r.get("gap") is not None else "")
-                + "</td></tr>")
-        # 🔴 2026-09-06 Leo 回報「格式跑掉」：表格比 .wrap 的 1100px 寬，
-        # 右邊兩欄（RS60／SuperTrend 線）直接被切掉看不到，而且不能橫捲。
-        # 硬規則本來就寫著「寬內容要放在自己的 overflow-x 容器裡，頁面本體不能橫捲」，
-        # 我做的時候漏了。⭐ 欄位一多就要先想版面，不是先塞欄位。
-        # ⚠️ 手機版的卡片排版靠 `.ex thead{display:none}` 把標題列藏起來，
-        # 所以標題**必須真的包在 <thead> 裡**——原本是裸的 <tr><th>，那條 CSS
-        # 等於沒作用，手機上標題列會跟著卡片一起露出來擠成一團（9/6 實測）。
-        return (f'<div class="exwrap"><table class="ex"><thead>{head}</thead>'
-                f'<tbody>{"".join(body)}</tbody></table></div>'
-                '<div class="scrollhint">← 表格可左右滑動 →</div>')
+            big = " big" if (r["w"] or 0) >= 3 else ""
+            # 摘要列：代號｜名稱｜誰的｜三燈｜現價｜報酬｜市值
+            # 這七項是「要不要點開」的判斷依據，其餘全部收在裡面。
+            head = (f'<summary class="sm">'
+                    f'<span class="c1">{esc(r["tk"])}'
+                    + ('<span class="dim" style="font-size:10px"> ⚠️補算</span>'
+                       if r.get("filled") else "")
+                    + f'<span class="nm2">{esc(r["name"])}</span></span>'
+                    f'<span class="c2">{lam}</span>'
+                    f'<span class="c3">{esc(who_tag(r["acct"])[1])}</span>'
+                    f'<span class="c4">{n(r["px"])}</span>'
+                    f'<span class="c5">{sgn(r["pnl_pct"])}</span>'
+                    f'<span class="c6"><span class="cur">{r["cur"]}</span>'
+                    f'{n(r["mv_n"] if r["mv_n"] is not None else r["mv"], 0)}</span>'
+                    f'</summary>')
+
+            def kv(k, v, cls=""):
+                return f'<div class="d{" " + cls if cls else ""}"><b>{k}</b><span>{v}</span></div>'
+
+            body = ['<div class="det">']
+            if r.get("nopos"):
+                body.append('<div class="d wide"><b>部位</b>'
+                            '<span class="dim">⚠️ 報表查無部位</span></div>')
+            body += [
+                kv("股數", n(r["sh"], 2)),
+                kv("平均成本", n(r["avg"])),
+                kv("現價", n(r["px"])),
+                kv("市值", f'<span class="cur">{r["cur"]}</span>'
+                   + n(r["mv_n"] if r["mv_n"] is not None else r["mv"], 0)),
+                kv("損益", sgn(r["pnl_n"] if r["pnl_n"] is not None else r["pnl"], 0, "")),
+                kv("報酬", sgn(r["pnl_pct"])),
+                kv("佔所屬帳戶", n(r["w"], 1, "%")),
+                kv("貴價（洪瑞泰）",
+                   n(r["exp"]) + (f' <span class="dim">'
+                                  f'{"貴 +" if (r["over"] or 0) > 0 else "低 "}'
+                                  f'{r["over"]:,.0f}%</span>'
+                                  if r.get("over") is not None else ""),
+                   "overexp" if (r.get("over") or 0) > 0 else ""),
+                kv("俗價（洪瑞泰）", n(r.get("cheap"))),
+                kv("SuperTrend 線",
+                   n(r["st_line"]) + (f' <span class="dim">距 {r["gap"]:+.1f}%</span>'
+                                      if r.get("gap") is not None else "")),
+                kv("RS60", sgn(r["rs"], 2)),
+                kv("歷史高點（3年）",
+                   n(r["hi3y"]) + (f' <span class="dim">{esc(r["hi3y_d"])}</span>'
+                                   if r.get("hi3y_d") else "")),
+                kv("距高點", sgn(r["dd3y"])),
+                kv("52 週高", n(r["hi52"])),
+                kv("距 52 週高", sgn(r["dd52"])),
+            ]
+            body.append("</div>")
+            out.append(f'<details class="row{big}"{attrs}>{head}'
+                       + "".join(body) + "</details>")
+        return '<div class="rows">' + "".join(out) + "</div>"
+
 
     both = [r for r in rows if r["kind"] == "both"]
     rs_only = [r for r in rows if r["kind"] == "rs"]
     mv_b = sum(r["mv"] or 0 for r in both)
     mv_r = sum(r["mv"] or 0 for r in rs_only)
     tot = meta["total_mv"] or 1
+    n_st_only = meta.get("st_only", 0)
     n_over = sum(1 for r in rows if (r.get("over") or 0) > 0)
     n_under = sum(1 for r in rows if r.get("over") is not None and r["over"] <= 0)
     n_noval = sum(1 for r in rows if r.get("over") is None)
@@ -545,7 +626,8 @@ def render(rows, meta):
            '<button class="fb" data-f="val" data-v="under">未超過</button></div>'
            '<div class="fg"><input class="fq" id="fq" type="search" '
            'placeholder="代號或名稱…" autocomplete="off">'
-           '<button class="fb" id="fclear">清除</button></div>'
+           '<button class="fb" id="fclear">清除</button>'
+           '<button class="fb" id="fexpand">全部展開</button></div>'
            '<div class="fcount" id="fcount"></div>'
            '</div>')
     B.append(seg)
@@ -565,7 +647,15 @@ def render(rows, meta):
         '</div>',
         # 貴價涵蓋率要寫出來——**「沒有貴價」跟「沒超過貴價」是兩件事**，
         # 不寫的話那幾檔在「超過/未超過」兩個篩選裡都不出現，看起來像不存在。
-        f'<div class="sub">📐 <b>貴價</b>用洪瑞泰法（美股預期 EPS、台股實績 EPS），'
+        # ⚠️ 有了「ST 翻空」這盞燈，就一定要講「只有 ST 翻空」那組不在這頁——
+        # 不講的話那盞燈永遠不會單獨亮，看起來像那種情況不存在。
+        # ⚠️ **沒有自己把那幾檔加進來**：母體是 Leo 9/6 指定的（兩條都成立＋
+        #    只有 RS 跌破），改母體是他的決定不是我的。
+        f'<div class="sub">🚦 三盞燈＝老墨規則的三個條件：<b>ST 翻空</b>（賣一半）／'
+        f'<b>全出</b>（ST＋RS 都到，或 RS 已跌破）／<b>超過貴價</b>。點一列展開細節。<br>'
+        f'⚠️ <b>「只有 ST 翻空、RS 還沒跌破」那組（目前 {n_st_only} 檔）不在這頁</b>'
+        f'——你 9/6 指定的範圍是「兩條都成立」與「只有 RS 跌破」。要加說一聲。<br>'
+        f'📐 <b>貴價</b>用洪瑞泰法（美股預期 EPS、台股實績 EPS），'
         f'讀每日 07:33 算好的快取，跟站上其他頁同一個來源。'
         f'<b>{n_over} 檔已經超過貴價</b>，{n_under} 檔還沒，'
         f'<b>{n_noval} 檔沒有貴價資料</b>（財報抓不到 EPS）——'
