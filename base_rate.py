@@ -456,7 +456,7 @@ def default_tickers():
     except Exception:
         pass
     try:
-        # 2026-08-31：監控母體（小孩的券商帳戶 + Leo 的台股繼承帳戶）本來完全不在
+        # 2026-08-31：監控母體（小孩的券商帳戶 + Leo 的繼承台股帳戶）本來完全不在
         # 名單裡，只有財報快訊看得到。台股代號要補後綴才查得到月營收共識，
         # 用 tw_symbol.resolve 而不是硬掛 .TW——上櫃股要 .TWO。
         import tw_symbol
