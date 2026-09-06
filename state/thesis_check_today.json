@@ -1,65 +1,32 @@
 {
- "date": "2026-09-04",
+ "date": "2026-09-05",
  "triggered": [
   [
-   "1560",
-   "RS 跌破60MA｜RS(60日)由未跌破轉為跌破自身均線，代表相對強弱轉弱",
+   "APD",
+   "RS 跌破60MA｜RS(60日)由現值2.53轉為跌破自身均線，代表相對強度轉弱",
    false,
-   "trend"
+   "trend",
+   "rs_below"
   ],
   [
-   "CCJ",
-   "RS 站回60MA｜RS(60日)重新站回自身60日均線之上",
+   "LIN",
+   "SuperTrend 翻多｜SuperTrend由空翻多，代表個股趨勢重新轉強",
    false,
-   "trend"
+   "trend",
+   "supertrend_bull"
   ],
   [
-   "GLW",
-   "RS 跌破60MA｜個股RS(60日)由未跌破轉為跌破自身均線，確認轉弱",
-   true,
-   "trend"
-  ],
-  [
-   "CVSA",
-   "RS 跌破60MA｜RS(60日)由目前未跌破轉為跌破自身均線",
-   true,
-   "trend"
-  ],
-  [
-   "HIG",
-   "SuperTrend 翻多｜SuperTrend由空翻多，代表下彎趨勢結束",
-   true,
-   "trend"
-  ],
-  [
-   "IX",
-   "RS 站回60MA｜RS(60日)重新站回自身60日均線，代表相對強度由弱轉強",
-   true,
-   "trend"
-  ],
-  [
-   "TLT",
-   "SuperTrend 翻多｜SuperTrend由空翻多，代表下跌趨勢反轉，出場建議失效",
-   true,
-   "trend"
-  ],
-  [
-   "UHS",
-   "SuperTrend 翻多｜SuperTrend由空翻多，代表下降趨勢反轉，先前出場判斷可能錯誤",
-   true,
-   "trend"
-  ],
-  [
-   "XYLG",
-   "RS 跌破60MA｜RS(60日)跌破自身均線，代表相對強度轉弱，此續抱判斷失效",
-   true,
-   "trend"
+   "7781",
+   "RS 跌破60MA｜RS(60日)由未跌破轉為跌破自身均線，代表相對強弱轉弱，產業/個股動能判斷失效",
+   false,
+   "trend",
+   "rs_below"
   ]
  ],
  "near": [
   [
-   "WM",
-   "距失效線 220.59 僅 0.5%（現價 221.72）",
+   "ORCL",
+   "距失效線 159.4 僅 0.4%（現價 158.78）",
    false,
    "value"
   ]
@@ -276,25 +243,19 @@
    "value"
   ],
   [
-   "2618.TW",
+   "2618",
    "2026全年營收年增低於歷史中位數+6%，代表成長不如共識預期、容錯空間耗盡",
    false,
    "value"
   ],
   [
-   "2731.TW",
-   "毛利率跌破過去15季區間下緣10.0%（現值14.3%），代表獲利能力惡化超出歷史範圍",
-   false,
-   "value"
-  ],
-  [
-   "4763.TW",
+   "4763",
    "下次財報ROE跌破20%，或盈再率轉為非ideal區間，代表體質轉弱",
    false,
    "value"
   ],
   [
-   "5520.TWO",
+   "5520",
    "盈再率由acceptable轉為unacceptable，代表資本再投入報酬率轉差（下次財報查證）",
    false,
    "value"
@@ -406,12 +367,6 @@
    "下季營收達成或超越季增+9%（現行共識前提要求），證明市場期待並非過度樂觀",
    false,
    "value"
-  ],
-  [
-   "ENB",
-   "RS(60日)跌破自身均線，確認相對強度轉弱（⚠️登錄當天即成立，條件寫成現況描述非未來事件）",
-   false,
-   "trend"
   ],
   [
    "ENB",
@@ -564,7 +519,13 @@
    "value"
   ],
   [
-   "2313.TW",
+   "2303",
+   "RS(60日)由未跌破轉為跌破其均線，代表相對強度轉弱（⚠️登錄當天即成立，條件寫成現況描述非未來事件）",
+   true,
+   "trend"
+  ],
+  [
+   "2313",
    "洪瑞泰品質關於下次覆核轉為「通過」，代表體質面轉強，原偏貴疑慮可能是暫時性錯判",
    true,
    "value"
@@ -727,12 +688,6 @@
   ],
   [
    "GOOG",
-   "RS(60日)跌破自身均線，代表相對強弱轉弱（⚠️登錄當天即成立，條件寫成現況描述非未來事件）",
-   true,
-   "trend"
-  ],
-  [
-   "GOOG",
    "單季毛利率跌破58%，代表目前結構性高毛利優勢開始鬆動",
    true,
    "value"
@@ -871,13 +826,7 @@
   ],
   [
    "UHS",
-   "洪瑞泰品質關由失效轉為通過，代表體質疑慮解除，可上修為續抱/可買",
-   true,
-   "value"
-  ],
-  [
-   "UHS",
-   "下一季單季營收季增低於2%（未達共識隱含所需成長速度），代表「預估達標可期」的推論失準",
+   "單季營收季增低於+2%（未達成本年共識18.6B所需步調），坐實品質疑慮",
    true,
    "value"
   ],
@@ -888,14 +837,8 @@
    "value"
   ],
   [
-   "2454.TW",
-   "洪瑞泰品質關轉為通過（quality gate重新達標），貴俗價估值才具參考性",
-   true,
-   "value"
-  ],
-  [
-   "2454.TW",
-   "毛利率回升至24季區間中位48.1%以上（現況46.2%，位階25%）",
+   "2454",
+   "單季獲利年增率明顯低於高盛預估59%年複合成長軌道，代表獲利假設落空",
    true,
    "value"
   ],
@@ -908,18 +851,6 @@
   [
    "CEG",
    "下半年營收季增顯著優於共識門檻(如達15%以上)，顯示基本面加速超乎預期",
-   true,
-   "value"
-  ],
-  [
-   "2454",
-   "單季獲利年增率明顯低於高盛預估59%年複合成長軌道，代表獲利假設落空",
-   true,
-   "value"
-  ],
-  [
-   "2303",
-   "洪瑞泰品質關由目前的「失效」重新轉為「通過」，代表基本面警訊解除",
    true,
    "value"
   ],
@@ -937,21 +868,9 @@
   ],
   [
    "BTDR",
-   "SuperTrend由空翻多，代表空頭訊號失效，可重新評估進場（⚠️登錄當天即成立，條件寫成現況描述非未來事件）",
-   false,
-   "trend"
-  ],
-  [
-   "BTDR",
    "單季營收季增低於+31%（未達共識隱含之成長門檻，於下次財報公布時查證）",
    false,
    "value"
-  ],
-  [
-   "GOOGL",
-   "RS(60日)跌破自身均線，代表個股相對產業轉弱（⚠️登錄當天即成立，條件寫成現況描述非未來事件）",
-   false,
-   "trend"
   ],
   [
    "GOOGM",
@@ -973,11 +892,401 @@
   ]
  ],
  "healthy": {
-  "held": 187,
-  "watch": 221
+  "held": 185,
+  "watch": 183
  },
- "uncovered": [
-  "UHS"
- ],
- "covered_count": 77
+ "uncovered": [],
+ "covered_count": 78,
+ "exit_state": [
+  [
+   "AAOI",
+   true,
+   true
+  ],
+  [
+   "ACGL",
+   true,
+   true
+  ],
+  [
+   "AGO",
+   true,
+   true
+  ],
+  [
+   "AMD",
+   true,
+   true
+  ],
+  [
+   "API",
+   true,
+   true
+  ],
+  [
+   "ARKQ",
+   true,
+   true
+  ],
+  [
+   "ARKX",
+   true,
+   true
+  ],
+  [
+   "BA",
+   true,
+   true
+  ],
+  [
+   "BCS",
+   true,
+   true
+  ],
+  [
+   "BRK-B",
+   true,
+   true
+  ],
+  [
+   "C",
+   true,
+   true
+  ],
+  [
+   "CCL",
+   true,
+   true
+  ],
+  [
+   "CI",
+   true,
+   true
+  ],
+  [
+   "CLS",
+   true,
+   true
+  ],
+  [
+   "CPA",
+   true,
+   true
+  ],
+  [
+   "FNF",
+   true,
+   true
+  ],
+  [
+   "HENKY",
+   true,
+   true
+  ],
+  [
+   "KR",
+   true,
+   true
+  ],
+  [
+   "ON",
+   true,
+   true
+  ],
+  [
+   "PHIN",
+   true,
+   true
+  ],
+  [
+   "PHM",
+   true,
+   true
+  ],
+  [
+   "R",
+   true,
+   true
+  ],
+  [
+   "TFC",
+   true,
+   true
+  ],
+  [
+   "TSM",
+   true,
+   true
+  ],
+  [
+   "2303",
+   false,
+   true
+  ],
+  [
+   "AER",
+   false,
+   true
+  ],
+  [
+   "AES",
+   false,
+   true
+  ],
+  [
+   "ALL",
+   true,
+   false
+  ],
+  [
+   "BAC",
+   true,
+   false
+  ],
+  [
+   "BEN",
+   true,
+   false
+  ],
+  [
+   "BWA",
+   false,
+   true
+  ],
+  [
+   "COHR",
+   false,
+   true
+  ],
+  [
+   "CVSA",
+   false,
+   true
+  ],
+  [
+   "GLW",
+   false,
+   true
+  ],
+  [
+   "GOOG",
+   false,
+   true
+  ],
+  [
+   "GSK",
+   false,
+   true
+  ],
+  [
+   "HIG",
+   false,
+   true
+  ],
+  [
+   "HPE",
+   true,
+   false
+  ],
+  [
+   "IX",
+   false,
+   true
+  ],
+  [
+   "MRVL",
+   false,
+   true
+  ],
+  [
+   "MU",
+   true,
+   false
+  ],
+  [
+   "TLT",
+   false,
+   true
+  ],
+  [
+   "TSLA",
+   false,
+   true
+  ],
+  [
+   "006208",
+   false,
+   false
+  ],
+  [
+   "2313",
+   false,
+   false
+  ],
+  [
+   "2454",
+   false,
+   false
+  ],
+  [
+   "2850",
+   false,
+   false
+  ],
+  [
+   "2881",
+   false,
+   false
+  ],
+  [
+   "2882",
+   false,
+   false
+  ],
+  [
+   "2884",
+   false,
+   false
+  ],
+  [
+   "2891",
+   false,
+   false
+  ],
+  [
+   "AAPL",
+   false,
+   false
+  ],
+  [
+   "ARKG",
+   false,
+   false
+  ],
+  [
+   "ARKK",
+   false,
+   false
+  ],
+  [
+   "BAYRY",
+   false,
+   false
+  ],
+  [
+   "BNY",
+   false,
+   false
+  ],
+  [
+   "CEG",
+   false,
+   false
+  ],
+  [
+   "CICHY",
+   false,
+   false
+  ],
+  [
+   "CNH",
+   false,
+   false
+  ],
+  [
+   "DNKEY",
+   false,
+   false
+  ],
+  [
+   "HSBC",
+   false,
+   false
+  ],
+  [
+   "ITOCY",
+   false,
+   false
+  ],
+  [
+   "JPM",
+   false,
+   false
+  ],
+  [
+   "KNBWY",
+   false,
+   false
+  ],
+  [
+   "LH",
+   false,
+   false
+  ],
+  [
+   "LITE",
+   false,
+   false
+  ],
+  [
+   "MCK",
+   false,
+   false
+  ],
+  [
+   "MSFT",
+   false,
+   false
+  ],
+  [
+   "NVDA",
+   false,
+   false
+  ],
+  [
+   "PAA",
+   false,
+   false
+  ],
+  [
+   "SPCX",
+   null,
+   null
+  ],
+  [
+   "SSUMY",
+   false,
+   false
+  ],
+  [
+   "THC",
+   false,
+   false
+  ],
+  [
+   "TM",
+   false,
+   false
+  ],
+  [
+   "UHS",
+   false,
+   false
+  ],
+  [
+   "UNM",
+   false,
+   false
+  ],
+  [
+   "XYLG",
+   false,
+   false
+  ],
+  [
+   "XYZ",
+   false,
+   false
+  ]
+ ]
 }
