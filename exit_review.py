@@ -26,7 +26,7 @@
 ・歷史高點：price_store 的 3 年日線
 
 用法:
-    python exit_review.py            # 產出到 obis 每日看板
+    python exit_review.py            # 產出到 obis 存檔（帶日期，一次性快照）
     python exit_review.py -o x.html
 """
 import argparse
@@ -41,6 +41,18 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import obis_paths as op                                      # noqa: E402
 
+# 🔴 2026-09-06 Leo（兩次修正，順序很重要）：
+#   ① 「檔案不要顯示在網頁上」→ 不推投資站。**家人看得到那個站**，
+#      這一頁有實際持股、成本、損益、誰的帳戶。
+#   ② 「網頁還是可以每週更新」→ 所以它不是一次性的，是**每週覆寫的看板**。
+#
+# 因此放 `每日看板/`（＝程式會再寫它一次的東西）而不是 `存檔/`，檔名**不帶日期**。
+# 9/5 定的分法是「看誰會再寫它一次」，不是看更新頻率——每週覆寫仍然是覆寫，
+# 而檔名帶日期會讓 52 週堆出 52 份，還會讓「壞掉沒更新」跟「本來就是那天的」
+# 分不出來。頁內有「資料日期」，要知道新舊看那裡。
+#
+# ✅ 不公開的做法：只寫 obis、不寫 docs/、不進版控、網站導覽不連它。
+#    這三件事任何一件破掉，家人就看得到——所以排程裡**不准**加 git add。
 FNAME = "出場檢視表.html"
 
 
@@ -64,9 +76,8 @@ def gather():
     asof = scan[0].get("asof") if scan else "—"
 
     # 🔴 2026-09-06 Leo：「同時說明是誰的持股」。
-    # 原本只讀 load_holdings()（＝Leo 的 Firstrade），漏掉另外三個帳戶——
-    # 實際有 **92 筆、4 個帳戶**：Leo Firstrade 66／Leo 繼承台股 12／Ian 8／Loewe 6。
-    # 首版就是因為這樣，2303 聯電（小孩的）的部位欄印成「—」。
+    # 原本只讀 load_holdings()（＝主帳戶那一個），漏掉其餘帳戶——實際有 92 筆、
+    # 4 個帳戶。首版就是因為這樣，其中一檔（不在主帳戶裡的）部位欄印成「—」。
     # ⭐ 「持股」不是一個母體是四個，混在一起算佔比會失真——所以**佔比按各帳戶自己算**。
     rows_all = trade_plan._read_rows()
     pos = collections.defaultdict(lambda: {"sh": 0.0, "mv": 0.0, "cb": 0.0,
@@ -157,7 +168,7 @@ def gather():
         px = r.get("price")
         rows.append({
             "tk": n, "kind": kind,
-            "name": (r.get("name") or p.get("name") or "")[:22],
+            "name": (r.get("name") or p.get("name") or "")[:14],
             "px": px, "rs": r.get("rs_short"), "lit": r.get("lit"),
             "st_line": r.get("st_line"), "gap": r.get("gap_pct"),
             "sh": sh, "mv": mv, "cb": cb,
@@ -192,7 +203,9 @@ CSS = """
 .sb h2{font-size:15px;font-weight:700;color:#F5B841;margin-bottom:4px}
 .sb .sub{font-size:11.5px;color:var(--dim);margin-bottom:9px;line-height:1.7}
 .sb .sub b{color:#CBD5E1}
-.ex{width:100%;border-collapse:collapse;font-size:12.5px}
+.exwrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px}
+.scrollhint{font-size:10.5px;color:var(--dim);text-align:right;margin-top:4px}
+.ex{width:100%;min-width:940px;border-collapse:collapse;font-size:12.5px}
 .ex th{text-align:right;padding:7px 7px;color:var(--dim);font-weight:600;font-size:11px;
  border-bottom:1px solid var(--line);white-space:nowrap}
 .ex th:first-child,.ex th:nth-child(2){text-align:left}
@@ -201,7 +214,11 @@ CSS = """
  color:var(--muted);white-space:nowrap}
 .ex td:first-child,.ex td:nth-child(2){text-align:left;font-family:inherit}
 .ex td.tk{color:var(--ink);font-weight:700}
-.ex td.nm{color:var(--dim);font-size:11.5px}
+/* ⚠️ 不要叫 .nm——board_theme 的 .nm 是共用樣式，帶 max-width:190px＋ellipsis，
+   在手機卡片版（td 變 block）會把整列寬度鎖成 190px，右邊露出一塊空底色。
+   ⭐ 共用元件的 class 名不是中性的，取名前先 grep board_theme。 */
+.ex td.exnm,.ex td.exwho{color:var(--dim);font-size:11.5px;max-width:190px;
+ overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ex tr.big td{background:rgba(248,113,113,.05)}
 .pos{color:var(--up)}.neg{color:var(--down)}.dim{color:var(--dim)}
 .warnbox{background:var(--surface);border:1px solid var(--line);
@@ -214,7 +231,10 @@ CSS = """
 .kv .v{font-size:16px;font-weight:700;margin-top:3px;
  font-family:'Fira Code',monospace;font-variant-numeric:tabular-nums}
 .kv .s{font-size:10.5px;color:var(--muted);margin-top:2px}
-@media(max-width:760px){
+@media(max-width:900px){
+ .exwrap{overflow-x:visible;margin:0;padding:0}
+ .ex{min-width:0}
+ .scrollhint{display:none}
  .ex,.ex tbody,.ex tr,.ex td{display:block;width:100%}
  .ex thead{display:none}
  .ex tr{border:1px solid var(--line);border-radius:10px;margin:9px 0;
@@ -223,7 +243,10 @@ CSS = """
  .ex tr td:last-child{border-bottom:none}
  .ex td::before{content:attr(data-h);float:left;color:var(--dim);font-size:10.5px;
   font-family:inherit}
- .ex td.tk::before,.ex td.nm::before{content:none}
+ /* 手機卡片版：解掉桌機版的截字寬度；代號與名稱不加欄位標籤（它們就是卡片標題，
+    加了會變成「代號AMD」黏在一起），但「誰的」要留標籤，否則只看到一個「Leo」。 */
+ .ex td.exnm,.ex td.exwho{max-width:none;overflow:visible;white-space:normal}
+ .ex td.tk::before,.ex td.exnm::before{content:none}
  .ex td.tk{font-size:15px}
 }
 """
@@ -241,11 +264,19 @@ def render(rows, meta):
         c = "pos" if v >= 0 else "neg"
         return f'<span class="{c}">{v:+,.{d}f}{suf}</span>'
 
-    # 帳戶 → 顯示標記。⚠️ 這四個是不同的錢與不同的決策權，別混在一起看。
-    WHO = {"Firstrade": ("", "Leo 自己操作"),
-           "台股(繼承帳戶)": ("🏠", "Leo 繼承（監控不參與風控）"),
-           "子帳戶A": ("👦", "Ian"),
-           "子帳戶B": ("👧", "Loewe")}
+    # 帳戶 → 顯示標記。⚠️ 這幾個是不同的錢與不同的決策權，別混在一起看。
+    #
+    # 🔴 2026-09-06：這張對照表原本**寫死在程式裡**（券商分公司名 + 小孩的名字），
+    # 而這支程式是版控的、repo 是公開的 → 等於把家人的券商帳戶結構推上 GitHub。
+    # 產出的 HTML 一直都沒公開，但**程式碼本身也是資料**，我漏看了這一層。
+    # ⭐ 「這份輸出不公開」不代表「產生它的程式可以寫死私人資訊」。
+    #
+    # 改成讀 gitignore 的 `account_labels.json`：
+    #     {"含這段字的帳戶名": ["圖示", "顯示標籤"], ...}
+    # 找不到檔案就退回顯示帳戶名本身——功能不會壞，只是標籤不好看。
+    # 標籤刻意短——這一欄 37 列裡有 30 幾列都是同一個值，寫長只是佔寬度。
+    WHO = {k: (tuple(v) if isinstance(v, (list, tuple)) else ("", str(v)))
+           for k, v in (_load("account_labels.json", {}) or {}).items()}
 
     def who_tag(acct):
         for k, (ic_, lab) in WHO.items():
@@ -256,10 +287,12 @@ def render(rows, meta):
     def table(rs):
         if not rs:
             return '<div class="sub">這一組目前沒有標的。</div>'
-        head = ("<tr><th>代號</th><th>名稱</th><th>誰的</th><th>股數</th><th>平均成本</th><th>現價</th>"
-                "<th>市值</th><th>損益</th><th>報酬</th><th>佔部位</th>"
-                "<th>52週高</th><th>距52週高</th><th>3年高</th><th>距3年高</th>"
-                "<th>RS60</th><th>SuperTrend線</th></tr>")
+        # ⚠️ 原本 52 週高與 3 年高各佔兩欄（共四欄），但實測**多數股票兩者相同**
+        # （高點就在近一年內），只有少數不同（CI：305.80 vs 353.95）。
+        # 合併成一欄「歷史高點」用 3 年高，52 週高不同時才在下面補一行。
+        head = ("<tr><th>代號</th><th>名稱</th><th>誰的</th><th>股數</th><th>平均成本</th>"
+                "<th>現價</th><th>市值</th><th>損益</th><th>報酬</th><th>佔部位</th>"
+                "<th>歷史高點</th><th>距高點</th><th>RS60</th><th>ST線</th></tr>")
         body = []
         for r in rs:
             big = ' class="big"' if (r["w"] or 0) >= 3 else ""
@@ -268,8 +301,8 @@ def render(rows, meta):
                 f'<td class="tk" data-h="代號">{esc(r["tk"])}'
                 + ('<span class="dim" style="font-size:10px"> ⚠️補算</span>'
                    if r.get("filled") else "") + "</td>"
-                f'<td class="nm" data-h="名稱">{esc(r["name"])}</td>'
-                f'<td class="nm" data-h="誰的">'
+                f'<td class="exnm" data-h="名稱">{esc(r["name"])}</td>'
+                f'<td class="exwho" data-h="誰的">'
                 + ('<span class="dim">⚠️ 報表查無部位</span>' if r.get("nopos")
                    else f'{who_tag(r["acct"])[0]} {esc(who_tag(r["acct"])[1])}')
                 + "</td>"
@@ -280,22 +313,29 @@ def render(rows, meta):
                 f'<td data-h="損益">{sgn(r["pnl"], 0, "")}</td>'
                 f'<td data-h="報酬">{sgn(r["pnl_pct"])}</td>'
                 f'<td data-h="佔部位">{n(r["w"], 1, "%")}</td>'
-                f'<td data-h="52週高">{n(r["hi52"])}'
-                + (f'<br><span class="dim" style="font-size:10px">{esc(r["hi52_d"])}</span>'
-                   if r.get("hi52_d") else "")
-                + "</td>"
-                f'<td data-h="距52週高">{sgn(r["dd52"])}</td>'
-                f'<td data-h="3年高">{n(r["hi3y"])}'
+                f'<td data-h="歷史高點">{n(r["hi3y"])}'
                 + (f'<br><span class="dim" style="font-size:10px">{esc(r["hi3y_d"])}</span>'
                    if r.get("hi3y_d") else "")
+                + (f'<br><span class="dim" style="font-size:10px">52週 {r["hi52"]:,.2f}</span>'
+                   if (r.get("hi52") and r.get("hi3y")
+                       and abs(r["hi52"] - r["hi3y"]) > 0.01) else "")
                 + "</td>"
-                f'<td data-h="距3年高">{sgn(r["dd3y"])}</td>'
+                f'<td data-h="距高點">{sgn(r["dd3y"])}</td>'
                 f'<td data-h="RS60">{sgn(r["rs"], 2)}</td>'
                 f'<td data-h="SuperTrend線">{n(r["st_line"])}'
                 + (f'<br><span class="dim" style="font-size:10px">'
                    f'距 {r["gap"]:+.1f}%</span>' if r.get("gap") is not None else "")
                 + "</td></tr>")
-        return f'<table class="ex">{head}{"".join(body)}</table>'
+        # 🔴 2026-09-06 Leo 回報「格式跑掉」：表格比 .wrap 的 1100px 寬，
+        # 右邊兩欄（RS60／SuperTrend 線）直接被切掉看不到，而且不能橫捲。
+        # 硬規則本來就寫著「寬內容要放在自己的 overflow-x 容器裡，頁面本體不能橫捲」，
+        # 我做的時候漏了。⭐ 欄位一多就要先想版面，不是先塞欄位。
+        # ⚠️ 手機版的卡片排版靠 `.ex thead{display:none}` 把標題列藏起來，
+        # 所以標題**必須真的包在 <thead> 裡**——原本是裸的 <tr><th>，那條 CSS
+        # 等於沒作用，手機上標題列會跟著卡片一起露出來擠成一團（9/6 實測）。
+        return (f'<div class="exwrap"><table class="ex"><thead>{head}</thead>'
+                f'<tbody>{"".join(body)}</tbody></table></div>'
+                '<div class="scrollhint">← 表格可左右滑動 →</div>')
 
     both = [r for r in rows if r["kind"] == "both"]
     rs_only = [r for r in rows if r["kind"] == "rs"]
@@ -359,10 +399,16 @@ def render(rows, meta):
              '這裡給的是 52 週／3 年的絕對高點。'
              '</div></div>')
 
+    import time
+    gen = time.strftime("%Y-%m-%d %H:%M")
     B.append(f'<div class="sb"><div class="sub">'
              f'訊號資料日 <b>{esc(meta["asof"])}</b>（最後一個交易日）｜'
              f'成本與股數來自 Firstrade 報表｜高點取 price_store 3 年日線。<br>'
-             f'⚠️ 名單是<b>現在的狀態</b>不是「今天剛觸發」——多數是幾週前就跌破了。'
+             f'⚠️ 名單是<b>現在的狀態</b>不是「今天剛觸發」——多數是幾週前就跌破了。<br>'
+             # 這一頁每週日 08:30 覆寫。檔名不帶日期，所以「上次產出」要寫在頁內——
+             # 沒有它就分不出「這週沒有新變化」跟「排程已經壞掉三週了」。
+             f'🕗 本頁每週日 08:30 自動覆寫，上次產出 <b>{esc(gen)}</b>。'
+             f'<b>不會出現在投資站</b>（站上家人看得到）——只存在這台電腦與 Google Drive。'
              f'</div></div>')
 
     return ('<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">'

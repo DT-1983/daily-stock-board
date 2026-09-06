@@ -133,3 +133,6 @@ state/target_changes_today.json
 bt_sector_gics.json
 bt_mofi_*.json
 portfolios.*.before-*.json
+
+# 帳戶 → 顯示標籤（含家人姓名與券商分公司，不可進公開 repo）
+account_labels.json
