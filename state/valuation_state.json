@@ -1,596 +1,596 @@
 {
   "1227": {
     "price": 28.55,
-    "cheap": 13.67,
-    "expensive": 41.8,
+    "cheap": 14.19,
+    "expensive": 43.41,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "TW",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "1733": {
-    "price": 32.25,
-    "cheap": 17.29,
-    "expensive": 52.9,
+    "price": 32.35,
+    "cheap": 17.57,
+    "expensive": 53.75,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "TW",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "2105": {
-    "price": 30.7,
-    "cheap": 15.52,
-    "expensive": 47.46,
+    "price": 30.95,
+    "cheap": 16.89,
+    "expensive": 51.67,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "TW",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "2317": {
-    "price": 247.5,
-    "cheap": 126.75,
-    "expensive": 387.74,
+    "price": 256.0,
+    "cheap": 130.58,
+    "expensive": 399.44,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "TW",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "2412": {
-    "price": 138.0,
+    "price": 137.5,
     "cheap": 48.19,
     "expensive": 147.42,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "TW",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "3045": {
     "price": 118.0,
-    "cheap": 47.6,
-    "expensive": 145.62,
+    "cheap": 49.0,
+    "expensive": 149.9,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "TW",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "6592": {
-    "price": 60.9,
-    "cheap": 109.83,
-    "expensive": 335.96,
+    "price": 61.0,
+    "cheap": 109.01,
+    "expensive": 333.45,
     "icon": "🟢",
     "eps_basis": "changli_normalized",
     "market": "TW",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "AAOI": {
-    "price": 100.38,
+    "price": 105.53,
     "cheap": 45.13,
     "expensive": 138.06,
     "icon": "🟡",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "AAPL": {
-    "price": 328.21,
+    "price": 319.97,
     "cheap": 76.79,
     "expensive": 234.89,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "ACGL": {
-    "price": 99.83,
+    "price": 98.1,
     "cheap": 129.38,
     "expensive": 395.77,
     "icon": "🟢",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "AER": {
-    "price": 146.48,
+    "price": 145.4,
     "cheap": 159.1,
     "expensive": 486.68,
     "icon": "🟢",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "AES": {
-    "price": 14.78,
+    "price": 14.79,
     "cheap": 22.02,
-    "expensive": 67.37,
+    "expensive": 67.36,
     "icon": "🟢",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "AGO": {
-    "price": 75.82,
+    "price": 75.69,
     "cheap": 91.81,
     "expensive": 280.84,
     "icon": "🟢",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "ALL": {
-    "price": 263.11,
+    "price": 259.57,
     "cheap": 351.67,
     "expensive": 1075.76,
     "icon": "🟢",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "AMD": {
-    "price": 456.16,
+    "price": 477.57,
     "cheap": 25.2,
     "expensive": 77.09,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "API": {
-    "price": 4.17,
+    "price": 4.24,
     "cheap": 0.98,
     "expensive": 3.0,
     "icon": "🔴",
     "eps_basis": "ttm_fallback",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "BA": {
-    "price": 210.51,
+    "price": 212.25,
     "cheap": 40.41,
     "expensive": 123.63,
     "icon": "🔴",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "BAC": {
-    "price": 63.04,
-    "cheap": 42.12,
-    "expensive": 128.84,
+    "price": 62.68,
+    "cheap": 42.14,
+    "expensive": 128.92,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "BAYRY": {
-    "price": 14.36,
+    "price": 14.19,
     "cheap": 3.9,
     "expensive": 11.92,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "BCS": {
-    "price": 26.9,
-    "cheap": 23.88,
-    "expensive": 73.06,
+    "price": 27.0,
+    "cheap": 23.79,
+    "expensive": 72.79,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "BEN": {
-    "price": 33.55,
+    "price": 34.73,
     "cheap": 14.81,
     "expensive": 45.3,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "BNY": {
-    "price": 164.33,
-    "cheap": 79.39,
-    "expensive": 242.86,
+    "price": 164.84,
+    "cheap": 81.09,
+    "expensive": 248.05,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "BWA": {
-    "price": 65.73,
-    "cheap": 40.92,
+    "price": 67.54,
+    "cheap": 40.91,
     "expensive": 125.16,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "C": {
-    "price": 138.14,
+    "price": 137.72,
     "cheap": 94.92,
     "expensive": 290.35,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "CCL": {
-    "price": 23.48,
+    "price": 23.51,
     "cheap": 20.24,
     "expensive": 61.92,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "CI": {
-    "price": 286.26,
+    "price": 282.52,
     "cheap": 194.71,
     "expensive": 595.62,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "CICHY": {
-    "price": 24.55,
-    "cheap": 38.32,
-    "expensive": 117.23,
+    "price": 24.94,
+    "cheap": 38.43,
+    "expensive": 117.55,
     "icon": "🟢",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "CLS": {
-    "price": 309.84,
+    "price": 312.35,
     "cheap": 64.63,
     "expensive": 197.69,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "CNH": {
-    "price": 13.84,
+    "price": 14.4,
     "cheap": 5.59,
     "expensive": 17.09,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "COHR": {
-    "price": 264.41,
-    "cheap": 27.42,
-    "expensive": 83.87,
+    "price": 281.86,
+    "cheap": 32.14,
+    "expensive": 98.3,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "CPA": {
-    "price": 129.41,
+    "price": 132.31,
     "cheap": 213.28,
     "expensive": 652.43,
     "icon": "🟢",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "CVSA": {
-    "price": 127.64,
+    "price": 128.09,
     "cheap": 74.89,
     "expensive": 229.09,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "DNKEY": {
-    "price": 29.24,
+    "price": 29.22,
     "cheap": 21.74,
     "expensive": 66.5,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "FNF": {
-    "price": 47.28,
+    "price": 45.78,
     "cheap": 26.05,
     "expensive": 79.7,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "GLW": {
-    "price": 146.0,
+    "price": 154.3,
     "cheap": 16.29,
     "expensive": 49.84,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "GOOG": {
-    "price": 339.08,
+    "price": 335.31,
     "cheap": 198.76,
     "expensive": 608.0,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "GSK": {
-    "price": 50.87,
-    "cheap": 33.91,
-    "expensive": 103.72,
+    "price": 49.89,
+    "cheap": 33.8,
+    "expensive": 103.39,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "HENKY": {
-    "price": 20.22,
+    "price": 20.38,
     "cheap": 15.67,
     "expensive": 47.92,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "HIG": {
-    "price": 140.0,
+    "price": 138.37,
     "cheap": 133.7,
     "expensive": 408.99,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "HSBC": {
-    "price": 106.46,
-    "cheap": 78.11,
-    "expensive": 238.94,
+    "price": 107.11,
+    "cheap": 78.12,
+    "expensive": 238.96,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "ITOCY": {
-    "price": 14.4,
-    "cheap": 713.07,
-    "expensive": 2181.29,
+    "price": 14.1,
+    "cheap": 713.1,
+    "expensive": 2181.39,
     "icon": "🟢",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "IX": {
-    "price": 41.19,
-    "cheap": 18.84,
-    "expensive": 57.63,
+    "price": 39.94,
+    "cheap": 18.95,
+    "expensive": 57.96,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "JPM": {
-    "price": 362.06,
+    "price": 358.64,
     "cheap": 211.56,
     "expensive": 647.15,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "KNBWY": {
-    "price": 18.91,
-    "cheap": 917.19,
-    "expensive": 2805.72,
+    "price": 18.73,
+    "cheap": 917.23,
+    "expensive": 2805.83,
     "icon": "🟢",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "KR": {
-    "price": 58.51,
+    "price": 58.59,
     "cheap": 21.75,
     "expensive": 66.55,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "LH": {
-    "price": 331.5,
+    "price": 326.89,
     "cheap": 122.5,
     "expensive": 374.72,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "LITE": {
-    "price": 847.37,
-    "cheap": 38.57,
-    "expensive": 117.98,
+    "price": 881.255,
+    "cheap": 41.14,
+    "expensive": 125.85,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "MCK": {
-    "price": 921.38,
+    "price": 907.99,
     "cheap": 379.53,
     "expensive": 1160.99,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "MRVL": {
-    "price": 208.83,
-    "cheap": 20.28,
-    "expensive": 62.02,
+    "price": 223.55,
+    "cheap": 20.68,
+    "expensive": 63.27,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "MSFT": {
-    "price": 510.12,
+    "price": 499.7,
     "cheap": 159.86,
     "expensive": 489.03,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "MU": {
-    "price": 958.16,
+    "price": 1016.59,
     "cheap": 202.43,
     "expensive": 619.24,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "NVDA": {
-    "price": 228.45,
-    "cheap": 48.64,
-    "expensive": 148.78,
+    "price": 230.36,
+    "cheap": 52.44,
+    "expensive": 160.42,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "ON": {
-    "price": 73.65,
+    "price": 74.38,
     "cheap": 27.95,
     "expensive": 85.51,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "PAA": {
-    "price": 25.525,
+    "price": 25.7,
     "cheap": 13.02,
     "expensive": 39.82,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "PHIN": {
-    "price": 68.42,
+    "price": 69.04,
     "cheap": 48.27,
     "expensive": 147.65,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "PHM": {
-    "price": 124.31,
+    "price": 124.45,
     "cheap": 118.26,
     "expensive": 361.75,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "SPCX": {
-    "price": 149.74,
+    "price": 147.95,
     "cheap": 15.74,
     "expensive": 48.14,
     "icon": "🔴",
     "eps_basis": "forward",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "SSUMY": {
-    "price": 11.89,
-    "cheap": 730.23,
-    "expensive": 2233.8,
+    "price": 11.71,
+    "cheap": 732.07,
+    "expensive": 2239.42,
     "icon": "🟢",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "TFC": {
-    "price": 51.61,
+    "price": 51.65,
     "cheap": 45.0,
     "expensive": 137.66,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "THC": {
-    "price": 263.49,
+    "price": 265.05,
     "cheap": 206.82,
     "expensive": 632.65,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "TM": {
-    "price": 199.87,
-    "cheap": 208.53,
-    "expensive": 637.91,
+    "price": 197.11,
+    "cheap": 209.77,
+    "expensive": 641.68,
     "icon": "🟢",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "TSLA": {
-    "price": 376.365,
+    "price": 354.08,
     "cheap": 12.88,
     "expensive": 39.41,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "TSM": {
-    "price": 417.01,
-    "cheap": 102.16,
-    "expensive": 312.52,
+    "price": 428.91,
+    "cheap": 103.62,
+    "expensive": 316.98,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "UHS": {
-    "price": 169.21,
+    "price": 169.65,
     "cheap": 265.22,
     "expensive": 811.31,
     "icon": "🟢",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "UNM": {
-    "price": 96.57,
+    "price": 95.85,
     "cheap": 55.11,
     "expensive": 168.58,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   },
   "XYZ": {
-    "price": 83.37,
+    "price": 82.76,
     "cheap": 40.88,
     "expensive": 125.06,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
-    "updated_at": "2026-09-04 07:33"
+    "updated_at": "2026-09-07 07:32"
   }
 }
