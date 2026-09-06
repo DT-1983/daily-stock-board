@@ -110,10 +110,15 @@ def gather():
             continue
         bear = not r.get("bull")
         rsdn = (r.get("rs_short") is not None and r["rs_short"] < 0)
+        # 2026-09-06（第二次）Leo：「加」——「只有 ST 翻空」那組也列進來。
+        # 原本只收 both/rs 兩組，是照 9/6 上午他圈的範圍。加了「ST 翻空」這盞燈
+        # 之後那組不列就變成「有一盞永遠不會單獨亮的燈」，等於做了個看不到的東西。
         if bear and rsdn:
             want.append((n, "both", r))
         elif rsdn:
             want.append((n, "rs", r))
+        elif bear:
+            want.append((n, "st", r))
 
     # 🔴 沒進每日掃描的持股要**補算**，不能靜默略過。
     # 首版就是這樣漏掉 R（Ryder）——它兩條都成立、是真的該進這張表，
@@ -129,8 +134,9 @@ def gather():
                     filled.append((n, None))
                     continue
                 bear, rsdn = bool(st.get("st_bearish")), bool(st.get("rs60_broken"))
-                if bear and rsdn or rsdn:
-                    want.append((n, "both" if (bear and rsdn) else "rs",
+                if bear or rsdn:
+                    want.append((n, "both" if (bear and rsdn)
+                                 else ("rs" if rsdn else "st"),
                                  {"ticker": n, "name": "", "price": None,
                                   "rs_short": None, "bull": not bear,
                                   "st_line": None, "gap_pct": None, "_filled": True}))
@@ -485,15 +491,16 @@ def render(rows, meta):
         照樣兩盞都畫出來，因為老墨的規則就是分兩段執行——
         只亮①是「賣一半」，①②都亮才是「全出」。把②畫成③的樣子會看不出階段。
         """
-        st_flip = r["kind"] == "both"          # 這頁只收 RS 已跌破的兩組
-        all_out = r["kind"] == "both"
+        k = r["kind"]                          # both / rs / st
+        st_flip = k in ("both", "st")          # SuperTrend 已翻空
+        all_out = k in ("both", "rs")          # 老墨規則裡「剩餘全出」那一段
         over = (r.get("over") or 0) > 0
         # 🟡 只有 RS 跌破那組：老墨規則裡它也是「全出」，但 SuperTrend 還沒翻空。
         # 不能把①點亮（那是假的），也不能說它沒事——所以②用不同的字。
-        rs_only = r["kind"] == "rs"
         L = [("st", st_flip, "ST 翻空", "賣一半"),
-             ("all", all_out or rs_only, "全出",
-              "ST＋RS 都到" if all_out else "RS 跌破"),
+             ("all", all_out, "全出",
+              "ST＋RS 都到" if k == "both" else
+              ("RS 跌破" if k == "rs" else "尚未")),
              ("val", over, "超過貴價",
               f'貴 +{r["over"]:,.0f}%' if over else
               ("—" if r.get("over") is None else f'低 {r["over"]:,.0f}%'))]
@@ -573,8 +580,11 @@ def render(rows, meta):
 
     both = [r for r in rows if r["kind"] == "both"]
     rs_only = [r for r in rows if r["kind"] == "rs"]
+    st_only = [r for r in rows if r["kind"] == "st"]
     mv_b = sum(r["mv"] or 0 for r in both)
     mv_r = sum(r["mv"] or 0 for r in rs_only)
+    mv_s = sum(r["mv"] or 0 for r in st_only)
+    pnl_s = sum(r["pnl"] or 0 for r in st_only)
     tot = meta["total_mv"] or 1
     n_st_only = meta.get("st_only", 0)
     n_over = sum(1 for r in rows if (r.get("over") or 0) > 0)
@@ -606,7 +616,8 @@ def render(rows, meta):
            '<div class="fg"><span class="fl">訊號</span>'
            '<button class="fb on" data-f="kind" data-v="">全部</button>'
            '<button class="fb" data-f="kind" data-v="both">🔴 兩條都成立</button>'
-           '<button class="fb" data-f="kind" data-v="rs">🟡 只有 RS</button></div>'
+           '<button class="fb" data-f="kind" data-v="rs">🟡 只有 RS</button>'
+           '<button class="fb" data-f="kind" data-v="st">🟠 只有 ST</button></div>'
            '<div class="fg"><span class="fl">市場</span>'
            '<button class="fb on" data-f="mkt" data-v="">全部</button>'
            '<button class="fb" data-f="mkt" data-v="us">美股</button>'
@@ -638,23 +649,22 @@ def render(rows, meta):
         f'<div class="s">市值 {mv_b:,.0f}（全部持股的 {mv_b/tot*100:.1f}%）</div></div>',
         f'<div class="c"><div class="k">🟡 只有 RS 跌破</div><div class="v">{len(rs_only)} 檔</div>'
         f'<div class="s">市值 {mv_r:,.0f}（全部持股的 {mv_r/tot*100:.1f}%）</div></div>',
-        f'<div class="c"><div class="k">兩組合計佔部位</div>'
-        f'<div class="v">{(mv_b+mv_r)/tot*100:.1f}%</div>'
-        f'<div class="s">NT$ {mv_b+mv_r:,.0f}</div></div>',
-        f'<div class="c"><div class="k">兩組未實現損益</div>'
-        f'<div class="v {"pos" if pnl_b+pnl_r >= 0 else "neg"}">{pnl_b+pnl_r:+,.0f}</div>'
-        f'<div class="s">🔴 {pnl_b:+,.0f}　🟡 {pnl_r:+,.0f}</div></div>',
+        f'<div class="c"><div class="k">🟠 只有 ST 翻空</div><div class="v">{len(st_only)} 檔</div>'
+        f'<div class="s">市值 {mv_s:,.0f}（全部持股的 {mv_s/tot*100:.1f}%）</div></div>',
+        f'<div class="c"><div class="k">三組合計佔部位</div>'
+        f'<div class="v">{(mv_b+mv_r+mv_s)/tot*100:.1f}%</div>'
+        f'<div class="s">NT$ {mv_b+mv_r+mv_s:,.0f}</div></div>',
+        f'<div class="c"><div class="k">三組未實現損益</div>'
+        f'<div class="v {"pos" if pnl_b+pnl_r+pnl_s >= 0 else "neg"}">'
+        f'{pnl_b+pnl_r+pnl_s:+,.0f}</div>'
+        f'<div class="s">🔴 {pnl_b:+,.0f}　🟡 {pnl_r:+,.0f}　🟠 {pnl_s:+,.0f}</div></div>',
         '</div>',
         # 貴價涵蓋率要寫出來——**「沒有貴價」跟「沒超過貴價」是兩件事**，
         # 不寫的話那幾檔在「超過/未超過」兩個篩選裡都不出現，看起來像不存在。
-        # ⚠️ 有了「ST 翻空」這盞燈，就一定要講「只有 ST 翻空」那組不在這頁——
-        # 不講的話那盞燈永遠不會單獨亮，看起來像那種情況不存在。
-        # ⚠️ **沒有自己把那幾檔加進來**：母體是 Leo 9/6 指定的（兩條都成立＋
-        #    只有 RS 跌破），改母體是他的決定不是我的。
+        # 2026-09-06（第二次）Leo：「加」——「只有 ST 翻空」那組已經列進來了，
+        # 所以三盞燈的組合現在都看得到（只亮①＝賣一半、①②都亮＝全出）。
         f'<div class="sub">🚦 三盞燈＝老墨規則的三個條件：<b>ST 翻空</b>（賣一半）／'
         f'<b>全出</b>（ST＋RS 都到，或 RS 已跌破）／<b>超過貴價</b>。點一列展開細節。<br>'
-        f'⚠️ <b>「只有 ST 翻空、RS 還沒跌破」那組（目前 {n_st_only} 檔）不在這頁</b>'
-        f'——你 9/6 指定的範圍是「兩條都成立」與「只有 RS 跌破」。要加說一聲。<br>'
         f'📐 <b>貴價</b>用洪瑞泰法（美股預期 EPS、台股實績 EPS），'
         f'讀每日 07:33 算好的快取，跟站上其他頁同一個來源。'
         f'<b>{n_over} 檔已經超過貴價</b>，{n_under} 檔還沒，'
@@ -679,6 +689,13 @@ def render(rows, meta):
              '老墨的規則裡<b>這一條就是「剩餘全出」</b>，不用等 SuperTrend。'
              '⚠️ 這也表示「<b>股價還沒轉弱、只是跑輸大盤</b>」，跟上面那組性質不同。'
              '</div>' + table(rs_only) + "</div>")
+
+    B.append('<div class="sb"><h2>🟠 只有 SuperTrend 翻空</h2>'
+             '<div class="sub">SuperTrend 翻空、但 RS(60) <b>還沒</b>跌破——'
+             '老墨規則裡這一段是<b>「賣一半」</b>，不是全出。<br>'
+             '⚠️ 這組跟上面兩組性質不同：<b>它還沒到「全出」那一條</b>，'
+             '列在這裡是為了讓三盞燈的階段看得完整（只亮第一盞就是這組）。'
+             '</div>' + table(st_only) + "</div>")
 
     B.append('<div class="sb"><h2>欄位怎麼讀</h2><div class="sub">'
              '<b>RS60</b>＝相對大盤 60 日強弱的乖離，<b>負數就是跌破自身均線</b>。<br>'
@@ -731,8 +748,10 @@ def main():
     os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
     io.open(out, "w", encoding="utf-8").write(html)
     nb = sum(1 for r in rows if r["kind"] == "both")
+    nr = sum(1 for r in rows if r["kind"] == "rs")
+    ns = sum(1 for r in rows if r["kind"] == "st")
     print(f"✅ 已存 {out}（{len(html):,} bytes）")
-    print(f"   🔴 兩條都成立 {nb} 檔｜🟡 只有 RS 跌破 {len(rows)-nb} 檔"
+    print(f"   🔴 兩條都成立 {nb} 檔｜🟡 只有 RS 跌破 {nr} 檔｜🟠 只有 ST 翻空 {ns} 檔"
           f"｜訊號日 {meta['asof']}")
     return 0
 
