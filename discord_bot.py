@@ -146,9 +146,11 @@ async def cmd_council(interaction: discord.Interaction, 問題: str = ""):
         if 問題:
             head += f"\n> {問題}"
         await interaction.followup.send(head)
+        prior = []          # 前面軍師講過的話，往下傳給 PRIOR_FOR 裡的角色
         for role in roles:
-            msg = await asyncio.to_thread(war_room.ask, role, 問題)
-            msg = f"**{war_room.ROLES[role]['name']}**\n{msg}"
+            out = await asyncio.to_thread(war_room.ask, role, 問題, None, prior)
+            prior.append((war_room.ROLES[role]['name'], out))
+            msg = f"**{war_room.ROLES[role]['name']}**\n{out}"
             for i in range(0, len(msg), 1900):
                 await interaction.followup.send(msg[i:i + 1900])
     except Exception as e:                                # noqa: BLE001

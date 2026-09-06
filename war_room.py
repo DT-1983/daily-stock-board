@@ -58,6 +58,13 @@ MAX_CHARS = 1800          # Discord 單則 2000，留餘裕給標題
 # 投資長要給兩個獨立角度＋各自的失效條件，最長。
 ROLE_CHARS = {"仲達": 650, "龐統": 900, "陳壽": 800, "孔明": 1100}
 
+# 軍議時，哪幾位看得到前面軍師的回答（2026-09-06 Leo：「可以」）。
+# 先只放仲達一個人試——他排在龐統/孔明後面，而且他的工作（講風險）
+# 本來就要有對象才成立：針對「孔明剛說可以續抱」講風險，比空講現況有用。
+# ⚠️ 刻意不給龐統（他是找材料的，先看到判斷會被帶著找材料）；
+#   也不給陳壽（他看的是歷史紀錄與樣本數，跟今天誰說了什麼無關）。
+PRIOR_FOR = {"仲達"}
+
 
 def _load(p, d=None):
     try:
@@ -762,7 +769,7 @@ def council_roles(question=""):
     return [r for r in ORDER if not (r == "孔明" and not named)]
 
 
-def ask(role, question=None, limit=None):
+def ask(role, question=None, limit=None, prior=None):
     r = ROLES.get(role)
     if not r:
         return f"沒有這位軍師：{role}（可用：{'、'.join(ROLES)}）"
@@ -785,6 +792,22 @@ def ask(role, question=None, limit=None):
         named = _unresolved_block(question)
     if named:
         mat = named + "\n\n" + mat
+    # 前面軍師講了什麼（2026-09-06 Leo 同意先只在仲達身上試）。
+    # 目的：仲達不要重講一次現況，而是針對**孔明剛下的判斷**講風險。
+    #
+    # 🔴 這一段是 AI 的輸出，不是資料。把 AI 的輸出餵回去給下一個 AI，
+    # 最大的風險是**前面講錯的東西被後面當成事實再講一次**，而且看起來更有把握
+    # （兩位都這樣說）。所以標題就寫死「這是判斷不是資料」，
+    # 並且明令：跟材料衝突時以材料為準。
+    if prior and role in PRIOR_FOR:
+        blocks = [f'　【{who} 說】\n{txt.strip()}' for who, txt in prior if txt]
+        if blocks:
+            mat = ('【前面軍師的判斷（⚠️ 這是他們的判斷，不是事實資料）】\n'
+                   + ('\n\n').join(blocks)
+                   + '\n  ⚠️ 這幾段跟下面的材料衝突時，**一律以材料為準**；'
+                   '他們也可能講錯。\n'
+                   '  你的工作不是覆述他們，是講**他們的判斷成立的話、風險在哪**，'
+                   '以及**他們漏掉的風險**。同樣的話不要再說一次。\n\n') + mat
     import llm_board
     base = PROMPT.format(persona=r["persona"],
                          date=dt.date.today().isoformat(),
@@ -836,9 +859,13 @@ def main():
     if a.role == "軍議":
         roles = council_roles(a.question)
         print(f"—— 軍議：{'、'.join(roles)} ——")
+        # 前面講過的話往下傳（只有 PRIOR_FOR 裡的角色會真的用到）。
+        prior = []
         for r in roles:
             print(f"{os.linesep}—— {ROLES[r]['name']} ——")
-            print(ask(r, a.question))
+            out = ask(r, a.question, prior=prior)
+            print(out)
+            prior.append((ROLES[r]["name"], out))
         return 0
     if a.material_only:
         m = ROLES[a.role]
