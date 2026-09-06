@@ -132,11 +132,12 @@ async def cmd_chen(interaction: discord.Interaction, 問題: str = ""):
     await _ask_war_room(interaction, "陳壽", 問題)
 
 
-@tree.command(name="軍議", description="一次問三位（依有沒有指定個股自動決定叫誰），約 2-3 分鐘")
-@app_commands.describe(問題="要議什麼；指定個股→龐統/孔明/仲達，沒指定→龐統/仲達/陳壽")
+@tree.command(name="軍議", description="依序問龐統→孔明→仲達→陳壽（沒指定個股時跳過孔明），約 3-4 分鐘")
+@app_commands.describe(問題="要議什麼；指定個股→四位都問，沒指定→龐統/仲達/陳壽")
 async def cmd_council(interaction: discord.Interaction, 問題: str = ""):
-    # ⚠️ **一位答完就先送一則**，不要等三位都跑完——一位約 40-60 秒，
-    # 三位就是 2-3 分鐘，全部跑完才送的話中間完全沒有回饋，看起來像掛了。
+    # ⚠️ **一位答完就先送一則**，不要等全部跑完——一位約 40-60 秒，
+    # 四位就是 3-4 分鐘，全部跑完才送的話中間完全沒有回饋，看起來像掛了。
+    # 順序由 war_room.council_roles 決定（材料→判斷→風險→回顧），這裡不重排。
     await interaction.response.defer(thinking=True)
     try:
         import war_room
