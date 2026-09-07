@@ -141,6 +141,25 @@ def icon(name, size=17, color="currentColor", stroke=2):
 
 # ── 共用 CSS：base(全站通用) ─────────────────────────────────────────
 HUD_CSS = """
+/* 🔴 色票也放這裡一份（2026-09-07）。
+   起因：產業鏈看板（board_html.py）**有自己一份 :root**，只有舊的五個色，
+   缺 --cy / --cy-dim / --hud / --panel / --lamp 這些新變數 →
+   下面的覆蓋規則寫了 var(--cy-dim) 卻解析不到，籤的底色整個透明，
+   而且 --ink/--accent 還是舊值 → Leo：「產業鏈看板設計失敗，跟其它頁面都不同」。
+   ⭐ 記憶 investment_site_ui_standard 記過：**抽共用 CSS 變數前，
+      先查每個消費端是不是都載了定義那些變數的那份 CSS**。這次就是沒查。
+   修法：HUD_CSS 自己帶一份完整色票，誰載它誰就有，不依賴 BASE_CSS。
+   （BASE_CSS 也含 HUD_CSS，等於同值重宣告一次，無害。） */
+:root{--bg:#04070E;--surface:#080E1A;--card:#0C1524;--line:#16304A;--line2:#0E1B2B;
+ --ink:#DCE7F5;--muted:#9DB0C8;--dim:#5B6E8A;--accent:#22D3EE;
+ --up:#22C55E;--down:#EF4444;--warn:#FFB627;
+ /* HUD 專用（新增，舊頁面用不到也不會壞） */
+ --void:#04070E;--panel:#080E1A;--raise:#0C1524;--hud:#16304A;--hud-lit:#1F4E6E;
+ --grid:#0E1B2B;--ink2:#9DB0C8;--cy:#22D3EE;--cy-dim:rgba(34,211,238,.10);
+ --lamp:#FFB627;--lamp-dim:rgba(255,182,39,.13);
+ /* RRG 四色＝industry_rotation.QUADRANT_COLOR，兩頁不用重新記顏色。
+    會跟漲跌紅綠、燈的琥珀撞色——Leo 9/7：「多顏色沒關係」，一致比避讓重要。 */
+ --q-lead:#3987e5;--q-imp:#2fbf71;--q-weak:#eda100;--q-lag:#e5484d}
 /* ═══ 戰情室 HUD 覆蓋層（2026-09-07）═══════════════════════════════
    Leo 對第一版的評語是「不夠先進數字化」。差別不在顏色深淺，在**語彙**：
    圓角卡片是消費性 App，方角＋細線＋四角括號＋等寬數字才是儀器面板。
