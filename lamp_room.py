@@ -476,6 +476,19 @@ body{margin:0}
  .pane{max-height:none}
  .room .pane.left{max-height:46vh}
  .room:not(.chat) .right{display:none}
+ /* 🔴 2026-09-07 Leo：「手機沒辦法展開軍師」。
+    軍師欄其實有開（鈕變成「收起軍師」），但疊成一欄之後它是**第三列**——
+    排在整份技術圖下面，要捲過所有圖表才看得到，等於沒開。
+    ⭐ 「有渲染」不等於「看得到」；在手機上這兩件事差一整個螢幕的距離。
+    手機改成**蓋上來的浮層**：本來就是「問一下就關掉」的用法，不是並排參考。 */
+ .room.chat .right{position:fixed;inset:0;z-index:40;max-height:none;
+  border-radius:0;border:0;display:flex;flex-direction:column}
+ .room.chat .msgs{flex:1;min-height:0}
+ /* 浮層打開時把兩顆浮動鈕收掉：它們會壓在輸入框和送出鈕上面。
+    關閉走軍師欄自己的 ✕（右上角），不缺出口。 */
+ /* ⚠️ 不要用 :has()——舊一點的 WebView 沒有，而且它靜默失效（選擇器整條被丟掉）。
+    改成開軍師時在 body 掛一個 class，JS 一行的事，哪個瀏覽器都吃。 */
+ body.chatting .chatbtn,body.chatting .modebar{display:none}
 }
 
 /* 數字一律等寬對齊（HUD）：欄位不會因為字寬不同而跳動。 */
@@ -566,11 +579,16 @@ ROOM_JS = r"""
     var box = document.getElementById("msgs");
     if (!box || !room.classList.contains("chat")) return;
     fetch("/room/history?ticker=" + encodeURIComponent(tk || ""))
-      .then(function(r){ return r.text(); })
+      .then(function(r){ return r.ok ? r.text() : ""; })
       .then(function(h){
         var old = box.querySelector(".hist");
         if (old) old.remove();
-        if (h) box.insertAdjacentHTML("afterbegin", h);
+        // ⚠️ 只認我們自己那段。服務沒起來時回的是 HTML 錯誤頁，
+        //    直接 insertAdjacentHTML 會把「Error response 404」整片塞進對話裡
+        //    （2026-09-07 手機實測看到）。看不懂的東西就當沒有，不要往畫面上倒。
+        if (h && h.indexOf('<div class="hist"') === 0) {
+          box.insertAdjacentHTML("afterbegin", h);
+        }
       })
       .catch(function(){});
   }
@@ -631,6 +649,7 @@ ROOM_JS = r"""
     room.classList.toggle("chat", on);
     right.hidden = !on;
     btn.textContent = on ? "✕ 收起軍師" : "🏛️ 軍師";
+    document.body.classList.toggle("chatting", on);   // 手機浮層用（見 ROOM_CSS）
     // 開起來才抓歷史：關著抓等於每點一檔就多打一次伺服器。
     if (on) loadHist(cur || "");
   }
