@@ -49,16 +49,23 @@ table.cb th{text-align:right;padding:8px 6px;color:var(--dim);font-weight:600;
 table.cb th:nth-child(-n+4){text-align:left}
 table.cb td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
 .rrwarn{margin-left:3px;font-size:11px;cursor:help}
-.roomlink{display:flex;flex-direction:column;justify-content:center;gap:2px;
- padding:8px 14px;border:1px solid var(--cy,#22D3EE);text-decoration:none;
- color:var(--cy,#22D3EE);font-size:13px;flex:0 0 auto;
- background:var(--cy-dim,rgba(34,211,238,.10))}
+/* 2026-09-08 Leo：「這個戰情室按鍵 可以跟查做成一排嗎? 查可以縮小一點，
+   反正也是要跳出去」——查股框跟戰情室都是「跳出去」的入口，排同一排。
+   查股框縮小：輸入格 min-width 從 220 降到 150，說明字改一行帶過。 */
+.roomlink{display:flex;align-items:center;gap:8px;
+ padding:9px 14px;border:1px solid var(--cy,#22D3EE);text-decoration:none;
+ color:var(--cy,#22D3EE);font-size:13px;font-weight:700;flex:0 0 auto;
+ background:var(--cy-dim,rgba(34,211,238,.10));white-space:nowrap}
 .roomlink span{font-size:10.5px;color:var(--dim);font-weight:400}
+.roomlink:hover{background:rgba(34,211,238,.18)}
 /* ⚠️ 查股框的輸入格要有最小寬度：多了戰情室那顆之後，同一排四樣東西
    （統計卡＋查股框＋按鈕＋戰情室）會把它壓到 192px，placeholder 整句看不完。
    給 min-width 讓它**寧可換行也不要壓扁**——換行只是多一列，壓扁是壞掉。 */
-.cbtop .lkbox{flex:1 1 380px}
-.cbtop .lkbox input{min-width:220px}
+.cbtop .lkbox{flex:1 1 300px;padding:7px 11px}
+.cbtop .lkbox input{min-width:150px}
+/* 查股框的說明字縮小——它只是提示，不需要跟按鈕搶高度 */
+.cbtop .lkbox .lkn{font-size:10px}
+.cbtop .lkbox .lkl{font-size:12px}
 @media(max-width:760px){.roomlink{flex:1 1 100%}}
 table.cb td:nth-child(-n+4){text-align:left}
 table.cb tr:hover td{background:rgba(255,255,255,.03)}
@@ -361,8 +368,8 @@ def body_html(d):
                 # ⚠️ 這是公開頁（家人看得到）。沒授權的裝置點進去看到的是
                 #    「這台裝置還沒授權」那頁，不會外流任何數字。
                 + '<a class="roomlink" href="' + ROOM_URL + '">'
-                  '🚦 <b>燈號戰情室</b>'
-                  '<span>左選單／中圖表／右軍師，需本機開機</span></a>'
+                  '🚦 燈號戰情室'
+                  '<span>需本機開機</span></a>'
                 + '</div>')
     body.append(filter_html())
     body.append(f'<div class="cbsec">⭐ 打點成立<small>亮 ≥{d["combo_min"]} 燈且風報比 ≥ 1，'
