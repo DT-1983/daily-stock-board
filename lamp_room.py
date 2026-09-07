@@ -437,6 +437,12 @@ body{margin:0}
  background:transparent;color:var(--dim);font-weight:600}
 .mb.on{background:var(--accent,#3b82f6);color:#fff}
 @media(max-width:900px){.modebar{bottom:10px}.tablepane{padding:0 8px 14px}}
+/* 之前談過（2026-09-07 Leo：「可以會翻回之前的討論」）。
+   刻意做得比新訊息淡一階——它是背景，不是這一輪的回答。 */
+.hist{border-bottom:1px dashed var(--line);margin-bottom:8px;padding-bottom:8px}
+.histh{font-size:11px;color:var(--dim);padding:4px 2px 8px;letter-spacing:.04em}
+.hist .msg{opacity:.72}
+.hist .msg .who{font-size:10.5px}
 .chatbtn{position:fixed;right:14px;bottom:14px;z-index:9;font:inherit;font-size:13px;
  padding:9px 15px;border-radius:999px;border:0;cursor:pointer;font-weight:700;
  background:var(--accent,#3b82f6);color:#fff;box-shadow:0 6px 20px rgba(0,0,0,.45)}
@@ -519,18 +525,29 @@ ROOM_JS = r"""
       });
   }
   items.forEach(function(el){ el.addEventListener("click", function(){
-    if (lastTk && lastTk !== el.dataset.tk) {
-      freshNext = true;                       // 換標的 → 下一問重開
-      const tag = document.getElementById("rstate");
-      if (tag) tag.textContent = "換標的，下一問會重新開始";
-    }
     lastTk = el.dataset.tk;
     pick(el);
+    loadHist(el.dataset.tk);
   }); });
 
   // ── 模式切換（列表 / 個股）──
   // ⚠️ 列表模式是**預設**：Leo 的用法是先掃描再鑽進去，開頁就看到表比較順。
   //    手機在外面也是先看列表。
+  // 之前談過什麼：換標的就重載一次。
+  // ⚠️ 只在軍師欄開著的時候抓，關著抓等於每點一檔就多打一次伺服器。
+  function loadHist(tk){
+    var box = document.getElementById("msgs");
+    if (!box || !room.classList.contains("chat")) return;
+    fetch("/room/history?ticker=" + encodeURIComponent(tk || ""))
+      .then(function(r){ return r.text(); })
+      .then(function(h){
+        var old = box.querySelector(".hist");
+        if (old) old.remove();
+        if (h) box.insertAdjacentHTML("afterbegin", h);
+      })
+      .catch(function(){});
+  }
+
   var mStock = document.getElementById("mode-stock");
   var mList = document.getElementById("mode-list");
   function setMode(list){
@@ -587,12 +604,16 @@ ROOM_JS = r"""
     room.classList.toggle("chat", on);
     right.hidden = !on;
     btn.textContent = on ? "✕ 收起軍師" : "🏛️ 軍師";
+    // 開起來才抓歷史：關著抓等於每點一檔就多打一次伺服器。
+    if (on) loadHist(cur || "");
   }
   btn.addEventListener("click", function(){ toggle(!room.classList.contains("chat")); });
   document.getElementById("rclose").addEventListener("click", function(){ toggle(false); });
 
   var role = "軍議";
-  // 換股票就重開 session：續談時軍師手上是上一檔的材料。
+  // 2026-09-07：不再需要「換股票就重開」——續談的 key 綁標的（war_room_chat._key），
+  // 換股票本來就是另一條線。留著 freshNext 反而會把那一檔存好的對話洗掉，
+  // 跟「跨天要能翻回去續談」直接衝突。fresh 只剩「重開這一條」按鈕會用到。
   var freshNext = false;
   var lastTk = null;
   document.querySelectorAll(".rb").forEach(function(b){
@@ -653,7 +674,10 @@ ROOM_JS = r"""
         // 續談狀態要看得見：不然使用者不知道這一輪是接續還是重開，
         // 而「接續」代表回答建立在上一輪的材料上，那是要知道的事。
         const tag = document.getElementById("rstate");
-        if (tag) tag.textContent = (inf.resumed ? "續談中" : "新對話")
+        if (tag) tag.textContent =
+          (inf.resumed ? ("續談" + (inf.since ? "（接 " + inf.since.slice(5, 10) + "）" : ""))
+                       : "新對話")
+          + (inf.refreshed ? "・材料已換成今天" : "")
           + (cur ? "・" + cur : "") + "　等值 US$" + (inf.cost || 0).toFixed(3);
       })
       .catch(function(e){ wait.remove(); add("err", role, "呼叫失敗：" + e); })
@@ -742,48 +766,69 @@ def page_html():
 
 
 # 續談用的 session（2026-09-07 Leo：「做吧」）。
-# key = (角色, 標的)，value = claude 的 session_id。
-#
-# 🔴 **一定要綁標的**。續談表示這一輪的回答建立在上一輪的材料上；
-#   看完 6442 換去看 2454 再問「那它呢」，軍師手上還是 6442 的材料——
-#   那正是 2026-09-04「問高力答 HIG」那一類錯，只是換個入口回來。
-#   換標的就換 key ＝ 自動重開，材料不會串味。
-# ⚠️ 存在記憶體不是檔案：bot 重啟就重來。這是刻意的——跨天續談會接到
-#   昨天的材料（燈號每天重掃），比重問一次更糟。
-_SESSIONS = {}
+# 續談與對話記錄都搬到 war_room_chat.py（2026-09-07 Leo：「需要跨天，可以會翻回
+# 之前的討論」＋「discord 也同步」）。原本是這裡一個記憶體 dict，
+# bot 重啟就沒、跨天不接、Discord 那邊完全是另一條線。
 
 
 def ask(role, question, ticker=None, fresh=False):
     """呼叫軍師。回 (answers, info)。**不重寫任何判斷邏輯**，直接用 war_room。"""
     import war_room
-    key0 = str(ticker or "")
+    import war_room_chat as wc
 
-    def _one(r, q, prior=None):
-        k = (r, key0)
-        sid = None if fresh else _SESSIONS.get(k)
-        txt, meta = war_room.ask_meta(r, q, prior=prior, resume=sid)
-        if meta.get("session_id"):
-            _SESSIONS[k] = meta["session_id"]
-        return txt, meta, bool(sid)
+    out, info = [], {"resumed": False, "refreshed": False, "since": "",
+                     "cost": 0.0, "turns": 0}
 
-    out, info = [], {"resumed": False, "cost": 0.0, "turns": 0}
+    def _acc(x):
+        info["resumed"] = info["resumed"] or x["resumed"]
+        info["refreshed"] = info["refreshed"] or x["refreshed"]
+        info["since"] = info["since"] or x.get("since") or ""
+
     if role == "軍議":
         prior = []
         for r in war_room.council_roles(question):
-            t, m, res = _one(r, question, prior)
+            t, m, x = wc.ask(r, question, ticker, fresh, prior=prior, src="room")
             prior.append((war_room.ROLES[r]["name"], t))
             out.append({"name": war_room.ROLES[r]["name"], "text": t})
-            info["resumed"] = info["resumed"] or res
+            _acc(x)
             info["cost"] += float(m.get("cost_usd") or 0)
             info["turns"] += 1
     elif role not in war_room.ROLES:
         out = [{"name": role,
                 "text": f"沒有這位軍師（可用：{'、'.join(war_room.ROLES)}）"}]
     else:
-        t, m, res = _one(role, question)
+        t, m, x = wc.ask(role, question, ticker, fresh, src="room")
         out = [{"name": war_room.ROLES[role]["name"], "text": t}]
-        info.update(resumed=res, cost=float(m.get("cost_usd") or 0), turns=1)
+        _acc(x)
+        info["cost"] = float(m.get("cost_usd") or 0)
+        info["turns"] = 1
     return out, info
+
+
+def chat_html(ticker):
+    """右欄開啟時先端出「之前談過什麼」。
+
+    ⚠️ 只端這一檔的。翻全部的歷史是 CLI（`python war_room_chat.py -n 30`）的事，
+    在只有 380px 寬的欄位裡塞別檔的對話只會蓋掉現在要看的東西。
+    """
+    from board_theme import esc
+    import war_room_chat as wc
+    h = wc.history(ticker or "", limit=12)
+    if not h:
+        return ""
+    out = ['<div class="hist"><div class="histh">之前談過（'
+           + str(len(h)) + ' 輪）</div>']
+    for r in h:
+        d = str(r.get("ts") or "")[5:16].replace("T", " ")
+        tag = "🔁" if r.get("refreshed") else ""
+        src = "Discord" if r.get("src") == "discord" else ""
+        out.append(f'<div class="msg me"><span class="who">你 · {esc(d)}'
+                   f'{" · " + src if src else ""}</span>'
+                   f'{esc(r.get("q") or "（預設問題）")}</div>')
+        out.append(f'<div class="msg"><span class="who">{esc(r.get("role"))} {tag}'
+                   f'</span>{esc(r.get("a") or "")}</div>')
+    out.append("</div>")
+    return "".join(out)
 
 
 def main():
