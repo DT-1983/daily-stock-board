@@ -116,9 +116,13 @@ def left_html(items, asof):
         chg = ("" if r["chg"] is None else
                f'<span class="{"up" if r["chg"] >= 0 else "dn"}">'
                f'{r["chg"]:+.2f}%</span>')
-        gap = ("" if r["gap"] is None else
-               f'距目標 <span class="{"up" if r["gap"] >= 0 else "dn"}">'
-               f'{r["gap"]:+.1f}%</span>')
+        # 2026-09-07 Leo：「左邊各股可以顯示目標價」。原本只有「距目標 +15.8%」，
+        # 看得出差多少但看不到目標價本身——要判斷「這個目標價合不合理」得再點進去。
+        gap = ("" if r["tgt"] is None else
+               f'目標 <b class="tg">{r["tgt"]:,.2f}</b>'
+               + ("" if r["gap"] is None else
+                  f' <span class="{"up" if r["gap"] >= 0 else "dn"}">'
+                  f'{r["gap"]:+.1f}%</span>'))
         lis.append(
             f'<li class="it" data-tk="{esc(r["tk"])}" data-mkt="{r["mkt"]}"'
             f' data-lit="{r["lit"]}"'
@@ -326,6 +330,7 @@ body{margin:0}
  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:58%}
 .l1 .px{margin-left:auto;order:3;font-variant-numeric:tabular-nums;font-size:12.5px;
  display:flex;gap:6px;white-space:nowrap}
+.l2 .tg{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
 .l2{display:flex;align-items:center;gap:8px;margin-top:3px;font-size:10.5px;
  color:var(--dim)}
 .l2 .lamps{margin-left:auto;display:flex;gap:3px}
