@@ -362,9 +362,25 @@ CSS = """
  background:rgba(192,132,252,.10)}
 .lamp.val.on i{background:#c084fc}
 
-/* 展開的細節：自動排欄，寬螢幕四欄、手機兩欄，不用寫斷點 */
-.exdet{display:grid;gap:1px;background:var(--line2);
- grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+/* 展開的細節：**分段**（2026-09-07 Leo：「排這樣更難看懂了，幫我分段」）。
+   原本是一個 15 格的大 grid 一路流下去，相關欄位被版面切斷
+   （「歷史高點」在第二排結尾、「距高點/52週高」掉到第三排）。
+   改成四段，每段一個左側標籤：部位／估值／出場訊號／離高點多遠。 */
+.exdet{display:flex;flex-direction:column;gap:1px;background:var(--line2)}
+.exgrp{display:grid;grid-template-columns:78px 1fr;background:var(--line2);gap:1px}
+.exglab{background:var(--card,var(--surface));padding:8px 10px;font-size:10.5px;
+ color:var(--dim);display:flex;align-items:center;letter-spacing:.05em}
+/* ⚠️ auto-FILL 不是 auto-FIT：只有兩格的那段（估值／出場訊號）用 auto-fit
+   會把兩格拉滿整列寬，標籤跟數字被扯到左右兩端，比不分段還難讀。
+   auto-fill 保留空軌道，每格維持正常寬度。 */
+.exgf{display:grid;gap:1px;background:var(--line2);
+ grid-template-columns:repeat(auto-fill,minmax(168px,1fr))}
+.exwarnrow{background:var(--surface);padding:8px 11px;font-size:12px;color:var(--dim)}
+@media(max-width:620px){
+ /* 手機：段標籤改成橫的一條，不然 78px 佔掉太多寬度 */
+ .exgrp{grid-template-columns:1fr}
+ .exglab{padding:5px 11px;font-size:10px}
+}
 .d{background:var(--surface);padding:7px 11px;display:flex;
  justify-content:space-between;align-items:baseline;gap:8px;font-size:12px}
 .d.wide{grid-column:1/-1}
@@ -550,11 +566,23 @@ def render(rows, meta):
             def kv(k, v, cls=""):
                 return f'<div class="d{" " + cls if cls else ""}"><b>{k}</b><span>{v}</span></div>'
 
+            def grp(title, cells):
+                """一段。⚠️ 分段的重點不是好看，是**相關的欄位要排在一起**：
+                原本 15 格一路流下去，「歷史高點」在第二排結尾、「距高點／52週高」
+                被切到第三排——上下文被版面切斷，數字就要重新找。"""
+                cells = [c for c in cells if c]
+                if not cells:
+                    return ""
+                return (f'<div class="exgrp"><div class="exglab">{title}</div>'
+                        f'<div class="exgf">{"".join(cells)}</div></div>')
+
+            def kv(k, v, cls=""):
+                return f'<div class="d{" " + cls if cls else ""}"><b>{k}</b><span>{v}</span></div>'
+
             body = ['<div class="exdet">']
             if r.get("nopos"):
-                body.append('<div class="d wide"><b>部位</b>'
-                            '<span class="dim">⚠️ 報表查無部位</span></div>')
-            body += [
+                body.append('<div class="exwarnrow">⚠️ 報表查無部位</div>')
+            body.append(grp("部位", [
                 kv("股數", n(r["sh"], 2)),
                 kv("平均成本", n(r["avg"])),
                 kv("現價", n(r["px"])),
@@ -563,6 +591,8 @@ def render(rows, meta):
                 kv("損益", sgn(r["pnl_n"] if r["pnl_n"] is not None else r["pnl"], 0, "")),
                 kv("報酬", sgn(r["pnl_pct"])),
                 kv("佔所屬帳戶", n(r["w"], 1, "%")),
+            ]))
+            body.append(grp("估值", [
                 kv("貴價（洪瑞泰）",
                    n(r["exp"]) + (f' <span class="dim">'
                                   f'{"貴 +" if (r["over"] or 0) > 0 else "低 "}'
@@ -570,17 +600,20 @@ def render(rows, meta):
                                   if r.get("over") is not None else ""),
                    "overexp" if (r.get("over") or 0) > 0 else ""),
                 kv("俗價（洪瑞泰）", n(r.get("cheap"))),
+            ]))
+            body.append(grp("出場訊號", [
                 kv("SuperTrend 線",
                    n(r["st_line"]) + (f' <span class="dim">距 {r["gap"]:+.1f}%</span>'
                                       if r.get("gap") is not None else "")),
                 kv("RS60", sgn(r["rs"], 2)),
-                kv("歷史高點（3年）",
-                   n(r["hi3y"]) + (f' <span class="dim">{esc(r["hi3y_d"])}</span>'
-                                   if r.get("hi3y_d") else "")),
-                kv("距高點", sgn(r["dd3y"])),
+            ]))
+            body.append(grp("離高點多遠", [
+                kv("3 年高", n(r["hi3y"]) + (f' <span class="dim">{esc(r["hi3y_d"])}</span>'
+                                            if r.get("hi3y_d") else "")),
+                kv("距 3 年高", sgn(r["dd3y"])),
                 kv("52 週高", n(r["hi52"])),
                 kv("距 52 週高", sgn(r["dd52"])),
-            ]
+            ]))
             body.append("</div>")
             out.append(f'<details class="exrow{big}"{attrs}>{head}'
                        + "".join(body) + "</details>")
