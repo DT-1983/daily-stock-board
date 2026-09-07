@@ -257,6 +257,26 @@ async def _room_page(request):
     return resp
 
 
+async def _trades_page(request):
+    """交易紀錄 /trades（2026-09-07，Sonia 那張卡連這裡）。
+
+    ⚠️ 這頁有實際交易紀錄（券商、股數、價格、理由），跟 /lookup 同一道 token 門檻，
+    沒過一律 404。內容跟 obis 的「交易紀錄.html」是同一個產生器，不會有兩套。
+    """
+    ok, set_cookie = _room_gate(request)
+    if not ok:
+        print("[trades] 擋下（無 key／cookie）", flush=True)
+        return _room_404()
+    import trade_journal
+    html = await asyncio.to_thread(trade_journal.page)
+    resp = web.Response(text=html, content_type="text/html", charset="utf-8")
+    if set_cookie:
+        resp.set_cookie(lookup_page.COOKIE, lookup_page._token(),
+                        max_age=lookup_page.COOKIE_DAYS * 86400,
+                        httponly=True, samesite="Lax", secure=True)
+    return resp
+
+
 async def _room_detail(request):
     """中欄片段。⚠️ 這裡會抓 2 年資料算指標，是最慢的一段（數秒）。"""
     ok, _ = _room_gate(request)
@@ -308,6 +328,7 @@ async def _run():
     app.router.add_get("/room", _room_page)
     app.router.add_get("/room/detail", _room_detail)
     app.router.add_post("/room/ask", _room_ask)
+    app.router.add_get("/trades", _trades_page)
     runner = web.AppRunner(app)
     await runner.setup()
     site = web.TCPSite(runner, "127.0.0.1", HEALTH_PORT)
