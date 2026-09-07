@@ -306,7 +306,18 @@ def right_html():
         '<div class="phead">軍師<span class="dim" id="rtk">未選標的</span>'
         '<span class="dim" id="rstate"></span>'
         '<button class="x" id="rclose">✕</button></div>'
+        # 範圍：這一檔 / 全部持股。⚠️ 兩個範圍的對話是**分開記**的，
+        # 不然「全部持股的風險」會接到「某一檔的風險」那條線上。
+        '<div class="scope"><button class="sb on" id="sc-one">這一檔</button>'
+        '<button class="sb" id="sc-all">全部持股</button>'
+        '<span class="scn" id="scnote"></span></div>'
         f'<div class="roles">{btns}</div>'
+        # 全本的範例問題（學 阿福 的提示）。要給**具體問句**，
+        # 使用者才知道這裡問得到什麼；不是寫「可以問全部」然後讓他自己想。
+        '<div class="quick" id="quick" hidden>'
+        '<button class="qk">所有個股有什麼重要的事？條列給我</button>'
+        '<button class="qk">現在整體最大的風險是什麼</button>'
+        '<button class="qk">最近的判斷準不準</button></div>'
         '<div class="msgs" id="msgs">'
         '<div class="hint">選一檔股票，再挑一位軍師。<br>'
         '走本機 claude（Max plan 訂閱額度，<b>不另外計費</b>），'
@@ -447,6 +458,19 @@ body{margin:0}
  background:transparent;color:var(--dim);font-weight:600;letter-spacing:.05em}
 .mb.on{background:var(--cy-dim,rgba(34,211,238,.10));color:var(--cy,#22D3EE)}
 @media(max-width:900px){.modebar{bottom:10px}.tablepane{padding:0 8px 14px}}
+/* 範圍切換（2026-09-07）：這一檔 / 全部持股 */
+.scope{display:flex;gap:5px;align-items:center;padding:8px 12px 0}
+.sb{font:inherit;font-size:11.5px;padding:3px 11px;border-radius:0;cursor:pointer;
+ border:1px solid var(--hud,#16304A);background:transparent;color:var(--dim);
+ letter-spacing:.03em}
+.sb.on{background:var(--cy-dim,rgba(34,211,238,.10));border-color:var(--cy,#22D3EE);
+ color:var(--cy,#22D3EE);font-weight:600}
+.scn{font-size:10.5px;color:var(--dim);margin-left:auto;text-align:right}
+.rb[disabled]{opacity:.35;cursor:not-allowed}
+.quick{display:flex;flex-wrap:wrap;gap:5px;padding:8px 12px 0}
+.qk{font:inherit;font-size:11px;padding:3px 9px;border-radius:0;cursor:pointer;
+ border:1px dashed var(--hud,#16304A);background:transparent;color:var(--muted)}
+.qk:hover{border-style:solid;border-color:var(--cy,#22D3EE);color:var(--cy,#22D3EE)}
 /* 進度籤（2026-09-07，學老墨的 阿福「正在讀新聞」）。
    ⭐ 重點不是字一個一個浮出來，是**知道它在忙什麼**——等 50 秒跟當掉
    在畫面上長得一模一樣。我們的進度是照實回報的：材料在呼叫 AI 之前就用
@@ -568,6 +592,10 @@ ROOM_JS = r"""
     lastTk = el.dataset.tk;
     pick(el);
     loadHist(el.dataset.tk);
+    // 點了個股就是想看那一檔——自動切回「這一檔」，不然會以為在問它、
+    // 其實問的是全本（反過來的誤會比較難發現）。
+    scope = "one";
+    applyScope();
   }); });
 
   // ── 模式切換（列表 / 個股）──
@@ -655,6 +683,48 @@ ROOM_JS = r"""
   }
   btn.addEventListener("click", function(){ toggle(!room.classList.contains("chat")); });
   document.getElementById("rclose").addEventListener("click", function(){ toggle(false); });
+  applyScope();
+
+  // 範圍：one＝目前選中的那一檔，all＝全部持股（仲達/陳壽的材料本來就是全本）。
+  // ⚠️ 孔明在全本模式下**不能用**——他是個股判斷的角色，他的材料在沒有指定
+  //    股票時會明寫「請使用者說要問哪一檔」。與其讓他回一句沒用的話，
+  //    不如在介面上就講清楚為什麼不能選。
+  var scope = "one";
+  var ONLY_ONE = {"孔明": "孔明一次只判一檔，要先選股票"};
+  function applyScope(){
+    document.getElementById("sc-one").classList.toggle("on", scope === "one");
+    document.getElementById("sc-all").classList.toggle("on", scope === "all");
+    document.getElementById("quick").hidden = (scope !== "all");
+    var note = document.getElementById("scnote");
+    if (note) note.textContent = (scope === "all")
+      ? "仲達／陳壽的材料本來就是全本"
+      : (cur ? "" : "還沒選股票");
+    document.querySelectorAll(".rb").forEach(function(b){
+      var why = (scope === "all") ? ONLY_ONE[b.dataset.r] : null;
+      b.disabled = !!why;
+      b.title = why || "";
+      if (why && b.classList.contains("on")) {
+        // 目前選的軍師在這個範圍不能用 → 退回軍議，不要留一個按不動的選擇
+        var g = document.querySelector('.rb[data-r="軍議"]');
+        if (g) { g.click(); }
+      }
+    });
+    var rtk = document.getElementById("rtk");
+    if (rtk) rtk.textContent = (scope === "all") ? "看著 全部持股"
+      : (cur ? "看著 " + cur : "未選標的");
+  }
+  document.getElementById("sc-one").addEventListener("click", function(){
+    scope = "one"; applyScope();
+  });
+  document.getElementById("sc-all").addEventListener("click", function(){
+    scope = "all"; applyScope();
+  });
+  document.querySelectorAll(".qk").forEach(function(b){
+    b.addEventListener("click", function(){
+      qbox.value = b.textContent;
+      ask(false);
+    });
+  });
 
   var role = "軍議";
   // 2026-09-07：不再需要「換股票就重開」——續談的 key 綁標的（war_room_chat._key），
@@ -695,9 +765,12 @@ ROOM_JS = r"""
 
   function ask(fresh){
     var q = qbox.value.trim();
-    // 沒選股票也可以問仲達/陳壽（他們的材料是全局的），但要提醒。
-    var full = (cur && q) ? (cur + " " + q) : (q || (cur || ""));
-    add("me", null, (cur ? "【" + cur + "】" : "") + (q || "（用預設問題）"));
+    // 全本模式**不要**把目前選中的那一檔黏到問題前面——那正是原本
+    // 「看一下所有個股」會變成問單一檔的原因。
+    var tk = (scope === "all") ? "" : (cur || "");
+    var full = (tk && q) ? (tk + " " + q) : (q || (tk || ""));
+    add("me", null, (scope === "all" ? "【全部持股】" : (tk ? "【" + tk + "】" : ""))
+        + (q || "（用預設問題）"));
     qbox.value = "";
     send.disabled = true;
 
@@ -723,12 +796,12 @@ ROOM_JS = r"""
 
     var url = "/room/ask_stream?role=" + encodeURIComponent(role)
       + "&question=" + encodeURIComponent(full)
-      + "&ticker=" + encodeURIComponent(cur || "")
+      + "&ticker=" + encodeURIComponent(tk)
       + (fresh ? "&fresh=1" : "");
     var es;
     try { es = new EventSource(url); }
     catch (e) { es = null; }
-    if (!es) { askFallback(full, fresh); return; }
+    if (!es) { askFallback(full, fresh, tk); return; }
 
     var got = false;
     es.addEventListener("stage", function(ev){
@@ -782,7 +855,7 @@ ROOM_JS = r"""
         // 完全沒收到東西＝串流這條路不通（服務沒起來／中間層擋 SSE）。
         // ⚠️ 這時候不要只印一句錯誤就算了，退回原本那條會拿到答案的路。
         box.remove();
-        askFallback(full, fresh);
+        askFallback(full, fresh, tk);
       } else {
         Array.prototype.forEach.call(box.children, function(c){ c.classList.remove("now"); });
         Object.keys(bubbles).forEach(function(k){ bubbles[k].classList.remove("live"); });
@@ -792,12 +865,12 @@ ROOM_JS = r"""
 
   // 舊的一次拿全部（串流不通時的退路）。⚠️ 保留它是因為串流多了一層可能斷的東西，
   // 斷了要還有辦法拿到答案，不是只看到一句紅字。
-  function askFallback(full, fresh){
+  function askFallback(full, fresh, askTk){
     send.disabled = true;
     var wait = add("", role, "思考中…（串流不可用，改用一次回全部；一位約 40-60 秒）");
     fetch("/room/ask", {method:"POST", headers:{"Content-Type":"application/json"},
                         body: JSON.stringify({role: role, question: full,
-                                              ticker: cur || "", fresh: !!fresh})})
+                                              ticker: askTk, fresh: !!fresh})})
       .then(function(r){
         // ⚠️ 不能直接 r.json()。服務重啟或 tunnel 斷線時回的是 HTML 錯誤頁，
         //    JSON.parse 會丟 "Unexpected token '<'"——使用者只看到一句
