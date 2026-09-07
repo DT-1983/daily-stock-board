@@ -382,8 +382,7 @@ body{margin:0}
  cursor:pointer;font:inherit;font-size:11px;padding:2px 7px;margin-left:6px;
  line-height:1.4}
 .lbtn:hover{border-color:var(--cy,#22D3EE);color:var(--cy,#22D3EE)}
-.lshow{position:fixed;left:8px;top:46px;z-index:9;display:none}
-.room.lhide ~ .lshow{display:block}
+.lshow{display:none;flex:0 0 auto}
 .room.chat .right{display:flex;flex-direction:column}
 .phead{position:sticky;top:0;z-index:2;background:var(--panel,#080E1A);
  padding:10px 12px;border-bottom:1px solid var(--hud,#16304A);font-weight:700;font-size:13px;
@@ -493,13 +492,14 @@ body{margin:0}
 .tsec h3 small{font-weight:400;font-size:11px;color:var(--dim)}
 .tablepane table.cb tr[data-tid]{cursor:pointer}
 .tablepane table.cb tr[data-tid]:hover td{background:rgba(34,211,238,.09)}
-.modebar{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:9;
- display:flex;border:1px solid var(--hud,#16304A);border-radius:0;overflow:hidden;
- background:var(--surface);box-shadow:0 6px 20px rgba(0,0,0,.45)}
-.mb{font:inherit;font-size:12.5px;padding:8px 18px;border:0;cursor:pointer;
+/* 導覽列裡的控制項（2026-09-08 從 position:fixed 搬進來）。 */
+.navsp{flex:1 1 auto;min-width:6px}
+.modebar{display:inline-flex;flex:0 0 auto;border:1px solid var(--hud,#16304A);
+ overflow:hidden}
+.mb{font:inherit;font-size:11.5px;padding:3px 12px;border:0;cursor:pointer;
  background:transparent;color:var(--dim);font-weight:600;letter-spacing:.05em}
 .mb.on{background:var(--cy-dim,rgba(34,211,238,.10));color:var(--cy,#22D3EE)}
-@media(max-width:900px){.modebar{bottom:10px}.tablepane{padding:0 8px 14px}}
+@media(max-width:900px){.tablepane{padding:0 8px 14px}}
 /* 範圍切換（2026-09-07）：這一檔 / 全部持股 */
 .scope{display:flex;gap:5px;align-items:center;padding:8px 12px 0}
 .sb{font:inherit;font-size:11.5px;padding:3px 11px;border-radius:0;cursor:pointer;
@@ -533,9 +533,10 @@ body{margin:0}
 .histh{font-size:11px;color:var(--dim);padding:4px 2px 8px;letter-spacing:.04em}
 .hist .msg{opacity:.72}
 .hist .msg .who{font-size:10.5px}
-.chatbtn{position:fixed;right:14px;bottom:14px;z-index:9;font:inherit;font-size:13px;
- padding:9px 15px;border-radius:0;cursor:pointer;font-weight:700;letter-spacing:.05em;
- border:1px solid var(--cy,#22D3EE);background:var(--panel,#080E1A);color:var(--cy,#22D3EE);box-shadow:0 6px 20px rgba(0,0,0,.45)}
+.chatbtn{font:inherit;font-size:11.5px;padding:3px 11px;cursor:pointer;
+ font-weight:700;letter-spacing:.04em;flex:0 0 auto;margin-left:6px;
+ border:1px solid var(--cy,#22D3EE);background:var(--panel,#080E1A);
+ color:var(--cy,#22D3EE)}
 @media(max-width:900px){
  /* 手機：三欄疊成一欄，靠上面的分頁鈕切換——並排在 375px 上誰都看不清楚 */
  .room,.room.chat{grid-template-columns:1fr;height:auto}
@@ -556,7 +557,7 @@ body{margin:0}
     關閉走軍師欄自己的 ✕（右上角），不缺出口。 */
  /* ⚠️ 不要用 :has()——舊一點的 WebView 沒有，而且它靜默失效（選擇器整條被丟掉）。
     改成開軍師時在 body 掛一個 class，JS 一行的事，哪個瀏覽器都吃。 */
- body.chatting .chatbtn,body.chatting .modebar{display:none}
+ /* 軍師浮層蓋住導覽列是對的——關閉走浮層自己的 ✕ */
 }
 
 /* 數字一律等寬對齊（HUD）：欄位不會因為字寬不同而跳動。 */
@@ -1117,8 +1118,17 @@ def nav_html():
         else:
             out.append(f'<a class="nl" href="{href}">{icon(ic, 13)}{esc(lab)}</a>')
     links = "".join(out)
+    # 右側的控制項：收合／模式／軍師。
+    # ⭐ 原本這三顆都是 position:fixed 浮在畫面上，結果三個都擋到東西
+    #    （模式鈕擋圖、軍師鈕蓋住送出、展開鈕蓋住中欄左上）。
+    #    浮動鈕沒有「不擋東西的位置」——畫面滿的時候每個角落都有內容。
+    ctrl = ('<span class="navsp"></span>'
+            '<button class="lbtn lshow" id="lshow" title="展開左欄">» 報價組合</button>'
+            '<span class="modebar"><button class="mb" id="mode-stock">個股</button>'
+            '<button class="mb on" id="mode-list">列表</button></span>'
+            '<button class="chatbtn" id="chatbtn">🏛️ 軍師</button>')
     return ('<nav class="roomnav"><span class="rnb">🚦 燈號戰情室</span>'
-            f'{links}</nav>')
+            f'{links}{ctrl}</nav>')
 
 
 def page_html():
@@ -1144,10 +1154,6 @@ def page_html():
             + f'<div class="pane tablepane" id="tablepane">{table_html()}</div>'
             + right_html()
             + "</div>"
-            '<button class="lbtn lshow" id="lshow" title="展開左欄">» 報價組合</button>'
-            '<div class="modebar"><button class="mb" id="mode-stock">個股</button>'
-            '<button class="mb on" id="mode-list">列表</button></div>'
-            '<button class="chatbtn" id="chatbtn">🏛️ 軍師</button>'
             + ROOM_JS + "</body></html>")
 
 
