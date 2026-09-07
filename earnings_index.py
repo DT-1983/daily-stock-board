@@ -28,7 +28,9 @@ def parse_card(path: str) -> dict:
         r = re.search(p, h, re.S)
         return r.group(1).strip() if r else d
     ticker = os.path.basename(path)[9:-5].replace("_", ".")
-    market = "TW" if re.match(r"^\d{4,5}$", ticker) else "US"
+    # ⚠️ 檔名可能是 earnings_2330.html（舊）或 earnings_2330_TW.html（新，帶交易所後綴）。
+    #    只認裸代號的話，帶 .TW 的會被判成美股——市場篩選就整組錯。
+    market = "TW" if re.match(r"^\d{4,5}(\.TWO?)?$", ticker) else "US"
     return {
         "file": os.path.basename(path),
         "ticker": ticker,
