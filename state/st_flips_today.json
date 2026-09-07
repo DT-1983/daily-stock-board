@@ -1,25 +1,79 @@
 {
-"date": "2026-09-05",
+"date": "2026-09-07",
 "flips_hold": [],
-"flips_watch": [
+"flips_watch": [],
+"ai_alerts": [
 {
-"code": "BE",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1
+"chain": "低軌衛星",
+"market": "US",
+"sig": "🔴",
+"code": "LHX",
+"name": "L3Harris Technologies Inc",
+"reason": "觀望→賣出"
 },
 {
+"chain": "太陽能",
+"market": "US",
+"sig": "🔴",
 "code": "HASI",
-"name": "",
-"word": "🟢→🔴 翻空",
-"dir": -1
+"name": "HA Sustainable Infrastructure Capital Inc",
+"reason": "觀望→賣出"
 },
 {
-"code": "8046",
-"name": "南電",
-"word": "🔴→🟢 翻多",
-"dir": 1
+"chain": "矽光子/光通訊",
+"market": "TW",
+"sig": "🟢",
+"code": "3081",
+"name": "聯亞",
+"reason": "觀望→買進"
+},
+{
+"chain": "矽光子/光通訊",
+"market": "TW",
+"sig": "🟢",
+"code": "3450",
+"name": "聯鈞",
+"reason": "觀望→買進"
+},
+{
+"chain": "機器人",
+"market": "TW",
+"sig": "🟢",
+"code": "4576",
+"name": "大銀微",
+"reason": "觀望→買進"
+},
+{
+"chain": "機器人",
+"market": "TW",
+"sig": "🟢",
+"code": "1504",
+"name": "東元",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 電力/核能",
+"market": "TW",
+"sig": "🟢",
+"code": "1504",
+"name": "東元",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 電力/核能",
+"market": "TW",
+"sig": "🟢",
+"code": "1503",
+"name": "士電",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 材料/被動元件",
+"market": "TW",
+"sig": "🟢",
+"code": "8358",
+"name": "CO-TECH DEVELOPMENT CORP",
+"reason": "觀望→買進"
 }
-],
-"ai_alerts": []
+]
 }

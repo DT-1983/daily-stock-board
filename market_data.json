@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-05 12:40",
+ "updated": "2026-09-07 08:46",
  "indices": [
   {
    "sym": "^GSPC",
@@ -45,7 +45,7 @@
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/05",
+   "date": "09/07",
    "close": 31.62,
    "chg_pct": -0.24
   },
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "美軍18人陣亡、戰費逾375億美元 川普仍稱伊朗戰爭「小菜一碟」",
+   "title": "美國拉高太陽能進口門檻  全球市場恐分裂成兩套價格",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6598252",
-   "ts": "09/05 12:40"
+   "url": "https://news.cnyes.com/news/id/6598985",
+   "ts": "09/07 08:30"
   },
   {
-   "title": "川普：魏科夫、庫許納將出訪 推動俄烏和平談判",
+   "title": "日元上周大幅震盪 匯市本周如何演繹？",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6598421",
-   "ts": "09/05 12:31"
+   "url": "https://news.cnyes.com/news/id/6598804",
+   "ts": "09/07 08:30"
   },
   {
-   "title": "記憶體股強彈 美光、SanDisk、SK海力士齊飆 AI需求成最大推手",
+   "title": "印度市場獲重大突破  物聯智慧以核心技術助客戶通過STQC認證",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6597538",
+   "ts": "09/07 08:30"
+  },
+  {
+   "title": "簽LTA還不夠？博通合資建廠的真相！接下來鎖定這個概念股！",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6597348",
+   "ts": "09/07 08:30"
+  },
+  {
+   "title": "非農爆衝只是前菜！本周「更大未爆彈」來襲，這事千萬別做！",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6598983",
+   "ts": "09/07 08:29"
+  },
+  {
+   "title": "伊朗宣布：將在荷姆茲海峽之外設立禁區",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6598420",
-   "ts": "09/05 12:20"
+   "url": "https://news.cnyes.com/news/id/6598914",
+   "ts": "09/07 08:23"
   },
   {
-   "title": "三星攜手Arm攻端側AI！2奈米客製晶片啟動 OpenAI傳成潛在客戶",
+   "title": "營收速報  - 太景*-KY(4157)8月營收705萬元年增率高達172.21％",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6598982",
+   "ts": "09/07 08:21"
+  },
+  {
+   "title": "越南躍居對美順差第一大國 對中逆差卻高達773億美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6598422",
-   "ts": "09/05 12:10"
+   "url": "https://news.cnyes.com/news/id/6598876",
+   "ts": "09/07 08:20"
   },
   {
-   "title": "8月非農強彈藏隱憂 分析師質疑美國就業數據失真",
+   "title": "伊朗警告美國再攻擊將遭「更猛烈」反擊！制裁加劇經濟壓力、石油出口受阻",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6598341",
-   "ts": "09/05 12:10"
+   "url": "https://news.cnyes.com/news/id/6598809",
+   "ts": "09/07 08:10"
   },
   {
-   "title": "〈熱門股〉盟立大啖先進封裝商機 周漲11%創歷史新高",
+   "title": "【升息也壓不住？】非農超預期、美債衝4.78%！台股卻要創新高？",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6598377",
-   "ts": "09/05 11:28"
-  },
-  {
-   "title": "〈熱門股〉松川精密獲AI需求助攻獲利挺 股價創收盤新天價335元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6598289",
-   "ts": "09/05 10:27"
-  },
-  {
-   "title": "〈熱門股〉玉山金攻壽險版圖！投信狂掃貨 周漲12%衝破40元創新高",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6588875",
-   "ts": "09/05 10:26"
-  },
-  {
-   "title": "〈熱門股〉輝達RTX Spark預購告急 微星周漲逾11%外資連六買共2.3萬張",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6598242",
-   "ts": "09/05 10:22"
-  },
-  {
-   "title": "輝達砸35億美元認購聯發科ECB、SEMICON登場、0050換股名單出爐 本周大事回顧",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6598209",
-   "ts": "09/05 10:20"
+   "url": "https://news.cnyes.com/news/id/6598916",
+   "ts": "09/07 08:01"
   }
  ],
  "inst": {
