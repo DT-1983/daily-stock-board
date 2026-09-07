@@ -37,7 +37,7 @@ CSS_EXTRA = """
 .nrow{display:block;padding:11px 13px;border-bottom:1px solid var(--line2);
  text-decoration:none;transition:background .15s}
 .nrow:last-child{border-bottom:0}
-.nrow:hover{background:#16223A}
+.nrow:hover{background:#0E1B2B}
 .nrow .tt{font-size:13.5px;line-height:1.5;color:var(--ink)}
 .nrow .mt{font-size:11px;color:var(--dim);margin-top:3px}
 .mtag{display:inline-block;font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:4px;

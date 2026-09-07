@@ -57,7 +57,7 @@ SIG = {"🟢": ("buy", "買進", "#22C55E"), "🔴": ("sell", "賣出", "#EF4444
 CSS = """
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#020617;--surface:#0F172A;--card:#131F35;--line:#1E293B;--line2:#16223A;
+:root{--bg:#04070E;--surface:#080E1A;--card:#0C1524;--line:#16304A;--line2:#0E1B2B;
  --ink:#F8FAFC;--muted:#94A3B8;--dim:#64748B;--accent:#3B82F6;
  --up:#22C55E;--down:#EF4444;--warn:#EAB308}
 body{background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;
@@ -122,7 +122,7 @@ h1 svg{flex-shrink:0}
  background:transparent;border-left:0;border-right:0;border-top:0;color:inherit;
  font-family:inherit;font-size:inherit;transition:background .15s}
 .row:last-child{border-bottom:0}
-.row:hover,.row:focus-visible{background:#16223A}
+.row:hover,.row:focus-visible{background:#0E1B2B}
 .row:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
 .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px}
 .info{flex:1;min-width:0}
@@ -294,8 +294,8 @@ function drawChart(id){const c=CHARTS[id];if(!c)return;
    plugins:{legend:{labels:{color:'#94A3B8',boxWidth:11,font:{size:10}}},zoom:zoomOpt(id,c)},
    scales:{x:{type:'linear',min:0,max:c.dates.length-1,offset:true,
      ticks:{color:'#64748B',maxTicksLimit:6,font:{size:9},
-       callback:v=>c.dates[Math.round(v)]||''},grid:{color:'#1E293B'}},
-           y:{ticks:{color:'#64748B',font:{size:9}},grid:{color:'#1E293B'}}}}});
+       callback:v=>c.dates[Math.round(v)]||''},grid:{color:'#16304A'}},
+           y:{ticks:{color:'#64748B',font:{size:9}},grid:{color:'#16304A'}}}}});
  ZOOM_GROUP[id]=[main];
  drawExtra(id,c);}
 // 2026-09-02 Leo：「產業鏈也能做縮放嗎」——跟進出燈號/財報卡同一套：滾輪縮放、
@@ -332,7 +332,7 @@ function drawExtra(id,c){
     plugins:{legend:{display:false},zoom:zoomOpt(id,c)},
     scales:{x:{type:'linear',min:0,max:c.dates.length-1,offset:true,
       ticks:{display:false},grid:{display:false}},
-     y:{ticks:{color:'#64748B',font:{size:9}},grid:{color:'#1E293B'}}}}});
+     y:{ticks:{color:'#64748B',font:{size:9}},grid:{color:'#16304A'}}}}});
   if(ZOOM_GROUP[id])ZOOM_GROUP[id].push(sq);}
  if(elRs&&((c.rs_s&&c.rs_s.length)||(c.rs_l&&c.rs_l.length))){
   const base=(c.rs_s&&c.rs_s.length?c.rs_s:c.rs_l).map((_,i)=>({x:i,y:0}));
@@ -348,7 +348,7 @@ function drawExtra(id,c){
      filter:item=>item.text!=='基準線(0%)'}},zoom:zoomOpt(id,c)},
     scales:{x:{type:'linear',min:0,max:c.dates.length-1,offset:true,
       ticks:{display:false},grid:{display:false}},
-     y:{ticks:{color:'#64748B',font:{size:9}},grid:{color:'#1E293B'}}}}});
+     y:{ticks:{color:'#64748B',font:{size:9}},grid:{color:'#16304A'}}}}});
   if(ZOOM_GROUP[id])ZOOM_GROUP[id].push(rsc);}}
 function openM(i){$('#m'+i).classList.add('on');document.body.style.overflow='hidden';}
 function closeM(i){$('#m'+i).classList.remove('on');document.body.style.overflow='';}

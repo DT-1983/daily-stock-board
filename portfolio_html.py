@@ -285,7 +285,7 @@ const chart=new Chart(document.getElementById('race'),{{type:'line',
  data:{{labels:{json.dumps(all_dates)},datasets:{json.dumps(datasets, ensure_ascii=False)}}},
  options:{{responsive:true,interaction:{{mode:'nearest',intersect:false}},
   plugins:{{legend:{{display:false}},tooltip:{{mode:'nearest',intersect:false}}}},
-  scales:{{y:{{grid:{{color:'#1E293B'}},ticks:{{color:'#94A3B8',
+  scales:{{y:{{grid:{{color:'#16304A'}},ticks:{{color:'#94A3B8',
     callback:function(v){{return '$'+v.toLocaleString();}}}}}},
            x:{{grid:{{display:false}},ticks:{{color:'#94A3B8',maxTicksLimit:8}}}}}}}}}});
 $$('.seg button').forEach(b=>b.onclick=()=>{{

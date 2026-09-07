@@ -1460,8 +1460,8 @@ function updateChartPoints(pts, trailDs) {
           // 切市場/基準/週期或播放動畫時整張圖的座標尺度會跟著跳動，
           // 泡泡明明沒怎麼動、畫面卻感覺在亂飄。實測全部資料落在95.8~104.9，
           // 固定 AXIS_MIN~AXIS_MAX（留一點緩衝）之後，唯一會動的只有泡泡本身。
-          x: {min: AXIS_MIN, max: AXIS_MAX, title: {display:true, text:'RS-Ratio 相對強弱', color:'#8fb0d6'}, ticks:{color:'#5f80a6', stepSize: 1}, grid:{color:'#16223A'}},
-          y: {min: AXIS_MIN, max: AXIS_MAX, title: {display:true, text:'RS-Momentum 強弱變化率', color:'#8fb0d6'}, ticks:{color:'#5f80a6', stepSize: 1}, grid:{color:'#16223A'}}
+          x: {min: AXIS_MIN, max: AXIS_MAX, title: {display:true, text:'RS-Ratio 相對強弱', color:'#8fb0d6'}, ticks:{color:'#5f80a6', stepSize: 1}, grid:{color:'#0E1B2B'}},
+          y: {min: AXIS_MIN, max: AXIS_MAX, title: {display:true, text:'RS-Momentum 強弱變化率', color:'#8fb0d6'}, ticks:{color:'#5f80a6', stepSize: 1}, grid:{color:'#0E1B2B'}}
         }
       },
       plugins: [quadrantBgPlugin(), bubbleLabelPlugin(), trailMarkerPlugin()]
@@ -1815,11 +1815,11 @@ CSS_EXTRA = """
 .rrglayout{display:grid;grid-template-columns:300px 1fr;gap:14px;align-items:start;margin-top:12px}
 /* 排行榜搬到圖表下面而不是旁邊（用戶反饋），改直排堆疊。 */
 .rrgwrap{display:flex;flex-direction:column;gap:14px}
-.rrgbox{height:520px;background:#0a1222;border:1px solid #16223A;border-radius:12px;padding:10px;position:relative}
+.rrgbox{height:520px;background:#0a1222;border:1px solid #0E1B2B;border-radius:12px;padding:10px;position:relative}
 /* 排行榜寬度改跟圖表一樣寬（原本限制 640px，右側留一大塊空白）。
  多出來的空間補兩欄新資訊：資金規模數字化、RS-Ratio 在座標軸上的相對位置迷你條——
  用戶反饋「太空了，請建議要放什麼」，這兩欄都是現成算好的資料，不用另外抓。 */
-.rrgrankpanel{background:#0a1222;border:1px solid #16223A;border-radius:12px;padding:10px;margin-top:14px}
+.rrgrankpanel{background:#0a1222;border:1px solid #0E1B2B;border-radius:12px;padding:10px;margin-top:14px}
 /* 表頭跟資料列共用同一組欄寬(CSS Grid)，這樣兩邊才能真的對齊——
  原本 flex 寫法表頭跟資料列各算各的寬度容易對不準。 */
 /* 2026-08-25：RS-Ratio／RS-Momentum 拆成兩欄（原本合併一欄，標題+數字都會被
@@ -1896,12 +1896,12 @@ CSS_EXTRA = """
 .exptk{color:#cfe6ff;font-family:var(--mono,monospace);font-weight:600}
 .expnm{color:#8fb0d6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .expwt{color:#5f80a6;text-align:right;font-variant-numeric:tabular-nums}
-.expbar{height:4px;background:#16223A;border-radius:2px;overflow:hidden}
+.expbar{height:4px;background:#0E1B2B;border-radius:2px;overflow:hidden}
 .expbarfill{display:block;height:100%;background:#25e6ff;border-radius:2px}
 .rrgrow .qv{color:#8fb0d6;font-size:11px;text-align:center}
 .rrgrow .sz{color:#8fb0d6;font-size:11.5px;font-variant-numeric:tabular-nums;text-align:right}
 .posbar{display:flex;align-items:center}
-.posbartrack{position:relative;width:100%;height:4px;background:#16223A;border-radius:2px}
+.posbartrack{position:relative;width:100%;height:4px;background:#0E1B2B;border-radius:2px}
 .posbarmark{position:absolute;top:50%;width:8px;height:8px;border-radius:50%;
  transform:translate(-50%,-50%);box-shadow:0 0 0 2px #0a1222}
 /* 多週期象限一覽：4 個小圓點對應 20/60/120/240 日，一眼看短中長期象限是否一致
@@ -1912,7 +1912,7 @@ CSS_EXTRA = """
 .playbtn{background:#132038;border:1px solid #2a3550;color:#25e6ff;
  font-size:12.5px;font-weight:600;padding:8px 14px;border-radius:8px;cursor:pointer;font-family:inherit}
 .playbtn:hover{border-color:#25e6ff}
-.playbtn:disabled{color:#5f80a6;border-color:#16223A;cursor:not-allowed}
+.playbtn:disabled{color:#5f80a6;border-color:#0E1B2B;cursor:not-allowed}
 .playbtn.playing{color:#ffb020;border-color:#ffb020}
 .playhint{font-size:11px;color:#5f80a6;align-self:center}
 .rrgframe{position:absolute;top:14px;right:20px;font-size:12px;color:#8fb0d6;
@@ -1923,7 +1923,7 @@ CSS_EXTRA = """
  原本自然高度比圖表矮一截，兩個並排的框高度對不齊。space-between 把 6 排
  控制項平均撐開分布在整個高度裡，不是全部擠在頂端、底下留一塊空白。 */
 .rrgctrl{display:flex;flex-direction:column;justify-content:space-between;height:520px;
- padding:12px 14px;background:#0a1222;border:1px solid #16223A;border-radius:12px}
+ padding:12px 14px;background:#0a1222;border:1px solid #0E1B2B;border-radius:12px}
 /* 篩選面板改窄欄直排：標籤疊在控制項上面，不是左右並排——橫排在300px塞不下。
  按鈕本身也縮小一號（padding/字級都比全站預設的 .seg button 小），
  這樣「計算週期」「回放範圍」這兩組4顆一排的才擠得進一列，不會被逼到換行。 */
@@ -1938,7 +1938,7 @@ CSS_EXTRA = """
 .tailval{font-size:12px;color:#25e6ff;font-variant-numeric:tabular-nums}
 /* 2026-08-25：說明區塊卡片化（用戶反饋原本一大坨灰字「不明顯」）。
  主要說明用比 --muted 亮的藍白色，只有最後一條(已知限制)維持muted層級。 */
-.rrgnote{background:#0a1222;border:1px solid #16223A;border-radius:12px;padding:16px 18px;margin-top:14px}
+.rrgnote{background:#0a1222;border:1px solid #0E1B2B;border-radius:12px;padding:16px 18px;margin-top:14px}
 .rrgnotehd{font-size:13.5px;font-weight:700;color:#e8f2ff;margin-bottom:10px}
 .rrgnoteitem{color:#cfe6ff;font-size:12.5px;line-height:1.75;padding:10px 0;border-top:1px solid #131c30}
 .rrgnoteitem:first-of-type{border-top:0;padding-top:0}
