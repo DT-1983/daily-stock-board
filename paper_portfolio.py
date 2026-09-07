@@ -60,7 +60,7 @@ BTC_MAX_WEIGHT = 0.10          # 該鏈標的在跨鏈主倉的合計權重上�
 # 兩邊不會漂移；本機 07:00 掃描→push，Actions 09:00 讀）。
 # 進場（打點）：≥3 燈成立 且 風報比 ≥ 1（分子=市場目標價共識−現價、分母=現價−ST線）
 #   四燈 = L1 SuperTrend(日線,SMA版ATR)多方 / L2 動能>0 / L3 雙重颱風不為綠 / L4 RS60日乖離>+3%
-#   排序：亮燈數多者先、同燈數風報比高者先；每檔 1/TREND_MIN_SLOTS 倉，現金用完為止
+#   排序：亮燈數多者先、同燈數風報比高者先；每檔 1/LAMP_MIN_SLOTS 倉，現金用完為止
 # 出場（跟原本三指標一樣，老墨的不對稱兩階段）：
 #   ① ST 翻空（bull=False）→ 賣一半（狀態判斷；賣過一半的不重複）
 #   ② RS60 跌破自己的 60MA（rs_short<0）→ 剩餘全出，全出後 LAMP_COOLDOWN_DAYS 內不再進
@@ -70,6 +70,12 @@ CHAIN_COMBO_OLD = "三指標合流"   # portfolios.json 舊倉名，load() 時�
 LAMP_RESULT = "state/combo_result.json"
 LAMP_MAX_AGE_DAYS = 4            # 掃描結果超過這麼多天沒更新就不動作（別拿舊燈號下單）
 LAMP_COOLDOWN_DAYS = 7           # 全出後幾個日曆天內不重新進場（避免出了隔天又買回）
+# 2026-09-08 Leo：「做前 10 名吧」——燈號倉的位子從 8 個放寬到 10 個。
+# 🔴 **獨立一個常數，不要改 TREND_MIN_SLOTS**：那個是趨勢倉與燈號倉共用的，
+#    直接改會把「產業鏈+趨勢」倉一起動到，而 Leo 只說要改燈號倉。
+#    ⭐ 動投資參數前先查它還有誰在用——共用常數改一個值會有兩個後果。
+# 每檔 1/10 倉（$1,000），第 9、10 名的打點進得去；代價是每檔部位變小。
+LAMP_MIN_SLOTS = 10
 MAIN = [CHAIN_ALL, CHAIN_TREND, BUFFETT_NAME, CHAIN_COMBO]
 FX_FALLBACK = 32.0              # USD/TWD 備援匯率
 
@@ -535,7 +541,8 @@ def _alloc_shares(tickers, capital, prices, fx, min_slots=0, caps=None):
     return h
 
 
-def combo_apply(state, pf, combo_frac, buy, half_sell, full_exit, prices, fx, date):
+def combo_apply(state, pf, combo_frac, buy, half_sell, full_exit,
+                prices, fx, date, slots=None):
     """三指標合流倉的實際下單：直接動股數，不走 _alloc_shares/rebalance() 的整籃子等權重重配
     ——「賣一半A」不該連動改變B的股數，這是跟其他倉本質不同的地方（單一部位獨立管理）。
     combo_frac：state裡的{ticker: 0.5或1.0}持倉比例追蹤，跟pf["holdings"]分開存。"""
@@ -556,8 +563,10 @@ def combo_apply(state, pf, combo_frac, buy, half_sell, full_exit, prices, fx, da
         combo_frac[tk] = 0.5
 
     if buy:
+        slots = slots or TREND_MIN_SLOTS
         v = _value(pf, prices, fx)
-        slot = v / TREND_MIN_SLOTS   # 跟趨勢倉同一套「最少切N份」精神，避免單檔all-in
+        # 燈號倉走自己的 LAMP_MIN_SLOTS（10），趨勢倉維持 TREND_MIN_SLOTS（8）。
+        slot = v / slots            # 「最少切N份」精神，避免單檔 all-in
         for tk in buy:
             if not prices.get(tk):
                 continue
@@ -665,7 +674,8 @@ def rebalance(state, hmap, prices, fx, date, only=None):
             continue
         v = _value(pf, prices, fx) if (pf["holdings"] or pf.get("cash")) else BASE
         # 趨勢倉/合流倉：訊號檔數常常很少，留現金避免硬集中在1-2檔（合流倉事件觸發更稀疏，同理套用）
-        slots = TREND_MIN_SLOTS if name in (CHAIN_TREND, CHAIN_COMBO) else 0
+        slots = (LAMP_MIN_SLOTS if name == CHAIN_COMBO else
+                 TREND_MIN_SLOTS if name == CHAIN_TREND else 0)
         # Bitcoin 鏈限重：套用在所有「跨鏈」主倉（單一鏈明細倉不套，那本來就是純曝險）
         caps = _btc_caps() if name in (CHAIN_ALL, CHAIN_TREND, CHAIN_COMBO) else None
         pf["holdings"] = _alloc_shares(hmap.get(name, list(pf["holdings"])), v, prices, fx,
@@ -805,7 +815,8 @@ def main():
                 allt = _all_tickers(state) | set(buy) | set(half_sell) | set(full_exit)
                 prices = fetch_prices(allt)
                 before = set(pf["holdings"])
-                combo_apply(state, pf, combo_frac, buy, half_sell, full_exit, prices, fx, date)
+                combo_apply(state, pf, combo_frac, buy, half_sell, full_exit,
+                            prices, fx, date, slots=LAMP_MIN_SLOTS)
                 bought = sorted(set(pf["holdings"]) - before)
                 for tk in full_exit:
                     exits[tk] = date
