@@ -340,8 +340,11 @@ body{margin:0}
    這裡只放連結，38px 一條；標題在左欄的「報價組合」已經有了。 */
 .roomnav{display:flex;align-items:center;gap:6px;height:38px;padding:0 10px;
  border-bottom:1px solid var(--hud,#16304A);background:var(--panel,#080E1A);
- overflow-x:auto;scrollbar-width:none;white-space:nowrap}
-.roomnav::-webkit-scrollbar{display:none}
+ white-space:nowrap;overflow:hidden}
+/* 連結區自己捲；控制項在外面，永遠看得到。 */
+.navls{display:flex;align-items:center;gap:6px;flex:1 1 auto;min-width:0;
+ overflow-x:auto;scrollbar-width:none}
+.navls::-webkit-scrollbar{display:none}
 .rnb{font-size:12px;font-weight:700;letter-spacing:.04em;margin-right:6px;
  flex:0 0 auto;color:var(--cy,#22D3EE)}
 .roomnav .nl{padding:4px 9px;min-height:0;font-size:11.5px;flex:0 0 auto;
@@ -493,7 +496,6 @@ body{margin:0}
 .tablepane table.cb tr[data-tid]{cursor:pointer}
 .tablepane table.cb tr[data-tid]:hover td{background:rgba(34,211,238,.09)}
 /* 導覽列裡的控制項（2026-09-08 從 position:fixed 搬進來）。 */
-.navsp{flex:1 1 auto;min-width:6px}
 .modebar{display:inline-flex;flex:0 0 auto;border:1px solid var(--hud,#16304A);
  overflow:hidden}
 .mb{font:inherit;font-size:11.5px;padding:3px 12px;border:0;cursor:pointer;
@@ -1122,13 +1124,17 @@ def nav_html():
     # ⭐ 原本這三顆都是 position:fixed 浮在畫面上，結果三個都擋到東西
     #    （模式鈕擋圖、軍師鈕蓋住送出、展開鈕蓋住中欄左上）。
     #    浮動鈕沒有「不擋東西的位置」——畫面滿的時候每個角落都有內容。
-    ctrl = ('<span class="navsp"></span>'
-            '<button class="lbtn lshow" id="lshow" title="展開左欄">» 報價組合</button>'
+    ctrl = ('<button class="lbtn lshow" id="lshow" title="展開左欄">» 報價組合</button>'
             '<span class="modebar"><button class="mb" id="mode-stock">個股</button>'
             '<button class="mb on" id="mode-list">列表</button></span>'
             '<button class="chatbtn" id="chatbtn">🏛️ 軍師</button>')
+    # 🔴 2026-09-08 Leo：「右上少一個軍師的按鍵」。
+    #    整條導覽列是 overflow-x:auto，連結一多就把最後一顆（軍師）推出右邊界，
+    #    在 1900px 的螢幕上剛好差幾十 px —— 看起來像「沒有這顆鈕」。
+    #    ⭐ 修法不是縮小字，是**分成兩區**：連結自己捲，控制項固定不參與捲動。
+    #       這樣不管幾個連結、螢幕多窄，控制項一定在畫面上。
     return ('<nav class="roomnav"><span class="rnb">🚦 燈號戰情室</span>'
-            f'{links}{ctrl}</nav>')
+            f'<span class="navls">{links}</span>{ctrl}</nav>')
 
 
 def page_html():
