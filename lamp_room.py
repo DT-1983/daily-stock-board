@@ -598,6 +598,75 @@ ROOM_JS = r"""
     applyScope();
   }); });
 
+  // ── 兩組篩選同步（2026-09-07 Leo：「選美股就兩邊都選美股」）──
+  // 兩邊狀態各自存在自己的閉包裡，我不去改它——改成**按對方那顆鈕**，
+  // 讓它自己的 handler 跑，狀態與每顆籤的計數都會正確更新。
+  var syncing = false;                       // 防止互按無限迴圈
+  var MKT_L2T = {"": "all", "us": "us", "tw": "tw"};
+  var MKT_T2L = {"all": "", "us": "us", "tw": "tw"};
+  // ⚠️ 有損的對應：列表多了含風報比條件的兩顆，左欄沒有（左欄的風報比是排序）。
+  //    打點→3燈、⭐⭐→4燈，只取燈數那一半。寧可左欄少濾一點，
+  //    也不要讓它的檔數比列表少而說不出原因。
+  var LIT_L2T = {"": "all", "3": "3", "4": "4"};
+  var LIT_T2L = {"all": "", "3": "3", "4": "4", "hit": "3", "hit4": "4"};
+
+  function clickIf(sel){
+    var el = document.querySelector(sel);
+    if (el && el.getAttribute("aria-pressed") !== "true"
+           && !el.classList.contains("on")) { el.click(); }
+  }
+
+  // 左欄 → 列表
+  document.querySelectorAll(".ch").forEach(function(b){
+    b.addEventListener("click", function(){
+      if (syncing) return;
+      syncing = true;
+      try {
+        // ⚠️ 左欄的籤是 data-m / data-l（不是 data-mkt / data-lit）。
+        //    我第一版寫錯屬性名 → 同步整個沒接上**而且不會報錯**。
+        if (b.dataset.m !== undefined) {
+          var v = MKT_L2T[b.dataset.m];
+          if (v) clickIf('[data-f="mkt"][data-v="' + v + '"]');
+        } else if (b.dataset.l !== undefined) {
+          var w = LIT_L2T[b.dataset.l];
+          if (w) clickIf('[data-f="lit"][data-v="' + w + '"]');
+        }
+      } finally { syncing = false; }
+    });
+  });
+
+  // 列表 → 左欄
+  document.querySelectorAll('.tablepane [data-f]').forEach(function(b){
+    b.addEventListener("click", function(){
+      if (syncing) return;
+      syncing = true;
+      try {
+        var m = null;
+        if (b.dataset.f === "mkt") m = MKT_T2L[b.dataset.v];
+        else if (b.dataset.f === "lit") m = LIT_T2L[b.dataset.v];
+        if (m === null || m === undefined) return;    // 象限/來源左欄沒有，跳過
+        var g = (b.dataset.f === "mkt") ? "m" : "l";
+        var el = document.querySelector('.ch[data-' + g + '="' + m + '"]');
+        if (el && !el.classList.contains("on")) el.click();
+      } finally { syncing = false; }
+    });
+  });
+
+  // 開頁時把左欄的預設（台股＋4燈）推到列表去。
+  // ⚠️ 沒有這一步，開頁就是**兩邊不一致**：左欄已經濾成台股 4 燈，
+  //    表格還顯示 312 檔全部——同一個畫面兩套數字，比沒有同步更糟。
+  (function(){
+    syncing = true;
+    try {
+      var m0 = document.querySelector(".ch[data-m].on");
+      var l0 = document.querySelector(".ch[data-l].on");
+      if (m0 && MKT_L2T[m0.dataset.m])
+        clickIf('[data-f="mkt"][data-v="' + MKT_L2T[m0.dataset.m] + '"]');
+      if (l0 && LIT_L2T[l0.dataset.l])
+        clickIf('[data-f="lit"][data-v="' + LIT_L2T[l0.dataset.l] + '"]');
+    } finally { syncing = false; }
+  })();
+
   // ── 模式切換（列表 / 個股）──
   // ⚠️ 列表模式是**預設**：Leo 的用法是先掃描再鑽進去，開頁就看到表比較順。
   //    手機在外面也是先看列表。

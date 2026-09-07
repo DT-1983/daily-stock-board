@@ -217,48 +217,72 @@ CSS = """
 """
 
 
-def _watch(d, px, fc_rows):
-    """「要注意什麼」——**全部由程式判斷**，一條都不是 AI 寫的。
+def _pros_cons(d, px, fc_rows):
+    """回 (站得住的, 要注意的)。**兩邊都是程式判斷**，一條都不是 AI 寫的。
 
-    ⚠️ 只列**這一檔真的成立**的，沒有就不列。湊數的提醒會讓人不再讀這一段，
-    然後真的有事的那天也一起跳過。
+    ⚠️ 只列**這一檔真的成立**的，沒有就留白。湊數的條目會讓人不再讀這一段，
+    然後真的有事的那天也一起跳過（同財報懶人包利多/風險的作法）。
     """
-    out = []
     L = d.get("lamp") or {}
     rr, gap = L.get("rr"), L.get("gap_pct")
+    pros, cons = [], []
+
+    # ── 站得住的 ──
+    if L.get("combo") and rr is not None and rr >= 1:
+        pros.append(f"⭐ 打點成立：亮 {L.get('lit')}/4 燈且風報比 {rr:,.1f}（≥1）")
+    elif L.get("lit") is not None and L["lit"] >= 3:
+        pros.append(f"技術面共振：{L['lit']}/4 燈")
+    if L.get("bull") and gap is not None and gap >= 5:
+        pros.append(f"距 SuperTrend 停損線還有 {gap:.1f}%，不是貼著停損進場")
+    rs_s, rs_l = L.get("rs_short"), L.get("rs_long")
+    if rs_s is not None and rs_l is not None and rs_s > 0 and rs_l > 0:
+        pros.append(f"相對強度短長皆正（RS60 {rs_s:+.1f}%／RS240 {rs_l:+.1f}%）")
+    b = d.get("base_rate") or {}
+    tier = ((b.get("requirement") or {}).get("tier")) if isinstance(b, dict) else None
+    if tier == "normal":
+        pros.append("預估前提落在這檔自己過去做得到的範圍內，有容錯空間")
+    m = d.get("margin") or {}
+    if isinstance(m, dict) and m.get("pct_rank") is not None and m["pct_rank"] <= 40:
+        pros.append(f"毛利率在自身歷史第 {m['pct_rank']:.0f} 百分位，還有往上的空間")
+    n_ok = sum(1 for r in (fc_rows or []) if r.get("verdict") == "ok")
+    if n_ok:
+        pros.append(f"查核有 {n_ok} 條對得上（報告的說法跟我們算的一致）")
+
+    # ── 要注意的 ──
     if rr is not None and rr < 0:
-        out.append(("超過共識目標", "現價已高於市場共識目標價，燈還亮但上檔空間沒了"))
+        cons.append("現價已高於市場共識目標——燈還亮，但上檔空間沒了")
     if L.get("bull") and gap is not None and gap < 5:
-        out.append(("逼近停損", f"距 SuperTrend 停損線只剩 {gap:.1f}%，"
-                                "風報比的分母很小、數字會被放大"))
+        cons.append(f"距停損線只剩 {gap:.1f}%，風報比的分母很小、數字會被放大")
     if L.get("bull") is False:
-        out.append(("SuperTrend 空方", "這條線現在是壓力不是停損；出場規則已觸發過"))
-    n_fc = sum(1 for r in (fc_rows or []) if r.get("verdict") == "warn")
-    if n_fc:
-        out.append((f"查核抓到 {n_fc} 條落差", "報告的假設跟這檔自己的歷史對不上，細節看下面查核表"))
+        cons.append("SuperTrend 空方——這條線現在是壓力不是停損，出場規則已觸發過")
+    n_warn = sum(1 for r in (fc_rows or []) if r.get("verdict") == "warn")
+    if n_warn:
+        cons.append(f"查核抓到 {n_warn} 條落差：報告的假設跟這檔自己的歷史對不上")
+    if tier in ("unprecedented", "rare"):
+        cons.append("預估前提要求貼在或超出這檔自身歷史紀錄——不是做不到，是沒有容錯空間")
     for r in (d.get("reports") or [])[:3]:
         try:
             import broker_credibility as _bc
             note = _bc.note_for(r.get("broker"))
         except Exception:                                   # noqa: BLE001
             note = None
+        # ⚠️ note_for() 回的是 **dict** 不是字串（今天 cell_fired 同一型的坑：
+        #    同名不同型別而且不會報錯）。要挑欄位出來用。
         if note:
-            # ⚠️ note_for() 回的是 **dict** 不是字串。直接塞進 f-string 會把
-            # 整包 {'tag': …, 'note': …} 印在報告最上面（今天 cell_fired 才踩過
-            # 同一型：**同名不同型別，而且不會報錯**）。要挑欄位出來用。
-            out.append((f"{r.get('broker')}：{note.get('tag') or '有已知偏誤'}",
-                        note.get("note") or ""))
+            cons.append(f"{r.get('broker')} {note.get('tag') or '有已知偏誤'}"
+                        "——看它的目標價時記得折價")
             break
-    m = d.get("margin") or {}
-    if isinstance(m, dict) and (m.get("pct_rank") is not None) and m["pct_rank"] >= 90:
-        out.append(("毛利率位階偏高", f"在自己歷史的第 {m['pct_rank']:.0f} 百分位——"
-                                     "往上的空間有限，預估要靠它再擴張就要小心"))
-    return out
+    if isinstance(m, dict) and m.get("pct_rank") is not None and m["pct_rank"] >= 90:
+        cons.append(f"毛利率在自身歷史第 {m['pct_rank']:.0f} 百分位，"
+                    "預估要靠它再擴張就要小心")
+    if not (d.get("reports") or []):
+        cons.append("目前沒有券商報告，下面的目標價是市場共識（多家平均）不是單一家的推導")
+    return pros, cons
 
 
 def _intro_html(d, name, px, fc_rows=None):
-    """報告最上面那一段。三段：這家在做什麼／現在什麼狀態／要注意什麼。"""
-    from board_theme import esc
+    """報告最上面那一段。版型抄財報懶人包：大數字磚＋中英雙標題＋兩欄利多風險。"""
+    from board_theme import esc, esc_b
     L = d.get("lamp") or {}
 
     # ① 這家在做什麼（唯一一段 AI 寫的；查不到就整段不出現，不要編）
@@ -272,40 +296,58 @@ def _intro_html(d, name, px, fc_rows=None):
     if prof and (prof.get("sector") or prof.get("industry")):
         sect = f'{prof.get("sector") or "—"}／{prof.get("industry") or "—"}'
 
-    # ② 現在是什麼狀態——**全部是既有欄位，程式填**
-    bits = []
+    # ② 大數字磚——**全部是既有欄位，程式填**（能算的不要讓 AI 用講的）
+    def tile(lab, val, sub="", cls=""):
+        return (f'<div class="bk"><div class="lb">{esc(lab)}</div>'
+                f'<div class="vl {cls}">{val}</div>'
+                + (f'<div class="sb2">{esc(sub)}</div>' if sub else "") + "</div>")
+    tiles = []
     if L.get("lit") is not None:
-        bits.append(f'<b>{L["lit"]}/4 燈</b>')
+        tiles.append(tile("LAMPS 燈號", f'{L["lit"]}/4',
+                          "⭐ 打點成立" if (L.get("combo") and (L.get("rr") or 0) >= 1)
+                          else ("COMBO 成立" if L.get("combo") else "未達 COMBO")))
     if L.get("bull") is not None:
-        bits.append("🔴 SuperTrend 多方" if L["bull"] else "🟢 SuperTrend 空方")
+        tiles.append(tile("TREND 趨勢", "🔴 多方" if L["bull"] else "🟢 空方",
+                          (f'停損線 {L["st_line"]:,.1f}' if L.get("st_line") and L["bull"]
+                           else (f'站上 {L["st_line"]:,.1f} 才翻多' if L.get("st_line") else ""))))
     if L.get("rr") is not None:
-        bits.append(f'風報比 <b>{L["rr"]:,.1f}</b>')
+        tiles.append(tile("R:R 風報比", f'{L["rr"]:,.1f}',
+                          "目標與停損的比值",
+                          "pos" if L["rr"] >= 1 else ("neg" if L["rr"] < 0 else "")))
     if L.get("target") and px:
         up = (L["target"] / px - 1) * 100
-        bits.append(f'距共識目標 <b>{up:+.1f}%</b>')
+        tiles.append(tile("UPSIDE 距共識目標", f'{up:+.1f}%',
+                          f'共識 {L["target"]:,.0f}', "pos" if up > 0 else "neg"))
     if L.get("rs_short") is not None:
-        bits.append(f'RS60 <b>{L["rs_short"]:+.1f}%</b>')
+        tiles.append(tile("RS 相對強度", f'{L["rs_short"]:+.1f}%',
+                          (f'長線 {L["rs_long"]:+.1f}%' if L.get("rs_long") is not None else ""),
+                          "pos" if L["rs_short"] > 0 else "neg"))
     n_rep = len(d.get("reports") or [])
-    bits.append(f'券商報告 <b>{n_rep}</b> 份' if n_rep else "尚無券商報告")
+    tiles.append(tile("REPORTS 券商報告", f'{n_rep}',
+                      (d["reports"][0].get("broker") if n_rep else "尚無") or ""))
 
-    # ③ 要注意什麼
-    ws = _watch(d, px, fc_rows)
-    # ⚠️ 用 esc_b 不是 esc：券商偏誤那條的原文帶 **粗體** 標記，
-    # 用 esc 會把星號原封不動印出來（board_theme.esc_b 專門處理這個）。
-    from board_theme import esc_b
-    wh = "".join(f'<li><b>{esc(k)}</b>　{esc_b(v)}</li>' for k, v in ws)
+    # ③ 站得住的 / 要注意的（兩欄並排，同財報懶人包的利多/風險）
+    pros, cons = _pros_cons(d, px, fc_rows)
+    def lst(title, items, cls, mark):
+        if not items:
+            return (f'<div class="col {cls}"><h3>{title}</h3>'
+                    '<div class="none">這一檔目前沒有。</div></div>')
+        li = "".join(f'<li><span class="mk">{mark}</span>{esc_b(x)}</li>' for x in items)
+        return f'<div class="col {cls}"><h3>{title}</h3><ul>{li}</ul></div>'
 
     return ('<div class="sb intro">'
-            '<h2>這是什麼</h2>'
+            '<h2>這是什麼 <span class="en">What It Does</span></h2>'
             + (f'<div class="ibiz">{esc(txt)}</div>' if txt else
                '<div class="sub">（yfinance 查不到這檔的業務說明——'
                '不編一段給你，下面的數字照常）</div>')
             + (f'<div class="isec">{esc(sect)}</div>' if sect else "")
-            + f'<div class="istat">{"　·　".join(bits)}</div>'
-            + (f'<div class="iwatch"><div class="iwh">要注意什麼</div>'
-               f'<ul>{wh}</ul></div>' if wh else "")
-            + '<div class="sub">上面這段業務描述由本機 claude 從 yfinance 的'
-              '公開說明濃縮，<b>沒有給它任何數字</b>；狀態與提醒全部是程式算的。</div>'
+            + f'<div class="bks">{"".join(tiles)}</div>'
+            + '<div class="two2">'
+            + lst("站得住的 <span class=\'en\'>Supports</span>", pros, "ok", "✓")
+            + lst("要注意的 <span class=\'en\'>Watch</span>", cons, "warn", "✕")
+            + "</div>"
+            + '<div class="sub">業務描述由本機 claude 從 yfinance 的公開說明濃縮，'
+              '<b>沒有給它任何數字</b>；上面的磚與兩欄清單全部是程式算的。</div>'
             '</div>')
 
 
@@ -633,19 +675,41 @@ def _stat(d):
 
 
 BRIEF_INTRO_CSS = """
+/* 版型抄財報懶人包（.kpis / 中英雙標題 / 利多風險兩欄），
+   ⚠️ 但**不 import 它的 CSS**——那份整份寫死 #132A47/#1E3A5F，
+   搬過來等於把偏離色票的問題一起搬。這裡只抄版型，顏色一律 var(--*)。 */
 .intro{border-left:3px solid var(--cy,#22D3EE)}
-.ibiz{font-size:14.5px;line-height:1.9;color:var(--ink);margin:6px 0 2px}
-.isec{font-size:11.5px;color:var(--dim);letter-spacing:.06em;margin-bottom:9px}
-.istat{font-size:13px;color:var(--muted);line-height:2;padding:8px 0;
- border-top:1px solid var(--line2);border-bottom:1px solid var(--line2)}
-.istat b{color:var(--ink);font-family:'IBM Plex Mono',ui-monospace,monospace;
- font-variant-numeric:tabular-nums}
-.iwatch{margin-top:9px}
-.iwh{font-size:10.5px;letter-spacing:.16em;color:var(--warn,#FFB627);
- font-family:'IBM Plex Mono',ui-monospace,monospace;margin-bottom:4px}
-.iwatch ul{margin:0;padding-left:17px}
-.iwatch li{font-size:12.5px;line-height:1.85;color:var(--muted)}
-.iwatch li b{color:var(--ink)}
+.intro h2 .en,.intro h3 .en{font-family:'IBM Plex Mono',ui-monospace,monospace;
+ font-size:10.5px;letter-spacing:.18em;color:var(--dim);font-weight:400;margin-left:7px}
+.ibiz{font-size:14.5px;line-height:1.95;color:var(--ink);margin:8px 0 2px}
+.isec{font-size:11px;color:var(--dim);letter-spacing:.14em;margin-bottom:12px;
+ font-family:'IBM Plex Mono',ui-monospace,monospace}
+.bks{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--hud,#16304A);
+ border:1px solid var(--hud,#16304A);margin:10px 0 14px}
+.bk{background:var(--panel,#080E1A);padding:10px 11px;min-width:0}
+.bk .lb{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:9px;
+ letter-spacing:.13em;color:var(--dim);text-transform:uppercase;white-space:nowrap;
+ overflow:hidden;text-overflow:ellipsis}
+.bk .vl{font-size:21px;font-weight:700;margin:4px 0 2px;letter-spacing:-.01em;
+ font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.bk .vl.pos{color:var(--up)}.bk .vl.neg{color:var(--down)}
+.bk .sb2{font-size:10.5px;color:var(--dim);line-height:1.5}
+.two2{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--hud,#16304A);
+ border:1px solid var(--hud,#16304A)}
+.two2 .col{background:var(--panel,#080E1A);padding:11px 13px}
+.two2 h3{font-size:12.5px;font-weight:700;margin:0 0 7px}
+.two2 .ok h3{color:var(--up)}.two2 .warn h3{color:var(--warn,#FFB627)}
+.two2 ul{margin:0;padding:0;list-style:none}
+.two2 li{font-size:12.5px;line-height:1.8;color:var(--muted);margin-bottom:6px;
+ display:flex;gap:7px}
+.two2 li b{color:var(--ink)}
+.two2 .mk{flex:0 0 auto;font-weight:700}
+.two2 .ok .mk{color:var(--up)}.two2 .warn .mk{color:var(--warn,#FFB627)}
+.two2 .none{font-size:12px;color:var(--dim)}
+@media(max-width:820px){
+ .bks{grid-template-columns:repeat(2,1fr)}
+ .two2{grid-template-columns:1fr}
+}
 """
 
 INDEX_NAME = "整合報告索引.html"
