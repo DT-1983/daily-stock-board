@@ -825,6 +825,85 @@ def main():
                 print(f"✅ 進出燈號倉 {date}（燈號 {res['date']}，匯率 {fx:.2f}）：買進+{bought or '無'}"
                       f"（打點候選 {len(buy)} 檔，現金吃完為止） / 賣一半{half_sell or '無'} / "
                       f"全出{full_exit or '無'} → 現持 {len(pf['holdings'])} 檔，現金 ${pf['cash']:,.0f}")
+    elif cmd == "lamp-slots":
+        # 位子數改了之後把燈號倉調到新的形狀。手動執行，不進排程。
+        import shutil
+        state = load()
+        pf = state["portfolios"][CHAIN_COMBO]
+        res = load_lamp_result(date)
+        if not res:
+            print("讀不到燈號掃描結果，不動作")
+            return
+        bak = STORE + f".{date}.bak"
+        shutil.copy(STORE, bak)
+        print(f"已備份 {bak}")
+
+        exits = state.setdefault("lamp_exits", {})
+        held_frac = state.get("combo_frac") or {}
+        rows = res["rows"]
+        buy_all, _hs, _fe = lamp_signal_events(rows, held_frac, exits, date)
+        allt = _all_tickers(state) | set(buy_all)
+        prices = fetch_prices(allt)
+        fx = get_fx()
+
+        v = _value(pf, prices, fx)
+        slot = v / LAMP_MIN_SLOTS
+        print(f"總市值 {v:,.0f}｜新的每份 {slot:,.0f}（1/{LAMP_MIN_SLOTS}）")
+        print("── 調整前 ──")
+        for tk, h in pf["holdings"].items():
+            pu = to_usd(tk, prices.get(tk) or h["eu"], fx)
+            print(f"   {tk:10} {h['sh']:>10.4f} 股　市值 {h['sh'] * pu:,.0f}")
+
+        # ② 修到 1/N：只賣多的，不加碼不足的
+        #    ⚠️ 不足的不補——那會變成「用新錢攤平」，不是這次要做的事。
+        freed = 0.0
+        for tk, h in list(pf["holdings"].items()):
+            pu = to_usd(tk, prices.get(tk) or h["eu"], fx)
+            if not pu:
+                continue
+            mv = h["sh"] * pu
+            if mv <= slot:
+                continue
+            sell_sh = (mv - slot) / pu
+            h["sh"] = round(h["sh"] - sell_sh, 4)
+            freed += sell_sh * pu
+            print(f"   修 {tk:10} 賣 {sell_sh:.4f} 股　釋出 {sell_sh * pu:,.0f}")
+        pf["cash"] = pf.get("cash", 0.0) + freed
+        print(f"釋出現金 {freed:,.0f}｜可用現金 {pf['cash']:,.0f}")
+
+        # ③ 照策略自己的排序補位（lamp_signal_events 已經濾掉持有與冷卻期）
+        need = LAMP_MIN_SLOTS - len(pf["holdings"])
+        bought = []
+        for tk in buy_all:
+            if need <= 0 or pf["cash"] <= 0:
+                break
+            pu = to_usd(tk, prices.get(tk) or 0, fx)
+            if not pu or pu <= 0:
+                print(f"   跳過 {tk}（沒有價格）")
+                continue
+            size = min(pf["cash"], slot)
+            pf["holdings"][tk] = {"sh": round(size / pu, 4), "eu": round(pu, 4),
+                                  "en": round(prices[tk], 2)}
+            pf["cash"] -= size
+            (state.setdefault("combo_frac", {}))[tk] = 1.0
+            bought.append(tk)
+            need -= 1
+            print(f"   買 {tk:10} {size:,.0f}")
+
+        _refresh_current(pf, prices, fx)
+        update_nav(state, prices, fx, date)
+        save(state)
+        print("── 調整後 ──")
+        for tk, h in pf["holdings"].items():
+            pu = to_usd(tk, prices.get(tk) or h["eu"], fx)
+            print(f"   {tk:10} {h['sh']:>10.4f} 股　市值 {h['sh'] * pu:,.0f}")
+        print(f"✅ {len(pf['holdings'])} 檔｜現金 {pf['cash']:,.2f}｜買進 {bought or '無'}")
+        json.dump({"date": date, "lamp_date": res.get("date"), "buy": bought,
+                   "half_sell": [], "full_exit": [], "held": len(pf["holdings"]),
+                   "cash": round(pf["cash"], 2), "note": f"位子數調整為 {LAMP_MIN_SLOTS}"},
+                  open("state/lamp_trades_today.json", "w", encoding="utf-8"),
+                  ensure_ascii=False, indent=1)
+
     elif cmd == "nav":
         prices = fetch_prices(_all_tickers(state))
         update_nav(state, prices, fx, date)
