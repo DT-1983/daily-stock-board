@@ -1,14 +1,18 @@
 {
- "date": "2026-09-05",
- "lamp_date": "2026-09-04",
+ "date": "2026-09-07",
+ "lamp_date": "2026-09-07",
  "buy": [
   "6442.TW",
-  "NVDA"
+  "BAYRY",
+  "MA",
+  "NDSN",
+  "NVDA",
+  "PAAS",
+  "TM",
+  "V"
  ],
  "half_sell": [],
- "full_exit": [
-  "1504.TW"
- ],
- "held": 9,
+ "full_exit": [],
+ "held": 8,
  "cash": 0.0
 }
