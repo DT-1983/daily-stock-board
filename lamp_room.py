@@ -347,6 +347,8 @@ body{margin:0}
 .roomnav .nl{padding:4px 9px;min-height:0;font-size:11.5px;flex:0 0 auto;
  border-radius:0;background:transparent}
 .roomnav .nl svg{width:13px;height:13px}
+.roomnav .nl.alt{font-size:10.5px;color:var(--dim);border-style:dashed;
+ margin-left:-3px}
 /* ⚠️ 高度要扣掉導覽列，不然版型會比視窗高 38px，底下多一條捲軸。 */
 .room{display:grid;grid-template-columns:320px minmax(0,1fr) 0;gap:var(--gap);
  height:calc(100vh - 38px);padding:var(--gap);box-sizing:border-box;background:var(--bg)}
@@ -1048,9 +1050,22 @@ def nav_html():
     相對路徑會連到自己那台的 404。
     """
     from board_theme import nav_abs, icon, esc
-    links = "".join(
-        f'<a class="nl" href="{href}">{icon(ic, 13)}{esc(lab)}</a>'
-        for _k, ic, lab, href in nav_abs())
+    # 🔴 2026-09-07 Leo：「從上面快捷按鍵進去是舊的」。
+    # 「進出燈號」原本連到公開的靜態燈號頁（GitHub Pages），
+    # 等於從戰情室按一下就被送出去，而且看到的是同一份資料的另一種呈現。
+    # 戰情室的列表模式**就是**進出燈號，所以這一顆改成指回自己並標成目前頁。
+    # ⚠️ 公開那份沒有被取代——它的存在理由是「不需要本機開機」，
+    #    電腦沒開的時候只有它看得到。所以另外留一顆「公開版」。
+    out = []
+    for k, ic, lab, href in nav_abs():
+        if k == "combo":
+            out.append(f'<a class="nl cur" href="/room">{icon(ic, 13)}{esc(lab)}</a>')
+            out.append(f'<a class="nl alt" href="{href}" '
+                       f'title="GitHub Pages 上的靜態版，本機沒開機時也看得到">'
+                       f'{esc("公開版")}</a>')
+        else:
+            out.append(f'<a class="nl" href="{href}">{icon(ic, 13)}{esc(lab)}</a>')
+    links = "".join(out)
     return ('<nav class="roomnav"><span class="rnb">🚦 燈號戰情室</span>'
             f'{links}</nav>')
 
