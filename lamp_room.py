@@ -145,14 +145,14 @@ def left_html(items, asof):
         '</div>'
         '<div class="chips">'
         '<span class="cl">市場</span>'
-        '<button class="ch on" data-m="">全部</button>'
+        '<button class="ch" data-m="">全部</button>'
         '<button class="ch" data-m="us">美股</button>'
-        '<button class="ch" data-m="tw">台股</button>'
+        '<button class="ch on" data-m="tw">台股</button>'
         '</div>'
         '<div class="chips">'
         '<span class="cl">只看</span>'
-        '<button class="ch on" data-l="">全部燈數</button>'
-        '<button class="ch" data-l="4">4燈</button>'
+        '<button class="ch" data-l="">全部燈數</button>'
+        '<button class="ch on" data-l="4">4燈</button>'
         '<button class="ch" data-l="3">≥3燈</button>'
         '</div></div>'
         '<ul class="list" id="list">' + "".join(lis) + "</ul></aside>")
@@ -179,6 +179,11 @@ def detail_html(ticker):
 
     QL = {"leading": "🟢 領先", "improving": "🔵 改善",
           "weakening": "🟡 轉弱", "lagging": "🔴 落後"}
+    # 跟四燈同一種「亮/滅」語彙。半亮＝改善（還沒到領先但在往上走）。
+    QDOT = {"leading": '<i class="lp on"></i>亮　',
+            "improving": '<i class="lp half"></i>半亮　',
+            "weakening": '<i class="lp"></i>滅　',
+            "lagging": '<i class="lp"></i>滅　'}
     lamps = raw.get("lamps") or {}
     lamp_rows = "".join(
         f'<div class="lrow"><i class="lp {"on" if v else ""}"></i>{esc(k)}</div>'
@@ -209,9 +214,13 @@ def detail_html(ticker):
         f'<div class="dc"><div class="k">RS60</div>'
         f'<div class="v">{num(raw.get("rs_short"), 2, "%")}</div>'
         f'<div class="s">{"高於自身 60 日均線" if (raw.get("rs_short") or 0) > 0 else "低於自身 60 日均線"}</div></div>',
-        f'<div class="dc"><div class="k">輪動象限</div>'
+        # H（Leo：「可以加上 RRG 的訊號嗎? 跟燈號一樣（在最上面的字卡）」）
+        # 象限本來就有，但只是一行文字。改成跟四燈同一種「亮/滅」語彙：
+        # 領先＝亮，改善＝半亮（在往上走），轉弱/落後＝滅。
+        # ⚠️ 這**不是新指標**，就是同一份 RRG 象限換個畫法——不要讓人以為多了一個訊號。
+        f'<div class="dc"><div class="k">RRG 輪動</div>'
         f'<div class="v">{QL.get(r["quad"], "—")}</div>'
-        f'<div class="s">{esc(r["src"])}</div></div>',
+        f'<div class="s">{QDOT.get(r["quad"], "")}{esc(r["src"])}</div></div>',
     ])
 
     tech = ""
@@ -220,7 +229,9 @@ def detail_html(ticker):
         import tw_symbol
         sym = (tw_symbol.resolve(r["tk"]) if r["tk"][:1].isdigit()
                else r["tk"].replace(".", "-"))
-        tech = ti.build_html(sym, expanded=True) or ""
+        # F：把分析師共識目標價傳給圖，主圖才畫得出那條黃色目標價線
+        #    （technical_indicators 自己不知道目標價，那是 combo_result 的欄位）
+        tech = ti.build_html(sym, expanded=True, target=r.get("tgt")) or ""
     except Exception as e:                                  # noqa: BLE001
         tech = (f'<div class="warn">技術圖產生失敗（上面的數字仍然有效）：'
                 f'{esc(str(e)[:140])}</div>')
@@ -307,6 +318,7 @@ body{margin:0}
 .l2 .lamps{margin-left:auto;display:flex;gap:3px}
 .lp{width:7px;height:7px;border-radius:50%;background:var(--line);display:inline-block}
 .lp.on{background:#fbbf24}
+.lp.half{background:#fbbf24;opacity:.45}
 .up{color:var(--up,#4ade80)}.dn{color:var(--down,#f87171)}
 .dhead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
  padding:12px 14px;border-bottom:1px solid var(--line)}
@@ -314,9 +326,13 @@ body{margin:0}
 .dhead .nm{color:var(--dim);font-size:13px}
 .dhead .px{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
 .dhead .dim{margin-left:auto;font-size:11px;color:var(--dim)}
-.dcards{display:grid;gap:1px;background:var(--line);
- grid-template-columns:repeat(auto-fit,minmax(180px,1fr));margin-bottom:10px}
-.dc{background:var(--surface);padding:9px 12px}
+/* G（2026-09-07 Leo：「上面字卡幫我做成一排就好」）
+   原本 auto-fit minmax(180px) 會折成兩排，把圖擠下去。改成單排橫向捲，
+   欄位再多也只佔一排；窄螢幕靠自己捲，不吃圖的高度。 */
+.dcards{display:flex;gap:1px;background:var(--line);margin-bottom:10px;
+ overflow-x:auto;-webkit-overflow-scrolling:touch}
+.dc{flex:1 0 150px}
+.dc{background:var(--surface);padding:9px 12px;min-width:0}
 .dc .k{font-size:10px;color:var(--dim)}
 .dc .v{font-size:16px;font-weight:700;margin-top:2px}
 .dc .s{font-size:10.5px;color:var(--muted,#94a3b8);margin-top:3px;line-height:1.7}
@@ -357,7 +373,9 @@ body{margin:0}
 ROOM_JS = r"""
 <script>
 (function(){
-  var F = {q:"", mkt:"", lit:"", sort:"lit"};
+  // I（Leo：「預設選台股、四燈」）。⚠️ 初值要跟上面 class="ch on" 的那兩顆一致，
+  // 兩邊分開寫就是遲早會對不上——畫面標亮但實際沒套用，最難查的那種。
+  var F = {q:"", mkt:"tw", lit:"4", sort:"lit"};
   var list = document.getElementById("list");
   var items = Array.prototype.slice.call(list.querySelectorAll(".it"));
   var cur = null;
@@ -483,7 +501,10 @@ ROOM_JS = r"""
   });
 
   apply();
-  if (items.length) { pick(items[0]); }
+  // ⚠️ 要選**篩選後看得到的**第一檔，不是 items[0]。
+  //    預設是台股+4燈，items[0] 卻是美股 MA → 中間顯示一檔左邊看不到的股票。
+  const first = items.find(function(e){ return !e.hidden; });
+  if (first) { pick(first); }
 })();
 </script>
 """
