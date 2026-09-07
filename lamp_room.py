@@ -137,7 +137,7 @@ def left_html(items, asof):
             "</li>")
     return (
         '<aside class="pane left"><div class="grip" id="grip"></div>'
-        f'<div class="phead">報價組合<span class="dim">{len(items)} 檔 · {esc(asof)}</span></div>'
+        f'<div class="phead">報價組合<span class="dim">{len(items)} 檔 · {esc(asof)}</span>''<button class="lbtn" id="lhide" title="收合左欄（把空間讓給圖表）">«</button></div>'
         '<div class="ctrlbar">'
         '<input class="q" id="q" type="search" placeholder="搜代號／名稱／產業" autocomplete="off">'
         '<div class="chips">'
@@ -350,13 +350,34 @@ body{margin:0}
 .roomnav .nl.alt{font-size:10.5px;color:var(--dim);border-style:dashed;
  margin-left:-3px}
 /* ⚠️ 高度要扣掉導覽列，不然版型會比視窗高 38px，底下多一條捲軸。 */
-.room{display:grid;grid-template-columns:320px minmax(0,1fr) 0;gap:var(--gap);
+/* --lw＝左欄寬度，由拖曳把手改（存 localStorage）。
+   🔴 原本這裡寫死 320px，所以 JS 設的 --lw 沒有任何人在讀——拖了不會動。 */
+:root{--lw:320px}
+.room{display:grid;grid-template-columns:var(--lw) minmax(0,1fr) 0;gap:var(--gap);
  height:calc(100vh - 38px);padding:var(--gap);box-sizing:border-box;background:var(--bg)}
-.room.chat{grid-template-columns:320px minmax(0,1fr) 380px}
+/* 收合：左欄整個不佔位。⚠️ 用 grid-template-columns 收掉而不是 display:none——
+   中欄要拿到多出來的寬度，圖表才會跟著變寬。 */
+.room.lhide{grid-template-columns:0 minmax(0,1fr) 0}
+.room.lhide .pane.left{display:none}
+.room.lhide.chat{grid-template-columns:0 minmax(0,1fr) 380px}
+.room.chat{grid-template-columns:var(--lw) minmax(0,1fr) 380px}
 .pane{background:var(--panel,#080E1A);border:1px solid var(--hud,#16304A);border-radius:2px;
  overflow:auto;min-height:0}
 .pane.left{position:relative}
-.grip{right:-3px}
+/* 🔴 原本只有 `right:-3px`：沒有 position、沒有寬高、沒有 cursor，
+   那條把手在畫面上不存在也抓不到——所以「可以拉動」這件事從來沒有生效過。 */
+.grip{position:absolute;top:0;right:-4px;width:8px;height:100%;z-index:5;
+ cursor:col-resize;touch-action:none}
+.grip::after{content:"";position:absolute;top:0;left:3px;width:2px;height:100%;
+ background:transparent;transition:background .15s}
+.grip:hover::after,.grip.on::after{background:var(--cy,#22D3EE)}
+/* 收合／展開鍵 */
+.lbtn{background:none;border:1px solid var(--hud,#16304A);color:var(--dim);
+ cursor:pointer;font:inherit;font-size:11px;padding:2px 7px;margin-left:6px;
+ line-height:1.4}
+.lbtn:hover{border-color:var(--cy,#22D3EE);color:var(--cy,#22D3EE)}
+.lshow{position:fixed;left:8px;top:46px;z-index:9;display:none}
+.room.lhide ~ .lshow{display:block}
 .room.chat .right{display:flex;flex-direction:column}
 .phead{position:sticky;top:0;z-index:2;background:var(--panel,#080E1A);
  padding:10px 12px;border-bottom:1px solid var(--hud,#16304A);font-weight:700;font-size:13px;
@@ -1003,17 +1024,41 @@ ROOM_JS = r"""
     const saved = (function(){ try { return localStorage.getItem("roomLW"); }
                                catch(e) { return null; } })();
     if (saved) room.style.setProperty("--lw", saved);
+    // 收合／展開。⚠️ 收合後圖要 resize()——中欄變寬了 Chart.js 不會自己察覺。
+    function resizeCharts(){
+      setTimeout(function(){
+        document.querySelectorAll("#mid canvas").forEach(function(c){
+          const ch = (window.Chart && Chart.getChart) ? Chart.getChart(c) : null;
+          if (ch) ch.resize();
+        });
+      }, 40);
+    }
+    function setHide(on){
+      room.classList.toggle("lhide", on);
+      const sb = document.getElementById("lshow");
+      if (sb) sb.style.display = on ? "block" : "none";
+      try { localStorage.setItem("roomLHide", on ? "1" : "0"); } catch(e) {}
+      resizeCharts();
+    }
+    const hb = document.getElementById("lhide");
+    const sb = document.getElementById("lshow");
+    if (hb) hb.addEventListener("click", function(){ setHide(true); });
+    if (sb) sb.addEventListener("click", function(){ setHide(false); });
+    try { if (localStorage.getItem("roomLHide") === "1") setHide(true); } catch(e) {}
+
+    // ⚠️ pointer events 不是 mouse events：Leo 也用平板，mousedown 在觸控上不會觸發。
     let dragging = false;
-    grip.addEventListener("mousedown", function(e){
+    grip.addEventListener("pointerdown", function(e){
       dragging = true; grip.classList.add("on");
+      grip.setPointerCapture(e.pointerId);
       document.body.style.userSelect = "none"; e.preventDefault();
     });
-    window.addEventListener("mousemove", function(e){
+    window.addEventListener("pointermove", function(e){
       if (!dragging) return;
       const w = Math.min(640, Math.max(220, e.clientX - 10));
       room.style.setProperty("--lw", w + "px");
     });
-    window.addEventListener("mouseup", function(){
+    window.addEventListener("pointerup", function(){
       if (!dragging) return;
       dragging = false; grip.classList.remove("on");
       document.body.style.userSelect = "";
@@ -1093,6 +1138,7 @@ def page_html():
             + f'<div class="pane tablepane" id="tablepane">{table_html()}</div>'
             + right_html()
             + "</div>"
+            '<button class="lbtn lshow" id="lshow" title="展開左欄">» 報價組合</button>'
             '<div class="modebar"><button class="mb" id="mode-stock">個股</button>'
             '<button class="mb on" id="mode-list">列表</button></div>'
             '<button class="chatbtn" id="chatbtn">🏛️ 軍師</button>'
