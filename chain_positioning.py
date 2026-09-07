@@ -258,23 +258,23 @@ def _is_tw_yf(ticker):
 
 
 CSS = """
-.positioning{margin-top:16px;padding-top:14px;border-top:1px solid #0E1B2B}
-.positioning h3{font-size:14px;font-weight:700;color:#F5B841;margin-bottom:4px}
-.chainpos{font-size:12.5px;color:#C7D8EC;line-height:1.6;margin-bottom:8px;
- padding:8px 10px;background:#161a20;border-radius:8px}
-.posnote{font-size:11.5px;color:#8a8f98;margin-bottom:10px}
-.segarrow{text-align:center;font-size:10.5px;color:#4a5568;margin:2px 0}
+.positioning{margin-top:16px;padding-top:14px;border-top:1px solid var(--line2,#0E1B2B)}
+.positioning h3{font-size:14px;font-weight:700;color:var(--warn,#FFB627);margin-bottom:4px}
+.chainpos{font-size:12.5px;color:var(--muted,#9DB0C8);line-height:1.6;margin-bottom:8px;
+ padding:8px 10px;background:var(--card,#0C1524);border-radius:0}
+.posnote{font-size:11.5px;color:var(--dim,#5B6E8A);margin-bottom:10px}
+.segarrow{text-align:center;font-size:10.5px;color:var(--dim,#5B6E8A);margin:2px 0}
 .segrow{margin:6px 0 10px}
-.segname{font-size:12px;color:#93C5FD;font-weight:600}
-.segmine{color:#F5B841;font-weight:700;font-size:10.5px}
-.segdo{font-size:11px;color:#8a8f98;margin:2px 0 6px}
+.segname{font-size:12px;color:var(--cy,#22D3EE);font-weight:600}
+.segmine{color:var(--warn,#FFB627);font-weight:700;font-size:10.5px}
+.segdo{font-size:11px;color:var(--dim,#5B6E8A);margin:2px 0 6px}
 .segcells{display:flex;flex-wrap:wrap;gap:6px}
-.peer{background:#1a1d23;border:1px solid #2a2e35;border-radius:8px;padding:6px 9px;font-size:11.5px;min-width:120px}
-.peer.focus{border-color:#4a9eff;box-shadow:0 0 0 1px #4a9eff}
-.pt{font-weight:700;color:#e8eaed}
-.pc{color:#6b7280;font-weight:400;margin-left:4px;font-size:10.5px}
-.pv{color:#9aa0a6;margin-top:2px}
-.pv .pos{color:#4ade80}.pv .neg{color:#ff8a8a}.pv .flat{color:#6b7280}
+.peer{background:var(--panel,#080E1A);border:1px solid var(--hud,#16304A);border-radius:0;padding:6px 9px;font-size:11.5px;min-width:120px}
+.peer.focus{border-color:var(--cy,#22D3EE);box-shadow:0 0 0 1px var(--cy,#22D3EE)}
+.pt{font-weight:700;color:var(--ink,#DCE7F5)}
+.pc{color:var(--dim,#5B6E8A);font-weight:400;margin-left:4px;font-size:10.5px}
+.pv{color:var(--muted,#9DB0C8);margin-top:2px}
+.pv .pos{color:var(--up,#22C55E)}.pv .neg{color:var(--down,#EF4444)}.pv .flat{color:var(--dim,#5B6E8A)}
 """
 
 

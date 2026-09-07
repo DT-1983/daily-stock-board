@@ -280,18 +280,117 @@ def _pros_cons(d, px, fc_rows):
     return pros, cons
 
 
-def _intro_html(d, name, px, fc_rows=None):
+def _cp_css():
+    """產業鏈定位的樣式。⚠️ 重用元件要**連樣式一起帶**——
+    只搬 markup 是搬了一半（今天在戰情室已經踩過一次）。"""
+    try:
+        import chain_positioning as CP
+        return CP.CSS
+    except Exception:                                       # noqa: BLE001
+        return ""
+
+
+def _sector_html(d, prof=None):
+    """類股定位：這檔屬於哪個類股、那個類股在輪動圖的哪一象限、
+    同類股裡它排第幾。
+
+    ⚠️ 為什麼要有這一層：產業鏈定位只涵蓋我們自己定義的 9 條鏈，
+    實測 14 檔整合報告裡只有 2 檔在鏈裡。這一層**掃描母體裡每一檔都有**。
+    ⚠️ 象限四色 import 自輪動頁，跟看板同色，不另外定義一組。
+    """
+    from board_theme import esc
+    L = d.get("lamp") or {}
+    sec = L.get("sector_zh") or ""
+    if not sec:
+        # 🔴 不在燈號掃描母體裡就沒有類股／象限（實測 14 檔報告有 6 檔是這樣）。
+        # 這時候至少給 yfinance 的產業分類，並**明講為什麼沒有同類股對照**——
+        # 整段消失的話，讀的人不知道是「沒有這個資訊」還是「我們漏了」。
+        if not (prof and (prof.get("sector") or prof.get("industry"))):
+            return ""
+        return ('<div class="sb"><h2>類股定位 <span class="en">Sector Position</span></h2>'
+                f'<div class="sub">{esc(prof.get("sector") or "—")}／'
+                f'{esc(prof.get("industry") or "—")}<span class="qsec2">'
+                'yfinance 分類</span></div>'
+                '<div class="posnote">這一檔<b>不在每日燈號掃描的母體裡</b>，'
+                '所以沒有輪動象限，也沒有同類股的燈數／RS 對照——'
+                '不是漏掉，是我們沒有掃它。要看的話用查股頁即時算一次。</div></div>')
+    try:
+        from combo_html import QCOL, QLAB
+    except Exception:                                       # noqa: BLE001
+        QCOL = {"leading": "#3987e5", "improving": "#2fbf71",
+                "lagging": "#e5484d", "weakening": "#eda100"}
+        QLAB = {"leading": "領先", "improving": "改善",
+                "lagging": "落後", "weakening": "弱化"}
+    q = (L.get("quad") or {})
+    q60 = q.get("60")
+    qh = (f'<span class="qb2" style="background:{QCOL[q60]}">{QLAB[q60]}</span>'
+          if q60 in QLAB else '<span class="dimv">未分類</span>')
+    qtip = ("　".join(f'{n} 日 {QLAB.get(q.get(n), "—")}' for n in ("20", "60", "120"))
+            if q60 in QLAB else "")
+
+    # 同類股對照：從同一份 combo_result 拿，數字跟燈號頁一致
+    rows = (_load("state/combo_result.json", {}) or {}).get("rows") or []
+    peers = [r for r in rows if (r.get("sector_zh") or "") == sec]
+    me = _norm(d["ticker"])
+    peers.sort(key=lambda r: ((r.get("lit") or 0), (r.get("rs_short") or -999)),
+               reverse=True)
+    rank = next((i + 1 for i, r in enumerate(peers)
+                 if _norm(r.get("ticker", "")) == me), None)
+    # 🔴 **自己一定要在圖上**。原本只取前 12 名，2454 排第 18 就整個不見了——
+    # 一張「你在哪裡」的圖沒有你，等於沒回答問題。
+    show = peers[:12]
+    if rank and rank > 12:
+        me_row = next((r for r in peers if _norm(r.get("ticker", "")) == me), None)
+        if me_row:
+            show = peers[:11] + [me_row]
+    cells = []
+    for r in show:
+        mine = _norm(r.get("ticker", "")) == me
+        rs = r.get("rs_short")
+        rs_s = (f'<span class="{"pos" if rs > 0 else "neg"}">{rs:+.1f}%</span>'
+                if rs is not None else "—")
+        cells.append(f'<div class="peer2{" focus" if mine else ""}">'
+                     f'<div class="pt2">{esc((r.get("name") or r.get("ticker"))[:10])}'
+                     f'<span class="pc2">{esc(r.get("ticker"))}</span></div>'
+                     f'<div class="pv2">{r.get("lit", 0)}/4 燈　RS {rs_s}</div></div>')
+    more = (f'<div class="posnote">同類股共 {len(peers)} 檔，這裡列燈數／RS 最高的 '
+            f'{len(show) - (1 if rank and rank > 12 else 0)} 檔'
+            + (f'，加上本檔（第 {rank} 名）' if rank and rank > 12 else "")
+            + '</div>' if len(peers) > len(show) else "")
+    rk = (f'　·　同類股 {len(peers)} 檔中燈數／RS 排第 <b>{rank}</b>'
+          if rank and len(peers) > 1 else "")
+
+    return ('<div class="sb"><h2>類股定位 <span class="en">Sector Position</span></h2>'
+            f'<div class="sub">{esc(sec)}　{qh}'
+            + (f'<span class="qsec2">{esc(qtip)}</span>' if qtip else "")
+            + f'{rk}</div>'
+            '<div class="posnote">類股取自 TradingView 分類、象限取自產業輪動圖最新快照'
+            '（顯示 60 日）；同類股的燈數與 RS 來自同一份每日掃描，'
+            '<b>跟進出燈號頁是同一組數字</b>。</div>'
+            f'<div class="segcells">{"".join(cells)}</div>{more}</div>')
+
+
+def _chain_html(d):
+    """產業鏈定位——直接用財報懶人包那個元件，不重寫一套。
+
+    ⚠️ 查不到鏈就回空字串（大部分個股都不在我們定義的 9 條鏈裡），
+    這時候只有上面的類股定位。**不要為了讓版面有東西而硬湊一個鏈。**
+    """
+    try:
+        import chain_positioning as CP
+        return CP.build_html(d["ticker"]) or ""
+    except Exception as e:                                  # noqa: BLE001
+        print(f"  [warn] 產業鏈定位失敗：{str(e)[:60]}")
+        return ""
+
+
+def _intro_html(d, name, px, fc_rows=None, biz="", prof=None):
     """報告最上面那一段。版型抄財報懶人包：大數字磚＋中英雙標題＋兩欄利多風險。"""
     from board_theme import esc, esc_b
     L = d.get("lamp") or {}
 
     # ① 這家在做什麼（唯一一段 AI 寫的；查不到就整段不出現，不要編）
-    try:
-        import company_intro as ci
-        txt, prof = ci.intro(d["ticker"])
-    except Exception as e:                                  # noqa: BLE001
-        print(f"  [warn] 簡介失敗：{str(e)[:60]}")
-        txt, prof = "", None
+    txt = biz
     sect = ""
     if prof and (prof.get("sector") or prof.get("industry")):
         sect = f'{prof.get("sector") or "—"}／{prof.get("industry") or "—"}'
@@ -381,8 +480,17 @@ def render(d, extra_notes=None):
         except Exception as e:                              # noqa: BLE001
             print(f"  查核層失敗：{str(e)[:80]}")
 
+    # yfinance 的公司資料查一次就好——簡介與類股定位都要用。
+    # ⚠️ 各自查一次不只是慢，兩邊還可能拿到不同的快照。
+    try:
+        import company_intro as ci
+        biz, prof = ci.intro(d["ticker"])
+    except Exception as e:                                  # noqa: BLE001
+        print(f"  [warn] 簡介失敗：{str(e)[:60]}")
+        biz, prof = "", None
+
     # ── 簡介（2026-09-07 Leo：「前面寫個簡介」）─────────────
-    body.append(_intro_html(d, name, px, fc_rows))
+    body.append(_intro_html(d, name, px, fc_rows, biz, prof))
 
     # ── 燈號 ───────────────────────────────────────────────
     L = d.get("lamp")
@@ -424,6 +532,10 @@ def render(d, extra_notes=None):
                               f'<div class="v{" zh" if zh else ""}">{v}</div>'
                               f'<div class="s">{esc(sub_)}</div></div>'
                               for k, v, sub_, zh in cells) + "</div></div>")
+
+    # ── 產業定位（2026-09-07 Leo：「補上這隻股票在產業那裡」）──────
+    body.append(_sector_html(d, prof))
+    body.append(_chain_html(d))
 
     # ── 券商報告 ────────────────────────────────────────────
     if d["reports"]:
@@ -601,6 +713,7 @@ def render(d, extra_notes=None):
     return ("<!doctype html><html lang=\"zh-Hant\"><head><meta charset=\"utf-8\">"
             "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
             f"<title>{esc(name)} 整合報告</title><style>" + BASE_CSS + CSS + BRIEF_INTRO_CSS
+            + _cp_css()
             + "</style></head><body><div class=\"wrap\">"
             + header("earnings", f"{name} 整合報告", sub, nav_abs(),
                      eyebrow="STOCK DOSSIER")
@@ -706,6 +819,17 @@ BRIEF_INTRO_CSS = """
 .two2 .mk{flex:0 0 auto;font-weight:700}
 .two2 .ok .mk{color:var(--up)}.two2 .warn .mk{color:var(--warn,#FFB627)}
 .two2 .none{font-size:12px;color:var(--dim)}
+.qb2{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 8px;
+ color:#fff;letter-spacing:.06em;margin:0 6px}
+.qsec2{font-size:11px;color:var(--dim);margin-left:4px}
+.peer2{background:var(--panel,#080E1A);border:1px solid var(--hud,#16304A);
+ padding:6px 9px;font-size:11.5px;min-width:118px}
+.peer2.focus{border-color:var(--cy,#22D3EE);box-shadow:0 0 0 1px var(--cy,#22D3EE)}
+.pt2{font-weight:700;color:var(--ink)}
+.pc2{color:var(--dim);font-weight:400;margin-left:5px;font-size:10.5px;
+ font-family:'IBM Plex Mono',ui-monospace,monospace}
+.pv2{color:var(--muted);margin-top:2px;
+ font-family:'IBM Plex Mono',ui-monospace,monospace}
 @media(max-width:820px){
  .bks{grid-template-columns:repeat(2,1fr)}
  .two2{grid-template-columns:1fr}
