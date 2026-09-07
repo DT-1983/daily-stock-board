@@ -2380,5 +2380,35 @@
     "industry": "Apparel/Footwear",
     "exchange": "NYSE",
     "asof": "2026-09-06"
+  },
+  "5287": {
+    "sector": "Technology Services",
+    "industry": "Internet Software/Services",
+    "exchange": "TPEX",
+    "asof": "2026-09-07"
+  },
+  "ASML": {
+    "sector": "Electronic Technology",
+    "industry": "Semiconductors",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-07"
+  },
+  "NA": {
+    "sector": "Electronic Technology",
+    "industry": "Semiconductors",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-07"
+  },
+  "6197": {
+    "sector": "Electronic Technology",
+    "industry": "Computer Processing Hardware",
+    "exchange": "TWSE",
+    "asof": "2026-09-08"
+  },
+  "4728": {
+    "sector": "Health Technology",
+    "industry": "Medical Specialties",
+    "exchange": "TPEX",
+    "asof": "2026-09-08"
   }
 }

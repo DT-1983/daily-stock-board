@@ -94,6 +94,95 @@
      "speaker": "Rodney Liu"
     }
    ]
+  },
+  "Q2 2026": {
+   "fetched": "2026-09-08",
+   "items": [
+    {
+     "type": "metric",
+     "label": "資料中心與AI相關產品營收占比首度突破合併營收五成",
+     "value": "本季資料中心／AI相關產品營收占比首次超過台達電合併總營收的50%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "液冷產品營收占比較去年同期提升",
+     "value": "液冷相關產品營收占比已逾12%，去年同期約10%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "電源電子分部本季營收年增幅度",
+     "value": "Power Electronics（電源電子）分部本季營收年增達50%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "工業自動化分部營收成長但因缺料轉為虧損",
+     "value": "工業自動化（IA）分部本季營收年增15%，但因記憶體等零組件缺貨、成本上升，本季轉為虧損",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "上半年資本支出實際金額",
+     "value": "上半年資本支出達新台幣275億元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "AI相關設備折舊年限政策調整",
+     "value": "自2026年4月起，AI相關設備折舊年限由原本3至5年縮短為3年",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "上半年每股盈餘已超越過去任何整年度水準",
+     "value": "累計上半年EPS達新台幣17.59元，年增89%，管理層表示已超過過去任何一個完整會計年度的全年EPS",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "全年與下半年資本支出計畫及用途",
+     "value": "管理層預估全年資本支出約新台幣700億元，較去年新台幣466億元增加50%以上；下半年資本支出將超過新台幣400億元，主要用於泰國廠區拆遷重建、中國及台灣新廠，以及美國廠擴產",
+     "speaker": "副財務長"
+    },
+    {
+     "type": "guidance",
+     "label": "電源電子分部AI相關營收占比全年目標",
+     "value": "管理層表示電源電子分部中AI相關產品營收占比全年必定超過25%，目標達到28%",
+     "speaker": "副財務長"
+    },
+    {
+     "type": "guidance",
+     "label": "高壓直流(HVDC)新產品爬坡時程",
+     "value": "正負400伏特架構為今年主推規格，第三季開始量產；800伏特架構第四季小量出貨，量產爬坡預計明年才開始；今年出貨仍以NVIDIA Blackwell平台為主，Rubin平台占比仍低",
+     "speaker": "周志宏"
+    },
+    {
+     "type": "guidance",
+     "label": "固態變壓器(SST)量產時程展望",
+     "value": "SST目前於小型資料中心試用出貨，預計明年建立第一條量產線",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "液冷技術路徑中長期展望",
+     "value": "管理層表示液對空氣冷卻（liquid-to-air）仍將持續一段時間，液對液冷卻（liquid-to-liquid）技術要到2028年才會導入",
+     "speaker": "周志宏"
+    },
+    {
+     "type": "guidance",
+     "label": "下半年營收與毛利率展望",
+     "value": "管理層預期下半年營收將優於上半年，第三季為傳統旺季、營收將優於第二季，但毛利率預期與第二季的35.6%持平，不預期進一步大幅提升",
+     "speaker": "鄭平（董事長）"
+    },
+    {
+     "type": "guidance",
+     "label": "對雲端服務供應商(CSP)資本支出展望的看法",
+     "value": "管理層表示雲端服務供應商（CSP）資本支出仍持續增加，預期2027年可能進一步增加；美國部分法規與民意反對是潛在風險，但整體AI建置趨勢不變",
+     "speaker": "周志宏"
+    }
+   ]
   }
  },
  "2301.TW": {
@@ -284,97 +373,2733 @@
    ]
   },
   "Q3 2026": {
+   "fetched": "2026-09-08",
+   "items": [
+    {
+     "type": "metric",
+     "label": "本季合併營收年增幅度",
+     "value": "本季合併營收達296億美元，年增86%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "AI半導體營收成長",
+     "value": "AI半導體營收167億美元，年增221%、季增54%，占總營收比重由上季49%提升至56%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "非AI半導體營收",
+     "value": "非AI半導體營收42億美元，年增5%，季持平",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "基礎設施軟體營收與ARR成長",
+     "value": "基礎設施軟體營收88億美元，年增29%；年度經常性收入（ARR）年增15%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "本季毛利率",
+     "value": "毛利率為營收的75%，季減210個基點",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "本季營業利益率",
+     "value": "營業利益率達67.9%，創歷史新高，年增240個基點",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "本季資本支出",
+     "value": "本季資本支出5.32億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "XPU客戶數",
+     "value": "六家客戶採用客製化加速器（XPU），出貨持續加速",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "下季（Q4）合併營收展望",
+     "value": "預期第四季合併營收達348億美元，年增93%",
+     "speaker": "Hock Tan"
+    },
+    {
+     "type": "guidance",
+     "label": "下季（Q4）AI營收展望",
+     "value": "預期第四季AI營收達217億美元，年增236%",
+     "speaker": "Hock Tan"
+    },
+    {
+     "type": "guidance",
+     "label": "2027會計年度AI營收展望",
+     "value": "已取得供應保證，2027年AI營收將再翻倍至約1150億美元",
+     "speaker": "Hock Tan"
+    },
+    {
+     "type": "guidance",
+     "label": "2028會計年度AI營收展望",
+     "value": "已可預見2028會計年度AI半導體營收將再翻倍至2300億美元",
+     "speaker": "Hock Tan"
+    },
+    {
+     "type": "guidance",
+     "label": "下季（Q4）毛利率展望",
+     "value": "預期第四季合併毛利率約73%，較去年同期78%下滑",
+     "speaker": "Amie Thuener"
+    },
+    {
+     "type": "guidance",
+     "label": "與Google多年期TPU供應協議",
+     "value": "與Google簽署長期協議，未來數年將每年供應數百億美元（multi-tens of billions）等級的TPU與AI網通產品",
+     "speaker": "Hock Tan"
+    },
+    {
+     "type": "quote",
+     "label": "本季基調金句",
+     "value": "第三季需求非常火熱，而我們才剛要開始。",
+     "speaker": "Hock Tan（執行長）"
+    }
+   ]
+  }
+ },
+ "TSLA": {
+  "2026Q3": {
    "fetched": "2026-09-07",
    "items": [
     {
      "type": "metric",
-     "label": "半導體業務營收與AI半導體營收",
-     "value": "半導體事業部營收208億美元，年增127%；其中AI半導體營收167億美元，年增221%",
+     "label": "本季總營收",
+     "value": "282億美元，年增26%",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "基礎設施軟體營收與年度經常性營收(ARR)",
-     "value": "基礎設施軟體營收88億美元，年增29%，年度經常性營收(ARR)維持15%年增",
+     "label": "服務及其他業務營收成長",
+     "value": "季度營收成長50%",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "第三季合併總營收",
-     "value": "第三季合併營收296億美元，年增86%",
+     "label": "儲能部署量",
+     "value": "13.5 GWh，年增41%",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "第三季毛利率與營業利益率",
-     "value": "合併毛利率75%(半導體部門毛利率67%)，營業利益率67.9%，較去年同期提升240個基點",
+     "label": "各地區交車量季增",
+     "value": "美洲季增60%、亞太季增27%、歐非中東季增12%",
+     "speaker": "Vaibhav Taneja，財務長"
+    },
+    {
+     "type": "metric",
+     "label": "FSD全球付費用戶數",
+     "value": "累計近150萬用戶",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "第三季資本支出",
-     "value": "資本支出5.32億美元",
-     "speaker": ""
+     "label": "FSD北美滲透率",
+     "value": "本季北美交車約55%搭配FSD訂閱",
+     "speaker": "Vaibhav Taneja，財務長"
     },
     {
      "type": "metric",
-     "label": "XPU出貨量成長與佔比",
-     "value": "XPU出貨量年增3.5倍，占第三季AI營收73%",
-     "speaker": ""
+     "label": "訂單庫存水位",
+     "value": "本季底訂單庫存為2023年以來最大規模",
+     "speaker": "Vaibhav Taneja，財務長"
     },
     {
-     "type": "metric",
-     "label": "AI網路營收成長",
-     "value": "AI網路營收年增超過2.5倍",
-     "speaker": ""
-    },
-    {
-     "type": "metric",
-     "label": "AI客戶集中度",
-     "value": "目前有六家主要XPU客戶，Anthropic與OpenAI是其中兩家",
+     "type": "guidance",
+     "label": "全年資本支出指引",
+     "value": "全年資本支出超過250億美元，聚焦擴大機器人計程車車隊、AI算力產能與Optimus產線",
      "speaker": ""
     },
     {
      "type": "guidance",
-     "label": "下季合併營收與營業利益率展望",
-     "value": "預期第四季合併營收348億美元，年增93%，營業利益率約66%",
+     "label": "儲能業務長期毛利率目標",
+     "value": "預期儲能業務毛利率將回歸正常化，落在中低20%區間",
+     "speaker": "Vaibhav Taneja，財務長"
+    },
+    {
+     "type": "guidance",
+     "label": "未來資本支出成長方向",
+     "value": "未來2到3年資本支出將持續成長，用於擴大機器人計程車車隊、擴充Optimus產能、投資半導體晶圓廠、建置太陽能製造產能與AI算力基礎設施",
+     "speaker": "Vaibhav Taneja，財務長"
+    },
+    {
+     "type": "guidance",
+     "label": "德州鋰精煉產能目標",
+     "value": "目標達到年產30 GWh電池級鋰的產能",
      "speaker": ""
     },
     {
      "type": "guidance",
-     "label": "下季AI半導體營收展望",
-     "value": "預期第四季AI半導體營收217億美元，年增236%",
+     "label": "Tesla Semi量產與自駕時程",
+     "value": "Semi維持2026年量產計畫，自動駕駛軟體版本預計2027年初上線",
      "speaker": ""
     },
     {
      "type": "guidance",
-     "label": "AI營收多年期展望(2027、2028財年)",
-     "value": "管理層預期AI營收於2027財年較2026財年翻倍至約1150億美元，2028財年再翻倍至約2300億美元",
+     "label": "FSD貨幣化結構與未來成長來源",
+     "value": "目前FSD營收55%來自一次性買斷、45%來自訂閱，預期未來FSD貨幣化的成長主要將來自訂閱",
+     "speaker": "Vaibhav Taneja，財務長"
+    },
+    {
+     "type": "guidance",
+     "label": "下一代Optimus產能目標",
+     "value": "相對Optimus 3的年產100萬台，目標是未來達到年產1000萬台的野心規模",
+     "speaker": "Elon Musk，執行長"
+    },
+    {
+     "type": "quote",
+     "label": "本季基調代表發言",
+     "value": "我們正在打造的，是我們認為史上最雄心勃勃的先進基礎設施製造產能建設計畫。",
+     "speaker": "Elon Musk，執行長"
+    }
+   ]
+  },
+  "Q2 2026": {
+   "fetched": "2026-09-08",
+   "items": [
+    {
+     "type": "metric",
+     "label": "全球交車量",
+     "value": "480,126輛,年增25%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "全球生產量",
+     "value": "451,758輛,年增10%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "汽車業務毛利率(不含法規碳權)",
+     "value": "16.3%,較去年同期19.2%下滑",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "儲能業務部署量",
+     "value": "13.5 GWh,季增53%,為公司史上第二大單季",
+     "speaker": "Vaibhav Taneja"
+    },
+    {
+     "type": "metric",
+     "label": "儲能業務毛利率",
+     "value": "20.4%,較去年同期39.5%大幅下滑,主因為約2.4億美元電芯供應商保固費用調整",
+     "speaker": "Vaibhav Taneja"
+    },
+    {
+     "type": "metric",
+     "label": "服務及其他業務毛利率",
+     "value": "14.1%,創歷史新高",
+     "speaker": "Vaibhav Taneja"
+    },
+    {
+     "type": "metric",
+     "label": "FSD全球付費用戶數",
+     "value": "近150萬名,其中55%為買斷、45%為訂閱制;北美Q2交車中FSD訂閱/購買滲透率達55%",
+     "speaker": "Vaibhav Taneja"
+    },
+    {
+     "type": "metric",
+     "label": "Robotaxi機隊規模",
+     "value": "已擴展至美國共7個市場",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Robotaxi無人監督行駛里程成長率",
+     "value": "管理層表示無人監督行駛里程數持續以雙位數速度週度成長",
+     "speaker": "Ashok Elluswamy"
+    },
+    {
+     "type": "metric",
+     "label": "訂單backlog狀態",
+     "value": "CFO表示公司在Q2結束時的訂單積壓量為2023年以來最大",
+     "speaker": "Vaibhav Taneja"
+    },
+    {
+     "type": "guidance",
+     "label": "全年資本支出展望",
+     "value": "預計全年資本支出將超過250億美元",
+     "speaker": "Vaibhav Taneja"
+    },
+    {
+     "type": "guidance",
+     "label": "儲能業務毛利率中長期目標",
+     "value": "管理層預期正常化後,儲能業務毛利率將落在低至中段20%區間",
+     "speaker": "Vaibhav Taneja"
+    },
+    {
+     "type": "guidance",
+     "label": "Optimus生產爬坡時程展望",
+     "value": "生產將遵循正常製造業S曲線,但因零件與機器人本身皆屬全新,初期爬坡階段將相對平緩且拉長",
+     "speaker": "Elon Musk"
+    },
+    {
+     "type": "guidance",
+     "label": "Tesla Semi自駕能力時程",
+     "value": "預計2027年初實現自駕能力",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "本季基調代表發言",
+     "value": "我們正處於一個大型投資週期,預期以研發為主的營業費用在2026年及之後將持續成長。",
+     "speaker": "Vaibhav Taneja(財務長)"
+    }
+   ]
+  }
+ },
+ "TEM": {
+  "2026Q3": {
+   "fetched": "2026-09-07",
+   "items": [
+    {
+     "type": "metric",
+     "label": "核心業務量成長率",
+     "value": "本季加速至年增31%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "診斷部門營收年增",
+     "value": "年增20%，達2.893億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "數據與應用部門營收年增",
+     "value": "年增28%，達9,320萬美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Insights（數據授權與建模）營收年增",
+     "value": "年增36%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "遺傳性癌症檢測營收年增",
+     "value": "年增5%，達1.074億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "演算法附加率（Algorithm Attach Rate）",
+     "value": "本季升至45%，上一季為40%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "MRD（微小殘留病灶）檢測量",
+     "value": "本季約9,000例，較上季約6,500例季增38%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "本季數據業務簽約總額",
+     "value": "約2億美元的新簽約（bookings），涵蓋BioNTech、AstraZeneca、GSK、BMS、Merck、Daiichi Sankyo等大型多年期數據授權與建模合約",
      "speaker": ""
     },
     {
      "type": "guidance",
-     "label": "每GW美元含量與GW部署量展望",
-     "value": "每GW的美元含量維持在200億至300億美元區間並可跨世代延續；預期2027年部署約10GW(其中6GW來自Anthropic與OpenAI)，2028年部署約20GW(其中15GW來自Anthropic與OpenAI)",
+     "label": "全年營收展望上修",
+     "value": "2026全年營收展望上修至15.95億至16.05億美元，年增約25%",
      "speaker": ""
     },
     {
      "type": "guidance",
-     "label": "新加坡基板廠與磷化銦(InP)產能擴產計畫",
-     "value": "新加坡基板廠將於2027財年開始量產部署，磷化銦(InP)產能將較去年同期成長三倍",
+     "label": "全年調整後EBITDA展望",
+     "value": "預計2026全年調整後EBITDA約6,500萬美元，較2025年改善約7,200萬美元",
      "speaker": ""
     },
     {
      "type": "guidance",
-     "label": "非AI半導體與基礎設施軟體下季展望",
-     "value": "預期第四季非AI半導體營收約43億美元，季增5%；基礎設施軟體營收約87億美元，年增25%",
+     "label": "自由現金流轉正時程",
+     "value": "預計2026年底前實現正自由現金流（FCF）",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "數據業務中長期成長目標",
+     "value": "管理層表示希望維持數據業務中長期成長率在30%以上",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "新產品定價與營收增量時程",
+     "value": "xT CDx腫瘤專用版取得FDA核准後可採統一定價，預期每案均價（ASP）提升200美元，自2027年起每年增加約8,500萬美元營收；xF液態切片預計2027年下半年獲批，另增550美元均價；兩項合計預計於2028年帶來約4億美元營收增量",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "遺傳性癌症檢測成長目標",
+     "value": "目標在2026年底前恢復至中段雙位數（mid-teens）成長",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "本季基調代表發言",
+     "value": "數據業務簡直是熱火朝天，我們簽約的動能是這麼多年來最強的一次。",
+     "speaker": "Eric Lefkofsky，創辦人暨執行長"
+    }
+   ]
+  }
+ },
+ "TWST": {
+  "2026Q3": {
+   "fetched": "2026-09-07",
+   "items": [
+    {
+     "type": "metric",
+     "label": "DNA合成與蛋白質解決方案（DSPS）部門營收",
+     "value": "5660萬美元，年增39%，季增6%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "次世代定序（NGS）應用部門營收",
+     "value": "6180萬美元，年增12%，季增8%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "治療藥物（Therapeutics）客群營收",
+     "value": "4040萬美元，年增49%，主要受惠AI驅動藥物發現需求成長",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "學術與政府客群營收",
+     "value": "1550萬美元，年增32%，季增21%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "美洲地區營收",
+     "value": "7730萬美元，年增30%，為最大市場",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "NGS服務客戶數與商業化產品採用情況",
+     "value": "本季服務657家NGS客戶，其中182家已採用商業化產品",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "基因合成出貨量",
+     "value": "本季出貨36.9萬個基因，去年同期為23.7萬個",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "複雜基因（Complex Genes）搶先體驗計畫成果",
+     "value": "已收到逾1800個構築體訂單，來自100多筆訂單，絕大多數在12天交期內完成交付；正式上線已於法說會前兩週完成",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "現金與約當現金部位",
+     "value": "截至2026年6月30日，現金、約當現金與短期投資合計1.668億美元",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "FY2026第四季營收展望",
+     "value": "預期營收落在1.23億至1.24億美元之間，中位數約年增25%；DSPS與NGS兩部門皆預期季增，NGS預期重回年增逾20%的水準",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "FY2026全年營收與毛利率展望上修",
+     "value": "全年營收展望上調至4.56億至4.57億美元（中位數較先前展望上調1200萬美元），約年增21%；全年毛利率預期超過52%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "長期毛利率目標",
+     "value": "管理層設定長期毛利率目標為超過60%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "獲利能力展望",
+     "value": "FY2026第四季目標為調整後EBITDA打平；FY2027承諾維持調整後EBITDA打平或轉正；第四季營運費用預期較本季減少逾500萬美元（不含一次性人員轉任費用）",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "AI驅動藥物發現訂單成長展望",
+     "value": "管理層預期FY2027 AI驅動藥物發現訂單可望再度呈現三位數百分比年增，重演FY2026的成長態勢（FY2025基期約為2500萬美元訂單）",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "本季基調代表發言",
+     "value": "生物學正變得日益數位化、數據驅動且由AI賦能；我們看到這個機會正在成熟為一個持久的成長引擎，相信FY2027年AI驅動藥物發現的訂單有機會再次呈現三位數百分比的成長，與FY2026年相比。",
+     "speaker": "Emily Leproust，執行長（CEO）"
+    }
+   ]
+  }
+ },
+ "CRCL": {
+  "2026Q3": {
+   "fetched": "2026-09-07",
+   "items": [
+    {
+     "type": "guidance",
+     "label": "全年RLDC利潤率財測上調",
+     "value": "全年RLDC利潤率財測區間上調至41.7%至43.7%（原財測為38%至40%）",
+     "speaker": "Jeremy Fox-Geen，財務長"
+    },
+    {
+     "type": "guidance",
+     "label": "全年其他收入財測大幅上調",
+     "value": "全年其他收入財測區間上調至3.1億至3.3億美元（原財測為1.5億至1.7億美元）",
+     "speaker": "Jeremy Fox-Geen，財務長"
+    },
+    {
+     "type": "guidance",
+     "label": "全年調整後營運費用財測維持不變但偏高標",
+     "value": "調整後營運費用財測區間維持5.7億至5.85億美元不變，但預期將落在區間高標",
+     "speaker": "Jeremy Fox-Geen，財務長"
+    },
+    {
+     "type": "guidance",
+     "label": "中長期USDC流通量成長目標",
+     "value": "跨週期來看，USDC流通量年複合成長率（CAGR）40%是可達成的目標",
+     "speaker": "Jeremy Fox-Geen，財務長"
+    },
+    {
+     "type": "guidance",
+     "label": "Arc Mainnet主網正式上線時程",
+     "value": "Arc Mainnet將於本季（2026年）9月16日正式上線",
+     "speaker": "Jeremy Allaire，共同創辦人／執行長／董事長"
+    },
+    {
+     "type": "guidance",
+     "label": "持續加碼平台投資的資本配置立場",
+     "value": "考量資產負債表穩健、且看好投資平台建設的長期報酬相當吸引人，現在是持續加碼此類投資的正確時機",
+     "speaker": "Jeremy Fox-Geen，財務長"
+    },
+    {
+     "type": "metric",
+     "label": "Circle Payments Network（CPN）合作金融機構家數",
+     "value": "已有175家金融機構加入CPN，較上季增加30%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "CPN年化支付量成長",
+     "value": "CPN年化支付量本季末達150億美元；截至2026年7月31日（近30日移動年化基準）已成長至230億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Arc Token預售金額與未來認列收入",
+     "value": "本季Arc Token預售收入達2.42億美元，預計於達成特定里程碑後，於2026年認列1.8億美元收入",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "USDC平台持有規模與占比",
+     "value": "USDC平台持有量達124億美元，年增106%，占USDC總流通量17%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "USYC代幣化貨幣市場基金規模",
+     "value": "USYC規模突破30億美元，較去年同期成長十倍",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "USDC鏈上交易量成長",
+     "value": "USDC單季鏈上交易量達14.8兆美元，年增151%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "USDC於穩定幣交易量的市占率",
+     "value": "根據Visa數據，2026年6月USDC占整體穩定幣交易量70%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "x402協議AI代理支付結算占比",
+     "value": "在x402協議下，USDC結算了99.3%的AI代理（agentic）支付交易量",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "本季管理層基調代表發言",
+     "value": "Circle目前處於顯著的領先地位，我們在信任、流動性、法規地位、技術與網路規模等面向，都建立了深厚且持久的競爭護城河。",
+     "speaker": "Jeremy Allaire，共同創辦人／執行長／董事長"
+    }
+   ]
+  }
+ },
+ "COIN": {
+  "2026Q3": {
+   "fetched": "2026-09-07",
+   "items": [
+    {
+     "type": "metric",
+     "label": "Bitcoin相關交易占總營收比重",
+     "value": "Bitcoin相關交易目前僅占總營收12%，較過去一度超過50%大幅下降，反映公司營收來源多元化策略奏效",
+     "speaker": "Brian Armstrong（執行長）"
+    },
+    {
+     "type": "metric",
+     "label": "Coinbase One付費訂閱會員數",
+     "value": "付費會員數突破100萬，創歷史新高，且是在整體加密貨幣交易量走低的環境下達成",
+     "speaker": "Alesia Haas（財務長）"
+    },
+    {
+     "type": "metric",
+     "label": "Base網路穩定幣轉帳量",
+     "value": "過去12個月Base網路處理的穩定幣轉帳量達32兆美元，結算成本低於1美分、結算時間低於1秒",
+     "speaker": "Brian Armstrong（執行長）"
+    },
+    {
+     "type": "metric",
+     "label": "AI代理型（agentic）穩定幣交易在Base的集中度",
+     "value": "超過90%的agentic穩定幣交易透過Base網路結算",
+     "speaker": "Brian Armstrong（執行長）"
+    },
+    {
+     "type": "metric",
+     "label": "員工人數",
+     "value": "全公司員工人數為4,951人，涵蓋零售、機構與AI代理基礎設施等業務線",
+     "speaker": "Alesia Haas（財務長）"
+    },
+    {
+     "type": "metric",
+     "label": "USDC市場地位",
+     "value": "USDC以交易量計為全球第一大受監管穩定幣，但以市值計仍居第二，落後於Tether",
+     "speaker": "Brian Armstrong（執行長）"
+    },
+    {
+     "type": "guidance",
+     "label": "成長行銷投資回收期展望",
+     "value": "成長行銷支出的投資回收期通常抓1年，近期實際表現優於這個基準",
+     "speaker": "Alesia Haas（財務長）"
+    },
+    {
+     "type": "guidance",
+     "label": "Pre-IPO永續合約產品擴展規劃",
+     "value": "Pre-IPO永續合約目前先在非美國市場推出（首檔標的為SpaceX），美國市場的開放仍列在產品規劃路線圖（roadmap）上，尚無明確時間表",
+     "speaker": "Brian Armstrong（執行長）"
+    },
+    {
+     "type": "guidance",
+     "label": "Base生態系統競爭優勢展望",
+     "value": "相較於新進的Layer 2競爭者，公司在Base生態系統的發展上仍保有約2年的先行優勢",
+     "speaker": "Brian Armstrong（執行長）"
+    },
+    {
+     "type": "guidance",
+     "label": "對Bitcoin後市週期的展望",
+     "value": "儘管Bitcoin相關交易占營收比重已降至12%，執行長仍表示Bitcoin未來會在市場循環中「大幅回歸」",
+     "speaker": "Brian Armstrong（執行長）"
+    },
+    {
+     "type": "quote",
+     "label": "本季基調代表發言",
+     "value": "面對《CLARITY法案》未能通過參議院等監管不確定性，執行長表示：「這對Coinbase來說其實就只是一切照常」，反映公司對既有法遵框架的信心",
+     "speaker": "Brian Armstrong（執行長）"
+    }
+   ]
+  }
+ },
+ "HOOD": {
+  "2026Q3": {
+   "fetched": "2026-09-07",
+   "items": [
+    {
+     "type": "metric",
+     "label": "本季總營收",
+     "value": "13.1億美元，年增32%，創單季新高",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "交易相關營收",
+     "value": "7.76億美元，年增44%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "選擇權營收與合約量",
+     "value": "營收3.42億美元，年增29%；交易量7.74億口合約，創歷史新高",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "事件合約營收",
+     "value": "營收1.56億美元，年增達10倍；合約量136億口",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "加密貨幣營收",
+     "value": "1.00億美元，年減38%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "淨新增存款",
+     "value": "217億美元，年化成長率28%，創紀錄",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "調整後EBITDA利潤率",
+     "value": "57%，創歷史新高獲利能力",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "總資金帳戶數",
+     "value": "2,840萬戶，年增190萬戶；本季單季新增近100萬戶",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Robinhood Gold訂閱數與滲透率",
+     "value": "480萬人，滲透率17%，創歷史新高",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Trump Accounts兒童帳戶簽約數",
+     "value": "累計700萬個簽約帳戶",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "年營收達1億美元以上業務線數量",
+     "value": "累計13項業務線ARR達1億美元以上，本季新增Robinhood Legend與信用卡2項",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "2026全年調整後營運費用(含股權激勵)展望",
+     "value": "由原先26.8億至28.25億美元下修至26.75億至27.75億美元",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "7月營運動能展望",
+     "value": "淨存款(不含Trump Accounts資金流入)追蹤約40億美元；股票/選擇權/事件合約日均交易量與第二季相近；加密貨幣交易量略低於第二季",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "產品與國際擴張路線圖",
+     "value": "Robinhood Social預計於2026年第三季底推出；持續推動新加坡作為亞太樞紐、印尼直接申牌等國際擴張計畫",
      "speaker": ""
     },
     {
      "type": "quote",
      "label": "本季基調發言",
-     "value": "第三季的需求非常火熱，而我們才剛要開始。我們的六家XPU客戶正在加速採用客製化加速器。",
-     "speaker": "Hock Tan（執行長）"
+     "value": "我們現在已經有13項業務達到這個里程碑，反映我們持續快速為客戶推出新產品的步調，其中包含本季新增的2項——Robinhood Legend和信用卡。",
+     "speaker": "Shiv Verma，財務長"
+    }
+   ]
+  }
+ },
+ "SHOP": {
+  "2026Q3": {
+   "fetched": "2026-09-07",
+   "items": [
+    {
+     "type": "metric",
+     "label": "GMV年增幅度",
+     "value": "本季GMV（Gross Merchandise Volume）以固定匯率計算年增32%，達1,156億美元，是連續第五季GMV年增率超過30%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "商家解決方案營收",
+     "value": "Merchant Solutions營收年增37%，達28億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "訂閱解決方案營收",
+     "value": "Subscription Solutions營收年增22%，達8.02億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "B2B業務GMV成長",
+     "value": "B2B GMV年增76%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "實體零售POS GMV成長",
+     "value": "Point-of-Sale（POS）GMV年增32%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "支付滲透率",
+     "value": "Shopify Payments滲透率達全球GMV的68%，年增3個百分點；歐洲支付滲透率年增3.5個百分點",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "月經常性收入（MRR）與Plus占比",
+     "value": "MRR年增19%達2.21億美元；Shopify Plus的MRR占總MRR的34%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "自由現金流與利潤率",
+     "value": "自由現金流達6.54億美元，FCF利潤率18%（排除會計原則變動影響後年增2個百分點）",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "大型商家留存率",
+     "value": "年GMV逾100萬美元的商家留存率92%；年GMV逾1,000萬美元的商家留存率97%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "AI助理Sidekick使用量",
+     "value": "Sidekick日活躍商家數年增3.6倍、日對話次數年增4.8倍，本季對話總數達3,400萬次；商家透過Sidekick建立的自訂App數量從上季1.2萬個增加到本季3.6萬個",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "下季（Q3）營收成長展望",
+     "value": "管理層預期Q3營收年增率落在30%出頭（low 30s）",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "下季（Q3）毛利成長展望",
+     "value": "管理層預期Q3毛利金額年增率落在20%中至高段（mid- to high-20s）",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "下季（Q3）營運費用展望",
+     "value": "管理層預期Q3營運費用（operating expenses）占營收比重落在33%至34%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "下季（Q3）自由現金流利潤率展望",
+     "value": "管理層預期Q3自由現金流利潤率落在高十幾%至20%出頭（high teens to low 20s），其中含不到1個百分點來自會計原則變動帶來的挹注",
+     "speaker": ""
+    }
+   ]
+  }
+ },
+ "AMD": {
+  "Q2 2026": {
+   "fetched": "2026-09-08",
+   "items": [
+    {
+     "type": "metric",
+     "label": "資料中心事業部營收年增幅度",
+     "value": "資料中心營收67億美元，年增107%，占總營收58%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "伺服器CPU營收成長態勢",
+     "value": "伺服器CPU營收連續第五季創新高，雲端與企業客戶營收各自年增逾70%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "用戶端(Client)事業部營收年增",
+     "value": "用戶端營收31億美元，年增23%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "遊戲事業部營收年減",
+     "value": "遊戲營收7.79億美元，年減31%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "嵌入式事業部營收年增",
+     "value": "嵌入式營收9.77億美元，年增19%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "非GAAP毛利率年增幅度",
+     "value": "非GAAP毛利率56%，較去年同期提升200個基點",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "年度設計訂單(design wins)總額",
+     "value": "年度設計訂單金額超過180億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "第五代EPYC於公有雲的滲透率",
+     "value": "第五代EPYC已支援1,600多個公有雲執行個體中約三分之一",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "ROCm開源社群貢獻成長",
+     "value": "ROCm開源專案的社群貢獻量年增達10倍",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "第三季營收與毛利率展望",
+     "value": "第三季營收展望約130億美元（正負3億美元），約當年增41%；非GAAP毛利率展望約56%，營運費用約36.5億美元",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "下半年伺服器CPU營收成長展望",
+     "value": "預期下半年伺服器CPU營收年增將超過80%，資料中心事業成長動能將較上半年加速；PC市場面臨逆風，但用戶端業務預期表現優於整體市場",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "2027年資料中心與伺服器CPU成長目標",
+     "value": "預期2027年資料中心事業部營收成長逾100%（較目前規模翻倍以上），伺服器CPU營收在更高基期上仍年增超過70%，資料中心AI業務成長持續加速",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "2030年長期市場規模與獲利目標",
+     "value": "預期到2030年資料中心AI加速器市場（TAM）達1.4兆美元（年均複合成長45%）、伺服器CPU市場達2,200億美元（年均複合成長50%）、整體AI運算市場規模逼近2兆美元（年均複合成長約40%）；長期年度EPS目標大幅超過20美元，營收成長目標大幅超過35%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "新產品爬坡時程與下一代平台規劃",
+     "value": "Helios平台將於第三季開始初步出貨、第四季顯著放量、2027年第一季再進一步擴大；MI500將於2027年推出，將是Instinct系列史上最大的世代躍進；新一代機櫃級AI平台將每年隨新世代推出",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "本季最具代表性的管理層發言",
+     "value": "我們帶著強勁的動能進入下半年。隨著Venice與MI450系列已進入量產，Helios的首批出貨將於本季開始……超過十年的專注投資，讓我們擁有業界最強大、最全面的產品組合。",
+     "speaker": "Dr. Lisa Su，董事長暨執行長"
+    }
+   ]
+  }
+ },
+ "GLW": {
+  "Q2 2026": {
+   "fetched": "2026-09-08",
+   "items": [
+    {
+     "type": "metric",
+     "label": "光通訊(Optical Communications)營收年增",
+     "value": "營收年增32%達20.7億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "企業網路(Enterprise)營收年增",
+     "value": "營收年增65%達12.7億美元，是本季成長最快的次分類",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "太陽能(Solar)營收年增",
+     "value": "營收年增90%達4.38億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "光通訊淨利與ROIC",
+     "value": "光通訊部門淨利年增77%達4.38億美元；公司整體ROIC達14.9%，年增180個基點",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Gen AI相關產品營收",
+     "value": "企業網路內的Gen AI相關產品營收較去年同期幾乎翻倍",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "自由現金流",
+     "value": "本季自由現金流達14.2億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "與Meta簽訂多年期光通訊協議",
+     "value": "與Meta簽訂最高60億美元的多年期光纖、纜線與連接性供應協議",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "與NVIDIA、Amazon簽訂多年期協議",
+     "value": "與NVIDIA簽訂多年期美國在地光連接製造合作案；與Amazon簽訂數十億美元規模的多年期光纖、纜線與連接性協議",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "Springboard計畫年化營收run rate目標",
+     "value": "目標2026年底達成200億美元年化營收run rate、2028年底300億美元、2030年底400億美元，2026年Q4至2030年Q4營收年複合成長率(CAGR)19%，且獲利成長速度快於營收",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "風險調整後的「高信心計畫」目標",
+     "value": "風險調整後版本目標為2028年底年化營收270億美元、2030年底350億美元",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "長期營業利益率目標",
+     "value": "管理層重申長期營業利益率目標維持在20%以上",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "2026全年資本支出計畫",
+     "value": "2026全年資本支出約20億美元，且第三、四季投資力道將加大，主要用於支持光通訊產能擴張",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "光子學(Photonics) MAP平台營收機會",
+     "value": "鎖定共同封裝光學(co-packaged optics)與近封裝光學(near-package optics)技術，目標2030年創造100億美元的光子學Market-Access Platform營收機會",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "第三季展望",
+     "value": "預期營收49-50億美元(年增約16%)，Core EPS落在0.85-0.89美元(年增約28%)",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "本季基調代表發言",
+     "value": "我們正邁入加速成長的新階段，預計從2026年第四季到2030年第四季達成19%的營收年複合成長率，同時獲利成長速度會超過營收成長速度。",
+     "speaker": "Wendell Weeks（執行長）"
+    }
+   ]
+  }
+ },
+ "GOOG": {
+  "Q2 2026": {
+   "fetched": "2026-09-08",
+   "items": [
+    {
+     "type": "metric",
+     "label": "Search 及其他營收年增幅度",
+     "value": "Search and Other 營收年增 17%，單季超過 630 億美元，其中零售與金融產業貢獻最大",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "YouTube 廣告營收",
+     "value": "YouTube 廣告營收年增 13%，達 111 億美元，主要由效果型廣告與品牌廣告帶動",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Cloud 營收年增幅度",
+     "value": "Cloud 營收年增 82%，達 248 億美元，由 AI 基礎建設與 AI 解決方案的強勁需求帶動",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Network 廣告營收",
+     "value": "Network 廣告營收年減 1%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Google Services 分部營收",
+     "value": "Google Services 營收達 950 億美元，年增 15%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "訂閱平台與裝置營收",
+     "value": "訂閱平台與裝置營收本季年增 15%，達 129 億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Cloud backlog 規模",
+     "value": "Cloud backlog 較上季增加逾 500 億美元，達 5,140 億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Cloud 營業利益率擴張",
+     "value": "Cloud 營業利益達 88 億美元，較去年同期成長逾三倍；營業利益率由去年同期的 20.7% 提升至 35.6%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Gemini App 用戶數",
+     "value": "Gemini App 月活躍用戶達 9.5 億，過去一年日活躍用戶成長逾三倍",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "AI Mode 全球用戶突破里程碑",
+     "value": "自去年 10 月全球擴大推出以來，AI Mode 月活躍用戶已突破 10 億",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Cloud 大型客戶用量深度",
+     "value": "近 500 家 Cloud 客戶在過去一年中各自處理超過 1 兆個 token",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "全年資本支出上修",
+     "value": "將 2026 全年資本支出指引上修至 195 億至 205 億美元區間（原為 180 億至 190 億美元），主因是為滿足成長中的需求，產能交付進度加速",
+     "speaker": "Anat Ashkenazi"
+    },
+    {
+     "type": "guidance",
+     "label": "backlog 轉營收時程",
+     "value": "預期目前 backlog 中逾 50% 將於未來 24 個月內認列為營收",
+     "speaker": "Anat Ashkenazi"
+    },
+    {
+     "type": "guidance",
+     "label": "Q3 第三方產能過渡策略與毛利率影響",
+     "value": "在供給吃緊的環境下，計畫於第三季擴大使用第三方運算產能作為過渡橋接策略，同時持續建置自有內部產能；此策略有助於持續擴大客戶基礎並創造更大整體價值，但短期內將對毛利率造成溫和壓力",
+     "speaker": "Anat Ashkenazi"
+    },
+    {
+     "type": "quote",
+     "label": "本季基調發言",
+     "value": "我們持續處於供給吃緊的狀態，這正是動能強勁與快速採用的象徵。",
+     "speaker": "Sundar Pichai，執行長"
+    }
+   ]
+  }
+ },
+ "INTC": {
+  "Q2 2026": {
+   "fetched": "2026-09-08",
+   "items": [
+    {
+     "type": "metric",
+     "label": "AI相關業務營收年增與占比",
+     "value": "AI相關業務營收年增超過70%，占當季總營收約70%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "資料中心AI(DCAI)部門營收表現",
+     "value": "營收63億美元，季增24%、年增59%，為歷史上最強的一季，其中伺服器業務年增創歷史新高",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "客戶運算(CCPG)部門營收與AI PC占比",
+     "value": "營收89億美元，季增15%；AI PC營收季增26%，已占客戶端營收組合三分之二",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Intel Foundry部門營收",
+     "value": "營收58億美元，季增6%；對外晶圓代工營收2.93億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Intel 18A製程產出表現",
+     "value": "18A產出較目標高出約25%，較上季成長逾50%，良率持續優於預期",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "本季非公認會計原則毛利率",
+     "value": "非公認會計原則毛利率41.8%，較財測高出約280個基點",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "本季非公認會計原則EPS",
+     "value": "非公認會計原則EPS為0.42美元，優於財測的0.20美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "本季營運現金流",
+     "value": "營運現金流達70億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "ASIC業務目前營收規模",
+     "value": "目前ASIC業務營收約為20億美元的年化規模(run rate)",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "第三季營收與獲利展望",
+     "value": "營收展望158億至168億美元(中值163億美元)；非公認會計原則毛利率42%；非公認會計原則EPS 0.38美元",
+     "speaker": "David Zinsner, CFO"
+    },
+    {
+     "type": "guidance",
+     "label": "2026年資本支出上修",
+     "value": "全年資本支出上修至超過200億美元，其中設備支出較2025年成長40%，絕大部分投資在美國廠網",
+     "speaker": "David Zinsner, CFO"
+    },
+    {
+     "type": "guidance",
+     "label": "2027年資本支出與14A製程時程",
+     "value": "2027年資本支出將顯著高於2026年水準；14A製程PDK 0.9預計10月完成，風險量產訂於2027年下半年，正式量產目標為2028年",
+     "speaker": "Lip-Bu Tan, CEO"
+    },
+    {
+     "type": "guidance",
+     "label": "毛利率中長期目標",
+     "value": "今年目標是讓毛利率穩定維持在40%以上各季度，之後再從此基礎上力求進一步提升；長期而言，營收成長對毛利率的貢獻率(drop-through)目標為40%至60%",
+     "speaker": "David Zinsner, CFO"
+    },
+    {
+     "type": "guidance",
+     "label": "ASIC市場長期展望",
+     "value": "ASIC潛在市場總量(TAM)可能超過1000億美元；目前約20億美元的營收規模，管理層預期在不遠的將來可望達到40億美元規模",
+     "speaker": "David Zinsner, CFO"
+    },
+    {
+     "type": "quote",
+     "label": "本季基調金句",
+     "value": "客戶對我們產品的強勁需求持續超越我們不斷成長的供給，我們的設計與製造執行力正在提升。十五個月前建立的營運紀律開始展現具體成果——如今我們正經歷超過15年來最強勁的營收成長。",
+     "speaker": "Lip-Bu Tan, 執行長(CEO)"
+    }
+   ]
+  }
+ },
+ "MRVL": {
+  "Q3 2026": {
+   "fetched": "2026-09-08",
+   "items": [
+    {
+     "type": "metric",
+     "label": "本季總營收",
+     "value": "20.75億美元，季增3%、年增37%，創歷史新高",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "資料中心終端市場營收成長",
+     "value": "年增38%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "通訊及其他終端市場營收成長",
+     "value": "年增34%；若排除車用乙太網路業務則年增近50%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "PCIe Gen 6 retimer 業務進度",
+     "value": "目前已與超過30家客戶及夥伴接洽，並已獲得10個以上插槽設計",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "XPU-attached 產品中標數",
+     "value": "已累積超過15個 XPU-attached 中標項目",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "CXL 相關產品設計進度",
+     "value": "已在兩家一線雲端服務商獲得5個獨特插槽設計",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "下季（FY2026 Q4）營收展望",
+     "value": "22億美元，上下浮動5%",
+     "speaker": "Willem Meintjes"
+    },
+    {
+     "type": "guidance",
+     "label": "下季（FY2026 Q4）毛利率展望",
+     "value": "GAAP毛利率51.1%至52.1%；Non-GAAP毛利率58.5%至59.5%",
+     "speaker": "Willem Meintjes"
+    },
+    {
+     "type": "guidance",
+     "label": "下季（FY2026 Q4）每股盈餘展望",
+     "value": "GAAP EPS介於0.31至0.41美元；Non-GAAP EPS介於0.74至0.84美元",
+     "speaker": "Willem Meintjes"
+    },
+    {
+     "type": "guidance",
+     "label": "FY2027資料中心業務展望",
+     "value": "資料中心營收預計年增超過25%；資料中心交換器（switch）營收有望突破5億美元",
+     "speaker": "Matt Murphy"
+    },
+    {
+     "type": "guidance",
+     "label": "FY2027通訊業務展望",
+     "value": "通訊業務營收預計持續年增10%",
+     "speaker": "Matt Murphy"
+    },
+    {
+     "type": "guidance",
+     "label": "FY2027營運費用與稅率展望",
+     "value": "Non-GAAP營運費用成長速度約為營收成長速度的一半；Non-GAAP稅率預計降至約12%",
+     "speaker": "Willem Meintjes"
+    },
+    {
+     "type": "guidance",
+     "label": "FY2028成長加速展望",
+     "value": "資料中心營收成長將較FY2027的25%明顯加速；客製化（custom）業務較FY2027倍增；公司整體營收成長約30%",
+     "speaker": "Matt Murphy"
+    },
+    {
+     "type": "guidance",
+     "label": "Celestial AI併購後營收貢獻展望",
+     "value": "預期FY2028下半年開始產生顯著營收，基本情境下FY2028第四季達5億美元年化營收，FY2029第四季達10億美元年化營收",
+     "speaker": "Willem Meintjes / Matt Murphy"
+    }
+   ]
+  }
+ },
+ "MSFT": {
+  "Q2 2026": {
+   "fetched": "2026-09-08",
+   "items": [
+    {
+     "type": "metric",
+     "label": "Microsoft 365 Copilot 付費席次",
+     "value": "1,500萬席,年增160%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "GitHub Copilot 付費訂閱數",
+     "value": "470萬,年增75%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Copilot Pro Plus 訂閱成長",
+     "value": "季增77%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Fabric 年化營收run rate",
+     "value": "超過20億美元,年增60%,客戶數超過31,000家",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Foundry 高消費客戶成長",
+     "value": "單季支出超過100萬美元的客戶數年增約80%,處理超過1兆token的客戶已有250家以上",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "商業RPO(剩餘履約義務)",
+     "value": "達6,250億美元,年增11%,加權平均存續期間2.5年;其中約45%(約2,810億美元)來自OpenAI合約,其餘部分年增28%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Azure與雲端服務營收成長",
+     "value": "按固定匯率計算年增39%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Microsoft Cloud營收",
+     "value": "515億美元,按固定匯率年增26%,為單季首度突破500億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "本季新增資料中心容量",
+     "value": "約1 gigawatt",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "資本支出結構",
+     "value": "本季資本支出375億美元,其中約三分之二用於GPU/CPU等短生命週期資產",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "商業訂單成長(bookings)",
+     "value": "按固定匯率計算年增23%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "下季Azure營收成長展望",
+     "value": "預估按固定匯率計算年增37%至38%",
+     "speaker": "Amy Hood"
+    },
+    {
+     "type": "guidance",
+     "label": "下季(FY2026 Q3)總營收展望",
+     "value": "預估介於806.5億至817.5億美元,年增15%至17%",
+     "speaker": "Amy Hood"
+    },
+    {
+     "type": "guidance",
+     "label": "全年FY2026營業利益率展望",
+     "value": "預估將較先前指引微幅上升(先前指引為持平至略降)",
+     "speaker": "Amy Hood"
+    }
+   ]
+  }
+ },
+ "MU": {
+  "Q2 2026": {
+   "fetched": "2026-09-08",
+   "items": [
+    {
+     "type": "metric",
+     "label": "Cloud Memory Business Unit (CMBU) 營收創紀錄",
+     "value": "77億美元，季增47%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Mobile and Client Business Unit (MCBU) 營收創紀錄",
+     "value": "77億美元，季增81%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Automotive and Embedded Business Unit (AEBU) 營收創紀錄",
+     "value": "27億美元，季增57%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Core Data Center Business Unit (CDBU) 營收創紀錄",
+     "value": "57億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "部分關鍵客戶目前需求滿足率",
+     "value": "中期而言，部分主要客戶的需求僅能滿足50%至三分之二",
+     "speaker": "Sanjay Mehrotra (CEO)"
+    },
+    {
+     "type": "guidance",
+     "label": "下季（FY2026 Q3）營收展望",
+     "value": "預計335億美元，正負7.5億美元，將創歷史新高",
+     "speaker": "Mark Murphy (CFO)"
+    },
+    {
+     "type": "guidance",
+     "label": "下季（FY2026 Q3）毛利率展望",
+     "value": "預計約81%",
+     "speaker": "Mark Murphy (CFO)"
+    },
+    {
+     "type": "guidance",
+     "label": "下季（FY2026 Q3）EPS展望",
+     "value": "以11.5億股計算，預計每股盈餘19.15美元，正負0.40美元，創歷史新高",
+     "speaker": "Mark Murphy (CFO)"
+    },
+    {
+     "type": "guidance",
+     "label": "FY2026全年資本支出上修",
+     "value": "上修至250億美元以上",
+     "speaker": "Mark Murphy (CFO)"
+    },
+    {
+     "type": "guidance",
+     "label": "FY2027資本支出計畫",
+     "value": "為支應HBM與DRAM相關投資將大幅墊高，建廠相關資本支出將較FY2026年增逾100億美元",
+     "speaker": "Mark Murphy (CFO)"
+    },
+    {
+     "type": "guidance",
+     "label": "先進製程爬坡時程",
+     "value": "1γ DRAM與G9 NAND製程預計於2026年年中成為主力生產占比，其中1γ DRAM是公司史上最快的量產爬坡速度",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "HBM4量產與良率展望",
+     "value": "HBM4 36GB 12層堆疊已於2026年開始量產出貨，專為NVIDIA Vera Rubin平台設計，預期良率成熟速度將快於HBM3E",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "資料中心記憶體位元中長期產業展望",
+     "value": "AI需求正推動DRAM與NAND資料中心位元的TAM，於2026年曆年首度超過整體產業TAM的50%",
+     "speaker": "Sanjay Mehrotra (CEO)"
+    },
+    {
+     "type": "quote",
+     "label": "本季基調代表發言",
+     "value": "記憶體讓AI更聰明、更有能力，能支援更長的上下文視窗、更深的推理鏈與多代理協作，這正是我們堅信Micron是AI最大受惠者與賦能者之一的原因。",
+     "speaker": "Sanjay Mehrotra (CEO)"
+    }
+   ]
+  }
+ },
+ "NVDA": {
+  "Q3 2026": {
+   "fetched": "2026-09-08",
+   "items": [
+    {
+     "type": "metric",
+     "label": "本季總營收",
+     "value": "570億美元，年增62%，季增22%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "資料中心營收",
+     "value": "創新高512億美元，年增66%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "運算類營收成長",
+     "value": "年增56%，主要受GB300出貨放量帶動",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "網路類營收",
+     "value": "82億美元，年增162%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "遊戲營收",
+     "value": "43億美元，年增30%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "車用營收",
+     "value": "5.92億美元，年增32%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "存貨與供應承諾變化",
+     "value": "存貨季增32%，供應承諾季增63%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Blackwell出貨組合",
+     "value": "GB300出貨占比已達Blackwell總營收約三分之二，超越GB200",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "中國區營收認列狀況",
+     "value": "本季未認列任何中國資料中心運算營收，客戶大額訂單因地緣政治因素未能實現",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "下季（2026財年Q4）營收展望",
+     "value": "預期總營收650億美元，正負2%",
+     "speaker": "Colette Kress"
+    },
+    {
+     "type": "guidance",
+     "label": "下季毛利率展望",
+     "value": "GAAP毛利率74.8%、non-GAAP毛利率75.0%，正負50個基本點",
+     "speaker": "Colette Kress"
+    },
+    {
+     "type": "guidance",
+     "label": "Blackwell與Rubin營收能見度",
+     "value": "目前已有5000億美元的Blackwell與Rubin營收能見度，涵蓋今年初至2026日曆年底",
+     "speaker": "Colette Kress"
+    },
+    {
+     "type": "guidance",
+     "label": "中長期毛利率目標",
+     "value": "儘管投入成本上升，公司仍致力於將毛利率維持在70%中段（mid-70s）",
+     "speaker": "Colette Kress"
+    },
+    {
+     "type": "guidance",
+     "label": "AI基礎設施專案規模展望",
+     "value": "本季已宣布合計約500萬顆GPU規模的AI工廠與基礎設施專案",
+     "speaker": "Colette Kress"
+    },
+    {
+     "type": "quote",
+     "label": "本季基調金句",
+     "value": "NVIDIA是全世界唯一能執行每一個AI模型、且能在每一個主要平台上運行的架構——只要一種架構，一切都能順利運作。",
+     "speaker": "Jensen Huang（執行長）"
+    }
+   ]
+  }
+ },
+ "PLTR": {
+  "Q2 2026": {
+   "fetched": "2026-09-08",
+   "items": [
+    {
+     "type": "metric",
+     "label": "美國商業營收年增幅度",
+     "value": "美國商業營收年增149%，季增28%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "美國整體營收年增幅度",
+     "value": "美國營收年增115%，季增23%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "美國政府營收年增幅度",
+     "value": "美國政府營收年增90%，季增18%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "美國商業客戶數",
+     "value": "美國商業客戶數達653家，年增35%，季增6%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "前20大客戶平均營收成長",
+     "value": "前20大客戶過去12個月平均營收年增67%，達每戶1.24億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "美國商業TCV訂單金額",
+     "value": "美國商業TCV（總合約價值）訂單達21.32億美元，年增153%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "總TCV訂單金額",
+     "value": "全公司總TCV訂單達33.73億美元，年增49%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "RDV剩餘合約價值",
+     "value": "RDV達131億美元，年增83%，季增11%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "RPO剩餘履約義務",
+     "value": "RPO達49億美元，年增103%，季增10%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Rule of 40 分數",
+     "value": "Rule of 40 分數達155%，較上季擴大10個百分點，為連續第12季擴大",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "淨美元保留率(NDR)",
+     "value": "淨美元保留率達157%，較上季提升700個基點",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "第三季營收展望",
+     "value": "management預期第三季營收介於21.6億至21.64億美元之間",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "全年營收與美國商業營收展望上修",
+     "value": "全年營收展望上修至81.5億至81.58億美元（年增約82%），全年美國商業營收展望上修至超過34.24億美元（年增至少134%），為公司史上最大幅度的展望上修",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "未來18個月整體成長率目標",
+     "value": "CEO Alex Karp表示要把公司整體成長率推升到與美國商業事業部相當或更高的水準，時間範圍鎖定未來18個月；全年並承諾2026年每一季都維持GAAP獲利，全年調整後自由現金流展望上修至45億至47億美元",
+     "speaker": "Alex Karp（執行長）"
+    },
+    {
+     "type": "quote",
+     "label": "本季基調代表發言",
+     "value": "AI主權的需求已經被釋放了，我正在把公司推向一個目標：未來18個月要讓整體成長率追平、甚至超越美國商業事業部的成長速度。",
+     "speaker": "Alex Karp（執行長）"
+    }
+   ]
+  }
+ },
+ "2330.TW": {
+  "Q2 2026": {
+   "fetched": "2026-09-08",
+   "items": [
+    {
+     "type": "metric",
+     "label": "本季整體營收",
+     "value": "美元計價營收達402億美元，年增33.7%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "HPC平台營收表現",
+     "value": "高效能運算(HPC)平台營收季增20%，占本季總營收66%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "智慧型手機平台營收表現",
+     "value": "智慧型手機平台營收季減4%，占本季總營收22%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "車用電子平台營收表現",
+     "value": "車用電子平台營收季增15%，占本季總營收4%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "先進製程占晶圓營收比重",
+     "value": "7奈米以下先進製程占本季晶圓營收77%；其中2奈米占3%、3奈米占30%、5奈米占33%、7奈米占11%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "本季毛利率",
+     "value": "第二季毛利率季增150個基點至67.7%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "下季(2026年第三季)營收與獲利展望",
+     "value": "營收展望446億至458億美元(中位數約當季增12%、年增37%)；毛利率展望65%至67%；營業利益率展望56%至58%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "全年2026營收成長展望",
+     "value": "美元計價全年營收年增率預期「略高於40%」",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "資本支出計畫上修",
+     "value": "全年資本支出上修至600億至640億美元(原先展望為520億至560億美元)，其中70%至80%用於先進製程、約10%用於特殊製程、10%至20%用於先進封裝/測試/光罩等其他用途",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "2奈米製程放量對毛利率的稀釋",
+     "value": "2奈米製程放量預期在2026年下半年稀釋毛利率3至4個百分點；海外晶圓廠稀釋毛利率初期為2%至3%，之後將擴大至3%至4%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "技術藍圖與量產時程",
+     "value": "A14(第二代奈米片架構)預計2027年進入試產、2028年量產；其衍生製程A13/A12預計2029年量產",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "海外及台灣先進產能擴建計畫",
+     "value": "在亞利桑那州追加投資1000億美元，興建4座以上採用2奈米及更先進製程的晶圓廠；台灣規劃興建13座先進製程晶圓廠；並持續擴建日本、德國產能",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "2026年度現金股利",
+     "value": "2026年度現金股利上調至每股新台幣24元，較2025年每股18元成長33%",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "本季基調代表發言",
+     "value": "選擇一項製程技術並將它量產爬坡，不是去7-Eleven買牛奶那麼簡單。",
+     "speaker": "C.C. Wei（魏哲家，董事長暨執行長）"
+    }
+   ]
+  }
+ },
+ "2303.TW": {
+  "Q2 2026": {
+   "fetched": "2026-09-08",
+   "items": [
+    {
+     "type": "metric",
+     "label": "上半年營收年增",
+     "value": "2026年上半年營收年增11.3%，達新台幣1,297.7億元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "本季營收季增",
+     "value": "2026年第二季營收季增12.6%，達新台幣687.3億元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "晶圓出貨量季增",
+     "value": "第二季晶圓出貨量達113萬片12吋約當晶圓，較上季成長10.6%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "毛利率變化",
+     "value": "第二季毛利率較上季提升約3個百分點至32.5%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "產能利用率變化",
+     "value": "第二季產能利用率由上季79%攀升至85%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "22奈米製程營收占比",
+     "value": "22奈米製程營收占第二季總營收17.5%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "22／28奈米合計營收占比",
+     "value": "22奈米與28奈米合計已成為最大營收貢獻製程，占總營收37%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "特殊製程營收占比",
+     "value": "特殊製程（specialty）產品現占公司總營收50%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "2026年資本支出上修",
+     "value": "2026年資本支出預算由原訂15億美元上修至20億美元",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "擴產計畫",
+     "value": "董事會已核准新加坡P4廠潔淨室擴建案，並將於台灣台南新建晶圓廠；2026至2027年董事會核准的總擴產預算約新台幣50億元",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "矽光子平台開放時程",
+     "value": "12吋矽光子平台預計2027年開放客戶使用",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "與Intel合作12奈米製程進度",
+     "value": "與Intel合作的12奈米製程PDK目標於2026年底完成，預計2027年流片（tape-out），2028年開始有意義的量產",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "新產能爬坡時程",
+     "value": "新產能從核准到量產的前置時間預估超過20個月，將落在2028至2029年這個週期",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "AI相關營收成長目標",
+     "value": "2026年AI相關營收預計達約3億美元，公司目標三年內AI營收規模超過10億美元",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "第三季展望",
+     "value": "晶圓出貨量預計以高個位數成長；毛利率預期落在30%中段區間；產能利用率預期超過90%，其中8吋利用率預期改善至80%中段區間，12吋利用率預期維持高於公司平均",
+     "speaker": ""
+    }
+   ]
+  }
+ },
+ "2313.TW": {
+  "Q2 2026": {
+   "fetched": "2026-09-08",
+   "items": [
+    {
+     "type": "metric",
+     "label": "整體營收年增（2026年Q2）",
+     "value": "年增10%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "資料中心（含光模組）營收年增",
+     "value": "年增182%，營收占比由去年同期約4%大幅提升至10%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "手機事業營收年增",
+     "value": "年增14%，營收占比17%（前一季為18%）",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "PC事業營收年減",
+     "value": "年減25%，營收占比11%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "RF+FPC營收年增",
+     "value": "年增4%，營收占比24%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "SMT營收年增",
+     "value": "年增8%，營收占比13%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "衛星業務營收年增",
+     "value": "年增9%，營收占比22%，其中天上衛星占衛星業務比重約30%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "消費及其他營收年增",
+     "value": "年增19%，營收占比4%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "2027年營收目標",
+     "value": "管理層設定光通模組與低軌衛星營收目標各達新臺幣250億元，兩大業務合計貢獻營收比重看增至逾五成",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "光模組產能擴充時程",
+     "value": "單月產能將由2026年Q4約新臺幣10億元，擴充至2027年Q4達現有三倍規模",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "衛星業務結構展望",
+     "value": "天上衛星營收占衛星業務比重預計由目前約30%，提升至2027年逾50%以上，帶動衛星業務整體規模成長",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "缺料緩解時程展望",
+     "value": "管理層預期光模組缺料狀況自2026年Q4起緩解，2027年將進一步改善",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "廠房擴產計畫",
+     "value": "臺灣觀音廠土地由7,600坪擴充至14,000坪；重慶二廠預計2027年底前投滿所有可投資空間；泰國廠持續擴充產能",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "管理層對本季基調的說明",
+     "value": "缺料問題確實存在，光模組缺料嚴重，客戶端也同步缺料，導致出貨遞延，使今年第三季表現較為疲弱；但客戶正積極驗證大陸玻布，加上臺灣廠商產能預計第四季開出，缺料可望自第四季起緩解，明年再進一步改善",
+     "speaker": "管理層（法說會現場主管）"
+    }
+   ]
+  }
+ },
+ "2317.TW": {
+  "Q2 2026": {
+   "fetched": "2026-09-08",
+   "items": [
+    {
+     "type": "metric",
+     "label": "雲端網路產品營收占比",
+     "value": "第二季正式達到51%，首度突破五成，成為集團最大營收來源",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "7月營收",
+     "value": "達新台幣9,465億元，創歷史新高，年增54.2%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "上半年ROE(股東權益報酬率)",
+     "value": "6.21%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "淨現金部位",
+     "value": "新台幣2,198億元(約68億美元)",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "上半年資本支出執行",
+     "value": "約新台幣809億元(約25億美元)，符合原訂預算規劃",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "ASIC占AI伺服器營收比重",
+     "value": "上半年占比已略高於去年全年水準(去年全年約一成)",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "第三季營收展望",
+     "value": "第三季業績將顯著季增，且能見度比五月中旬時更加清晰",
+     "speaker": "蔣集恆（輪值CEO）"
+    },
+    {
+     "type": "guidance",
+     "label": "AI伺服器機櫃第三季出貨展望",
+     "value": "預計呈現高雙位數季增",
+     "speaker": "蔣集恆（輪值CEO）"
+    },
+    {
+     "type": "guidance",
+     "label": "新一代AI機櫃(Vera Rubin)出貨時程",
+     "value": "第三季進行量產準備，第四季開始出貨，預計2027年成為主力產品",
+     "speaker": "蔣集恆（輪值CEO）"
+    },
+    {
+     "type": "guidance",
+     "label": "CPO與800G以上交換機展望",
+     "value": "預計第三季量產出貨，市場傳出出貨規模已上修至合計逾五萬台，管理層稱其為集團「第二成長曲線」",
+     "speaker": "蔣集恆（輪值CEO）"
+    },
+    {
+     "type": "guidance",
+     "label": "全年資本支出計畫",
+     "value": "全年資本支出預估將年增逾三成，重點投向AI伺服器機櫃、液冷散熱、測試設備，以及美國在地化產能",
+     "speaker": "黃德才（財務長）"
+    },
+    {
+     "type": "guidance",
+     "label": "中長期營業利益率目標",
+     "value": "今年全年營益率可望超越去年3.2%的水準，中長期目標維持在3%以上",
+     "speaker": "蔣集恆（輪值CEO）"
+    },
+    {
+     "type": "guidance",
+     "label": "AI機櫃與ASIC市佔率目標",
+     "value": "AI機櫃市佔率朝五成目標邁進；ASIC市佔率目標為四成以上",
+     "speaker": "蔣集恆（輪值CEO）／黃德才（財務長）"
+    },
+    {
+     "type": "guidance",
+     "label": "訂單能見度",
+     "value": "訂單能見度已看到明年，預期明年營運持續成長",
+     "speaker": "蔣集恆（輪值CEO）"
+    }
+   ]
+  }
+ },
+ "2412.TW": {
+  "Q2 2026": {
+   "fetched": "2026-09-08",
+   "items": [
+    {
+     "type": "metric",
+     "label": "ICT營收年增幅度",
+     "value": "ICT營收年增32%，為2021年以來Q2最高水準",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "大數據業務營收年增幅度",
+     "value": "大數據（Big Data）營收年增167%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "5G市占率",
+     "value": "5G市占率39.4%，穩居市場第一",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "資安訂閱戶數與成長",
+     "value": "資安訂閱戶達110萬戶，年增11%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "國際子公司合計營收成長",
+     "value": "國際子公司合計營收年增242%；美國業務營收年增逾11倍；東南亞業務營收年增近一倍",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "上半年ICT訂單與合約金額",
+     "value": "上半年ICT訂單金額年增30%；上半年ICT合約總金額已追平2025全年總額",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "郵付用戶ARPU與流失率",
+     "value": "郵付（postpaid）ARPU年增2.4%（增加新台幣13元）；郵付用戶流失率為0.36%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "寬頻ARPU",
+     "value": "寬頻ARPU為每月新台幣824元，年增新台幣20元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "IDC營收與市占",
+     "value": "IDC營收年增14%；連同旗下中華系統整合（Chief Telecom）計算，台灣IDC市占率達78%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "資安業務營收年增幅度",
+     "value": "資安（Cybersecurity）業務營收年增34%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "全年財測達成信心",
+     "value": "管理層表示，基於上半年表現優於財測高標，對「達成全年財測目標」有信心",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "美國AI基礎建設商機規模展望",
+     "value": "管理層預期美國AI相關商機未來2-3年內將帶來「數十億新台幣」規模的營收貢獻",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "資本支出節奏與下半年展望",
+     "value": "上半年資本支出為新台幣98.5億元，年減14.3%，主因5G網路建設進入常態化階段；管理層表示下半年資本支出力道將加大",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "ICT全年營收目標展望",
+     "value": "管理層表示對「超越今年ICT營收目標」有信心",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "本季基調代表發言",
+     "value": "我們很高興宣布本季暨上半年營運表現亮眼，營收、營業利益、稅後淨利與每股盈餘（EPS）全數超越財測高標。",
+     "speaker": "林榮賜（Rong-Shy Lin）總經理"
+    }
+   ]
+  }
+ },
+ "2881.TW": {
+  "Q2 2026": {
+   "fetched": "2026-09-08",
+   "items": [
+    {
+     "type": "metric",
+     "label": "富邦人壽首年保費(FYP)年增幅度",
+     "value": "首年保費達新台幣850億元，年增35%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "富邦人壽新契約CSM成長",
+     "value": "新契約CSM達新台幣349億元，年增11%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "富邦人壽CSM餘額成長",
+     "value": "CSM餘額達新台幣4,280億元，年增6.4%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "富邦人壽整體投資報酬率",
+     "value": "上半年整體投資報酬率達9.18%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "台北富邦銀行稅後淨利成長",
+     "value": "稅後淨利年增逾30%，達新台幣250億元以上",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "台北富邦銀行營收結構成長",
+     "value": "總營收年增25.8%，其中淨利息收入年增27%、淨手續費收入年增逾39%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "台北富邦銀行放款與存款成長",
+     "value": "放款餘額年增14.9%，存款年增逾15%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "富邦證券獲利創新高",
+     "value": "稅後淨利年增170%，達新台幣110億元以上，創歷史新高",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "富邦產險合併比率與市占率",
+     "value": "合併比率86.9%，市占率逾24%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "香港富邦銀行放款與獲利成長",
+     "value": "放款年增29%，存款年增逾19%，淨利年增逾24%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "中國富邦華一銀行放款與獲利成長",
+     "value": "放款年增15.6%，存款年增17.4%，淨利年增逾26%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "集團調整後淨值與每股淨值",
+     "value": "調整後淨值超過新台幣1.6兆元，調整後每股淨值達新台幣109.3元",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "台北富邦銀行海外據點擴張時程",
+     "value": "已於東京、雪梨開設新海外分行，印度分行目標於2026年底前開業",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "台北富邦銀行淨利差與財管業務展望",
+     "value": "計畫透過改善資產負債結構持續提升淨利差，並加速拓展財富管理業務與深化區域銀行布局",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "管理層對資本部位韌性的評論",
+     "value": "7月未經審計的淨值水準大致維持穩定，展現富邦資本部位的韌性。",
+     "speaker": "富邦金控管理層（法說會發言人）"
+    }
+   ]
+  }
+ },
+ "2882.TW": {
+  "Q2 2026": {
+   "fetched": "2026-09-08",
+   "items": [
+    {
+     "type": "metric",
+     "label": "國泰世華銀行放款成長率",
+     "value": "上半年放款年增14%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "國泰世華銀行存款成長率",
+     "value": "上半年存款年增15%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "財富管理手續費收入成長",
+     "value": "上半年財富管理手續費收入年增25%，帶動銀行創上半年獲利新高",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "國泰人壽新契約CSM",
+     "value": "上半年新契約CSM達新台幣539億元，達成全年目標（750億元）的72%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "CSM餘額成長",
+     "value": "CSM餘額較年初成長6.9%，來到新台幣5,470億元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "國泰人壽淨值創新高",
+     "value": "淨值創新高達新台幣9,587億元，淨值比11.5%（調整後淨值比17.1%）",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "國泰證券上半年獲利表現",
+     "value": "上半年獲利年增148%，ROE達44.7%，國內經紀市占率創新高",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "國泰世華銀行年化信用成本",
+     "value": "年化信用成本24個基本點，因放款成長使一般提存增加而較去年同期上升",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "稅後純益加計FVOCI股票處分利益",
+     "value": "上半年稅後純益加計稅後FVOCI股票處分利益達新台幣1,659億元，已超越2025全年水準",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "全年NIM（淨利差）展望",
+     "value": "CFO Grace Chen表示，因放款定價競爭與資金成本影響，預期全年NIM約落在1.63%至1.65%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "全年放款成長目標",
+     "value": "維持全年雙位數放款成長目標不變",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "全年避險成本與經常性投資收益率展望",
+     "value": "預期全年避險成本約1.2%，避險前經常性投資收益率全年可望超過3.5%（仍取決於利率維持在相對高檔）",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "淨手續費收入展望",
+     "value": "財富管理動能強勁，可望支撐淨手續費收入呈雙位數成長",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "股利政策展望",
+     "value": "將綜合考量整體獲利表現、業務發展需求、股東期待及同業股利水準，在維持健全財務比率前提下訂定股利政策",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "管理層對本季基調的總結",
+     "value": "公司稅後純益達新台幣765億元，主要由核心業務動能強勁所帶動。",
+     "speaker": "C.K. Lee（總經理／CEO）"
+    }
+   ]
+  }
+ },
+ "2884.TW": {
+  "Q2 2026": {
+   "fetched": "2026-09-08",
+   "items": [
+    {
+     "type": "metric",
+     "label": "海外分行與子公司獲利占比",
+     "value": "海外分行及子公司稅後淨利占集團總稅後淨利25.3%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "海外放款餘額成長",
+     "value": "海外放款餘額年增近20%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "玉山證券獲利成長",
+     "value": "玉山證券稅後淨利年增205%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "複委託手續費收入成長",
+     "value": "海外複委託手續費收入年增112%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "財富管理手續費收入",
+     "value": "財富管理手續費收入達新台幣93億元,創歷史新高,年增30.7%,占總手續費收入46.7%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "國內放款成長動能來源",
+     "value": "國內放款成長主要來自AI相關產業需求帶動,以資通訊(ICT)與電子產品業者為主",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "全年放款成長目標上修",
+     "value": "全年放款成長目標上修至13%至14%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "全年存款成長目標上修",
+     "value": "全年存款成長目標(含海外)上修至12%至14%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "財富管理手續費收入展望",
+     "value": "維持全年財富管理手續費收入雙位數成長目標",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "淨利差(NIM)年底目標",
+     "value": "目標全年年底淨利差(NIM)達1.33%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "費用成長展望",
+     "value": "預期2026年整體費用成長率維持個位數",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "股利政策展望",
+     "value": "維持穩健成長之股利政策,目標殖利率維持在4%以上",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "本季基調",
+     "value": "玉山金控2026年第二季繳出優異表現,單季稅後淨利創下歷史同期新高。",
+     "speaker": "Sarah, Deputy CFO"
+    }
+   ]
+  }
+ },
+ "2891.TW": {
+  "Q2 2026": {
+   "fetched": "2026-09-08",
+   "items": [
+    {
+     "type": "metric",
+     "label": "上半年新增放款規模創紀錄",
+     "value": "上半年新增放款達新台幣5,000億元，創歷史新高",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "外幣放款年增幅度",
+     "value": "外幣放款年增18.2%（排除匯率影響後年增15.2%）",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "東南亞與印度分行放款成長",
+     "value": "東南亞放款年增46%，印度分行放款年增107%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "存款總額成長",
+     "value": "存款總額達新台幣6.2兆元，年增14.8%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "財富管理手續費收入成長",
+     "value": "財富管理手續費收入年增44%，帶動整體手續費收入年增26%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "台灣人壽首年保費成長",
+     "value": "首年保費(FYP)年增139%，達新台幣641億元，其中外幣保單占首年保費比重達50%、新台幣保單占23%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "中信銀行通路對台灣人壽保費貢獻度",
+     "value": "中信銀行通路對台灣人壽首年保費的貢獻度提升至49%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "資本適足率與清償能力指標",
+     "value": "銀行資本適足率(CAR)13.6%、普通股權益比率(CET1)10%、台灣人壽TIS比率125%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "淨利差(NIM)下半年展望",
+     "value": "管理層維持下半年NIM展望於1.70%至1.73%區間",
+     "speaker": "Megan Hsu（CTBC Holding財務長）"
+    },
+    {
+     "type": "guidance",
+     "label": "全年信用成本展望",
+     "value": "全年信用成本展望維持28至33個基點，下半年估計會更接近28至30個基點",
+     "speaker": "Megan Hsu（CTBC Holding財務長）"
+    },
+    {
+     "type": "guidance",
+     "label": "成本收入比展望上修",
+     "value": "成本收入比展望由原本的52%至54%上修（改善）至50%至52%",
+     "speaker": "Megan Hsu（CTBC Holding財務長）"
+    },
+    {
+     "type": "guidance",
+     "label": "台灣人壽全年首年保費與新契約邊際目標上修",
+     "value": "全年首年保費目標由原新台幣820億元上修至逾新台幣1,000億元，全年新契約邊際成長目標為15%至20%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "IRB法核准後之資本釋放計畫",
+     "value": "IRB（內部評等法）於2025年第四季核准後，未來五年內可望釋放約新台幣1,000億元資本（每年約新台幣200億元），用以支持放款成長",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "海外據點擴張時程",
+     "value": "美國德州辦事處預計2026年第二季開幕、鳳凰城分行預計2026年第四季開幕、洛杉磯分行預計2027年第一季開幕；日本福岡分行核准預計2026年7月取得",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "管理層對本季基調的代表發言",
+     "value": "上半年最大的成長動能來自五大信賴產業的需求，包括AI相關產業；上半年放款總額增加約新台幣5,000億元，創下歷史新高的增幅。",
+     "speaker": "Rachael Kao（CTBC Holding總經理）"
+    }
+   ]
+  }
+ },
+ "3037.TW": {
+  "Q2 2026": {
+   "fetched": "2026-09-08",
+   "items": [
+    {
+     "type": "metric",
+     "label": "應用別營收占比",
+     "value": "AI數據中心61%（季增，上季為59%）、IoT 24%（季減，上季為25%）、通訊5%、汽車3%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "產品別營收占比",
+     "value": "ABF載板52%（季增22%、年增51%）、HDI 27%（季增14%、年增29%）、傳統PCB 9%、BT載板9%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "產能利用率",
+     "value": "ABF載板逾90%、BT載板約80-85%、PCB約85-90%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "第三季營收與毛利率展望",
+     "value": "第三季營收將較第二季成長，毛利率也有望進一步提升",
+     "speaker": "財務長（CFO）"
+    },
+    {
+     "type": "guidance",
+     "label": "全年資本支出上修",
+     "value": "2026年資本支出上修至新台幣537億元以上（原規劃340億元），其中長交期設備預算由141億元追加至316億元",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "ABF載板AI產品占比展望",
+     "value": "上半年占比已逾60%，預計下半年提升至70%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "PCB產品AI占比展望",
+     "value": "上半年占比已逾60%，目標下半年達65%至70%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "EMIB先進封裝量產時程與良率目標",
+     "value": "EMIB預計明年進入量產，初期良率目標50%，客戶已提供利潤保證",
+     "speaker": "技術長（CMO）Judy"
+    },
+    {
+     "type": "guidance",
+     "label": "中長期毛利率目標",
+     "value": "設定中長期毛利率目標50%至60%，需仰賴技術護城河與持續研發，而非單純調漲價格",
+     "speaker": "技術長（CMO）Judy"
+    },
+    {
+     "type": "guidance",
+     "label": "泰國廠量產時程",
+     "value": "泰國廠預計明年正式量產",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "1.6T光模組上線時程",
+     "value": "1.6T光模組預計第四季上線",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "玻璃基板量產規劃",
+     "value": "2030年前尚無玻璃基板量產計畫",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "全年折舊與年底負債比率展望",
+     "value": "預估全年折舊約新台幣208億元，年底負債比率預期由59.2%降至約52%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "海外募資與掛牌規劃",
+     "value": "規劃透過策略性資產處分與增資、發行GDR，並推動子公司於香港掛牌，同時進行大陸業務整合與資源優化",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "本季基調發言",
+     "value": "本季毛利率大幅躍升，主要受惠於AI GPU與HPC需求強勁，以及產品組合持續優化。",
+     "speaker": "管理層"
+    }
+   ]
+  }
+ },
+ "3045.TW": {
+  "Q2 2026": {
+   "fetched": "2026-09-08",
+   "items": [
+    {
+     "type": "metric",
+     "label": "電信本業EBIT表現",
+     "value": "電信本業EBIT年增25%，達20年新高，占合併EBITDA比重達77%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Telco Plus事業群營收成長",
+     "value": "Telco Plus營收年增19%，其中資料中心（AIDC）營收年增89%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "momo.com電商營運表現",
+     "value": "momo.com營收年增4%，GMV成長加速至年增7%，營業利益年增3%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "5G滲透率與用戶升級",
+     "value": "5G滲透率達45%，年增3個百分點；4G轉5G用戶數年增46%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "月租型用戶流失率",
+     "value": "月租型用戶流失率降至歷史新低0.50%，較去年同期的0.59%改善",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "智慧型手機ARPU與行動服務營收",
+     "value": "智慧型手機ARPU年增3%至新台幣689元；行動服務營收創歷史新高，年增3%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "淨利與每股盈餘",
+     "value": "淨利年增38%，達20年新高；本季每股盈餘（EPS）為新台幣1.49元，上半年累計每股盈餘2.86元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "合併獲利能力指標",
+     "value": "合併EBIT年增18%，達20年新高；EBITDA年增9%；年化股東權益報酬率（ROE）達19%，優於去年同期的15%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "財務體質與現金流",
+     "value": "淨負債對EBITDA比降至1.33倍；IFRS16調整前年化自由現金流殖利率約8.4%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "本季資本支出金額",
+     "value": "本季資本支出為新台幣18.2億元，較上季的24.7億元及去年同期的23.7億元下滑",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "AI資料中心目前容量",
+     "value": "目前資料中心（傳統機房加AI機房）合計總容量略高於30MW",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "全年營運利益成長目標上修",
+     "value": "全年營收成長目標維持5%至7%不變；電信本業營業利益成長目標由原先的4%至6%上修至13%至15%；合併營業利益成長目標由原先的1%至2%上修至7%至9%，但公司形容下半年展望因蘋果新機上市時點及折舊攤銷增加等季節性因素而「偏保守」",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "AI資料中心擴充時程與策略",
+     "value": "資料中心容量預計未來12至24個月持續成長，採資產輕量化（SLI）模式布局，自簽約起6至18個月內完成部署；策略上刻意降低對單一大型雲端業者（hyperscaler）的曝險，優先與新興雲端業者（neocloud）及企業客戶合作以創造更好的訂單綜效",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "中長期ICT市占率目標",
+     "value": "管理層設定中長期目標，要在未來5至6年內將ICT市占率從目前約7%倍增至約14%",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "本季基調代表發言",
+     "value": "我們的核心成長引擎——Telco Plus 與 Telco Plus Tech——兩者營收都繳出強勁的年增成長，進一步鞏固了我們身為市場領導者、作為一家由AI驅動之ICT公司的地位。",
+     "speaker": "Jamie Lin（董事長）"
     }
    ]
   }
