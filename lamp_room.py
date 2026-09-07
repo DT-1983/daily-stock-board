@@ -323,13 +323,14 @@ body{margin:0}
 .room{display:grid;grid-template-columns:320px minmax(0,1fr) 0;gap:var(--gap);
  height:100vh;padding:var(--gap);box-sizing:border-box;background:var(--bg)}
 .room.chat{grid-template-columns:320px minmax(0,1fr) 380px}
-.pane{background:var(--surface);border:1px solid var(--line);border-radius:12px;
+.pane{background:var(--panel,#080E1A);border:1px solid var(--hud,#16304A);border-radius:2px;
  overflow:auto;min-height:0}
 .pane.left{position:relative}
 .grip{right:-3px}
 .room.chat .right{display:flex;flex-direction:column}
-.phead{position:sticky;top:0;z-index:2;background:var(--surface);
- padding:10px 12px;border-bottom:1px solid var(--line);font-weight:700;font-size:13px;
+.phead{position:sticky;top:0;z-index:2;background:var(--panel,#080E1A);
+ padding:10px 12px;border-bottom:1px solid var(--hud,#16304A);font-weight:700;font-size:13px;
+ letter-spacing:.04em;
  display:flex;align-items:center;gap:8px}
 .phead .dim{margin-left:auto;font-weight:400;font-size:11px;color:var(--dim)}
 .phead .x{margin-left:6px;background:none;border:0;color:var(--dim);cursor:pointer;
@@ -339,21 +340,22 @@ body{margin:0}
      · 篩選列會跟著清單一起捲走（捲到 600px 時它在 -498px，根本點不到）
      · 排序後不捲回頂 → 重排發生在畫面外，看起來像沒反應
    ⭐ 「功能沒壞但使用者說壞了」＝**回饋不足**，要修的是看得見的那一半。 */
-.ctrlbar{position:sticky;top:38px;z-index:2;background:var(--surface);
- border-bottom:1px solid var(--line);padding-bottom:6px}
+.ctrlbar{position:sticky;top:38px;z-index:2;background:var(--panel,#080E1A);
+ border-bottom:1px solid var(--hud,#16304A);padding-bottom:6px}
 .q{width:calc(100% - 24px);margin:10px 12px 6px;padding:7px 10px;font:inherit;
- font-size:12.5px;border-radius:8px;border:1px solid var(--line);
+ font-size:12.5px;border-radius:0;border:1px solid var(--hud,#16304A);
  background:transparent;color:var(--ink)}
 .chips{display:flex;flex-wrap:wrap;gap:5px;padding:0 12px 8px;align-items:center}
 .cl{font-size:10.5px;color:var(--dim);margin-right:2px}
-.ch{font:inherit;font-size:11.5px;padding:3px 9px;border-radius:999px;cursor:pointer;
- border:1px solid var(--line);background:transparent;color:var(--dim)}
-.ch.on{background:var(--accent,#3b82f6);border-color:var(--accent,#3b82f6);
- color:#fff;font-weight:600}
+.ch{font:inherit;font-size:11.5px;padding:3px 9px;border-radius:0;cursor:pointer;
+ border:1px solid var(--hud,#16304A);background:transparent;color:var(--dim);
+ letter-spacing:.03em}
+.ch.on{background:var(--cy-dim,rgba(34,211,238,.10));border-color:var(--cy,#22D3EE);
+ color:var(--cy,#22D3EE);font-weight:600}
 .list{list-style:none;margin:0;padding:0 6px 10px}
-.it{padding:8px 10px;border-radius:9px;cursor:pointer;border:1px solid transparent}
-.it:hover{background:rgba(148,163,184,.07)}
-.it.sel{border-color:var(--accent,#3b82f6);background:rgba(59,130,246,.10)}
+.it{padding:8px 10px;border-radius:0;cursor:pointer;border:1px solid transparent}
+.it:hover{background:rgba(34,211,238,.06)}
+.it.sel{border-color:var(--cy,#22D3EE);background:var(--cy-dim,rgba(34,211,238,.10))}
 .l1{display:flex;align-items:baseline;gap:6px;font-size:13px}
 /* Leo 2026-09-07：「學一下老墨中文字比較大，不是代號」——名稱才是認得出
    是哪一檔的東西，代號是拿來查的。所以名稱吃粗體大字、代號縮小當附註。
@@ -380,12 +382,14 @@ body{margin:0}
 /* G（2026-09-07 Leo：「上面字卡幫我做成一排就好」）
    原本 auto-fit minmax(180px) 會折成兩排，把圖擠下去。改成單排橫向捲，
    欄位再多也只佔一排；窄螢幕靠自己捲，不吃圖的高度。 */
-.dcards{display:flex;gap:1px;background:var(--line);margin-bottom:10px;
+.dcards{display:flex;gap:1px;background:var(--hud,#16304A);margin-bottom:10px;
  overflow-x:auto;-webkit-overflow-scrolling:touch}
 .dc{flex:1 0 150px}
 .dc{background:var(--surface);padding:9px 12px;min-width:0}
-.dc .k{font-size:10px;color:var(--dim)}
-.dc .v{font-size:16px;font-weight:700;margin-top:2px}
+.dc .k{font-size:9px;color:var(--dim);letter-spacing:.14em;text-transform:uppercase;
+ font-family:'IBM Plex Mono',ui-monospace,monospace}
+.dc .v{font-size:16px;font-weight:600;margin-top:2px;
+ font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
 .dc .s{font-size:10.5px;color:var(--muted,#94a3b8);margin-top:3px;line-height:1.7}
 .lrow{display:flex;align-items:center;gap:5px}
 .empty,.warn{padding:22px 16px;color:var(--dim);font-size:13px}
@@ -394,23 +398,25 @@ body{margin:0}
 .datewarn b{color:#FCD34D}
 .roles{display:flex;flex-wrap:wrap;gap:5px;padding:9px 12px;
  border-bottom:1px solid var(--line)}
-.rb{font:inherit;font-size:11.5px;padding:4px 9px;border-radius:8px;cursor:pointer;
- border:1px solid var(--line);background:transparent;color:var(--dim);
+.rb{font:inherit;font-size:11.5px;padding:4px 9px;border-radius:0;cursor:pointer;
+ border:1px solid var(--hud,#16304A);background:transparent;color:var(--dim);
  display:flex;flex-direction:column;align-items:center;line-height:1.35}
 .rb span{font-size:9.5px;opacity:.75}
-.rb.on{background:var(--accent,#3b82f6);border-color:var(--accent,#3b82f6);color:#fff}
+.rb.on{background:var(--cy-dim,rgba(34,211,238,.10));border-color:var(--cy,#22D3EE);
+ color:var(--cy,#22D3EE)}
 .msgs{flex:1;overflow:auto;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
 .hint{font-size:11.5px;color:var(--dim);line-height:1.8}
-.msg{border:1px solid var(--line);border-radius:10px;padding:9px 11px;font-size:12px;
+.msg{border:1px solid var(--hud,#16304A);border-radius:2px;padding:9px 11px;font-size:12px;
  line-height:1.75;white-space:pre-wrap;word-break:break-word}
-.msg.me{background:rgba(59,130,246,.10);border-color:rgba(59,130,246,.4)}
-.msg .who{font-weight:700;font-size:11px;color:#F5B841;display:block;margin-bottom:3px}
+.msg.me{background:var(--cy-dim,rgba(34,211,238,.10));border-color:rgba(34,211,238,.35)}
+.msg .who{font-weight:700;font-size:11px;color:var(--lamp,#FFB627);letter-spacing:.04em;display:block;margin-bottom:3px}
 .msg.err{border-color:rgba(248,113,113,.5);color:var(--down,#f87171)}
 .ask{border-top:1px solid var(--line);padding:9px 12px;display:flex;gap:7px}
-.ask textarea{flex:1;font:inherit;font-size:12px;padding:7px 9px;border-radius:8px;
- border:1px solid var(--line);background:transparent;color:var(--ink);resize:vertical}
-.send{font:inherit;font-size:12px;padding:0 14px;border-radius:8px;cursor:pointer;
- border:0;background:var(--accent,#3b82f6);color:#fff;font-weight:600}
+.ask textarea{flex:1;font:inherit;font-size:12px;padding:7px 9px;border-radius:0;
+ border:1px solid var(--hud,#16304A);background:transparent;color:var(--ink);resize:vertical}
+.send{font:inherit;font-size:12px;padding:0 14px;border-radius:0;cursor:pointer;
+ border:1px solid var(--cy,#22D3EE);background:var(--cy-dim,rgba(34,211,238,.10));
+ color:var(--cy,#22D3EE);font-weight:600;letter-spacing:.06em}
 .send[disabled]{opacity:.5;cursor:default}
 /* 模式切換（2026-09-07 Leo：「整合在同一張，一個指令轉換」）。
    列表模式＝整頁一張表（掃描用，手機/平板在外面看的那種）
@@ -425,17 +431,17 @@ body{margin:0}
 .tnote{padding:10px 2px 12px;font-size:11.5px;color:var(--dim)}
 .tnote b{color:var(--ink)}
 .tsec{margin-bottom:20px}
-.tsec h3{font-size:14px;margin:0 0 8px;color:#F5B841;display:flex;
+.tsec h3{font-size:14px;margin:0 0 8px;color:var(--lamp,#FFB627);display:flex;
  align-items:baseline;gap:10px}
 .tsec h3 small{font-weight:400;font-size:11px;color:var(--dim)}
 .tablepane table.cb tr[data-tid]{cursor:pointer}
-.tablepane table.cb tr[data-tid]:hover td{background:rgba(245,184,65,.09)}
+.tablepane table.cb tr[data-tid]:hover td{background:rgba(34,211,238,.09)}
 .modebar{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:9;
- display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;
+ display:flex;border:1px solid var(--hud,#16304A);border-radius:0;overflow:hidden;
  background:var(--surface);box-shadow:0 6px 20px rgba(0,0,0,.45)}
 .mb{font:inherit;font-size:12.5px;padding:8px 18px;border:0;cursor:pointer;
- background:transparent;color:var(--dim);font-weight:600}
-.mb.on{background:var(--accent,#3b82f6);color:#fff}
+ background:transparent;color:var(--dim);font-weight:600;letter-spacing:.05em}
+.mb.on{background:var(--cy-dim,rgba(34,211,238,.10));color:var(--cy,#22D3EE)}
 @media(max-width:900px){.modebar{bottom:10px}.tablepane{padding:0 8px 14px}}
 /* 之前談過（2026-09-07 Leo：「可以會翻回之前的討論」）。
    刻意做得比新訊息淡一階——它是背景，不是這一輪的回答。 */
@@ -444,8 +450,8 @@ body{margin:0}
 .hist .msg{opacity:.72}
 .hist .msg .who{font-size:10.5px}
 .chatbtn{position:fixed;right:14px;bottom:14px;z-index:9;font:inherit;font-size:13px;
- padding:9px 15px;border-radius:999px;border:0;cursor:pointer;font-weight:700;
- background:var(--accent,#3b82f6);color:#fff;box-shadow:0 6px 20px rgba(0,0,0,.45)}
+ padding:9px 15px;border-radius:0;cursor:pointer;font-weight:700;letter-spacing:.05em;
+ border:1px solid var(--cy,#22D3EE);background:var(--panel,#080E1A);color:var(--cy,#22D3EE);box-shadow:0 6px 20px rgba(0,0,0,.45)}
 @media(max-width:900px){
  /* 手機：三欄疊成一欄，靠上面的分頁鈕切換——並排在 375px 上誰都看不清楚 */
  .room,.room.chat{grid-template-columns:1fr;height:auto}
@@ -453,6 +459,9 @@ body{margin:0}
  .room .pane.left{max-height:46vh}
  .room:not(.chat) .right{display:none}
 }
+
+/* 數字一律等寬對齊（HUD）：欄位不會因為字寬不同而跳動。 */
+.l1 .px,.l2,.dhead .px{font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
 """
 
 ROOM_JS = r"""

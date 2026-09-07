@@ -64,8 +64,8 @@ LOOKUP_BOX = (
     '</form>')
 
 LOOKUP_CSS = """
-/* 2026-09-03：這顆框原本用寫死的 #12151b / #2a2e35 / #0d1016 / #e8eaed，
-   跟同一排的統計卡（--surface #0F172A / --line #1E293B）並排就是兩個色系。
+/* 2026-09-03：這顆框原本用寫死的 var(--surface,#080E1A) / var(--line,#16304A) / var(--bg,#04070E) / var(--ink,#DCE7F5)，
+   跟同一排的統計卡（--surface #080E1A / --line #16304A）並排就是兩個色系。
    查股頁沿用這顆框時把偏差一起帶過去，Leo 才會覺得「風格不一致」。
    改成全部走變數——燈號頁、首頁、查股頁三處同時修正。 */
 .lkbox{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:14px 0 4px;
@@ -141,15 +141,27 @@ def icon(name, size=17, color="currentColor", stroke=2):
 
 # ── 共用 CSS：base(全站通用) ─────────────────────────────────────────
 BASE_CSS = """
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#020617;--surface:#0F172A;--card:#131F35;--line:#1E293B;--line2:#16223A;
- --ink:#F8FAFC;--muted:#94A3B8;--dim:#64748B;--accent:#3B82F6;
- --up:#22C55E;--down:#EF4444;--warn:#EAB308}
-body{background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;
- font-family:Inter,-apple-system,"Microsoft JhengHei","PingFang TC",sans-serif;font-size:15px}
+/* 2026-09-07 戰情室 HUD 色票。**變數名一個都沒改**，只換值——
+   七個頁面、十幾個共用元件全部指向這裡，改名等於要同時改完所有消費端。 */
+:root{--bg:#04070E;--surface:#080E1A;--card:#0C1524;--line:#16304A;--line2:#0E1B2B;
+ --ink:#DCE7F5;--muted:#9DB0C8;--dim:#5B6E8A;--accent:#22D3EE;
+ --up:#22C55E;--down:#EF4444;--warn:#FFB627;
+ /* HUD 專用（新增，舊頁面用不到也不會壞） */
+ --void:#04070E;--panel:#080E1A;--raise:#0C1524;--hud:#16304A;--hud-lit:#1F4E6E;
+ --grid:#0E1B2B;--ink2:#9DB0C8;--cy:#22D3EE;--cy-dim:rgba(34,211,238,.10);
+ --lamp:#FFB627;--lamp-dim:rgba(255,182,39,.13);
+ /* RRG 四色＝industry_rotation.QUADRANT_COLOR，兩頁不用重新記顏色。
+    會跟漲跌紅綠、燈的琥珀撞色——Leo 9/7：「多顏色沒關係」，一致比避讓重要。 */
+ --q-lead:#3987e5;--q-imp:#2fbf71;--q-weak:#eda100;--q-lag:#e5484d}
+body{background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased;
+ font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;font-size:15px;
+ /* 極淡掃描線：唯一的裝飾，其餘全部是資料。3px 一週期，放大也不會變成條紋。 */
+ background-image:repeating-linear-gradient(180deg,
+   rgba(34,211,238,.022) 0 1px,transparent 1px 3px)}
 .wrap{max-width:1100px;margin:0 auto;padding:14px 14px 60px}
-.num{font-family:'Fira Code',monospace;font-variant-numeric:tabular-nums}
+.num{font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
 a{color:inherit}
 
 header{padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:6px}
@@ -196,7 +208,7 @@ h1 svg{flex-shrink:0}
  background:transparent;border-left:0;border-right:0;border-top:0;color:inherit;
  font-family:inherit;font-size:inherit;transition:background .15s}
 .row:last-child{border-bottom:0}
-.row:hover,.row:focus-visible{background:#16223A}
+.row:hover,.row:focus-visible{background:#0E1B2B}
 .row:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
 .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px}
 .info{flex:1;min-width:0}
@@ -277,7 +289,98 @@ h1 svg{flex-shrink:0}
 .chartlegend{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;font-size:12px;color:var(--muted)}
 .chartlegend span{display:inline-flex;align-items:center;gap:5px}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ═══ 戰情室 HUD 覆蓋層（2026-09-07）═══════════════════════════════
+   Leo 對第一版的評語是「不夠先進數字化」。差別不在顏色深淺，在**語彙**：
+   圓角卡片是消費性 App，方角＋細線＋四角括號＋等寬數字才是儀器面板。
+   ⚠️ 這一段刻意放最後：同權重後寫的贏，所以蓋得掉上面的圓角與字體，
+      要退回舊視覺只要刪掉這一段，不用逐條回改。 */
+
+/* 方角：一次收掉全站的圓角。留 2px 給互動元件，完全 0 會顯得毛躁。 */
+.rows,.card,.stat,.legend,.empty,.mbox,.detail,.dcell,.vsgrid .box,
+.stalewarn,.nl,.seg,.sc,.mhd button,.modal .mbox{border-radius:2px}
+.seg{border-radius:0;background:transparent;border:1px solid var(--line);padding:0}
+.seg button{border-radius:0;min-height:32px;padding:6px 15px;font-size:12.5px;
+ letter-spacing:.04em;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed=true]{background:var(--cy-dim);color:var(--cy)}
+.sc{border-radius:0;font-weight:500;letter-spacing:.03em}
+.sc[aria-pressed=true]{background:var(--cy-dim);color:var(--cy);border-color:var(--hud-lit)}
+.sc b,.cnt,.sv,.dcell .v,.stat .big,.vsgrid .val,.vsgrid .pnl,.htk,.hsub,.rt{
+ font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+/* 眉標：全大寫、加寬字距的英文小標。這是「儀器」的語感來源，
+   而且它同時是資訊——每一段都講得出自己是什麼。 */
+.eye{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10px;
+ letter-spacing:.22em;text-transform:uppercase;color:var(--cy);font-weight:600;
+ display:block;margin-bottom:3px}
+.eye em{font-style:normal;color:var(--dim);letter-spacing:.1em}
+
+/* 四角括號：只給「主要面板」用，每頁一兩個就夠——到處都是就變裝飾。 */
+.hud{position:relative}
+.hud::before,.hud::after{content:"";position:absolute;width:12px;height:12px;
+ border:1px solid var(--cy);pointer-events:none}
+.hud::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
+.hud::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
+
+header{border-bottom:1px solid var(--hud)}
+h1{letter-spacing:.02em;font-weight:900}
+.nl{border-radius:0;font-weight:500;letter-spacing:.03em;color:var(--ink2);
+ background:var(--raise)}
+.nl:hover,.nl:focus-visible{border-color:var(--cy);background:var(--cy-dim);color:var(--cy)}
+.nl.cur{border-color:var(--cy);background:var(--cy-dim);color:var(--cy)}
+.ctrl{border-bottom:1px solid var(--hud)}
+.sechd .ico{border-radius:0;background:var(--cy-dim);border:1px solid var(--hud)}
+.cnt{border-radius:0;border:1px solid var(--hud);background:transparent;
+ letter-spacing:.06em}
+.row:hover,.row:focus-visible{background:var(--cy-dim)}
+.detail{background:var(--raise)}
+.bar{border-radius:0;background:var(--hud-lit)}
+.sigtag{border-radius:0;letter-spacing:.04em}
+.dcell .k{letter-spacing:.14em;text-transform:uppercase;font-size:9px;
+ font-family:'IBM Plex Mono',ui-monospace,monospace}
+.card h2,.explain h3,.mdbody h3{color:var(--lamp)}
+.legend i,.d2{border-radius:0}
+.stalewarn{border-radius:0;border-left:3px solid var(--down)}
+
+/* 統計卡：方角、數字用等寬、標籤全大寫加寬字距。
+   第一張加四角括號當作「主面板」的錨——每頁只有一組，不會變成裝飾。 */
+body .cbstat{border:1px solid var(--hud);background:var(--panel)}
+body .cbstat div{border:0;border-right:1px solid var(--grid);border-radius:0;
+ background:transparent;padding:7px 14px}
+body .cbstat div:last-child{border-right:0}
+body .cbstat b{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:19px;
+ font-weight:600;letter-spacing:-.01em}
+body .cbstat span{font-size:9.5px;letter-spacing:.1em;color:var(--dim)}
+body .lkbox{border-radius:0!important;border-color:var(--hud)!important}
+body .lkbox button{border-radius:0!important}
+body .lkbox input{border-radius:0!important}
+
+/* 區塊標題：左邊一條青色細標，取代原本純文字的標題。
+   它同時把「這一段開始了」講清楚，比加大字級省空間。 */
+body .cbsec{border-left:2px solid var(--cy);padding-left:9px;letter-spacing:.02em}
+body .cbnote{border-radius:0;border-left-color:var(--lamp)}
+body table.cb th{letter-spacing:.12em;font-size:10px;text-transform:uppercase;
+ font-family:'IBM Plex Mono',ui-monospace,monospace;border-bottom-color:var(--hud)}
+body table.cb td{font-variant-numeric:tabular-nums}
+body table.cb tr:hover td{background:var(--cy-dim)}
+body .lamp{border-radius:1px}
+body .qb{border-radius:0;letter-spacing:.06em}
+body .expbtn{border-radius:0}
+body .expbtn:hover{border-color:var(--cy);color:var(--cy)}
 """
+
+
+
+# 每頁的眉標代號（2026-09-07）。key 跟 header() 的 current 一樣，
+# 查不到就退回 TERMINAL——新頁面忘了加不會壞，只是少一個代號。
+EYEBROW = {
+    "board": "SECTOR BOARD", "combo": "SIGNAL MATRIX", "lamp": "SIGNAL MATRIX",
+    "rotation": "ROTATION RRG", "chip": "CHIP FLOW", "earnings": "EARNINGS DESK",
+    "race": "PAPER BOOK", "gdp": "MACRO WATCH", "ark": "ARK TRACKER",
+    "buffett": "VALUE SCREEN", "home": "COMMAND", "lookup": "LOOKUP",
+    "room": "WAR ROOM", "trades": "TRADE LOG",
+}
 
 
 def header(title_icon, title, subtitle, nav_items, current=None):
@@ -285,7 +388,11 @@ def header(title_icon, title, subtitle, nav_items, current=None):
     links = "".join(
         f'<a class="nl{" cur" if k == current else ""}" href="{href}">{icon(ic, 14)}{esc(lab)}</a>'
         for k, ic, lab, href in nav_items)
-    return (f'<header><h1>{icon(title_icon, 21, "#3B82F6")}{esc(title)}</h1>'
+    # 眉標：全大寫加寬字距的英文小標。它不只是裝飾——寫的是這一頁的代號，
+    # 七個頁面的眉標各不相同，掃一眼就知道自己在哪一頁。
+    eye = EYEBROW.get(current or "", "TERMINAL")
+    return (f'<header><span class="eye">{esc(eye)}<em> // 隆中對</em></span>'
+            f'<h1>{icon(title_icon, 21, "#22D3EE")}{esc(title)}</h1>'
             f'<div class="sub">{subtitle}</div>'
             f'<div class="navlinks">{links}</div></header>')
 

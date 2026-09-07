@@ -258,7 +258,7 @@ def _is_tw_yf(ticker):
 
 
 CSS = """
-.positioning{margin-top:16px;padding-top:14px;border-top:1px solid #16223A}
+.positioning{margin-top:16px;padding-top:14px;border-top:1px solid #0E1B2B}
 .positioning h3{font-size:14px;font-weight:700;color:#F5B841;margin-bottom:4px}
 .chainpos{font-size:12.5px;color:#C7D8EC;line-height:1.6;margin-bottom:8px;
  padding:8px 10px;background:#161a20;border-radius:8px}

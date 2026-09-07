@@ -1125,23 +1125,23 @@ def _tile(name, main, sub):
 
 CSS = """
 /* 2026-09-03 Leo：「查任意股風格不一致，請改成跟燈號風格一致」。
-   這組卡片原本用寫死的灰褐色（#1a1d23 / #2a2e35 / #e8eaed），跟 board_theme 的
+   這組卡片原本用寫死的灰褐色（var(--surface,#080E1A) / var(--line,#16304A) / var(--ink,#DCE7F5)），跟 board_theme 的
    深藍色票（--surface / --line / --ink）並排就是兩個色系——而這個元件同時出現在
    產業鏈看板、進出燈號、財報分析、查股四個頁面，等於四頁都帶著同一個偏差。
    改成全部走變數，四頁一起正。
-   ⚠️ 每個變數都帶 fallback（`var(--line,#1E293B)`）——**earnings_infographic.py
+   ⚠️ 每個變數都帶 fallback（`var(--line,#16304A)`）——**earnings_infographic.py
    用了這份 CSS 但沒有載入 BASE_CSS，也沒自己定義這些變數**。不帶預設值的話
    財報卡的卡片背景會整個變透明，而且不會報錯（CSS 找不到變數就當沒設定）。
    ⚠️ 圖表 canvas 裡的色碼（軸刻度/格線/K棒）**刻意不動**：那是 Chart.js 的 JS
    設定，讀不到 CSS 變數，硬改只會變成字串 "var(--dim,#64748B)" 而畫不出來。 */
-.technical{margin-top:16px;padding-top:14px;border-top:1px solid var(--line,#1E293B)}
+.technical{margin-top:16px;padding-top:14px;border-top:1px solid var(--line,#16304A)}
 .technical h3{font-size:14px;font-weight:700;color:#F5B841;margin-bottom:4px}
 .techgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:10px}
-.ttile{background:var(--surface,#0F172A);border:1px solid var(--line,#1E293B);border-radius:9px;padding:9px 11px}
+.ttile{background:var(--surface,#080E1A);border:1px solid var(--line,#16304A);border-radius:9px;padding:9px 11px}
 .tn{font-size:10px;color:var(--dim,#64748B);letter-spacing:.3px;font-weight:600}
 .tv{font-size:14px;font-weight:700;margin-top:4px;color:var(--ink,#F8FAFC)}
 .ts{font-size:11px;color:var(--muted,#94A3B8);margin-top:2px}
-.techtoggle{margin-top:12px;width:100%;padding:9px;background:var(--surface,#0F172A);border:1px solid var(--line,#1E293B);
+.techtoggle{margin-top:12px;width:100%;padding:9px;background:var(--surface,#080E1A);border:1px solid var(--line,#16304A);
  border-radius:8px;color:#93C5FD;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
 .techtoggle:hover{border-color:var(--accent,#3B82F6)}
 .techcharts{margin-top:10px}
@@ -1155,7 +1155,7 @@ CSS = """
 .techside.single{grid-template-columns:1fr}
 .techmain{min-width:0}
 @media(max-width:860px){.techrow{grid-template-columns:1fr}}
-.tpanel{background:var(--surface,#0F172A);border:1px solid var(--line,#1E293B);border-radius:9px;padding:8px 11px}
+.tpanel{background:var(--surface,#080E1A);border:1px solid var(--line,#16304A);border-radius:9px;padding:8px 11px}
 .tph{font-size:11px;color:#F5B841;font-weight:700;margin-bottom:5px}
 .tprow{display:flex;justify-content:space-between;gap:10px;padding:2px 0;font-size:12px}
 .tprow>span{color:var(--muted,#94A3B8)}
@@ -1168,15 +1168,15 @@ CSS = """
 .techcharts.nosides .techside{display:none}
 .techcharts.nosides .techrow{display:block}
 .tcside{font:inherit;font-size:11px;padding:3px 9px;border-radius:7px;cursor:pointer;
- border:1px solid var(--line,#1E293B);background:transparent;color:var(--dim,#94a3b8)}
+ border:1px solid var(--line,#16304A);background:transparent;color:var(--dim,#94a3b8)}
 .tctools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
-.tcwin{display:inline-flex;background:var(--surface,#0F172A);border:1px solid var(--line,#1E293B);border-radius:8px;padding:2px}
+.tcwin{display:inline-flex;background:var(--surface,#080E1A);border:1px solid var(--line,#16304A);border-radius:8px;padding:2px}
 .tcwin button{border:0;background:transparent;color:var(--muted,#94A3B8);font-size:11px;font-weight:600;
  padding:5px 12px;border-radius:6px;cursor:pointer;font-family:inherit}
 .tcwin button[aria-pressed=true]{background:#334155;color:var(--ink,#F8FAFC)}
 /* 2026-09-02 Leo：「可以做放大縮小功能？調整橫軸？」——chartjs-plugin-zoom（Chart.js
    官方組織維護），滾輪縮放＋拖曳平移，四張圖同步；這顆按鈕復原成 90天/半年/1年/3年 按鈕給的範圍。 */
-.tcreset{background:none;border:1px solid var(--line,#1E293B);border-radius:7px;color:var(--muted,#94A3B8);
+.tcreset{background:none;border:1px solid var(--line,#16304A);border-radius:7px;color:var(--muted,#94A3B8);
  font-size:11px;font-weight:600;padding:6px 12px;cursor:pointer;font-family:inherit}
 .tcreset:hover{border-color:var(--accent,#3B82F6);color:#93C5FD}
 .tchint{font-size:10.5px;color:var(--dim,#64748B)}

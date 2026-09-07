@@ -5431,6 +5431,31 @@ Leo 選「含當日」（那是為了對齊老墨螢幕值訂的）。`mansfield
 
 ## 2026-09-07　燈號戰情室、四燈上圖、軍師續談、Sonia 兩張卡、視覺提案
 
+**全站視覺換成戰情室 HUD（Leo：「視覺可以先套用了」）**
+- Leo 對第一版的評語是「**不夠先進數字化**」。差別不在顏色深淺，在**語彙**：
+  圓角卡片是消費性 App，方角＋細線＋等寬數字＋全大寫眉標才是儀器面板。
+- 改的是 `board_theme.BASE_CSS`（全站唯一色票來源），七頁一起換，各頁不用動：
+  · 色票換值但**變數名一個都沒改** —— 改名等於要同時改完所有消費端
+  · 底色 #020617→#04070E、面板 #0F172A→#080E1A、框線 #1E293B→#16304A、
+    重點色 #3B82F6→#22D3EE（青）；新增 --void/--panel/--hud/--cy/--lamp
+    與 RRG 四色（＝industry_rotation.QUADRANT_COLOR，Leo：「多顏色沒關係」）
+  · 字體 Inter/Fira Code → Noto Sans TC ＋ **IBM Plex Mono**（數字 tabular-nums）
+  · body 加極淡掃描線（3px 週期），是全站唯一的裝飾
+- **作法是在 BASE_CSS 最後追加覆蓋層**，不是逐條改寫前面 60 條規則。
+  同權重後寫的贏，要退回舊視覺只要刪那一段；逐條改的風險是漏掉幾條，
+  變成新舊兩種風格混在同一頁。
+- `header()` 加眉標（SIGNAL MATRIX / SECTOR BOARD / WAR ROOM …，表 `EYEBROW`）。
+  它不只是裝飾——七頁各不相同，掃一眼就知道自己在哪一頁；查不到退回 TERMINAL。
+- 🔴 **踩到載入順序**：我把 `.cbstat` 之類的覆蓋寫進 BASE_CSS，但 combo_html.CSS
+  是在它**之後**載入的 → 統計卡還是圓角有框。改成 `body .cbstat{...}` 墊高權重，
+  跟載入順序脫鉤。⭐ **共用層蓋不到後載入的頁面 CSS**，這是今天第二次撞到同一件事。
+- 順手清掉 12 支檔案裡 45 處寫死的舊色碼（記憶 investment_site_ui_standard 點名過
+  LOOKUP_CSS 與 technical_indicators.CSS，這次連 board_html/industry_rotation 等一起換）。
+  留著舊 fallback 的話，載不到 BASE_CSS 時整塊會變回舊配色。
+- ⚠️ **公開站的七頁是靜態產物**，樣式寫在各自的 HTML 裡 —— 要各自重跑才會變。
+  combo.html 已重建；其餘等各自排程（board/rotation 每日早上、earnings/gdp/ark/buffett
+  週或雙週）。這期間公開站會新舊混著。
+
 **價格標籤跟著可視範圍（Leo：「手機縮放目標價、停損價會跑」）**
 - 原本：`pricetags` 外掛一律抓每條線 `ds.data` 的**最後一根**（＝整段序列的最新值）。
   縮放或平移之後畫面上是別的日期區間 —— 線畫在 262，標籤還寫 204.25，

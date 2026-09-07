@@ -240,7 +240,7 @@ def build_html(ticker):
 
 
 CSS = """
-.reality{margin-top:16px;padding-top:14px;border-top:1px solid #16223A}
+.reality{margin-top:16px;padding-top:14px;border-top:1px solid #0E1B2B}
 .reality h3{font-size:14px;font-weight:700;color:#F5B841;margin-bottom:4px}
 .realitysub{font-size:11.5px;color:#93C5FD;font-weight:600;margin:12px 0 5px}
 .realitytbl{width:100%;border-collapse:collapse;font-size:12px}
