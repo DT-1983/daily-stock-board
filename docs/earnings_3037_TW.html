@@ -1,0 +1,714 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex"><title>3037.TW Q2 2026 財報懶人包</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script><script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.2.1/dist/chartjs-chart-financial.min.js"></script><script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.2.0/dist/chartjs-plugin-zoom.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0A1628;color:#E8EEF7;
+ font-family:"Microsoft JhengHei","PingFang TC",-apple-system,"Segoe UI",sans-serif;
+ padding:22px;line-height:1.5}
+.wrap{max-width:1280px;margin:0 auto}
+.card{background:#132A47;border:1px solid #1E3A5F;border-radius:14px;padding:16px}
+.hd{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;
+ border-bottom:3px solid #F5B841;padding-bottom:14px;margin-bottom:18px;flex-wrap:wrap}
+.hd h1{font-size:27px;font-weight:800;letter-spacing:.5px}
+.hd .sub{color:#8FA8C8;font-size:13px;margin-top:3px}
+.tk{font-size:34px;font-weight:800;color:#F5B841;line-height:1}
+.tk-sub{color:#8FA8C8;font-size:12px;text-align:right;margin-top:4px}
+.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:16px}
+.kpi{background:#132A47;border:1px solid #1E3A5F;border-radius:14px;padding:14px 12px;
+ border-top:3px solid #2E4A6F}
+.kpi .lb{color:#8FA8C8;font-size:11.5px;letter-spacing:.4px;text-transform:uppercase}
+.kpi .vl{font-size:26px;font-weight:800;margin:5px 0 3px;letter-spacing:-.5px}
+.kpi .yo{font-size:13px;font-weight:700}
+.up{color:#22C55E}.dn{color:#EF4444}.neu{color:#8FA8C8}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px}
+h2{font-size:14px;font-weight:800;color:#F5B841;letter-spacing:.6px;margin-bottom:11px;
+ text-transform:uppercase}
+.item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid #1E3A5F}
+.item:last-child{border-bottom:0}
+.ic{font-size:19px;line-height:1.2;flex-shrink:0;width:24px;text-align:center}
+.it-t{font-weight:700;font-size:13.5px;margin-bottom:2px}
+.it-d{color:#A9C0DC;font-size:12.5px;line-height:1.55}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{color:#8FA8C8;font-weight:600;text-align:right;padding:6px 4px;
+ border-bottom:1px solid #1E3A5F;font-size:11.5px}
+th:first-child{text-align:left}
+td{padding:6px 4px;text-align:right;border-bottom:1px solid #16304F}
+td:first-child{text-align:left;color:#C7D8EC}
+.gauge{text-align:center;margin-top:12px}
+.gauge .lbl{font-size:15px;font-weight:800;margin-top:-8px}
+.gauge .rsn{color:#8FA8C8;font-size:11.5px;margin-top:5px;line-height:1.45}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.pos{background:#0E2E1E;border:1px solid #1B5E3A}
+.neg{background:#2E1418;border:1px solid #5E1B24}
+.pos h2{color:#22C55E}.neg h2{color:#EF4444}
+.li{display:flex;gap:9px;padding:7px 0;font-size:12.8px;line-height:1.5;align-items:flex-start}
+.li .m{flex-shrink:0;font-weight:800}
+.pos .m{color:#22C55E}.neg .m{color:#EF4444}
+.dec{display:grid;grid-template-columns:1.15fr 1fr;gap:12px;margin-bottom:16px}
+.rate{display:flex;justify-content:space-between;align-items:center;padding:8px 0;
+ border-bottom:1px solid #1E3A5F;font-size:13px}
+.rate:last-of-type{border-bottom:0}
+.st{color:#F5B841;letter-spacing:2.5px;font-size:14.5px}
+.st .off{color:#33507A}
+.na{color:#8FA8C8;font-size:11.5px;letter-spacing:0}
+.badge{text-align:center;padding:14px;border-radius:12px;margin-bottom:12px}
+.badge .bg{font-size:31px;font-weight:800;letter-spacing:2px;line-height:1}
+.badge .bs{font-size:11.5px;margin-top:5px;opacity:.92}
+.note{color:#8FA8C8;font-size:11.5px;margin-top:9px;line-height:1.5}
+.bl{background:linear-gradient(90deg,#14304F,#1B3E63);border:1px solid #2A4E78;
+ border-radius:14px;padding:16px 20px;display:flex;align-items:center;gap:15px}
+.bl .e{font-size:29px;flex-shrink:0}
+.bl .t{font-size:11.5px;color:#F5B841;font-weight:800;letter-spacing:1.2px;margin-bottom:3px}
+.bl .c{font-size:14.5px;line-height:1.6}
+.verdict{margin-top:14px;padding:14px 16px;background:#161a20;border:1px solid #2a2e35;
+ border-left:3px solid #F5B841;border-radius:10px}
+.verdict .vt{font-size:11.5px;font-weight:700;color:#F5B841;letter-spacing:.5px;margin-bottom:6px}
+.verdict .vc{font-size:13.5px;line-height:1.7;color:#C7D8EC}
+.ftr{color:#6B84A6;font-size:11px;margin-top:16px;line-height:1.7;
+ border-top:1px solid #1E3A5F;padding-top:12px}
+.warn{background:#3A2A0E;border:1px solid #7A5A1E;color:#F5C96B;border-radius:9px;
+ padding:9px 13px;font-size:12px;margin-bottom:14px}
+@media(max-width:1000px){.kpis{grid-template-columns:repeat(2,1fr)}
+ .grid3,.two,.dec{grid-template-columns:1fr}}
+
+.positioning{margin-top:16px;padding-top:14px;border-top:1px solid var(--line2,#0E1B2B)}
+.positioning h3{font-size:14px;font-weight:700;color:var(--warn,#FFB627);margin-bottom:4px}
+.chainpos{font-size:12.5px;color:var(--muted,#9DB0C8);line-height:1.6;margin-bottom:8px;
+ padding:8px 10px;background:var(--card,#0C1524);border-radius:0}
+.posnote{font-size:11.5px;color:var(--dim,#5B6E8A);margin-bottom:10px}
+.segarrow{text-align:center;font-size:10.5px;color:var(--dim,#5B6E8A);margin:2px 0}
+.segrow{margin:6px 0 10px}
+.segname{font-size:12px;color:var(--cy,#22D3EE);font-weight:600}
+.segmine{color:var(--warn,#FFB627);font-weight:700;font-size:10.5px}
+.segdo{font-size:11px;color:var(--dim,#5B6E8A);margin:2px 0 6px}
+.segcells{display:flex;flex-wrap:wrap;gap:6px}
+.peer{background:var(--panel,#080E1A);border:1px solid var(--hud,#16304A);border-radius:0;padding:6px 9px;font-size:11.5px;min-width:120px}
+.peer.focus{border-color:var(--cy,#22D3EE);box-shadow:0 0 0 1px var(--cy,#22D3EE)}
+.pt{font-weight:700;color:var(--ink,#DCE7F5)}
+.pc{color:var(--dim,#5B6E8A);font-weight:400;margin-left:4px;font-size:10.5px}
+.pv{color:var(--muted,#9DB0C8);margin-top:2px}
+.pv .pos{color:var(--up,#22C55E)}.pv .neg{color:var(--down,#EF4444)}.pv .flat{color:var(--dim,#5B6E8A)}
+
+.reality{margin-top:16px;padding-top:14px;border-top:1px solid #0E1B2B}
+.reality h3{font-size:14px;font-weight:700;color:#F5B841;margin-bottom:4px}
+.realitysub{font-size:11.5px;color:#93C5FD;font-weight:600;margin:12px 0 5px}
+.realitytbl{width:100%;border-collapse:collapse;font-size:12px}
+.realitytbl th{color:#8a8f98;font-weight:600;text-align:right;padding:5px 7px;
+ border-bottom:1px solid #2a2e35;font-size:10.5px}
+.realitytbl th:first-child,.realitytbl td:first-child{text-align:left}
+.realitytbl td{padding:5px 7px;border-bottom:1px solid #1a1d23;text-align:right;color:#e8eaed}
+.realitytbl tr:last-child td{border-bottom:0}
+.realitytbl .pos{color:#4ade80}.realitytbl .neg{color:#ff8a8a}.realitytbl .flat{color:#6b7280}
+.ndot{color:#EAB308;cursor:help}
+.realitywarn{background:#2a2410;border:1px solid #5c4a1a;border-radius:8px;
+ padding:9px 11px;font-size:12px;line-height:1.6;color:#F5D98B;margin-top:10px}
+
+/* 滾輪縮放的啟用狀態（2026-09-07 Leo：「用滾輪往下滾都會卡在圖」）。
+   ⭐ 縮放是偶爾要用的、捲頁面是每次都要用的——搶滾輪的應該是偶爾那個。
+   所以改成點一下圖才啟用，並且**讓使用者看得出來現在是哪個模式**。 */
+.zoomwrap{position:relative}
+.zoomwrap.zon{outline:1px solid var(--cy,#22D3EE);outline-offset:1px}
+.zoomtip{position:absolute;top:4px;right:6px;z-index:3;pointer-events:none;
+ font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:9.5px;
+ letter-spacing:.08em;padding:1px 6px;border:1px solid var(--hud,#16304A);
+ background:var(--panel,#080E1A);color:var(--dim,#5B6E8A);opacity:0;
+ transition:opacity .15s}
+.zoomwrap:hover .zoomtip{opacity:1}
+.zoomwrap.zon .zoomtip{opacity:1;border-color:var(--cy,#22D3EE);color:var(--cy,#22D3EE)}
+
+/* 2026-09-03 Leo：「查任意股風格不一致，請改成跟燈號風格一致」。
+   這組卡片原本用寫死的灰褐色（var(--surface,#080E1A) / var(--line,#16304A) / var(--ink,#DCE7F5)），跟 board_theme 的
+   深藍色票（--surface / --line / --ink）並排就是兩個色系——而這個元件同時出現在
+   產業鏈看板、進出燈號、財報分析、查股四個頁面，等於四頁都帶著同一個偏差。
+   改成全部走變數，四頁一起正。
+   ⚠️ 每個變數都帶 fallback（`var(--line,#16304A)`）——**earnings_infographic.py
+   用了這份 CSS 但沒有載入 BASE_CSS，也沒自己定義這些變數**。不帶預設值的話
+   財報卡的卡片背景會整個變透明，而且不會報錯（CSS 找不到變數就當沒設定）。
+   ⚠️ 圖表 canvas 裡的色碼（軸刻度/格線/K棒）**刻意不動**：那是 Chart.js 的 JS
+   設定，讀不到 CSS 變數，硬改只會變成字串 "var(--dim,#64748B)" 而畫不出來。 */
+.technical{margin-top:16px;padding-top:14px;border-top:1px solid var(--line,#16304A)}
+.technical h3{font-size:14px;font-weight:700;color:#F5B841;margin-bottom:4px}
+.techgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-top:10px}
+.ttile{background:var(--surface,#080E1A);border:1px solid var(--line,#16304A);border-radius:9px;padding:9px 11px}
+.tn{font-size:10px;color:var(--dim,#64748B);letter-spacing:.3px;font-weight:600}
+.tv{font-size:14px;font-weight:700;margin-top:4px;color:var(--ink,#F8FAFC)}
+.ts{font-size:11px;color:var(--muted,#94A3B8);margin-top:2px}
+.techtoggle{margin-top:12px;width:100%;padding:9px;background:var(--surface,#080E1A);border:1px solid var(--line,#16304A);
+ border-radius:8px;color:#93C5FD;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.techtoggle:hover{border-color:var(--accent,#3B82F6)}
+.techcharts{margin-top:10px}
+.tclabel{font-size:11px;color:var(--muted,#94A3B8);margin:10px 0 4px}
+/* 2026-09-02 Leo：「文字可以跟圖表上下對齊嗎」——原本左邊 5 張卡整欄疊、右邊 4 張圖
+   整欄疊，各自堆疊、行數跟圖高不同步，越往下錯位越多。改成「一組卡配一張圖」成一列
+   （techrow），哪張卡對應哪張圖就在同一列，兩欄永遠對齊，不看下面的內容多寡。 */
+.techwrap{display:flex;flex-direction:column;gap:14px;margin-top:6px}
+.techrow{display:grid;grid-template-columns:340px minmax(0,1fr);gap:14px;align-items:start}
+.techside{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;align-content:start}
+.techside.single{grid-template-columns:1fr}
+.techmain{min-width:0}
+@media(max-width:860px){.techrow{grid-template-columns:1fr}}
+.tpanel{background:var(--surface,#080E1A);border:1px solid var(--line,#16304A);border-radius:9px;padding:8px 11px}
+.tph{font-size:11px;color:#F5B841;font-weight:700;margin-bottom:5px}
+.tprow{display:flex;justify-content:space-between;gap:10px;padding:2px 0;font-size:12px}
+.tprow>span{color:var(--muted,#94A3B8)}
+.tprow>b{color:var(--ink,#F8FAFC);font-weight:600}
+.tcbox{height:180px}
+.tcbox-xs{height:120px}
+.tcbox-xs canvas{height:120px!important}
+.tcbox-sm{height:100px}
+/* B：收起說明卡時，圖表吃滿整列 */
+.techcharts.nosides .techside{display:none}
+.techcharts.nosides .techrow{display:block}
+.tcside{font:inherit;font-size:11px;padding:3px 9px;border-radius:7px;cursor:pointer;
+ border:1px solid var(--line,#16304A);background:transparent;color:var(--dim,#94a3b8)}
+.tctools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
+.tcwin{display:inline-flex;background:var(--surface,#080E1A);border:1px solid var(--line,#16304A);border-radius:8px;padding:2px}
+.tcwin button{border:0;background:transparent;color:var(--muted,#94A3B8);font-size:11px;font-weight:600;
+ padding:5px 12px;border-radius:6px;cursor:pointer;font-family:inherit}
+.tcwin button[aria-pressed=true]{background:#334155;color:var(--ink,#F8FAFC)}
+/* 2026-09-02 Leo：「可以做放大縮小功能？調整橫軸？」——chartjs-plugin-zoom（Chart.js
+   官方組織維護），滾輪縮放＋拖曳平移，四張圖同步；這顆按鈕復原成 90天/半年/1年/3年 按鈕給的範圍。 */
+.tcreset{background:none;border:1px solid var(--line,#16304A);border-radius:7px;color:var(--muted,#94A3B8);
+ font-size:11px;font-weight:600;padding:6px 12px;cursor:pointer;font-family:inherit}
+.tcreset:hover{border-color:var(--accent,#3B82F6);color:#93C5FD}
+.tchint{font-size:10.5px;color:var(--dim,#64748B)}
+
+
+.callnote-block{margin-top:10px}
+.callnote-text{font-size:12.5px;color:#e8eaed;line-height:1.6;background:#1a1d23;
+ border:1px solid #2a2e35;border-radius:8px;padding:9px 11px;margin-top:6px}
+.callnote-quote{margin-top:10px;font-size:12.5px;color:#C7D8EC;line-height:1.6;
+ font-style:italic;border-left:2px solid #F5B841;padding-left:10px}
+.callnote-speaker{font-size:11px;color:#8a8f98;margin-top:4px;font-style:normal}
+
+/* 🔴 色票也放這裡一份（2026-09-07）。
+   起因：產業鏈看板（board_html.py）**有自己一份 :root**，只有舊的五個色，
+   缺 --cy / --cy-dim / --hud / --panel / --lamp 這些新變數 →
+   下面的覆蓋規則寫了 var(--cy-dim) 卻解析不到，籤的底色整個透明，
+   而且 --ink/--accent 還是舊值 → Leo：「產業鏈看板設計失敗，跟其它頁面都不同」。
+   ⭐ 記憶 investment_site_ui_standard 記過：**抽共用 CSS 變數前，
+      先查每個消費端是不是都載了定義那些變數的那份 CSS**。這次就是沒查。
+   修法：HUD_CSS 自己帶一份完整色票，誰載它誰就有，不依賴 BASE_CSS。
+   （BASE_CSS 也含 HUD_CSS，等於同值重宣告一次，無害。） */
+:root{--bg:#04070E;--surface:#080E1A;--card:#0C1524;--line:#16304A;--line2:#0E1B2B;
+ --ink:#DCE7F5;--muted:#9DB0C8;--dim:#5B6E8A;--accent:#22D3EE;
+ --up:#22C55E;--down:#EF4444;--warn:#FFB627;
+ /* HUD 專用（新增，舊頁面用不到也不會壞） */
+ --void:#04070E;--panel:#080E1A;--raise:#0C1524;--hud:#16304A;--hud-lit:#1F4E6E;
+ --grid:#0E1B2B;--ink2:#9DB0C8;--cy:#22D3EE;--cy-dim:rgba(34,211,238,.10);
+ --lamp:#FFB627;--lamp-dim:rgba(255,182,39,.13);
+ /* RRG 四色＝industry_rotation.QUADRANT_COLOR，兩頁不用重新記顏色。
+    會跟漲跌紅綠、燈的琥珀撞色——Leo 9/7：「多顏色沒關係」，一致比避讓重要。 */
+ --q-lead:#3987e5;--q-imp:#2fbf71;--q-weak:#eda100;--q-lag:#e5484d}
+/* ═══ 戰情室 HUD 覆蓋層（2026-09-07）═══════════════════════════════
+   Leo 對第一版的評語是「不夠先進數字化」。差別不在顏色深淺，在**語彙**：
+   圓角卡片是消費性 App，方角＋細線＋四角括號＋等寬數字才是儀器面板。
+   ⚠️ 這一段刻意放最後：同權重後寫的贏，所以蓋得掉上面的圓角與字體，
+      要退回舊視覺只要刪掉這一段，不用逐條回改。 */
+
+/* 方角：一次收掉全站的圓角。留 2px 給互動元件，完全 0 會顯得毛躁。 */
+.rows,.card,.stat,.legend,.empty,.mbox,.detail,.dcell,.vsgrid .box,
+.stalewarn,.nl,.seg,.sc,.mhd button,.modal .mbox{border-radius:2px}
+.seg{border-radius:0;background:transparent;border:1px solid var(--line);padding:0}
+.seg button{border-radius:0;min-height:32px;padding:6px 15px;font-size:12.5px;
+ letter-spacing:.04em;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed=true]{background:var(--cy-dim);color:var(--cy)}
+.sc{border-radius:0;font-weight:500;letter-spacing:.03em}
+.sc[aria-pressed=true]{background:var(--cy-dim);color:var(--cy);border-color:var(--hud-lit)}
+.sc b,.cnt,.sv,.dcell .v,.stat .big,.vsgrid .val,.vsgrid .pnl,.htk,.hsub,.rt{
+ font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+/* 眉標：全大寫、加寬字距的英文小標。這是「儀器」的語感來源，
+   而且它同時是資訊——每一段都講得出自己是什麼。 */
+.eye{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10px;
+ letter-spacing:.22em;text-transform:uppercase;color:var(--cy);font-weight:600;
+ display:block;margin-bottom:3px}
+.eye em{font-style:normal;color:var(--dim);letter-spacing:.1em}
+
+/* 四角括號：只給「主要面板」用，每頁一兩個就夠——到處都是就變裝飾。 */
+.hud{position:relative}
+.hud::before,.hud::after{content:"";position:absolute;width:12px;height:12px;
+ border:1px solid var(--cy);pointer-events:none}
+.hud::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
+.hud::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
+
+header{border-bottom:1px solid var(--hud)}
+h1{letter-spacing:.02em;font-weight:900}
+.nl{border-radius:0;font-weight:500;letter-spacing:.03em;color:var(--ink2);
+ background:var(--raise)}
+.nl:hover,.nl:focus-visible{border-color:var(--cy);background:var(--cy-dim);color:var(--cy)}
+.nl.cur{border-color:var(--cy);background:var(--cy-dim);color:var(--cy)}
+.ctrl{border-bottom:1px solid var(--hud)}
+.sechd .ico{border-radius:0;background:var(--cy-dim);border:1px solid var(--hud)}
+.cnt{border-radius:0;border:1px solid var(--hud);background:transparent;
+ letter-spacing:.06em}
+.row:hover,.row:focus-visible{background:var(--cy-dim)}
+.detail{background:var(--raise)}
+.bar{border-radius:0;background:var(--hud-lit)}
+.sigtag{border-radius:0;letter-spacing:.04em}
+.dcell .k{letter-spacing:.14em;text-transform:uppercase;font-size:9px;
+ font-family:'IBM Plex Mono',ui-monospace,monospace}
+.card h2,.explain h3,.mdbody h3{color:var(--lamp)}
+.legend i,.d2{border-radius:0}
+.stalewarn{border-radius:0;border-left:3px solid var(--down)}
+
+/* 統計卡：方角、數字用等寬、標籤全大寫加寬字距。
+   第一張加四角括號當作「主面板」的錨——每頁只有一組，不會變成裝飾。 */
+body .cbstat{border:1px solid var(--hud);background:var(--panel)}
+body .cbstat div{border:0;border-right:1px solid var(--grid);border-radius:0;
+ background:transparent;padding:7px 14px}
+body .cbstat div:last-child{border-right:0}
+body .cbstat b{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:19px;
+ font-weight:600;letter-spacing:-.01em}
+body .cbstat span{font-size:9.5px;letter-spacing:.1em;color:var(--dim)}
+body .lkbox{border-radius:0!important;border-color:var(--hud)!important}
+body .lkbox button{border-radius:0!important}
+body .lkbox input{border-radius:0!important}
+
+/* 區塊標題：左邊一條青色細標，取代原本純文字的標題。
+   它同時把「這一段開始了」講清楚，比加大字級省空間。 */
+body .cbsec{border-left:2px solid var(--cy);padding-left:9px;letter-spacing:.02em}
+body .cbnote{border-radius:0;border-left-color:var(--lamp)}
+body table.cb th{letter-spacing:.12em;font-size:10px;text-transform:uppercase;
+ font-family:'IBM Plex Mono',ui-monospace,monospace;border-bottom-color:var(--hud)}
+body table.cb td{font-variant-numeric:tabular-nums}
+body table.cb tr:hover td{background:var(--cy-dim)}
+body .lamp{border-radius:1px}
+body .qb{border-radius:0;letter-spacing:.06em}
+body .expbtn{border-radius:0}
+body .expbtn:hover{border-color:var(--cy);color:var(--cy)}
+</style></head><body><div class="wrap">
+
+<div class="hd">
+  <div><h1>欣興</h1>
+    <div class="sub">Q2 2026 財報懶人包　·　會計期間截至 2026-06-30　·　YoY 基準 2025-06-30</div></div>
+  <div><div class="tk">3037.TW</div>
+    <div class="tk-sub">股價 949.0 TWD　·　產生於 2026-09-08 03:09</div></div>
+</div>
+
+<div class="kpis"><div class="kpi"><div class="lb">營收 Revenue</div><div class="vl">42.89B</div><span class="yo up">▲ +32.1% YoY</span></div><div class="kpi"><div class="lb">毛利 Gross Profit</div><div class="vl">10.64B</div><span class="yo up">▲ +150.6% YoY</span></div><div class="kpi"><div class="lb">營業利益 Op. Income</div><div class="vl">6.65B</div><span class="yo up">▲ +340.7% YoY</span></div><div class="kpi"><div class="lb">淨利 Net Income</div><div class="vl">13.11B</div><span class="yo up">▲ +44196.7% YoY</span></div><div class="kpi"><div class="lb">資本支出 CapEx</div><div class="vl">6.33B</div><span class="yo neu">-5.0% YoY</span></div></div>
+
+<div class="grid3">
+  <div class="card"><h2>營運亮點 Highlights</h2><div class="item"><div class="ic">📈</div><div><div class="it-t">營收獲利雙飆升</div><div class="it-d">營收428.9億年增32.1%，淨利131.1億年增44196.7%，EPS 8.38元</div></div></div><div class="item"><div class="ic">💰</div><div><div class="it-t">營益率大改善</div><div class="it-d">營業利益66.5億年增340.7%，營益率15.5%（去年同期僅4.6%）</div></div></div><div class="item"><div class="ic">🎯</div><div><div class="it-t">業外收益超越本業</div><div class="it-d">業外損益89.2億已大於本業營益66.5億，占稅前損益約57%</div></div></div><div class="item"><div class="ic">🏭</div><div><div class="it-t">ABF載板滿載成長</div><div class="it-d">ABF載板營收占比52%季增22%，年增51%，產能利用率逾90%</div></div></div></div>
+  <div class="card"><h2>財務數據 Financial Results</h2>
+    <table><tr><th>項目</th><th>本季</th><th>YoY</th></tr><tr><td>營收</td><td>42.89B</td><td class="up">+32.1%</td></tr><tr><td>毛利</td><td>10.64B</td><td class="up">+150.6%</td></tr><tr><td>營業利益</td><td>6.65B</td><td class="up">+340.7%</td></tr><tr><td>淨利</td><td>13.11B</td><td class="up">+44196.7%</td></tr><tr><td>營運現金流</td><td>7.49B</td><td class="up">+30.6%</td></tr><tr><td>自由現金流</td><td>1.16B</td><td class="dn">-224.3%</td></tr></table>
+    <div class="gauge"><h2 style="margin-top:16px">市場情緒 Sentiment</h2>
+      <svg viewBox="0 0 220 118" style="width:100%;max-width:220px"><path d="M34.0,100.0 A76,76 0 0 1 48.5,55.3" stroke="#EF4444" stroke-width="15" fill="none" stroke-linecap="butt"/><path d="M48.5,55.3 A76,76 0 0 1 86.5,27.7" stroke="#F97316" stroke-width="15" fill="none" stroke-linecap="butt"/><path d="M86.5,27.7 A76,76 0 0 1 133.5,27.7" stroke="#8FA8C8" stroke-width="15" fill="none" stroke-linecap="butt"/><path d="M133.5,27.7 A76,76 0 0 1 171.5,55.3" stroke="#4ADE80" stroke-width="15" fill="none" stroke-linecap="butt"/><path d="M171.5,55.3 A76,76 0 0 1 186.0,100.0" stroke="#22C55E" stroke-width="15" fill="none" stroke-linecap="butt"/><line x1="110" y1="100" x2="154.1" y2="55.9" stroke="#E8EEF7" stroke-width="3.5" stroke-linecap="round"/><circle cx="110" cy="100" r="7" fill="#E8EEF7"/></svg><div class="lbl" style="color:#4ADE80">BULLISH</div>
+      <div class="rsn">分析師目標價1257元高於現價32%，惟短線技術動能已轉空</div></div>
+  </div>
+  <div class="card"><h2>資本與產能動態 Capital &amp; Capacity</h2><div class="item"><div class="ic">🏗️</div><div><div class="it-t">資本支出大舉上修</div><div class="it-d">全年資本支出上修至537億元（原340億元），長交期設備追加至316億元</div></div></div><div class="item"><div class="ic">💸</div><div><div class="it-t">自由現金流波動大</div><div class="it-d">自由現金流11.6億年減224.3%，資本支出仍高達63.3億元</div></div></div><div class="item"><div class="ic">⚙️</div><div><div class="it-t">折舊負擔上升</div><div class="it-d">預估全年折舊約208億元，反映擴產後固定成本增加</div></div></div><div class="item"><div class="ic">📉</div><div><div class="it-t">負債比率下降</div><div class="it-d">年底負債比率預期由59.2%降至約52%，財務結構逐步改善</div></div></div></div>
+</div>
+
+<div class="two">
+  <div class="card pos"><h2>✓ 利多 Key Positives</h2>
+    <div class="li"><span class="m">✓</span><span>毛利率連續6季走高：13.4%→13.1%→13.4%→15.8%→18.0%→24.8%</span></div><div class="li"><span class="m">✓</span><span>ABF載板AI產品占比上半年逾60%，展望下半年估達70%</span></div><div class="li"><span class="m">✓</span><span>分析師共識strong buy（19位），平均目標價1257.89元</span></div><div class="li"><span class="m">✓</span><span>淨現金429.3億元，財務體質仍屬穩健</span></div><div class="li"><span class="m">✓</span><span>泰國廠明年量產、1.6T光模組Q4上線，成長動能明確</span></div></div>
+  <div class="card neg"><h2>✕ 風險 Key Risks &amp; Concerns</h2>
+    <div class="li"><span class="m">✕</span><span>盈再率318.4%遠超200%地雷線，掏空疑慮需留意</span></div><div class="li"><span class="m">✕</span><span>配息率僅22.9%，配息偏低使盈餘含金量存疑</span></div><div class="li"><span class="m">✕</span><span>近4年ROE僅1年達標15%以上，獲利穩定度不足</span></div><div class="li"><span class="m">✕</span><span>現價949元已遠超貴價247.48元，估值明顯偏貴</span></div><div class="li"><span class="m">✕</span><span>技術面轉空：SuperTrend與雙重颱風K線皆空頭第5根，動能-88.50</span></div></div>
+</div>
+
+<div class="dec">
+  <div class="card"><h2>洪瑞泰選股法 Decision Framework</h2><div class="rate"><div>① 高 ROE ≥ 15%<div style="color:#6B84A6;font-size:10.5px;font-weight:400;margin-top:1px">近 4 年 1/4 年達標（需 ≥3）</div></div><div style="text-align:right"><div style="font-weight:700">22.6%</div><span style="color:#EF4444;font-weight:800">❌ 不過</span></div></div><div class="rate"><div>② 盈再率 < 80%<div style="color:#6B84A6;font-size:10.5px;font-weight:400;margin-top:1px">☠️ 地雷（>200%，掏空徵兆）</div></div><div style="text-align:right"><div style="font-weight:700">318.4%</div><span style="color:#EF4444;font-weight:800">❌ 不過</span></div></div><div class="rate"><div>③ 配息率 ≥ 40%<div style="color:#6B84A6;font-size:10.5px;font-weight:400;margin-top:1px">配息偏低，留意盈餘品質</div></div><div style="text-align:right"><div style="font-weight:700">22.9%</div><span style="color:#EF4444;font-weight:800">❌ 不過</span></div></div><div style="margin-top:12px;padding-top:11px;border-top:1px solid #1E3A5F"><div style="color:#F5B841;font-size:11.5px;font-weight:700;margin-bottom:5px">俗貴價（常利EPS基準，買=÷1.15^8／賣=×30）</div><div style="font-size:12.5px;color:#C7D8EC;line-height:1.7">近四季 EPS 15.15　<span style="color:#22C55E">俗價 80.90</span>　<span style="color:#EF4444">貴價 247.48</span><br>現價 949.00 → <b>🔴 現價 > 貴價 → 太貴，考慮賣出</b></div></div><div style="margin-top:12px;padding-top:11px;border-top:1px solid #1E3A5F"><div style="color:#F5B841;font-size:11.5px;font-weight:700;margin-bottom:5px">變壞判定（EPS 衰退／照妖鏡）</div><div style="color:#22C55E;font-weight:700;font-size:13.5px">✅ 沒有變壞跡象</div><div style="color:#6B84A6;font-size:12px;margin-top:3px">· 無</div></div>
+    <div style="margin-top:13px;padding-top:12px;border-top:1px solid #1E3A5F">
+      <div style="color:#F5B841;font-size:11.5px;font-weight:700;margin-bottom:4px">長線投資邏輯</div>
+      <div style="font-size:12.8px;line-height:1.6;color:#C7D8EC">盈再率318%踩雷、ROE僅1年達標、配息22.9%偏低，三關卡未過；股價遠超貴價247.48，非好公司便宜價。</div>
+      <div style="color:#F5B841;font-size:11.5px;font-weight:700;margin:11px 0 4px">適合的投資人</div>
+      <div style="font-size:12.8px;color:#C7D8EC">偏好高成長科技股、能承受估值波動與掏空疑慮的積極型投資人</div>
+    </div>
+  </div>
+  <div class="card"><h2>分析師共識與估值 Consensus</h2>
+    <div class="badge" style="background:#0E3A22;border:1px solid #22C55E">
+      <div class="bg" style="color:#22C55E">STRONG BUY</div>
+      <div class="bs" style="color:#22C55E">19 位分析師共識　·　平均目標價 1257.8948
+        （潛在空間 +32.5%）</div>
+    </div>
+    <table><tr><td>Forward P/E</td><td>25.23</td><td style="color:#6B84A6;font-size:11px;text-align:right">低於 20 偏便宜</td></tr><tr><td>PEG Ratio</td><td>1.45</td><td style="color:#6B84A6;font-size:11px;text-align:right">小於 1＝成長性被低估</td></tr><tr><td>FCF Yield</td><td>0.07%</td><td style="color:#6B84A6;font-size:11px;text-align:right">自由現金流／市值，越高越好</td></tr><tr><td>EV / Sales</td><td>9.87</td><td style="color:#6B84A6;font-size:11px;text-align:right">越低越好</td></tr><tr><td>Trailing P/E</td><td>62.64</td><td style="color:#6B84A6;font-size:11px;text-align:right">看過去 12 個月</td></tr><tr><td>P / B</td><td>12.18</td><td style="color:#6B84A6;font-size:11px;text-align:right">資產面估值</td></tr></table>
+    <div style="margin-top:11px;padding-top:10px;border-top:1px solid #1E3A5F">
+      <div style="color:#F5B841;font-size:11.5px;font-weight:700;margin-bottom:4px">進場策略</div>
+      <div style="font-size:12.8px;line-height:1.6;color:#C7D8EC">現價遠高於貴價247元，短線轉空，建議拉回至年線支撐再分批布局，勿追高。</div>
+      <div class="note">52 週區間 130.5 ~ 1230.0　·　市值 1556.73B
+        　·　淨現金 42.93B</div>
+    </div>
+  </div>
+</div>
+
+<div class="bl"><div class="e">💡</div>
+  <div><div class="t">BOTTOM LINE</div><div class="c">本季獲利與毛利率大幅躍升，現金流仍受高資本支出壓抑，股價已反映強勁展望，估值明顯偏貴。</div></div>
+  <div class="e">📈</div></div>
+
+<div class="verdict"><div class="vt">🔎 綜合判斷</div><div class="vc">已查核近6季損益、業外損益序列、技術面與同鏈定位。①業外損益連4季攀升，最新季89.2億已超越本業營益66.5億；②毛利率連6季走高至24.8%；③技術面轉空但長線RS仍+46.8%，同鏈短線優於同業惟毛利率仍低於鏈均。下一步驗證業外占比會否持續稀釋本業含金量。</div></div>
+<div class="reality"><h3>財報與營收實況</h3>
+<div class="posnote">近 6 季趨勢，⚠ 標記業外收益大於本業營業利益的季度</div>
+<table class="realitytbl"><tr><th>季度</th><th>營收</th><th>毛利率</th><th>營益率</th><th>EPS</th><th>業外損益</th></tr><tr><td>2025-03</td><td class="num">300.9億</td><td class="num">13.4%</td><td class="num">4.2%</td><td class="num">0.60</td><td class="num"><span class="num pos">1.1億</span></td></tr><tr><td>2025-06</td><td class="num">324.7億</td><td class="num">13.1%</td><td class="num">4.6%</td><td class="num">0.02</td><td class="num"><span class="num neg">-11.5億</span></td></tr><tr><td>2025-09</td><td class="num">339.9億</td><td class="num">13.4%</td><td class="num">4.5%</td><td class="num">1.44</td><td class="num"><span class="num pos">14.1億</span></td></tr><tr><td>2025-12</td><td class="num">346.9億</td><td class="num">15.8%</td><td class="num">6.8%</td><td class="num">2.32</td><td class="num"><span class="num pos">17.8億</span></td></tr><tr><td>2026-03 <span class="ndot" title="業外收益大於本業營業利益">⚠</span></td><td class="num">374.5億</td><td class="num">18.0%</td><td class="num">7.4%</td><td class="num">3.28</td><td class="num"><span class="num pos">35.4億</span></td></tr><tr><td>2026-06 <span class="ndot" title="業外收益大於本業營業利益">⚠</span></td><td class="num">428.9億</td><td class="num">24.8%</td><td class="num">15.5%</td><td class="num">8.45</td><td class="num"><span class="num pos">89.2億</span></td></tr></table>
+<div class="realitywarn">⚠️ 最新一季（2026-06）業外收益（89.2億）大於本業營業利益（66.5億），約占稅前損益 57%——EPS 有一半以上不是本業賺的，成長性判斷請扣除業外看本業趨勢。</div>
+<div class="realitysub">月營收 YoY（近 6 月）</div><table class="realitytbl"><tr><th>月份</th><th>營收</th><th>年增率</th></tr><tr><td>2026-02</td><td class="num">116.0億</td><td class="num pos">+16.2%</td></tr><tr><td>2026-03</td><td class="num">130.8億</td><td class="num pos">+23.3%</td></tr><tr><td>2026-04</td><td class="num">139.3億</td><td class="num pos">+27.6%</td></tr><tr><td>2026-05</td><td class="num">140.6億</td><td class="num pos">+32.4%</td></tr><tr><td>2026-06</td><td class="num">149.0億</td><td class="num pos">+36.3%</td></tr><tr><td>2026-07</td><td class="num">162.5億</td><td class="num pos">+43.7%</td></tr></table>
+</div>
+<div class="technical"><h3>技術面四指標</h3>
+<div class="posnote">近一年日線計算，基準指數：台股加權指數</div>
+<div class="techgrid"><div class="ttile"><div class="tn">SUPER TREND</div><div class="tv"><span style="color:#ff8a8a">空頭</span></div><div class="ts">第5根／史上平均29根／20日延續率56%／贏過歷史0%</div></div><div class="ttile"><div class="tn">雙重颱風K線</div><div class="tv"><span style="color:#ff8a8a">空頭</span></div><div class="ts">第 5 根</div></div><div class="ttile"><div class="tn">EXCEED CHARGE</div><div class="tv"><span style="color:#ff8a8a">無擠壓</span></div><div class="ts">強空動能（動能 -88.50）</div></div><div class="ttile"><div class="tn">RS 相對強弱</div><div class="tv">短線 <b class="num" style="color:#ff8a8a">-11.1%</b>　長線 <b class="num" style="color:#4ade80">+46.8%</b></div><div class="ts"></div></div></div>
+<button class="techtoggle" onclick="ti_toggle_3037_TW()" id="ti_btn_3037_TW">展開圖表 ▾</button>
+<div class="techcharts nosides" id="ti_charts_3037_TW" style="display:none">
+  <div class="tctools">
+  <div class="tcwin" id="ti_win_3037_TW">
+    <button data-w="90" aria-pressed="true">90天</button>
+    <button data-w="180" aria-pressed="false">半年</button>
+    <button data-w="365" aria-pressed="false">1年</button>
+    <button data-w="1095" aria-pressed="false">3年</button>
+  </div>
+  <button class="tcside" onclick="ti_side_3037_TW()" id="ti_sidebtn_3037_TW"
+    title="B（2026-09-07 Leo：「左邊的 SUPER TREND PRO MAX 可以隱藏嗎? 不然圖太小」）">◨ 顯示說明卡</button>
+  <button class="tcreset" onclick="ti_reset_3037_TW()" title="滾輪縮放／拖曳平移橫軸，五張圖同步；按這裡復原">↺ 重置縮放</button>
+  </div>
+  <div class="techwrap"><div class="techrow"><div class="techside"><div class="tpanel"><div class="tph">SUPER TREND PRO MAX</div><div class="tprow"><span>多方支撐</span><b>N/A</b></div><div class="tprow"><span>空方壓力</span><b>1,153.40</b></div><div class="tprow"><span>這波走了幾根</span><b>3 根</b></div><div class="tprow"><span>多頭平均長度</span><b>37.2 根</b></div><div class="tprow"><span>空頭平均長度</span><b>29.0 根</b></div><div class="tprow"><span>多頭最小長度</span><b>4 根</b></div><div class="tprow"><span>空頭最小長度</span><b>4 根</b></div><div class="tprow"><span>支撐歷史延續機率</span><b>56.8%</b></div><div class="tprow"><span>壓力歷史延續機率</span><b>55.6%</b></div></div><div class="tpanel"><div class="tph">雙重颱風 K 線</div><div class="tprow"><span>顏色狀態</span><b>🟢 綠／偏空</b></div><div class="tprow"><span>20 日平均成本</span><b>1,042.85</b></div><div class="tprow"><span>收盤相對成本</span><b>在成本之下</b></div></div></div><div class="techmain"><div class="tclabel">價格（線色＝雙重颱風三態：🔴偏多 🟢偏空 🟡不明）+ SuperTrend</div><div class="tcbox"><canvas id="ti_c1_3037_TW"></canvas></div></div></div><div class="techrow"><div class="techside single"><div class="tpanel"><div class="tph">成交量</div><div class="tprow"><span>成交量</span><b>20,944 張</b></div><div class="tprow"><span>20 日均量</span><b>24,097 張</b></div><div class="tprow"><span>量能</span><b>低於均量</b></div></div></div><div class="techmain"><div class="tclabel">成交量（青線＝20 日均量）</div><div class="tcbox tcbox-sm"><canvas id="ti_cv_3037_TW"></canvas></div></div></div><div class="techrow"><div class="techside single"><div class="tpanel"><div class="tph">EXCEED CHARGE 充能爆發</div><div class="tprow"><span>動能</span><b>-88.50</b></div><div class="tprow"><span>動能方向</span><b>強空</b></div><div class="tprow"><span>擠壓等級</span><b>無</b></div></div></div><div class="techmain"><div class="tclabel">EXCEED CHARGE 動能柱（金點＝擠壓中，綠/紅點＝已釋放，★＝釋放瞬間）</div><div class="tcbox tcbox-sm"><canvas id="ti_c2_3037_TW"></canvas></div></div></div><div class="techrow"><div class="techside single"><div class="tpanel"><div class="tph">RS STRONGER 相對強弱</div><div class="tprow"><span>短線 RS（20 日）</span><b>-11.13%</b></div><div class="tprow"><span>長線 RS（250 日）</span><b>+46.76%</b></div></div></div><div class="techmain"><div class="tclabel">RS 相對強弱（短線20日／長線1年，紅線＝基準；🟡長線翻正 🔵短線創新高 🩷資金比股價先動）</div><div class="tcbox tcbox-sm"><canvas id="ti_c3_3037_TW"></canvas></div></div></div><div class="techrow"><div class="techside single"><div class="tpanel"><div class="tph">四燈（老墨打點條件）</div><div class="tprow"><span>L1 SuperTrend 多方</span><b>⚫ 滅</b></div><div class="tprow"><span>L2 動能 > 0</span><b>⚫ 滅</b></div><div class="tprow"><span>L3 雙重颱風不為綠</span><b>⚫ 滅</b></div><div class="tprow"><span>L4 RS60 乖離 > +3%</span><b>⚫ 滅</b></div><div class="tprow"><span>現在亮幾盞</span><b>0 / 4</b></div></div></div><div class="techmain"><div class="tclabel">四燈歷史（由上到下 L1→L4；亮＝黃點。⚠️ L4 前 60 根是暖機期，一律不亮）</div><div class="tcbox tcbox-xs"><canvas id="ti_c4_3037_TW"></canvas></div></div></div></div>
+<script>
+window.TI_DATA_3037_TW = {"dates": ["09/09", "09/10", "09/11", "09/12", "09/13", "09/16", "09/18", "09/19", "09/20", "09/23", "09/24", "09/25", "09/26", "09/27", "09/30", "10/01", "10/04", "10/07", "10/08", "10/09", "10/11", "10/14", "10/15", "10/16", "10/17", "10/18", "10/21", "10/22", "10/23", "10/24", "10/25", "10/28", "10/29", "10/30", "11/01", "11/04", "11/05", "11/06", "11/07", "11/08", "11/11", "11/12", "11/13", "11/14", "11/15", "11/18", "11/19", "11/20", "11/21", "11/22", "11/25", "11/26", "11/27", "11/28", "11/29", "12/02", "12/03", "12/04", "12/05", "12/06", "12/09", "12/10", "12/11", "12/12", "12/13", "12/16", "12/17", "12/18", "12/19", "12/20", "12/23", "12/24", "12/25", "12/26", "12/27", "12/30", "12/31", "01/02", "01/03", "01/06", "01/07", "01/08", "01/09", "01/10", "01/13", "01/14", "01/15", "01/16", "01/17", "01/20", "01/21", "01/22", "02/03", "02/04", "02/05", "02/06", "02/07", "02/10", "02/11", "02/12", "02/13", "02/14", "02/17", "02/18", "02/19", "02/20", "02/21", "02/24", "02/25", "02/26", "02/27", "03/03", "03/04", "03/05", "03/06", "03/07", "03/10", "03/11", "03/12", "03/13", "03/14", "03/17", "03/18", "03/19", "03/20", "03/21", "03/24", "03/25", "03/26", "03/27", "03/28", "03/31", "04/01", "04/02", "04/07", "04/08", "04/09", "04/10", "04/11", "04/14", "04/15", "04/16", "04/17", "04/18", "04/21", "04/22", "04/23", "04/24", "04/25", "04/28", "04/29", "04/30", "05/02", "05/05", "05/06", "05/07", "05/08", "05/09", "05/12", "05/13", "05/14", "05/15", "05/16", "05/19", "05/20", "05/21", "05/22", "05/23", "05/26", "05/27", "05/28", "05/29", "06/02", "06/03", "06/04", "06/05", "06/06", "06/09", "06/10", "06/11", "06/12", "06/13", "06/16", "06/17", "06/18", "06/19", "06/20", "06/23", "06/24", "06/25", "06/26", "06/27", "06/30", "07/01", "07/02", "07/03", "07/04", "07/07", "07/08", "07/09", "07/10", "07/11", "07/14", "07/15", "07/16", "07/17", "07/18", "07/21", "07/22", "07/23", "07/24", "07/25", "07/28", "07/29", "07/30", "07/31", "08/04", "08/05", "08/06", "08/07", "08/08", "08/11", "08/12", "08/13", "08/14", "08/15", "08/18", "08/19", "08/20", "08/21", "08/22", "08/25", "08/26", "08/27", "08/28", "08/29", "09/01", "09/02", "09/03", "09/04", "09/05", "09/08", "09/09", "09/10", "09/11", "09/12", "09/15", "09/16", "09/17", "09/18", "09/19", "09/22", "09/23", "09/24", "09/25", "09/26", "09/30", "10/01", "10/02", "10/03", "10/07", "10/08", "10/09", "10/13", "10/14", "10/15", "10/16", "10/17", "10/20", "10/21", "10/22", "10/23", "10/27", "10/28", "10/29", "10/30", "10/31", "11/03", "11/04", "11/05", "11/06", "11/07", "11/10", "11/11", "11/12", "11/13", "11/14", "11/17", "11/18", "11/19", "11/20", "11/21", "11/24", "11/25", "11/26", "11/27", "11/28", "12/01", "12/02", "12/03", "12/04", "12/05", "12/08", "12/09", "12/10", "12/11", "12/12", "12/15", "12/16", "12/17", "12/18", "12/19", "12/22", "12/23", "12/24", "12/26", "12/29", "12/30", "12/31", "01/02", "01/05", "01/06", "01/07", "01/08", "01/09", "01/12", "01/13", "01/14", "01/15", "01/16", "01/19", "01/20", "01/21", "01/22", "01/23", "01/26", "01/27", "01/28", "01/29", "01/30", "02/02", "02/03", "02/04", "02/05", "02/06", "02/09", "02/10", "02/11", "02/23", "02/24", "02/25", "02/26", "03/02", "03/03", "03/04", "03/05", "03/06", "03/09", "03/10", "03/11", "03/12", "03/13", "03/16", "03/17", "03/18", "03/19", "03/20", "03/23", "03/24", "03/25", "03/26", "03/27", "03/30", "03/31", "04/01", "04/02", "04/07", "04/08", "04/09", "04/10", "04/13", "04/14", "04/15", "04/16", "04/17", "04/20", "04/21", "04/22", "04/23", "04/24", "04/27", "04/28", "04/29", "04/30", "05/04", "05/05", "05/06", "05/07", "05/08", "05/11", "05/12", "05/13", "05/14", "05/15", "05/18", "05/19", "05/20", "05/21", "05/22", "05/25", "05/26", "05/27", "05/28", "05/29", "06/01", "06/02", "06/03", "06/04", "06/05", "06/08", "06/09", "06/10", "06/11", "06/12", "06/15", "06/16", "06/17", "06/18", "06/22", "06/23", "06/24", "06/25", "06/26", "06/29", "06/30", "07/01", "07/02", "07/03", "07/06", "07/07", "07/08", "07/09", "07/10", "07/13", "07/14", "07/15", "07/16", "07/17", "07/20", "07/21", "07/22", "07/23", "07/24", "07/27", "07/28", "07/29", "07/30", "07/31", "08/03", "08/04", "08/05", "08/06", "08/07", "08/10", "08/11", "08/12", "08/13", "08/14", "08/17", "08/18", "08/19", "08/20", "08/21", "08/24", "08/25", "08/26", "08/27", "08/28", "08/31", "09/01", "09/02", "09/03", "09/04", "09/07"], "closes": [139.99, 137.52, 136.04, 143.93, 145.41, 144.42, 140.97, 144.92, 144.92, 147.38, 142.95, 144.42, 144.42, 146.89, 141.96, 142.45, 138.51, 139.5, 135.06, 140.48, 139.0, 141.47, 142.95, 140.48, 144.92, 142.45, 149.35, 161.18, 165.13, 159.21, 163.65, 163.65, 161.18, 159.21, 163.65, 161.18, 162.66, 163.65, 174.0, 171.53, 168.08, 165.13, 167.1, 163.65, 161.18, 156.75, 157.24, 155.27, 158.23, 158.72, 156.75, 156.25, 147.87, 144.92, 146.89, 146.4, 146.89, 147.87, 151.32, 149.35, 146.4, 145.9, 145.9, 144.92, 139.5, 135.55, 139.5, 140.97, 139.5, 139.0, 143.44, 143.44, 142.95, 143.44, 142.95, 139.5, 139.0, 144.92, 147.38, 149.35, 151.82, 150.83, 143.44, 142.95, 138.02, 138.51, 136.54, 139.99, 139.99, 139.0, 137.52, 137.03, 124.71, 119.78, 121.26, 121.75, 123.23, 121.75, 122.74, 120.27, 126.19, 124.71, 123.23, 126.19, 128.16, 125.69, 129.64, 128.65, 127.67, 123.72, 116.33, 112.38, 111.89, 114.36, 111.89, 110.41, 111.4, 107.95, 110.41, 105.98, 104.5, 105.98, 106.47, 103.02, 107.95, 108.44, 104.99, 104.5, 105.48, 103.02, 97.6, 91.19, 94.05, 95.03, 85.57, 77.09, 69.4, 76.3, 77.19, 83.5, 87.54, 83.99, 83.5, 83.99, 80.05, 79.85, 87.54, 85.27, 91.29, 93.95, 94.64, 92.57, 93.26, 91.19, 90.99, 89.61, 91.29, 92.57, 99.57, 98.39, 101.05, 99.57, 100.55, 97.6, 99.08, 101.05, 100.55, 104.5, 102.53, 108.93, 107.95, 104.5, 99.57, 100.55, 101.54, 101.54, 101.54, 98.58, 105.48, 107.46, 105.48, 101.05, 101.54, 100.06, 102.03, 99.08, 98.58, 108.44, 109.92, 112.38, 112.38, 111.4, 112.38, 110.41, 110.41, 115.34, 116.33, 113.37, 114.36, 120.76, 125.24, 123.75, 119.75, 131.73, 135.22, 133.23, 132.73, 133.23, 128.24, 131.23, 132.23, 130.73, 132.73, 139.71, 141.71, 137.22, 134.72, 135.22, 133.73, 135.72, 136.72, 142.21, 138.22, 137.72, 137.72, 135.22, 141.71, 138.72, 133.23, 133.23, 134.72, 139.71, 141.71, 151.69, 149.69, 144.2, 134.23, 130.73, 132.23, 133.23, 133.73, 133.23, 134.72, 141.21, 142.21, 144.2, 141.71, 151.69, 147.2, 148.2, 157.18, 158.18, 158.68, 156.68, 156.68, 148.7, 151.19, 154.68, 152.69, 155.68, 157.68, 159.67, 160.67, 153.19, 145.7, 158.18, 165.16, 160.17, 159.67, 159.67, 158.68, 155.68, 163.17, 162.17, 165.66, 159.67, 163.17, 178.14, 168.16, 162.4, 163.89, 159.93, 162.9, 164.88, 165.87, 176.76, 171.15, 167.16, 169.65, 160.17, 171.15, 159.67, 163.66, 175.64, 178.14, 186.62, 186.12, 196.6, 195.6, 196.1, 198.09, 214.56, 220.05, 225.54, 227.04, 224.54, 224.54, 221.05, 213.56, 211.57, 206.58, 214.56, 220.05, 215.06, 216.56, 220.05, 220.05, 219.05, 219.55, 218.55, 229.53, 230.03, 225.54, 227.04, 225.04, 243.0, 253.48, 249.49, 248.99, 273.44, 300.38, 307.37, 320.34, 326.33, 338.31, 332.32, 353.28, 366.75, 343.8, 377.73, 364.25, 384.21, 387.21, 364.75, 339.31, 346.79, 370.74, 368.25, 404.67, 445.09, 457.56, 480.52, 480.02, 462.05, 416.15, 449.08, 431.12, 388.21, 423.13, 465.05, 479.02, 506.96, 547.88, 541.89, 578.81, 579.81, 552.87, 497.98, 459.06, 504.97, 500.97, 503.97, 492.49, 443.59, 487.5, 517.94, 562.85, 618.73, 623.72, 636.7, 624.72, 595.78, 616.74, 643.68, 641.69, 676.61, 708.55, 714.54, 726.51, 788.39, 837.29, 823.31, 801.36, 881.2, 909.14, 901.15, 856.25, 894.17, 816.33, 859.24, 873.21, 890.18, 879.2, 819.32, 814.33, 816.33, 821.32, 903.15, 968.02, 987.98, 1082.78, 1077.79, 1022.91, 1052.84, 1047.85, 973.01, 997.96, 969.02, 931.09, 909.14, 967.02, 882.19, 852.25, 900.16, 958.04, 979.0, 985.98, 966.02, 1002.95, 972.01, 929.1, 1017.92, 973.01, 974.01, 1067.81, 1037.87, 977.0, 967.02, 917.0, 840.0, 863.0, 875.0, 875.0, 903.0, 874.0, 936.0, 882.0, 794.0, 750.0, 825.0, 907.0, 896.0, 839.0, 848.0, 764.0, 688.0, 716.0, 787.0, 865.0, 924.0, 969.0, 973.0, 955.0, 992.0, 992.0, 1000.0, 1000.0, 1020.0, 1120.0, 1145.0, 1130.0, 1140.0, 1085.0, 1075.0, 1095.0, 1160.0, 1180.0, 1110.0, 999.0, 971.0, 973.0, 923.0, 902.0, 949.0], "st": [null, null, null, null, null, null, null, null, null, 130.52, 130.52, 130.82, 130.82, 134.02, 134.02, 134.02, 134.02, 134.02, 134.02, 134.02, 134.02, 134.02, 134.02, 134.02, 134.02, 134.02, 134.02, 139.25, 144.62, 144.62, 144.62, 144.62, 144.62, 144.62, 144.62, 144.62, 144.62, 144.82, 148.37, 153.1, 153.1, 153.1, 153.1, 153.1, 153.1, 153.1, 153.1, 153.1, 153.1, 153.1, 153.1, 153.1, 168.13, 161.13, 161.13, 161.13, 161.13, 161.13, 161.13, 161.13, 161.13, 161.13, 160.44, 160.44, 155.76, 152.56, 152.56, 152.56, 152.56, 152.56, 152.56, 152.56, 152.56, 152.56, 152.56, 152.56, 150.59, 150.59, 150.59, 150.59, 139.15, 139.5, 139.5, 139.5, 153.25, 152.41, 151.57, 151.57, 151.57, 151.57, 149.3, 148.37, 142.5, 137.08, 134.47, 134.47, 134.47, 134.47, 134.47, 134.47, 134.47, 134.47, 134.47, 134.47, 134.47, 134.47, 134.47, 134.47, 134.47, 134.47, 133.14, 127.57, 125.15, 125.15, 125.15, 124.26, 124.26, 119.24, 119.24, 119.24, 116.57, 116.57, 116.57, 116.57, 116.57, 116.57, 116.57, 116.57, 116.57, 113.52, 110.56, 105.39, 105.39, 105.39, 99.65, 93.96, 87.94, 87.94, 87.94, 87.94, 87.94, 87.94, 87.94, 87.94, 87.94, 87.94, 87.94, 87.94, 76.55, 79.72, 81.93, 81.93, 81.93, 81.93, 81.93, 81.93, 81.93, 81.93, 87.04, 90.18, 90.18, 90.18, 90.18, 90.18, 90.18, 90.18, 90.18, 90.68, 92.19, 95.07, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 98.38, 99.12, 99.12, 99.12, 99.12, 99.12, 99.12, 100.0, 101.38, 102.48, 102.48, 104.15, 109.64, 110.27, 110.27, 110.27, 114.93, 114.93, 114.93, 114.93, 114.93, 114.93, 114.93, 114.93, 114.93, 122.7, 122.7, 122.7, 122.7, 122.7, 122.7, 122.75, 123.0, 125.14, 125.14, 125.39, 127.09, 127.09, 127.09, 127.09, 127.09, 127.09, 127.09, 127.09, 127.09, 129.34, 131.23, 131.23, 131.23, 152.14, 150.44, 150.44, 150.44, 150.44, 150.44, 150.44, 150.44, 150.44, 150.44, 132.33, 133.18, 133.18, 138.67, 139.26, 142.06, 142.06, 142.06, 142.06, 142.06, 142.06, 142.06, 142.06, 142.06, 142.06, 145.55, 145.55, 145.55, 145.55, 145.55, 145.55, 145.55, 145.55, 145.55, 145.55, 145.55, 145.55, 145.55, 145.55, 145.7, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 154.48, 162.47, 166.81, 167.16, 170.75, 178.19, 184.77, 194.65, 194.65, 197.4, 197.4, 197.4, 197.4, 197.4, 197.4, 197.4, 197.4, 197.4, 197.4, 197.4, 197.4, 197.94, 199.84, 199.84, 204.08, 209.42, 209.42, 209.42, 209.42, 209.42, 215.26, 215.26, 215.26, 217.01, 240.31, 254.78, 266.95, 278.23, 278.23, 278.23, 282.72, 297.54, 297.54, 297.54, 297.54, 310.46, 310.46, 310.46, 310.46, 310.46, 310.46, 310.46, 310.46, 336.46, 359.46, 364.4, 385.01, 385.01, 385.01, 385.01, 385.01, 385.01, 385.01, 385.01, 385.01, 385.01, 415.5, 436.91, 441.1, 455.32, 455.32, 455.32, 455.32, 455.32, 455.32, 455.32, 455.32, 591.94, 591.94, 591.94, 591.94, 470.59, 502.37, 509.66, 509.86, 509.86, 509.86, 509.86, 523.18, 554.96, 591.09, 614.84, 614.84, 648.27, 680.21, 711.84, 711.84, 711.84, 717.63, 749.76, 749.76, 749.76, 749.76, 749.76, 749.76, 749.76, 749.76, 749.76, 749.76, 749.76, 749.76, 749.76, 773.92, 822.62, 846.27, 882.19, 882.19, 882.19, 882.19, 882.19, 882.19, 882.19, 882.19, 882.19, 882.19, 1117.51, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1058.38, 1058.38, 1055.58, 1055.58, 1055.58, 1016.9, 975.4, 975.4, 975.4, 975.4, 975.4, 975.4, 975.4, 953.9, 933.1, 933.1, 933.1, 933.1, 755.0, 755.0, 755.0, 755.4, 771.7, 811.6, 832.3, 844.1, 905.0, 984.4, 984.4, 984.4, 984.4, 984.4, 984.4, 984.4, 984.4, 984.4, 984.4, 1223.7, 1223.7, 1223.7, 1153.4, 1153.4], "st_dir": [null, null, null, null, null, null, null, null, null, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1], "dt": [null, null, null, null, null, null, null, null, null, 130.52, 130.52, 130.82, 130.82, 134.02, 134.02, 134.02, 134.02, 134.02, 134.02, 134.02, 134.02, 134.02, 134.02, 134.02, 134.02, 134.02, 134.02, 139.25, 144.62, 144.62, 144.62, 144.62, 144.62, 144.62, 144.62, 144.62, 144.62, 144.82, 148.37, 153.1, 153.1, 153.1, 153.1, 153.1, 153.1, 153.1, 153.1, 153.1, 153.1, 153.1, 153.1, 153.1, 168.13, 161.13, 161.13, 161.13, 161.13, 161.13, 161.13, 161.13, 161.13, 161.13, 160.44, 160.44, 155.76, 152.56, 152.56, 152.56, 152.56, 152.56, 152.56, 152.56, 152.56, 152.56, 152.56, 152.56, 150.59, 150.59, 150.59, 150.59, 139.15, 139.5, 139.5, 139.5, 153.25, 152.41, 151.57, 151.57, 151.57, 151.57, 149.3, 148.37, 142.5, 137.08, 134.47, 134.47, 134.47, 134.47, 134.47, 134.47, 134.47, 134.47, 134.47, 134.47, 134.47, 134.47, 134.47, 134.47, 134.47, 134.47, 133.14, 127.57, 125.15, 125.15, 125.15, 124.26, 124.26, 119.24, 119.24, 119.24, 116.57, 116.57, 116.57, 116.57, 116.57, 116.57, 116.57, 116.57, 116.57, 113.52, 110.56, 105.39, 105.39, 105.39, 99.65, 93.96, 87.94, 87.94, 87.94, 87.94, 87.94, 87.94, 87.94, 87.94, 87.94, 87.94, 87.94, 87.94, 76.55, 79.72, 81.93, 81.93, 81.93, 81.93, 81.93, 81.93, 81.93, 81.93, 87.04, 90.18, 90.18, 90.18, 90.18, 90.18, 90.18, 90.18, 90.18, 90.68, 92.19, 95.07, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 95.08, 98.38, 99.12, 99.12, 99.12, 99.12, 99.12, 99.12, 100.0, 101.38, 102.48, 102.48, 104.15, 109.64, 110.27, 110.27, 110.27, 114.93, 114.93, 114.93, 114.93, 114.93, 114.93, 114.93, 114.93, 114.93, 122.7, 122.7, 122.7, 122.7, 122.7, 122.7, 122.75, 123.0, 125.14, 125.14, 125.39, 127.09, 127.09, 127.09, 127.09, 127.09, 127.09, 127.09, 127.09, 127.09, 129.34, 131.23, 131.23, 131.23, 152.14, 150.44, 150.44, 150.44, 150.44, 150.44, 150.44, 150.44, 150.44, 150.44, 132.33, 133.18, 133.18, 138.67, 139.26, 142.06, 142.06, 142.06, 142.06, 142.06, 142.06, 142.06, 142.06, 142.06, 142.06, 145.55, 145.55, 145.55, 145.55, 145.55, 145.55, 145.55, 145.55, 145.55, 145.55, 145.55, 145.55, 145.55, 145.55, 145.7, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 151.04, 154.48, 162.47, 166.81, 167.16, 170.75, 178.19, 184.77, 194.65, 194.65, 197.4, 197.4, 197.4, 197.4, 197.4, 197.4, 197.4, 197.4, 197.4, 197.4, 197.4, 197.4, 197.94, 199.84, 199.84, 204.08, 209.42, 209.42, 209.42, 209.42, 209.42, 215.26, 215.26, 215.26, 217.01, 240.31, 254.78, 266.95, 278.23, 278.23, 278.23, 282.72, 297.54, 297.54, 297.54, 297.54, 310.46, 310.46, 310.46, 310.46, 310.46, 310.46, 310.46, 310.46, 336.46, 359.46, 364.4, 385.01, 385.01, 385.01, 385.01, 385.01, 385.01, 385.01, 385.01, 385.01, 385.01, 415.5, 436.91, 441.1, 455.32, 455.32, 455.32, 455.32, 455.32, 455.32, 455.32, 455.32, 591.94, 591.94, 591.94, 591.94, 470.59, 502.37, 509.66, 509.86, 509.86, 509.86, 509.86, 523.18, 554.96, 591.09, 614.84, 614.84, 648.27, 680.21, 711.84, 711.84, 711.84, 717.63, 749.76, 749.76, 749.76, 749.76, 749.76, 749.76, 749.76, 749.76, 749.76, 749.76, 749.76, 749.76, 749.76, 773.92, 822.62, 846.27, 882.19, 882.19, 882.19, 882.19, 882.19, 882.19, 882.19, 882.19, 882.19, 882.19, 1117.51, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1081.29, 1058.38, 1058.38, 1055.58, 1055.58, 1055.58, 1016.9, 975.4, 975.4, 975.4, 975.4, 975.4, 975.4, 975.4, 953.9, 933.1, 933.1, 933.1, 933.1, 755.0, 755.0, 755.0, 755.4, 771.7, 811.6, 832.3, 844.1, 905.0, 984.4, 984.4, 984.4, 984.4, 984.4, 984.4, 984.4, 984.4, 984.4, 984.4, 1223.7, 1223.7, 1223.7, 1153.4, 1153.4], "dt_dir": [null, null, null, null, null, null, null, null, null, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1], "mom": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 17.64, 17.86, 16.91, 15.29, 13.93, 11.38, 8.65, 4.71, 1.1, -1.79, -3.49, -5.39, -7.0, -8.39, -11.01, -13.69, -15.19, -16.64, -17.5, -17.74, -16.23, -14.84, -13.85, -12.96, -11.57, -10.39, -9.93, -10.33, -10.02, -9.52, -8.91, -8.22, -6.7, -5.04, -4.06, -3.27, -2.52, -2.56, -2.68, -1.66, 0.1, 2.12, 4.12, 5.68, 5.74, 5.62, 4.18, 2.46, 0.72, -0.23, -1.32, -2.66, -3.77, -4.75, -7.3, -10.23, -12.51, -14.74, -16.48, -17.67, -18.06, -18.29, -16.76, -15.16, -14.07, -12.11, -10.18, -8.68, -6.64, -4.49, -2.52, -1.22, -1.16, -1.3, -2.11, -2.85, -3.94, -5.27, -6.23, -7.72, -8.58, -10.44, -11.69, -12.52, -13.15, -13.83, -13.14, -12.39, -11.65, -10.81, -9.41, -8.49, -8.41, -9.25, -9.34, -8.89, -10.0, -12.16, -14.87, -16.11, -16.66, -16.09, -14.78, -13.94, -13.06, -12.32, -11.72, -10.9, -8.69, -6.86, -3.54, 0.1, 3.81, 6.41, 9.15, 11.39, 12.62, 12.64, 11.91, 11.65, 11.89, 12.04, 12.82, 12.75, 12.56, 11.63, 10.38, 8.93, 7.96, 7.06, 6.33, 6.87, 7.27, 6.8, 5.52, 4.33, 3.34, 2.18, 1.06, -0.61, -0.64, -0.48, -0.42, -1.25, -1.78, -2.77, -3.17, -4.0, -4.84, -3.54, -2.25, -0.02, 2.03, 3.5, 4.55, 5.15, 5.72, 6.9, 7.96, 7.88, 8.41, 10.04, 11.84, 12.63, 12.43, 13.83, 15.16, 15.38, 15.02, 14.78, 13.54, 13.0, 12.54, 11.54, 10.88, 11.0, 11.14, 10.6, 9.53, 8.15, 6.37, 5.21, 4.56, 4.78, 3.74, 3.3, 3.1, 2.37, 2.9, 2.62, 0.83, -0.71, -1.77, -2.03, -1.82, 0.5, 2.46, 2.92, 1.31, -0.61, -2.29, -3.59, -4.58, -4.96, -5.28, -4.54, -3.63, -2.66, -1.58, 1.01, 1.99, 2.88, 4.94, 7.33, 9.54, 12.03, 14.23, 14.34, 13.84, 13.4, 12.41, 11.78, 11.28, 10.63, 9.8, 7.66, 4.24, 3.39, 3.42, 3.21, 2.47, 1.73, 1.5, 0.96, 1.91, 2.55, 3.86, 3.19, 3.33, 5.92, 6.21, 5.61, 5.51, 4.82, 4.78, 4.22, 2.84, 4.16, 4.9, 4.36, 4.19, 2.21, 2.23, -0.32, -1.3, -0.1, 1.63, 3.84, 5.97, 10.47, 13.4, 15.5, 17.68, 21.35, 25.27, 29.16, 32.56, 35.63, 37.59, 37.87, 36.43, 33.25, 29.76, 26.25, 23.16, 19.51, 15.9, 13.14, 9.94, 7.07, 4.17, 1.07, 0.02, 0.13, -0.5, -0.26, 0.05, 3.62, 8.53, 12.13, 14.65, 20.27, 28.04, 35.67, 44.32, 51.38, 59.24, 64.67, 71.46, 78.49, 79.53, 84.61, 86.3, 89.21, 90.11, 85.2, 73.59, 64.0, 58.85, 52.0, 50.56, 53.89, 58.05, 63.5, 67.06, 66.29, 57.5, 53.7, 47.76, 35.32, 27.88, 31.16, 35.29, 45.01, 59.38, 66.63, 75.72, 81.87, 82.2, 69.73, 53.13, 48.04, 42.91, 40.24, 35.41, 20.61, 10.4, 8.51, 12.61, 18.85, 23.37, 32.15, 38.51, 41.21, 50.69, 63.21, 78.07, 96.31, 115.9, 127.73, 133.9, 150.5, 169.55, 179.82, 181.16, 186.95, 193.29, 193.62, 184.15, 183.72, 165.74, 155.91, 146.01, 134.11, 119.76, 94.36, 67.43, 42.75, 22.64, 18.44, 19.58, 25.6, 49.41, 66.97, 69.57, 83.68, 97.33, 94.82, 91.81, 86.88, 67.69, 48.91, 43.07, 23.45, -1.04, -21.47, -32.85, -41.57, -50.62, -56.16, -51.33, -51.13, -49.2, -29.15, -20.78, -8.13, 22.94, 39.32, 46.06, 48.49, 37.92, 11.48, -3.48, -23.03, -46.63, -60.55, -73.83, -72.48, -80.27, -103.0, -124.89, -132.28, -126.87, -114.26, -114.2, -110.29, -109.82, -114.63, -112.44, -94.97, -66.55, -36.35, -1.19, 32.27, 58.24, 90.59, 116.98, 147.59, 168.42, 181.32, 200.67, 221.62, 242.45, 260.12, 257.83, 250.71, 235.37, 223.16, 206.05, 174.43, 126.83, 79.13, 37.51, -9.86, -57.25, -88.5], "sq_on": [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, false, true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, true, true, true, true, false, true, true, false, false, false, false, false, false, false, true, true, false, true, true, true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, true, true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false], "rs_s": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, -3.53, -5.15, -3.5, -3.57, -3.66, -0.49, -3.58, 0.99, 8.78, 11.92, 8.36, 10.08, 10.18, 9.2, 7.91, 10.44, 7.35, 7.0, 6.4, 10.98, 7.87, 4.97, 4.79, 5.7, 3.36, 1.1, -1.45, -2.82, -3.36, -0.89, -2.14, -3.42, -2.47, -6.0, -7.42, -5.62, -7.51, -7.93, -7.77, -5.02, -5.38, -6.99, -6.1, -4.52, -5.11, -7.84, -9.78, -6.48, -5.55, -4.89, -2.88, -1.88, -1.41, -1.81, -1.32, -1.42, -3.12, -2.54, 2.52, 3.97, 2.58, 3.71, 4.0, 0.43, 0.44, -0.82, -1.97, -2.16, -1.9, -2.4, -3.42, -4.35, -5.32, -10.19, -13.47, -13.15, -12.8, -11.77, -11.15, -10.03, -10.58, -5.78, -5.02, -6.75, -4.41, -2.04, -2.82, -0.25, 0.25, 1.21, -1.79, -5.51, -6.74, -6.02, -4.87, -6.0, -6.38, -4.79, -5.8, -4.28, -6.49, -7.25, -6.04, -5.82, -7.0, -3.78, -2.15, -4.14, -4.57, -2.87, -3.22, -6.32, -8.13, -7.34, -5.92, -5.71, -10.83, -13.9, -12.52, -12.95, -5.19, -1.95, -3.53, -2.95, -2.27, -4.76, -2.72, 2.4, 0.93, 6.09, 8.3, 7.83, 5.26, 3.14, 2.13, 1.98, 0.1, 1.46, 0.59, 6.18, 3.54, 3.86, 2.28, 2.43, 0.67, 1.72, 1.99, 1.91, 5.47, 3.85, 10.87, 9.31, 5.5, 1.9, 1.95, 0.33, -0.27, -0.47, -4.04, 0.56, 1.21, 0.07, -3.2, -2.63, -4.72, -3.43, -4.59, -5.08, 5.74, 4.76, 6.06, 5.83, 4.45, 6.57, 3.17, 2.85, 6.36, 7.52, 4.77, 5.58, 10.03, 12.37, 9.78, 6.14, 14.18, 14.67, 11.26, 8.31, 8.17, 5.1, 5.41, 5.31, 3.52, 4.29, 9.64, 8.83, 4.32, 2.58, 1.14, 0.41, -0.71, -0.2, 2.9, -0.45, -1.57, -0.87, -2.88, 1.06, -0.54, -1.58, -2.91, -1.01, 0.35, 1.52, 7.57, 7.27, 3.24, -3.1, -5.19, -4.25, -3.73, -4.41, -4.59, -4.46, -1.16, -0.51, -0.23, -1.33, 4.29, 1.83, 1.03, 7.51, 6.59, 5.24, 4.3, 5.14, 1.63, 2.13, 3.37, 0.25, 0.48, -0.2, 1.2, 0.55, -2.86, -7.0, -0.94, 1.71, -0.07, -1.76, -1.98, -1.89, -2.96, 0.22, -0.08, 0.97, -2.51, -0.13, 8.34, 2.89, 0.76, 0.95, -0.51, 0.58, 1.9, 1.49, 7.83, 6.09, 3.23, 6.96, 1.41, 4.58, 0.9, 2.85, 8.06, 7.03, 10.51, 9.08, 15.57, 13.04, 11.34, 11.36, 18.08, 17.97, 19.55, 17.61, 16.44, 14.3, 12.38, 8.78, 6.57, 3.35, 5.23, 5.01, 1.32, 1.04, 1.38, -0.1, -0.49, -1.45, -3.44, -1.45, -2.67, -3.9, -2.69, -2.96, 3.87, 7.65, 5.06, 5.08, 12.45, 21.09, 21.93, 27.22, 25.47, 26.91, 22.31, 26.55, 26.82, 17.87, 28.31, 22.84, 24.35, 22.04, 14.41, 4.79, 3.65, 7.03, 3.2, 10.81, 16.4, 15.46, 19.18, 18.36, 14.91, 7.25, 11.43, 6.36, -0.16, 5.61, 10.66, 14.52, 20.29, 27.97, 22.56, 25.98, 25.61, 18.02, 7.34, -1.45, 4.89, 3.62, 4.36, 3.32, -4.77, -0.61, 6.62, 12.03, 15.55, 14.3, 13.27, 9.86, 1.95, 4.2, 7.11, 7.54, 12.54, 14.99, 13.86, 14.48, 18.52, 21.53, 17.89, 13.69, 23.26, 19.13, 15.98, 8.11, 9.76, 0.55, 4.67, 5.23, 7.25, 3.87, -2.46, -2.98, -1.49, -0.91, 4.67, 8.85, 6.98, 16.54, 13.15, 8.15, 8.36, 6.22, -1.68, -1.26, -2.46, -5.24, -4.22, -1.04, -6.39, -9.14, -6.35, -3.29, -2.3, -1.96, -4.94, -3.52, -4.79, -5.88, 3.21, 2.77, 2.35, 9.46, 4.19, -1.21, -2.17, -6.57, -11.88, -9.37, -7.1, -6.99, -3.96, -5.35, -0.41, -5.65, -8.7, -12.59, -7.27, 0.58, -0.19, -3.35, -1.72, -5.99, -10.92, -6.33, -4.05, 4.75, 11.13, 12.44, 12.69, 10.38, 12.23, 11.06, 10.58, 8.71, 10.38, 19.09, 21.26, 19.81, 18.77, 11.07, 10.02, 9.58, 12.34, 12.0, 3.26, -7.0, -11.07, -9.24, -13.0, -15.84, -11.13], "rs_l": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 2.84, 9.93, 9.37, 8.21, 7.11, 7.87, 4.21, 5.02, 6.82, 3.92, 4.5, 4.13, 6.06, 5.83, 2.37, -2.09, 4.45, 7.62, 5.71, 3.92, 3.72, 3.48, 1.99, 5.16, 4.71, 5.69, 1.92, 4.4, 13.61, 8.16, 6.05, 6.4, 4.86, 6.06, 7.76, 7.88, 15.2, 13.67, 10.89, 15.55, 9.91, 13.9, 10.34, 12.89, 19.38, 18.93, 23.95, 23.31, 31.57, 29.84, 29.09, 30.36, 40.19, 42.01, 46.02, 45.71, 45.88, 44.81, 44.09, 40.75, 39.37, 36.24, 40.2, 41.32, 37.2, 37.7, 38.84, 37.45, 37.17, 36.12, 33.59, 36.65, 34.71, 32.57, 33.65, 32.67, 41.76, 46.96, 43.38, 43.53, 54.36, 67.97, 70.84, 80.46, 80.42, 85.2, 80.8, 90.05, 93.69, 82.49, 102.64, 97.36, 103.63, 103.72, 94.03, 79.94, 79.71, 87.49, 82.58, 98.75, 111.68, 112.18, 121.63, 122.19, 117.53, 103.88, 113.41, 104.35, 91.74, 103.81, 114.06, 122.69, 135.46, 153.1, 145.02, 155.94, 159.46, 146.76, 126.44, 108.32, 122.13, 119.72, 121.19, 118.78, 100.92, 109.95, 125.77, 138.83, 149.14, 148.6, 147.95, 141.27, 123.31, 126.95, 132.64, 132.36, 142.16, 147.29, 145.66, 148.88, 159.49, 168.52, 162.47, 154.82, 180.36, 174.15, 168.95, 151.25, 155.32, 133.26, 142.6, 144.05, 149.95, 142.77, 127.8, 126.36, 129.3, 129.92, 142.7, 152.55, 147.66, 169.78, 161.85, 150.02, 149.02, 142.63, 122.65, 122.36, 118.13, 111.03, 112.12, 118.09, 104.49, 96.71, 101.72, 107.53, 108.79, 108.6, 100.53, 101.36, 96.61, 91.12, 107.06, 104.08, 101.06, 113.57, 102.33, 90.43, 87.27, 77.49, 65.63, 68.38, 71.27, 70.41, 74.84, 70.77, 78.34, 67.26, 60.24, 51.49, 59.2, 71.84, 68.83, 61.66, 62.72, 53.12, 42.73, 48.33, 50.37, 63.48, 73.84, 76.27, 76.92, 73.43, 76.42, 74.77, 73.75, 70.99, 74.3, 90.08, 95.49, 94.29, 93.91, 82.35, 81.52, 82.21, 89.11, 90.64, 77.0, 59.24, 51.4, 53.6, 46.07, 40.07, 46.76], "rs_turn": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 4.4523723633681955, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "rs_newh": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 15.568812114397513, null, null, null, 18.079997931582305, null, 19.55253610364114, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 21.090950856164724, null, null, null, null, null, null, null, null, 28.30584572180872, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "rs_lead": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 10.87236101017921, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 12.36638952135134, null, null, 14.17551913496331, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], "ma20": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 142.19, 142.12, 142.38, 142.61, 142.45, 142.53, 142.48, 143.32, 146.69, 149.48, 150.18, 151.05, 151.95, 152.65, 153.6, 154.59, 155.03, 155.79, 156.38, 158.64, 160.05, 160.72, 161.11, 161.63, 162.12, 162.8, 163.18, 164.03, 164.29, 164.02, 164.27, 164.09, 163.91, 163.23, 162.46, 161.91, 161.55, 160.99, 160.49, 157.55, 155.47, 154.35, 153.38, 152.07, 151.04, 149.56, 148.08, 147.34, 146.81, 146.01, 145.3, 144.66, 144.13, 143.79, 143.66, 143.51, 143.27, 142.95, 142.93, 142.67, 142.84, 143.32, 143.51, 143.46, 143.38, 143.42, 143.83, 143.82, 143.83, 143.98, 143.98, 143.61, 143.05, 140.28, 138.03, 136.92, 136.3, 135.8, 134.62, 133.19, 131.56, 129.84, 128.91, 127.75, 127.33, 126.93, 126.59, 126.59, 126.43, 126.34, 125.86, 124.34, 123.04, 122.12, 122.01, 121.73, 121.32, 120.96, 120.28, 119.99, 119.34, 117.93, 117.12, 116.62, 115.78, 114.5, 113.7, 112.29, 111.36, 110.57, 109.4, 107.14, 105.3, 104.02, 103.09, 102.65, 100.89, 97.75, 96.03, 93.59, 92.16, 90.68, 89.41, 88.85, 88.09, 87.16, 86.16, 85.87, 85.39, 85.64, 85.85, 85.45, 85.34, 85.24, 85.25, 85.37, 85.8, 87.06, 87.62, 89.51, 90.65, 91.41, 91.99, 92.55, 92.88, 93.46, 94.08, 94.83, 96.44, 97.31, 99.62, 101.3, 101.87, 102.08, 102.64, 102.82, 103.07, 103.29, 103.31, 103.67, 104.24, 104.41, 104.41, 104.46, 104.45, 104.55, 104.51, 104.11, 104.61, 105.46, 105.5, 105.38, 105.71, 106.16, 106.49, 106.81, 108.12, 108.99, 109.53, 109.81, 110.9, 112.48, 113.14, 113.52, 116.11, 119.98, 121.0, 122.26, 123.49, 125.0, 125.83, 126.27, 126.78, 127.15, 128.9, 129.75, 131.07, 131.95, 132.47, 132.69, 133.41, 134.07, 134.67, 135.14, 135.6, 135.79, 135.99, 136.57, 136.8, 137.22, 137.52, 137.68, 138.13, 138.61, 140.0, 140.7, 141.18, 140.9, 140.64, 140.6, 140.57, 140.49, 140.19, 140.17, 140.33, 140.57, 140.97, 140.92, 142.09, 142.66, 143.17, 144.83, 145.54, 146.75, 146.49, 146.51, 146.77, 147.88, 148.96, 149.55, 150.24, 150.96, 151.78, 152.79, 153.48, 153.86, 154.64, 155.97, 156.58, 157.02, 157.52, 157.6, 157.51, 157.71, 157.92, 158.32, 158.83, 159.19, 162.33, 163.15, 163.34, 163.53, 163.54, 163.75, 164.34, 165.18, 166.65, 167.03, 167.35, 167.78, 167.53, 167.9, 167.73, 167.77, 168.47, 169.3, 170.98, 171.65, 173.4, 175.24, 176.78, 178.21, 182.4, 185.54, 189.41, 191.46, 193.71, 195.05, 196.07, 198.2, 200.39, 201.61, 203.87, 205.67, 207.68, 209.99, 212.14, 213.09, 215.16, 216.77, 217.97, 220.13, 221.48, 222.08, 221.8, 221.52, 223.19, 226.54, 227.99, 229.83, 236.02, 244.57, 255.74, 263.37, 269.11, 273.53, 277.34, 283.5, 288.12, 292.14, 299.64, 307.79, 314.05, 324.56, 328.69, 330.78, 334.45, 339.54, 342.51, 346.86, 356.72, 365.32, 377.44, 386.46, 390.39, 392.7, 395.54, 398.31, 399.4, 402.56, 405.17, 409.84, 413.73, 419.42, 432.55, 448.61, 460.74, 469.73, 476.98, 482.48, 488.37, 493.36, 496.12, 499.65, 500.08, 506.64, 511.21, 519.14, 534.18, 547.28, 556.36, 567.05, 570.3, 571.94, 577.67, 578.3, 580.74, 584.28, 587.94, 594.55, 601.02, 608.49, 631.09, 645.58, 667.75, 691.93, 722.16, 746.5, 766.22, 783.84, 799.03, 829.45, 839.11, 845.75, 847.08, 847.6, 849.3, 850.39, 854.55, 864.01, 870.14, 881.19, 893.92, 904.37, 911.19, 915.97, 919.43, 927.31, 930.06, 937.46, 940.39, 945.65, 945.39, 944.4, 950.64, 956.87, 964.82, 972.18, 976.58, 978.93, 978.06, 968.03, 965.08, 963.5, 960.4, 963.99, 968.01, 967.38, 967.33, 966.9, 959.92, 954.04, 952.59, 957.38, 955.74, 951.76, 949.87, 945.76, 938.15, 926.17, 921.22, 920.36, 913.87, 902.58, 897.09, 881.75, 860.33, 840.55, 835.82, 833.55, 842.21, 850.9, 855.3, 859.2, 858.16, 858.59, 854.72, 855.83, 862.95, 898.52, 920.79, 931.98, 941.25, 952.55, 958.9, 970.49, 998.56, 1042.77, 1048.63, 1057.6, 1055.93, 1059.35, 1054.52, 1046.32, 1042.85], "ty": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 0, 0, -1, 0, -1, -1, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, -1, -1, -1, -1, -1, -1, 0, 0, 0, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, 0, 0, 0, 0, 0, 0, -1, -1, -1, -1, -1, 0, 0, -1, -1, -1, -1, -1, -1, 0, 0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, -1, -1, -1], "opens": [137.03, 140.97, 138.51, 140.97, 145.41, 145.9, 144.92, 141.96, 147.87, 146.89, 145.9, 145.9, 146.4, 146.4, 144.92, 142.95, 141.96, 139.5, 138.02, 137.52, 140.48, 139.99, 142.45, 140.48, 142.45, 147.38, 143.93, 154.28, 164.14, 165.62, 162.17, 164.63, 162.66, 157.73, 153.79, 164.63, 161.18, 163.15, 164.63, 176.46, 172.03, 165.13, 166.11, 166.11, 164.14, 160.69, 158.72, 155.27, 153.79, 159.7, 159.7, 156.25, 156.75, 147.87, 142.95, 148.86, 148.86, 148.37, 148.86, 151.82, 147.87, 147.38, 145.41, 147.87, 144.42, 139.99, 136.54, 139.99, 138.02, 139.5, 141.47, 145.41, 145.41, 144.92, 143.44, 142.45, 138.51, 139.99, 147.87, 149.35, 152.8, 150.83, 149.35, 143.44, 141.96, 138.02, 137.52, 139.5, 140.97, 141.47, 139.0, 137.03, 133.09, 125.2, 120.27, 121.75, 121.75, 123.72, 122.74, 123.72, 120.76, 126.68, 123.72, 123.72, 127.17, 129.64, 125.69, 127.17, 127.17, 124.71, 122.24, 112.38, 109.92, 113.37, 114.85, 110.41, 112.38, 107.46, 108.44, 111.89, 105.48, 105.48, 105.98, 105.48, 104.99, 107.95, 109.43, 106.96, 105.48, 104.01, 102.03, 93.16, 93.26, 93.16, 85.57, 77.39, 70.49, 76.3, 74.92, 83.4, 85.77, 85.18, 82.51, 83.5, 83.3, 78.27, 85.08, 87.54, 89.51, 92.18, 94.15, 93.85, 93.65, 94.15, 89.71, 91.29, 90.3, 92.27, 93.85, 102.53, 100.06, 100.55, 101.05, 100.55, 99.08, 99.57, 100.06, 100.55, 104.5, 104.5, 110.41, 109.92, 102.53, 101.54, 102.03, 101.54, 101.05, 101.54, 100.06, 105.48, 106.96, 104.01, 100.55, 102.53, 100.06, 101.54, 100.06, 97.6, 111.4, 112.38, 112.38, 112.38, 111.89, 112.38, 110.41, 112.38, 116.82, 118.3, 112.38, 114.85, 123.75, 126.24, 123.25, 119.75, 133.23, 136.72, 134.23, 132.73, 133.73, 129.73, 132.73, 131.73, 132.23, 137.72, 141.71, 138.72, 136.22, 136.22, 135.22, 136.22, 136.22, 137.72, 142.21, 140.21, 139.71, 139.21, 133.73, 143.71, 136.72, 132.23, 133.73, 137.72, 140.71, 145.2, 151.19, 152.19, 143.21, 134.72, 131.73, 134.23, 135.72, 134.72, 134.72, 136.72, 144.2, 145.2, 145.2, 143.71, 151.69, 149.69, 154.68, 158.68, 159.67, 159.17, 156.18, 155.18, 152.19, 152.69, 156.68, 153.69, 159.67, 155.68, 160.67, 150.69, 155.18, 148.2, 159.67, 165.16, 162.67, 160.67, 160.17, 157.18, 161.17, 162.67, 164.16, 167.66, 161.17, 167.66, 176.64, 161.91, 165.87, 162.4, 160.92, 164.38, 166.36, 168.84, 172.15, 173.64, 167.16, 163.66, 166.16, 163.17, 162.67, 167.66, 174.64, 178.63, 187.12, 189.61, 199.59, 196.6, 196.6, 202.09, 215.06, 221.05, 227.04, 229.53, 227.53, 219.55, 219.55, 219.55, 208.57, 210.57, 219.05, 219.55, 218.05, 218.05, 222.05, 221.05, 219.55, 222.05, 222.54, 230.53, 232.02, 223.54, 228.53, 234.02, 246.0, 254.98, 249.49, 252.48, 277.43, 296.39, 311.86, 334.81, 326.83, 332.82, 332.82, 355.77, 364.25, 346.79, 374.23, 383.71, 370.24, 379.72, 335.31, 354.27, 355.27, 370.74, 386.21, 409.66, 453.57, 457.06, 462.55, 476.03, 439.1, 449.58, 441.6, 388.21, 409.16, 445.59, 465.55, 467.04, 517.94, 569.83, 548.88, 562.85, 575.82, 499.98, 508.96, 486.5, 508.96, 472.03, 484.01, 478.02, 483.01, 533.91, 544.88, 604.76, 622.72, 639.69, 633.7, 628.71, 598.77, 618.73, 638.69, 642.68, 708.55, 716.53, 724.52, 773.42, 833.29, 862.23, 803.35, 826.31, 910.14, 897.16, 906.14, 873.21, 869.22, 828.3, 902.15, 851.26, 908.14, 899.16, 789.38, 819.32, 817.33, 868.22, 930.1, 1017.92, 989.97, 1102.74, 1122.7, 1087.77, 1067.81, 1047.85, 974.01, 975.0, 948.06, 838.28, 948.06, 936.08, 882.19, 920.12, 946.06, 983.99, 968.02, 997.96, 996.96, 997.96, 936.08, 947.06, 997.96, 996.96, 1012.93, 1082.78, 995.96, 943.07, 972.0, 880.0, 856.0, 890.0, 875.0, 921.0, 896.0, 882.0, 911.0, 809.0, 778.0, 785.0, 876.0, 915.0, 880.0, 850.0, 791.0, 785.0, 670.0, 787.0, 842.0, 878.0, 1005.0, 958.0, 986.0, 979.0, 988.0, 999.0, 1045.0, 1020.0, 1045.0, 1130.0, 1110.0, 1165.0, 1120.0, 1100.0, 1070.0, 1090.0, 1170.0, 1200.0, 999.0, 921.0, 955.0, 997.0, 930.0, 939.0], "highs": [141.47, 142.45, 138.51, 144.92, 147.87, 147.38, 144.92, 145.9, 150.34, 147.38, 145.9, 147.38, 148.86, 153.3, 147.38, 143.93, 141.96, 139.99, 139.0, 143.93, 141.96, 141.96, 143.44, 142.95, 148.37, 147.87, 151.82, 163.65, 166.61, 165.62, 165.13, 165.13, 162.66, 164.14, 164.14, 165.13, 165.62, 165.62, 174.49, 176.46, 172.52, 169.07, 168.58, 167.59, 165.13, 160.69, 160.2, 155.27, 160.2, 160.69, 162.17, 160.2, 156.75, 148.37, 148.86, 149.35, 150.83, 149.85, 153.79, 153.3, 148.86, 149.35, 148.37, 150.83, 145.41, 140.48, 141.47, 141.96, 140.48, 141.96, 145.41, 149.35, 145.9, 145.41, 145.9, 142.45, 139.99, 147.38, 149.35, 151.33, 153.79, 152.31, 149.85, 145.9, 141.96, 139.5, 139.0, 141.47, 141.47, 141.96, 139.0, 138.02, 134.07, 125.69, 123.23, 123.23, 123.72, 124.21, 125.2, 125.2, 126.19, 126.68, 124.71, 126.68, 132.1, 130.13, 131.61, 130.13, 129.64, 125.2, 123.23, 115.34, 112.38, 114.85, 114.85, 112.88, 113.86, 107.95, 111.4, 112.88, 105.98, 106.96, 107.46, 106.96, 107.95, 109.43, 109.92, 107.95, 106.96, 104.01, 102.03, 95.23, 94.44, 95.03, 85.57, 79.36, 73.35, 76.3, 79.66, 84.88, 89.02, 86.56, 83.89, 85.18, 83.7, 82.32, 87.84, 88.03, 93.06, 94.64, 95.03, 95.33, 95.03, 94.84, 91.88, 91.88, 91.88, 93.06, 100.55, 104.5, 102.03, 100.55, 102.03, 101.05, 102.03, 101.54, 101.05, 106.96, 104.99, 110.91, 113.37, 109.92, 103.02, 102.03, 104.01, 102.53, 103.02, 101.54, 105.98, 108.44, 106.96, 104.5, 101.54, 103.51, 102.53, 102.03, 101.54, 108.44, 114.85, 114.36, 113.86, 113.37, 113.37, 114.36, 111.89, 117.81, 119.29, 118.79, 114.85, 122.24, 127.74, 127.24, 123.75, 131.73, 141.21, 138.22, 134.72, 135.22, 134.72, 134.23, 133.23, 134.72, 134.23, 144.7, 142.21, 139.21, 136.72, 138.72, 135.72, 138.72, 138.22, 142.71, 142.21, 141.71, 144.2, 141.71, 142.21, 145.2, 138.72, 135.22, 135.22, 140.21, 145.7, 151.69, 153.19, 153.19, 143.71, 135.22, 132.73, 135.22, 137.22, 135.22, 135.72, 142.71, 146.2, 147.2, 145.2, 152.69, 151.69, 149.69, 161.17, 159.17, 164.66, 159.67, 159.17, 156.18, 152.69, 159.17, 157.18, 156.68, 160.67, 160.17, 167.16, 154.18, 157.18, 159.17, 167.66, 165.66, 163.17, 162.67, 161.67, 159.67, 165.16, 163.17, 166.66, 168.65, 168.65, 179.13, 177.14, 164.38, 165.87, 164.38, 164.88, 168.34, 171.31, 178.24, 175.14, 176.64, 178.63, 165.16, 174.64, 165.16, 163.66, 177.64, 182.63, 189.11, 187.62, 200.59, 203.58, 202.59, 203.58, 217.55, 223.54, 233.52, 229.53, 234.52, 229.03, 224.04, 220.55, 220.55, 212.56, 216.06, 220.55, 219.55, 220.05, 223.54, 222.05, 223.54, 223.04, 224.54, 232.52, 235.02, 244.0, 229.53, 229.03, 245.5, 256.47, 255.48, 256.97, 273.44, 300.38, 317.35, 327.33, 342.3, 339.31, 334.32, 362.26, 369.24, 364.25, 377.73, 376.23, 396.69, 400.18, 384.21, 346.79, 357.27, 380.72, 378.72, 404.67, 445.09, 462.05, 483.51, 502.97, 492.49, 439.1, 449.58, 449.58, 390.7, 426.63, 465.05, 485.01, 507.96, 548.88, 592.79, 589.79, 588.79, 575.82, 510.95, 508.96, 504.97, 536.9, 503.97, 494.99, 478.02, 487.5, 535.9, 568.84, 618.73, 653.66, 658.65, 646.68, 628.71, 627.71, 644.68, 643.68, 705.56, 713.54, 728.51, 747.47, 788.39, 837.29, 884.19, 830.3, 881.2, 918.12, 946.06, 926.1, 903.15, 870.22, 887.18, 924.11, 901.15, 916.12, 900.16, 816.33, 858.24, 828.3, 903.15, 983.99, 1027.9, 1082.78, 1107.73, 1127.69, 1092.76, 1097.75, 1047.85, 1007.94, 1002.95, 967.02, 923.11, 970.01, 958.04, 904.15, 928.1, 959.04, 1002.95, 1007.94, 1002.95, 1052.84, 1072.8, 950.05, 1017.92, 1087.77, 1007.94, 1067.81, 1112.72, 1012.93, 979.99, 972.0, 901.0, 882.0, 925.0, 875.0, 948.0, 914.0, 960.0, 915.0, 842.0, 812.0, 825.0, 907.0, 918.0, 892.0, 854.0, 792.0, 786.0, 756.0, 787.0, 865.0, 948.0, 1010.0, 995.0, 999.0, 995.0, 995.0, 1010.0, 1045.0, 1025.0, 1120.0, 1200.0, 1165.0, 1165.0, 1120.0, 1120.0, 1095.0, 1180.0, 1205.0, 1230.0, 999.0, 994.0, 988.0, 1005.0, 940.0, 965.0], "lows": [137.03, 136.04, 135.55, 140.48, 142.95, 143.44, 139.99, 139.5, 144.92, 144.42, 141.96, 144.42, 143.44, 146.4, 141.96, 140.97, 138.02, 138.02, 135.06, 137.52, 138.51, 138.51, 140.97, 139.5, 141.96, 141.47, 143.44, 153.3, 161.68, 158.72, 159.7, 159.21, 158.23, 153.79, 153.3, 160.2, 161.18, 162.17, 163.65, 170.55, 167.1, 164.14, 162.66, 161.68, 159.7, 154.28, 156.75, 155.27, 153.3, 157.73, 156.75, 155.27, 147.87, 141.96, 141.96, 146.4, 146.4, 146.89, 146.89, 148.86, 144.92, 145.9, 144.42, 144.92, 138.02, 135.06, 136.54, 138.51, 137.03, 138.51, 140.48, 142.95, 141.96, 142.95, 142.95, 139.0, 137.52, 139.0, 144.42, 147.38, 150.83, 150.34, 143.44, 142.45, 135.55, 137.52, 136.04, 139.5, 139.0, 138.51, 136.54, 135.06, 123.72, 119.78, 118.79, 121.26, 121.26, 121.75, 122.24, 120.27, 120.27, 123.72, 122.24, 123.23, 126.68, 125.2, 125.2, 126.68, 127.17, 122.24, 115.84, 111.4, 108.93, 111.89, 111.89, 109.92, 111.4, 104.5, 107.95, 105.98, 102.03, 104.01, 105.98, 102.53, 104.5, 106.47, 104.99, 104.5, 105.48, 102.03, 96.61, 90.7, 90.89, 91.68, 85.57, 77.09, 69.4, 75.71, 72.36, 82.22, 85.47, 83.99, 81.53, 83.11, 79.85, 78.18, 84.98, 84.58, 89.32, 91.49, 93.26, 92.27, 92.87, 89.32, 89.71, 89.22, 90.01, 90.6, 93.75, 97.99, 98.58, 98.58, 99.57, 97.6, 98.48, 98.58, 99.08, 100.06, 102.03, 103.02, 104.01, 104.5, 99.08, 100.06, 100.06, 100.55, 100.55, 96.71, 100.06, 104.01, 104.99, 101.05, 99.57, 98.58, 99.57, 99.08, 98.58, 96.91, 108.93, 110.91, 110.91, 108.93, 109.92, 110.41, 109.92, 111.89, 114.36, 113.37, 111.4, 113.86, 121.75, 123.25, 119.26, 119.75, 129.73, 131.73, 131.23, 131.23, 127.24, 128.24, 130.73, 130.73, 131.23, 137.22, 136.22, 136.22, 134.72, 135.22, 133.23, 135.22, 136.22, 137.22, 137.72, 135.72, 137.22, 134.72, 133.73, 138.22, 132.73, 132.23, 132.23, 137.72, 139.71, 144.7, 146.7, 144.2, 132.73, 129.24, 130.73, 131.73, 132.73, 130.23, 133.23, 134.72, 141.21, 143.21, 141.21, 142.21, 146.7, 144.7, 154.18, 156.18, 158.68, 154.18, 154.68, 147.7, 150.19, 151.69, 150.69, 152.69, 156.68, 153.69, 160.17, 150.19, 145.7, 148.2, 159.67, 160.17, 158.18, 159.17, 157.18, 154.68, 160.67, 157.68, 161.67, 158.68, 160.17, 166.66, 167.66, 159.43, 160.42, 158.44, 156.46, 162.4, 165.37, 168.34, 168.16, 167.16, 167.16, 159.67, 166.16, 157.68, 157.18, 166.16, 173.64, 177.64, 183.62, 189.61, 194.1, 194.6, 196.6, 201.09, 211.57, 221.05, 222.05, 224.04, 221.55, 219.05, 211.07, 211.07, 204.08, 208.57, 212.56, 214.06, 214.56, 216.06, 217.06, 217.55, 218.55, 215.56, 220.55, 227.53, 225.04, 219.05, 221.05, 234.02, 242.0, 245.0, 245.0, 246.5, 273.94, 294.9, 309.87, 324.34, 326.83, 317.35, 328.33, 354.27, 333.82, 342.3, 354.27, 374.23, 369.24, 360.76, 328.33, 331.82, 350.28, 365.75, 386.21, 407.17, 437.1, 435.11, 462.55, 456.07, 416.15, 416.15, 429.62, 388.21, 409.16, 444.09, 460.06, 467.04, 503.97, 522.93, 537.9, 562.85, 531.91, 497.98, 448.58, 486.5, 498.98, 472.03, 472.53, 443.59, 476.03, 513.95, 543.89, 595.78, 612.75, 618.73, 622.72, 590.79, 598.77, 604.76, 631.71, 642.68, 698.57, 709.55, 658.65, 758.45, 788.39, 820.32, 780.4, 813.33, 860.24, 891.18, 844.27, 860.24, 806.35, 820.32, 870.22, 851.26, 877.2, 812.34, 774.41, 806.35, 791.38, 866.23, 929.1, 976.0, 986.98, 1042.86, 997.96, 1032.88, 1022.91, 948.06, 962.03, 968.02, 888.18, 838.28, 918.12, 873.21, 809.34, 888.18, 918.12, 963.03, 963.03, 963.03, 989.97, 972.01, 914.13, 942.07, 962.03, 948.06, 1007.94, 1032.88, 976.0, 924.11, 897.0, 836.0, 843.0, 867.0, 875.0, 892.0, 826.0, 870.0, 872.0, 794.0, 747.0, 775.0, 876.0, 872.0, 825.0, 804.0, 764.0, 688.0, 653.0, 787.0, 842.0, 873.0, 962.0, 928.0, 942.0, 976.0, 972.0, 990.0, 976.0, 995.0, 1035.0, 1115.0, 1085.0, 1085.0, 1030.0, 1065.0, 1030.0, 1080.0, 1150.0, 1070.0, 999.0, 911.0, 948.0, 923.0, 873.0, 911.0], "vol": [9490, 17345, 9612, 13969, 12269, 8241, 11492, 14045, 14736, 7342, 12147, 13108, 18612, 35696, 18462, 9126, 16963, 14369, 18335, 21472, 13176, 7946, 11027, 13131, 24831, 16775, 39420, 77518, 67611, 33361, 25563, 29671, 24332, 44627, 31978, 19827, 18332, 11585, 52842, 35463, 15862, 18687, 20745, 14787, 12009, 17904, 9083, 9946, 10732, 9522, 12510, 10565, 21131, 25643, 10398, 8827, 11759, 10543, 20140, 10933, 12351, 6737, 6115, 12084, 22738, 18277, 12814, 9909, 12135, 9362, 15260, 20341, 10031, 8159, 7186, 8053, 8138, 23489, 23418, 17426, 19259, 9544, 15289, 6797, 14504, 7517, 8230, 6767, 3827, 9275, 15443, 21295, 41494, 31575, 18349, 11483, 10229, 10273, 9509, 14117, 18345, 12772, 20799, 13627, 32438, 20176, 27304, 15454, 14499, 24197, 47457, 22834, 26965, 15147, 11621, 14059, 11637, 19871, 9361, 18006, 30471, 20811, 7157, 15308, 11886, 11977, 8014, 9082, 5708, 8305, 31728, 28781, 19303, 14371, 1617, 16374, 27615, 15604, 36689, 27343, 29270, 18003, 12470, 8532, 10414, 11388, 31792, 23193, 36960, 28246, 23078, 17348, 15933, 24464, 8854, 9741, 9176, 9623, 28707, 31261, 18937, 10169, 11942, 9522, 13144, 9963, 8655, 37532, 17989, 67964, 74187, 31858, 18342, 10919, 22223, 11648, 6404, 19265, 25735, 24114, 10353, 13991, 8555, 15751, 11758, 9687, 37242, 60612, 83540, 36725, 17951, 21287, 14440, 22187, 9324, 72760, 55681, 25053, 11238, 53534, 67737, 24452, 24050, 95332, 177804, 59364, 33161, 28236, 45709, 45639, 26218, 34298, 22773, 113180, 57824, 44584, 18879, 17392, 14801, 20193, 15381, 38310, 21226, 27939, 31616, 29362, 53529, 32334, 28094, 18029, 12717, 26016, 55166, 78003, 55805, 44634, 44655, 27050, 15178, 16441, 15883, 17973, 9702, 33748, 36190, 29173, 12437, 62937, 22470, 27726, 76243, 27757, 48837, 21999, 18569, 22334, 12169, 18912, 19276, 18312, 18670, 15278, 48631, 30148, 24063, 40487, 65595, 23821, 16746, 17818, 13272, 13929, 26740, 17727, 22323, 23648, 20359, 89250, 52367, 31170, 20285, 13543, 23179, 17067, 16790, 48480, 23010, 19492, 49807, 38149, 28649, 33455, 24638, 45090, 50943, 54580, 20712, 70880, 43577, 30541, 33730, 79844, 53386, 72177, 36374, 35820, 19584, 12119, 23034, 20874, 18442, 25900, 24783, 15378, 13325, 15968, 10909, 11001, 12630, 21094, 48483, 26037, 58674, 23498, 19148, 40888, 55866, 29859, 30014, 72713, 75476, 116054, 77785, 63173, 44470, 42502, 67829, 45332, 57886, 75821, 87382, 67977, 100536, 70445, 67050, 79690, 62580, 46066, 50836, 84526, 75908, 83769, 75410, 17477, 25501, 17820, 13338, 15115, 14989, 14643, 14702, 20175, 16872, 60474, 49391, 9236, 8616, 8196, 9720, 5006, 7764, 5507, 4841, 9163, 7106, 47779, 35331, 38768, 42166, 30324, 57444, 10435, 7844, 6733, 4415, 8980, 7964, 4451, 7636, 9512, 7908, 38017, 31229, 33290, 42009, 25232, 40640, 25433, 31729, 26975, 28764, 25789, 28575, 28486, 20139, 22774, 20618, 29979, 37591, 22262, 29385, 26192, 23717, 20365, 18015, 25738, 18641, 12562, 24084, 24084, 22572, 24499, 25382, 15171, 15473, 18993, 17456, 20033, 26146, 25057, 25116, 31912, 75665, 27526, 31629, 31051, 25870, 17574, 21829, 40643, 31614, 32490, 0, 32563, 26823, 36228, 26226, 27074, 28925, 17427, 21515, 26400, 19038, 15263, 16512, 29543, 50036, 2901, 21656, 52138, 41065, 25016, 21029, 6748, 4755, 7207, 8302, 8180, 48652, 36601, 23425, 15655, 22376, 10414, 14712, 21470, 23380, 27319, 3826, 89270, 24775, 31790, 38880, 20944], "vol_ma20": [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, 14842.08, 15026.38, 14556.41, 14627.17, 14585.26, 15213.33, 15640.04, 17036.44, 20210.1, 22853.88, 24154.84, 24825.61, 25653.73, 25939.73, 26386.29, 27062.11, 27597.14, 27665.59, 27526.35, 29251.7, 29951.25, 30085.55, 30622.61, 31108.55, 31191.35, 30550.26, 30606.71, 29089.88, 25711.28, 22867.28, 21675.35, 21022.74, 20067.47, 19907.41, 18958.21, 17879.23, 17329.21, 17000.57, 16948.5, 15313.41, 14086.92, 13911.36, 13313.85, 12582.33, 12447.18, 12983.65, 13002.32, 13188.86, 13187.03, 13257.19, 13249.17, 13386.64, 13875.42, 13320.4, 12446.2, 12285.58, 12246.9, 12065.82, 12713.14, 12877.02, 13201.63, 13547.05, 13687.4, 14146.1, 13881.74, 13470.05, 12932.01, 12702.8, 12545.66, 12130.25, 12125.9, 12135.09, 12182.81, 13755.97, 14926.77, 15484.91, 15656.41, 15761.01, 15100.17, 14404.75, 14239.31, 14193.61, 14355.03, 14630.52, 14972.0, 15868.69, 16501.64, 17455.36, 17889.71, 18423.31, 19169.41, 20770.11, 20847.03, 20120.57, 19299.18, 18962.79, 19091.6, 19161.97, 19641.91, 19634.51, 19828.96, 20435.28, 20837.2, 20155.11, 20239.15, 19211.57, 18801.64, 17837.1, 17518.51, 17079.01, 16284.38, 15497.9, 15795.29, 15412.17, 15373.33, 14873.14, 14988.85, 15787.76, 15574.41, 16940.81, 17407.68, 17347.63, 17207.23, 17472.88, 17134.08, 17060.46, 17031.01, 18219.94, 18925.5, 20488.1, 21485.17, 21052.68, 20481.01, 20312.52, 20817.18, 21179.02, 20847.4, 19925.46, 19626.38, 19227.25, 19423.15, 18906.48, 18514.79, 18488.38, 18537.91, 18674.4, 18603.15, 17446.31, 18163.24, 17214.68, 19200.55, 21755.99, 22481.51, 22602.0, 21924.77, 22593.25, 22688.6, 22550.01, 23032.09, 22883.52, 22526.15, 22096.97, 22288.08, 22118.74, 22430.18, 22360.91, 22347.08, 23776.4, 24930.43, 28207.98, 26646.07, 23834.31, 23305.75, 23110.65, 23674.02, 23029.08, 26084.64, 28548.5, 28837.92, 28113.06, 29584.07, 32453.26, 32976.3, 33751.03, 37730.07, 46032.37, 48516.24, 48312.21, 46693.37, 44801.82, 45247.49, 45660.81, 46311.35, 46727.97, 51277.62, 53702.6, 52293.84, 50453.73, 50070.67, 50248.83, 48581.79, 45964.02, 46656.91, 46515.75, 43146.12, 35836.72, 34336.62, 35355.01, 35559.92, 34679.15, 33298.64, 32623.61, 32209.51, 33829.16, 32070.32, 31969.35, 31971.81, 33260.62, 33743.54, 33762.36, 33574.75, 33599.82, 32582.98, 32006.74, 32297.17, 32525.86, 32516.43, 30461.8, 31991.97, 31710.77, 32195.64, 35371.92, 35458.96, 35142.51, 32342.3, 30480.54, 29365.53, 27741.23, 27334.32, 27539.24, 27632.77, 27772.12, 27637.36, 29583.83, 29403.83, 28797.49, 29363.17, 32021.07, 30065.28, 29779.06, 29283.66, 26135.15, 25443.76, 24338.93, 24125.37, 24313.03, 24378.75, 24788.23, 28305.14, 29959.7, 30602.64, 30683.42, 30596.68, 29324.08, 28670.04, 28306.37, 28706.0, 26576.78, 26360.33, 28013.4, 29029.96, 29798.8, 30775.09, 30669.97, 32038.09, 33469.09, 35015.69, 35033.35, 34114.85, 33675.35, 33643.87, 34316.11, 37631.16, 39141.53, 41897.03, 42876.26, 42243.29, 42071.99, 41703.35, 40364.71, 39500.93, 38990.59, 38612.84, 38620.08, 37134.47, 35253.57, 33322.97, 32832.84, 29838.86, 28291.49, 27819.15, 28556.81, 25866.43, 26130.81, 23696.86, 22835.55, 23088.91, 24903.02, 25790.01, 26138.99, 28730.96, 31582.64, 36090.38, 38740.48, 41130.27, 42687.55, 44014.25, 46860.22, 48576.79, 50839.6, 53575.94, 55520.9, 57617.89, 59711.02, 62058.37, 64453.47, 66393.58, 66729.24, 67539.61, 68580.7, 69171.32, 69192.94, 67578.66, 67459.91, 65175.06, 64226.62, 62992.5, 60267.95, 58757.09, 56612.25, 53553.36, 49919.33, 47529.25, 43346.05, 42847.49, 41964.51, 38441.85, 35743.66, 33850.16, 31794.38, 27818.38, 24411.18, 20498.11, 16969.67, 16554.01, 15634.23, 17132.2, 18231.87, 19414.54, 20773.38, 21557.42, 23694.54, 23207.55, 22756.15, 20069.09, 17820.29, 17807.48, 17774.91, 17587.66, 17483.46, 17708.8, 17715.96, 19341.42, 20660.81, 21867.13, 23612.26, 22484.88, 22750.3, 22083.56, 21561.7, 21394.25, 19960.26, 20727.96, 21764.47, 22852.17, 23638.37, 24328.06, 24960.72, 26237.1, 27734.83, 28372.3, 29446.17, 28854.92, 28479.36, 27833.15, 26633.48, 26658.79, 25558.87, 24915.28, 24533.05, 24388.52, 24078.91, 24014.41, 23854.77, 23188.99, 22955.71, 22766.64, 22608.58, 22111.3, 21539.05, 21678.81, 21465.34, 21751.34, 24348.74, 24706.76, 25387.44, 25653.09, 26014.51, 26265.13, 26152.38, 26980.33, 27432.41, 27831.97, 26562.85, 27432.43, 27999.91, 28861.68, 29300.13, 29652.14, 29791.1, 29409.59, 29229.54, 28953.95, 26122.56, 25509.45, 24753.61, 24678.2, 25886.5, 25152.84, 25144.16, 25718.89, 26191.44, 25817.75, 26869.21, 25578.49, 24475.09, 23024.06, 22127.9, 21183.23, 22169.62, 23128.34, 23223.85, 22686.6, 22853.52, 22611.07, 22521.04, 22117.4, 20784.62, 22005.52, 21114.02, 22970.64, 22156.15, 22494.85, 23387.42, 24097.21], "st4": [null, null, null, null, null, null, null, null, null, 125.4, 125.4, 125.79, 125.79, 128.75, 128.75, 128.75, 128.75, 128.75, 128.75, 128.75, 128.75, 128.75, 128.75, 128.75, 128.75, 128.75, 128.75, 132.84, 138.11, 138.11, 138.11, 138.11, 138.11, 138.11, 138.11, 138.11, 138.11, 138.46, 141.47, 146.3, 146.3, 146.3, 146.3, 146.3, 146.3, 146.3, 146.3, 146.3, 146.3, 146.3, 146.3, 146.3, 146.3, 166.46, 166.46, 166.46, 166.46, 166.46, 166.46, 166.46, 166.46, 166.46, 165.13, 165.13, 160.44, 157.49, 157.49, 157.49, 157.49, 157.49, 157.49, 157.49, 157.49, 157.49, 157.49, 157.49, 154.53, 154.53, 154.53, 154.53, 154.53, 154.53, 154.53, 154.53, 154.53, 154.53, 154.53, 154.53, 154.53, 154.53, 153.15, 152.31, 147.04, 141.86, 138.95, 138.95, 138.95, 138.95, 138.95, 138.95, 138.95, 138.95, 138.26, 138.26, 138.26, 138.26, 138.26, 138.26, 138.26, 138.26, 137.67, 132.3, 129.98, 129.98, 129.98, 128.55, 128.55, 123.57, 123.57, 123.57, 120.76, 120.76, 120.76, 120.52, 120.52, 120.52, 120.52, 120.52, 120.52, 117.02, 114.31, 109.53, 109.53, 109.53, 104.34, 99.2, 93.46, 93.46, 93.46, 93.46, 93.46, 93.46, 93.46, 93.46, 93.46, 93.46, 93.46, 93.46, 93.46, 75.28, 77.86, 77.86, 77.86, 77.86, 77.86, 77.86, 77.86, 78.42, 83.67, 86.5, 86.5, 86.5, 86.5, 86.5, 86.5, 86.5, 86.5, 86.5, 88.41, 91.11, 91.11, 91.11, 91.11, 91.11, 91.11, 91.11, 91.11, 91.11, 91.11, 91.11, 91.11, 91.11, 91.11, 91.11, 91.11, 91.11, 91.11, 91.11, 93.87, 94.61, 94.61, 94.61, 94.61, 94.61, 94.61, 95.05, 96.24, 97.94, 97.94, 99.52, 104.6, 105.28, 105.28, 105.28, 108.08, 108.08, 108.08, 108.08, 108.08, 108.08, 108.08, 108.08, 108.38, 116.61, 117.06, 117.06, 117.06, 117.06, 117.06, 118.01, 118.26, 120.2, 120.2, 120.95, 122.55, 122.55, 122.55, 122.55, 122.55, 122.55, 122.55, 122.55, 122.55, 123.05, 124.99, 124.99, 124.99, 124.99, 124.99, 124.99, 124.99, 124.99, 124.99, 124.99, 124.99, 124.99, 125.04, 127.29, 127.84, 127.84, 132.33, 133.13, 135.52, 135.52, 135.52, 135.52, 135.52, 135.52, 135.52, 135.52, 136.32, 136.32, 139.51, 139.51, 139.51, 139.51, 139.51, 139.51, 139.51, 139.51, 139.51, 139.51, 139.51, 139.51, 139.51, 139.51, 139.51, 143.76, 143.76, 143.76, 143.76, 143.76, 143.76, 143.76, 143.76, 143.76, 143.76, 143.76, 143.76, 143.76, 143.76, 143.76, 143.76, 143.76, 143.76, 143.76, 144.1, 151.59, 156.13, 156.68, 160.97, 167.81, 173.84, 183.77, 183.77, 186.77, 186.77, 186.77, 186.77, 186.77, 186.77, 186.77, 186.77, 186.77, 186.77, 188.86, 189.61, 190.41, 192.86, 192.86, 196.6, 202.14, 202.14, 202.14, 202.14, 202.14, 203.93, 203.93, 203.93, 203.93, 224.69, 237.66, 249.74, 259.87, 259.87, 259.87, 261.86, 276.13, 276.13, 276.13, 276.13, 285.47, 285.47, 285.47, 285.47, 285.47, 285.47, 285.47, 285.47, 306.57, 329.43, 332.77, 352.43, 352.43, 352.43, 352.43, 352.43, 352.43, 352.43, 352.43, 352.43, 352.43, 378.52, 396.59, 400.18, 415.15, 415.15, 415.15, 415.15, 415.15, 415.15, 415.15, 415.15, 415.15, 415.15, 415.15, 415.15, 425.03, 458.76, 466.64, 468.24, 468.24, 468.24, 468.24, 485.01, 515.24, 552.77, 580.11, 580.11, 606.56, 636.0, 665.04, 665.04, 665.04, 665.04, 693.48, 693.48, 693.48, 693.48, 693.48, 693.48, 693.48, 693.48, 693.48, 693.48, 693.48, 693.48, 693.48, 713.04, 762.84, 783.4, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 817.83, 1083.2, 1040.7, 1040.7, 1040.7, 1040.7, 1040.7, 1040.7, 1040.7, 1026.2, 1009.3, 1009.3, 1009.3, 1009.3, 1009.3, 1009.3, 1009.3, 1009.3, 1009.3, 1009.3, 1009.3, 788.8, 847.5, 926.7, 926.7, 926.7, 926.7, 926.7, 926.7, 926.7, 926.7, 926.7, 926.7, 926.7, 926.7, 1307.5, 1235.7, 1235.7], "st4_dir": [null, null, null, null, null, null, null, null, null, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -1, -1, -1], "target": null, "lp": [[0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0]], "lplit": [0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 3, 3, 3, 3, 1, 2, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 2, 3, 3, 3, 2, 2, 2, 2, 2, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 4, 4, 4, 4, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 4, 4, 3, 4, 4, 4, 4, 4, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 0, 2, 2, 2, 2, 2, 2, 1, 0, 1, 1, 1, 3, 3, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 3, 2, 2, 0, 0, 0]};
+let ti_drawn_3037_TW = false;
+let ti_charts_3037_TW = null;
+let ti_win_3037_TW = 90;
+function ti_toggle_3037_TW(){
+  const box = document.getElementById('ti_charts_3037_TW');
+  const btn = document.getElementById('ti_btn_3037_TW');
+  const open = box.style.display !== 'none';
+  box.style.display = open ? 'none' : 'block';
+  if (btn) btn.textContent = open ? '展開圖表 ▾' : '收合圖表 ▴';
+  if (!open && !ti_drawn_3037_TW) { ti_drawn_3037_TW = true; ti_draw_3037_TW(); }
+}
+document.getElementById('ti_win_3037_TW').addEventListener('click', function(e){
+  const b = e.target.closest('button');
+  if (!b) return;
+  Array.prototype.forEach.call(this.querySelectorAll('button'), x => x.setAttribute('aria-pressed', x === b));
+  ti_win_3037_TW = parseInt(b.dataset.w, 10) || 90;
+  if (ti_drawn_3037_TW) ti_draw_3037_TW();
+});
+function ti_draw_3037_TW(){
+  const full = window.TI_DATA_3037_TW;
+  const n = full.dates.length;
+  const cut = Math.max(0, n - ti_win_3037_TW);
+  const slice = arr => (arr || []).slice(cut);
+  // 🔴 2026-09-07：原本這裡是**手寫的欄位清單**逐項 slice。加了四燈 `lp` 之後
+  // 忘了補進來 → `d.lp` 是 undefined → 圖畫成空的**而且不報錯**（datasets 是空陣列）。
+  // ⭐ 同一個形狀今天踩了好幾次：手維護的清單，漏一項就是靜默失敗。
+  // 改成全欄位自動處理：巢狀陣列（四燈是 4×N）逐列切，其餘直接切。
+  // 之後 payload 再加欄位，這裡不用動。
+  // ⚠️ 只有陣列要切。payload 裡也有純量（target 是數字或 null），
+  //    無條件 slice 會噴 "(arr || []).slice is not a function" 而且**整個 draw 掛掉**
+  //    ——五張圖一張都不會出現。改通用寫法時我把「漏加欄位」換成了
+  //    「假設每個欄位都是陣列」，這是換了一種靜默失敗不是修掉它。
+  const d = Object.fromEntries(Object.entries(full).map(([k, v]) => [
+    k, !Array.isArray(v) ? v
+       : (Array.isArray(v[0]) ? v.map(r => slice(r)) : slice(v))]));
+  if (ti_charts_3037_TW) { ti_charts_3037_TW.forEach(c => c.destroy()); }
+  // 2026-09-02 Leo：「可以做放大縮小功能？調整橫軸？」——四張圖都用同一個 index x 軸
+  // （不再是各自的 category 軸），滾輪縮放／拖曳平移一張，其餘三張跟著動，量價才對得上。
+  // syncing 旗標防止 A 同步 B 時，B 的 onZoom/onPan 回頭又同步 A 造成無窮迴圈。
+  let ti_syncing_3037_TW = false;
+  function ti_sync_3037_TW(src){
+    if (ti_syncing_3037_TW) return;
+    ti_syncing_3037_TW = true;
+    const xs = src.scales.x;
+    (ti_charts_3037_TW || []).forEach(c => {
+      if (c !== src) c.zoomScale('x', {min: xs.min, max: xs.max}, 'none');
+    });
+    ti_syncing_3037_TW = false;
+  }
+  const ZOOM_OPT = {
+    pan: {enabled: true, mode: 'x', onPanComplete: ({chart}) => ti_sync_3037_TW(chart)},
+    zoom: {wheel: {enabled: false}, pinch: {enabled: true}, mode: 'x',
+      // onZoom：滾輪縮放當下就同步（離散觸發，不頻繁，不會卡）；onZoomComplete 當保險。
+      onZoom: ({chart}) => ti_sync_3037_TW(chart), onZoomComplete: ({chart}) => ti_sync_3037_TW(chart)},
+    limits: {x: {min: 0, max: d.dates.length - 1, minRange: 5}}
+  };
+  // 2026-09-02 Leo：SuperTrend 改黃(多方支撐)/紫(空方壓力)——原本紅/綠跟雙重颱風K線的
+  // 紅偏多/綠偏空撞色，兩條線意義完全不同（一個是支撐壓力，一個是三態偏向），撞色會誤讀。
+  const segColor = (dir, up, down, none) => ctx => {
+    const v = dir[ctx.p1DataIndex];
+    return v === 1 ? (up || '#4ade80') : (v === -1 ? (down || '#ff8a8a') : (none || '#6b7280'));
+  };
+  // 2026-09-02 Leo：「雙重颱風只能做線不能做K線嗎？」——原本是收盤線分段上色，改成真的
+  // 蠟燭圖（開高低收都畫），顏色仍是雙重颱風三態（紅偏多/綠偏空/黃不明），不是傳統漲跌配色。
+  // chartjs-chart-financial／chartjs-plugin-zoom 都是 Chart.js 官方組織的外掛（同一個
+  // GitHub org，MIT），純前端渲染，沒有任何資料外流——跟已經在用的 Chart.js 本身同信任層級。
+  const TY_COL = {1: '#ef4444', '-1': '#22c55e', 0: '#eab308'};
+  const tyColorFn = ctx => {
+    var c = TY_COL[(d.ty || [])[ctx.dataIndex]] || '#8FA8C8';
+    return {up: c, down: c, unchanged: c};   // 三個都給同一色：不管開高低收怎麼比，一律照颱風三態上色
+  };
+  const xAxis = {type:'linear',min:0,max:d.dates.length-1,offset:true,
+    ticks:{color:'#6b7280',font:{size:9},maxRotation:0,autoSkip:true,maxTicksLimit:8,
+      callback:function(v){return d.dates[Math.round(v)]||'';}},grid:{display:false}};
+  const xAxisHidden = {type:'linear',min:0,max:d.dates.length-1,offset:true,
+    ticks:{display:false},grid:{display:false}};
+  // 價格標籤（2026-09-07 Leo：「super trend 我們沒有停損線嗎?」）。
+  // 線本來就有，但沒有標示 → 五條疊在一起分不出哪條是哪條。
+  // ⚠️ 畫在 afterDatasetsDraw：在資料之後，才不會被 K 棒蓋住。
+  const ti_tags_3037_TW = {
+    id: 'pricetags',
+    afterDatasetsDraw(chart) {
+      const {ctx, chartArea, scales} = chart;
+      if (!chartArea || !scales.y) return;
+      // 🔴 2026-09-07 Leo：「手機縮放目標價、停損價會跑」。
+      // 原本一律抓 ds.data 的**最後一根**（＝整段序列的最新值），
+      // 但縮放/平移之後畫面上是別的日期區間 —— 線在 262，標籤還寫 204.25，
+      // 兩者對不起來，看起來就像標籤亂跑。
+      // 改成抓「**可視範圍內的最後一根**」，標籤永遠描述螢幕上真的畫出來的那條線。
+      // ⚠️ 不能只改 y 的位置：值本身也要換，不然位置對了數字還是舊的。
+      const vx0 = Math.ceil(scales.x.min), vx1 = Math.floor(scales.x.max);
+      const ymin = scales.y.min, ymax = scales.y.max;
+      const put = [];
+      chart.data.datasets.forEach(ds => {
+        if (!ds.label || ds.label.indexOf('K線') === 0) return;
+        let v = null;
+        for (let i = Math.min(vx1, ds.data.length - 1); i >= Math.max(0, vx0); i--) {
+          const p = ds.data[i];
+          if (p && p.y != null && !Number.isNaN(p.y)) { v = p.y; break; }
+        }
+        // 這條線在目前的畫面上沒有值，或值在 y 軸範圍外 → 不要畫標籤。
+        // 畫出來只會被夾在邊緣，指向一個畫面上根本不存在的價格。
+        if (v == null || v < ymin || v > ymax) return;
+        let col = ds.borderColor;
+        if (typeof col !== 'string') {
+          // SuperTrend 是分段上色（多方黃/空方紫），borderColor 拿不到 →
+          // 用 segment 的當下方向決定，不要退回一個假的顏色。
+          // 方向也要看**可視範圍的最後一根**：平移到多方那一段，
+          // 標籤卻用最新的空方紫，顏色就對不回線。
+          const di = Math.min(vx1, (d.st_dir || []).length - 1);
+          col = (ds.label === 'SuperTrend')
+            ? (d.st_dir && d.st_dir[di] === 1 ? '#facc15' : '#c084fc')
+            : '#94a3b8';
+        }
+        put.push({y: scales.y.getPixelForValue(v), v, col, label: ds.label});
+      });
+      // 現價自己一個（白色，最重要的那個數字）。
+      // ⚠️ 它沒有對應的線，所以**只在最後一根看得到時才畫**——平移到七月去看，
+      // 一個 240 的標籤浮在那裡不連著任何東西，只會讓人以為標籤跑掉了。
+      const cl = d.closes[d.closes.length - 1];
+      if (cl != null && vx1 >= d.closes.length - 1 && cl >= ymin && cl <= ymax)
+        put.push({y: scales.y.getPixelForValue(cl), v: cl,
+                   col: '#E2E8F0', label: '現價'});
+      // 重疊就往下擠開，不然靠得近的兩條會疊成一團看不懂
+      put.sort((a2, b2) => a2.y - b2.y);
+      for (let i = 1; i < put.length; i++)
+        if (put[i].y - put[i - 1].y < 13) put[i].y = put[i - 1].y + 13;
+
+      ctx.save();
+      ctx.font = '10px ui-monospace,SFMono-Regular,Menlo,monospace';
+      ctx.textBaseline = 'middle';
+      put.forEach(t => {
+        const txt = t.v.toLocaleString(undefined, {maximumFractionDigits: 2});
+        const w = ctx.measureText(txt).width + 10;
+        const x = chartArea.left + 2;
+        ctx.fillStyle = t.col;
+        ctx.fillRect(x, t.y - 6.5, w, 13);
+        ctx.fillStyle = '#0B1220';
+        ctx.fillText(txt, x + 5, t.y + 0.5);
+        // 名稱放在色塊右邊，用線的顏色，才對得回是哪一條
+        ctx.fillStyle = t.col;
+        ctx.fillText(t.label, x + w + 5, t.y + 0.5);
+      });
+      ctx.restore();
+    }
+  };
+  const c1 = new Chart(document.getElementById('ti_c1_3037_TW'), {type:'candlestick',
+    plugins:[ti_tags_3037_TW],
+    data:{datasets:[
+      {label:'K線（雙重颱風三色）',
+        data:d.dates.map((dt,i)=>({x:i,o:d.opens[i],h:d.highs[i],l:d.lows[i],c:d.closes[i]}))
+          .filter(p=>p.o!=null&&p.h!=null&&p.l!=null&&p.c!=null),
+        // D（2026-09-07 Leo：「K線圖為何都是實心，應該有空心實心?」）
+        // 台股／老墨慣例：收 >= 開 → **空心**（只有邊框），收 < 開 → 實心。
+        // 原本 background 與 border 給同一個顏色，所以全部都是實心。
+        // ⚠️ 顏色仍然是雙重颱風三態（紅偏多/綠偏空/黃不明），空心實心是**另一個維度**
+        //   （當根漲跌），兩者不衝突：可以有「空心綠」＝偏空但當根收紅。
+        backgroundColors:(ctx)=>{const i=ctx.dataIndex;
+          return (d.closes[i]!=null && d.opens[i]!=null && d.closes[i]>=d.opens[i])
+            ? 'rgba(0,0,0,0)' : tyColorFn(ctx);},
+        borderColors:tyColorFn, borderWidth:1.3},
+      {type:'line',label:'SuperTrend',data:d.st.map((v,i)=>({x:i,y:v})),borderWidth:1.6,pointRadius:0,
+        segment:{borderColor:segColor(d.st_dir,'#facc15','#c084fc','#6b7280')}},
+      // 20 日平均成本＝量加權(VWAP) 不是 SMA——實測對上老墨的 135.95
+      {type:'line',label:'20日平均成本',data:d.ma20.map((v,i)=>({x:i,y:v})),borderColor:'#F59E0B',
+        borderWidth:1.2,pointRadius:0,borderDash:[2,2],tension:.15},
+      // F：停損 4 倍（3 倍那條就是上面的 SuperTrend，老墨畫面上兩個數字相同）
+      {type:'line',label:'停損4倍',data:d.st4.map((v,i)=>({x:i,y:v})),borderWidth:1.5,
+        pointRadius:0,borderDash:[6,4],
+        // 2026-09-07 Leo：「停損4倍顏色不清楚」。原本 #7AD1A0/#B49BE0 是
+        // SuperTrend 黃紫的淡化版——同色系又更淡，等於兩條線長得像同一條。
+        // 改成獨立色系（橘紅），而且**只有一個顏色不分多空**：
+        // 這條線的意義是「更外圈的停損」，方向已經由 SuperTrend 那條表達了。
+        borderColor:'#FB7185'},
+      // 目標價：呼叫端有給才畫（券商/分析師共識），沒給就是空陣列，圖上不會出現
+      {type:'line',label:'目標價',
+        data:(d.target==null?[]:d.dates.map((_,i)=>({x:i,y:d.target}))),
+        borderColor:'#FDE047',borderWidth:1.4,pointRadius:0,borderDash:[8,4]}]},
+    options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{labels:{color:'#9aa0a6',boxWidth:14,font:{size:10}}}, zoom:ZOOM_OPT},
+      scales:{x:xAxis, y:{ticks:{color:'#6b7280',font:{size:9}},grid:{color:'#1a1d23'}}}}});
+  // 成交量：紅漲綠跌（台股慣例），疊 20 日均量線——老墨圖上有、我們原本漏了
+  const volColor = d.closes.map(function(c, i) {
+    const prev = i > 0 ? d.closes[i - 1] : c;
+    return (c == null || prev == null) ? '#2a2e35' : (c >= prev ? '#ef4444' : '#22c55e');
+  });
+  const cv = new Chart(document.getElementById('ti_cv_3037_TW'), {
+    data:{datasets:[
+      {type:'bar',label:'成交量',data:d.vol.map((v,i)=>({x:i,y:v})),backgroundColor:volColor,order:2},
+      {type:'line',label:'20日均量',data:d.vol_ma20.map((v,i)=>({x:i,y:v})),borderColor:'#22d3ee',
+        borderWidth:1.3,pointRadius:0,tension:.2,order:1}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}, zoom:ZOOM_OPT},
+      scales:{x:xAxisHidden, y:{ticks:{color:'#6b7280',font:{size:9}},grid:{color:'#1a1d23'}}}}});
+  // 動能柱：多頭轉強亮綠/轉弱暗綠，空頭轉強亮紅/轉弱暗紅（TTM Squeeze 慣例）；
+  // sq_on 點陣列（擠壓中金色、已釋放依動能方向上色）疊在 y=0 當擠壓/釋放標記
+  const momColor = d.mom.map((v, i) => {
+    if (v == null) return '#2a2e35';
+    const prev = i > 0 ? d.mom[i - 1] : v;
+    // 2026-09-07 Leo：「EXCEED CHARGE 為什麼都是綠色?」——實測不是 bug
+    // （MA 當下就畫了 30 根負柱、y 軸到 -20），是那一檔可見區間動能全為正。
+    // 但亮綠(#4ade80)/暗綠(#1e7a45) 對比太弱，「轉強/轉弱」看不出來 → 拉開。
+    if (v >= 0) return v >= prev ? '#22FF88' : '#116B3A';
+    return v <= prev ? '#FF5C5C' : '#7A1F1F';
+  });
+  const dotColor = d.sq_on.map((on, i) => {
+    if (on) return '#EAB308';
+    const m = d.mom[i];
+    return m == null ? '#6b7280' : (m >= 0 ? '#4ade80' : '#ff8a8a');
+  });
+  const c2 = new Chart(document.getElementById('ti_c2_3037_TW'), {type:'bar',
+    data:{datasets:[
+      {label:'動能',data:d.mom.map((v,i)=>({x:i,y:v})),backgroundColor:momColor,order:2},
+      {label:'擠壓/釋放',type:'line',data:d.mom.map((_,i)=>({x:i,y:0})),showLine:false,
+        pointRadius:2.6,pointBackgroundColor:dotColor,pointBorderWidth:0,order:1},
+      {label:'釋放★',type:'line',data:d.sq_on.map((on,i)=>({x:i,y:(i>0&&d.sq_on[i-1]&&!on)?0:null})),
+        showLine:false,pointStyle:'star',pointRadius:6.5,pointBorderColor:'#ffffff',pointBorderWidth:0.8,
+        pointBackgroundColor:d.mom.map(m=>m==null?'#9aa0a6':(m>=0?'#4ade80':'#ff8a8a')),order:0}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}, zoom:ZOOM_OPT},
+      scales:{x:xAxisHidden, y:{ticks:{color:'#6b7280',font:{size:9}},grid:{color:'#1a1d23'}}}}});
+  const c3 = new Chart(document.getElementById('ti_c3_3037_TW'), {type:'line',
+    data:{datasets:[
+      {label:'基準線(0%)',data:d.mom.map((_,i)=>({x:i,y:0})),borderColor:'#EF4444',borderWidth:2,
+        pointRadius:0,order:3},
+      {label:'短線20日',data:d.rs_s.map((v,i)=>({x:i,y:v})),borderColor:'#EAB308',borderWidth:1.4,
+        pointRadius:0,tension:.15,order:1},
+      {label:'長線1年',data:d.rs_l.map((v,i)=>({x:i,y:v})),borderColor:'#4a9eff',borderWidth:1.4,
+        pointRadius:0,tension:.15,order:2},
+      {label:'🟡翻正',data:d.rs_turn.map((v,i)=>({x:i,y:v})),showLine:false,pointRadius:4,
+        pointBackgroundColor:'#FACC15',pointBorderColor:'#1a1d23',pointBorderWidth:1,order:0},
+      {label:'🔵創新高',data:d.rs_newh.map((v,i)=>({x:i,y:v})),showLine:false,pointRadius:4,
+        pointBackgroundColor:'#38BDF8',pointBorderColor:'#1a1d23',pointBorderWidth:1,order:0},
+      {label:'🩷資金領先',data:d.rs_lead.map((v,i)=>({x:i,y:v})),showLine:false,pointRadius:4.5,
+        pointBackgroundColor:'#F472B6',pointBorderColor:'#1a1d23',pointBorderWidth:1,order:0}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:'#9aa0a6',boxWidth:14,font:{size:10},
+        filter:item=>item.text!=='基準線(0%)'}}, zoom:ZOOM_OPT},
+      scales:{x:xAxisHidden, y:{ticks:{color:'#6b7280',font:{size:9}},grid:{color:'#1a1d23'}}}}});
+  // 四燈歷史：四條 y 高度（L1 在上、L4 在下），亮的那天畫一個黃點。
+  // 用散點而不是柱狀，因為要的是「哪幾天亮」不是量值；同一個 x 軸與縮放群組，
+  // 所以跟上面四張圖一起縮放平移。
+  // E（2026-09-07 Leo：「右邊下面燈號都用黃燈就可以了 (現在顏色太多)」）
+  // 四盞同色，靠 y 高度分辨是哪一盞。整張圖的顏色語彙已經被
+  // K 棒三態、SuperTrend 黃紫、動能四色佔滿了，這裡再加四色只會互相干擾。
+  const LP_COL = ['#FACC15', '#FACC15', '#FACC15', '#FACC15'];
+  const LP_NAME = ['L1 ST多方', 'L2 動能>0', 'L3 颱風不綠', 'L4 RS60>3%'];
+  const c4 = new Chart(document.getElementById('ti_c4_3037_TW'), {type:'scatter',
+    data:{datasets: (d.lp || []).map((row, k) => ({
+      label: LP_NAME[k],
+      data: row.map((v, i) => v ? {x:i, y:4-k} : null).filter(Boolean),
+      pointRadius: 2.6, pointStyle:'rect',
+      backgroundColor: LP_COL[k], borderWidth: 0, showLine: false }))},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:'#9aa0a6',boxWidth:10,font:{size:9}}},
+        zoom:ZOOM_OPT,
+        tooltip:{callbacks:{label:(c)=>c.dataset.label+' 亮',
+          title:(items)=>d.dates[items[0].parsed.x] || ''}}},
+      scales:{x:xAxisHidden,
+        y:{min:0.4, max:4.6, ticks:{stepSize:1, color:'#6b7280', font:{size:9},
+          callback:(v)=>LP_NAME[4-v] || ''}, grid:{color:'#1a1d23'}}}}});
+  ti_charts_3037_TW = [c1, cv, c2, c3, c4];
+}
+function ti_reset_3037_TW(){ (ti_charts_3037_TW || []).forEach(c => c.resetZoom()); }
+function ti_side_3037_TW(){
+  // 收起左邊的說明卡，圖就吃滿整列寬。⚠️ 收完要 resize()，Chart.js 不會自己
+  // 察覺容器變寬（canvas 會維持舊寬度，右邊留一塊空白）。
+  const box = document.getElementById('ti_charts_3037_TW');
+  const off = box.classList.toggle('nosides');
+  const b = document.getElementById('ti_sidebtn_3037_TW');
+  if (b) b.textContent = off ? '◨ 顯示說明卡' : '◧ 隱藏說明卡';
+  setTimeout(() => (ti_charts_3037_TW || []).forEach(c => c.resize()), 30);
+}
+
+</script>
+</div><script>
+// 滾輪：預設捲頁面，**點一下圖才啟用縮放**（2026-09-07 Leo 回報「滾輪卡在圖」）。
+// ⚠️ 用事件代理綁在 document 上，因為圖是後來才塞進 DOM 的
+//    （戰情室是 fetch 回來 innerHTML，個別綁會漏掉）。
+(function(){
+  if (window.__zoomClickInit) return;      // 一頁只裝一次
+  window.__zoomClickInit = true;
+  function wrapAll(){
+    document.querySelectorAll("canvas").forEach(function(c){
+      var ch = (window.Chart && Chart.getChart) ? Chart.getChart(c) : null;
+      if (!ch || !ch.options.plugins || !ch.options.plugins.zoom) return;
+      var p = c.parentElement;
+      if (!p || p.classList.contains("zoomwrap")) return;
+      p.classList.add("zoomwrap");
+      var t = document.createElement("span");
+      t.className = "zoomtip";
+      t.textContent = "點一下啟用滾輪縮放";
+      p.appendChild(t);
+    });
+  }
+  function setZoom(wrap, on){
+    wrap.classList.toggle("zon", on);
+    var tip = wrap.querySelector(".zoomtip");
+    if (tip) tip.textContent = on ? "滾輪縮放中 · 點外面或 Esc 結束"
+                                  : "點一下啟用滾輪縮放";
+    var c = wrap.querySelector("canvas");
+    var ch = (c && window.Chart && Chart.getChart) ? Chart.getChart(c) : null;
+    if (ch && ch.options.plugins && ch.options.plugins.zoom) {
+      ch.options.plugins.zoom.zoom.wheel.enabled = on;
+      ch.update("none");
+    }
+  }
+  function clearAll(){
+    document.querySelectorAll(".zoomwrap.zon").forEach(function(w){ setZoom(w, false); });
+  }
+  document.addEventListener("click", function(e){
+    wrapAll();
+    var w = e.target.closest ? e.target.closest(".zoomwrap") : null;
+    // 點圖外面就全部關掉——不然離開之後滾輪還是被那張圖吃著
+    document.querySelectorAll(".zoomwrap.zon").forEach(function(o){
+      if (o !== w) setZoom(o, false);
+    });
+    if (w && !w.classList.contains("zon")) setZoom(w, true);
+  }, true);
+  document.addEventListener("keydown", function(e){
+    if (e.key === "Escape") clearAll();
+  });
+  // 圖是非同步畫出來的，等一下再包一次；之後每次點擊也會補包（見上面 wrapAll）
+  setTimeout(wrapAll, 600);
+  setTimeout(wrapAll, 2000);
+})();
+</script>
+<div class="positioning"><h3>產業鏈定位 · 玻璃基板/TGV</h3><div class="chainpos">玻璃基板(Glass Substrate/TGV)是先進封裝載板的下一代候選材料，用來取代傳統ABF有機載板，解決AI晶片尺寸持續放大後的翹曲、訊號損耗與I/O密度瓶頸。<b>目前正處於題材驗證期</b>：Intel、台積電、三星等主要廠商都已投入研發與試產線，但業界共識是2026年仍是送樣與試產驗證階段，<b>大規模量產要等到2027年中至2028年</b>，多數台廠個股股價已提前反映數年後才會兌現的獲利貢獻，技術風險與時程風險都不低。</div><div class="posnote">依上游→下游排列，同鏈股票毛利率與近60日報酬對照，資料 2026-09-07 22:46（青框＝本檔所在環節）</div><div class="segrow"><div class="segname">IDM自研先行者</div><div class="segdo">自主研發玻璃基板並率先導入自家先進封裝(EMIB/Foveros)</div><div class="segcells"><div class="peer"><div class="pt">INTC<span class="pc">INTC</span></div><div class="pv">毛利 <b class="num">38.9%</b>　60日 <span class="num neg">-18.1%</span></div></div></div></div><div class="segarrow">↓ 往下游</div><div class="segrow"><div class="segname">玻璃原材料</div><div class="segdo">供應低CTE(低熱膨脹係數)特殊玻璃基材，與AGC/Schott/NEG同為寡占供應商</div><div class="segcells"><div class="peer"><div class="pt">GLW<span class="pc">GLW</span></div><div class="pv">毛利 <b class="num">36.4%</b>　60日 <span class="num neg">-12.4%</span></div></div></div></div><div class="segarrow">↓ 往下游</div><div class="segrow"><div class="segname">IC載板/面板廠(基板製造本體) <span class="segmine">· 你的標的在這裡</span></div><div class="segdo">將玻璃基板製成半導體封裝載板，含增層、線路布置</div><div class="segcells"><div class="peer focus"><div class="pt">欣興<span class="pc">3037</span></div><div class="pv">毛利 <b class="num">24.8%</b>　60日 <span class="num pos">+5.2%</span></div></div><div class="peer"><div class="pt">景碩<span class="pc">3189</span></div><div class="pv">毛利 <b class="num">26.1%</b>　60日 <span class="num pos">+33.3%</span></div></div><div class="peer"><div class="pt">南電<span class="pc">8046</span></div><div class="pv">毛利 <b class="num">24.7%</b>　60日 <span class="num pos">+28.2%</span></div></div><div class="peer"><div class="pt">群創<span class="pc">3481</span></div><div class="pv">毛利 <b class="num">14.6%</b>　60日 <span class="num pos">+2.9%</span></div></div></div></div><div class="segarrow">↓ 往下游</div><div class="segrow"><div class="segname">觸控/面板跨界TGV</div><div class="segdo">以既有玻璃/面板製程經驗跨入TGV鑽孔與封裝載板</div><div class="segcells"><div class="peer"><div class="pt">3673<span class="pc">3673</span></div><div class="pv">毛利 <b class="num">6.2%</b>　60日 <span class="num neg">-17.5%</span></div></div></div></div><div class="segarrow">↓ 往下游</div><div class="segrow"><div class="segname">TGV雷射鑽孔設備</div><div class="segdo">提供玻璃通孔雷射改質(LIDE)、雷射剝離、電漿清洗等關鍵設備，卡位TGV最難的鑽孔環節</div><div class="segcells"><div class="peer"><div class="pt">鈦昇<span class="pc">8027</span></div><div class="pv">毛利 <b class="num">29.7%</b>　60日 <span class="num neg">-20.2%</span></div></div></div></div><div class="segarrow">↓ 往下游</div><div class="segrow"><div class="segname">試產製程設備(塗佈/烘烤/壓合)</div><div class="segdo">提供玻璃基板試產所需乾膜壓合、RDL烘烤、暫時載板製作等設備</div><div class="segcells"><div class="peer"><div class="pt">群翊<span class="pc">6664</span></div><div class="pv">毛利 <b class="num">49.3%</b>　60日 <span class="num neg">-3.1%</span></div></div></div></div><div class="segarrow">↓ 往下游</div><div class="segrow"><div class="segname">特殊化學品/材料</div><div class="segdo">供應TGV玻璃載板製程所需特殊化學品、特殊氣體及相關材料</div><div class="segcells"><div class="peer"><div class="pt">晶呈科技<span class="pc">4768</span></div><div class="pv">毛利 <b class="num">24.4%</b>　60日 <span class="num neg">-21.4%</span></div></div></div></div><div class="segarrow">↓ 往下游</div><div class="segrow"><div class="segname">檢測/量測設備</div><div class="segdo">提供玻璃基板不透光材質下的缺陷檢測、聲學量測技術，偵測隱藏裂紋</div><div class="segcells"><div class="peer"><div class="pt">ONTO<span class="pc">ONTO</span></div><div class="pv">毛利 <b class="num">55.5%</b>　60日 <span class="num neg">-11.7%</span></div></div><div class="peer"><div class="pt">CAMT<span class="pc">CAMT</span></div><div class="pv">毛利 <b class="num">51.0%</b>　60日 <span class="num neg">-20.9%</span></div></div></div></div><div class="segarrow">↓ 往下游</div><div class="segrow"><div class="segname">先進封裝製程/接合設備</div><div class="segdo">提供沉積、蝕刻、化學機械研磨、打線與熱壓接合等先進封裝設備</div><div class="segcells"><div class="peer"><div class="pt">AMAT<span class="pc">AMAT</span></div><div class="pv">毛利 <b class="num">49.4%</b>　60日 <span class="num neg">-17.6%</span></div></div><div class="peer"><div class="pt">KLIC<span class="pc">KLIC</span></div><div class="pv">毛利 <b class="num">52.6%</b>　60日 <span class="num neg">-26.9%</span></div></div></div></div></div>
+<div class="reality"><h3>管理層口頭重點</h3>
+<div class="posnote">資料來源：法說會逐字稿公開內容（Motley Fool／GuruFocus等），管理層口頭發言，非公司正式財報數字，數字未經覆核</div>
+<div class="techgrid"><div class="ttile"><div class="tn">應用別營收占比</div><div class="tv">AI數據中心61%（季增，上季為59%）、IoT 24%（季減，上季為25%）、通訊5%、汽車3%</div></div><div class="ttile"><div class="tn">產品別營收占比</div><div class="tv">ABF載板52%（季增22%、年增51%）、HDI 27%（季增14%、年增29%）、傳統PCB 9%、BT載板9%</div></div><div class="ttile"><div class="tn">產能利用率</div><div class="tv">ABF載板逾90%、BT載板約80-85%、PCB約85-90%</div></div></div>
+<div class="callnote-block"><div class="realitysub">管理層展望</div><div class="callnote-text"><b>第三季營收與毛利率展望</b>：第三季營收將較第二季成長，毛利率也有望進一步提升</div><div class="callnote-text"><b>全年資本支出上修</b>：2026年資本支出上修至新台幣537億元以上（原規劃340億元），其中長交期設備預算由141億元追加至316億元</div><div class="callnote-text"><b>ABF載板AI產品占比展望</b>：上半年占比已逾60%，預計下半年提升至70%</div><div class="callnote-text"><b>PCB產品AI占比展望</b>：上半年占比已逾60%，目標下半年達65%至70%</div><div class="callnote-text"><b>EMIB先進封裝量產時程與良率目標</b>：EMIB預計明年進入量產，初期良率目標50%，客戶已提供利潤保證</div><div class="callnote-text"><b>中長期毛利率目標</b>：設定中長期毛利率目標50%至60%，需仰賴技術護城河與持續研發，而非單純調漲價格</div><div class="callnote-text"><b>泰國廠量產時程</b>：泰國廠預計明年正式量產</div><div class="callnote-text"><b>1.6T光模組上線時程</b>：1.6T光模組預計第四季上線</div><div class="callnote-text"><b>玻璃基板量產規劃</b>：2030年前尚無玻璃基板量產計畫</div><div class="callnote-text"><b>全年折舊與年底負債比率展望</b>：預估全年折舊約新台幣208億元，年底負債比率預期由59.2%降至約52%</div><div class="callnote-text"><b>海外募資與掛牌規劃</b>：規劃透過策略性資產處分與增資、發行GDR，並推動子公司於香港掛牌，同時進行大陸業務整合與資源優化</div></div>
+<div class="callnote-quote">「本季毛利率大幅躍升，主要受惠於AI GPU與HPC需求強勁，以及產品組合持續優化。」<div class="callnote-speaker">—— 管理層</div></div>
+</div>
+
+<div class="ftr">
+  <b>資料來源</b>：所有財務數字與估值指標皆取自 yfinance 之公司申報財報，未經 AI 生成或修改。
+  星級評分中的成長性/財務體質/估值/風險由公式計算，「競爭護城河」與文字敘述由 AI 依上述數據撰寫。<br>
+  <b>本頁並列兩套獨立策略，互不覆蓋，可能給出相反結論——那是正常的，不是 bug</b>：<br>
+  　<b>① 洪瑞泰（Mike桑）選股法</b>（左下卡）：三大關卡（ROE≥15% 且連續穩定／盈再率&lt;80%／
+  配息率≥40%）＋ 俗價（常利EPS÷1.15^8）買、貴價（常利EPS×30）賣 ＋ 變壞判定。長線、重品質、不看成長故事。<br>
+  　<b>② 分析師共識與估值</b>（右下卡）：BUY/HOLD/SELL 標章為 yfinance 彙整的<b>賣方分析師共識</b>，
+  搭配 Forward P/E、PEG、FCF Yield、EV/Sales。市場派觀點，含成長性預期。<br>
+  兩者衝突時（例：分析師喊 BUY 但洪瑞泰三關全不過）＝ 該檔是「市場看好但體質不合格」，
+  請自行判斷要跟哪一套。本頁為研究參考，不構成投資建議。<br>
+  <b>已知限制</b>：無法取得法說會內容、管理層展望與新聞，因此「下季展望」類資訊不予呈現，避免編造。<br>
+  <b>資料源落差</b>：上方核心卡片（洪瑞泰／分析師共識）用 yfinance，「財報與營收實況」用 FinMind（台股）——
+  兩者更新頻率不同，若季度標籤看起來不一致，是資料源落後、不是抓錯。以「財報與營收實況」區塊數字為準。
+</div>
+</div></body></html>
