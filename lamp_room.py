@@ -134,24 +134,27 @@ def left_html(items, asof):
     return (
         '<aside class="pane left">'
         f'<div class="phead">報價組合<span class="dim">{len(items)} 檔 · {esc(asof)}</span></div>'
+        '<div class="ctrlbar">'
         '<input class="q" id="q" type="search" placeholder="搜代號／名稱／產業" autocomplete="off">'
         '<div class="chips">'
         '<span class="cl">排序</span>'
-        '<button class="ch on" data-s="lit">燈數</button>'
-        '<button class="ch" data-s="gap">距目標</button>'
-        '<button class="ch" data-s="rr">風報比</button>'
-        '<button class="ch" data-s="chg">漲跌</button>'
+        '<button class="ch on" data-s="lit">燈數 ▼</button>'
+        '<button class="ch" data-s="gap">距目標 ▼</button>'
+        '<button class="ch" data-s="rr">風報比 ▼</button>'
+        '<button class="ch" data-s="chg">漲跌 ▼</button>'
         '</div>'
         '<div class="chips">'
         '<span class="cl">市場</span>'
         '<button class="ch on" data-m="">全部</button>'
         '<button class="ch" data-m="us">美股</button>'
         '<button class="ch" data-m="tw">台股</button>'
-        '<span class="cl">燈數</span>'
-        '<button class="ch on" data-l="">全部</button>'
+        '</div>'
+        '<div class="chips">'
+        '<span class="cl">只看</span>'
+        '<button class="ch on" data-l="">全部燈數</button>'
         '<button class="ch" data-l="4">4燈</button>'
         '<button class="ch" data-l="3">≥3燈</button>'
-        '</div>'
+        '</div></div>'
         '<ul class="list" id="list">' + "".join(lis) + "</ul></aside>")
 
 
@@ -273,6 +276,13 @@ body{margin:0}
 .phead .dim{margin-left:auto;font-weight:400;font-size:11px;color:var(--dim)}
 .phead .x{margin-left:6px;background:none;border:0;color:var(--dim);cursor:pointer;
  font-size:14px}
+/* 🔴 2026-09-07 Leo：「選燈號不會跑／選風報比也不會跑」。
+   實測不是邏輯壞掉（4燈→98 檔、風報比排序正確），是**看不出來**：
+     · 篩選列會跟著清單一起捲走（捲到 600px 時它在 -498px，根本點不到）
+     · 排序後不捲回頂 → 重排發生在畫面外，看起來像沒反應
+   ⭐ 「功能沒壞但使用者說壞了」＝**回饋不足**，要修的是看得見的那一半。 */
+.ctrlbar{position:sticky;top:38px;z-index:2;background:var(--surface);
+ border-bottom:1px solid var(--line);padding-bottom:6px}
 .q{width:calc(100% - 24px);margin:10px 12px 6px;padding:7px 10px;font:inherit;
  font-size:12.5px;border-radius:8px;border:1px solid var(--line);
  background:transparent;color:var(--ink)}
@@ -367,6 +377,9 @@ ROOM_JS = r"""
     vis.forEach(function(el){ list.appendChild(el); });
     document.querySelector(".left .phead .dim").textContent =
       vis.length + " / " + items.length + " 檔";
+    // 🔴 重排後捲回頂。不捲的話，你在清單中段按排序，變動全發生在畫面上方，
+    // 看起來就是「按了沒反應」——Leo 2026-09-07 回報的「不會跑」就是這個。
+    list.parentNode.scrollTop = 0;
   }
 
   document.getElementById("q").addEventListener("input", function(){
