@@ -100,7 +100,93 @@ def claude_available():
     return bool(_claude_bin())
 
 
-def ask_claude_meta(prompt, resume=None):
+def stream_claude_meta(prompt, resume=None, tools=None,
+                       on_delta=None, on_tool=None):
+    """串流版的 ask_claude_meta。回 (完整文字, meta)，過程中呼叫 callback。
+
+    · on_delta(片段文字) —— 模型吐一段就叫一次
+    · on_tool(工具名)    —— 模型開始用工具（龐統上網查）時叫一次
+
+    走 `--output-format stream-json --include-partial-messages --verbose`。
+    ⚠️ `--verbose` 是必要的，少了它 CLI 不吐 stream-json（會直接報錯）。
+
+    ⚠️ **失敗要跟非串流版一樣大聲**。原本 ask_claude_meta 花了力氣把
+    「exit code 非 0 / 空字串 / is_error」都變成例外；串流版如果只是安靜地
+    回一段空字串，等於把那些保護全丟掉。
+    """
+    exe = _claude_bin()
+    if not exe:
+        raise RuntimeError("找不到 claude CLI")
+    cmd = [exe, "-p", "--output-format", "stream-json",
+           "--include-partial-messages", "--verbose",
+           "--dangerously-skip-permissions",
+           "--disallowedTools", "Bash", "Write", "Edit", "NotebookEdit"]
+    if tools:
+        cmd += ["--allowedTools"] + list(tools)
+    if resume:
+        cmd += ["--resume", str(resume)]
+    proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE, text=True,
+                            encoding="utf-8", errors="replace")
+    try:
+        proc.stdin.write(prompt)
+        proc.stdin.close()
+    except Exception:                                       # noqa: BLE001
+        pass
+    txt, meta, err = "", {}, None
+    seen_tools = set()
+    for line in proc.stdout:
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            d = json.loads(line)
+        except ValueError:
+            continue
+        t = d.get("type")
+        if t == "stream_event":
+            ev = d.get("event") or {}
+            et = ev.get("type")
+            if et == "content_block_delta":
+                dl = ev.get("delta") or {}
+                if dl.get("type") == "text_delta" and dl.get("text"):
+                    txt += dl["text"]
+                    if on_delta:
+                        on_delta(dl["text"])
+            elif et == "content_block_start":
+                cb = ev.get("content_block") or {}
+                if cb.get("type") == "tool_use" and on_tool:
+                    nm = cb.get("name") or "工具"
+                    if nm not in seen_tools:
+                        seen_tools.add(nm)
+                        on_tool(nm)
+        elif t == "result":
+            if d.get("is_error"):
+                err = str(d.get("result"))[:200]
+            u = d.get("usage") or {}
+            meta = {"session_id": d.get("session_id"),
+                    "cost_usd": d.get("total_cost_usd"),
+                    "duration_ms": d.get("duration_ms"),
+                    "num_turns": d.get("num_turns"),
+                    "stop_reason": d.get("stop_reason"),
+                    "cache_read": u.get("cache_read_input_tokens"),
+                    "cache_write": u.get("cache_creation_input_tokens"),
+                    "output_tokens": u.get("output_tokens")}
+            # result 的 result 欄位是完整答案；串流拼出來的可能少了最後一塊
+            if not d.get("is_error") and (d.get("result") or "").strip():
+                txt = d["result"].strip()
+    rc = proc.wait()
+    stderr = (proc.stderr.read() or "")[:300] if proc.stderr else ""
+    if err:
+        raise RuntimeError(f"claude 回報錯誤：{err}")
+    if rc != 0:
+        raise RuntimeError(f"claude 失敗 (exit {rc}): {stderr}")
+    if not txt.strip():
+        raise RuntimeError("claude 回空字串")
+    return txt.strip(), meta
+
+
+def ask_claude_meta(prompt, resume=None, tools=None):
     """headless claude -p，回 (回答文字, meta)。
 
     2026-09-07 改走 `--output-format json`。官方文件把「CLI 當 subprocess + `-p`
@@ -121,6 +207,14 @@ def ask_claude_meta(prompt, resume=None):
     if not exe:
         raise RuntimeError("找不到 claude CLI")
     cmd = [exe, "-p", "--dangerously-skip-permissions", "--output-format", "json"]
+    # 2026-09-07：軍師只需要讀東西。原本四位都是全權限，等於在 Leo 的電腦上
+    # 有 Bash 跟 Write——沒用到不代表不該關。
+    # ⚠️ skip-permissions 要留著：headless 沒有人可以按同意，少了它任何一次
+    #    工具呼叫都會停在等待授權然後逾時，而且失敗得很安靜。
+    cmd += ["--disallowedTools", "Bash", "Write", "Edit", "NotebookEdit"]
+    if tools:
+        # 只有需要自己查資料的角色（龐統）會傳這個。
+        cmd += ["--allowedTools"] + list(tools)
     if resume:
         cmd += ["--resume", str(resume)]
     r = subprocess.run(cmd, input=prompt, capture_output=True, text=True,

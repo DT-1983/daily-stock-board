@@ -193,7 +193,8 @@ def stats():
 
 
 # ── 統一入口：網頁與 Discord 都走這裡 ──────────────────────────────
-def ask(role, question, ticker=None, fresh=False, prior=None, src="room"):
+def ask(role, question, ticker=None, fresh=False, prior=None,
+        src="room", on_stage=None, on_delta=None):
     """問一位軍師，自動處理續談、跨天換材料、寫記錄。
 
     回 (回答文字, meta, 資訊dict)。資訊 dict：
@@ -215,7 +216,8 @@ def ask(role, question, ticker=None, fresh=False, prior=None, src="room"):
         q = refresh_block(old_asof, asof) + q
         refreshed = True
 
-    txt, meta = war_room.ask_meta(role, q, prior=prior, resume=sid)
+    txt, meta = war_room.ask_meta(role, q, prior=prior, resume=sid,
+                                  on_stage=on_stage, on_delta=on_delta)
     if meta.get("session_id"):
         put_session(role, tk, meta["session_id"], asof)
     log_turn(role, tk, question or "", txt, src=src, asof=asof,

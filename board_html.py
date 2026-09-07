@@ -29,7 +29,7 @@ from board_html_legacy import (parse_report, oneliner, CHAIN_ORDER, CHAIN_MAP,
                         fetch_us_charts, esc_tw, TW_JSON, OBIS, chain_phase,
                         CHAIN_ICON, TW_NAME, tw_name, _align_rs)  # alert_telegram.py 從本模組 import，要 re-export
 from technical_indicators import squeeze_momentum, mansfield_rs_series, rs_signal_series
-from board_theme import NAV, header as theme_header
+from board_theme import NAV, HUD_CSS, header as theme_header
 
 if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
     sys.stdout.reconfigure(encoding="utf-8")  # Windows cp950 印 emoji 會炸
@@ -55,15 +55,17 @@ SIG = {"🟢": ("buy", "買進", "#22C55E"), "🔴": ("sell", "賣出", "#EF4444
        "⚪": ("watch", "觀望", "#64748B")}
 
 CSS = """
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#04070E;--surface:#080E1A;--card:#0C1524;--line:#16304A;--line2:#0E1B2B;
  --ink:#F8FAFC;--muted:#94A3B8;--dim:#64748B;--accent:#3B82F6;
  --up:#22C55E;--down:#EF4444;--warn:#EAB308}
 body{background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;
- font-family:Inter,-apple-system,"Microsoft JhengHei","PingFang TC",sans-serif;font-size:15px}
+ font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;
+ font-size:15px;background-image:repeating-linear-gradient(180deg,
+   rgba(34,211,238,.022) 0 1px,transparent 1px 3px)}
 .wrap{max-width:1100px;margin:0 auto;padding:14px 14px 60px}
-.num{font-family:'Fira Code',monospace;font-variant-numeric:tabular-nums}
+.num{font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
 
 /* header */
 header{padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:6px}
@@ -569,7 +571,7 @@ def main():
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex"><title>{date} 產業鏈看板</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script><script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.2.1/dist/chartjs-chart-financial.min.js"></script><script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.2.0/dist/chartjs-plugin-zoom.min.js"></script>
-<style>{CSS}</style></head><body><div class="wrap">
+<style>{CSS}{HUD_CSS}</style></head><body><div class="wrap">
 {theme_header("board", "產業鏈看板",
     f"{date} · {len(nav)} 條產業鏈 · 美股 yfinance／台股 FinMind · 判讀 Claude（本機）"
     f" · 每日 09:00 自動更新", NAV, "board")}

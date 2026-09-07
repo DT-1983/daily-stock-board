@@ -140,6 +140,88 @@ def icon(name, size=17, color="currentColor", stroke=2):
 
 
 # ── 共用 CSS：base(全站通用) ─────────────────────────────────────────
+HUD_CSS = """
+/* ═══ 戰情室 HUD 覆蓋層（2026-09-07）═══════════════════════════════
+   Leo 對第一版的評語是「不夠先進數字化」。差別不在顏色深淺，在**語彙**：
+   圓角卡片是消費性 App，方角＋細線＋四角括號＋等寬數字才是儀器面板。
+   ⚠️ 這一段刻意放最後：同權重後寫的贏，所以蓋得掉上面的圓角與字體，
+      要退回舊視覺只要刪掉這一段，不用逐條回改。 */
+
+/* 方角：一次收掉全站的圓角。留 2px 給互動元件，完全 0 會顯得毛躁。 */
+.rows,.card,.stat,.legend,.empty,.mbox,.detail,.dcell,.vsgrid .box,
+.stalewarn,.nl,.seg,.sc,.mhd button,.modal .mbox{border-radius:2px}
+.seg{border-radius:0;background:transparent;border:1px solid var(--line);padding:0}
+.seg button{border-radius:0;min-height:32px;padding:6px 15px;font-size:12.5px;
+ letter-spacing:.04em;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed=true]{background:var(--cy-dim);color:var(--cy)}
+.sc{border-radius:0;font-weight:500;letter-spacing:.03em}
+.sc[aria-pressed=true]{background:var(--cy-dim);color:var(--cy);border-color:var(--hud-lit)}
+.sc b,.cnt,.sv,.dcell .v,.stat .big,.vsgrid .val,.vsgrid .pnl,.htk,.hsub,.rt{
+ font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+/* 眉標：全大寫、加寬字距的英文小標。這是「儀器」的語感來源，
+   而且它同時是資訊——每一段都講得出自己是什麼。 */
+.eye{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10px;
+ letter-spacing:.22em;text-transform:uppercase;color:var(--cy);font-weight:600;
+ display:block;margin-bottom:3px}
+.eye em{font-style:normal;color:var(--dim);letter-spacing:.1em}
+
+/* 四角括號：只給「主要面板」用，每頁一兩個就夠——到處都是就變裝飾。 */
+.hud{position:relative}
+.hud::before,.hud::after{content:"";position:absolute;width:12px;height:12px;
+ border:1px solid var(--cy);pointer-events:none}
+.hud::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
+.hud::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
+
+header{border-bottom:1px solid var(--hud)}
+h1{letter-spacing:.02em;font-weight:900}
+.nl{border-radius:0;font-weight:500;letter-spacing:.03em;color:var(--ink2);
+ background:var(--raise)}
+.nl:hover,.nl:focus-visible{border-color:var(--cy);background:var(--cy-dim);color:var(--cy)}
+.nl.cur{border-color:var(--cy);background:var(--cy-dim);color:var(--cy)}
+.ctrl{border-bottom:1px solid var(--hud)}
+.sechd .ico{border-radius:0;background:var(--cy-dim);border:1px solid var(--hud)}
+.cnt{border-radius:0;border:1px solid var(--hud);background:transparent;
+ letter-spacing:.06em}
+.row:hover,.row:focus-visible{background:var(--cy-dim)}
+.detail{background:var(--raise)}
+.bar{border-radius:0;background:var(--hud-lit)}
+.sigtag{border-radius:0;letter-spacing:.04em}
+.dcell .k{letter-spacing:.14em;text-transform:uppercase;font-size:9px;
+ font-family:'IBM Plex Mono',ui-monospace,monospace}
+.card h2,.explain h3,.mdbody h3{color:var(--lamp)}
+.legend i,.d2{border-radius:0}
+.stalewarn{border-radius:0;border-left:3px solid var(--down)}
+
+/* 統計卡：方角、數字用等寬、標籤全大寫加寬字距。
+   第一張加四角括號當作「主面板」的錨——每頁只有一組，不會變成裝飾。 */
+body .cbstat{border:1px solid var(--hud);background:var(--panel)}
+body .cbstat div{border:0;border-right:1px solid var(--grid);border-radius:0;
+ background:transparent;padding:7px 14px}
+body .cbstat div:last-child{border-right:0}
+body .cbstat b{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:19px;
+ font-weight:600;letter-spacing:-.01em}
+body .cbstat span{font-size:9.5px;letter-spacing:.1em;color:var(--dim)}
+body .lkbox{border-radius:0!important;border-color:var(--hud)!important}
+body .lkbox button{border-radius:0!important}
+body .lkbox input{border-radius:0!important}
+
+/* 區塊標題：左邊一條青色細標，取代原本純文字的標題。
+   它同時把「這一段開始了」講清楚，比加大字級省空間。 */
+body .cbsec{border-left:2px solid var(--cy);padding-left:9px;letter-spacing:.02em}
+body .cbnote{border-radius:0;border-left-color:var(--lamp)}
+body table.cb th{letter-spacing:.12em;font-size:10px;text-transform:uppercase;
+ font-family:'IBM Plex Mono',ui-monospace,monospace;border-bottom-color:var(--hud)}
+body table.cb td{font-variant-numeric:tabular-nums}
+body table.cb tr:hover td{background:var(--cy-dim)}
+body .lamp{border-radius:1px}
+body .qb{border-radius:0;letter-spacing:.06em}
+body .expbtn{border-radius:0}
+body .expbtn:hover{border-color:var(--cy);color:var(--cy)}
+"""
+
+
 BASE_CSS = """
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
@@ -290,85 +372,8 @@ h1 svg{flex-shrink:0}
 .chartlegend span{display:inline-flex;align-items:center;gap:5px}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
-/* ═══ 戰情室 HUD 覆蓋層（2026-09-07）═══════════════════════════════
-   Leo 對第一版的評語是「不夠先進數字化」。差別不在顏色深淺，在**語彙**：
-   圓角卡片是消費性 App，方角＋細線＋四角括號＋等寬數字才是儀器面板。
-   ⚠️ 這一段刻意放最後：同權重後寫的贏，所以蓋得掉上面的圓角與字體，
-      要退回舊視覺只要刪掉這一段，不用逐條回改。 */
+""" + HUD_CSS
 
-/* 方角：一次收掉全站的圓角。留 2px 給互動元件，完全 0 會顯得毛躁。 */
-.rows,.card,.stat,.legend,.empty,.mbox,.detail,.dcell,.vsgrid .box,
-.stalewarn,.nl,.seg,.sc,.mhd button,.modal .mbox{border-radius:2px}
-.seg{border-radius:0;background:transparent;border:1px solid var(--line);padding:0}
-.seg button{border-radius:0;min-height:32px;padding:6px 15px;font-size:12.5px;
- letter-spacing:.04em;border-right:1px solid var(--line)}
-.seg button:last-child{border-right:0}
-.seg button[aria-pressed=true]{background:var(--cy-dim);color:var(--cy)}
-.sc{border-radius:0;font-weight:500;letter-spacing:.03em}
-.sc[aria-pressed=true]{background:var(--cy-dim);color:var(--cy);border-color:var(--hud-lit)}
-.sc b,.cnt,.sv,.dcell .v,.stat .big,.vsgrid .val,.vsgrid .pnl,.htk,.hsub,.rt{
- font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
-
-/* 眉標：全大寫、加寬字距的英文小標。這是「儀器」的語感來源，
-   而且它同時是資訊——每一段都講得出自己是什麼。 */
-.eye{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10px;
- letter-spacing:.22em;text-transform:uppercase;color:var(--cy);font-weight:600;
- display:block;margin-bottom:3px}
-.eye em{font-style:normal;color:var(--dim);letter-spacing:.1em}
-
-/* 四角括號：只給「主要面板」用，每頁一兩個就夠——到處都是就變裝飾。 */
-.hud{position:relative}
-.hud::before,.hud::after{content:"";position:absolute;width:12px;height:12px;
- border:1px solid var(--cy);pointer-events:none}
-.hud::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
-.hud::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
-
-header{border-bottom:1px solid var(--hud)}
-h1{letter-spacing:.02em;font-weight:900}
-.nl{border-radius:0;font-weight:500;letter-spacing:.03em;color:var(--ink2);
- background:var(--raise)}
-.nl:hover,.nl:focus-visible{border-color:var(--cy);background:var(--cy-dim);color:var(--cy)}
-.nl.cur{border-color:var(--cy);background:var(--cy-dim);color:var(--cy)}
-.ctrl{border-bottom:1px solid var(--hud)}
-.sechd .ico{border-radius:0;background:var(--cy-dim);border:1px solid var(--hud)}
-.cnt{border-radius:0;border:1px solid var(--hud);background:transparent;
- letter-spacing:.06em}
-.row:hover,.row:focus-visible{background:var(--cy-dim)}
-.detail{background:var(--raise)}
-.bar{border-radius:0;background:var(--hud-lit)}
-.sigtag{border-radius:0;letter-spacing:.04em}
-.dcell .k{letter-spacing:.14em;text-transform:uppercase;font-size:9px;
- font-family:'IBM Plex Mono',ui-monospace,monospace}
-.card h2,.explain h3,.mdbody h3{color:var(--lamp)}
-.legend i,.d2{border-radius:0}
-.stalewarn{border-radius:0;border-left:3px solid var(--down)}
-
-/* 統計卡：方角、數字用等寬、標籤全大寫加寬字距。
-   第一張加四角括號當作「主面板」的錨——每頁只有一組，不會變成裝飾。 */
-body .cbstat{border:1px solid var(--hud);background:var(--panel)}
-body .cbstat div{border:0;border-right:1px solid var(--grid);border-radius:0;
- background:transparent;padding:7px 14px}
-body .cbstat div:last-child{border-right:0}
-body .cbstat b{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:19px;
- font-weight:600;letter-spacing:-.01em}
-body .cbstat span{font-size:9.5px;letter-spacing:.1em;color:var(--dim)}
-body .lkbox{border-radius:0!important;border-color:var(--hud)!important}
-body .lkbox button{border-radius:0!important}
-body .lkbox input{border-radius:0!important}
-
-/* 區塊標題：左邊一條青色細標，取代原本純文字的標題。
-   它同時把「這一段開始了」講清楚，比加大字級省空間。 */
-body .cbsec{border-left:2px solid var(--cy);padding-left:9px;letter-spacing:.02em}
-body .cbnote{border-radius:0;border-left-color:var(--lamp)}
-body table.cb th{letter-spacing:.12em;font-size:10px;text-transform:uppercase;
- font-family:'IBM Plex Mono',ui-monospace,monospace;border-bottom-color:var(--hud)}
-body table.cb td{font-variant-numeric:tabular-nums}
-body table.cb tr:hover td{background:var(--cy-dim)}
-body .lamp{border-radius:1px}
-body .qb{border-radius:0;letter-spacing:.06em}
-body .expbtn{border-radius:0}
-body .expbtn:hover{border-color:var(--cy);color:var(--cy)}
-"""
 
 
 
