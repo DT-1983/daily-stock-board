@@ -260,6 +260,7 @@ def right_html():
     return (
         '<aside class="pane right" id="right" hidden>'
         '<div class="phead">軍師<span class="dim" id="rtk">未選標的</span>'
+        '<span class="dim" id="rstate"></span>'
         '<button class="x" id="rclose">✕</button></div>'
         f'<div class="roles">{btns}</div>'
         '<div class="msgs" id="msgs">'
@@ -439,7 +440,15 @@ ROOM_JS = r"""
         mid.innerHTML = '<div class="warn">讀取失敗：' + e + '</div>';
       });
   }
-  items.forEach(function(el){ el.addEventListener("click", function(){ pick(el); }); });
+  items.forEach(function(el){ el.addEventListener("click", function(){
+    if (lastTk && lastTk !== el.dataset.tk) {
+      freshNext = true;                       // 換標的 → 下一問重開
+      const tag = document.getElementById("rstate");
+      if (tag) tag.textContent = "換標的，下一問會重新開始";
+    }
+    lastTk = el.dataset.tk;
+    pick(el);
+  }); });
 
   // ── 軍師欄 ──
   var room = document.querySelector(".room");
@@ -454,6 +463,9 @@ ROOM_JS = r"""
   document.getElementById("rclose").addEventListener("click", function(){ toggle(false); });
 
   var role = "軍議";
+  // 換股票就重開 session：續談時軍師手上是上一檔的材料。
+  var freshNext = false;
+  var lastTk = null;
   document.querySelectorAll(".rb").forEach(function(b){
     b.addEventListener("click", function(){
       role = b.dataset.r;
@@ -485,12 +497,20 @@ ROOM_JS = r"""
     var wait = add("", role, "思考中…（本機 claude，一位約 40-60 秒；軍議四位約 3-4 分鐘，"
                    + "跑完才會一起顯示）");
     fetch("/room/ask", {method:"POST", headers:{"Content-Type":"application/json"},
-                        body: JSON.stringify({role: role, question: full})})
+                        body: JSON.stringify({role: role, question: full,
+                                              ticker: cur || "", fresh: freshNext})})
       .then(function(r){ return r.json(); })
       .then(function(j){
         wait.remove();
         if (j.error){ add("err", role, j.error); return; }
         (j.answers || []).forEach(function(a){ add("", a.name, a.text); });
+        freshNext = false;
+        const inf = j.info || {};
+        // 續談狀態要看得見：不然使用者不知道這一輪是接續還是重開，
+        // 而「接續」代表回答建立在上一輪的材料上，那是要知道的事。
+        const tag = document.getElementById("rstate");
+        if (tag) tag.textContent = (inf.resumed ? "續談中" : "新對話")
+          + (cur ? "・" + cur : "") + "　等值 US$" + (inf.cost || 0).toFixed(3);
       })
       .catch(function(e){ wait.remove(); add("err", role, "呼叫失敗：" + e); })
       .finally(function(){ send.disabled = false; });
@@ -535,20 +555,49 @@ def page_html():
             + ROOM_JS + "</body></html>")
 
 
-def ask(role, question):
-    """呼叫軍師。回 [{name, text}]。**不重寫任何判斷邏輯**，直接用 war_room。"""
+# 續談用的 session（2026-09-07 Leo：「做吧」）。
+# key = (角色, 標的)，value = claude 的 session_id。
+#
+# 🔴 **一定要綁標的**。續談表示這一輪的回答建立在上一輪的材料上；
+#   看完 6442 換去看 2454 再問「那它呢」，軍師手上還是 6442 的材料——
+#   那正是 2026-09-04「問高力答 HIG」那一類錯，只是換個入口回來。
+#   換標的就換 key ＝ 自動重開，材料不會串味。
+# ⚠️ 存在記憶體不是檔案：bot 重啟就重來。這是刻意的——跨天續談會接到
+#   昨天的材料（燈號每天重掃），比重問一次更糟。
+_SESSIONS = {}
+
+
+def ask(role, question, ticker=None, fresh=False):
+    """呼叫軍師。回 (answers, info)。**不重寫任何判斷邏輯**，直接用 war_room。"""
     import war_room
+    key0 = str(ticker or "")
+
+    def _one(r, q, prior=None):
+        k = (r, key0)
+        sid = None if fresh else _SESSIONS.get(k)
+        txt, meta = war_room.ask_meta(r, q, prior=prior, resume=sid)
+        if meta.get("session_id"):
+            _SESSIONS[k] = meta["session_id"]
+        return txt, meta, bool(sid)
+
+    out, info = [], {"resumed": False, "cost": 0.0, "turns": 0}
     if role == "軍議":
-        out, prior = [], []
+        prior = []
         for r in war_room.council_roles(question):
-            t = war_room.ask(r, question, prior=prior)
+            t, m, res = _one(r, question, prior)
             prior.append((war_room.ROLES[r]["name"], t))
             out.append({"name": war_room.ROLES[r]["name"], "text": t})
-        return out
-    if role not in war_room.ROLES:
-        return [{"name": role, "text": f"沒有這位軍師（可用：{'、'.join(war_room.ROLES)}）"}]
-    return [{"name": war_room.ROLES[role]["name"],
-             "text": war_room.ask(role, question)}]
+            info["resumed"] = info["resumed"] or res
+            info["cost"] += float(m.get("cost_usd") or 0)
+            info["turns"] += 1
+    elif role not in war_room.ROLES:
+        out = [{"name": role,
+                "text": f"沒有這位軍師（可用：{'、'.join(war_room.ROLES)}）"}]
+    else:
+        t, m, res = _one(role, question)
+        out = [{"name": war_room.ROLES[role]["name"], "text": t}]
+        info.update(resumed=res, cost=float(m.get("cost_usd") or 0), turns=1)
+    return out, info
 
 
 def main():

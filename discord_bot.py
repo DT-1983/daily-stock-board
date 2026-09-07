@@ -285,14 +285,20 @@ async def _room_ask(request):
         return web.json_response({"error": "壞掉的請求"}, status=400)
     role = str(body.get("role") or "軍議")
     question = str(body.get("question") or "")[:500]
-    print(f"[room] ask role={role!r} q={question[:40]!r}", flush=True)
+    ticker = str(body.get("ticker") or "")[:20]
+    fresh = bool(body.get("fresh"))
+    print(f"[room] ask role={role!r} tk={ticker!r} fresh={fresh} q={question[:40]!r}",
+          flush=True)
     try:
         import lamp_room
-        answers = await asyncio.to_thread(lamp_room.ask, role, question)
+        answers, info = await asyncio.to_thread(
+            lamp_room.ask, role, question, ticker, fresh)
     except Exception as e:                                # noqa: BLE001
         traceback.print_exc()
         return web.json_response({"error": f"軍師出錯：{str(e)[:200]}"})
-    return web.json_response({"answers": answers})
+    print(f"[room] ask done resumed={info.get('resumed')} "
+          f"等值 US${info.get('cost', 0):.4f}", flush=True)
+    return web.json_response({"answers": answers, "info": info})
 
 
 async def _run():
