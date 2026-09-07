@@ -967,9 +967,13 @@ function ti_draw_{uid}(){{
       {{type:'line',label:'20日平均成本',data:d.ma20.map((v,i)=>({{x:i,y:v}})),borderColor:'#F59E0B',
         borderWidth:1.2,pointRadius:0,borderDash:[2,2],tension:.15}},
       // F：停損 4 倍（3 倍那條就是上面的 SuperTrend，老墨畫面上兩個數字相同）
-      {{type:'line',label:'停損4倍',data:d.st4.map((v,i)=>({{x:i,y:v}})),borderWidth:1.1,
-        pointRadius:0,borderDash:[5,3],
-        segment:{{borderColor:segColor(d.st4_dir,'#7AD1A0','#B49BE0','#4b5563')}}}},
+      {{type:'line',label:'停損4倍',data:d.st4.map((v,i)=>({{x:i,y:v}})),borderWidth:1.5,
+        pointRadius:0,borderDash:[6,4],
+        // 2026-09-07 Leo：「停損4倍顏色不清楚」。原本 #7AD1A0/#B49BE0 是
+        // SuperTrend 黃紫的淡化版——同色系又更淡，等於兩條線長得像同一條。
+        // 改成獨立色系（橘紅），而且**只有一個顏色不分多空**：
+        // 這條線的意義是「更外圈的停損」，方向已經由 SuperTrend 那條表達了。
+        borderColor:'#FB7185'}},
       // 目標價：呼叫端有給才畫（券商/分析師共識），沒給就是空陣列，圖上不會出現
       {{type:'line',label:'目標價',
         data:(d.target==null?[]:d.dates.map((_,i)=>({{x:i,y:d.target}}))),
