@@ -469,6 +469,49 @@ def _sma(arr, n):
     return out
 
 
+LAMP_NAMES = ("L1 SuperTrend 多方", "L2 動能 > 0",
+              "L3 雙重颱風不為綠", "L4 RS60 乖離 > +3%")
+LAMP_RS_WIN, LAMP_RS_MIN = 60, 3.0
+
+
+def _lamp_series(closes, highs, lows, vols, bench_closes, st, sq, dt):
+    """四燈的每日 0/1 序列，回 [L1, L2, L3, L4]，每個都跟 closes 等長。
+
+    ⚠️ 算不出來的日子給 **0（滅）不是 None**——這條 strip 的語意是「那天有沒有亮」，
+    而暖機期本來就不該算亮。但暖機期的長度要讓人看得出來，所以 L4 前 60 根
+    一律 0，圖上會是一段整齊的空白，不會被誤讀成「那時候很弱」。
+    """
+    n = len(closes)
+    z = [0] * n
+
+    def _dir_on(d):
+        return ([1 if (i < len(d) and d[i] == 1) else 0 for i in range(n)]
+            if d is not None else list(z))
+
+    l1 = _dir_on(st.get("dir") if isinstance(st, dict) else None)
+    # ⚠️ 不能寫 `(sq or {}).get("momentum") or []`——momentum 是 numpy array，
+    # `or` 會去取它的布林值，numpy 直接丟 ValueError（truth value is ambiguous）。
+    # 這支檔頭早就警告過「numpy 值要轉回原生型別」，這裡還是踩了。明確判 None。
+    mom = (sq.get("momentum") if isinstance(sq, dict) else None)
+    mom = [] if mom is None else list(mom)
+    l2 = [1 if (i < len(mom) and mom[i] is not None and mom[i] == mom[i] and mom[i] > 0)
+          else 0 for i in range(n)]
+    ty = (typhoon_state_series(closes, vols, dt["dir"])
+          if isinstance(dt, dict) and dt.get("dir") is not None else [])
+    # 「不為綠」＝ 紅(1) 或 黃(0) 都算亮；算不出來(None) 不算。
+    l3 = [1 if (i < len(ty) and ty[i] is not None and ty[i] != -1) else 0 for i in range(n)]
+    l4 = list(z)
+    if bench_closes:
+        rs = mansfield_rs_series(closes, bench_closes, LAMP_RS_WIN)
+        # mansfield_rs_series 是**右對齊**回 min(len) 長度，要對回 closes 的尾端
+        off = n - len(rs)
+        for i in range(n):
+            j = i - off
+            if 0 <= j < len(rs) and rs[j] == rs[j] and rs[j] > LAMP_RS_MIN:
+                l4[i] = 1
+    return [l1, l2, l3, l4]
+
+
 def build(ticker, disp_days=756, expanded=False):
     """算一次，回 (html, summary_text)。理由同 fundamentals_reality.build()：
     避免財報卡渲染跟 narrative() 的 LLM prompt 各自重抓一次價量資料。
@@ -706,6 +749,11 @@ def build(ticker, disp_days=756, expanded=False):
         "opens": _clean(opens)[cut:], "highs": _clean(highs)[cut:], "lows": _clean(lows)[cut:],
         "vol": [None if v is None else int(v) for v in vols][cut:],
         "vol_ma20": _clean(_sma(vols, 20))[cut:],
+        # 四燈歷史（2026-09-07）。⚠️ 每一盞都要跟 combo_scan 用同一支函式與同一個窗口，
+        # 否則圖上的燈會跟頁面標的燈數對不上（今天早上 RS 兩套定義的教訓）。
+        **(lambda L: {"lp": [x[cut:] for x in L],
+                      "lplit": [sum(1 for r in L if r[i]) for i in range(len(L[0]))][cut:]})(
+            _lamp_series(closes, highs, lows, vols, bench_closes, st, sq, dt)),
     }
 
     _row_price = _techrow(panel_price,
@@ -714,6 +762,17 @@ def build(ticker, disp_days=756, expanded=False):
         '<div class="tclabel">成交量（青線＝20 日均量）</div>', f"ti_cv_{uid}", "tcbox tcbox-sm")
     _row_sq = _techrow(panel_sq,
         '<div class="tclabel">EXCEED CHARGE 動能柱（金點＝擠壓中，綠/紅點＝已釋放，★＝釋放瞬間）</div>', f"ti_c2_{uid}", "tcbox tcbox-sm")
+    # 四燈 strip 的側欄：現在這一根的四盞狀態。**跟頁面上的燈數同一個算法**
+    # （combo_scan 也是這四支函式、同樣的窗口），所以兩邊不會對不上。
+    _lp_now = _lamp_series(closes, highs, lows, vols, bench_closes, st, sq, dt)
+    panel_lamp = _rows("四燈（老墨打點條件）", [
+        (nm, ("🟡 亮" if (row and row[-1]) else "⚫ 滅"))
+        for nm, row in zip(LAMP_NAMES, _lp_now)
+    ] + [("現在亮幾盞", f"{sum(1 for r in _lp_now if r and r[-1])} / 4")])
+
+    _row_lamp = _techrow(panel_lamp,
+        '<div class="tclabel">四燈歷史（由上到下 L1→L4；亮＝黃點。'
+        '⚠️ L4 前 60 根是暖機期，一律不亮）</div>', f"ti_c4_{uid}", "tcbox tcbox-xs")
     _row_rs = _techrow(panel_rs,
         '<div class="tclabel">RS 相對強弱（短線20日／長線1年，紅線＝基準；🟡長線翻正 🔵短線創新高 🩷資金比股價先動）</div>', f"ti_c3_{uid}", "tcbox tcbox-sm")
     _toggle_btn = ("" if expanded else
@@ -743,8 +802,7 @@ def build(ticker, disp_days=756, expanded=False):
   </div>
   <button class="tcreset" onclick="ti_reset_{uid}()" title="滾輪縮放／拖曳平移橫軸，四張圖同步；按這裡復原">↺ 重置縮放</button>
   </div>
-  <div class="techwrap">{_row_price}{_row_vol}{_row_sq}{_row_rs}</div>
-</div>
+  <div class="techwrap">{_row_price}{_row_vol}{_row_sq}{_row_rs}{_row_lamp}</div>
 <script>
 window.TI_DATA_{uid} = {json.dumps(chart_data, ensure_ascii=False)};
 let ti_drawn_{uid} = false;
@@ -770,12 +828,13 @@ function ti_draw_{uid}(){{
   const n = full.dates.length;
   const cut = Math.max(0, n - ti_win_{uid});
   const slice = arr => (arr || []).slice(cut);
-  const d = {{dates: slice(full.dates), closes: slice(full.closes), st: slice(full.st),
-    st_dir: slice(full.st_dir), dt: slice(full.dt), dt_dir: slice(full.dt_dir),
-    mom: slice(full.mom), sq_on: slice(full.sq_on), rs_s: slice(full.rs_s), rs_l: slice(full.rs_l),
-    rs_turn: slice(full.rs_turn), rs_newh: slice(full.rs_newh), rs_lead: slice(full.rs_lead),
-    ma20: slice(full.ma20), vol: slice(full.vol), vol_ma20: slice(full.vol_ma20),
-    ty: slice(full.ty), opens: slice(full.opens), highs: slice(full.highs), lows: slice(full.lows)}};
+  // 🔴 2026-09-07：原本這裡是**手寫的欄位清單**逐項 slice。加了四燈 `lp` 之後
+  // 忘了補進來 → `d.lp` 是 undefined → 圖畫成空的**而且不報錯**（datasets 是空陣列）。
+  // ⭐ 同一個形狀今天踩了好幾次：手維護的清單，漏一項就是靜默失敗。
+  // 改成全欄位自動處理：巢狀陣列（四燈是 4×N）逐列切，其餘直接切。
+  // 之後 payload 再加欄位，這裡不用動。
+  const d = Object.fromEntries(Object.entries(full).map(([k, v]) => [
+    k, Array.isArray(v) && Array.isArray(v[0]) ? v.map(r => slice(r)) : slice(v)]));
   if (ti_charts_{uid}) {{ ti_charts_{uid}.forEach(c => c.destroy()); }}
   // 2026-09-02 Leo：「可以做放大縮小功能？調整橫軸？」——四張圖都用同一個 index x 軸
   // （不再是各自的 category 軸），滾輪縮放／拖曳平移一張，其餘三張跟著動，量價才對得上。
@@ -884,7 +943,26 @@ function ti_draw_{uid}(){{
       plugins:{{legend:{{labels:{{color:'#9aa0a6',boxWidth:14,font:{{size:10}},
         filter:item=>item.text!=='基準線(0%)'}}}}, zoom:ZOOM_OPT}},
       scales:{{x:xAxisHidden, y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
-  ti_charts_{uid} = [c1, cv, c2, c3];
+  // 四燈歷史：四條 y 高度（L1 在上、L4 在下），亮的那天畫一個黃點。
+  // 用散點而不是柱狀，因為要的是「哪幾天亮」不是量值；同一個 x 軸與縮放群組，
+  // 所以跟上面四張圖一起縮放平移。
+  const LP_COL = ['#FACC15', '#4ADE80', '#38BDF8', '#F472B6'];
+  const LP_NAME = ['L1 ST多方', 'L2 動能>0', 'L3 颱風不綠', 'L4 RS60>3%'];
+  const c4 = new Chart(document.getElementById('ti_c4_{uid}'), {{type:'scatter',
+    data:{{datasets: (d.lp || []).map((row, k) => ({{
+      label: LP_NAME[k],
+      data: row.map((v, i) => v ? {{x:i, y:4-k}} : null).filter(Boolean),
+      pointRadius: 2.6, pointStyle:'rect',
+      backgroundColor: LP_COL[k], borderWidth: 0, showLine: false }}))}},
+    options:{{responsive:true,maintainAspectRatio:false,
+      plugins:{{legend:{{labels:{{color:'#9aa0a6',boxWidth:10,font:{{size:9}}}}}},
+        zoom:ZOOM_OPT,
+        tooltip:{{callbacks:{{label:(c)=>c.dataset.label+' 亮',
+          title:(items)=>d.dates[items[0].parsed.x] || ''}}}}}},
+      scales:{{x:xAxisHidden,
+        y:{{min:0.4, max:4.6, ticks:{{stepSize:1, color:'#6b7280', font:{{size:9}},
+          callback:(v)=>LP_NAME[4-v] || ''}}, grid:{{color:'#1a1d23'}}}}}}}}}});
+  ti_charts_{uid} = [c1, cv, c2, c3, c4];
 }}
 function ti_reset_{uid}(){{ (ti_charts_{uid} || []).forEach(c => c.resetZoom()); }}
 {_autodraw}
@@ -961,6 +1039,8 @@ CSS = """
 .tprow>span{color:var(--muted,#94A3B8)}
 .tprow>b{color:var(--ink,#F8FAFC);font-weight:600}
 .tcbox{height:180px}
+.tcbox-xs{height:120px}
+.tcbox-xs canvas{height:120px!important}
 .tcbox-sm{height:100px}
 .tctools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
 .tcwin{display:inline-flex;background:var(--surface,#0F172A);border:1px solid var(--line,#1E293B);border-radius:8px;padding:2px}
