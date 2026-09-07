@@ -34,6 +34,7 @@
 import os
 import sys
 import asyncio
+import json
 import traceback
 from pathlib import Path
 
@@ -316,6 +317,85 @@ async def _room_detail(request):
     return web.Response(text=html, content_type="text/html", charset="utf-8")
 
 
+async def _room_ask_stream(request):
+    """串流版的軍師（SSE）。用 GET 是因為 EventSource 只能 GET。
+
+    事件：
+      stage  進度（正在讀什麼／正在查網路）——**照實回報**，不是假進度條
+      delta  一段文字
+      reset  前面串的作廢（重寫那一輪），畫面要清掉重來
+      done   結束，帶 meta
+
+    ⚠️ war_room 是同步的，跑在 to_thread；callback 從那條 thread 呼叫，
+       所以要用 call_soon_threadsafe 把事件丟回事件圈，不能直接 await。
+    """
+    ok, _ = _room_gate(request)
+    if not ok:
+        return web.Response(text="", status=404)
+    role = str(request.query.get("role") or "軍議")
+    question = str(request.query.get("question") or "")[:500]
+    ticker = str(request.query.get("ticker") or "")[:20]
+    fresh = request.query.get("fresh") in ("1", "true")
+
+    resp = web.StreamResponse(headers={
+        "Content-Type": "text/event-stream; charset=utf-8",
+        "Cache-Control": "no-cache",
+        "X-Accel-Buffering": "no",      # 別讓中間層把 SSE 緩衝起來
+    })
+    await resp.prepare(request)
+    loop = asyncio.get_running_loop()
+    q = asyncio.Queue()
+
+    def emit(kind, data):
+        loop.call_soon_threadsafe(q.put_nowait, (kind, data))
+
+    async def pump():
+        while True:
+            kind, data = await q.get()
+            if kind is None:
+                return
+            payload = json.dumps(data, ensure_ascii=False)
+            await resp.write(f"event: {kind}\ndata: {payload}\n\n".encode("utf-8"))
+
+    async def work():
+        import war_room
+        import war_room_chat as wc
+        try:
+            roles = (war_room.council_roles(question) if role == "軍議"
+                     else [role])
+            prior, total = [], 0.0
+            for r in roles:
+                if r not in war_room.ROLES:
+                    emit("delta", {"name": r, "text": f"沒有這位軍師：{r}"})
+                    continue
+                emit("start", {"name": war_room.ROLES[r]["name"]})
+                txt, meta, x = await asyncio.to_thread(
+                    wc.ask, r, question, ticker, fresh,
+                    (prior if r in war_room.PRIOR_FOR else None), "room",
+                    lambda m, _r=r: emit("stage", {"name": war_room.ROLES[_r]["name"],
+                                                   "text": m}),
+                    lambda t, _r=r: emit("delta", {"name": war_room.ROLES[_r]["name"],
+                                                   "text": t}))
+                prior.append((war_room.ROLES[r]["name"], txt))
+                total += float(meta.get("cost_usd") or 0)
+                emit("end", {"name": war_room.ROLES[r]["name"], "text": txt,
+                             "resumed": x.get("resumed"),
+                             "refreshed": x.get("refreshed"),
+                             "since": x.get("since"), "cost": total})
+            emit("done", {"cost": total, "turns": len(roles)})
+        except Exception as e:                              # noqa: BLE001
+            traceback.print_exc()
+            emit("error", {"text": f"軍師出錯：{str(e)[:200]}"})
+        finally:
+            loop.call_soon_threadsafe(q.put_nowait, (None, None))
+
+    pumper = asyncio.ensure_future(pump())
+    await work()
+    await pumper
+    await resp.write_eof()
+    return resp
+
+
 async def _room_history(request):
     """右欄的「之前談過」。純讀檔，很快，不用丟 thread。"""
     ok, _ = _room_gate(request)
@@ -366,6 +446,7 @@ async def _run():
     app.router.add_get("/room", _room_page)
     app.router.add_get("/room/detail", _room_detail)
     app.router.add_get("/room/history", _room_history)
+    app.router.add_get("/room/ask_stream", _room_ask_stream)
     app.router.add_post("/room/ask", _room_ask)
     app.router.add_get("/trades", _trades_page)
     runner = web.AppRunner(app)

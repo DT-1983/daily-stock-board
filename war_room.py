@@ -640,6 +640,10 @@ ROLES = {
         "name": "龐統（研究員）",
         "material": material_pangtong,
         "needs_question": True,
+        # 🔴 只有龐統能自己查（2026-09-07 Leo：「自己查只給龐統？」）。
+        # 找材料的可以出去找；下判斷的（孔明/仲達/陳壽）只能用我們自己的管線，
+        # 這樣他們講的每個數字才回得了頭對帳。
+        "tools": ["WebSearch", "WebFetch"],
         "persona": (
             "你是隆中對的研究員「龐統」。你的職責是**把找到的材料整理成可讀的研究筆記**，"
             "不是下投資判斷。\n"
@@ -649,12 +653,17 @@ ROLES = {
             "鐵律：\n"
             "1. **不給買賣建議、不給目標價、不判斷貴便宜**——那是孔明的事。"
             "你只負責「發生了什麼、跟什麼有關」。\n"
-            "2. **只根據下面的新聞材料寫**，不要自己補背景知識當事實。"
-            "要補脈絡就標明「這是我的補充，不在材料裡」。\n"
+            "2. 材料不夠時**你可以自己上網查**（WebSearch／WebFetch）——這是你跟"
+            "其他三位最大的差別，他們只能用系統給的材料。查完要照規則 6 標來源。\n"
+            "   ⚠️ 但**不要自己補背景知識當事實**。憑印象寫的東西要標明"
+            "「這是我的補充，沒有來源」。\n"
             "3. 新聞有日期，**要講哪一則是什麼時候的**——舊聞當新聞是研究員最嚴重的錯。\n"
             "4. 材料是關鍵字搜尋來的，**可能有不相關的**。判斷不相關就直接說不相關，"
             "不要硬湊進敘事。\n"
-            "5. 最後給一句「這對持有這檔的人意味著什麼」——描述性的，不是建議。"),
+            "5. 最後給一句「這對持有這檔的人意味著什麼」——描述性的，不是建議。\n"
+            "6. **每一條後面標來源與日期**，格式 `（來源：媒體名 09/06）`。"
+            "自己查來的要標媒體名，系統給的鉅亨網材料標「鉅亨」。\n"
+            "   理由：Leo 要能當場查證。**標不出來源的那一條，不要寫。**"),
     },
     "陳壽": {
         "name": "陳壽（復盤官）",
@@ -674,9 +683,18 @@ ROLES = {
     },
 }
 
+# 進度籤上顯示的文字。⚠️ 要講**這個角色實際去讀了什麼**，不是通用的「處理中」——
+# 通用的進度條跟沒有進度條一樣，看不出它是不是卡住了。
+MATERIAL_STAGE = {
+    "仲達": "正在讀 失效條件、燈號異動、大盤溫度、券商目標價",
+    "孔明": "正在讀 投資長材料（訊號／貴俗價／基本面）",
+    "龐統": "正在讀 鉅亨網新聞 ＋ 公司基本資料",
+    "陳壽": "正在讀 判斷準確度紀錄 ＋ 交易紀錄",
+}
+
 PROMPT = """{persona}
 
-今天是 {date}。以下是系統幫你備好的材料——**只根據這些材料回答，不要自己去查別的**。
+今天是 {date}。以下是系統幫你備好的材料。{scope}
 
 ===== 材料開始 =====
 {material}
@@ -690,6 +708,9 @@ Leo 的問題：{question}
 - 把**事實**（材料裡寫的）跟**推論**（你的判讀）分開標示。
 - 材料裡沒有的就說沒有，不要補。
 - 開頭直接講結論，不要「好的，讓我來分析」這種開場。
+- **第一行先用一句話交代你看了什麼、資料到哪一天**（例如「看了 40 檔持股，
+  燈號資料日 09-05、新聞集中在 09-06」）。看的範圍跟資料的新舊會直接改變結論的可信度，
+  讀的人要先知道；但只給一句，不要展開。
 
 🔴 **精簡規則（2026-09-04 Leo：「有一段囉嗦不太像軍師，可以簡單一點，
 多給一些有用的資訊」）**：
@@ -772,8 +793,20 @@ def council_roles(question=""):
     return [r for r in ORDER if not (r == "孔明" and not named)]
 
 
-def ask_meta(role, question=None, limit=None, prior=None, resume=None):
-    """回 (回答文字, meta)。meta 含 session_id，呼叫端要續談時傳回 resume。"""
+def ask_meta(role, question=None, limit=None, prior=None, resume=None,
+             on_stage=None, on_delta=None):
+    """`on_stage(文字)` 回報進度（正在讀什麼／正在查網路），`on_delta(片段)` 串流。
+    回 (回答文字, meta)。meta 含 session_id，呼叫端要續談時傳回 resume。
+
+    ⚠️ 進度是**照實回報**的：材料在呼叫 AI 之前就用 Python 組好了，
+       所以哪幾塊載了我們明確知道，不是為了畫面好看編出來的假進度條。
+    """
+    def _st(msg):
+        if on_stage:
+            try:
+                on_stage(msg)
+            except Exception:                               # noqa: BLE001
+                pass
     r = ROLES.get(role)
     if not r:
         return f"沒有這位軍師：{role}（可用：{'、'.join(ROLES)}）", {}
@@ -781,10 +814,12 @@ def ask_meta(role, question=None, limit=None, prior=None, resume=None):
     limit = limit or ROLE_CHARS.get(role, MAX_CHARS)
     q = (question or "").strip() or DEFAULT_Q[role]
     # 孔明/龐統要看問題才知道查哪一檔；仲達/陳壽的材料跟問題無關（是當日全貌）
+    _st(MATERIAL_STAGE.get(role, f"{r['name']} 正在準備材料"))
     mat = (r["material"](question) if r.get("needs_question")
            else r["material"]())
     # 問題裡點名的個股，把它的**真實資料**加在材料最前面（見 resolve_in_question
     # 的註解：2026-09-04 答錯股票那次）。放最前面是因為材料會被截斷。
+    _st("正在確認你問的是哪一檔")
     named = resolve_in_question(question)
     if not named:
         # 🔴 2026-09-06（Leo 問 ONON，仲達回答 ON Semiconductor）。
@@ -813,8 +848,13 @@ def ask_meta(role, question=None, limit=None, prior=None, resume=None):
                    '  你的工作不是覆述他們，是講**他們的判斷成立的話、風險在哪**，'
                    '以及**他們漏掉的風險**。同樣的話不要再說一次。\n\n') + mat
     import llm_board
+    # 只有龐統被允許自己查；其他三位維持「只能用這些材料」。
+    can_search = bool(r.get("tools"))
+    scope = ("材料不夠時你**可以自己上網查**，查到的東西要標來源與日期。"
+             if can_search else
+             "**只根據這些材料回答，不要自己去查別的。**")
     base = PROMPT.format(persona=r["persona"],
-                         date=dt.date.today().isoformat(),
+                         date=dt.date.today().isoformat(), scope=scope,
                          material=mat[:9000], question=q, limit=limit)
     # 繁體字是 Leo 的硬規則。**prompt 寫「用繁體」不等於做到**
     # （simplified_chinese_guard 記過：鐵則本來就有，MRVL 那張照樣整張簡體）。
@@ -826,7 +866,18 @@ def ask_meta(role, question=None, limit=None, prior=None, resume=None):
     txt, fix, bad = "", "", []
     meta = {}
     for _ in range(3):
-        out, meta = llm_board.ask_claude_meta(base + fix, resume=resume)
+        _st(f"{r['name']} 正在{'重寫（上一次不合格）' if fix else '思考'}")
+        if on_delta and not fix:
+            # 只有第一輪串流。重寫是**整份重寫**，串第二份會跟畫面上已經浮出來的
+            # 疊在一起——那一輪改走非串流，由呼叫端送 reset 把畫面清掉。
+            out, meta = llm_board.stream_claude_meta(
+                base + fix, resume=resume, tools=r.get("tools"),
+                on_delta=on_delta,
+                on_tool=lambda n: _st("正在查網路" if n in ("WebSearch", "WebFetch")
+                                      else f"正在用 {n}"))
+        else:
+            out, meta = llm_board.ask_claude_meta(base + fix, resume=resume,
+                                                  tools=r.get("tools"))
         if not out:
             return f"⚠️ {r['name']} 這次沒有產出（本機 claude 沒回應），請再試一次。", meta
         txt = out.strip()

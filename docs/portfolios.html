@@ -3,15 +3,27 @@
 <title>策略賽馬 · 模擬倉</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#020617;--surface:#0F172A;--card:#131F35;--line:#1E293B;--line2:#16223A;
- --ink:#F8FAFC;--muted:#94A3B8;--dim:#64748B;--accent:#3B82F6;
- --up:#22C55E;--down:#EF4444;--warn:#EAB308}
-body{background:var(--bg);color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;
- font-family:Inter,-apple-system,"Microsoft JhengHei","PingFang TC",sans-serif;font-size:15px}
+/* 2026-09-07 戰情室 HUD 色票。**變數名一個都沒改**，只換值——
+   七個頁面、十幾個共用元件全部指向這裡，改名等於要同時改完所有消費端。 */
+:root{--bg:#04070E;--surface:#080E1A;--card:#0C1524;--line:#16304A;--line2:#0E1B2B;
+ --ink:#DCE7F5;--muted:#9DB0C8;--dim:#5B6E8A;--accent:#22D3EE;
+ --up:#22C55E;--down:#EF4444;--warn:#FFB627;
+ /* HUD 專用（新增，舊頁面用不到也不會壞） */
+ --void:#04070E;--panel:#080E1A;--raise:#0C1524;--hud:#16304A;--hud-lit:#1F4E6E;
+ --grid:#0E1B2B;--ink2:#9DB0C8;--cy:#22D3EE;--cy-dim:rgba(34,211,238,.10);
+ --lamp:#FFB627;--lamp-dim:rgba(255,182,39,.13);
+ /* RRG 四色＝industry_rotation.QUADRANT_COLOR，兩頁不用重新記顏色。
+    會跟漲跌紅綠、燈的琥珀撞色——Leo 9/7：「多顏色沒關係」，一致比避讓重要。 */
+ --q-lead:#3987e5;--q-imp:#2fbf71;--q-weak:#eda100;--q-lag:#e5484d}
+body{background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased;
+ font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;font-size:15px;
+ /* 極淡掃描線：唯一的裝飾，其餘全部是資料。3px 一週期，放大也不會變成條紋。 */
+ background-image:repeating-linear-gradient(180deg,
+   rgba(34,211,238,.022) 0 1px,transparent 1px 3px)}
 .wrap{max-width:1100px;margin:0 auto;padding:14px 14px 60px}
-.num{font-family:'Fira Code',monospace;font-variant-numeric:tabular-nums}
+.num{font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
 a{color:inherit}
 
 header{padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:6px}
@@ -58,7 +70,7 @@ h1 svg{flex-shrink:0}
  background:transparent;border-left:0;border-right:0;border-top:0;color:inherit;
  font-family:inherit;font-size:inherit;transition:background .15s}
 .row:last-child{border-bottom:0}
-.row:hover,.row:focus-visible{background:#16223A}
+.row:hover,.row:focus-visible{background:#0E1B2B}
 .row:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
 .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px}
 .info{flex:1;min-width:0}
@@ -140,6 +152,85 @@ h1 svg{flex-shrink:0}
 .chartlegend span{display:inline-flex;align-items:center;gap:5px}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
+/* ═══ 戰情室 HUD 覆蓋層（2026-09-07）═══════════════════════════════
+   Leo 對第一版的評語是「不夠先進數字化」。差別不在顏色深淺，在**語彙**：
+   圓角卡片是消費性 App，方角＋細線＋四角括號＋等寬數字才是儀器面板。
+   ⚠️ 這一段刻意放最後：同權重後寫的贏，所以蓋得掉上面的圓角與字體，
+      要退回舊視覺只要刪掉這一段，不用逐條回改。 */
+
+/* 方角：一次收掉全站的圓角。留 2px 給互動元件，完全 0 會顯得毛躁。 */
+.rows,.card,.stat,.legend,.empty,.mbox,.detail,.dcell,.vsgrid .box,
+.stalewarn,.nl,.seg,.sc,.mhd button,.modal .mbox{border-radius:2px}
+.seg{border-radius:0;background:transparent;border:1px solid var(--line);padding:0}
+.seg button{border-radius:0;min-height:32px;padding:6px 15px;font-size:12.5px;
+ letter-spacing:.04em;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed=true]{background:var(--cy-dim);color:var(--cy)}
+.sc{border-radius:0;font-weight:500;letter-spacing:.03em}
+.sc[aria-pressed=true]{background:var(--cy-dim);color:var(--cy);border-color:var(--hud-lit)}
+.sc b,.cnt,.sv,.dcell .v,.stat .big,.vsgrid .val,.vsgrid .pnl,.htk,.hsub,.rt{
+ font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+/* 眉標：全大寫、加寬字距的英文小標。這是「儀器」的語感來源，
+   而且它同時是資訊——每一段都講得出自己是什麼。 */
+.eye{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10px;
+ letter-spacing:.22em;text-transform:uppercase;color:var(--cy);font-weight:600;
+ display:block;margin-bottom:3px}
+.eye em{font-style:normal;color:var(--dim);letter-spacing:.1em}
+
+/* 四角括號：只給「主要面板」用，每頁一兩個就夠——到處都是就變裝飾。 */
+.hud{position:relative}
+.hud::before,.hud::after{content:"";position:absolute;width:12px;height:12px;
+ border:1px solid var(--cy);pointer-events:none}
+.hud::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
+.hud::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
+
+header{border-bottom:1px solid var(--hud)}
+h1{letter-spacing:.02em;font-weight:900}
+.nl{border-radius:0;font-weight:500;letter-spacing:.03em;color:var(--ink2);
+ background:var(--raise)}
+.nl:hover,.nl:focus-visible{border-color:var(--cy);background:var(--cy-dim);color:var(--cy)}
+.nl.cur{border-color:var(--cy);background:var(--cy-dim);color:var(--cy)}
+.ctrl{border-bottom:1px solid var(--hud)}
+.sechd .ico{border-radius:0;background:var(--cy-dim);border:1px solid var(--hud)}
+.cnt{border-radius:0;border:1px solid var(--hud);background:transparent;
+ letter-spacing:.06em}
+.row:hover,.row:focus-visible{background:var(--cy-dim)}
+.detail{background:var(--raise)}
+.bar{border-radius:0;background:var(--hud-lit)}
+.sigtag{border-radius:0;letter-spacing:.04em}
+.dcell .k{letter-spacing:.14em;text-transform:uppercase;font-size:9px;
+ font-family:'IBM Plex Mono',ui-monospace,monospace}
+.card h2,.explain h3,.mdbody h3{color:var(--lamp)}
+.legend i,.d2{border-radius:0}
+.stalewarn{border-radius:0;border-left:3px solid var(--down)}
+
+/* 統計卡：方角、數字用等寬、標籤全大寫加寬字距。
+   第一張加四角括號當作「主面板」的錨——每頁只有一組，不會變成裝飾。 */
+body .cbstat{border:1px solid var(--hud);background:var(--panel)}
+body .cbstat div{border:0;border-right:1px solid var(--grid);border-radius:0;
+ background:transparent;padding:7px 14px}
+body .cbstat div:last-child{border-right:0}
+body .cbstat b{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:19px;
+ font-weight:600;letter-spacing:-.01em}
+body .cbstat span{font-size:9.5px;letter-spacing:.1em;color:var(--dim)}
+body .lkbox{border-radius:0!important;border-color:var(--hud)!important}
+body .lkbox button{border-radius:0!important}
+body .lkbox input{border-radius:0!important}
+
+/* 區塊標題：左邊一條青色細標，取代原本純文字的標題。
+   它同時把「這一段開始了」講清楚，比加大字級省空間。 */
+body .cbsec{border-left:2px solid var(--cy);padding-left:9px;letter-spacing:.02em}
+body .cbnote{border-radius:0;border-left-color:var(--lamp)}
+body table.cb th{letter-spacing:.12em;font-size:10px;text-transform:uppercase;
+ font-family:'IBM Plex Mono',ui-monospace,monospace;border-bottom-color:var(--hud)}
+body table.cb td{font-variant-numeric:tabular-nums}
+body table.cb tr:hover td{background:var(--cy-dim)}
+body .lamp{border-radius:1px}
+body .qb{border-radius:0;letter-spacing:.06em}
+body .expbtn{border-radius:0}
+body .expbtn:hover{border-color:var(--cy);color:var(--cy)}
+
 @media(min-width:1080px){
   .wrap{max-width:1280px}
   .stat{padding:12px;margin:8px 0}
@@ -171,7 +262,7 @@ table.rules tr:last-child td{border-bottom:0}
   table.rules td:last-child{color:var(--dim);font-size:11.5px}
 }
 </style></head><body><div class="wrap">
-<header><h1><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>策略賽馬模擬倉</h1><div class="sub">起始 2026-08-18（第 20 天）· <b>資料日期 2026-09-07</b> · 每倉 $10,000 · 匯率 1美元=32.0台幣 · 淨值每日 09:00 更新，清單每週六重篩<br><span style='color:var(--dim);font-size:11px'>頁面產生於 2026-09-07 05:39（產生時間≠資料時間，以上面的資料日期為準）</span></div><div class="navlinks"><a class="nl" href="./"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>首頁</a><a class="nl" href="rotation.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3a9 9 0 0 1 8.5 6M21 12a9 9 0 0 1-8.5 6M3 12a9 9 0 0 1 3-6.7M6 20.7A9 9 0 0 1 3 14"/></svg>產業輪動</a><a class="nl" href="combo.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="5"/><circle cx="12" cy="7" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="17" r="1.6"/></svg>進出燈號</a><a class="nl" href="chip.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v5c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 11v5c0 1.7 3.6 3 8 3s8-1.3 8-3v-5"/></svg>籌碼異動</a><a class="nl cur" href="portfolios.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>策略賽馬</a><a class="nl" href="board.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>產業鏈看板</a><a class="nl" href="earnings.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>財報分析</a><a class="nl" href="gdp.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 8-4-16-3 8H2"/></svg>GDP 觀察</a><a class="nl" href="ark.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 14 4-5 3 3 5-7"/></svg>ARK 追蹤</a><a class="nl" href="buffett.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg>巴菲特清單</a></div></header>
+<header><span class="eye">TERMINAL<em> // 隆中對</em></span><h1><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>策略賽馬模擬倉</h1><div class="sub">起始 2026-08-18（第 20 天）· <b>資料日期 2026-09-07</b> · 每倉 $10,000 · 匯率 1美元=32.0台幣 · 淨值每日 09:00 更新，清單每週六重篩<br><span style='color:var(--dim);font-size:11px'>頁面產生於 2026-09-07 21:31（產生時間≠資料時間，以上面的資料日期為準）</span></div><div class="navlinks"><a class="nl" href="./"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>首頁</a><a class="nl" href="rotation.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3a9 9 0 0 1 8.5 6M21 12a9 9 0 0 1-8.5 6M3 12a9 9 0 0 1 3-6.7M6 20.7A9 9 0 0 1 3 14"/></svg>產業輪動</a><a class="nl" href="combo.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="5"/><circle cx="12" cy="7" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="17" r="1.6"/></svg>進出燈號</a><a class="nl" href="chip.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v5c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 11v5c0 1.7 3.6 3 8 3s8-1.3 8-3v-5"/></svg>籌碼異動</a><a class="nl cur" href="portfolios.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>策略賽馬</a><a class="nl" href="board.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>產業鏈看板</a><a class="nl" href="earnings.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>財報分析</a><a class="nl" href="gdp.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 8-4-16-3 8H2"/></svg>GDP 觀察</a><a class="nl" href="ark.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 14 4-5 3 3 5-7"/></svg>ARK 追蹤</a><a class="nl" href="buffett.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg>巴菲特清單</a></div></header>
 
 <div class="stat"><div class="sub2">4 套方法總投入 $40,000（各 $10,000）</div><div class="big neg">$39,535　<span style="font-size:17px">-$465（-1.16%）</span></div></div>
 <div class="card">
@@ -281,7 +372,7 @@ const chart=new Chart(document.getElementById('race'),{type:'line',
  data:{labels:["2026-08-18", "2026-08-19", "2026-08-20", "2026-08-21", "2026-08-22", "2026-08-24", "2026-08-25", "2026-08-26", "2026-08-27", "2026-08-28", "2026-08-29", "2026-08-31", "2026-09-01", "2026-09-02", "2026-09-03", "2026-09-04", "2026-09-05", "2026-09-06", "2026-09-07"],datasets:[{"label": "產業鏈全", "data": [9996.0, 9610.51, 9578.5, 9492.67, 9496.57, 9494.66, 9264.59, 9522.87, 9716.14, 9794.44, 9794.52, 9565.81, 9683.79, 9566.74, 9462.93, 9662.56, 9759.47, 9816.57, 9761.15], "borderColor": "#3B82F6", "fill": false, "tension": 0.2, "borderWidth": 3, "borderDash": [], "pointRadius": 0, "grp": "main", "hidden": false}, {"label": "產業鏈+趨勢", "data": [10009.44, 9591.39, 9501.53, 9463.14, 9437.17, 9436.19, 9201.47, 9518.7, 9773.01, 9843.86, 9843.96, 9656.14, 9806.45, 9665.13, 9477.27, 9690.35, 9783.88, 9849.64, 9788.52], "borderColor": "#22C55E", "fill": false, "tension": 0.2, "borderWidth": 3, "borderDash": [], "pointRadius": 0, "grp": "main", "hidden": false}, {"label": "巴菲特價值", "data": [9957.61, 9977.96, 10057.93, 10043.22, 10118.0, 10048.99, 10014.54, 10039.91, 9984.64, 9906.65, 9906.7, 9919.04, 10056.71, 10039.88, 10030.44, 10027.56, 10044.13, 10164.84, 9985.42], "borderColor": "#F97316", "fill": false, "tension": 0.2, "borderWidth": 3, "borderDash": [], "pointRadius": 0, "grp": "main", "hidden": false}, {"label": "進出燈號", "data": [10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 9999.99], "borderColor": "#A78BFA", "fill": false, "tension": 0.2, "borderWidth": 3, "borderDash": [], "pointRadius": 0, "grp": "main", "hidden": false}, {"label": "AI 伺服器", "data": [9762.56, 9605.78, 9460.16, 9401.78, 9436.15, 9466.95, 9278.46, 9554.58, 9700.89, 9789.03, 9789.05, 9728.77, 9845.54, 9758.13, 9737.95, 9943.9, 10050.27, 10110.02, 10022.03], "borderColor": "#EAB308", "fill": false, "tension": 0.2, "borderWidth": 1.5, "borderDash": [4, 3], "pointRadius": 0, "grp": "chain", "hidden": true}, {"label": "矽光子/光通訊", "data": [10251.2, 9791.99, 9731.42, 9812.1, 9847.8, 9757.44, 9442.54, 9955.25, 10476.42, 10646.63, 10646.63, 10662.05, 10921.97, 10730.32, 10496.08, 10622.67, 10722.94, 10786.72, 10567.7], "borderColor": "#22D3EE", "fill": false, "tension": 0.2, "borderWidth": 1.5, "borderDash": [4, 3], "pointRadius": 0, "grp": "chain", "hidden": true}, {"label": "低軌衛星", "data": [9902.76, 9677.16, 9536.56, 9362.63, 9348.1, 9366.44, 9167.45, 9209.08, 9461.33, 9565.28, 9565.28, 9392.7, 9653.87, 9437.38, 9396.96, 9549.38, 9544.65, 9593.84, 9576.93], "borderColor": "#EF4444", "fill": false, "tension": 0.2, "borderWidth": 1.5, "borderDash": [4, 3], "pointRadius": 0, "grp": "chain", "hidden": true}, {"label": "太陽能", "data": [10102.26, 9573.41, 9733.78, 9518.44, 9478.89, 9542.88, 9331.08, 9507.68, 9552.32, 9672.12, 9672.13, 9426.85, 9389.29, 9266.95, 9280.23, 9425.44, 9520.23, 9558.09, 9509.72], "borderColor": "#94A3B8", "fill": false, "tension": 0.2, "borderWidth": 1.5, "borderDash": [4, 3], "pointRadius": 0, "grp": "chain", "hidden": true}, {"label": "Bitcoin→AI 機房", "data": [9981.96, 9315.67, 9460.45, 9827.76, 9589.06, 9589.06, 9401.99, 9903.61, 9526.19, 9806.86, 9806.86, 9011.03, 9084.51, 8754.07, 9143.85, 9834.12, 10222.92, 10222.92, 10222.92], "borderColor": "#60A5FA", "fill": false, "tension": 0.2, "borderWidth": 1.5, "borderDash": [4, 3], "pointRadius": 0, "grp": "chain", "hidden": true}, {"label": "AI 電力/核能", "data": [9983.65, 9678.62, 9715.56, 9576.14, 9704.05, 9709.62, 9551.62, 9634.95, 9880.2, 9859.48, 9859.51, 9584.78, 9641.2, 9577.61, 9538.03, 9666.87, 9738.91, 9783.62, 9726.37], "borderColor": "#3B82F6", "fill": false, "tension": 0.2, "borderWidth": 1.5, "borderDash": [4, 3], "pointRadius": 0, "grp": "chain", "hidden": true}, {"label": "機器人", "data": [9982.46, 9656.07, 9659.88, 9428.38, 9422.07, 9417.63, 9143.42, 9263.85, 9509.46, 9541.64, 9541.66, 9337.78, 9445.05, 9440.17, 9092.94, 9241.1, 9288.63, 9344.32, 9281.57], "borderColor": "#22C55E", "fill": false, "tension": 0.2, "borderWidth": 1.5, "borderDash": [4, 3], "pointRadius": 0, "grp": "chain", "hidden": true}, {"label": "玻璃基板/TGV", "data": [10021.79, 9442.45, 9231.16, 9152.05, 9176.61, 9128.56, 8867.47, 9311.94, 9533.47, 9503.72, 9503.73, 9080.19, 9157.87, 9089.41, 8857.06, 8926.18, 9121.41, 9182.78, 9235.34], "borderColor": "#F97316", "fill": false, "tension": 0.2, "borderWidth": 1.5, "borderDash": [4, 3], "pointRadius": 0, "grp": "chain", "hidden": true}, {"label": "AI 材料/被動元件", "data": [10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10067.77, 10174.59, 10348.54], "borderColor": "#A78BFA", "fill": false, "tension": 0.2, "borderWidth": 1.5, "borderDash": [4, 3], "pointRadius": 0, "grp": "chain", "hidden": true}, {"label": "AI 電源/散熱", "data": [10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10000.0, 10149.6, 10221.7, 9978.9], "borderColor": "#EAB308", "fill": false, "tension": 0.2, "borderWidth": 1.5, "borderDash": [4, 3], "pointRadius": 0, "grp": "chain", "hidden": true}]},
  options:{responsive:true,interaction:{mode:'nearest',intersect:false},
   plugins:{legend:{display:false},tooltip:{mode:'nearest',intersect:false}},
-  scales:{y:{grid:{color:'#1E293B'},ticks:{color:'#94A3B8',
+  scales:{y:{grid:{color:'#16304A'},ticks:{color:'#94A3B8',
     callback:function(v){return '$'+v.toLocaleString();}}},
            x:{grid:{display:false},ticks:{color:'#94A3B8',maxTicksLimit:8}}}}});
 $$('.seg button').forEach(b=>b.onclick=()=>{
