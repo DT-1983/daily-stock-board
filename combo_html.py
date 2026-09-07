@@ -308,7 +308,13 @@ def attach_charts(rows, limit=None):
     跟 rotation.html(5.7MB) 比還好。
     """
     import technical_indicators as ti
-    todo = [r for r in rows if r["combo"]]
+    # 🔴 2026-09-07 Leo 選了「只給打點留圖」：整頁從 17MB 降到約 7MB。
+    # 原本對**所有 COMBO 成立**（165 檔）產圖，一頁 17MB，手機開很慢。
+    # 打點＝亮 ≥3 燈**且風報比 ≥ 1**，那才是真的會看圖的那批；
+    # 其餘的看到表格就夠，要看圖走戰情室或查股頁（都是現算的，不佔這頁）。
+    # ⚠️ 這只影響**公開靜態頁**的預先產圖，不影響任何燈號判斷或母體。
+    todo = [r for r in rows
+            if r["combo"] and (r.get("rr") is not None and r["rr"] >= 1)]
     if limit:
         todo = todo[:limit]
     print(f"  產技術面圖表 {len(todo)} 檔…")
@@ -362,7 +368,9 @@ def body_html(d):
     body.append(f'<div class="cbsec">⭐ 打點成立<small>亮 ≥{d["combo_min"]} 燈且風報比 ≥ 1，'
                 f'共 {len(hit)} 檔</small></div>' + _table(hit))
     body.append(f'<div class="cbsec">COMBO 成立但風報比 &lt; 1<small>技術面共振了，'
-                f'但這個價位進場賠率不划算，共 {len(weak)} 檔</small></div>' + _table(weak))
+                f'但這個價位進場賠率不划算，共 {len(weak)} 檔'
+                f'　·　這一區不預先產圖（頁面太重），要看圖點上面的戰情室或查股框'
+                f'</small></div>' + _table(weak))
     body.append(f'<div class="cbsec">COMBO 成立但查無目標價<small>只能看距停損，'
                 f'共 {len(notgt)} 檔</small></div>' + _table(notgt))
     body.append(FILTER_JS)

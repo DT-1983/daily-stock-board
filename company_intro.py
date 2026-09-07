@@ -69,6 +69,10 @@ def profile(ticker):
 
 PROMPT = """把下面這家公司的英文業務說明，濃縮成**一段繁體中文（台灣用語）**。
 
+🔴 這家公司是：**{zh_name}（{ticker}）**，英文名 {en_name}。
+   開頭一定要用「{zh_name}」這個名字。**不准用你記得的其他名字，
+   也不要自己把英文名翻成中文**——你翻的跟台灣實際在用的常常不一樣。
+
 ===== 原文 =====
 {summary}
 產業分類：{sector} / {industry}
@@ -80,6 +84,8 @@ PROMPT = """把下面這家公司的英文業務說明，濃縮成**一段繁體
 - 產品線**只挑最重要的兩三項**，不要把原文的清單整串搬過來
   （原文常常列十幾樣，全抄等於沒有濃縮）。
 - 第一句就講**它靠什麼賺錢**（賣什麼給誰），不要用「該公司成立於…」開場。
+  ⚠️ **公司名後面要接動詞**（「雙鴻**生產**…」「聯發科**設計**…」），
+  不要直接接名詞——「雙鴻散熱模組」讀起來像產品名不像公司在做什麼（實測踩過）。
 - 講得出**主要產品線或客戶**就講，原文沒有就不要補。
 - 讀者是台灣的個人投資人：專有名詞用台灣的講法
   （例如 foundry＝晶圓代工、semiconductor＝半導體、connector＝連接器）。
@@ -88,7 +94,48 @@ PROMPT = """把下面這家公司的英文業務說明，濃縮成**一段繁體
   原文裡的年份、成立時間也不要寫進去。
 - 🔴 一個簡體字都不能出現。
 - 標點用**全形**（，。；：），不要半形逗號。
-- 只輸出那一段文字本身，不要任何前言、引號或說明。"""
+- 只輸出那一段文字本身，不要任何前言、引號或說明。
+
+🔴 **最後確認：你寫的公司名是「{zh_name}」嗎？**
+   2026-09-07 實測：沒給名字時 3324 雙鴻被寫成「奇鋐」（另一家散熱廠）、
+   6944 兆聯實業被寫成「美聯技術」（自己翻的）。名字錯了整段就是廢的。"""
+
+
+def zh_name(ticker):
+    """台股中文名。查不到回 ""（美股本來就沒有）。"""
+    try:
+        import combo_scan
+        return str((combo_scan._tw_names() or {}).get(
+            str(ticker).replace(".TWO", "").replace(".TW", "")) or "")
+    except Exception:                                       # noqa: BLE001
+        return ""
+
+
+def wrong_company(txt, ticker):
+    """🔴 寫錯公司的守門員。回 (是不是錯的, 原因)。
+
+    ① 台股：文中**必須出現自己的中文名**（用英文名或自己翻的都算沒過）
+    ② 文中不可出現**別家公司**的中文名
+       ⚠️ 自己名字的子字串不算（「聯發」是「聯發科」的一部分，不是別家）；
+          長度要 ≥3，不然「全台」「合機」這種一般詞會誤判成公司名（實測過）。
+    """
+    mine = zh_name(ticker)
+    if not mine or not txt:
+        return False, ""                    # 美股沒有中文名可比，跳過
+    if mine not in txt:
+        return True, f"文中沒有出現「{mine}」"
+    try:
+        import combo_scan
+        names = combo_scan._tw_names() or {}
+    except Exception:                                       # noqa: BLE001
+        return False, ""
+    key = str(ticker).replace(".TWO", "").replace(".TW", "")
+    others = sorted({str(nm) for code, nm in names.items()
+                     if code != key and len(str(nm)) >= 3
+                     and str(nm) in txt and str(nm) not in mine})
+    if others:
+        return True, "文中出現別家公司：" + "、".join(others)
+    return False, ""
 
 
 def intro(ticker, force=False):
@@ -103,20 +150,24 @@ def intro(ticker, force=False):
     if hit and hit.get("hash") == h and hit.get("text") and not force:
         return hit["text"], p
     import llm_board
+    zh = zh_name(ticker) or (p.get("name") or str(ticker))
+
+    def _prompt(extra=""):
+        return PROMPT.format(summary=p["summary"][:2500],
+                             sector=p["sector"] or "—",
+                             industry=p["industry"] or "—",
+                             zh_name=zh, ticker=ticker,
+                             en_name=p.get("name") or "—") + extra
+
     try:
-        txt = (llm_board._ask_claude(
-            PROMPT.format(summary=p["summary"][:2500],
-                          sector=p["sector"] or "—",
-                          industry=p["industry"] or "—")) or "").strip()
+        txt = (llm_board._ask_claude(_prompt()) or "").strip()
         # 繁體是硬規則，而且 prompt 寫了不等於做到（simplified_chinese_guard）。
         bad = sorted(llm_board.simplified_chars(txt))
         if bad:
-            txt = (llm_board._ask_claude(
-                PROMPT.format(summary=p["summary"][:2500],
-                              sector=p["sector"] or "—",
-                              industry=p["industry"] or "—")
-                + "\n\n⚠️ 你上一次用了簡體字："
-                + "".join(bad) + "。整段重寫，全部繁體。") or "").strip()
+            txt = (llm_board._ask_claude(_prompt(
+                "\n\n⚠️ 你上一次用了簡體字："
+                + "".join(bad) + "。整段重寫，全部繁體。"))
+                   or "").strip()
             if llm_board.simplified_chars(txt):
                 print(f"  [warn] {ticker} 簡介還是有簡體字，捨棄不用")
                 return "", p
@@ -130,12 +181,10 @@ def intro(ticker, force=False):
     # 太長就打回重寫一次。⚠️ **不要硬切**——切在句子中間比長更難讀，
     # 而且被切掉的通常是後半段的重點（同 war_room 超字數的處理）。
     if len(txt) > 140:
-        txt2 = (llm_board._ask_claude(
-            PROMPT.format(summary=p["summary"][:2500],
-                          sector=p["sector"] or "—",
-                          industry=p["industry"] or "—")
-            + "\n\n⚠️ 你上一次寫了 " + str(len(txt)) + " 字，上限 110 字。"
-              "整段重寫，只留最重要的業務與兩三項主要產品，其餘全部砍掉。")
+        txt2 = (llm_board._ask_claude(_prompt(
+            "\n\n⚠️ 你上一次寫了 " + str(len(txt))
+            + " 字，上限 110 字。整段重寫，"
+            "只留最重要的業務與兩三項主要產品，其餘全部砍掉。"))
                 or "").strip()
         for x, y in ((",", "，"), (";", "；"), (":", "："), ("(", "（"), (")", "）")):
             txt2 = txt2.replace(x, y)
@@ -148,6 +197,28 @@ def intro(ticker, force=False):
     if re.search(r"(股價|市值|營收|目標價|年增|季增|成長率)\s*[0-9]", txt):
         print(f"  [warn] {ticker} 簡介出現數字，捨棄不用")
         return "", p
+    # 🔴 守門：驗一次，錯了帶著原因重寫；還是錯就**不要用**。
+    #    寧可整段沒有，也不要在報告最上面講另一家公司。
+    wrong, why = wrong_company(txt, ticker)
+    if wrong:
+        print(f"  ⚠️ {ticker} 簡介公司名不對（{why}），重寫一次")
+        txt = (llm_board._ask_claude(_prompt(
+            "\n\n🔴 你上一次寫錯公司了：" + why
+            + "。這家公司叫「" + zh + "」，"
+            "整段重寫，開頭就用這個名字。")) or "").strip()
+        for x, y in ((",", "，"), (";", "；"), (":", "："),
+                     ("(", "（"), (")", "）")):
+            txt = txt.replace(x, y)
+        wrong, why = wrong_company(txt, ticker)
+        if wrong:
+            print(f"  ❌ {ticker} 重寫後還是不對（{why}），這一檔不給簡介")
+            # 🔴 **舊的錯快取要一起刪掉**。原本只 return ""，快取裡那份寫錯公司的
+            #    還在——下一次不帶 --force 就會命中它，等於守門白做。
+            #    ⭐ 擋下壞資料的時候，要順手把已經存進去的那份也清掉。
+            if cache.pop(key, None) is not None:
+                _save(cache)
+                print(f"     （已清掉 {ticker} 的舊快取）")
+            return "", p
     if not txt:
         return (hit or {}).get("text", ""), p
     cache[key] = {"hash": h, "text": txt}

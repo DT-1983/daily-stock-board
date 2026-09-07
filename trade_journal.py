@@ -165,13 +165,36 @@ def page():
                   f"<td>{qp}</td><td>{st}</td><td>{'、'.join(r['reasons'])}</td>"
                   f"<td>{s.get('lit', '—')}燈 {('RR%.1f' % s['rr']) if s.get('rr') is not None else ''}</td>"
                   f"<td>{qh}</td><td>{ch}</td><td class=dim>{r['id']}</td></tr>")
-    page = ("<!doctype html><html lang=zh-Hant><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'>"
-            "<title>交易紀錄</title><style>body{background:#0B1220;color:#e8eaed;font-family:-apple-system,'Microsoft JhengHei',sans-serif;padding:14px}"
-            "h1{font-size:18px}table{border-collapse:collapse;width:100%;font-size:13px}th,td{padding:7px 8px;border-bottom:1px solid #16304A;text-align:left;vertical-align:top}"
-            "th{color:#94A3B8;font-size:12px}.dim{color:#475569;font-size:10px}small{color:#64748B}.n{color:#64748B;font-size:12px;margin:8px 0 14px}</style></head><body>"
-            f"<h1>📒 交易紀錄</h1><div class=n>{len(rows)} 筆 · 產生 {datetime.datetime.now():%Y-%m-%d %H:%M} · 私人檔案，不在公開網站</div>"
-            "<div style='overflow-x:auto'><table><tr><th>時間</th><th>券商</th><th>動作</th><th>代號</th><th>量／價</th><th>狀態</th>"
-            "<th>理由</th><th>燈號</th><th>象限</th><th>投資長</th><th>id</th></tr>" + "".join(tr) + "</table></div></body></html>")
+    # 2026-09-07 Leo：「TRADES 幫我做導覽列」。順便把這頁本來自己寫死的一小段 CSS
+    # （#0B1220 / #e8eaed / #94A3B8…）換掉——它跟 LOOKUP_CSS、ti.CSS 是同一批
+    # 「自己偏離色票」的東西，改吃 board_theme 的 BASE_CSS。
+    # ⚠️ 這頁跑在 stock.talentxtrend.com，導覽列一律 nav_abs()（相對路徑會 404）。
+    from board_theme import BASE_CSS, header, nav_abs
+    css = """
+.tj{border-collapse:collapse;width:100%;font-size:13px;margin-top:10px}
+.tj th,.tj td{padding:8px 9px;border-bottom:1px solid var(--line2);
+ text-align:left;vertical-align:top}
+.tj th{color:var(--dim);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+ font-family:'IBM Plex Mono',ui-monospace,monospace;border-bottom-color:var(--hud)}
+.tj tr:hover td{background:var(--cy-dim)}
+.tj td{font-variant-numeric:tabular-nums}
+.dim{color:var(--dim);font-size:10px}
+small{color:var(--dim)}
+.n{color:var(--muted);font-size:12px;margin:8px 0 14px}
+"""
+    sub = (f"{len(rows)} 筆 · 產生 {datetime.datetime.now():%Y-%m-%d %H:%M}"
+           " · <b>私人檔案，不在公開網站</b><br>"
+           "記一筆："
+           "<code>python trade_journal.py quick \"IB buy NVDA 3 @230.4 | 理由\"</code>")
+    page = ("<!doctype html><html lang=zh-Hant><head><meta charset=utf-8>"
+            "<meta name=viewport content='width=device-width,initial-scale=1'>"
+            "<title>交易紀錄</title><style>" + BASE_CSS + css + "</style></head><body>"
+            '<div class="wrap">'
+            + header("portfolio", "交易紀錄", sub, nav_abs(), eyebrow="TRADE LOG")
+            + "<div style='overflow-x:auto'><table class=tj><tr><th>時間</th><th>券商</th>"
+            "<th>動作</th><th>代號</th><th>量／價</th><th>狀態</th>"
+            "<th>理由</th><th>燈號</th><th>象限</th><th>投資長</th><th>id</th></tr>"
+            + "".join(tr) + "</table></div></div></body></html>")
     return page
 
 
