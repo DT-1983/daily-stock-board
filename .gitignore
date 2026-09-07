@@ -143,3 +143,6 @@ state/war_room_sessions.json
 
 # 個股簡介快取（yfinance 業務說明濃縮，非私人但會一直長）
 state/company_intro.json
+
+# 財報日曆快取（yfinance 公布日/下次預估）
+state/earnings_calendar.json
