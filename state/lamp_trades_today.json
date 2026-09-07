@@ -1,18 +1,13 @@
 {
- "date": "2026-09-07",
+ "date": "2026-09-08",
  "lamp_date": "2026-09-07",
  "buy": [
-  "6442.TW",
-  "BAYRY",
-  "MA",
-  "NDSN",
-  "NVDA",
-  "PAAS",
-  "TM",
-  "V"
+  "T",
+  "SSUMY"
  ],
  "half_sell": [],
  "full_exit": [],
- "held": 8,
- "cash": 0.0
+ "held": 10,
+ "cash": 0.0,
+ "note": "位子數調整為 10"
 }
