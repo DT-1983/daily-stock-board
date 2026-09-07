@@ -624,12 +624,26 @@ def render_index(rows):
         return "".join(p)
 
     def cell_fired(r):
+        """🔴 2026-09-07 Leo 回報「有出現錯誤」：這格印出的是
+        `{'type': 'price_above', 'value': 5000.0, 'desc': '現價達到目標價 50`
+        ——整個 dict 的 repr，而且被切在第 60 字，句子斷在一半。
+
+        原因：`fired` 的元素是 **dict** 不是字串，`str()` 就把結構印出來了。
+        ⭐ 對一個不知道型別的東西呼叫 str() 再截斷，壞掉的時候長得像資料，
+           不像錯誤——所以它可以一直印在畫面上沒人發現。
+        改成明確取 `desc`；萬一哪天結構變了，也印得出型別與值而不是一坨 repr。
+        """
         if not r["fired"]:
             return '<span class="quiet">未觸發</span>'
-        first = str(r["fired"][0])[:60]
+        f = r["fired"][0]
+        if isinstance(f, dict):
+            txt = (f.get("desc")
+                   or f"{f.get('type', '條件')} {f.get('value', '')}".strip())
+        else:
+            txt = str(f)
         extra = (f'<span class="sub">另有 {len(r["fired"]) - 1} 條</span>'
                  if len(r["fired"]) > 1 else "")
-        return f'<span class="fire">🔴 {esc(first)}</span>{extra}'
+        return f'<span class="fire">🔴 {esc(txt)}</span>{extra}'
 
     def cell_ours(r):
         p = []
