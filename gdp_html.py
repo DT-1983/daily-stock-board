@@ -159,8 +159,8 @@ for(const k of ['us','tw']){{
   options:{{responsive:true,maintainAspectRatio:false,interaction:{{mode:'index',intersect:false}},
    plugins:{{legend:{{labels:{{color:'#94A3B8',boxWidth:18,font:{{size:11}}}}}},
     tooltip:{{callbacks:{{label:x=>x.dataset.label+' '+(x.parsed.y==null?'—':x.parsed.y.toFixed(2)+'%')}}}}}},
-   scales:{{x:{{ticks:{{color:'#64748B',font:{{size:10}},maxRotation:45}},grid:{{color:'#1E293B'}}}},
-    y:{{ticks:{{color:'#64748B',font:{{size:10}},callback:v=>v+'%'}},grid:{{color:'#1E293B'}}}}}}}}}});
+   scales:{{x:{{ticks:{{color:'#64748B',font:{{size:10}},maxRotation:45}},grid:{{color:'#16304A'}}}},
+    y:{{ticks:{{color:'#64748B',font:{{size:10}},callback:v=>v+'%'}},grid:{{color:'#16304A'}}}}}}}}}});
 }}
 </script></body></html>"""
 

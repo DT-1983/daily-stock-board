@@ -59,7 +59,7 @@ CSS_EXTRA = """
 .gv{font-size:10.5px;font-weight:600;padding:2px 8px;border-radius:5px}
 .ok{background:#052e16;color:#4ADE80}.no{background:#2E1418;color:#FCA5A5}
 .bl{color:#C7D8EC;font-size:12px;line-height:1.6;margin-top:10px;
- border-top:1px solid #16223A;padding-top:9px}
+ border-top:1px solid #0E1B2B;padding-top:9px}
 .enote{color:var(--dim);font-size:11.5px;margin-top:26px;padding-top:14px;
  border-top:1px solid var(--line);line-height:1.8}
 """

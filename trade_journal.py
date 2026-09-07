@@ -167,7 +167,7 @@ def page():
                   f"<td>{qh}</td><td>{ch}</td><td class=dim>{r['id']}</td></tr>")
     page = ("<!doctype html><html lang=zh-Hant><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'>"
             "<title>交易紀錄</title><style>body{background:#0B1220;color:#e8eaed;font-family:-apple-system,'Microsoft JhengHei',sans-serif;padding:14px}"
-            "h1{font-size:18px}table{border-collapse:collapse;width:100%;font-size:13px}th,td{padding:7px 8px;border-bottom:1px solid #1E293B;text-align:left;vertical-align:top}"
+            "h1{font-size:18px}table{border-collapse:collapse;width:100%;font-size:13px}th,td{padding:7px 8px;border-bottom:1px solid #16304A;text-align:left;vertical-align:top}"
             "th{color:#94A3B8;font-size:12px}.dim{color:#475569;font-size:10px}small{color:#64748B}.n{color:#64748B;font-size:12px;margin:8px 0 14px}</style></head><body>"
             f"<h1>📒 交易紀錄</h1><div class=n>{len(rows)} 筆 · 產生 {datetime.datetime.now():%Y-%m-%d %H:%M} · 私人檔案，不在公開網站</div>"
             "<div style='overflow-x:auto'><table><tr><th>時間</th><th>券商</th><th>動作</th><th>代號</th><th>量／價</th><th>狀態</th>"
