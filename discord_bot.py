@@ -226,10 +226,82 @@ async def _lookup_page(request):
     return resp
 
 
+# ── 燈號戰情室 /room（2026-09-07，見 lamp_room.py 檔頭）──────────────
+def _room_gate(request):
+    """跟 /lookup 同一道門檻。**不另外發明第二套驗證**——兩套遲早會有一套漏改。"""
+    return lookup_page.gate(request.query.get("key", ""),
+                            request.cookies.get(lookup_page.COOKIE, ""))
+
+
+def _room_404():
+    return web.Response(text=lookup_page.not_found_html(), status=404,
+                        content_type="text/html", charset="utf-8")
+
+
+async def _room_page(request):
+    ok, set_cookie = _room_gate(request)
+    if not ok:
+        print("[room] 擋下（無 key／cookie）", flush=True)
+        return _room_404()
+    import lamp_room
+    # to_thread 的理由同 /lookup：讀 312 檔的收盤快取是同步 IO，
+    # 直接在事件迴圈裡跑會把整個 bot（含 Discord 心跳）卡住。
+    html = await asyncio.to_thread(lamp_room.page_html)
+    print(f"[room] 開頁 {'外部' if request.headers.get('CF-Connecting-IP') else '本機'}",
+          flush=True)
+    resp = web.Response(text=html, content_type="text/html", charset="utf-8")
+    if set_cookie:
+        resp.set_cookie(lookup_page.COOKIE, lookup_page._token(),
+                        max_age=lookup_page.COOKIE_DAYS * 86400,
+                        httponly=True, samesite="Lax", secure=True)
+    return resp
+
+
+async def _room_detail(request):
+    """中欄片段。⚠️ 這裡會抓 2 年資料算指標，是最慢的一段（數秒）。"""
+    ok, _ = _room_gate(request)
+    if not ok:
+        return web.Response(text="", status=404)
+    import lamp_room
+    tk = request.query.get("ticker", "")
+    try:
+        html = await asyncio.to_thread(lamp_room.detail_html, tk)
+    except Exception as e:                                # noqa: BLE001
+        traceback.print_exc()
+        html = f'<div class="warn">{tk} 產生失敗：{str(e)[:160]}</div>'
+    print(f"[room] detail {tk!r}", flush=True)
+    return web.Response(text=html, content_type="text/html", charset="utf-8")
+
+
+async def _room_ask(request):
+    """右欄軍師。**一次一問，不排隊**——本機 claude 同時跑兩輪會互相搶資源，
+    而且使用者也看不出哪個回答對應哪個問題。前端送出後把按鈕鎖起來。"""
+    ok, _ = _room_gate(request)
+    if not ok:
+        return web.json_response({"error": "not found"}, status=404)
+    try:
+        body = await request.json()
+    except Exception:                                     # noqa: BLE001
+        return web.json_response({"error": "壞掉的請求"}, status=400)
+    role = str(body.get("role") or "軍議")
+    question = str(body.get("question") or "")[:500]
+    print(f"[room] ask role={role!r} q={question[:40]!r}", flush=True)
+    try:
+        import lamp_room
+        answers = await asyncio.to_thread(lamp_room.ask, role, question)
+    except Exception as e:                                # noqa: BLE001
+        traceback.print_exc()
+        return web.json_response({"error": f"軍師出錯：{str(e)[:200]}"})
+    return web.json_response({"answers": answers})
+
+
 async def _run():
     app = web.Application()
     app.router.add_get("/", _health)
     app.router.add_get("/lookup", _lookup_page)
+    app.router.add_get("/room", _room_page)
+    app.router.add_get("/room/detail", _room_detail)
+    app.router.add_post("/room/ask", _room_ask)
     runner = web.AppRunner(app)
     await runner.setup()
     site = web.TCPSite(runner, "127.0.0.1", HEALTH_PORT)
