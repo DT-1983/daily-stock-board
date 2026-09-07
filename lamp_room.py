@@ -162,36 +162,37 @@ def left_html(items, asof):
         '<ul class="list" id="list">' + "".join(lis) + "</ul></aside>")
 
 
-def table_html():
-    """列表模式：整頁一張表。**重用 combo_html 的產生器**，不寫第二套。
+def _combo_css():
+    """進出燈號頁的樣式（table.cb / .lamp / .qb / 篩選籤）＋查股框樣式。
 
-    ⚠️ combo_html._row_html() 吃的是 combo_result 的原始 row（不是我這邊
-    整理過的 items），所以這裡直接讀原始檔，不要拿 rows() 的結果去湊——
-    欄位名對不上會靜默少幾欄。
+    🔴 這是「格式跑掉」的真正原因：我重用了 combo_html 的 HTML，
+    **但沒有重用它的 CSS**，表格因此是裸的（欄位黏在一起、燈號那欄空白）。
+    重用元件要連樣式一起帶——只搬 markup 是搬了一半。
+    ⚠️ 已比對 ROOM_CSS 的選擇器：只有 `.on` 撞名，而戰情室一律寫成
+    `.lp.on / .ch.on / .rb.on / .mb.on`（兩個 class，權重較高），不受影響。
     """
-    from board_theme import esc
+    try:
+        import combo_html as ch
+        from board_theme import LOOKUP_CSS
+        return ch.CSS + LOOKUP_CSS
+    except Exception:                                   # noqa: BLE001
+        return ""
+
+
+def table_html():
+    """列表模式＝**整個「進出燈號」頁**（統計卡＋查股框＋篩選籤＋三區塊＋說明）。
+
+    ⚠️ 不自己拼版面，直接叫 combo_html.body_html()。之前我只挑 _table() 來用，
+    統計卡、篩選籤、說明全都沒有——同一份資料長出兩種頁面。
+    圖表展開鈕不會出現（那要 attach_charts 先跑過，240 檔現算太慢），
+    這頁改成**點整列跳到個股模式**，那邊的圖比展開鈕那張更完整。
+    """
     import combo_html as ch
     d = _load(RESULT, {}) or {}
-    raw = [r for r in (d.get("rows") or []) if r.get("ticker")]
-    cmin = d.get("combo_min") or 3
-    hit = [r for r in raw if r.get("combo") and (r.get("rr") or 0) >= 1]
-    combo = [r for r in raw if r.get("combo") and r not in hit]
-    rest = [r for r in raw if not r.get("combo")]
-
-    def sec(title, note, rs):
-        if not rs:
-            return ""
-        return (f'<div class="tsec"><h3>{title}<small>{esc(note)}，共 {len(rs)} 檔</small></h3>'
-                + ch._table(rs) + "</div>")
-
-    asof = raw[0].get("asof") if raw else "—"
-    return ('<div class="tablewrap">'
-            f'<div class="tnote">列表模式 · 資料日 {esc(asof)} · '
-            f'共 {len(raw)} 檔　<b>點任一列會切到個股模式並選中那一檔</b></div>'
-            + sec("⭐ 打點成立", f"亮 ≥{cmin} 燈且風報比 ≥ 1", hit)
-            + sec("COMBO 成立", f"亮 ≥{cmin} 燈但風報比未達 1", combo)
-            + sec("其餘", "未達 COMBO", rest)
-            + "</div>")
+    if not (d.get("rows") or []):
+        return '<div class="empty">找不到 combo_result.json。</div>'
+    return ('<div class="tnote">點任一列 → 切到<b>個股模式</b>並選中那一檔'
+            '（技術圖、燈號細節、軍師都在那邊）。</div>' + ch.body_html(d))
 
 
 # ── 中欄 ──────────────────────────────────────────────────────────────
@@ -557,7 +558,7 @@ ROOM_JS = r"""
       if (e.target.closest("button, a")) return;
       // ⚠️ combo_html 的 data-tid 帶 `d_` 前綴（它自己的 DOM id 規則），
       //    直接拿來當代號會對不上——我第一版就是這樣，點了完全沒反應。
-      var tk = String(tr.dataset.tid || "").replace(/^d_/, "");
+      var tk = tr.dataset.tk || "";
       var el = items.find(function(x){ return x.dataset.tk === tk; });
       setMode(false);
       if (el) {
@@ -727,7 +728,7 @@ def page_html():
             + Q + "utf-8" + Q + "><meta name=" + Q + "viewport" + Q + " content="
             + Q + "width=device-width,initial-scale=1" + Q + ">"
             "<title>燈號戰情室</title>" + scripts
-            + "<style>" + BASE_CSS + ti_css + ROOM_CSS + "</style></head><body>"
+            + "<style>" + BASE_CSS + _combo_css() + ti_css + ROOM_CSS + "</style></head><body>"
             '<div class="room">'
             + left_html(items, asof)
             + '<main class="pane" id="mid"><div class="empty">左邊選一檔。</div></main>'

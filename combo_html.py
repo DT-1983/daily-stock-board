@@ -264,6 +264,7 @@ def _row_html(r):
         qh = '<span class="dimv" title="ETF 或查無類股分類">—</span>'
         qv = "none"
     return (f'<tr data-mkt="{mkt}" data-lit="{r["lit"]}" data-rr="{rrok}" data-quad="{qv}" '
+            f'data-tk="{esc(r["ticker"])}" '
             f'data-src="{esc(srcs)}" data-tid="{tid}">'
             f'<td>{btn}<b>{esc(r["ticker"])}</b></td>'
             f'<td>{esc((r.get("name") or "")[:16])}</td>'
@@ -315,7 +316,10 @@ def attach_charts(rows, limit=None):
     return rows
 
 
-def build(d):
+def body_html(d):
+    """頁面內容（不含表頭）。**戰情室的列表模式直接用這個**——
+    統計卡／查股框／篩選籤／三個區塊／說明全部同一份，
+    不會出現「公開頁跟戰情室長不一樣」。"""
     rows = d["rows"]
     ok = [r for r in rows if r["combo"]]
     hit = [r for r in ok if r.get("rr") is not None and r["rr"] >= 1]
@@ -364,9 +368,13 @@ def build(d):
                 '⚠️ 出場仍依原規則（SuperTrend 翻空賣一半／RS 跌破 60MA 全出），'
                 '這頁只管進場時機，不是停利建議。</div>')
     body.append("</div>")
+    return NL.join(body)
+
+
+def build(d):
     return (header("lamp", "進出燈號",
                    f'四燈共振 × 風報比　·　資料日 {esc(d.get("date",""))}', NAV, "combo")
-            + NL.join(body))
+            + body_html(d))
 
 
 def main():
