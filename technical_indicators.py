@@ -892,7 +892,62 @@ function ti_draw_{uid}(){{
       callback:function(v){{return d.dates[Math.round(v)]||'';}}}},grid:{{display:false}}}};
   const xAxisHidden = {{type:'linear',min:0,max:d.dates.length-1,offset:true,
     ticks:{{display:false}},grid:{{display:false}}}};
+  // 價格標籤（2026-09-07 Leo：「super trend 我們沒有停損線嗎?」）。
+  // 線本來就有，但沒有標示 → 五條疊在一起分不出哪條是哪條。
+  // ⚠️ 畫在 afterDatasetsDraw：在資料之後，才不會被 K 棒蓋住。
+  const ti_tags_{uid} = {{
+    id: 'pricetags',
+    afterDatasetsDraw(chart) {{
+      const {{ctx, chartArea, scales}} = chart;
+      if (!chartArea || !scales.y) return;
+      const put = [];
+      chart.data.datasets.forEach(ds => {{
+        if (!ds.label || ds.label.indexOf('K線') === 0) return;
+        let v = null;
+        for (let i = ds.data.length - 1; i >= 0; i--) {{
+          const p = ds.data[i];
+          if (p && p.y != null && !Number.isNaN(p.y)) {{ v = p.y; break; }}
+        }}
+        if (v == null) return;
+        let col = ds.borderColor;
+        if (typeof col !== 'string') {{
+          // SuperTrend 是分段上色（多方黃/空方紫），borderColor 拿不到 →
+          // 用 segment 的當下方向決定，不要退回一個假的顏色。
+          col = (ds.label === 'SuperTrend')
+            ? (d.st_dir && d.st_dir[d.st_dir.length - 1] === 1 ? '#facc15' : '#c084fc')
+            : '#94a3b8';
+        }}
+        put.push({{y: scales.y.getPixelForValue(v), v, col, label: ds.label}});
+      }});
+      // 現價自己一個（白色，最重要的那個數字）
+      const cl = d.closes[d.closes.length - 1];
+      if (cl != null) put.push({{y: scales.y.getPixelForValue(cl), v: cl,
+                                col: '#E2E8F0', label: '現價'}});
+      // 重疊就往下擠開，不然靠得近的兩條會疊成一團看不懂
+      put.sort((a2, b2) => a2.y - b2.y);
+      for (let i = 1; i < put.length; i++)
+        if (put[i].y - put[i - 1].y < 13) put[i].y = put[i - 1].y + 13;
+
+      ctx.save();
+      ctx.font = '10px ui-monospace,SFMono-Regular,Menlo,monospace';
+      ctx.textBaseline = 'middle';
+      put.forEach(t => {{
+        const txt = t.v.toLocaleString(undefined, {{maximumFractionDigits: 2}});
+        const w = ctx.measureText(txt).width + 10;
+        const x = chartArea.left + 2;
+        ctx.fillStyle = t.col;
+        ctx.fillRect(x, t.y - 6.5, w, 13);
+        ctx.fillStyle = '#0B1220';
+        ctx.fillText(txt, x + 5, t.y + 0.5);
+        // 名稱放在色塊右邊，用線的顏色，才對得回是哪一條
+        ctx.fillStyle = t.col;
+        ctx.fillText(t.label, x + w + 5, t.y + 0.5);
+      }});
+      ctx.restore();
+    }}
+  }};
   const c1 = new Chart(document.getElementById('ti_c1_{uid}'), {{type:'candlestick',
+    plugins:[ti_tags_{uid}],
     data:{{datasets:[
       {{label:'K線（雙重颱風三色）',
         data:d.dates.map((dt,i)=>({{x:i,o:d.opens[i],h:d.highs[i],l:d.lows[i],c:d.closes[i]}}))
