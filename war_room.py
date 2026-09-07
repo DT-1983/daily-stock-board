@@ -772,10 +772,11 @@ def council_roles(question=""):
     return [r for r in ORDER if not (r == "孔明" and not named)]
 
 
-def ask(role, question=None, limit=None, prior=None):
+def ask_meta(role, question=None, limit=None, prior=None, resume=None):
+    """回 (回答文字, meta)。meta 含 session_id，呼叫端要續談時傳回 resume。"""
     r = ROLES.get(role)
     if not r:
-        return f"沒有這位軍師：{role}（可用：{'、'.join(ROLES)}）"
+        return f"沒有這位軍師：{role}（可用：{'、'.join(ROLES)}）", {}
     # 各角色自己的字數上限；沒設的退回全域上限。
     limit = limit or ROLE_CHARS.get(role, MAX_CHARS)
     q = (question or "").strip() or DEFAULT_Q[role]
@@ -819,11 +820,15 @@ def ask(role, question=None, limit=None, prior=None):
     # （simplified_chinese_guard 記過：鐵則本來就有，MRVL 那張照樣整張簡體）。
     # 首測仲達就吐出一個「还」。所以偵測到就帶著「你用了哪幾個」重寫，最多 3 次；
     # 還是有就照實標出來，不要靜靜送出去。
+    # 2026-09-07：續談（--resume）。回傳的 session_id 讓呼叫端能接下一輪。
+    # ⚠️ 續談時**不要重送整份材料**——重點就是不用再送一次。這裡的 base 已經
+    # 含材料，所以只有第一輪用完整 base，續談那輪由呼叫端傳精簡的問題進來。
     txt, fix, bad = "", "", []
+    meta = {}
     for _ in range(3):
-        out = llm_board.ask(base + fix)
+        out, meta = llm_board.ask_claude_meta(base + fix, resume=resume)
         if not out:
-            return f"⚠️ {r['name']} 這次沒有產出（本機 claude 沒回應），請再試一次。"
+            return f"⚠️ {r['name']} 這次沒有產出（本機 claude 沒回應），請再試一次。", meta
         txt = out.strip()
         try:
             bad = sorted(llm_board.simplified_chars(txt))
@@ -836,7 +841,7 @@ def ask(role, question=None, limit=None, prior=None):
             # ⚠️ 只重寫一次；第二次還是超長就砍在最後一個完整段落，
             #    寧可少一段，不要留半句。
             if len(txt) <= limit:
-                return txt
+                return txt, meta
             if "太長" not in fix:
                 fix = (f"\n\n⚠️ 你上一次太長了，寫了 {len(txt)} 字，"
                        f"上限是 {limit} 字。整份重寫，壓到 {limit} 字以內。"
@@ -845,11 +850,16 @@ def ask(role, question=None, limit=None, prior=None):
                 continue
             cut = txt[:limit]
             nl = cut.rfind("\n")
-            return cut[:nl] if nl > limit // 2 else cut
+            return (cut[:nl] if nl > limit // 2 else cut), meta
         fix = ("\n\n⚠️ 你上一次的回答用了簡體字（" + "".join(bad[:10])
                + "）。整份重寫，全部用繁體中文（台灣用語），一個簡體字都不能有。")
     return (txt + "\n\n⚠️ 重寫 3 次後仍偵測到簡體字："
-            + "".join(bad[:8]))[:limit]
+            + "".join(bad[:8]))[:limit], meta
+
+
+def ask(role, question=None, limit=None, prior=None, resume=None):
+    """向下相容：只要文字。Discord 那幾支不用改。"""
+    return ask_meta(role, question, limit, prior, resume)[0]
 
 
 def main():

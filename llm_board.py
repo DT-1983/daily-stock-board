@@ -100,22 +100,62 @@ def claude_available():
     return bool(_claude_bin())
 
 
-def _ask_claude(prompt):
-    """headless claude -p。用 stdin 餵 prompt，避開命令列長度與跳脫字元地雷。"""
+def ask_claude_meta(prompt, resume=None):
+    """headless claude -p，回 (回答文字, meta)。
+
+    2026-09-07 改走 `--output-format json`。官方文件把「CLI 當 subprocess + `-p`
+    + `--output-format json`」列為驅動同一個 agent loop 的支援做法，我們本來就在
+    走這條，只是用純文字模式，等於把拿得到的東西丟掉：
+
+      · session_id      → 可以 `--resume` 續談（第二輪起走 cache 讀取，成本約 1/10）
+      · total_cost_usd  → **等值成本**，不是帳單（Max plan 走訂閱額度）
+      · usage / num_turns / is_error / stop_reason → 失敗與用量看得見
+
+    ⚠️ 原本只有「回空字串」才判定失敗，其他失敗模式一律看不見。
+
+    `resume` 給 session_id 就接續上一輪。**呼叫端要自己決定什麼時候該續、什麼時候
+    該重開**——續談表示這一輪的回答建立在上一輪的材料上，換了標的還續談就會答到
+    上一檔（跟 2026-09-04「問高力答 HIG」同一類錯，只是換個入口回來）。
+    """
     exe = _claude_bin()
     if not exe:
         raise RuntimeError("找不到 claude CLI")
-    r = subprocess.run(
-        [exe, "-p", "--dangerously-skip-permissions"],
-        input=prompt, capture_output=True, text=True,
-        encoding="utf-8", errors="replace", timeout=TIMEOUT,
-    )
+    cmd = [exe, "-p", "--dangerously-skip-permissions", "--output-format", "json"]
+    if resume:
+        cmd += ["--resume", str(resume)]
+    r = subprocess.run(cmd, input=prompt, capture_output=True, text=True,
+                       encoding="utf-8", errors="replace", timeout=TIMEOUT)
     if r.returncode != 0:
         raise RuntimeError(f"claude 失敗 (exit {r.returncode}): {(r.stderr or '')[:300]}")
-    out = (r.stdout or "").strip()
-    if not out:
+    raw = (r.stdout or "").strip()
+    if not raw:
         raise RuntimeError("claude 回空字串")
-    return out
+    try:
+        d = json.loads(raw)
+    except ValueError:
+        # JSON 解不開就退回當純文字用——**不要整個失敗**，回答本身可能是好的。
+        return raw, {}
+    if d.get("is_error"):
+        raise RuntimeError(f"claude 回報錯誤：{str(d.get('result'))[:200]}")
+    txt = (d.get("result") or "").strip()
+    if not txt:
+        raise RuntimeError("claude 回空字串")
+    u = d.get("usage") or {}
+    return txt, {
+        "session_id": d.get("session_id"),
+        "cost_usd": d.get("total_cost_usd"),      # 等值，不是帳單
+        "duration_ms": d.get("duration_ms"),
+        "num_turns": d.get("num_turns"),
+        "stop_reason": d.get("stop_reason"),
+        "cache_read": u.get("cache_read_input_tokens"),
+        "cache_write": u.get("cache_creation_input_tokens"),
+        "output_tokens": u.get("output_tokens"),
+    }
+
+
+def _ask_claude(prompt):
+    """向下相容：只要文字。既有呼叫端不用改。"""
+    return ask_claude_meta(prompt)[0]
 
 
 def _ask_gemini(prompt):
