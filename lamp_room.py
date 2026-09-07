@@ -311,9 +311,13 @@ def right_html():
         '<div class="hint">選一檔股票，再挑一位軍師。<br>'
         '走本機 claude（Max plan 訂閱額度，<b>不另外計費</b>），'
         '一位大約 40-60 秒，軍議四位約 3-4 分鐘。</div></div>'
+        # 提示要給**具體的問題**（學老墨的 阿福）。原本寫「想問什麼？」等於沒說，
+        # 使用者要自己想；給三個範例才知道這裡問得到什麼。
         '<div class="ask"><textarea id="qbox" rows="2" '
-        'placeholder="想問什麼？留空＝這位軍師的預設問題（Ctrl+Enter 送出）"></textarea>'
-        '<button class="send" id="send">送出</button></div>'
+        'placeholder="投顧怎麼說？現在幾燈？距目標多少？　(Ctrl+Enter 送出)"></textarea>'
+        '<button class="send" id="send">送出</button>'
+        '<button class="send alt" id="restart" title="這一檔跟這位軍師重新開一條對話'
+        '（不接續之前談過的）">重開</button></div>'
         '</aside>')
 
 
@@ -443,6 +447,20 @@ body{margin:0}
  background:transparent;color:var(--dim);font-weight:600;letter-spacing:.05em}
 .mb.on{background:var(--cy-dim,rgba(34,211,238,.10));color:var(--cy,#22D3EE)}
 @media(max-width:900px){.modebar{bottom:10px}.tablepane{padding:0 8px 14px}}
+/* 進度籤（2026-09-07，學老墨的 阿福「正在讀新聞」）。
+   ⭐ 重點不是字一個一個浮出來，是**知道它在忙什麼**——等 50 秒跟當掉
+   在畫面上長得一模一樣。我們的進度是照實回報的：材料在呼叫 AI 之前就用
+   Python 組好了，哪幾塊載了我們明確知道，不是編出來的假進度條。 */
+.stages{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:5px}
+.stg{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10px;
+ letter-spacing:.03em;padding:2px 7px;border:1px solid var(--hud,#16304A);
+ color:var(--dim);white-space:nowrap}
+.stg.now{border-color:var(--cy,#22D3EE);color:var(--cy,#22D3EE)}
+.msg.live::after{content:"▊";color:var(--cy,#22D3EE);animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+@media(prefers-reduced-motion:reduce){.msg.live::after{animation:none}}
+.send.alt{background:transparent;color:var(--dim);border-color:var(--hud,#16304A);
+ font-weight:500;padding:0 10px}
 /* 之前談過（2026-09-07 Leo：「可以會翻回之前的討論」）。
    刻意做得比新訊息淡一階——它是背景，不是這一輪的回答。 */
 .hist{border-bottom:1px dashed var(--line);margin-bottom:8px;padding-bottom:8px}
@@ -646,23 +664,125 @@ ROOM_JS = r"""
     msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
     return d;
   }
-  function ask(){
+  // 累計成本與輪數（學老墨的 阿福 footer）。**一輪一輪加上去**——
+  // 單看一次多少錢沒有意義，會想知道的是「今天這樣問下來花了多少」。
+  var accCost = 0, accTurns = 0;
+  function stateLine(extra){
+    var tag = document.getElementById("rstate");
+    if (!tag) return;
+    tag.textContent = (extra ? extra + "・" : "")
+      + (cur ? cur + "・" : "") + accTurns + " 輪・等值 US$" + accCost.toFixed(3);
+  }
+
+  function ask(fresh){
     var q = qbox.value.trim();
     // 沒選股票也可以問仲達/陳壽（他們的材料是全局的），但要提醒。
     var full = (cur && q) ? (cur + " " + q) : (q || (cur || ""));
     add("me", null, (cur ? "【" + cur + "】" : "") + (q || "（用預設問題）"));
     qbox.value = "";
     send.disabled = true;
-    var wait = add("", role, "思考中…（本機 claude，一位約 40-60 秒；軍議四位約 3-4 分鐘，"
-                   + "跑完才會一起顯示）");
+
+    // 進度籤：一格一格加，最後一格高亮＝現在在做的事
+    var box = document.createElement("div");
+    box.className = "stages";
+    msgs.appendChild(box);
+    function stage(txt){
+      Array.prototype.forEach.call(box.children, function(c){ c.classList.remove("now"); });
+      var e = document.createElement("span");
+      e.className = "stg now";
+      e.textContent = txt;
+      box.appendChild(e);
+      msgs.scrollTop = msgs.scrollHeight;
+    }
+    stage("送出");
+
+    var bubbles = {};        // 軍師名 → 那一段的 div（軍議有四位）
+    function bubble(name){
+      if (!bubbles[name]) bubbles[name] = add("live", name, "");
+      return bubbles[name];
+    }
+
+    var url = "/room/ask_stream?role=" + encodeURIComponent(role)
+      + "&question=" + encodeURIComponent(full)
+      + "&ticker=" + encodeURIComponent(cur || "")
+      + (fresh ? "&fresh=1" : "");
+    var es;
+    try { es = new EventSource(url); }
+    catch (e) { es = null; }
+    if (!es) { askFallback(full, fresh); return; }
+
+    var got = false;
+    es.addEventListener("stage", function(ev){
+      got = true;
+      var d = JSON.parse(ev.data);
+      stage(d.text);
+    });
+    es.addEventListener("start", function(ev){
+      var d = JSON.parse(ev.data);
+      stage(d.name + " 開始回答");
+      bubble(d.name);
+    });
+    es.addEventListener("delta", function(ev){
+      got = true;
+      var d = JSON.parse(ev.data);
+      var b = bubble(d.name);
+      b.appendChild(document.createTextNode(d.text));
+      msgs.scrollTop = msgs.scrollHeight;
+    });
+    es.addEventListener("end", function(ev){
+      var d = JSON.parse(ev.data);
+      var b = bubble(d.name);
+      // 用完整版覆蓋串流拼出來的：重寫過的那一輪，串流那份是作廢的舊稿。
+      b.textContent = "";
+      var w = document.createElement("b");
+      w.className = "who";
+      w.textContent = d.name + (d.resumed ? "　續談" : "")
+        + (d.refreshed ? "　材料已換成今天" : "");
+      b.appendChild(w);
+      b.appendChild(document.createTextNode(d.text));
+      b.classList.remove("live");
+      accCost = d.cost || accCost;
+      accTurns += 1;
+      stateLine();
+    });
+    es.addEventListener("error", function(ev){
+      try { add("err", role, JSON.parse(ev.data).text); } catch (e) {}
+    });
+    es.addEventListener("done", function(ev){
+      var d = JSON.parse(ev.data);
+      accCost = d.cost || accCost;
+      stateLine();
+      Array.prototype.forEach.call(box.children, function(c){ c.classList.remove("now"); });
+      es.close();
+      send.disabled = false;
+    });
+    es.onerror = function(){
+      es.close();
+      send.disabled = false;
+      if (!got) {
+        // 完全沒收到東西＝串流這條路不通（服務沒起來／中間層擋 SSE）。
+        // ⚠️ 這時候不要只印一句錯誤就算了，退回原本那條會拿到答案的路。
+        box.remove();
+        askFallback(full, fresh);
+      } else {
+        Array.prototype.forEach.call(box.children, function(c){ c.classList.remove("now"); });
+        Object.keys(bubbles).forEach(function(k){ bubbles[k].classList.remove("live"); });
+      }
+    };
+  }
+
+  // 舊的一次拿全部（串流不通時的退路）。⚠️ 保留它是因為串流多了一層可能斷的東西，
+  // 斷了要還有辦法拿到答案，不是只看到一句紅字。
+  function askFallback(full, fresh){
+    send.disabled = true;
+    var wait = add("", role, "思考中…（串流不可用，改用一次回全部；一位約 40-60 秒）");
     fetch("/room/ask", {method:"POST", headers:{"Content-Type":"application/json"},
                         body: JSON.stringify({role: role, question: full,
-                                              ticker: cur || "", fresh: freshNext})})
+                                              ticker: cur || "", fresh: !!fresh})})
       .then(function(r){
         // ⚠️ 不能直接 r.json()。服務重啟或 tunnel 斷線時回的是 HTML 錯誤頁，
         //    JSON.parse 會丟 "Unexpected token '<'"——使用者只看到一句
-        //    看不懂的 SyntaxError，完全不知道是服務沒起來（2026-09-07 Leo 踩到）。
-        //    ⭐ 錯誤訊息要說「發生什麼事」，不是把底層例外原文丟出來。
+        //    看不懂的 SyntaxError（2026-09-07 Leo 踩到）。
         return r.text().then(function(t){
           try { return JSON.parse(t); }
           catch (e) {
@@ -678,23 +798,22 @@ ROOM_JS = r"""
         wait.remove();
         if (j.error){ add("err", role, j.error); return; }
         (j.answers || []).forEach(function(a){ add("", a.name, a.text); });
-        freshNext = false;
-        const inf = j.info || {};
-        // 續談狀態要看得見：不然使用者不知道這一輪是接續還是重開，
-        // 而「接續」代表回答建立在上一輪的材料上，那是要知道的事。
-        const tag = document.getElementById("rstate");
-        if (tag) tag.textContent =
-          (inf.resumed ? ("續談" + (inf.since ? "（接 " + inf.since.slice(5, 10) + "）" : ""))
-                       : "新對話")
-          + (inf.refreshed ? "・材料已換成今天" : "")
-          + (cur ? "・" + cur : "") + "　等值 US$" + (inf.cost || 0).toFixed(3);
+        var inf = j.info || {};
+        accCost += (inf.cost || 0);
+        accTurns += (inf.turns || 1);
+        stateLine(inf.resumed ? "續談" : "新對話");
       })
       .catch(function(e){ wait.remove(); add("err", role, "呼叫失敗：" + e); })
       .finally(function(){ send.disabled = false; });
   }
-  send.addEventListener("click", ask);
+  send.addEventListener("click", function(){ ask(false); });
+  document.getElementById("restart").addEventListener("click", function(){
+    // 重開＝這一檔這位軍師另起一條線（不接續）。
+    add("me", null, "（重開一條對話）");
+    ask(true);
+  });
   qbox.addEventListener("keydown", function(e){
-    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { ask(); }
+    if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { ask(false); }
   });
 
   // 左欄拖曳（Leo 2026-09-07：「左邊字卡可以讓我拉動嗎?」）。
