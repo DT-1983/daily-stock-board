@@ -104,12 +104,33 @@ async def cmd_lookup(interaction: discord.Interaction, 代號: str):
 #
 # ⚠️ 兩位都走本機 claude（Max plan 訂閱額度，**不是付費 API**），一次問答數十秒，
 # 所以跟 /查 一樣先 defer()。
+def _first_ticker(q):
+    """問題裡點名的第一檔，當成續談的 key。認不出就回 ""（大盤／整體那條線）。
+
+    ⚠️ 用 war_room 自己的解析器，不要另外寫一套——網頁跟 Discord 的 key
+    必須算得出一樣的值，兩套解析遲早會在同一句話上給出不同答案。
+    """
+    try:
+        import war_room
+        c = war_room._tickers_in_question(q or "")
+        return (c[0][0] if c else "")
+    except Exception:                                     # noqa: BLE001
+        return ""
+
+
 async def _ask_war_room(interaction, role, 問題):
     await interaction.response.defer(thinking=True)
     try:
         import war_room
-        msg = await asyncio.to_thread(war_room.ask, role, 問題)
-        head = f"**{war_room.ROLES[role]['name']}**\n"
+        import war_room_chat as wc
+        # 2026-09-07：Discord 也走同一份續談＋記錄，所以「在 Discord 問完、
+        # 回網頁點同一檔會接著談」，反過來也是。標的從問題裡解析（跟網頁同一套）。
+        tk = _first_ticker(問題)
+        msg, _m, _x = await asyncio.to_thread(
+            wc.ask, role, 問題, tk, False, None, "discord")
+        _note = ((f'　_接續 {_x["since"][:10]} 的對話_' if _x.get('resumed') else '')
+                 + ('　_材料已更新為今天_' if _x.get('refreshed') else ''))
+        head = f"**{war_room.ROLES[role]['name']}**{_note}" + "\n"
         if 問題:
             head += f"> {問題}\n\n"
         msg = head + msg
@@ -148,7 +169,9 @@ async def cmd_council(interaction: discord.Interaction, 問題: str = ""):
         await interaction.followup.send(head)
         prior = []          # 前面軍師講過的話，往下傳給 PRIOR_FOR 裡的角色
         for role in roles:
-            out = await asyncio.to_thread(war_room.ask, role, 問題, None, prior)
+            import war_room_chat as wc
+            out, _m, _x = await asyncio.to_thread(
+                wc.ask, role, 問題, _first_ticker(問題), False, prior, "discord")
             prior.append((war_room.ROLES[role]['name'], out))
             msg = f"**{war_room.ROLES[role]['name']}**\n{out}"
             for i in range(0, len(msg), 1900):
@@ -293,6 +316,21 @@ async def _room_detail(request):
     return web.Response(text=html, content_type="text/html", charset="utf-8")
 
 
+async def _room_history(request):
+    """右欄的「之前談過」。純讀檔，很快，不用丟 thread。"""
+    ok, _ = _room_gate(request)
+    if not ok:
+        return web.Response(text="", status=404)
+    import lamp_room
+    try:
+        html = lamp_room.chat_html(request.query.get("ticker", ""))
+    except Exception as e:                                # noqa: BLE001
+        traceback.print_exc()
+        html = ""
+        print(f"[room] history 失敗：{str(e)[:80]}", flush=True)
+    return web.Response(text=html, content_type="text/html", charset="utf-8")
+
+
 async def _room_ask(request):
     """右欄軍師。**一次一問，不排隊**——本機 claude 同時跑兩輪會互相搶資源，
     而且使用者也看不出哪個回答對應哪個問題。前端送出後把按鈕鎖起來。"""
@@ -327,6 +365,7 @@ async def _run():
     app.router.add_get("/lookup", _lookup_page)
     app.router.add_get("/room", _room_page)
     app.router.add_get("/room/detail", _room_detail)
+    app.router.add_get("/room/history", _room_history)
     app.router.add_post("/room/ask", _room_ask)
     app.router.add_get("/trades", _trades_page)
     runner = web.AppRunner(app)
