@@ -512,7 +512,7 @@ def _lamp_series(closes, highs, lows, vols, bench_closes, st, sq, dt):
     return [l1, l2, l3, l4]
 
 
-def build(ticker, disp_days=756, expanded=False):
+def build(ticker, disp_days=756, expanded=False, target=None):
     """算一次，回 (html, summary_text)。理由同 fundamentals_reality.build()：
     避免財報卡渲染跟 narrative() 的 LLM prompt 各自重抓一次價量資料。
     2026-08-11：RS窗改30日/1年、抓2年資料當暖機（原本抓1年配200日長線窗，暖機不夠，
@@ -559,6 +559,11 @@ def build(ticker, disp_days=756, expanded=False):
     #    （3037 三年翻轉 23 vs 24 次、平均段長 31.3 vs 30.0 根），差在個別訊號時點。
     st_wilder = supertrend(highs, lows, closes)   # 保留備查，不進顯示
     st = double_typhoon(highs, lows, closes)
+    # F（2026-09-07 Leo：「幫我加老墨的幾條線 目標價、停損三倍、四倍」）
+    # 老墨畫面實測：他的「停損 3 倍 483.90」與「SUPER 多方支撐 483.90」**是同一個數字**
+    # → 我們的 SuperTrend 線就是停損 3 倍（double_typhoon 預設 mult=3.0），不用另外畫。
+    # 要補的只有 4 倍那條。目標價由呼叫端傳進來（這支不知道券商目標價）。
+    st4 = double_typhoon(highs, lows, closes, mult=4.0)
     dt = double_typhoon(highs, lows, closes)
     sq = squeeze_momentum(highs, lows, closes)
     rs = mansfield_rs(closes, bench_closes) if bench_closes else {"short": None, "long": None}
@@ -749,6 +754,10 @@ def build(ticker, disp_days=756, expanded=False):
         "opens": _clean(opens)[cut:], "highs": _clean(highs)[cut:], "lows": _clean(lows)[cut:],
         "vol": [None if v is None else int(v) for v in vols][cut:],
         "vol_ma20": _clean(_sma(vols, 20))[cut:],
+        "st4": (_clean(st4["st"]) if st4 else [])[cut:],
+        "st4_dir": [int(x) if x is not None else None
+                    for x in (st4["dir"] if st4 else [])][cut:],
+        "target": target,
         # 四燈歷史（2026-09-07）。⚠️ 每一盞都要跟 combo_scan 用同一支函式與同一個窗口，
         # 否則圖上的燈會跟頁面標的燈數對不上（今天早上 RS 兩套定義的教訓）。
         **(lambda L: {"lp": [x[cut:] for x in L],
@@ -800,7 +809,9 @@ def build(ticker, disp_days=756, expanded=False):
     <button data-w="365" aria-pressed="false">1年</button>
     <button data-w="1095" aria-pressed="false">3年</button>
   </div>
-  <button class="tcreset" onclick="ti_reset_{uid}()" title="滾輪縮放／拖曳平移橫軸，四張圖同步；按這裡復原">↺ 重置縮放</button>
+  <button class="tcside" onclick="ti_side_{uid}()" id="ti_sidebtn_{uid}"
+    title="B（2026-09-07 Leo：「左邊的 SUPER TREND PRO MAX 可以隱藏嗎? 不然圖太小」）">◧ 隱藏說明卡</button>
+  <button class="tcreset" onclick="ti_reset_{uid}()" title="滾輪縮放／拖曳平移橫軸，五張圖同步；按這裡復原">↺ 重置縮放</button>
   </div>
   <div class="techwrap">{_row_price}{_row_vol}{_row_sq}{_row_rs}{_row_lamp}</div>
 <script>
@@ -833,8 +844,13 @@ function ti_draw_{uid}(){{
   // ⭐ 同一個形狀今天踩了好幾次：手維護的清單，漏一項就是靜默失敗。
   // 改成全欄位自動處理：巢狀陣列（四燈是 4×N）逐列切，其餘直接切。
   // 之後 payload 再加欄位，這裡不用動。
+  // ⚠️ 只有陣列要切。payload 裡也有純量（target 是數字或 null），
+  //    無條件 slice 會噴 "(arr || []).slice is not a function" 而且**整個 draw 掛掉**
+  //    ——五張圖一張都不會出現。改通用寫法時我把「漏加欄位」換成了
+  //    「假設每個欄位都是陣列」，這是換了一種靜默失敗不是修掉它。
   const d = Object.fromEntries(Object.entries(full).map(([k, v]) => [
-    k, Array.isArray(v) && Array.isArray(v[0]) ? v.map(r => slice(r)) : slice(v)]));
+    k, !Array.isArray(v) ? v
+       : (Array.isArray(v[0]) ? v.map(r => slice(r)) : slice(v))]));
   if (ti_charts_{uid}) {{ ti_charts_{uid}.forEach(c => c.destroy()); }}
   // 2026-09-02 Leo：「可以做放大縮小功能？調整橫軸？」——四張圖都用同一個 index x 軸
   // （不再是各自的 category 軸），滾輪縮放／拖曳平移一張，其餘三張跟著動，量價才對得上。
@@ -881,12 +897,28 @@ function ti_draw_{uid}(){{
       {{label:'K線（雙重颱風三色）',
         data:d.dates.map((dt,i)=>({{x:i,o:d.opens[i],h:d.highs[i],l:d.lows[i],c:d.closes[i]}}))
           .filter(p=>p.o!=null&&p.h!=null&&p.l!=null&&p.c!=null),
-        backgroundColors:tyColorFn, borderColors:tyColorFn, borderWidth:1}},
+        // D（2026-09-07 Leo：「K線圖為何都是實心，應該有空心實心?」）
+        // 台股／老墨慣例：收 >= 開 → **空心**（只有邊框），收 < 開 → 實心。
+        // 原本 background 與 border 給同一個顏色，所以全部都是實心。
+        // ⚠️ 顏色仍然是雙重颱風三態（紅偏多/綠偏空/黃不明），空心實心是**另一個維度**
+        //   （當根漲跌），兩者不衝突：可以有「空心綠」＝偏空但當根收紅。
+        backgroundColors:(ctx)=>{{const i=ctx.dataIndex;
+          return (d.closes[i]!=null && d.opens[i]!=null && d.closes[i]>=d.opens[i])
+            ? 'rgba(0,0,0,0)' : tyColorFn(ctx);}},
+        borderColors:tyColorFn, borderWidth:1.3}},
       {{type:'line',label:'SuperTrend',data:d.st.map((v,i)=>({{x:i,y:v}})),borderWidth:1.6,pointRadius:0,
         segment:{{borderColor:segColor(d.st_dir,'#facc15','#c084fc','#6b7280')}}}},
       // 20 日平均成本＝量加權(VWAP) 不是 SMA——實測對上老墨的 135.95
       {{type:'line',label:'20日平均成本',data:d.ma20.map((v,i)=>({{x:i,y:v}})),borderColor:'#F59E0B',
-        borderWidth:1.2,pointRadius:0,borderDash:[2,2],tension:.15}}]}},
+        borderWidth:1.2,pointRadius:0,borderDash:[2,2],tension:.15}},
+      // F：停損 4 倍（3 倍那條就是上面的 SuperTrend，老墨畫面上兩個數字相同）
+      {{type:'line',label:'停損4倍',data:d.st4.map((v,i)=>({{x:i,y:v}})),borderWidth:1.1,
+        pointRadius:0,borderDash:[5,3],
+        segment:{{borderColor:segColor(d.st4_dir,'#7AD1A0','#B49BE0','#4b5563')}}}},
+      // 目標價：呼叫端有給才畫（券商/分析師共識），沒給就是空陣列，圖上不會出現
+      {{type:'line',label:'目標價',
+        data:(d.target==null?[]:d.dates.map((_,i)=>({{x:i,y:d.target}}))),
+        borderColor:'#FDE047',borderWidth:1.4,pointRadius:0,borderDash:[8,4]}}]}},
     options:{{responsive:true,maintainAspectRatio:false,interaction:{{mode:'index',intersect:false}},
       plugins:{{legend:{{labels:{{color:'#9aa0a6',boxWidth:14,font:{{size:10}}}}}}, zoom:ZOOM_OPT}},
       scales:{{x:xAxis, y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
@@ -907,8 +939,11 @@ function ti_draw_{uid}(){{
   const momColor = d.mom.map((v, i) => {{
     if (v == null) return '#2a2e35';
     const prev = i > 0 ? d.mom[i - 1] : v;
-    if (v >= 0) return v >= prev ? '#4ade80' : '#1e7a45';
-    return v <= prev ? '#ff8a8a' : '#8a2e2e';
+    // 2026-09-07 Leo：「EXCEED CHARGE 為什麼都是綠色?」——實測不是 bug
+    // （MA 當下就畫了 30 根負柱、y 軸到 -20），是那一檔可見區間動能全為正。
+    // 但亮綠(#4ade80)/暗綠(#1e7a45) 對比太弱，「轉強/轉弱」看不出來 → 拉開。
+    if (v >= 0) return v >= prev ? '#22FF88' : '#116B3A';
+    return v <= prev ? '#FF5C5C' : '#7A1F1F';
   }});
   const dotColor = d.sq_on.map((on, i) => {{
     if (on) return '#EAB308';
@@ -946,7 +981,10 @@ function ti_draw_{uid}(){{
   // 四燈歷史：四條 y 高度（L1 在上、L4 在下），亮的那天畫一個黃點。
   // 用散點而不是柱狀，因為要的是「哪幾天亮」不是量值；同一個 x 軸與縮放群組，
   // 所以跟上面四張圖一起縮放平移。
-  const LP_COL = ['#FACC15', '#4ADE80', '#38BDF8', '#F472B6'];
+  // E（2026-09-07 Leo：「右邊下面燈號都用黃燈就可以了 (現在顏色太多)」）
+  // 四盞同色，靠 y 高度分辨是哪一盞。整張圖的顏色語彙已經被
+  // K 棒三態、SuperTrend 黃紫、動能四色佔滿了，這裡再加四色只會互相干擾。
+  const LP_COL = ['#FACC15', '#FACC15', '#FACC15', '#FACC15'];
   const LP_NAME = ['L1 ST多方', 'L2 動能>0', 'L3 颱風不綠', 'L4 RS60>3%'];
   const c4 = new Chart(document.getElementById('ti_c4_{uid}'), {{type:'scatter',
     data:{{datasets: (d.lp || []).map((row, k) => ({{
@@ -965,6 +1003,15 @@ function ti_draw_{uid}(){{
   ti_charts_{uid} = [c1, cv, c2, c3, c4];
 }}
 function ti_reset_{uid}(){{ (ti_charts_{uid} || []).forEach(c => c.resetZoom()); }}
+function ti_side_{uid}(){{
+  // 收起左邊的說明卡，圖就吃滿整列寬。⚠️ 收完要 resize()，Chart.js 不會自己
+  // 察覺容器變寬（canvas 會維持舊寬度，右邊留一塊空白）。
+  const box = document.getElementById('ti_charts_{uid}');
+  const off = box.classList.toggle('nosides');
+  const b = document.getElementById('ti_sidebtn_{uid}');
+  if (b) b.textContent = off ? '◨ 顯示說明卡' : '◧ 隱藏說明卡';
+  setTimeout(() => (ti_charts_{uid} || []).forEach(c => c.resize()), 30);
+}}
 {_autodraw}
 </script>
 </div>"""
@@ -986,14 +1033,14 @@ function ti_reset_{uid}(){{ (ti_charts_{uid} || []).forEach(c => c.resetZoom());
     return html, summary
 
 
-def build_html(ticker, expanded=False):
+def build_html(ticker, expanded=False, target=None):
     """CLI／向下相容用：只要 HTML。
 
     expanded=True：圖表**預設展開、不放收放鈕**。給單一個股頁用（lookup_page）——
     那種頁面一次只有一檔，收放鈕只是多一次點擊。看板/燈號/財報卡一頁很多檔，
     全部展開會爆掉，那邊維持預設收合。
     """
-    return build(ticker, expanded=expanded)[0]
+    return build(ticker, expanded=expanded, target=target)[0]
 
 
 def _tile(name, main, sub):
@@ -1042,6 +1089,11 @@ CSS = """
 .tcbox-xs{height:120px}
 .tcbox-xs canvas{height:120px!important}
 .tcbox-sm{height:100px}
+/* B：收起說明卡時，圖表吃滿整列 */
+.techcharts.nosides .techside{display:none}
+.techcharts.nosides .techrow{display:block}
+.tcside{font:inherit;font-size:11px;padding:3px 9px;border-radius:7px;cursor:pointer;
+ border:1px solid var(--line,#1E293B);background:transparent;color:var(--dim,#94a3b8)}
 .tctools{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:6px}
 .tcwin{display:inline-flex;background:var(--surface,#0F172A);border:1px solid var(--line,#1E293B);border-radius:8px;padding:2px}
 .tcwin button{border:0;background:transparent;color:var(--muted,#94A3B8);font-size:11px;font-weight:600;
