@@ -30,6 +30,9 @@ sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 import yfinance as yf
 
 import chain_positioning as CP  # 2026-08-06：產業鏈定位區塊（BEST MATCH 拆解功能之一）
+# 2026-09-08：財報卡自帶樣式、不吃 BASE_CSS，換 HUD 色票時整個沒跟上。
+# HUD_CSS 自己帶完整色票，掛在自家 CSS **之後**才蓋得過去。
+from board_theme import HUD_CSS
 import fundamentals_reality as FR  # 2026-08-06：財報與營收實況（BEST MATCH 拆解功能之二）
 import technical_indicators as TI  # 2026-08-06：技術面四指標（BEST MATCH 拆解功能之四）
 import earnings_call as EC  # 2026-08-09：管理層口頭重點（法說會逐字稿，補財報三表沒有的公司自訂KPI）
@@ -728,7 +731,7 @@ def render(d, sc, n, extra_html=None):
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex"><title>{d['ticker']} {d['quarter']} 財報懶人包</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script><script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.2.1/dist/chartjs-chart-financial.min.js"></script><script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.2.0/dist/chartjs-plugin-zoom.min.js"></script>
-<style>{CSS}{CP.CSS}{FR.CSS}{TI.CSS}{EC.CSS}</style></head><body><div class="wrap">
+<style>{CSS}{CP.CSS}{FR.CSS}{TI.CSS}{EC.CSS}{HUD_CSS}</style></head><body><div class="wrap">
 
 <div class="hd">
   <div><h1>{d['name']}</h1>
