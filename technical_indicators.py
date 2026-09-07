@@ -900,29 +900,45 @@ function ti_draw_{uid}(){{
     afterDatasetsDraw(chart) {{
       const {{ctx, chartArea, scales}} = chart;
       if (!chartArea || !scales.y) return;
+      // 🔴 2026-09-07 Leo：「手機縮放目標價、停損價會跑」。
+      // 原本一律抓 ds.data 的**最後一根**（＝整段序列的最新值），
+      // 但縮放/平移之後畫面上是別的日期區間 —— 線在 262，標籤還寫 204.25，
+      // 兩者對不起來，看起來就像標籤亂跑。
+      // 改成抓「**可視範圍內的最後一根**」，標籤永遠描述螢幕上真的畫出來的那條線。
+      // ⚠️ 不能只改 y 的位置：值本身也要換，不然位置對了數字還是舊的。
+      const vx0 = Math.ceil(scales.x.min), vx1 = Math.floor(scales.x.max);
+      const ymin = scales.y.min, ymax = scales.y.max;
       const put = [];
       chart.data.datasets.forEach(ds => {{
         if (!ds.label || ds.label.indexOf('K線') === 0) return;
         let v = null;
-        for (let i = ds.data.length - 1; i >= 0; i--) {{
+        for (let i = Math.min(vx1, ds.data.length - 1); i >= Math.max(0, vx0); i--) {{
           const p = ds.data[i];
           if (p && p.y != null && !Number.isNaN(p.y)) {{ v = p.y; break; }}
         }}
-        if (v == null) return;
+        // 這條線在目前的畫面上沒有值，或值在 y 軸範圍外 → 不要畫標籤。
+        // 畫出來只會被夾在邊緣，指向一個畫面上根本不存在的價格。
+        if (v == null || v < ymin || v > ymax) return;
         let col = ds.borderColor;
         if (typeof col !== 'string') {{
           // SuperTrend 是分段上色（多方黃/空方紫），borderColor 拿不到 →
           // 用 segment 的當下方向決定，不要退回一個假的顏色。
+          // 方向也要看**可視範圍的最後一根**：平移到多方那一段，
+          // 標籤卻用最新的空方紫，顏色就對不回線。
+          const di = Math.min(vx1, (d.st_dir || []).length - 1);
           col = (ds.label === 'SuperTrend')
-            ? (d.st_dir && d.st_dir[d.st_dir.length - 1] === 1 ? '#facc15' : '#c084fc')
+            ? (d.st_dir && d.st_dir[di] === 1 ? '#facc15' : '#c084fc')
             : '#94a3b8';
         }}
         put.push({{y: scales.y.getPixelForValue(v), v, col, label: ds.label}});
       }});
-      // 現價自己一個（白色，最重要的那個數字）
+      // 現價自己一個（白色，最重要的那個數字）。
+      // ⚠️ 它沒有對應的線，所以**只在最後一根看得到時才畫**——平移到七月去看，
+      // 一個 240 的標籤浮在那裡不連著任何東西，只會讓人以為標籤跑掉了。
       const cl = d.closes[d.closes.length - 1];
-      if (cl != null) put.push({{y: scales.y.getPixelForValue(cl), v: cl,
-                                col: '#E2E8F0', label: '現價'}});
+      if (cl != null && vx1 >= d.closes.length - 1 && cl >= ymin && cl <= ymax)
+        put.push({{y: scales.y.getPixelForValue(cl), v: cl,
+                   col: '#E2E8F0', label: '現價'}});
       // 重疊就往下擠開，不然靠得近的兩條會疊成一團看不懂
       put.sort((a2, b2) => a2.y - b2.y);
       for (let i = 1; i < put.length; i++)
