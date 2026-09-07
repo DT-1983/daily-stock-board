@@ -217,6 +217,98 @@ CSS = """
 """
 
 
+def _watch(d, px, fc_rows):
+    """「要注意什麼」——**全部由程式判斷**，一條都不是 AI 寫的。
+
+    ⚠️ 只列**這一檔真的成立**的，沒有就不列。湊數的提醒會讓人不再讀這一段，
+    然後真的有事的那天也一起跳過。
+    """
+    out = []
+    L = d.get("lamp") or {}
+    rr, gap = L.get("rr"), L.get("gap_pct")
+    if rr is not None and rr < 0:
+        out.append(("超過共識目標", "現價已高於市場共識目標價，燈還亮但上檔空間沒了"))
+    if L.get("bull") and gap is not None and gap < 5:
+        out.append(("逼近停損", f"距 SuperTrend 停損線只剩 {gap:.1f}%，"
+                                "風報比的分母很小、數字會被放大"))
+    if L.get("bull") is False:
+        out.append(("SuperTrend 空方", "這條線現在是壓力不是停損；出場規則已觸發過"))
+    n_fc = sum(1 for r in (fc_rows or []) if r.get("verdict") == "warn")
+    if n_fc:
+        out.append((f"查核抓到 {n_fc} 條落差", "報告的假設跟這檔自己的歷史對不上，細節看下面查核表"))
+    for r in (d.get("reports") or [])[:3]:
+        try:
+            import broker_credibility as _bc
+            note = _bc.note_for(r.get("broker"))
+        except Exception:                                   # noqa: BLE001
+            note = None
+        if note:
+            # ⚠️ note_for() 回的是 **dict** 不是字串。直接塞進 f-string 會把
+            # 整包 {'tag': …, 'note': …} 印在報告最上面（今天 cell_fired 才踩過
+            # 同一型：**同名不同型別，而且不會報錯**）。要挑欄位出來用。
+            out.append((f"{r.get('broker')}：{note.get('tag') or '有已知偏誤'}",
+                        note.get("note") or ""))
+            break
+    m = d.get("margin") or {}
+    if isinstance(m, dict) and (m.get("pct_rank") is not None) and m["pct_rank"] >= 90:
+        out.append(("毛利率位階偏高", f"在自己歷史的第 {m['pct_rank']:.0f} 百分位——"
+                                     "往上的空間有限，預估要靠它再擴張就要小心"))
+    return out
+
+
+def _intro_html(d, name, px, fc_rows=None):
+    """報告最上面那一段。三段：這家在做什麼／現在什麼狀態／要注意什麼。"""
+    from board_theme import esc
+    L = d.get("lamp") or {}
+
+    # ① 這家在做什麼（唯一一段 AI 寫的；查不到就整段不出現，不要編）
+    try:
+        import company_intro as ci
+        txt, prof = ci.intro(d["ticker"])
+    except Exception as e:                                  # noqa: BLE001
+        print(f"  [warn] 簡介失敗：{str(e)[:60]}")
+        txt, prof = "", None
+    sect = ""
+    if prof and (prof.get("sector") or prof.get("industry")):
+        sect = f'{prof.get("sector") or "—"}／{prof.get("industry") or "—"}'
+
+    # ② 現在是什麼狀態——**全部是既有欄位，程式填**
+    bits = []
+    if L.get("lit") is not None:
+        bits.append(f'<b>{L["lit"]}/4 燈</b>')
+    if L.get("bull") is not None:
+        bits.append("🔴 SuperTrend 多方" if L["bull"] else "🟢 SuperTrend 空方")
+    if L.get("rr") is not None:
+        bits.append(f'風報比 <b>{L["rr"]:,.1f}</b>')
+    if L.get("target") and px:
+        up = (L["target"] / px - 1) * 100
+        bits.append(f'距共識目標 <b>{up:+.1f}%</b>')
+    if L.get("rs_short") is not None:
+        bits.append(f'RS60 <b>{L["rs_short"]:+.1f}%</b>')
+    n_rep = len(d.get("reports") or [])
+    bits.append(f'券商報告 <b>{n_rep}</b> 份' if n_rep else "尚無券商報告")
+
+    # ③ 要注意什麼
+    ws = _watch(d, px, fc_rows)
+    # ⚠️ 用 esc_b 不是 esc：券商偏誤那條的原文帶 **粗體** 標記，
+    # 用 esc 會把星號原封不動印出來（board_theme.esc_b 專門處理這個）。
+    from board_theme import esc_b
+    wh = "".join(f'<li><b>{esc(k)}</b>　{esc_b(v)}</li>' for k, v in ws)
+
+    return ('<div class="sb intro">'
+            '<h2>這是什麼</h2>'
+            + (f'<div class="ibiz">{esc(txt)}</div>' if txt else
+               '<div class="sub">（yfinance 查不到這檔的業務說明——'
+               '不編一段給你，下面的數字照常）</div>')
+            + (f'<div class="isec">{esc(sect)}</div>' if sect else "")
+            + f'<div class="istat">{"　·　".join(bits)}</div>'
+            + (f'<div class="iwatch"><div class="iwh">要注意什麼</div>'
+               f'<ul>{wh}</ul></div>' if wh else "")
+            + '<div class="sub">上面這段業務描述由本機 claude 從 yfinance 的'
+              '公開說明濃縮，<b>沒有給它任何數字</b>；狀態與提醒全部是程式算的。</div>'
+            '</div>')
+
+
 def render(d, extra_notes=None):
     from board_theme import BASE_CSS, esc, esc_b, header, nav_abs
 
@@ -233,6 +325,22 @@ def render(d, extra_notes=None):
     name = (d.get("lamp") or {}).get("name") or (d["reports"][0].get("name")
                                                  if d["reports"] else d["ticker"])
     body = []
+
+    # 🔴 查核要**先算**，因為簡介要引用「抓到幾條落差」。
+    # 我第一版在 _watch 裡讀 d["factcheck"]——**gather() 根本沒有這個欄位**，
+    # 永遠拿到 0 而且不會報錯（silent_failure_pattern 的標準形狀）。
+    # 現在算一次、兩邊共用，查核層底下也不會再算第二次。
+    _top0 = d["reports"][0] if d["reports"] else None
+    fc_rows = []
+    if _top0:
+        try:
+            import report_factcheck as _fcm
+            fc_rows = _fcm.check(_top0, px, d.get("base_rate"), d.get("margin"))
+        except Exception as e:                              # noqa: BLE001
+            print(f"  查核層失敗：{str(e)[:80]}")
+
+    # ── 簡介（2026-09-07 Leo：「前面寫個簡介」）─────────────
+    body.append(_intro_html(d, name, px, fc_rows))
 
     # ── 燈號 ───────────────────────────────────────────────
     L = d.get("lamp")
@@ -354,12 +462,8 @@ def render(d, extra_notes=None):
 
     # ── 查核層（Leo：「像老墨的 html 檢查報告商寫的是不是事實」）──────
     if top:
-        try:
-            import report_factcheck as fcm
-            rows = fcm.check(top, px, d.get("base_rate"), d.get("margin"))
-        except Exception as e:                              # noqa: BLE001
-            rows = []
-            print(f"  查核層失敗：{str(e)[:80]}")
+        rows = fc_rows            # 上面算過了，不要再算一次
+        import report_factcheck as fcm   # 下面的摘要句還要用它
         if rows:
             V = {"ok": ("ok", "✅ 對得上"), "warn": ("warn", "⚠️ 有落差"),
                  "wait": ("wait", "⏳ 還不能驗")}
@@ -454,9 +558,10 @@ def render(d, extra_notes=None):
            + '<br>券商報告怎麼說 vs 我們自己算什麼——全部讀既有資料，沒有重算也沒有花錢')
     return ("<!doctype html><html lang=\"zh-Hant\"><head><meta charset=\"utf-8\">"
             "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
-            f"<title>{esc(name)} 整合報告</title><style>" + BASE_CSS + CSS
+            f"<title>{esc(name)} 整合報告</title><style>" + BASE_CSS + CSS + BRIEF_INTRO_CSS
             + "</style></head><body><div class=\"wrap\">"
-            + header("earnings", f"{name} 整合報告", sub, nav_abs())
+            + header("earnings", f"{name} 整合報告", sub, nav_abs(),
+                     eyebrow="STOCK DOSSIER")
             + "".join(body) + "</div></body></html>")
 
 
@@ -526,6 +631,22 @@ def _stat(d):
             f"｜毛利率位階 {'有' if d['margin'] else '無'}"
             f"｜預估前提 {'有' if d['base_rate'] else '無'}")
 
+
+BRIEF_INTRO_CSS = """
+.intro{border-left:3px solid var(--cy,#22D3EE)}
+.ibiz{font-size:14.5px;line-height:1.9;color:var(--ink);margin:6px 0 2px}
+.isec{font-size:11.5px;color:var(--dim);letter-spacing:.06em;margin-bottom:9px}
+.istat{font-size:13px;color:var(--muted);line-height:2;padding:8px 0;
+ border-top:1px solid var(--line2);border-bottom:1px solid var(--line2)}
+.istat b{color:var(--ink);font-family:'IBM Plex Mono',ui-monospace,monospace;
+ font-variant-numeric:tabular-nums}
+.iwatch{margin-top:9px}
+.iwh{font-size:10.5px;letter-spacing:.16em;color:var(--warn,#FFB627);
+ font-family:'IBM Plex Mono',ui-monospace,monospace;margin-bottom:4px}
+.iwatch ul{margin:0;padding-left:17px}
+.iwatch li{font-size:12.5px;line-height:1.85;color:var(--muted)}
+.iwatch li b{color:var(--ink)}
+"""
 
 INDEX_NAME = "整合報告索引.html"
 
@@ -756,7 +877,8 @@ def render_index(rows):
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
             "<title>整合報告索引</title><style>" + BASE_CSS + CSS + INDEX_CSS
             + '</style></head><body><div class="wrap">'
-            + header("earnings", "整合報告索引", sub, nav_abs())
+            + header("earnings", "整合報告索引", sub, nav_abs(),
+                     eyebrow="DOSSIER INDEX")
             + head + tbl + "</div></body></html>")
 
 
