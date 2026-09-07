@@ -801,7 +801,7 @@ def build(ticker, disp_days=756, expanded=False, target=None):
 <div class="posnote">近一年日線計算，基準指數：{_BENCHMARK_NAME.get(_benchmark(ticker), _benchmark(ticker))}</div>
 <div class="techgrid">{tiles}</div>
 {_toggle_btn}
-<div class="techcharts" id="ti_charts_{uid}"{_charts_style}>
+<div class="techcharts nosides" id="ti_charts_{uid}"{_charts_style}>
   <div class="tctools">
   <div class="tcwin" id="ti_win_{uid}">
     <button data-w="90" aria-pressed="true">90天</button>
@@ -810,7 +810,7 @@ def build(ticker, disp_days=756, expanded=False, target=None):
     <button data-w="1095" aria-pressed="false">3年</button>
   </div>
   <button class="tcside" onclick="ti_side_{uid}()" id="ti_sidebtn_{uid}"
-    title="B（2026-09-07 Leo：「左邊的 SUPER TREND PRO MAX 可以隱藏嗎? 不然圖太小」）">◧ 隱藏說明卡</button>
+    title="B（2026-09-07 Leo：「左邊的 SUPER TREND PRO MAX 可以隱藏嗎? 不然圖太小」）">◨ 顯示說明卡</button>
   <button class="tcreset" onclick="ti_reset_{uid}()" title="滾輪縮放／拖曳平移橫軸，五張圖同步；按這裡復原">↺ 重置縮放</button>
   </div>
   <div class="techwrap">{_row_price}{_row_vol}{_row_sq}{_row_rs}{_row_lamp}</div>

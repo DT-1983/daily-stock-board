@@ -132,7 +132,7 @@ def left_html(items, asof):
             f'<div class="l2"><span>{gap}</span><span class="lamps">{lamps}</span></div>'
             "</li>")
     return (
-        '<aside class="pane left">'
+        '<aside class="pane left"><div class="grip" id="grip"></div>'
         f'<div class="phead">報價組合<span class="dim">{len(items)} 檔 · {esc(asof)}</span></div>'
         '<div class="ctrlbar">'
         '<input class="q" id="q" type="search" placeholder="搜代號／名稱／產業" autocomplete="off">'
@@ -165,7 +165,7 @@ def detail_html(ticker):
     ⚠️ 圖畫不出來不要讓整區掛掉——上面那排數字本身就有價值（同 lookup_page 的作法）。
     """
     from board_theme import esc
-    items, _ = rows()
+    items, _asof = rows()
     r = next((x for x in items if x["tk"].upper() == str(ticker).upper()), None)
     if not r:
         return f'<div class="empty">{esc(str(ticker))} 不在今天的掃描母體裡。</div>'
@@ -199,7 +199,14 @@ def detail_html(ticker):
         f'<span class="px">{num(r["px"])}</span>'
         + ("" if r["chg"] is None else
            f'<span class="{"up" if r["chg"] >= 0 else "dn"}">{r["chg"]:+.2f}%</span>')
-        + f'<span class="dim">{esc(r["sec"])}</span></div>')
+        + f'<span class="dim">{esc(r["sec"])}　燈號資料 {esc(_asof)}</span></div>'
+        # 🔴 2026-09-07 查 Leo 的「9/3 沒日期」時發現的：上面這排卡是
+        # combo_result 的快取（每天 07:45 掃，內容是前一交易日收盤），
+        # 下面的圖是**現抓**的（到今天）。2454 當下卡片 4,415 / 圖 4,760，差 7.8%。
+        # 同一頁兩個現價卻沒有任何線索說明——兩邊的資料日都要標出來。
+        + '<div class="datewarn">⚠️ 上面的數字是<b>燈號掃描快取</b>（'
+        + esc(_asof) + '）；下面的圖是<b>現抓的</b>（到最新交易日）。'
+        '掃描之後又有交易日的話，兩者會不一樣。</div>')
 
     cards = "".join([
         f'<div class="dc"><div class="k">燈數</div><div class="v">{r["lit"]} / 4</div>'
@@ -281,6 +288,8 @@ body{margin:0}
 .room.chat{grid-template-columns:320px minmax(0,1fr) 380px}
 .pane{background:var(--surface);border:1px solid var(--line);border-radius:12px;
  overflow:auto;min-height:0}
+.pane.left{position:relative}
+.grip{right:-3px}
 .room.chat .right{display:flex;flex-direction:column}
 .phead{position:sticky;top:0;z-index:2;background:var(--surface);
  padding:10px 12px;border-bottom:1px solid var(--line);font-weight:700;font-size:13px;
@@ -309,10 +318,13 @@ body{margin:0}
 .it:hover{background:rgba(148,163,184,.07)}
 .it.sel{border-color:var(--accent,#3b82f6);background:rgba(59,130,246,.10)}
 .l1{display:flex;align-items:baseline;gap:6px;font-size:13px}
-.l1 b{color:var(--ink)}
-.l1 .nm{color:var(--dim);font-size:11px;overflow:hidden;text-overflow:ellipsis;
- white-space:nowrap}
-.l1 .px{margin-left:auto;font-variant-numeric:tabular-nums;font-size:12.5px;
+/* Leo 2026-09-07：「學一下老墨中文字比較大，不是代號」——名稱才是認得出
+   是哪一檔的東西，代號是拿來查的。所以名稱吃粗體大字、代號縮小當附註。
+   ⚠️ 美股沒有中文名時，代號自己當主角（HTML 那邊判斷），不要留一個空的大字。 */
+.l1 b{color:var(--dim);font-weight:400;font-size:11px;order:2}
+.l1 .nm{color:var(--ink);font-size:14.5px;font-weight:700;order:1;
+ overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:58%}
+.l1 .px{margin-left:auto;order:3;font-variant-numeric:tabular-nums;font-size:12.5px;
  display:flex;gap:6px;white-space:nowrap}
 .l2{display:flex;align-items:center;gap:8px;margin-top:3px;font-size:10.5px;
  color:var(--dim)}
@@ -339,6 +351,9 @@ body{margin:0}
 .dc .s{font-size:10.5px;color:var(--muted,#94a3b8);margin-top:3px;line-height:1.7}
 .lrow{display:flex;align-items:center;gap:5px}
 .empty,.warn{padding:22px 16px;color:var(--dim);font-size:13px}
+.datewarn{padding:6px 14px;font-size:11px;color:var(--dim);
+ border-bottom:1px solid var(--line)}
+.datewarn b{color:#FCD34D}
 .roles{display:flex;flex-wrap:wrap;gap:5px;padding:9px 12px;
  border-bottom:1px solid var(--line)}
 .rb{font:inherit;font-size:11.5px;padding:4px 9px;border-radius:8px;cursor:pointer;
@@ -499,7 +514,22 @@ ROOM_JS = r"""
     fetch("/room/ask", {method:"POST", headers:{"Content-Type":"application/json"},
                         body: JSON.stringify({role: role, question: full,
                                               ticker: cur || "", fresh: freshNext})})
-      .then(function(r){ return r.json(); })
+      .then(function(r){
+        // ⚠️ 不能直接 r.json()。服務重啟或 tunnel 斷線時回的是 HTML 錯誤頁，
+        //    JSON.parse 會丟 "Unexpected token '<'"——使用者只看到一句
+        //    看不懂的 SyntaxError，完全不知道是服務沒起來（2026-09-07 Leo 踩到）。
+        //    ⭐ 錯誤訊息要說「發生什麼事」，不是把底層例外原文丟出來。
+        return r.text().then(function(t){
+          try { return JSON.parse(t); }
+          catch (e) {
+            if (r.status === 404) {
+              return {error: "沒有授權：這頁需要用 ?key=… 開一次（會種 90 天 cookie）。"};
+            }
+            return {error: "服務沒有回 JSON（HTTP " + r.status + "）。"
+                    + "多半是本機服務正在重啟或沒開著——過幾秒再送一次。"};
+          }
+        });
+      })
       .then(function(j){
         wait.remove();
         if (j.error){ add("err", role, j.error); return; }
@@ -519,6 +549,39 @@ ROOM_JS = r"""
   qbox.addEventListener("keydown", function(e){
     if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) { ask(); }
   });
+
+  // 左欄拖曳（Leo 2026-09-07：「左邊字卡可以讓我拉動嗎?」）。
+  // 寬度存 localStorage，下次開還在。⚠️ 拖完要讓圖表 resize()——中欄變寬了，
+  // Chart.js 不會自己察覺（跟隱藏說明卡那顆鈕同一個坑）。
+  (function(){
+    const grip = document.getElementById("grip");
+    const room = document.querySelector(".room");
+    const saved = (function(){ try { return localStorage.getItem("roomLW"); }
+                               catch(e) { return null; } })();
+    if (saved) room.style.setProperty("--lw", saved);
+    let dragging = false;
+    grip.addEventListener("mousedown", function(e){
+      dragging = true; grip.classList.add("on");
+      document.body.style.userSelect = "none"; e.preventDefault();
+    });
+    window.addEventListener("mousemove", function(e){
+      if (!dragging) return;
+      const w = Math.min(640, Math.max(220, e.clientX - 10));
+      room.style.setProperty("--lw", w + "px");
+    });
+    window.addEventListener("mouseup", function(){
+      if (!dragging) return;
+      dragging = false; grip.classList.remove("on");
+      document.body.style.userSelect = "";
+      try { localStorage.setItem("roomLW", room.style.getPropertyValue("--lw")); }
+      catch(e) {}
+      // 中欄寬度變了，圖要重算
+      document.querySelectorAll("#mid canvas").forEach(function(c){
+        const ch = (window.Chart && Chart.getChart) ? Chart.getChart(c) : null;
+        if (ch) ch.resize();
+      });
+    });
+  })();
 
   apply();
   // ⚠️ 要選**篩選後看得到的**第一檔，不是 items[0]。
