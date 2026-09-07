@@ -358,7 +358,13 @@ body{margin:0}
 /* 收合：左欄整個不佔位。⚠️ 用 grid-template-columns 收掉而不是 display:none——
    中欄要拿到多出來的寬度，圖表才會跟著變寬。 */
 .room.lhide{grid-template-columns:0 minmax(0,1fr) 0}
-.room.lhide .pane.left{display:none}
+/* 🔴 2026-09-08 Leo：「縮小整個不見了」。
+   原本用 `display:none` 收左欄 —— 那會把它**整個移出格線排列**，
+   於是中欄遞補到第一欄（寬度 0），實測中欄只剩 2px，整頁看起來是空的。
+   ⭐ **grid 子項目 display:none 不只是隱藏，是重新排列**。
+   改用 visibility:hidden：位置留著，欄寬照 grid-template-columns 給的 0。 */
+.room.lhide .pane.left{visibility:hidden;overflow:hidden;border:0;padding:0;
+ min-width:0}
 .room.lhide.chat{grid-template-columns:0 minmax(0,1fr) 380px}
 .room.chat{grid-template-columns:var(--lw) minmax(0,1fr) 380px}
 .pane{background:var(--panel,#080E1A);border:1px solid var(--hud,#16304A);border-radius:2px;
