@@ -335,8 +335,21 @@ def right_html():
 ROOM_CSS = """
 :root{--gap:10px}
 body{margin:0}
+/* 導覽列（2026-09-07 Leo：「最上面可以加一個其它各頁的快捷嗎? 跟其它投資頁一樣」）。
+   ⚠️ 不用 board_theme.header()——那是完整頁首，在 100vh 的版型裡會吃掉一大塊。
+   這裡只放連結，38px 一條；標題在左欄的「報價組合」已經有了。 */
+.roomnav{display:flex;align-items:center;gap:6px;height:38px;padding:0 10px;
+ border-bottom:1px solid var(--hud,#16304A);background:var(--panel,#080E1A);
+ overflow-x:auto;scrollbar-width:none;white-space:nowrap}
+.roomnav::-webkit-scrollbar{display:none}
+.rnb{font-size:12px;font-weight:700;letter-spacing:.04em;margin-right:6px;
+ flex:0 0 auto;color:var(--cy,#22D3EE)}
+.roomnav .nl{padding:4px 9px;min-height:0;font-size:11.5px;flex:0 0 auto;
+ border-radius:0;background:transparent}
+.roomnav .nl svg{width:13px;height:13px}
+/* ⚠️ 高度要扣掉導覽列，不然版型會比視窗高 38px，底下多一條捲軸。 */
 .room{display:grid;grid-template-columns:320px minmax(0,1fr) 0;gap:var(--gap);
- height:100vh;padding:var(--gap);box-sizing:border-box;background:var(--bg)}
+ height:calc(100vh - 38px);padding:var(--gap);box-sizing:border-box;background:var(--bg)}
 .room.chat{grid-template-columns:320px minmax(0,1fr) 380px}
 .pane{background:var(--panel,#080E1A);border:1px solid var(--hud,#16304A);border-radius:2px;
  overflow:auto;min-height:0}
@@ -497,6 +510,8 @@ body{margin:0}
 @media(max-width:900px){
  /* 手機：三欄疊成一欄，靠上面的分頁鈕切換——並排在 375px 上誰都看不清楚 */
  .room,.room.chat{grid-template-columns:1fr;height:auto}
+ /* 手機的導覽列可橫向捲，不折行——折成兩三排會把圖擠到看不見 */
+ .roomnav{position:sticky;top:0;z-index:8}
  .pane{max-height:none}
  .room .pane.left{max-height:46vh}
  .room:not(.chat) .right{display:none}
@@ -1026,6 +1041,20 @@ ROOM_JS = r"""
 """
 
 
+def nav_html():
+    """細導覽列。**只有連結**，不放標題——標題在左欄的「報價組合」那裡已經有了。
+
+    ⚠️ 用 nav_abs() 不是 NAV：這頁跑在 stock.talentxtrend.com，
+    相對路徑會連到自己那台的 404。
+    """
+    from board_theme import nav_abs, icon, esc
+    links = "".join(
+        f'<a class="nl" href="{href}">{icon(ic, 13)}{esc(lab)}</a>'
+        for _k, ic, lab, href in nav_abs())
+    return ('<nav class="roomnav"><span class="rnb">🚦 燈號戰情室</span>'
+            f'{links}</nav>')
+
+
 def page_html():
     """三欄殼。CDN 圖表函式庫沿用 lookup_page 那組（同一套圖，不另外挑）。"""
     from board_theme import BASE_CSS
@@ -1042,7 +1071,8 @@ def page_html():
             + Q + "width=device-width,initial-scale=1" + Q + ">"
             "<title>燈號戰情室</title>" + scripts
             + "<style>" + BASE_CSS + _combo_css() + ti_css + ROOM_CSS + "</style></head><body>"
-            '<div class="room">'
+            + nav_html()
+            + '<div class="room">'
             + left_html(items, asof)
             + '<main class="pane" id="mid"><div class="empty">左邊選一檔。</div></main>'
             + f'<div class="pane tablepane" id="tablepane">{table_html()}</div>'
