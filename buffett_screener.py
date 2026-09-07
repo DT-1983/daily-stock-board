@@ -613,20 +613,54 @@ def fetch_fundamentals(ticker: str) -> dict:
             if cur and fcur and cur != fcur:
                 sh = info.get("sharesOutstanding") or info.get("impliedSharesOutstanding")
                 te = info.get("trailingEps")
-                ours = (ttm_ni / float(sh)) if (ttm_ni and sh) else None
-                if ours and te and ours * te > 0:      # 同號才算，一正一負代表對不上
-                    fx_scale = te / ours
+                # 🔴 2026-09-08 跟 MIKEON 官方 65 檔對帳時抓到的根因：
+                #    **年度與季度兩張表的幣別可能不一樣**。SSUMY（住友商事 ADR）
+                #    的 income_stmt 是日圓（年度淨利 551,241,184,000），
+                #    但 quarterly_income_stmt 是美元（TTM 3,687,002,136）。
+                #    原本拿 TTM 推係數 → 3.687e9/4.727e9 = 0.78 = trailingEps
+                #    → 係數算出 1.0「不用換」，但**常利是用日圓的年度數字算的**
+                #    → 俗價 732 vs 官方 6.9，差 106 倍，而且顯示成「便宜 🟢」。
+                #    ⭐ **係數要跟被它換算的那一組數字同源**。
+                #       對得上的是 TTM 那一組，不是常利那一組——
+                #       「有一個對得上」≠「對的那個對得上」（見記憶 advisor_reports_pipeline）。
+                # 改法：改用**年度序列**（跟常利同源）推係數。
+                ann_eps = (eps_history[0] if eps_history else None)
+                ttm_eps = (ttm_ni / float(sh)) if (ttm_ni and sh) else None
+                s_ttm = (te / ttm_eps) if (ttm_eps and te and ttm_eps * te > 0) else None
+                s_ann = (te / ann_eps) if (ann_eps and te and ann_eps * te > 0) else None
+                # ⭐ 預設用 TTM 推（跟 2026-08-28 原本的作法一樣，TM/TSM/BAYRY 都靠它對上）。
+                #    **但只有當 TTM 那組跟常利那組同單位時才成立。**
+                #    偵測法：幣別不符、TTM 卻推出「≈1 不用換」，就是兩張表單位不一致的指紋
+                #    ——TTM 已經是掛牌幣別、年度還是財報幣別，而常利是用年度算的。
+                #    這時候改用年度推，才會跟被換算的那組同源。
+                if s_ttm and 0.5 <= s_ttm <= 2.0 and s_ann and not (0.5 <= s_ann <= 2.0):
+                    fx_scale = s_ann
+                    fx_note = ""      # 有解，不是失敗
+                elif s_ttm:
+                    fx_scale = s_ttm
+                elif s_ann:
+                    fx_scale = s_ann
                 else:
                     fx_note = "幣別不符且推不出換算係數"
             elif cur and not fcur:
                 fx_note = "查不到財報幣別"
-        except Exception:
-            fx_note = "換算係數計算失敗"
+        except Exception as _e:                             # noqa: BLE001
+            fx_note = f"換算係數計算失敗（{str(_e)[:40]}）"
         if fx_scale:
             if changli_eps:
                 changli_eps = round(changli_eps * fx_scale, 4)
             eps_history = [round(e * fx_scale, 4) for e in eps_history]
-        elif fx_note.startswith("幣別不符"):
+        elif fx_note:
+            # 🔴 2026-09-08 對帳 MIKEON 官方 65 檔時抓到：守門原本只認
+            #    `fx_note.startswith("幣別不符")`，但 try 區塊裡**任何例外**都會走到
+            #    `fx_note = "換算係數計算失敗"` —— 那個字串不以「幣別不符」開頭，
+            #    守門就不啟動，**未換算的原幣 EPS 原封不動留下來**。
+            #    實測 SSUMY（住友商事 ADR）eps_history 是 [127.0, 118.9, ...] 日圓／原股，
+            #    股價 $11.71 美元 → 俗價算成 732 vs 官方 6.9，**差 106 倍**，
+            #    而且會顯示成「非常便宜 🟢」。ITOCY、KNBWY 同型。
+            # ⭐ 教訓：**守門的條件要涵蓋所有失敗路徑，不能只認其中一種**。
+            #    原本的寫法讓「算失敗」比「算不出來」更危險——後者被擋住，前者放行。
+            #    現在只要 fx_note 有東西（幣別不符 or 例外），一律不給俗貴價。
             # 推不出係數就**不要給俗貴價**——寧可空白也不要一個差 100 倍的 🟢。
             # （Leo 的原則：跑出來是錯的比沒跑出來嚴重。）
             changli_eps = None
