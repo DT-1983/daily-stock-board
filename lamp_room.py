@@ -162,6 +162,38 @@ def left_html(items, asof):
         '<ul class="list" id="list">' + "".join(lis) + "</ul></aside>")
 
 
+def table_html():
+    """列表模式：整頁一張表。**重用 combo_html 的產生器**，不寫第二套。
+
+    ⚠️ combo_html._row_html() 吃的是 combo_result 的原始 row（不是我這邊
+    整理過的 items），所以這裡直接讀原始檔，不要拿 rows() 的結果去湊——
+    欄位名對不上會靜默少幾欄。
+    """
+    from board_theme import esc
+    import combo_html as ch
+    d = _load(RESULT, {}) or {}
+    raw = [r for r in (d.get("rows") or []) if r.get("ticker")]
+    cmin = d.get("combo_min") or 3
+    hit = [r for r in raw if r.get("combo") and (r.get("rr") or 0) >= 1]
+    combo = [r for r in raw if r.get("combo") and r not in hit]
+    rest = [r for r in raw if not r.get("combo")]
+
+    def sec(title, note, rs):
+        if not rs:
+            return ""
+        return (f'<div class="tsec"><h3>{title}<small>{esc(note)}，共 {len(rs)} 檔</small></h3>'
+                + ch._table(rs) + "</div>")
+
+    asof = raw[0].get("asof") if raw else "—"
+    return ('<div class="tablewrap">'
+            f'<div class="tnote">列表模式 · 資料日 {esc(asof)} · '
+            f'共 {len(raw)} 檔　<b>點任一列會切到個股模式並選中那一檔</b></div>'
+            + sec("⭐ 打點成立", f"亮 ≥{cmin} 燈且風報比 ≥ 1", hit)
+            + sec("COMBO 成立", f"亮 ≥{cmin} 燈但風報比未達 1", combo)
+            + sec("其餘", "未達 COMBO", rest)
+            + "</div>")
+
+
 # ── 中欄 ──────────────────────────────────────────────────────────────
 def detail_html(ticker):
     """中欄：關鍵數字 + 技術圖。**圖是現算的**（抓 2 年資料算指標，數秒）。
@@ -379,6 +411,31 @@ body{margin:0}
 .send{font:inherit;font-size:12px;padding:0 14px;border-radius:8px;cursor:pointer;
  border:0;background:var(--accent,#3b82f6);color:#fff;font-weight:600}
 .send[disabled]{opacity:.5;cursor:default}
+/* 模式切換（2026-09-07 Leo：「整合在同一張，一個指令轉換」）。
+   列表模式＝整頁一張表（掃描用，手機/平板在外面看的那種）
+   個股模式＝左清單＋中圖＋右軍師（鑽進去用）
+   ⚠️ 兩個模式共用同一份 combo_result，表格是重用 combo_html 的產生器，
+      不是另外寫一套——不然遲早兩邊數字不一樣。 */
+.tablepane{grid-column:1/-1;padding:0 14px 16px}
+.room.list .left,.room.list #mid{display:none}
+.room.list{grid-template-columns:minmax(0,1fr)}
+.room.list.chat{grid-template-columns:minmax(0,1fr) 380px}
+.room:not(.list) .tablepane{display:none}
+.tnote{padding:10px 2px 12px;font-size:11.5px;color:var(--dim)}
+.tnote b{color:var(--ink)}
+.tsec{margin-bottom:20px}
+.tsec h3{font-size:14px;margin:0 0 8px;color:#F5B841;display:flex;
+ align-items:baseline;gap:10px}
+.tsec h3 small{font-weight:400;font-size:11px;color:var(--dim)}
+.tablepane table.cb tr[data-tid]{cursor:pointer}
+.tablepane table.cb tr[data-tid]:hover td{background:rgba(245,184,65,.09)}
+.modebar{position:fixed;left:50%;transform:translateX(-50%);bottom:14px;z-index:9;
+ display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;
+ background:var(--surface);box-shadow:0 6px 20px rgba(0,0,0,.45)}
+.mb{font:inherit;font-size:12.5px;padding:8px 18px;border:0;cursor:pointer;
+ background:transparent;color:var(--dim);font-weight:600}
+.mb.on{background:var(--accent,#3b82f6);color:#fff}
+@media(max-width:900px){.modebar{bottom:10px}.tablepane{padding:0 8px 14px}}
 .chatbtn{position:fixed;right:14px;bottom:14px;z-index:9;font:inherit;font-size:13px;
  padding:9px 15px;border-radius:999px;border:0;cursor:pointer;font-weight:700;
  background:var(--accent,#3b82f6);color:#fff;box-shadow:0 6px 20px rgba(0,0,0,.45)}
@@ -469,6 +526,57 @@ ROOM_JS = r"""
     lastTk = el.dataset.tk;
     pick(el);
   }); });
+
+  // ── 模式切換（列表 / 個股）──
+  // ⚠️ 列表模式是**預設**：Leo 的用法是先掃描再鑽進去，開頁就看到表比較順。
+  //    手機在外面也是先看列表。
+  var mStock = document.getElementById("mode-stock");
+  var mList = document.getElementById("mode-list");
+  function setMode(list){
+    room.classList.toggle("list", list);
+    mList.classList.toggle("on", list);
+    mStock.classList.toggle("on", !list);
+    // 切回個股要讓圖重算——它在 display:none 底下量到的寬度是 0
+    if (!list) {
+      setTimeout(function(){
+        document.querySelectorAll("#mid canvas").forEach(function(c){
+          var ch = (window.Chart && Chart.getChart) ? Chart.getChart(c) : null;
+          if (ch) ch.resize();
+        });
+      }, 30);
+    }
+    try { localStorage.setItem("roomMode", list ? "list" : "stock"); } catch(e) {}
+  }
+  mStock.addEventListener("click", function(){ setMode(false); });
+  mList.addEventListener("click", function(){ setMode(true); });
+
+  // 點表格任一列 → 切到個股模式並選中那一檔
+  document.querySelectorAll(".tablepane table.cb tr[data-tid]").forEach(function(tr){
+    tr.addEventListener("click", function(e){
+      // 表格自己的「圖」展開鈕不要被攔截
+      if (e.target.closest("button, a")) return;
+      // ⚠️ combo_html 的 data-tid 帶 `d_` 前綴（它自己的 DOM id 規則），
+      //    直接拿來當代號會對不上——我第一版就是這樣，點了完全沒反應。
+      var tk = String(tr.dataset.tid || "").replace(/^d_/, "");
+      var el = items.find(function(x){ return x.dataset.tk === tk; });
+      setMode(false);
+      if (el) {
+        // 選中的那一檔可能被目前的篩選藏起來 → 先清掉篩選，不然點了看不到
+        if (el.hidden) {
+          F = {q:"", mkt:"", lit:"", sort:F.sort};
+          document.getElementById("fq") && (document.getElementById("fq").value = "");
+          document.querySelectorAll(".ch").forEach(function(o){
+            var g = o.dataset.s !== undefined ? "s" : (o.dataset.m !== undefined ? "m" : "l");
+            if (g !== "s") o.classList.toggle("on", o.dataset[g] === "");
+          });
+          apply();
+        }
+        lastTk = el.dataset.tk;
+        pick(el);
+        el.scrollIntoView({block:"center"});
+      }
+    });
+  });
 
   // ── 軍師欄 ──
   var room = document.querySelector(".room");
@@ -588,6 +696,12 @@ ROOM_JS = r"""
     });
   })();
 
+  (function(){
+    var saved = null;
+    try { saved = localStorage.getItem("roomMode"); } catch(e) {}
+    setMode(saved !== "stock");        // 預設列表
+  })();
+
   apply();
   // ⚠️ 要選**篩選後看得到的**第一檔，不是 items[0]。
   //    預設是台股+4燈，items[0] 卻是美股 MA → 中間顯示一檔左邊看不到的股票。
@@ -617,8 +731,11 @@ def page_html():
             '<div class="room">'
             + left_html(items, asof)
             + '<main class="pane" id="mid"><div class="empty">左邊選一檔。</div></main>'
+            + f'<div class="pane tablepane" id="tablepane">{table_html()}</div>'
             + right_html()
             + "</div>"
+            '<div class="modebar"><button class="mb" id="mode-stock">個股</button>'
+            '<button class="mb on" id="mode-list">列表</button></div>'
             '<button class="chatbtn" id="chatbtn">🏛️ 軍師</button>'
             + ROOM_JS + "</body></html>")
 
