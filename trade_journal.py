@@ -145,7 +145,10 @@ def _fmt(r):
             f"    系統：{lamp} {rr} 象限{q} RS60 {s.get('rs_short')}{ch}")
 
 
-def html():
+def page():
+    """回 HTML 字串。2026-09-07 從 html() 抽出來——Sonia 那張卡要連一個
+    **看得到的網址**，不能只有寫進 Google Drive 的檔案。
+    ⚠️ 這頁有實際交易紀錄，路由端一定要套 lookup_page 的 token 門檻。"""
     rows = _load()
     Q = {"leading": ("領先", "#3987e5"), "improving": ("改善", "#2fbf71"),
          "weakening": ("弱化", "#eda100"), "lagging": ("落後", "#e5484d")}
@@ -169,9 +172,14 @@ def html():
             f"<h1>📒 交易紀錄</h1><div class=n>{len(rows)} 筆 · 產生 {datetime.datetime.now():%Y-%m-%d %H:%M} · 私人檔案，不在公開網站</div>"
             "<div style='overflow-x:auto'><table><tr><th>時間</th><th>券商</th><th>動作</th><th>代號</th><th>量／價</th><th>狀態</th>"
             "<th>理由</th><th>燈號</th><th>象限</th><th>投資長</th><th>id</th></tr>" + "".join(tr) + "</table></div></body></html>")
+    return page
+
+
+def html():
+    """寫到 obis（手機用）。內容跟 /trades 同一份，不會有兩套。"""
     os.makedirs(OBIS, exist_ok=True)
     out = os.path.join(OBIS, "交易紀錄.html")
-    open(out, "w", encoding="utf-8").write(page)
+    open(out, "w", encoding="utf-8").write(page())
     return out
 
 
