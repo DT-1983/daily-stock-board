@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-07 12:54",
+ "updated": "2026-09-07 15:40",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,16 +38,16 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "09/07",
-   "close": 47264.21,
-   "chg_pct": 1.53
+   "close": 47326.27,
+   "chg_pct": 1.67
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/07",
-   "close": 31.6,
-   "chg_pct": -0.29
+   "close": 31.55,
+   "chg_pct": -0.47
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "漢翔民用機業務新進展 拿下龐巴迪CL3500 20年新約",
+   "title": "漢翔搶下龐巴迪20年大單 龔明鑫直擊：台灣躍升全球中大型民航機製造強國",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6599170",
-   "ts": "09/07 12:34"
+   "url": "https://news.cnyes.com/news/id/6599304",
+   "ts": "09/07 15:37"
   },
   {
-   "title": "聯茂(6213)毛利率一季翻倍、8月營收年增近98%！真正瓶頸不是訂單而是「玻纖布」",
+   "title": "光學元件廠佳能8月營收13.13億元改寫10年來新高年增34%",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6599184",
-   "ts": "09/07 12:30"
+   "url": "https://news.cnyes.com/news/id/6599301",
+   "ts": "09/07 15:36"
   },
   {
-   "title": "〈房產〉七都大坪數宅交易占比全下滑 小宅單價勁漲  新竹小宅5年漲逾76%居冠",
+   "title": "聯詠第2季獲利大幅超出預期能延續嗎？9月14日投資人會議聚焦三大關鍵",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6599171",
-   "ts": "09/07 12:28"
+   "url": "https://news.cnyes.com/news/id/6599309",
+   "ts": "09/07 15:30"
   },
   {
-   "title": "營收速報  - 中菲行(5609)8月營收34.15億元年增率高達39.05％",
+   "title": "研華8月營收續站穩百億 創同期高年增87%",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6599179",
-   "ts": "09/07 12:20"
+   "url": "https://news.cnyes.com/news/id/6599282",
+   "ts": "09/07 15:13"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：緯創(3231-TW)EPS預估上修至16.65元，預估目標價為277.5元",
+   "title": "威剛8月營收189億元續寫新高 前8月破千億元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6599172",
-   "ts": "09/07 12:10"
+   "url": "https://news.cnyes.com/news/id/6599269",
+   "ts": "09/07 15:11"
+  },
+  {
+   "title": "美股周一因勞動節休市",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6599247",
+   "ts": "09/07 14:40"
+  },
+  {
+   "title": "AI樂觀情緒提振科技股 新興市場股市創兩個月新高",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6599210",
+   "ts": "09/07 14:10"
+  },
+  {
+   "title": "日本疑拋售美債為創紀錄日元干預融資！外匯儲備跌破1兆美元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6599091",
+   "ts": "09/07 14:00"
+  },
+  {
+   "title": "九月效應碰上史上第二高估值 歷史將再重演？",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6599202",
+   "ts": "09/07 13:40"
   },
   {
    "title": "OpenAI已造出「異星心智」？首席科學家：RSI真的來了、呼籲人類煞車",
    "mkt": "US",
    "url": "https://news.cnyes.com/news/id/6599105",
    "ts": "09/07 12:10"
-  },
-  {
-   "title": "〈工研院新院士〉秦永沛：台積電卓越製造沒有捷徑 近40年靠團隊一步一腳印",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6599124",
-   "ts": "09/07 11:40"
-  },
-  {
-   "title": "高盛：AI記憶體週期被低估！南韓KOSPI目標12000點、仍有約80%的上漲空間",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6598922",
-   "ts": "09/07 11:10"
-  },
-  {
-   "title": "黃仁勳宣告「AGI已經到來」！OpenAI GPT-6 Astra訓練動用逾10萬套輝達系統",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6598924",
-   "ts": "09/07 10:42"
-  },
-  {
-   "title": "蘋果、華為、小米拚場 折疊機本周集中亮相",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6598988",
-   "ts": "09/07 10:25"
   }
  ],
  "inst": {
-  "date": "09/04",
-  "total_yi": 616.7,
-  "foreign_yi": 562.1,
-  "trust_yi": -9.1
+  "date": "09/07",
+  "total_yi": 1138.7,
+  "foreign_yi": 883.1,
+  "trust_yi": 98.7
  }
 }
