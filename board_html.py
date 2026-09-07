@@ -30,6 +30,10 @@ from board_html_legacy import (parse_report, oneliner, CHAIN_ORDER, CHAIN_MAP,
                         CHAIN_ICON, TW_NAME, tw_name, _align_rs)  # alert_telegram.py 從本模組 import，要 re-export
 from technical_indicators import squeeze_momentum, mansfield_rs_series, rs_signal_series
 from board_theme import NAV, HUD_CSS, header as theme_header
+# 滾輪縮放改成「點圖才啟用」（2026-09-07）。這頁自己畫圖、沒走 ti.build_html，
+# 所以要自己把那段 JS 與樣式帶進來。
+from technical_indicators import ZOOM_CLICK_JS
+from technical_indicators import ZOOM_CSS as _ZOOM_CSS
 
 if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
     sys.stdout.reconfigure(encoding="utf-8")  # Windows cp950 印 emoji 會炸
@@ -312,7 +316,7 @@ function syncZoom(id,src){
  zoomSyncing=false;}
 function zoomOpt(id,c){
  return {pan:{enabled:true,mode:'x',onPanComplete:({chart})=>syncZoom(id,chart)},
-  zoom:{wheel:{enabled:true},pinch:{enabled:true},mode:'x',
+  zoom:{wheel:{enabled:false},pinch:{enabled:true},mode:'x',
    onZoom:({chart})=>syncZoom(id,chart),onZoomComplete:({chart})=>syncZoom(id,chart)},
   limits:{x:{min:0,max:c.dates.length-1,minRange:5}}};}
 function resetZoomFor(id){(ZOOM_GROUP[id]||[]).forEach(ch=>ch.resetZoom());}
@@ -571,7 +575,7 @@ def main():
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex"><title>{date} 產業鏈看板</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script><script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial@0.2.1/dist/chartjs-chart-financial.min.js"></script><script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8/hammer.min.js"></script><script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.2.0/dist/chartjs-plugin-zoom.min.js"></script>
-<style>{CSS}{HUD_CSS}</style></head><body><div class="wrap">
+<style>{CSS}{HUD_CSS}{_ZOOM_CSS}</style></head><body><div class="wrap">
 {theme_header("board", "產業鏈看板",
     f"{date} · {len(nav)} 條產業鏈 · 美股 yfinance／台股 FinMind · 判讀 Claude（本機）"
     f" · 每日 09:00 自動更新", NAV, "board")}
@@ -606,7 +610,7 @@ def main():
   <a href="#top" title="回頂端" aria-label="回頂端"><svg width="15" height="15" viewBox="0 0 24 24"
     fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></a></nav>
 {"".join(modals)}
-<script>const CHARTS={charts_json};{JS}</script></body></html>"""
+<script>const CHARTS={charts_json};{JS}</script>{ZOOM_CLICK_JS}</body></html>"""
 
     os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
     open(args.output, "w", encoding="utf-8").write(html)

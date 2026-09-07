@@ -867,7 +867,7 @@ function ti_draw_{uid}(){{
   }}
   const ZOOM_OPT = {{
     pan: {{enabled: true, mode: 'x', onPanComplete: ({{chart}}) => ti_sync_{uid}(chart)}},
-    zoom: {{wheel: {{enabled: true}}, pinch: {{enabled: true}}, mode: 'x',
+    zoom: {{wheel: {{enabled: false}}, pinch: {{enabled: true}}, mode: 'x',
       // onZoom：滾輪縮放當下就同步（離散觸發，不頻繁，不會卡）；onZoomComplete 當保險。
       onZoom: ({{chart}}) => ti_sync_{uid}(chart), onZoomComplete: ({{chart}}) => ti_sync_{uid}(chart)}},
     limits: {{x: {{min: 0, max: d.dates.length - 1, minRange: 5}}}}
@@ -1105,7 +1105,64 @@ function ti_side_{uid}(){{
                f"RS相對強弱 短線{f'{rs_s:+.1f}%' if rs_s is not None else '—'}"
                f"/長線{f'{rs_l:+.1f}%' if rs_l is not None else '—'}"
                f"{'　'+rs_sub if rs_sub else ''}")
-    return html, summary
+    # 滾輪縮放的啟用機制跟著圖一起送出去（自己有 __zoomClickInit 防重複，
+    # 一頁塞很多份也只會裝一次）。⚠️ 不能只放在頁面模板裡——戰情室的圖是
+    # fetch 回來 innerHTML 塞進去的，那條路沒有經過任何頁面模板。
+    return html + ZOOM_CLICK_JS, summary
+
+
+ZOOM_CLICK_JS = """<script>
+// 滾輪：預設捲頁面，**點一下圖才啟用縮放**（2026-09-07 Leo 回報「滾輪卡在圖」）。
+// ⚠️ 用事件代理綁在 document 上，因為圖是後來才塞進 DOM 的
+//    （戰情室是 fetch 回來 innerHTML，個別綁會漏掉）。
+(function(){
+  if (window.__zoomClickInit) return;      // 一頁只裝一次
+  window.__zoomClickInit = true;
+  function wrapAll(){
+    document.querySelectorAll("canvas").forEach(function(c){
+      var ch = (window.Chart && Chart.getChart) ? Chart.getChart(c) : null;
+      if (!ch || !ch.options.plugins || !ch.options.plugins.zoom) return;
+      var p = c.parentElement;
+      if (!p || p.classList.contains("zoomwrap")) return;
+      p.classList.add("zoomwrap");
+      var t = document.createElement("span");
+      t.className = "zoomtip";
+      t.textContent = "點一下啟用滾輪縮放";
+      p.appendChild(t);
+    });
+  }
+  function setZoom(wrap, on){
+    wrap.classList.toggle("zon", on);
+    var tip = wrap.querySelector(".zoomtip");
+    if (tip) tip.textContent = on ? "滾輪縮放中 · 點外面或 Esc 結束"
+                                  : "點一下啟用滾輪縮放";
+    var c = wrap.querySelector("canvas");
+    var ch = (c && window.Chart && Chart.getChart) ? Chart.getChart(c) : null;
+    if (ch && ch.options.plugins && ch.options.plugins.zoom) {
+      ch.options.plugins.zoom.zoom.wheel.enabled = on;
+      ch.update("none");
+    }
+  }
+  function clearAll(){
+    document.querySelectorAll(".zoomwrap.zon").forEach(function(w){ setZoom(w, false); });
+  }
+  document.addEventListener("click", function(e){
+    wrapAll();
+    var w = e.target.closest ? e.target.closest(".zoomwrap") : null;
+    // 點圖外面就全部關掉——不然離開之後滾輪還是被那張圖吃著
+    document.querySelectorAll(".zoomwrap.zon").forEach(function(o){
+      if (o !== w) setZoom(o, false);
+    });
+    if (w && !w.classList.contains("zon")) setZoom(w, true);
+  }, true);
+  document.addEventListener("keydown", function(e){
+    if (e.key === "Escape") clearAll();
+  });
+  // 圖是非同步畫出來的，等一下再包一次；之後每次點擊也會補包（見上面 wrapAll）
+  setTimeout(wrapAll, 600);
+  setTimeout(wrapAll, 2000);
+})();
+</script>"""
 
 
 def build_html(ticker, expanded=False, target=None):
@@ -1123,7 +1180,22 @@ def _tile(name, main, sub):
             f'<div class="tv">{main}</div><div class="ts">{sub}</div></div>')
 
 
-CSS = """
+ZOOM_CSS = """
+/* 滾輪縮放的啟用狀態（2026-09-07 Leo：「用滾輪往下滾都會卡在圖」）。
+   ⭐ 縮放是偶爾要用的、捲頁面是每次都要用的——搶滾輪的應該是偶爾那個。
+   所以改成點一下圖才啟用，並且**讓使用者看得出來現在是哪個模式**。 */
+.zoomwrap{position:relative}
+.zoomwrap.zon{outline:1px solid var(--cy,#22D3EE);outline-offset:1px}
+.zoomtip{position:absolute;top:4px;right:6px;z-index:3;pointer-events:none;
+ font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:9.5px;
+ letter-spacing:.08em;padding:1px 6px;border:1px solid var(--hud,#16304A);
+ background:var(--panel,#080E1A);color:var(--dim,#5B6E8A);opacity:0;
+ transition:opacity .15s}
+.zoomwrap:hover .zoomtip{opacity:1}
+.zoomwrap.zon .zoomtip{opacity:1;border-color:var(--cy,#22D3EE);color:var(--cy,#22D3EE)}
+"""
+
+CSS = ZOOM_CSS + """
 /* 2026-09-03 Leo：「查任意股風格不一致，請改成跟燈號風格一致」。
    這組卡片原本用寫死的灰褐色（var(--surface,#080E1A) / var(--line,#16304A) / var(--ink,#DCE7F5)），跟 board_theme 的
    深藍色票（--surface / --line / --ink）並排就是兩個色系——而這個元件同時出現在
@@ -1180,6 +1252,7 @@ CSS = """
  font-size:11px;font-weight:600;padding:6px 12px;cursor:pointer;font-family:inherit}
 .tcreset:hover{border-color:var(--accent,#3B82F6);color:#93C5FD}
 .tchint{font-size:10.5px;color:var(--dim,#64748B)}
+
 """
 
 
