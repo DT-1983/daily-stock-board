@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-07 15:40",
+ "updated": "2026-09-07 21:28",
  "indices": [
   {
    "sym": "^GSPC",
@@ -46,8 +46,8 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/07",
-   "close": 31.55,
-   "chg_pct": -0.47
+   "close": 31.49,
+   "chg_pct": -0.65
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "漢翔搶下龐巴迪20年大單 龔明鑫直擊：台灣躍升全球中大型民航機製造強國",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6599304",
-   "ts": "09/07 15:37"
-  },
-  {
-   "title": "光學元件廠佳能8月營收13.13億元改寫10年來新高年增34%",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6599301",
-   "ts": "09/07 15:36"
-  },
-  {
-   "title": "聯詠第2季獲利大幅超出預期能延續嗎？9月14日投資人會議聚焦三大關鍵",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6599309",
-   "ts": "09/07 15:30"
-  },
-  {
-   "title": "研華8月營收續站穩百億 創同期高年增87%",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6599282",
-   "ts": "09/07 15:13"
-  },
-  {
-   "title": "威剛8月營收189億元續寫新高 前8月破千億元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6599269",
-   "ts": "09/07 15:11"
-  },
-  {
-   "title": "美股周一因勞動節休市",
+   "title": "美國「K型經濟」現反轉訊號？低所得家庭8月薪資成長罕見超越高所得",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6599247",
-   "ts": "09/07 14:40"
+   "url": "https://news.cnyes.com/news/id/6599585",
+   "ts": "09/07 20:50"
   },
   {
-   "title": "AI樂觀情緒提振科技股 新興市場股市創兩個月新高",
+   "title": "鉅亨速報 - Factset 最新調查：Companhia de Saneamento Basico do Estado de Sao Paulo. - ADR(SBS-US)EPS預估上修至0.37元，預估目標價為5.97元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6599210",
-   "ts": "09/07 14:10"
+   "url": "https://news.cnyes.com/news/id/6599679",
+   "ts": "09/07 20:15"
   },
   {
-   "title": "日本疑拋售美債為創紀錄日元干預融資！外匯儲備跌破1兆美元",
+   "title": "鉅亨速報 - Factset 最新調查：Arxis, Inc. Class A(ARXS-US)EPS預估上修至0.46元，預估目標價為62.50元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6599091",
-   "ts": "09/07 14:00"
+   "url": "https://news.cnyes.com/news/id/6599678",
+   "ts": "09/07 20:15"
   },
   {
-   "title": "九月效應碰上史上第二高估值 歷史將再重演？",
+   "title": "鉅亨速報 - Factset 最新調查：Coinbase Global Inc - Class A(COIN-US)EPS預估下修至-3.08元，預估目標價為201.00元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6599202",
-   "ts": "09/07 13:40"
+   "url": "https://news.cnyes.com/news/id/6599677",
+   "ts": "09/07 20:15"
   },
   {
-   "title": "OpenAI已造出「異星心智」？首席科學家：RSI真的來了、呼籲人類煞車",
+   "title": "鉅亨速報 - Factset 最新調查：蔚來汽車(NIO-US)EPS預估上修至-0.09元，預估目標價為5.99元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6599105",
-   "ts": "09/07 12:10"
+   "url": "https://news.cnyes.com/news/id/6599676",
+   "ts": "09/07 20:15"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：群聯(8299-TW)EPS預估下修至388.99元，預估目標價為2740元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6599668",
+   "ts": "09/07 20:11"
+  },
+  {
+   "title": "營收速報  - 安國(8054)8月營收6.83億元年增率高達157.45％",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6599660",
+   "ts": "09/07 19:50"
+  },
+  {
+   "title": "營收速報  - 天虹(6937)8月營收2.65億元年增率高達123.29％",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6599659",
+   "ts": "09/07 19:50"
+  },
+  {
+   "title": "營收速報  - 台灣銘板(6593)8月營收4,367萬元年增率高達107.7％",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6599658",
+   "ts": "09/07 19:50"
+  },
+  {
+   "title": "營收速報  - 欣普羅(6560)8月營收1,110萬元年增率高達461.32％",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6599657",
+   "ts": "09/07 19:50"
   }
  ],
  "inst": {
   "date": "09/07",
-  "total_yi": 1138.7,
+  "total_yi": 1127.2,
   "foreign_yi": 883.1,
-  "trust_yi": 98.7
+  "trust_yi": 87.2
  }
 }
