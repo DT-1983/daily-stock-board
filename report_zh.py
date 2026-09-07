@@ -323,13 +323,25 @@ def render(key, r, d=None, px=None, fc=None):
             + "".join(B) + "</div></body></html>")
 
 
+def _fname_safe(x):
+    """檔名安全字串：拿掉 Windows 不允許的字元與空白。"""
+    import re as _re
+    return _re.sub(r'[\\/:*?"<>|\s]+', "", str(x or "")).strip()[:12]
+
+
 def _slug(s):
     return "".join(c for c in str(s) if c.isalnum() or c in "-_")[:24] or "報告"
 
 
 def build(key, r, output=""):
     html = render(key, r)
-    fn = f"{r.get('ticker')}_{_slug(r.get('broker'))}報告_中文重點.html"
+    # b（2026-09-07 Leo：「台股檔名可以加上中文」）——在 Google Drive 的檔案清單裡
+    # 「2454_…」認不出是哪一檔，「2454_聯發科_…」一眼就知道。
+    # ⚠️ 名稱可能含 / \ : * ? " < > | 這種檔名不能用的字（例如「矽力-KY」還好，
+    #    但外資名有時帶括號），一律過濾掉再組檔名。
+    _nm = _fname_safe(r.get("name") or "")
+    fn = (f"{r.get('ticker')}_{_nm}_{_slug(r.get('broker'))}報告_中文重點.html"
+          if _nm else f"{r.get('ticker')}_{_slug(r.get('broker'))}報告_中文重點.html")
     out = output or op.brief(fn)
     os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
     io.open(out, "w", encoding="utf-8").write(html)

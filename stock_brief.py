@@ -460,6 +460,30 @@ def render(d, extra_notes=None):
             + "".join(body) + "</div></body></html>")
 
 
+def _brief_href(tk, name):
+    nm = _fname_safe(name)
+    return (f"{tk}_{nm}_整合報告.html" if nm and nm != tk
+            else f"{tk}_整合報告.html")
+
+
+def _zh_href(tk, name, d):
+    """最新那份中文重點頁的檔名。**用檔案系統實際存在的那個**，
+    不是拼出來就算——report_zh 的命名規則改過，拼錯就是 404。"""
+    import glob as _glob
+    import os as _os
+    pats = _glob.glob(_os.path.join(OBIS, f"{tk}_*中文重點.html"))
+    if not pats:
+        return ""
+    pats.sort(key=_os.path.getmtime)
+    return _os.path.basename(pats[-1])
+
+
+def _fname_safe(x):
+    """檔名安全字串：拿掉 Windows 不允許的字元與空白。"""
+    import re as _re
+    return _re.sub(r'[\\/:*?"<>|\s]+', "", str(x or "")).strip()[:12]
+
+
 def briefed_tickers():
     """有券商報告的代號集合——`--all` 的母體。
 
@@ -482,7 +506,15 @@ def build_one(ticker, output=""):
     """產一檔，回 (輸出路徑, gather 結果)。"""
     d = gather(ticker)
     html = render(d)
-    out = output or os.path.join(OBIS, f"{d['ticker']}_整合報告.html")
+    # b：檔名帶中文名，Drive 的清單裡一眼認得出是哪一檔。
+    # ⚠️ 名稱要從 gather 的結果拿（跟索引那邊同一個來源），這個函式的
+    # 區域範圍裡沒有 `name` 這個變數——我第一版直接寫 name 就 NameError。
+    _nm = _fname_safe((d.get("lamp") or {}).get("name")
+                      or ((d.get("reports") or [{}])[0].get("name"))
+                      or "")
+    out = output or os.path.join(
+        OBIS, (f"{d['ticker']}_{_nm}_整合報告.html" if _nm and _nm != d["ticker"]
+               else f"{d['ticker']}_整合報告.html"))
     os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
     io.open(out, "w", encoding="utf-8").write(html)
     return out, d, len(html)
@@ -507,7 +539,15 @@ INDEX_CSS = """
 .ix a{color:var(--ink);font-weight:700;text-decoration:none;border-bottom:1px dotted var(--line2)}
 .ix a:hover{color:#93C5FD}
 .ix .code{font-family:'Fira Code',monospace;font-variant-numeric:tabular-nums;font-size:13.5px}
-.ix .nm{display:block;font-size:11.5px;color:var(--dim);font-weight:400;margin-top:2px}
+.ix /* a（2026-09-07 Leo：「投資報告，可以中文放大嗎?」）——中文名才是認得出
+   哪一檔的東西，代號是拿來查的。名稱升級成可點的大字（連最新中文重點頁），
+   代號降成下面一行的小連結（連整合報告）。 */
+.nm{display:block;font-size:11.5px;color:var(--dim);font-weight:400;margin-top:2px}
+.ix .nm.big{font-size:17px;font-weight:700;color:var(--ink);margin:0;
+ text-decoration:none;letter-spacing:.01em;line-height:1.35}
+.ix .nm.big:hover{color:var(--accent,#60a5fa);text-decoration:underline}
+.ix .main .sub a{color:var(--dim);text-decoration:none}
+.ix .main .sub a:hover{color:var(--accent,#60a5fa);text-decoration:underline}
 .ix .num{font-family:'Fira Code',monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
 .ix .sub{display:block;font-size:11px;color:var(--dim);margin-top:2px;line-height:1.6}
 .ix .pos{color:var(--up)}.ix .neg{color:var(--down)}
@@ -573,6 +613,10 @@ def index_rows():
         out.append({
             "ticker": d["ticker"],
             "name": (top or {}).get("name") or lamp.get("name") or d["ticker"],
+            "zh_href": _zh_href(tk, (top or {}).get("name")
+                                or lamp.get("name") or tk, d),
+            "brief_href": _brief_href(tk, (top or {}).get("name")
+                                      or lamp.get("name") or tk),
             "n_reports": len(d["reports"]),
             "brokers": sorted({str(r.get("broker") or "?") for r in d["reports"]}),
             "last_date": (top or {}).get("date"),
@@ -662,9 +706,16 @@ def render_index(rows):
         cls = ' class="hot"' if r["fired"] else ""
         trs.append(
             f"<tr{cls}>"
-            f'<td class="main" data-h="個股"><a class="code" '
-            f'href="{esc(r["ticker"])}_整合報告.html">{esc(r["ticker"])}</a>'
-            f'<span class="nm">{esc(r["name"])}</span></td>'
+            # a（Leo：「中文放大嗎? 點擊個股可以直接進去中文報告嗎?」）
+            # 中文名變成主要的、可點的連結，直接進**最新那份中文重點頁**——
+            # 那是他真正要讀的東西；整合報告改成旁邊一個小連結。
+            # ⚠️ 沒有中文重點頁時（例如報告解析成功但 report_zh 還沒跑）
+            #    連結退回整合報告，不要給一個 404。
+            f'<td class="main" data-h="個股">'
+            f'<a class="nm big" href="{esc(r["zh_href"] or r["brief_href"])}">'
+            f'{esc(r["name"])}</a>'
+            f'<span class="sub"><a class="code" href="{esc(r["brief_href"])}">'
+            f'{esc(r["ticker"])} · 整合報告</a></span></td>'
             f'<td data-h="券商報告"><span class="num">{r["n_reports"]}</span> 份'
             f'<span class="sub">{esc("、".join(r["brokers"][:3]))}'
             f'{"…" if len(r["brokers"]) > 3 else ""}　最新 {esc(r["last_date"] or "-")}</span></td>'
