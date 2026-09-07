@@ -49,6 +49,17 @@ table.cb th{text-align:right;padding:8px 6px;color:var(--dim);font-weight:600;
 table.cb th:nth-child(-n+4){text-align:left}
 table.cb td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
 .rrwarn{margin-left:3px;font-size:11px;cursor:help}
+.roomlink{display:flex;flex-direction:column;justify-content:center;gap:2px;
+ padding:8px 14px;border:1px solid var(--cy,#22D3EE);text-decoration:none;
+ color:var(--cy,#22D3EE);font-size:13px;flex:0 0 auto;
+ background:var(--cy-dim,rgba(34,211,238,.10))}
+.roomlink span{font-size:10.5px;color:var(--dim);font-weight:400}
+/* ⚠️ 查股框的輸入格要有最小寬度：多了戰情室那顆之後，同一排四樣東西
+   （統計卡＋查股框＋按鈕＋戰情室）會把它壓到 192px，placeholder 整句看不完。
+   給 min-width 讓它**寧可換行也不要壓扁**——換行只是多一列，壓扁是壞掉。 */
+.cbtop .lkbox{flex:1 1 380px}
+.cbtop .lkbox input{min-width:220px}
+@media(max-width:760px){.roomlink{flex:1 1 100%}}
 table.cb td:nth-child(-n+4){text-align:left}
 table.cb tr:hover td{background:rgba(255,255,255,.03)}
 .lamp{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:3px}
@@ -316,6 +327,11 @@ def attach_charts(rows, limit=None):
     return rows
 
 
+# 戰情室的網址（本機服務，走 tunnel）。⚠️ 寫在這裡而不是散在各頁，
+# 換網域只要改一處（同 board_theme.PAGES_URL 的作法）。
+ROOM_URL = "https://stock.talentxtrend.com/room"
+
+
 def body_html(d):
     """頁面內容（不含表頭）。**戰情室的列表模式直接用這個**——
     統計卡／查股框／篩選籤／三個區塊／說明全部同一份，
@@ -332,7 +348,16 @@ def body_html(d):
                 f'<div><b style="color:#22C55E">{len(hit)}</b><span>⭐ 打點成立（且風報比 ≥ 1）</span></div>'
                 f'<div><b style="color:#EF4444">{sum(1 for r in ok if (r.get("rr") or 0) < 0)}</b>'
                 '<span>現價已超過共識目標</span></div></div>'
-                + LOOKUP_BOX + '</div>')
+                + LOOKUP_BOX
+                # 2026-09-07 Leo：「從上面快捷按鍵進去是舊的」——從這頁沒有路
+                # 進戰情室，只能繞回 Sonia。放在查股框旁邊，因為**性質一樣**：
+                # 都是本機服務、都要 token、電腦沒開就進不去。
+                # ⚠️ 這是公開頁（家人看得到）。沒授權的裝置點進去看到的是
+                #    「這台裝置還沒授權」那頁，不會外流任何數字。
+                + '<a class="roomlink" href="' + ROOM_URL + '">'
+                  '🚦 <b>燈號戰情室</b>'
+                  '<span>左選單／中圖表／右軍師，需本機開機</span></a>'
+                + '</div>')
     body.append(filter_html())
     body.append(f'<div class="cbsec">⭐ 打點成立<small>亮 ≥{d["combo_min"]} 燈且風報比 ≥ 1，'
                 f'共 {len(hit)} 檔</small></div>' + _table(hit))
