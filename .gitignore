@@ -136,3 +136,7 @@ portfolios.*.before-*.json
 
 # 帳戶 → 顯示標籤（含家人姓名與券商分公司，不可進公開 repo）
 account_labels.json
+
+# 軍師對話（私人：持股、成本、在煩惱什麼——比燈號本身更敏感）
+state/war_room_chats.jsonl
+state/war_room_sessions.json
