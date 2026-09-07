@@ -140,3 +140,6 @@ account_labels.json
 # 軍師對話（私人：持股、成本、在煩惱什麼——比燈號本身更敏感）
 state/war_room_chats.jsonl
 state/war_room_sessions.json
+
+# 個股簡介快取（yfinance 業務說明濃縮，非私人但會一直長）
+state/company_intro.json

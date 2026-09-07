@@ -319,7 +319,7 @@ def render(key, r, d=None, px=None, fc=None):
             + BASE_CSS + stock_brief.CSS + CSS
             + '</style></head><body><div class="wrap">'
             + header("earnings", f"{esc(name)} {esc(r.get('ticker'))}　"
-                                 f"{esc(r.get('broker'))}報告中文重點", sub, nav_abs())
+                                 f"{esc(r.get('broker'))}報告中文重點", sub, nav_abs(), eyebrow="BROKER DIGEST")
             + "".join(B) + "</div></body></html>")
 
 
