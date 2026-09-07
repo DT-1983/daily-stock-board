@@ -546,7 +546,13 @@ INDEX_CSS = """
 .ix .nm.big{font-size:17px;font-weight:700;color:var(--ink);margin:0;
  text-decoration:none;letter-spacing:.01em;line-height:1.35}
 .ix .nm.big:hover{color:var(--accent,#60a5fa);text-decoration:underline}
-.ix .main .sub a{color:var(--dim);text-decoration:none}
+/* 2026-09-07 Leo：「整合報告字斷行了」——「3008 · 整合報告」被折成兩行。
+   那一格是表格的第一欄，內容比欄寬長就會折。兩件事一起做：
+     · 這一行本身不准折（它是一個連結，斷開之後兩半看起來像兩個東西）
+     · 給「個股」欄一個最小寬度，不要讓其他欄把它擠扁 */
+.ix .main{min-width:132px}
+.ix .main .sub{white-space:nowrap}
+.ix .main .sub a{color:var(--dim);text-decoration:none;white-space:nowrap}
 .ix .main .sub a:hover{color:var(--accent,#60a5fa);text-decoration:underline}
 .ix .num{font-family:'Fira Code',monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
 .ix .sub{display:block;font-size:11px;color:var(--dim);margin-top:2px;line-height:1.6}
