@@ -240,6 +240,15 @@ def gather():
 
 
 CSS = """
+/* 🔴 2026-09-07：class 名全部加 `ex` 前綴。
+   今天**第二次**撞到 board_theme 的共用樣式：
+     早上 `.nm`（帶 max-width:190px+ellipsis）→ 手機卡片版整列鎖成 190px；
+     現在 `.row`（帶 display:flex）→ <details> 變橫向 flex，
+            summary 與細節被排成左右兩欄，桌機整個版面壞掉。
+   ⭐ **共用元件的 class 名不是中性的**。`.row/.rows/.big/.tk/.empty` 這種
+      通用字在任何設計系統裡都會被用掉——自己的頁面一律加前綴，
+      不要每次都靠踩到才發現。 */
+
 .sb{background:var(--surface);border:1px solid var(--line);border-radius:12px;
  padding:14px 16px;margin:12px 0}
 .sb h2{font-size:15px;font-weight:700;color:#F5B841;margin-bottom:4px}
@@ -311,20 +320,20 @@ CSS = """
 /* ── 三燈摘要 + 展開細節（2026-09-06 Leo：「可以做像燈號那樣？」）──
    改成 <details> 之後**不再是表格**，所以沒有 min-width、沒有橫捲，
    手機與桌機共用同一份版面，不用再維護兩套排版。 */
-.rows{display:flex;flex-direction:column;gap:6px;margin-top:10px}
-.row{border:1px solid var(--line);border-radius:10px;background:var(--surface);
+.exrows{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.exrow{border:1px solid var(--line);border-radius:10px;background:var(--surface);
  overflow:hidden}
-.row.big{border-color:rgba(248,113,113,.45)}
-.row[open]{border-color:var(--accent,#3b82f6)}
+.exrow.big{border-color:rgba(248,113,113,.45)}
+.exrow[open]{border-color:var(--accent,#3b82f6)}
 /* ⚠️ 要 width:100%+box-sizing：<summary> 設 display:grid 之後在 Chrome 上是
    縮成內容寬（實測桌機 642px 塞在 1037px 的列裡，右邊空一大塊）。 */
-.sm{list-style:none;cursor:pointer;display:grid;align-items:center;gap:6px 10px;
+.exsm{list-style:none;cursor:pointer;display:grid;align-items:center;gap:6px 10px;
  width:100%;box-sizing:border-box;
  padding:9px 12px;
  grid-template-columns:minmax(120px,1.5fr) auto minmax(46px,.5fr)
                        minmax(62px,.6fr) minmax(62px,.6fr) minmax(84px,.8fr)}
-.sm::-webkit-details-marker{display:none}
-.sm:hover{background:rgba(148,163,184,.06)}
+.exsm::-webkit-details-marker{display:none}
+.exsm:hover{background:rgba(148,163,184,.06)}
 .c1{font-weight:700;font-size:14px;color:var(--ink);display:flex;
  align-items:baseline;gap:7px;min-width:0}
 .nm2{font-weight:400;font-size:11px;color:var(--dim);overflow:hidden;
@@ -334,7 +343,7 @@ CSS = """
 .c4,.c5,.c6{text-align:right;font-size:12.5px;
  font-variant-numeric:tabular-nums}
 .c6{font-weight:600}
-.row[open] .sm{border-bottom:1px solid var(--line2)}
+.exrow[open] .exsm{border-bottom:1px solid var(--line2)}
 
 /* 燈：亮的有底色，暗的只留輪廓——一眼掃得出哪幾檔三盞全亮 */
 .lamp{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;
@@ -354,7 +363,7 @@ CSS = """
 .lamp.val.on i{background:#c084fc}
 
 /* 展開的細節：自動排欄，寬螢幕四欄、手機兩欄，不用寫斷點 */
-.det{display:grid;gap:1px;background:var(--line2);
+.exdet{display:grid;gap:1px;background:var(--line2);
  grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
 .d{background:var(--surface);padding:7px 11px;display:flex;
  justify-content:space-between;align-items:baseline;gap:8px;font-size:12px}
@@ -366,7 +375,7 @@ CSS = """
 .expandbar{display:flex;gap:8px;justify-content:flex-end;margin-top:8px}
 @media(max-width:620px){
  /* 手機：燈自己一行，數字擠在第二行——欄位再細就讀不了了 */
- .sm{grid-template-columns:1fr auto auto auto;gap:5px 8px}
+ .exsm{grid-template-columns:1fr auto auto auto;gap:5px 8px}
  .c1{grid-column:1/-1}
  .c2{grid-column:1/-1}
  .c3{text-align:left}
@@ -377,11 +386,11 @@ CSS = """
 FILTER_JS = r'''
 <script>
 (function(){
-  // 篩選：五組按鈕（各組互斥）＋關鍵字。作用對象是 <details class="row">。
+  // 篩選：五組按鈕（各組互斥）＋關鍵字。作用對象是 <details class="exrow">。
   // ⚠️ 只切 hidden，不重排 DOM——展開狀態（open）才不會因為篩選而被重置。
   var F = {kind:"", mkt:"", who:"", pnl:"", val:""};
   var q = "";
-  var rows = Array.prototype.slice.call(document.querySelectorAll("details.row"));
+  var rows = Array.prototype.slice.call(document.querySelectorAll("details.exrow"));
 
   function apply(){
     var shown = 0, mv = 0;
@@ -397,8 +406,8 @@ FILTER_JS = r'''
       if (ok){ shown++; mv += parseFloat(d.mv) || 0; }
     });
     // 某一組被篩空就換一句話，不要留一個空盒子
-    document.querySelectorAll(".rows").forEach(function(w){
-      var vis = w.querySelectorAll("details.row:not([hidden])").length;
+    document.querySelectorAll(".exrows").forEach(function(w){
+      var vis = w.querySelectorAll("details.exrow:not([hidden])").length;
       w.style.display = vis ? "" : "none";
       var em = w.parentNode.querySelector(".exempty.f");
       if (!em){
@@ -522,10 +531,10 @@ def render(rows, meta):
                      f' data-val="{"" if r.get("over") is None else ("over" if r["over"] > 0 else "under")}"'
                      f' data-mv="{r["mv"] or 0:.0f}"'
                      f' data-q="{esc((str(r["tk"]) + " " + str(r["name"])).lower())}"')
-            big = " big" if (r["w"] or 0) >= 3 else ""
+            big = " exbig" if (r["w"] or 0) >= 3 else ""
             # 摘要列：代號｜名稱｜誰的｜三燈｜現價｜報酬｜市值
             # 這七項是「要不要點開」的判斷依據，其餘全部收在裡面。
-            head = (f'<summary class="sm">'
+            head = (f'<summary class="exsm">'
                     f'<span class="c1">{esc(r["tk"])}'
                     + ('<span class="dim" style="font-size:10px"> ⚠️補算</span>'
                        if r.get("filled") else "")
@@ -541,7 +550,7 @@ def render(rows, meta):
             def kv(k, v, cls=""):
                 return f'<div class="d{" " + cls if cls else ""}"><b>{k}</b><span>{v}</span></div>'
 
-            body = ['<div class="det">']
+            body = ['<div class="exdet">']
             if r.get("nopos"):
                 body.append('<div class="d wide"><b>部位</b>'
                             '<span class="dim">⚠️ 報表查無部位</span></div>')
@@ -573,9 +582,9 @@ def render(rows, meta):
                 kv("距 52 週高", sgn(r["dd52"])),
             ]
             body.append("</div>")
-            out.append(f'<details class="row{big}"{attrs}>{head}'
+            out.append(f'<details class="exrow{big}"{attrs}>{head}'
                        + "".join(body) + "</details>")
-        return '<div class="rows">' + "".join(out) + "</div>"
+        return '<div class="exrows">' + "".join(out) + "</div>"
 
 
     both = [r for r in rows if r["kind"] == "both"]
