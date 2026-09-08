@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-07 21:28",
+ "updated": "2026-09-08 08:46",
  "indices": [
   {
    "sym": "^GSPC",
@@ -45,9 +45,9 @@
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/07",
+   "date": "09/08",
    "close": 31.49,
-   "chg_pct": -0.65
+   "chg_pct": -0.43
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "美國「K型經濟」現反轉訊號？低所得家庭8月薪資成長罕見超越高所得",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6599585",
-   "ts": "09/07 20:50"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：Companhia de Saneamento Basico do Estado de Sao Paulo. - ADR(SBS-US)EPS預估上修至0.37元，預估目標價為5.97元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6599679",
-   "ts": "09/07 20:15"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：Arxis, Inc. Class A(ARXS-US)EPS預估上修至0.46元，預估目標價為62.50元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6599678",
-   "ts": "09/07 20:15"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：Coinbase Global Inc - Class A(COIN-US)EPS預估下修至-3.08元，預估目標價為201.00元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6599677",
-   "ts": "09/07 20:15"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：蔚來汽車(NIO-US)EPS預估上修至-0.09元，預估目標價為5.99元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6599676",
-   "ts": "09/07 20:15"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：群聯(8299-TW)EPS預估下修至388.99元，預估目標價為2740元",
+   "title": "營收速報  - 新漢(8234)8月營收6.12億元年增率高達47.96％",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6599668",
-   "ts": "09/07 20:11"
+   "url": "https://news.cnyes.com/news/id/6600153",
+   "ts": "09/08 08:23"
   },
   {
-   "title": "營收速報  - 安國(8054)8月營收6.83億元年增率高達157.45％",
+   "title": "營收速報  - 星雲(8047)8月營收8,544萬元年增率高達231.85％",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6599660",
-   "ts": "09/07 19:50"
+   "url": "https://news.cnyes.com/news/id/6600152",
+   "ts": "09/08 08:23"
   },
   {
-   "title": "營收速報  - 天虹(6937)8月營收2.65億元年增率高達123.29％",
+   "title": "營收速報  - 華安(6657)8月營收80萬元年增率高達153.31％",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6599659",
-   "ts": "09/07 19:50"
+   "url": "https://news.cnyes.com/news/id/6600151",
+   "ts": "09/08 08:23"
   },
   {
-   "title": "營收速報  - 台灣銘板(6593)8月營收4,367萬元年增率高達107.7％",
+   "title": "營收速報  - 天瀚(6225)8月營收323萬元年增率高達139.2％",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6599658",
-   "ts": "09/07 19:50"
+   "url": "https://news.cnyes.com/news/id/6600150",
+   "ts": "09/08 08:23"
   },
   {
-   "title": "營收速報  - 欣普羅(6560)8月營收1,110萬元年增率高達461.32％",
+   "title": "營收速報  - 威剛(3260)8月營收189.25億元年增率高達279.81％",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6599657",
-   "ts": "09/07 19:50"
+   "url": "https://news.cnyes.com/news/id/6600149",
+   "ts": "09/08 08:23"
+  },
+  {
+   "title": "全球首發！獲小米18 Fold頂配版本採用　長鑫LPDDR6實現旗艦手機端商用",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6599719",
+   "ts": "09/08 08:10"
+  },
+  {
+   "title": "川普再發聲安撫選民：戰勝伊朗後油價將「斷崖式下跌」　最終跌至每加侖2美元以下",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6600108",
+   "ts": "09/08 07:40"
+  },
+  {
+   "title": "美伊可能沒有核協議？美能源部長：考慮直接摧毀伊朗核能力",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6599189",
+   "ts": "09/08 07:10"
+  },
+  {
+   "title": "HBM需求從GPU擴大至ASIC 高容量堆疊帶動先進封裝升級",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6600102",
+   "ts": "09/08 07:00"
+  },
+  {
+   "title": "短缺惡化 ！韓券商：三星、SK海力士記憶體庫存量不足10天",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6599715",
+   "ts": "09/08 07:00"
   }
  ],
  "inst": {
