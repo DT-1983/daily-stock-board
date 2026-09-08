@@ -192,10 +192,51 @@ def table_html():
     if not (d.get("rows") or []):
         return '<div class="empty">找不到 combo_result.json。</div>'
     return ('<div class="tnote">點任一列 → 切到<b>個股模式</b>並選中那一檔'
-            '（技術圖、燈號細節、軍師都在那邊）。</div>' + ch.body_html(d))
+            '（技術圖、燈號細節、軍師都在那邊）。</div>'
+            # in_room=True：不要在戰情室裡再放一顆「前往戰情室」。
+            + ch.body_html(d, in_room=True))
 
 
 # ── 中欄 ──────────────────────────────────────────────────────────────
+def live_lamps(tk):
+    """**現在**這一檔幾盞燈（抓到最新交易日重算）。算不出來回 None。
+
+    為什麼要有（2026-09-08 Leo：「上面字卡是4燈，但下面圖表是3燈? 到底是幾燈?」）：
+      上面的卡是掃描快取（每天 07:45 跑，用的是**前一個收盤**），
+      下面的圖是現抓的到最新交易日 —— 兩者本來就差一天。
+      2313 華通 9/7 收 240、RS 3.33%（4燈）；9/8 收 231、RS 掉到 +0.22%（3燈）。
+      頁面上本來有一行免責聲明解釋這件事，但 Leo 讀了還是被搞混
+      → ⭐ **要解釋才看得懂的東西，就是還沒做好。把答案直接算出來擺上去。**
+
+    🔴 **直接呼叫 combo_scan.scan_one，不自己重寫一套燈號邏輯。**
+       燈號定義是凍結的（Leo：「燈號等老墨吧」），這裡只是換一份比較新的資料
+       去跑同一套規則。自己寫第二套遲早會跟掃描漂移。
+    """
+    try:
+        import combo_scan as cs
+        import price_store
+        import tw_symbol
+        sym = (tw_symbol.resolve(tk) if str(tk)[:1].isdigit()
+               else str(tk).replace(".", "-"))
+        is_tw = cs._is_tw(tk)
+        # 🔴 一定要 force=True。price_store 的 STALE_HOURS=12，而每天 07:45 的掃描
+        #    會把快取標成「新鮮」→ 到 19:45 前都不重抓，拿到的是**前一交易日**收盤。
+        #    不加 force 的話這裡算出來的「今日現算」會跟快取一模一樣（2313 都是 9/7 的 240），
+        #    ⭐ 那就變成「多一行字宣稱是今天的，其實是昨天的」——比不做還糟。
+        #    price_store.get_ohlc 的註解早就寫過這件事：「即時重算如果只重算指標
+        #    不重抓價格就是騙人的」。我第一版還是漏了。
+        bench = price_store.get_closes(["^TWII" if is_tw else "^GSPC"],
+                                       period="3y", force=True)
+        b = bench.get("^TWII" if is_tw else "^GSPC")
+        ohlc = price_store.get_ohlc([sym], period="3y", force=True)
+        df = ohlc.get(sym)
+        if df is None or df.empty or b is None:
+            return None
+        return cs.scan_one(tk, sym, df, b.dropna().tolist())
+    except Exception:                                       # noqa: BLE001
+        return None            # 算不出來就不顯示，不要讓整頁掛掉
+
+
 def detail_html(ticker):
     """中欄：關鍵數字 + 技術圖。**圖是現算的**（抓 2 年資料算指標，數秒）。
 
@@ -210,6 +251,22 @@ def detail_html(ticker):
     d = _load(RESULT, {}) or {}
     raw = next((x for x in (d.get("rows") or [])
                 if str(x.get("ticker")).upper() == r["tk"].upper()), {})
+    _row_asof = raw.get("asof") or _asof
+
+    # 「今日現算」：用**下面那張圖的同一份資料**（現抓到最新交易日）重跑同一套燈號，
+    # 直接擺在快取燈數旁邊。資料日一樣就不顯示（沒有差異就沒有必要多一行）。
+    _lv = live_lamps(r["tk"])
+    _live_line = ""
+    if _lv and _lv.get("asof") and _lv["asof"] != _row_asof:
+        _off = [k for k, v in (_lv.get("lamps") or {}).items() if not v]
+        _diff = _lv["lit"] - r["lit"]
+        _cls = "up" if _diff > 0 else ("dn" if _diff < 0 else "")
+        _live_line = (
+            f'<div class="livelit"><b class="{_cls}">{_lv["lit"]} / 4</b>'
+            f'<span class="tag">今日現算</span>'
+            f'<span class="asof">{esc(_lv["asof"])}　收 {_lv["price"]:,.2f}</span>'
+            + (f'<div class="offs">熄：{esc("、".join(_off))}</div>' if _off else "")
+            + "</div>")
 
     def num(v, n=2, suf=""):
         return "—" if v is None else f"{v:,.{n}f}{suf}"
@@ -236,7 +293,12 @@ def detail_html(ticker):
         f'<span class="px">{num(r["px"])}</span>'
         + ("" if r["chg"] is None else
            f'<span class="{"up" if r["chg"] >= 0 else "dn"}">{r["chg"]:+.2f}%</span>')
-        + f'<span class="dim">{esc(r["sec"])}　燈號資料 {esc(_asof)}</span></div>'
+        # 🔴 2026-09-08 Leo 問「9/8 沒對齊」時查到：原本這裡用 rows() 回的全頁 _asof，
+        #    而那是**清單第一列**的資料日。但同一份掃描檔本來就有兩個資料日——
+        #    台股 9/7、美股 9/4（美股 9/7 是勞動節休市，兩個都對）。
+        #    結果：點美股個股時標成 9/7，實際資料是 9/4，**標錯一天**。
+        # ⭐ 日期要跟著「這一檔自己的資料」走，不能用別檔的日期代表它。
+        + f'<span class="dim">{esc(r["sec"])}　燈號資料 {esc(_row_asof)}</span></div>'
         # 🔴 2026-09-07 查 Leo 的「9/3 沒日期」時發現的：上面這排卡是
         # combo_result 的快取（每天 07:45 掃，內容是前一交易日收盤），
         # 下面的圖是**現抓**的（到今天）。2454 當下卡片 4,415 / 圖 4,760，差 7.8%。
@@ -246,7 +308,9 @@ def detail_html(ticker):
         '掃描之後又有交易日的話，兩者會不一樣。</div>')
 
     cards = "".join([
-        f'<div class="dc"><div class="k">燈數</div><div class="v">{r["lit"]} / 4</div>'
+        f'<div class="dc"><div class="k">燈數</div><div class="v">{r["lit"]} / 4'
+        f'<span class="asof">{esc(_row_asof)}</span></div>'
+        + _live_line +
         f'<div class="s">{lamp_rows}</div></div>',
         f'<div class="dc"><div class="k">SuperTrend</div><div class="v">{st}</div>'
         f'<div class="s">{esc(stsub)}</div></div>',
@@ -338,9 +402,17 @@ body{margin:0}
 /* 導覽列（2026-09-07 Leo：「最上面可以加一個其它各頁的快捷嗎? 跟其它投資頁一樣」）。
    ⚠️ 不用 board_theme.header()——那是完整頁首，在 100vh 的版型裡會吃掉一大塊。
    這裡只放連結，38px 一條；標題在左欄的「報價組合」已經有了。 */
+/* 2026-09-08 Leo：「進出燈號跟戰情室很難分得出來」。
+   兩頁的內容本來就是同一支產生器（刻意的，避免兩份邏輯漂移），
+   所以要靠**頁首**分辨。給戰情室一條青色頂邊＋一個「本機・即時」標籤——
+   公開頁是靜態檔、沒有這條邊，一眼就分得出來。 */
 .roomnav{display:flex;align-items:center;gap:6px;height:38px;padding:0 10px;
+ border-top:2px solid var(--cy,#22D3EE);
  border-bottom:1px solid var(--hud,#16304A);background:var(--panel,#080E1A);
  white-space:nowrap;overflow:hidden}
+.rtag{font-size:9px;letter-spacing:.12em;color:var(--void,#04070E);
+ background:var(--cy,#22D3EE);padding:2px 5px;border-radius:2px;
+ margin-right:8px;flex:0 0 auto;font-weight:700}
 /* 連結區自己捲；控制項在外面，永遠看得到。 */
 .navls{display:flex;align-items:center;gap:6px;flex:1 1 auto;min-width:0;
  overflow-x:auto;scrollbar-width:none}
@@ -451,6 +523,17 @@ body{margin:0}
  font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
 .dc .s{font-size:10.5px;color:var(--muted,#94a3b8);margin-top:3px;line-height:1.7}
 .lrow{display:flex;align-items:center;gap:5px}
+/* 「今日現算」：快取燈數底下再擺一行現算的。只有兩者資料日不同才會出現。 */
+.dc .v .asof{font-size:9px;color:var(--dim);letter-spacing:.06em;margin-left:6px;
+             font-weight:400;white-space:nowrap}
+.livelit{margin-top:5px;padding-top:5px;border-top:1px dashed var(--line2,#0E1B2B);
+         display:flex;flex-wrap:wrap;align-items:baseline;gap:6px}
+.livelit b{font-size:16px;font-weight:600}
+.livelit b.dn{color:var(--warn,#FFB627)}
+.livelit b.up{color:var(--accent,#22D3EE)}
+.livelit .tag{font-size:9px;letter-spacing:.14em;color:var(--void,#04070E);
+              background:var(--accent,#22D3EE);padding:1px 5px;border-radius:2px}
+.livelit .offs{flex:1 0 100%;font-size:10px;color:var(--warn,#FFB627);margin-top:2px}
 .empty,.warn{padding:22px 16px;color:var(--dim);font-size:13px}
 .datewarn{padding:6px 14px;font-size:11px;color:var(--dim);
  border-bottom:1px solid var(--line)}
@@ -756,6 +839,35 @@ ROOM_JS = r"""
   }
   mStock.addEventListener("click", function(){ setMode(false); });
   mList.addEventListener("click", function(){ setMode(true); });
+
+  // ── 搜尋框：母體內就留在戰情室，母體外才跳查股頁 ──
+  // 2026-09-08 Leo：「改在母體內不跳出」。
+  // 原本這顆框（board_theme 的共用 LOOKUP_BOX）一律 target=_blank 開查股頁，
+  // 連母體裡本來就有的股票也被丟出去 → 等於離開軍師與左欄。
+  // ⭐ 只攔「找得到的」，找不到的完全不動它——讓表單照原本的方式送出去，
+  //    這樣「母體外要能查」這件事不會因為我多寫了 JS 而壞掉。
+  (function(){
+    var f = document.querySelector("form.lkbox");
+    if (!f) return;
+    var inp = f.querySelector('input[name="ticker"]');
+    if (!inp) return;
+    f.addEventListener("submit", function(e){
+      var q = (inp.value || "").trim();
+      if (!q) return;
+      var lo = q.toLowerCase();
+      var hit = items.find(function(x){
+        return (x.dataset.tk || "").toLowerCase() === lo;
+      }) || items.find(function(x){
+        return (x.dataset.q || "").indexOf(lo) >= 0;
+      });
+      if (!hit) return;                 // 母體外 → 照舊開查股頁
+      e.preventDefault();
+      setMode(false);
+      pick(hit);
+      try { hit.scrollIntoView({block: "nearest"}); } catch(_e) {}
+      inp.blur();
+    });
+  })();
 
   // 點表格任一列 → 切到個股模式並選中那一檔
   document.querySelectorAll(".tablepane table.cb tr[data-tid]").forEach(function(tr){
@@ -1134,6 +1246,7 @@ def nav_html():
     #    ⭐ 修法不是縮小字，是**分成兩區**：連結自己捲，控制項固定不參與捲動。
     #       這樣不管幾個連結、螢幕多窄，控制項一定在畫面上。
     return ('<nav class="roomnav"><span class="rnb">🚦 燈號戰情室</span>'
+            '<span class="rtag">本機・即時</span>'
             f'<span class="navls">{links}</span>{ctrl}</nav>')
 
 

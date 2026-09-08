@@ -151,3 +151,13 @@ state/earnings_calendar.json
 state/mikeon_crosscheck.json
 state/mikeon_crosscheck_before_fix.json
 state/mikeon_crosscheck_history/
+
+# 2026-09-08 本機重啟服務時的暫存 log／備份檔，不進 repo
+bot_restart.log
+bot_restart.log.err
+*.bak
+portfolios.json.*.bak
+
+# 讀私人失效條件登錄簿的本機工具（跟 trade_plan.py 同級）。
+# 註解裡帶有實際持股代號與門檻價 —— 程式碼那層也算外流。
+thesis_repricing.py

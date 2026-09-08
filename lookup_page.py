@@ -152,6 +152,16 @@ PAGE_CSS = """
 .lk-err{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--down);
  border-radius:10px;padding:15px 17px;color:#FCA5A5;font-size:13.5px;line-height:1.75;margin:12px 0}
 .lk-rf{font-size:12.5px;color:#93C5FD;margin:2px 0 6px}
+/* 個股簡介：擺在標的名稱下面、關鍵數字上面。短、不搶戲。 */
+.lk-intro{font-size:12.5px;line-height:1.85;color:var(--muted);margin:6px 0 10px;
+          padding:9px 12px;background:var(--surface);border:1px solid var(--line2,#0E1B2B);
+          border-left:2px solid var(--accent);border-radius:0 6px 6px 0}
+.lk-intro-wait{color:var(--dim)}
+.lk-gen{font-size:11px;color:var(--dim);opacity:.75}
+.lkdot{display:inline-block;width:4px;height:4px;margin-left:5px;border-radius:50%;
+       background:var(--accent);vertical-align:middle;animation:lkpulse 1.1s ease-in-out infinite}
+@keyframes lkpulse{0%,100%{opacity:.25}50%{opacity:1}}
+@media(prefers-reduced-motion:reduce){.lkdot{animation:none;opacity:.7}}
 .lk-picks{display:flex;flex-direction:column;gap:7px;margin-top:10px}
 .lk-pick{display:flex;gap:10px;align-items:baseline;padding:11px 13px;border-radius:9px;
  background:var(--surface);border:1px solid var(--line);text-decoration:none;color:var(--ink);
@@ -199,12 +209,96 @@ def _card(k, v, s="", zh=False):
 def _form(ticker=""):
     """搜尋框＝投資站首頁／進出燈號頁上那一顆（board_theme 的 .lkbox），
     只是 action 指回自己。兩邊各寫一份必然會漂移，所以連 class 都沿用。"""
+    # 2026-09-08 Leo：「查任意股票幫我拿掉，只要留查燈號＋圖表（文字改查燈號）」
+    # 那個 label 跟頁面標題一模一樣，同一句話在同一畫面出現兩次是雜訊。
     return (f'<form class="lkbox lk-form" method="get" action="/lookup">'
-            f'<span class="lkl">🔍 查任意股票</span>'
             f'<input name="ticker" value="{esc(ticker)}" '
             f'placeholder="代號或名稱：2454 / 台積電 / COST" '
             f'autocomplete="off" autocapitalize="characters">'
-            f'<button type="submit">查燈號＋圖表</button></form>')
+            f'<button type="submit">查燈號</button></form>')
+
+
+def intro_text(ticker):
+    """給 /lookup/intro 用：回簡介文字，沒有就**現在生**（會擋 ~30 秒）。
+
+    ⚠️ 呼叫端一定要放在執行緒裡跑，不要卡住事件迴圈。
+    ⚠️ 生不出來回空字串，**不要編一句話填版面**——
+       版面空一塊只是難看，編出來的公司描述會被當成事實。
+    """
+    tk = (ticker or "").strip()
+    if not tk:
+        return ""
+    try:
+        import company_intro as ci
+        txt, _p = ci.intro(tk)
+        return (txt or "").strip()
+    except Exception as e:                                  # noqa: BLE001
+        print(f"  [warn] intro_text({tk}) 失敗：{str(e)[:80]}")
+        return ""
+
+
+def _intro(row):
+    """個股簡介（2026-09-08 Leo：「加上個股簡介，馬上查就好，不用長幾句話」）。
+
+    🔴 **不能擋在頁面前面**。實測 company_intro.intro() 要 28.4 秒
+       （本機 claude 跑一輪），掛在載入路徑上就跟「馬上查」完全相反。
+    做法：
+      · 快取有 → 立刻顯示（大部分回訪都會命中）
+      · 快取沒有 → 先顯示手上**已經有的**資料（中文名／產業），
+        同時丟一支背景程序去生成，下次查就有了。
+    ⭐ 寧可先給一行真的、之後補齊，也不要讓人對著空白等半分鐘。
+    """
+    tk = str(row.get("ticker") or "")
+    if not tk:
+        return ""
+    txt = ""
+    try:
+        import company_intro as ci
+        hit = (ci._load() or {}).get(tk.upper())
+        if hit and hit.get("text"):
+            txt = hit["text"]
+    except Exception:                                       # noqa: BLE001
+        pass
+
+    if txt:
+        return f'<div class="lk-intro">{esc(txt)}</div>'
+
+    # 還沒有 → **頁面先出來**，前端去輪詢 /lookup/intro，好了再補進來。
+    # （2026-09-08 Leo：「可以查的時候先開頁面，跑出來再顯示？」
+    #   上一版是「背景生成、下次查才有」——那等於這一次查的人永遠看不到。）
+    bits = [b for b in [row.get("name"), row.get("sector_zh")] if b]
+    line = "　·　".join(esc(str(b)) for b in bits)
+    return (f'<div class="lk-intro lk-intro-wait" id="lkintro" '
+            f'data-tk="{esc(tk)}">{line}{"　" if line else ""}'
+            f'<span class="lk-gen">簡介產生中<i class="lkdot"></i></span></div>'
+            + INTRO_JS)
+
+
+# 輪詢：第一次就送出請求（那一下會真的觸發生成，要等 ~30 秒），
+# 逾時就換成一句人話，不要留一個永遠在轉的點點。
+INTRO_JS = """<script>
+(function(){
+  var el=document.getElementById('lkintro'); if(!el) return;
+  var tk=el.getAttribute('data-tk'), n=0;
+  function stop(msg){
+    var g=el.querySelector('.lk-gen'); if(g) g.textContent=msg;
+  }
+  function tick(){
+    n++;
+    fetch('/lookup/intro?ticker='+encodeURIComponent(tk),{credentials:'same-origin'})
+      .then(function(r){return r.json();})
+      .then(function(d){
+        if(d && d.ready && d.text){
+          el.classList.remove('lk-intro-wait');
+          el.textContent=d.text;
+        } else if(n<12){ setTimeout(tick,5000); }
+        else { stop('簡介這次沒產生出來'); }
+      })
+      .catch(function(){ if(n<12){ setTimeout(tick,5000);} else {stop('簡介讀取失敗');} });
+  }
+  tick();
+})();
+</script>"""
 
 
 def _summary(row):
@@ -600,7 +694,8 @@ def render(ticker, live=False):
             f'<span class="lk-src">{src}</span></div>' + rf_html)
     # 搜尋框擺在標的名稱**之前**：這頁的第一動作是查下一檔，
     # 跟進出燈號頁「工具列在上、內容在下」的節奏一致。
-    body = _form(ticker) + head + _summary(row) + _broker(row) + tech + NOTE
+    body = (_form(ticker) + head + _intro(row) + _summary(row)
+            + _broker(row) + tech + NOTE)
     return _shell(f'{row["ticker"]} 查股', body), 200
 
 
