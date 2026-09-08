@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-08 08:46",
+ "updated": "2026-09-08 12:50",
  "indices": [
   {
    "sym": "^GSPC",
@@ -37,17 +37,17 @@
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/07",
-   "close": 47326.27,
-   "chg_pct": 1.67
+   "date": "09/08",
+   "close": 47222.0,
+   "chg_pct": -0.22
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/08",
-   "close": 31.49,
-   "chg_pct": -0.43
+   "close": 31.45,
+   "chg_pct": -0.53
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "營收速報  - 新漢(8234)8月營收6.12億元年增率高達47.96％",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6600153",
-   "ts": "09/08 08:23"
-  },
-  {
-   "title": "營收速報  - 星雲(8047)8月營收8,544萬元年增率高達231.85％",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6600152",
-   "ts": "09/08 08:23"
-  },
-  {
-   "title": "營收速報  - 華安(6657)8月營收80萬元年增率高達153.31％",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6600151",
-   "ts": "09/08 08:23"
-  },
-  {
-   "title": "營收速報  - 天瀚(6225)8月營收323萬元年增率高達139.2％",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6600150",
-   "ts": "09/08 08:23"
-  },
-  {
-   "title": "營收速報  - 威剛(3260)8月營收189.25億元年增率高達279.81％",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6600149",
-   "ts": "09/08 08:23"
-  },
-  {
-   "title": "全球首發！獲小米18 Fold頂配版本採用　長鑫LPDDR6實現旗艦手機端商用",
+   "title": "國際大行狂拉警報！法國興業銀行：美債10年期殖利率升破5.5% 股市將受重創",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6599719",
-   "ts": "09/08 08:10"
+   "url": "https://news.cnyes.com/news/id/6600254",
+   "ts": "09/08 12:50"
   },
   {
-   "title": "川普再發聲安撫選民：戰勝伊朗後油價將「斷崖式下跌」　最終跌至每加侖2美元以下",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6600108",
-   "ts": "09/08 07:40"
+   "title": "安謀催生實體AI生態系 慧友躋身合作夥伴搶攻2000億美元運算商機",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6600343",
+   "ts": "09/08 12:47"
   },
   {
-   "title": "美伊可能沒有核協議？美能源部長：考慮直接摧毀伊朗核能力",
+   "title": "安謀催生實體AI生態系 慧友躋身合作夥伴搶攻2000億美元運算商機",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6599189",
-   "ts": "09/08 07:10"
+   "url": "https://news.cnyes.com/news/id/6600343",
+   "ts": "09/08 12:47"
   },
   {
-   "title": "HBM需求從GPU擴大至ASIC 高容量堆疊帶動先進封裝升級",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6600102",
-   "ts": "09/08 07:00"
+   "title": "國泰證9月投資觀點 看聯準會有更多維持按兵不動的空間",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6600339",
+   "ts": "09/08 12:45"
   },
   {
-   "title": "短缺惡化 ！韓券商：三星、SK海力士記憶體庫存量不足10天",
+   "title": "系統電IPC、無人機第二成長曲線成形 Q4營收估逐步成長",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6600323",
+   "ts": "09/08 12:45"
+  },
+  {
+   "title": "中聯油品事件再掀波  泰山今提告中聯、福壽、福懋及南僑求償10億元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6595271",
+   "ts": "09/08 12:43"
+  },
+  {
+   "title": "AI軟實力串聯硬體！00770擬配6元創掛牌新高 年化殖利率近9%",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6600301",
+   "ts": "09/08 12:42"
+  },
+  {
+   "title": "蘋果優質客戶服務神話破滅？M4 MacBook Pro修6次仍故障、曾承諾換機卻沒下文",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6599715",
-   "ts": "09/08 07:00"
+   "url": "https://news.cnyes.com/news/id/6600122",
+   "ts": "09/08 12:00"
+  },
+  {
+   "title": "喊進4光通訊大廠！高盛大幅上修光模組預測：2028年市場規模上看1485億美元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6600291",
+   "ts": "09/08 11:45"
+  },
+  {
+   "title": "蘋果採用中國記憶體要成真？長鑫科技發表聲明釋訊號",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6600121",
+   "ts": "09/08 11:30"
   }
  ],
  "inst": {
