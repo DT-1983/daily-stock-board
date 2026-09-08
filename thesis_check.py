@@ -93,6 +93,29 @@ def _st_state(tk):
     return v
 
 
+def ang_of(c):
+    return c.get("angle", "value")
+
+
+def _live_note(ctype, inval):
+    """把**現算的數字**寫成一句話。不用登錄時的 desc（那是舊的）。"""
+    inval = inval or {}
+    st_line = inval.get("st_line")
+    rs = inval.get("rs60")
+    asof = inval.get("asof") or ""
+    if ctype in ("supertrend_bear", "supertrend_flip"):
+        n = f"SuperTrend {'空方' if inval.get('st_bearish') else '多方'}"
+        if st_line:
+            n += f"（線 {st_line:,.2f}）"
+    elif ctype in ("rs_below", "rs_above"):
+        n = "RS(60日)"
+        if rs is not None:
+            n += f" 現值 {rs:+.2f}（{'低於' if rs < 0 else '高於'}自身均線）"
+    else:
+        n = ctype
+    return n + (f"　收盤 {asof}" if asof else "")
+
+
 def coverage_gap(reg):
     """哪些持股**根本沒有任何條件在被檢查**——這支每天回報的「✅健康 N 條」只涵蓋
     有登錄條件的股票，沒登錄的不會出現在任何一個數字裡，是徹底的靜默盲區。
@@ -179,6 +202,9 @@ def run():
 
     date = time.strftime("%Y-%m-%d")
     triggered, near, pending_metric = [], [], []
+    # 2026-09-08：解除清單。趨勢型每天重驗，不成立就回到 active——
+    # 「今天解除了」跟「今天觸發了」一樣是要看的事件。
+    resolved = []
     healthy = {"held": 0, "watch": 0}
     for tk, entry in reg.items():
         px = prices.get(tk)
@@ -194,7 +220,27 @@ def run():
         inval = _st_state(tk) if _trend_needed else None
         for c in entry.get("conditions", []):
             if c.get("status") == "triggered":
-                continue                      # 已觸發過的不重複報
+                # 🔴 2026-09-08：原本這裡直接 continue —— **觸發之後永遠回不去**。
+                #    2313 今天早盤被未收盤的 K 棒誤觸發，收盤已經沒事，
+                #    但那條會一直掛著，跟真正該出場的長得一模一樣。
+                # ⭐ **趨勢型是「狀態」不是「事件」**：SuperTrend 現在是多是空、
+                #    RS 現在在均線上下，每天都可以重新回答 → 不成立就解除。
+                #    價格穿越（price_above/below）是事件——「曾經跌破 X」是既成事實，
+                #    不該因為今天漲回去就當沒發生 → 維持一觸發就定案。
+                if c.get("type") in TREND_TYPES and inval:
+                    _bear = bool(inval.get("st_bearish"))
+                    _rsdn = bool(inval.get("rs60_broken"))
+                    if not TREND_TYPES[c["type"]](_bear, _rsdn):
+                        c["status"] = "active"
+                        c["resolved_date"] = date
+                        # ⚠️ 措辭：條件名稱（例「RS 站回60MA」）＋「已不成立」，
+                        #    不要寫成「RS 站回60MA…已解除」——那讀起來像
+                        #    「站回這件事解除了」，跟實際意思相反。
+                        resolved.append((tk,
+                                         f"「{TREND_LABEL[c['type']]}」條件已不成立"
+                                         f"｜{_live_note(c['type'], inval)}",
+                                         _h, ang_of(c)))
+                continue                      # 仍成立的不重複報
             ctype, val = c.get("type"), c.get("value")
             ang = c.get("angle", "value")
             desc = c.get("desc", "")
@@ -220,7 +266,12 @@ def run():
                              _h, ang))
                         continue
                     c["status"], c["triggered_date"] = "triggered", date
-                    triggered.append((tk, f"{label}｜{desc}", _h, ang, ctype))
+                    # 🔴 訊息帶**現算的值**。原本只放 desc，而 desc 是投資長登錄
+                    #    條件時寫的敘述（例：「RS(60日)由現值 3.79 跌破…」），
+                    #    之後從沒更新 —— 讀的人會以為 3.79 是現在的數字。
+                    #    ⭐ 顯示的數字要就是被檢查的那一個。
+                    triggered.append((tk, f"{label}｜{_live_note(ctype, inval)}",
+                                      _h, ang, ctype))
                 else:
                     healthy["held" if _h else "watch"] += 1
                 continue
@@ -272,7 +323,10 @@ def run():
            "uncovered": [g[0] for g in gap], "covered_count": n_cov,
            # 2026-09-05：持股現在的出場訊號存量 [代號, ST翻空, RS跌破]，
            # None 代表算不出來（**不等於沒事**）。
-           "exit_state": exit_state}
+           "exit_state": exit_state,
+           # 2026-09-08：今天**解除**的趨勢型條件。「解除」跟「觸發」一樣是事件，
+           # 而且它是唯一能讓誤觸發自己修正的機制。
+           "resolved": [list(x) for x in resolved]}
     json.dump(out, open(OUT_PATH, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
     n_tr = sum(1 for v in reg.values() for c in v.get("conditions", [])
@@ -303,6 +357,8 @@ def run():
         print(f"  {mark} [{ang}] {tk}：{msg}")
     for tk, msg, _h, ang in near:
         print(f"  ⚠️ [{ang}] {tk}：{msg}")
+    for tk, msg, _h, ang in resolved:
+        print(f"  ✅ [解除] {tk}：{msg}")
     return out
 
 
