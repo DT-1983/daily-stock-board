@@ -55,6 +55,8 @@ TREND_LABEL = {
     "supertrend_bear": "SuperTrend 翻空", "supertrend_bull": "SuperTrend 翻多",
     "rs_below": "RS 跌破60MA", "rs_above": "RS 站回60MA",
     "supertrend_flip": "SuperTrend 翻空",
+    # 價格型的標籤（2026-09-08 起也會出現在「已解除」訊息裡）
+    "price_above": "漲破門檻價", "price_below": "跌破門檻價",
 }
 
 # 🔴 2026-09-05（Leo：「SuperTrend 翻空／RS(60) 跌破自身均線，可以幫我針對持股
@@ -227,18 +229,32 @@ def run():
                 #    RS 現在在均線上下，每天都可以重新回答 → 不成立就解除。
                 #    價格穿越（price_above/below）是事件——「曾經跌破 X」是既成事實，
                 #    不該因為今天漲回去就當沒發生 → 維持一觸發就定案。
+                # 2026-09-08 Leo：「我要的是現在貴不貴」——**價格型也每天重驗**。
+                # 原本只有趨勢型會解除，價格型一觸發就定案（我當時的理由是
+                # 「曾經跌破 X 是既成事實」）。Leo 要的不是「曾經」是「現在」，
+                # 所以價格型跟趨勢型一樣：條件不再成立就解除。
+                _still = None
                 if c.get("type") in TREND_TYPES and inval:
                     _bear = bool(inval.get("st_bearish"))
                     _rsdn = bool(inval.get("rs60_broken"))
-                    if not TREND_TYPES[c["type"]](_bear, _rsdn):
+                    _still = TREND_TYPES[c["type"]](_bear, _rsdn)
+                elif c.get("type") == "price_above" and px is not None and c.get("value"):
+                    _still = px >= c["value"]
+                elif c.get("type") == "price_below" and px is not None and c.get("value"):
+                    _still = px <= c["value"]
+                if _still is False:
+                    if True:
                         c["status"] = "active"
                         c["resolved_date"] = date
                         # ⚠️ 措辭：條件名稱（例「RS 站回60MA」）＋「已不成立」，
                         #    不要寫成「RS 站回60MA…已解除」——那讀起來像
                         #    「站回這件事解除了」，跟實際意思相反。
-                        resolved.append((tk,
-                                         f"「{TREND_LABEL[c['type']]}」條件已不成立"
-                                         f"｜{_live_note(c['type'], inval)}",
+                        _lab = TREND_LABEL.get(c["type"], c["type"])
+                        _note = (_live_note(c["type"], inval)
+                                 if c["type"] in TREND_TYPES
+                                 else f"現價 {px:,.2f}"
+                                      f"（門檻 {c['value']:,.2f}）")
+                        resolved.append((tk, f"「{_lab}」條件已不成立｜{_note}",
                                          _h, ang_of(c)))
                 continue                      # 仍成立的不重複報
             ctype, val = c.get("type"), c.get("value")
