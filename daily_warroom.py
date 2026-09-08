@@ -109,6 +109,11 @@ def sec1_market(notes):
     lines = ["**① 大盤／總經**"]
     md = _load("market_data.json", {}) or {}
     us, tw = [], []
+    # 2026-09-08 Leo：「大盤總經可以加上收盤日期嗎?（同樣是美國就寫一條就可以了，
+    # 不然會太複雜）」——美股常常不是昨天的（週末、休市），不標日期會誤以為是最新。
+    # ⚠️ 每個指數都標會變四行重複，所以**同市場只在標題那行寫一次**；
+    #    真的同市場有不同日期時才逐條標（那代表資料有問題，要看得見）。
+    us_dates, tw_dates = set(), set()
     for it in md.get("indices", []):
         nm, pct, bp = it.get("name", it.get("sym", "")), it.get("chg_pct"), it.get("chg_bp")
         if pct is not None:
@@ -118,14 +123,32 @@ def sec1_market(notes):
             part = f"{nm} {bp:+.1f}bp"
         else:
             continue
-        (us if (it.get("grp") == "US" and pct is not None) else tw).append(part)
+        # 🔴 2026-09-08：原本判斷是 `grp=="US" and pct is not None`，
+        #    所以**美債殖利率（用 bp 不用 %）被丟進台股那一組**。
+        #    加了收盤日之後台股那行變成「收盤 09/04／09/08」才看見——
+        #    ⭐ 標上日期本身就是一種檢查：同一組出現兩個日期就是分組有問題。
+        _isus = it.get("grp") == "US"
+        (us if _isus else tw).append(part)
+        if it.get("date"):
+            (us_dates if _isus else tw_dates).add(it["date"])
     # 2026-09-01 Leo：「大盤可以一個指數一段嗎？」——原本 4 個指數用「｜」串一行，
     # 手機一行放得下約 20 字，4 個指數會折成 3 行且斷在奇怪的地方（實測截圖）。
     # 改成一個指數一行：行數變多但每行都完整，掃視反而快。
-    for p_ in us[:4]:
-        lines.append("🇺🇸 " + p_)
-    for p_ in tw[:4]:
-        lines.append("🇹🇼 " + p_)
+    def _dtag(ds):
+        """同市場只寫一次收盤日。⚠️ 有兩個以上不同日期就全列出來——
+        那代表某個指數的資料落後了，藏起來反而危險。"""
+        if not ds:
+            return ""
+        return f"　-# 收盤 {'／'.join(sorted(ds))}" if len(ds) > 1 else f"　-# 收盤 {list(ds)[0]}"
+
+    if us:
+        lines.append(f"🇺🇸 **美股**{_dtag(us_dates)}")
+        for p_ in us[:5]:      # 5＝四大指數＋美債殖利率（原本 4 會把美債截掉）
+            lines.append("　" + p_)
+    if tw:
+        lines.append(f"🇹🇼 **台股／匯率**{_dtag(tw_dates)}")
+        for p_ in tw[:4]:
+            lines.append("　" + p_)
 
     # 🌡️ 大盤體溫計（P2，2026-08-27）：電金比 vs 100MA。只報狀態不下行動指令——
     # 老墨的「連N日轉弱→清倉」門檻是他自己系統的規則，我們沒有對應回測依據
