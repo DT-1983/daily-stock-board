@@ -55,11 +55,15 @@ ICONS = {
 # 複製兩份必然會漂移（見 investment_site_ui_standard 記憶的原則）。
 LOOKUP_URL = "https://stock.talentxtrend.com/lookup"
 LOOKUP_BOX = (
+    # 2026-09-08 Leo：「查任意股票幫我拿掉，只要留查燈號（文字改查燈號）」。
+    # ⚠️ 這顆框有**兩份**：這裡（首頁／燈號頁／戰情室共用）和 lookup_page._form()
+    #    （查股頁自己那顆，因為要回填 value 與指回 /lookup）。
+    #    9/8 我只改了 lookup_page 那份 → Leo 在戰情室看到沒變，以為沒改成功。
+    #    ⭐ 同一顆元件有兩份實作時，改一份不算改完；動之前先 grep 字串找出所有份數。
     '<form class="lkbox" method="get" action="' + LOOKUP_URL + '" target="_blank">'
-    '<span class="lkl">🔍 查任意股票</span>'
     '<input name="ticker" placeholder="代號或名稱：2454 / 台積電 / COST" '
     'autocomplete="off" autocapitalize="characters">'
-    '<button type="submit">查燈號＋圖表</button>'
+    '<button type="submit">查燈號</button>'
     '<span class="lkn">不限掃描母體；台股可打中文名。即時計算約 3–8 秒</span>'
     '</form>')
 

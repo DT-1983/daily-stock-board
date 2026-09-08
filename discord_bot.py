@@ -250,6 +250,33 @@ async def _lookup_page(request):
     return resp
 
 
+async def _lookup_intro(request):
+    """只回「個股簡介」的輕端點（2026-09-08 Leo：「查的時候先開頁面，跑出來再顯示？」）。
+
+    為什麼要分開一支：簡介要跑本機 claude，實測 28.4 秒。
+    掛在 /lookup 的載入路徑上，等於每查一檔就對著空白頁等半分鐘。
+    改成頁面先出來、前端輪詢這支，好了再補進去。
+
+    ⚠️ 一樣走 lookup_page.gate —— **不另外發明第二套驗證**。
+       這支吐的是公司資料，沒有比主頁面不敏感，門檻不能比較鬆。
+    """
+    ok, _sc = lookup_page.gate(request.query.get("key", ""),
+                               request.cookies.get(lookup_page.COOKIE, ""))
+    if not ok:
+        return web.json_response({"ready": False, "text": ""}, status=404)
+    tk = (request.query.get("ticker") or "").strip()
+    if not tk:
+        return web.json_response({"ready": False, "text": ""})
+    try:
+        # to_thread：generate 是同步的本機 claude，直接跑會卡住事件迴圈
+        # （跟 /lookup 同一個理由）。
+        txt = await asyncio.to_thread(lookup_page.intro_text, tk)
+    except Exception as e:                                # noqa: BLE001
+        print(f"[lookup/intro] {tk} 失敗：{str(e)[:100]}", flush=True)
+        return web.json_response({"ready": False, "text": ""})
+    return web.json_response({"ready": bool(txt), "text": txt or ""})
+
+
 # ── 燈號戰情室 /room（2026-09-07，見 lamp_room.py 檔頭）──────────────
 def _room_gate(request):
     """跟 /lookup 同一道門檻。**不另外發明第二套驗證**——兩套遲早會有一套漏改。"""
@@ -443,6 +470,7 @@ async def _run():
     app = web.Application()
     app.router.add_get("/", _health)
     app.router.add_get("/lookup", _lookup_page)
+    app.router.add_get("/lookup/intro", _lookup_intro)
     app.router.add_get("/room", _room_page)
     app.router.add_get("/room/detail", _room_detail)
     app.router.add_get("/room/history", _room_history)
