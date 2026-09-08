@@ -146,3 +146,8 @@ state/company_intro.json
 
 # 財報日曆快取（yfinance 公布日/下次預估）
 state/earnings_calendar.json
+
+# 俗貴價對帳（含持股清單，不進公開 repo）
+state/mikeon_crosscheck.json
+state/mikeon_crosscheck_before_fix.json
+state/mikeon_crosscheck_history/

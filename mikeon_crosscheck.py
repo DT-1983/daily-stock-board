@@ -35,7 +35,14 @@ import sys
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-OUT = os.path.join(HERE, "state", "mikeon_crosscheck.json")
+OUT = os.path.join(HERE, "state", "mikeon_crosscheck.json")          # 最新一份
+HIST = os.path.join(HERE, "state", "mikeon_crosscheck_history")      # 每季一份，只進不出
+
+# 🔴 2026-09-08 Leo：「我們再累積一季的資料再看？」——
+#    原本每次跑都**覆寫** OUT，下一季跑完這一季就沒了，**根本累積不到東西**。
+#    ⭐ 「之後再比較」的計畫，前提是現在就把這一份留下來。
+#       決定可以延後，**保存不行**——錯過的那一期補不回來。
+#    所以另外存一份帶日期的到 HIST，只進不出（同 obis 存檔資料夾的原則）。
 
 
 def load_sheet(path):
@@ -135,8 +142,14 @@ def compare(rows, verbose=False):
                   + f"  {rec.get('eps_basis') or '-'}")
 
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
-    io.open(OUT, "w", encoding="utf-8").write(
-        json.dumps(out, ensure_ascii=False, indent=1))
+    payload = json.dumps(out, ensure_ascii=False, indent=1)
+    io.open(OUT, "w", encoding="utf-8").write(payload)
+    # 每季一份，檔名帶日期。⚠️ 同一天重跑會覆蓋同一個檔（那是同一次對帳的重試），
+    # 不同日期一律各留一份。
+    import datetime as _dt
+    os.makedirs(HIST, exist_ok=True)
+    io.open(os.path.join(HIST, f"{_dt.date.today().isoformat()}.json"),
+            "w", encoding="utf-8").write(payload)
 
     v = sorted(r["cheap_diff_pct"] for r in out
                if r.get("cheap_diff_pct") is not None
