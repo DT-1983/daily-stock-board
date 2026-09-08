@@ -3,68 +3,17 @@
 "flips_hold": [],
 "flips_watch": [
 {
-"code": "2330",
-"name": "台積電",
-"word": "🔴→🟢 翻多",
-"dir": 1
+"code": "2359",
+"name": "所羅門",
+"word": "🟢→🔴 翻空",
+"dir": -1
+},
+{
+"code": "8046",
+"name": "南電",
+"word": "🟢→🔴 翻空",
+"dir": -1
 }
 ],
-"ai_alerts": [
-{
-"chain": "機器人",
-"market": "US",
-"sig": "🔴",
-"code": "ISRG",
-"name": "Intuitive Surgical Inc",
-"reason": "觀望→賣出"
-},
-{
-"chain": "低軌衛星",
-"market": "US",
-"sig": "🔴",
-"code": "AVAV",
-"name": "AeroVironment Inc",
-"reason": "觀望→賣出"
-},
-{
-"chain": "AI 伺服器",
-"market": "TW",
-"sig": "🟢",
-"code": "2317",
-"name": "鴻海",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 伺服器",
-"market": "TW",
-"sig": "🟢",
-"code": "3231",
-"name": "緯創",
-"reason": "觀望→買進"
-},
-{
-"chain": "機器人",
-"market": "TW",
-"sig": "🔴",
-"code": "1536",
-"name": "和大",
-"reason": "觀望→賣出"
-},
-{
-"chain": "AI 電力/核能",
-"market": "TW",
-"sig": "🟢",
-"code": "1519",
-"name": "華城",
-"reason": "觀望→買進"
-},
-{
-"chain": "玻璃基板/TGV",
-"market": "TW",
-"sig": "🟢",
-"code": "2409",
-"name": "AUO CORPORATION",
-"reason": "觀望→買進"
-}
-]
+"ai_alerts": []
 }
