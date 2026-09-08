@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-08 16:08",
+ "updated": "2026-09-08 20:06",
  "indices": [
   {
    "sym": "^GSPC",
@@ -46,8 +46,8 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/08",
-   "close": 31.51,
-   "chg_pct": -0.35
+   "close": 31.49,
+   "chg_pct": -0.42
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "楊金龍央行總裁生涯 第三度獲「A-」評比",
+   "title": "存放款+財管發威！彰銀前8月獲利155億年增23.21%再創新高 EPS 1.29元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6600407",
-   "ts": "09/08 16:07"
+   "url": "https://news.cnyes.com/news/id/6600827",
+   "ts": "09/08 20:03"
   },
   {
-   "title": "中聯問題油生波 泰山今提告並求償10億元 南僑：最早發現且未隱匿",
+   "title": "台灣大林之晨：若成功完成精誠公開收購 明年營收挑戰電信一哥",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6600402",
-   "ts": "09/08 16:07"
+   "url": "https://news.cnyes.com/news/id/6600829",
+   "ts": "09/08 20:00"
   },
   {
-   "title": "英特爾、三星不落隊！宣布參與ASML下一代12吋光罩技術",
+   "title": "AI不是必然帶來通膨，而是一場供給調整速度與成本傳導速度的競賽",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6600854",
+   "ts": "09/08 20:00"
+  },
+  {
+   "title": "問就是正2？年化35%超狂！清流君警告：1,000萬恐暴跌只剩100萬，你真捏得住？",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6600429",
-   "ts": "09/08 16:05"
+   "url": "https://news.cnyes.com/news/id/6600851",
+   "ts": "09/08 20:00"
   },
   {
-   "title": "英特爾、三星不落隊！宣布參與ASML下一代12吋光罩技術",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6600429",
-   "ts": "09/08 16:05"
-  },
-  {
-   "title": "營收速報  - 永昕(4726)8月營收1.06億元年增率高達131.44％",
+   "title": "大盤估值飆破40倍天價！現在還能進場嗎？達人：回測265個歷史週期，勝率破75%的買法竟是…",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6600431",
-   "ts": "09/08 15:50"
+   "url": "https://news.cnyes.com/news/id/6600849",
+   "ts": "09/08 20:00"
   },
   {
-   "title": "加拿大對美商品祭最高50%關稅！卡尼強硬反擊川普、美加貿易戰引爆",
+   "title": "Google搜尋愈改愈難用？歐盟新規逼出29年最大倒退",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6600403",
-   "ts": "09/08 15:41"
+   "url": "https://news.cnyes.com/news/id/6600786",
+   "ts": "09/08 20:00"
   },
   {
-   "title": "美加關稅戰急速升溫 雙方互祭報復性關稅",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6600383",
-   "ts": "09/08 15:40"
-  },
-  {
-   "title": "長鑫科技首場業績會：淨利776億、營收暴增873%、LPDDR6全球首發上旗艦機",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6600202",
-   "ts": "09/08 15:30"
-  },
-  {
-   "title": "史上最賺的中秋！大樂透加碼6000個5千元獎項 謝志宏首曝「中獎率翻倍」包牌術",
+   "title": "冠星8月營收年增近2成創同期高 Q3出貨量估維持高檔",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6600389",
-   "ts": "09/08 14:55"
+   "url": "https://news.cnyes.com/news/id/6600828",
+   "ts": "09/08 19:55"
   },
   {
-   "title": "台積電宣布2030年起導入ASML High NA EUV、微影光罩尺寸擴大一倍",
+   "title": "ASML攜手晶圓巨頭研發新一代大光罩技術 突破High-NA EUV晶片面積限制",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6600387",
-   "ts": "09/08 14:26"
+   "url": "https://news.cnyes.com/news/id/6600750",
+   "ts": "09/08 19:40"
+  },
+  {
+   "title": "155億美元被迫搶進！SpaceX股價要被那指買盤點火了",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6600787",
+   "ts": "09/08 19:31"
+  },
+  {
+   "title": "【美股長假後開盤】迎戰油價與高利率 道瓊期貨跌近400點、科技股相對抗跌",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6600797",
+   "ts": "09/08 19:30"
   }
  ],
  "inst": {
   "date": "09/08",
-  "total_yi": -99.9,
+  "total_yi": -125.1,
   "foreign_yi": 132.7,
-  "trust_yi": -47.2
+  "trust_yi": -72.4
  }
 }
