@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-08 12:50",
+ "updated": "2026-09-08 16:08",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,16 +38,16 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "09/08",
-   "close": 47222.0,
-   "chg_pct": -0.22
+   "close": 47105.78,
+   "chg_pct": -0.47
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/08",
-   "close": 31.45,
-   "chg_pct": -0.53
+   "close": 31.51,
+   "chg_pct": -0.35
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "國際大行狂拉警報！法國興業銀行：美債10年期殖利率升破5.5% 股市將受重創",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6600254",
-   "ts": "09/08 12:50"
-  },
-  {
-   "title": "安謀催生實體AI生態系 慧友躋身合作夥伴搶攻2000億美元運算商機",
+   "title": "楊金龍央行總裁生涯 第三度獲「A-」評比",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6600343",
-   "ts": "09/08 12:47"
+   "url": "https://news.cnyes.com/news/id/6600407",
+   "ts": "09/08 16:07"
   },
   {
-   "title": "安謀催生實體AI生態系 慧友躋身合作夥伴搶攻2000億美元運算商機",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6600343",
-   "ts": "09/08 12:47"
-  },
-  {
-   "title": "國泰證9月投資觀點 看聯準會有更多維持按兵不動的空間",
+   "title": "中聯問題油生波 泰山今提告並求償10億元 南僑：最早發現且未隱匿",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6600339",
-   "ts": "09/08 12:45"
+   "url": "https://news.cnyes.com/news/id/6600402",
+   "ts": "09/08 16:07"
   },
   {
-   "title": "系統電IPC、無人機第二成長曲線成形 Q4營收估逐步成長",
+   "title": "英特爾、三星不落隊！宣布參與ASML下一代12吋光罩技術",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6600323",
-   "ts": "09/08 12:45"
+   "url": "https://news.cnyes.com/news/id/6600429",
+   "ts": "09/08 16:05"
   },
   {
-   "title": "中聯油品事件再掀波  泰山今提告中聯、福壽、福懋及南僑求償10億元",
+   "title": "英特爾、三星不落隊！宣布參與ASML下一代12吋光罩技術",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6600429",
+   "ts": "09/08 16:05"
+  },
+  {
+   "title": "營收速報  - 永昕(4726)8月營收1.06億元年增率高達131.44％",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6595271",
-   "ts": "09/08 12:43"
+   "url": "https://news.cnyes.com/news/id/6600431",
+   "ts": "09/08 15:50"
   },
   {
-   "title": "AI軟實力串聯硬體！00770擬配6元創掛牌新高 年化殖利率近9%",
+   "title": "加拿大對美商品祭最高50%關稅！卡尼強硬反擊川普、美加貿易戰引爆",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6600403",
+   "ts": "09/08 15:41"
+  },
+  {
+   "title": "美加關稅戰急速升溫 雙方互祭報復性關稅",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6600383",
+   "ts": "09/08 15:40"
+  },
+  {
+   "title": "長鑫科技首場業績會：淨利776億、營收暴增873%、LPDDR6全球首發上旗艦機",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6600202",
+   "ts": "09/08 15:30"
+  },
+  {
+   "title": "史上最賺的中秋！大樂透加碼6000個5千元獎項 謝志宏首曝「中獎率翻倍」包牌術",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6600301",
-   "ts": "09/08 12:42"
+   "url": "https://news.cnyes.com/news/id/6600389",
+   "ts": "09/08 14:55"
   },
   {
-   "title": "蘋果優質客戶服務神話破滅？M4 MacBook Pro修6次仍故障、曾承諾換機卻沒下文",
+   "title": "台積電宣布2030年起導入ASML High NA EUV、微影光罩尺寸擴大一倍",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6600122",
-   "ts": "09/08 12:00"
-  },
-  {
-   "title": "喊進4光通訊大廠！高盛大幅上修光模組預測：2028年市場規模上看1485億美元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6600291",
-   "ts": "09/08 11:45"
-  },
-  {
-   "title": "蘋果採用中國記憶體要成真？長鑫科技發表聲明釋訊號",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6600121",
-   "ts": "09/08 11:30"
+   "url": "https://news.cnyes.com/news/id/6600387",
+   "ts": "09/08 14:26"
   }
  ],
  "inst": {
-  "date": "09/07",
-  "total_yi": 1127.2,
-  "foreign_yi": 883.1,
-  "trust_yi": 87.2
+  "date": "09/08",
+  "total_yi": -99.9,
+  "foreign_yi": 132.7,
+  "trust_yi": -47.2
  }
 }
