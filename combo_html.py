@@ -345,7 +345,7 @@ def attach_charts(rows, limit=None):
 ROOM_URL = "https://stock.talentxtrend.com/room"
 
 
-def body_html(d):
+def body_html(d, in_room=False):
     """頁面內容（不含表頭）。**戰情室的列表模式直接用這個**——
     統計卡／查股框／篩選籤／三個區塊／說明全部同一份，
     不會出現「公開頁跟戰情室長不一樣」。"""
@@ -367,9 +367,15 @@ def body_html(d):
                 # 都是本機服務、都要 token、電腦沒開就進不去。
                 # ⚠️ 這是公開頁（家人看得到）。沒授權的裝置點進去看到的是
                 #    「這台裝置還沒授權」那頁，不會外流任何數字。
-                + '<a class="roomlink" href="' + ROOM_URL + '">'
-                  '🚦 燈號戰情室'
-                  '<span>需本機開機</span></a>'
+                # 🔴 2026-09-08 Leo：「進出燈號跟戰情室很難分得出來」。
+                #    這顆按鈕本來只該出現在**公開頁**（那頁沒有別的路進戰情室），
+                #    但戰情室的列表模式也是呼叫這支 body_html → 變成
+                #    **人已經在戰情室，畫面上卻有一顆「前往戰情室」**。
+                # ⭐ 那正是最強的「你在公開頁」訊號，難怪兩頁分不出來。
+                #    共用產生器要能分辨自己被誰呼叫，不然「只給 A 頁的東西」會漏到 B 頁。
+                + ('' if in_room else
+                   '<a class="roomlink" href="' + ROOM_URL + '">'
+                   '🚦 燈號戰情室<span>需本機開機</span></a>')
                 + '</div>')
     body.append(filter_html())
     body.append(f'<div class="cbsec">⭐ 打點成立<small>亮 ≥{d["combo_min"]} 燈且風報比 ≥ 1，'

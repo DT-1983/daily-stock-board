@@ -2410,5 +2410,11 @@
     "industry": "Medical Specialties",
     "exchange": "TPEX",
     "asof": "2026-09-08"
+  },
+  "2455": {
+    "sector": "Electronic Technology",
+    "industry": "Electronic Production Equipment",
+    "exchange": "TWSE",
+    "asof": "2026-09-08"
   }
 }
