@@ -1,124 +1,124 @@
 {
- "updated": "2026-09-08 20:06",
+ "updated": "2026-09-09 08:46",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "09/04",
-   "close": 7718.6,
-   "chg_pct": -0.38
+   "date": "09/08",
+   "close": 7673.52,
+   "chg_pct": -0.58
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "09/04",
-   "close": 26506.99,
-   "chg_pct": -0.29
+   "date": "09/08",
+   "close": 26421.41,
+   "chg_pct": -0.32
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "09/04",
-   "close": 53414.25,
-   "chg_pct": -0.51
+   "date": "09/08",
+   "close": 52786.07,
+   "chg_pct": -1.18
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "09/04",
-   "close": 11735.26,
-   "chg_pct": 3.37
+   "date": "09/08",
+   "close": 11887.87,
+   "chg_pct": 1.3
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/08",
-   "close": 47105.78,
-   "chg_pct": -0.47
+   "date": "09/07",
+   "close": 47326.27,
+   "chg_pct": 1.67
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/08",
-   "close": 31.49,
-   "chg_pct": -0.42
+   "date": "09/09",
+   "close": 31.48,
+   "chg_pct": -0.08
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "09/04",
-   "close": 4.78,
+   "date": "09/08",
+   "close": 4.81,
    "fmt": "yield",
    "chg_bp": 2.2
   }
  ],
  "news": [
   {
-   "title": "存放款+財管發威！彰銀前8月獲利155億年增23.21%再創新高 EPS 1.29元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6600827",
-   "ts": "09/08 20:03"
-  },
-  {
-   "title": "台灣大林之晨：若成功完成精誠公開收購 明年營收挑戰電信一哥",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6600829",
-   "ts": "09/08 20:00"
-  },
-  {
-   "title": "AI不是必然帶來通膨，而是一場供給調整速度與成本傳導速度的競賽",
+   "title": "AI資料中心有錢也蓋不了！有電土地大缺貨 舊工廠、礦場變搶手資產",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6600854",
-   "ts": "09/08 20:00"
+   "url": "https://news.cnyes.com/news/id/6601277",
+   "ts": "09/09 08:30"
   },
   {
-   "title": "問就是正2？年化35%超狂！清流君警告：1,000萬恐暴跌只剩100萬，你真捏得住？",
+   "title": "財經名嘴點名輝達與博通 看好成為OpenAI GPT-6 Astra受惠股",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6601237",
+   "ts": "09/09 08:30"
+  },
+  {
+   "title": "營收速報  - 幃翔(6185)8月營收6,047萬元年增率高達43.44％",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6600851",
-   "ts": "09/08 20:00"
+   "url": "https://news.cnyes.com/news/id/6601270",
+   "ts": "09/09 08:21"
   },
   {
-   "title": "大盤估值飆破40倍天價！現在還能進場嗎？達人：回測265個歷史週期，勝率破75%的買法竟是…",
+   "title": "營收速報  - 精技(2414)8月營收45.56億元年增率高達79.52％",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6600849",
-   "ts": "09/08 20:00"
+   "url": "https://news.cnyes.com/news/id/6601269",
+   "ts": "09/09 08:21"
   },
   {
-   "title": "Google搜尋愈改愈難用？歐盟新規逼出29年最大倒退",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6600786",
-   "ts": "09/08 20:00"
-  },
-  {
-   "title": "冠星8月營收年增近2成創同期高 Q3出貨量估維持高檔",
+   "title": "鉅亨速報 - Factset 最新調查：環宇-KY(4991-TW)目標價調升至663元，幅度約5.24%",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6600828",
-   "ts": "09/08 19:55"
+   "url": "https://news.cnyes.com/news/id/6601259",
+   "ts": "09/09 08:10"
   },
   {
-   "title": "ASML攜手晶圓巨頭研發新一代大光罩技術 突破High-NA EUV晶片面積限制",
+   "title": "美股盤後：油價、美債殖利率雙升壓抑大盤，AI硬體逆勢吸金、台積電漲2.35%",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6600750",
-   "ts": "09/08 19:40"
+   "url": "https://news.cnyes.com/news/id/6601256",
+   "ts": "09/09 08:01"
   },
   {
-   "title": "155億美元被迫搶進！SpaceX股價要被那指買盤點火了",
+   "title": "記憶體漲價擠壓手機產業！瑞穗：三星韌性優於同業",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6600787",
-   "ts": "09/08 19:31"
+   "url": "https://news.cnyes.com/news/id/6601154",
+   "ts": "09/09 08:00"
   },
   {
-   "title": "【美股長假後開盤】迎戰油價與高利率 道瓊期貨跌近400點、科技股相對抗跌",
+   "title": "美股重點新聞摘要2026年9月9日",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6600797",
-   "ts": "09/08 19:30"
+   "url": "https://news.cnyes.com/news/id/6601150",
+   "ts": "09/09 08:00"
+  },
+  {
+   "title": "營收速報 - 2026年9月9日台股中小型公司8月營收一覽（新增800家）",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6601253",
+   "ts": "09/09 07:56"
+  },
+  {
+   "title": "營收速報 - 2026年9月9日台股大型公司8月營收一覽（新增88家）",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6601252",
+   "ts": "09/09 07:56"
   }
  ],
  "inst": {
