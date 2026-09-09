@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-09 15:40",
+ "updated": "2026-09-09 20:18",
  "indices": [
   {
    "sym": "^GSPC",
@@ -47,7 +47,7 @@
    "grp": "FX",
    "date": "09/09",
    "close": 31.43,
-   "chg_pct": -0.24
+   "chg_pct": -0.22
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "OpenAI推出ChatGPT Images 2.5：生成速度提升50% 主打精準局部修圖",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6601485",
-   "ts": "09/09 15:40"
-  },
-  {
-   "title": "健鼎與金像電8月營收雙創百億元新高 2026年有望晉身千億元大戶",
+   "title": "和椿8月營收年增132％創單月新高 受惠訂單能見度攀升、助自動化布局加速",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6601530",
-   "ts": "09/09 15:35"
+   "url": "https://news.cnyes.com/news/id/6601955",
+   "ts": "09/09 20:16"
   },
   {
-   "title": "王品8月營收衝新高 父親節業績首度超車母親節寫台灣餐飲業紀錄",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6601528",
-   "ts": "09/09 15:28"
-  },
-  {
-   "title": "電車充電樁全面納管！標檢局祭2大新制：30kW家用樁強制檢驗已上線 2028年起擴大至750kW",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6601507",
-   "ts": "09/09 15:26"
-  },
-  {
-   "title": "鴻華先進取得DEKRA雙證書 強化車輛資安與OTA更新管理",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6601523",
-   "ts": "09/09 15:23"
-  },
-  {
-   "title": "少子化帶來人才斷層問題 Google台灣總經理林雅芳點出挑戰與解方",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6601510",
-   "ts": "09/09 15:23"
-  },
-  {
-   "title": "OpenAI深化與三星戰略合作 布局下一代晶片與企業級AI服務",
+   "title": "鉅亨速報 - Factset 最新調查：Stellantis N.V(STLA-US)EPS預估下修至0.63元，預估目標價為6.33元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6601508",
-   "ts": "09/09 15:10"
+   "url": "https://news.cnyes.com/news/id/6601981",
+   "ts": "09/09 20:16"
   },
   {
-   "title": "最便宜小米汽車！澎程N70/N90四分鐘所單10000台　大摩高盛花旗全喊買進",
+   "title": "鉅亨速報 - Factset 最新調查：Darling Ingredients Inc(DAR-US)EPS預估上修至6.72元，預估目標價為80.00元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6601360",
-   "ts": "09/09 15:00"
+   "url": "https://news.cnyes.com/news/id/6601980",
+   "ts": "09/09 20:16"
   },
   {
-   "title": "AI投資拉動美國經濟？摩根士丹利：真正AI新增貢獻約0.42個百分點",
+   "title": "鉅亨速報 - Factset 最新調查：Chime Financial, Inc. Class A(CHYM-US)EPS預估上修至0.45元，預估目標價為38.00元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6601359",
-   "ts": "09/09 14:50"
+   "url": "https://news.cnyes.com/news/id/6601979",
+   "ts": "09/09 20:15"
   },
   {
-   "title": "貝森特的債券回購構想 讓華爾街美債交易員不安",
+   "title": "鉅亨速報 - Factset 最新調查：JBS N.V. Class A(JBS-US)EPS預估下修至0.72元，預估目標價為18.11元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6601480",
-   "ts": "09/09 14:40"
+   "url": "https://news.cnyes.com/news/id/6601978",
+   "ts": "09/09 20:15"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：Nebius Group N.V. Class A(NBIS-US)EPS預估下修至-2.28元，預估目標價為276.00元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6601977",
+   "ts": "09/09 20:15"
+  },
+  {
+   "title": "迎戰50年後人口減半！國發會祭3大處方：長靠出生、中靠升級、短靠「外」援",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6601932",
+   "ts": "09/09 20:14"
+  },
+  {
+   "title": "外資大買面板雙虎、倒貨金融股 三大法人合計買超220億元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6601931",
+   "ts": "09/09 20:13"
+  },
+  {
+   "title": "營收速報  - 倍力(6874)8月營收1.07億元年增率高達182.48％",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6601947",
+   "ts": "09/09 19:50"
+  },
+  {
+   "title": "營收速報  - 洋基工程(6691)8月營收52.87億元年增率高達213.7％",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6601946",
+   "ts": "09/09 19:50"
   }
  ],
  "inst": {
   "date": "09/09",
-  "total_yi": 220.8,
+  "total_yi": 211.3,
   "foreign_yi": 209.2,
-  "trust_yi": 30.4
+  "trust_yi": 20.8
  }
 }
