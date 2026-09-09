@@ -620,37 +620,21 @@ def fetch_fundamentals(ticker: str) -> dict:
                         pass
                     if ttm_ni is None and info.get("trailingEps"):
                         ttm_ni = float(info["trailingEps"]) * float(shares)
-                    # ── 預期常利：照講稿的 percentile 法（2026-09-09 重寫）──
-                    # 講稿段 3304-3308（Documents/Stock/巴菲特班講稿…docx）：
-                    #   今年常利 > percentile 0.7 → 取 p70 與今年常利之平均
-                    #   常利越來越低            → 取 p30 與今年常利之平均
-                    #   今年常利指過去 4 季
-                    # 🔴 舊版是 mean(近2期)*0.7 + median(5期)*0.3 ——
-                    #    **把百分位數當成加權權重**，而且丟掉了「成長/衰退」的條件判斷。
-                    hist = [float(x) for x in ann[:5] if x is not None]
-                    cur = float(ttm_ni) if ttm_ni is not None else None
-                    if cur is None and hist:
-                        cur = hist[0]          # 沒有 TTM 就用最近年度頂替
-                    if cur is not None and len(hist) >= 3:
-                        p70 = float(np.percentile(hist, 70))
-                        p30 = float(np.percentile(hist, 30))
-                        if cur > p70:
-                            changli = (p70 + cur) / 2.0          # 成長
-                            changli_case = "成長(p70)"
-                        elif cur < p30:
-                            changli = (p30 + cur) / 2.0          # 衰退
-                            changli_case = "衰退(p30)"
-                        else:
-                            # 持平：講稿段 3313「持平的不偏估計值則平均數與percentile相同」，
-                            # 但沒有明講持平要取哪一個。取中位數與今年常利的平均，
-                            # 跟上下兩種情況的形式一致。**這一步是我的推導，不是原話。**
-                            changli = (float(np.percentile(hist, 50)) + cur) / 2.0
-                            changli_case = "持平(p50)〔推導〕"
+                    # ── 預期常利（2026-09-10 改回 8/27 版，Leo 拍板）──
+                    # 2026-09-09 曾照《巴菲特班講稿》段 3304-3308 改成 percentile 法
+                    # （今年常利>p70取p70與今年平均，<p30取p30與今年平均），
+                    # 但那是逐字稿文字描述，沒有拿官方數字驗證過；
+                    # 跟這裡的舊公式比對 BMY/PSX/DAL/TROW/VZ 五檔，PSX 差到 +10.7%。
+                    # 這個舊公式才是 2026-08-27 Leo 親自拿官方盈再表逆推、
+                    # 5/5 檔對官方「預期常利」欄精確吻合 <0.1% 驗證過的版本——
+                    # ⭐ 實測數字比對 > 逐字稿文字描述，優先度更高。
+                    vals = ([ttm_ni] + ann)[:5] if ttm_ni is not None else ann[:5]
+                    if len(vals) >= 3:   # 至少要3期才算得出有意義的中位數，太少不硬算
+                        changli = float(np.mean(vals[:2]) * 0.7 + np.median(vals) * 0.3)
                         if changli > 0:
                             changli_amt = changli
                             changli_eps = round(changli / float(shares), 4)
-                            changli_basis = ("normalized" if fld == "Normalized Income"
-                                             else "net_income") + "/" + changli_case
+                            changli_basis = "normalized" if fld == "Normalized Income" else "net_income"
         except Exception:
             pass
 
