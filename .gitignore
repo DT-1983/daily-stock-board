@@ -161,3 +161,8 @@ portfolios.json.*.bak
 # 讀私人失效條件登錄簿的本機工具（跟 trade_plan.py 同級）。
 # 註解裡帶有實際持股代號與門檻價 —— 程式碼那層也算外流。
 thesis_repricing.py
+
+# 每天變動的運行狀態，不進版控（發送紀錄／量測樣本）
+state/daily_warroom_sent.json
+state/us_close_probe.jsonl
+state/warroom_watchdog_attempts.json

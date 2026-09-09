@@ -23,6 +23,7 @@
 用法: python daily_warroom.py [--dry-run]
 """
 import os
+import re
 import sys
 import json
 import time
@@ -342,22 +343,34 @@ def sec_setup(date, scope="public"):
         qs = ("🔵 " + QL[q]) if q == "leading" else (QL.get(q, "—"))
         gap = r.get("gap_pct")
         # ⚠️ 停損很近時風報比的分母趨近 0，數字會被放大——標出來，不要只給大數字
-        warn = f"　⚠️停損僅 {gap:.1f}%" if (gap is not None and gap < 5) else ""
+        # 2026-09-09 Leo：「川湖…停損改 停損2.3%」。
+        # 🔴 原門檻是 gap < 5 —— **5% 是很正常的停損距離，不該叫「僅」**。
+        #    結果 2.3%、2.1% 這種健康的部位全被標上警告，警告就失去意義了。
+        # ⭐ 統一成 1%，跟 Sonia 的 LAMPS 卡同一個門檻——
+        #    同一個概念不該在兩個地方有兩套定義。
+        #    1% 以下＝一天的正常震盪就會碰到，那才是真的該警告。
+        if gap is None:
+            warn = ""
+        elif gap < 1:
+            warn = f"　⚠️停損僅 {gap:.1f}%"
+        else:
+            warn = f"　停損 {gap:.1f}%"
         lines.append(f"{mark} **{tkname(r.get('ticker'))}**　風報比 {r.get('rr'):.1f}"
                      f"　{qs}{warn}")
     if len(hit) > 10:
-        lines.append(f"-# 　…另有 {len(hit)-10} 檔，完整清單在進出燈號頁按"
-                     "「⭐⭐ 4 燈 + 風報比 ≥ 1」")
+        # 篩選條件的名稱在下一行的連結已經講過，這裡不用重複第二次。
+        lines.append(f"-# 　…另有 {len(hit)-10} 檔")
     n_lead = sum(1 for x in hit if x[0] == 0)
     try:
         from board_theme import PAGES_URL as _P
     except Exception:                                       # noqa: BLE001
         _P = "https://dt-1983.github.io/daily-stock-board"
-    lines.append(f"-# 共 {len(hit)} 檔，其中 {n_lead} 檔的產業在 🔵 領先象限"
-                 "（回測顯示產業過濾是這裡面最有價值的一層）"
-                 "　📑＝有券商報告")
-    lines.append(f"-# 🔗 [進出燈號頁]({_P}/combo.html)"
-                 "　按「⭐⭐ 4 燈 + 風報比 ≥ 1」看完整清單與個股圖表")
+    # 2026-09-09 Leo：「跟股票資訊無關的備注縮短」。
+    # 原本這兩行合計 60+ 字：說明回測結論、重複一次篩選條件名稱、解釋圖示。
+    # ⭐ 那些是**第一次讀時需要、之後每天重複就是雜訊**的東西。
+    #    每天都看的人已經知道 📑 是什麼、也知道點進去要按哪個鈕。
+    lines.append(f"-# 共 {len(hit)} 檔（{n_lead} 檔產業在 🔵 領先）　📑＝有券商報告"
+                 f"　🔗 [完整清單]({_P}/combo.html)")
     return lines
 
 
@@ -389,11 +402,12 @@ def sec_rrg_turn(date, scope="public"):
     except Exception:                                       # noqa: BLE001
         _P = "https://dt-1983.github.io/daily-stock-board"
     return (["**🔄 剛轉進領先象限的類股**（連續 ≥2 天、轉進 ≤20 天）"] + body
-            + [f"-# 🔗 [產業輪動雷達]({_P}/rotation.html)　"
-               f"[進出燈號]({_P}/combo.html)（可篩「4 燈」＋「領先」）",
-               "-# 💼＝持股　⚠️ 只是「產業轉強」不是買進訊號——"
-               "回測證明的是「產業在領先象限」當過濾條件有幫助，"
-               "**沒測過「剛轉進去」本身**"])
+            # 2026-09-09 Leo：「跟股票資訊無關的備注縮短」。
+            # ⚠️ 但下面那句警告**不能刪**：它會改變這段資料該怎麼被讀
+            #    （「產業轉強」不等於買進訊號）。縮的是解釋，留的是警告——
+            #    ⭐ 說明看過就會了，警告是每天都要成立的前提。
+            + [f"-# 🔗 [輪動雷達]({_P}/rotation.html)　[進出燈號]({_P}/combo.html)",
+               "-# 💼＝持股　⚠️「剛轉進領先」沒回測過，不是買進訊號"])
 
 
 def sec3_chief(date, scope="public"):
@@ -579,6 +593,27 @@ def sec_thesis(date, scope="private"):
     放公開版才對）。
     """
     lines = ["**⑤ 失效條件日檢**" if scope == "private" else "**⑥ 觀察名單失效條件**"]
+
+    def _clip(s, n=60):
+        """截斷訊息，但**絕不切在數字中間**。
+
+        🔴 2026-09-09 Leo 回報「格式亂」，實際問題比排版嚴重——原本是硬切 34 字元
+           （`msg` 後面直接接切片），剛好切在數字上：
+             ABNB 「SuperTrend 空方（線 193.」   ← 停損線變成半個數字
+             6944 「股價漲破貴價710.」            ← 同上
+             ORCL 「股價漲破洪瑞泰貴價15」         ← 15？還是 159？看不出來
+        ⭐ 顯示半個數字比不顯示更糟：它看起來像完整資訊，讀的人不會知道被切過。
+        實測 12 則訊息最長 59 字元，上限 60 就一則都不會被切（34 會切掉 8 則）。
+        """
+        import re                      # 這支沒有模組層 import re（只在 _is_tw 裡區域引入）
+        s = (s or "").strip()
+        if len(s) <= n:
+            return s
+        cut = s[:n]
+        m = re.search(r"[0-9][0-9,\.]*$", cut)     # 尾巴是半截數字就整個退掉
+        if m:
+            cut = cut[:m.start()]
+        return cut.rstrip(" 　（(【[｜|、,，:：-") + "…"
     d = _load("state/thesis_check_today.json", {}) or {}
     if not d:
         return []                     # 沒登錄過就整段不出現，不要放佔位語佔版面
@@ -641,8 +676,37 @@ def sec_thesis(date, scope="private"):
     exit_rows, other = [], []
     for r in trig:
         (exit_rows if (want_held and r[3] in _EXIT_TYPES) else other).append(r)
+
+    # ── 兩行排版（2026-09-09 Leo：「段落斷得不好，可以分兩行，不要斷在一半」）──
+    # 原本一行塞「代號＋條件＋現值＋收盤日」，手機一行約 40 字 → 折在隨機位置，
+    # 例如「SuperTrend 空／方（線 193.22）」斷在詞中間。
+    # ⭐ msg 本身就有「｜」分隔（條件名｜現況數值），那是**天然的斷點**——
+    #    照它斷就不會斷在半句話中間，不需要我另外挑位置。
+    _all_d = [m.group(1) for _t2, m2, _a, _t3 in (trig + near)
+              for m in [re.search(r"收盤 (\d{4}-\d{2}-\d{2})", str(m2))] if m]
+    _latest = max(_all_d) if _all_d else None
+
+    def _two(prefix, label, msg):
+        """回 [第一行, 第二行]。第二行沒東西就只回一行。
+
+        收盤日只在**落後於最新那一天**時才顯示（2026-09-09 Leo 問「收盤是不是
+        不必要？上面美股寫了」）。⭐ 一個每行都相同的欄位不帶資訊；
+        只有它跟別人不一樣時才是訊號（＝這一檔的資料落後了）。
+        """
+        s = str(msg or "").strip()
+        d = None
+        m = re.search(r"\s*收盤 (\d{4}-\d{2}-\d{2})\s*$", s)
+        if m:
+            d, s = m.group(1), s[:m.start()].strip()
+        head, _, tail = s.partition("｜")
+        out = [f"{prefix} {label}　{_clip(head, 40)}"]
+        if tail.strip():
+            stale = f"　-# ⚠️資料 {d}" if (d and _latest and d < _latest) else ""
+            out.append(f"　　{_clip(tail.strip(), 52)}{stale}")
+        return out
+
     for tk, msg, ang, _t in exit_rows[:5]:
-        lines.append(f"🔴 {_who(tk)}**{tkname(tk)}**　{msg[:34]}")
+        lines += _two("🔴", f"{_who(tk)}**{tkname(tk)}**", msg)
     if len(exit_rows) > 5:
         lines.append(f"-# 　…另有 {len(exit_rows)-5} 檔出場訊號")
 
@@ -650,11 +714,11 @@ def sec_thesis(date, scope="private"):
     # 手機上完全看不完（Leo：「排版很難懂不易閱讀」）。觸發的按「超過幅度」排序，
     # 最誇張的先看。
     for tk, msg, ang, _t in other[:5]:
-        lines.append(f"🚫{AI_.get(ang, '💰')} {_who(tk)}**{tkname(tk)}**　{msg[:34]}")
+        lines += _two(f"🚫{AI_.get(ang, '💰')}", f"{_who(tk)}**{tkname(tk)}**", msg)
     if len(other) > 5:
         lines.append(f"-# 　…另有 {len(other)-5} 檔已觸發")
     for tk, msg, ang, _t in near[:3]:
-        lines.append(f"⚠️{AI_.get(ang, '💰')} {_who(tk)}{tkname(tk)}　{msg[:34]}")
+        lines += _two(f"⚠️{AI_.get(ang, '💰')}", f"{_who(tk)}{tkname(tk)}", msg)
     if len(near) > 3:
         lines.append(f"-# 　…另有 {len(near)-3} 檔逼近")
 
@@ -669,13 +733,16 @@ def sec_thesis(date, scope="private"):
         rs_only = [r[0] for r in es if r[2] and not r[1]]
         unk = [r[0] for r in es if r[1] is None]
         if es:
-            lines.append(f"-# 🔻 **出場訊號現況（存量，非今日新增）**　"
-                         f"ST翻空＋RS跌破 {len(both)}｜只有ST翻空 {len(st_only)}｜"
-                         f"只有RS跌破 {len(rs_only)}｜沒事 "
+            # 「存量，非今日新增」這六個字每天重複，但那是這一行的**性質**不是資訊。
+            # 兩條都成立的名單原本列 14 檔（一整行代號），縮到 8 檔——
+            # 真的要看完整名單的人會去查股頁，這裡只需要知道「有這麼多、有誰」。
+            lines.append(f"-# 🔻 **出場訊號存量**　"
+                         f"ST空＋RS破 {len(both)}｜只ST空 {len(st_only)}｜"
+                         f"只RS破 {len(rs_only)}｜沒事 "
                          f"{len(es)-len(both)-len(st_only)-len(rs_only)-len(unk)}"
-                         + (f"｜⚪算不出來 {len(unk)}" if unk else ""))
+                         + (f"｜⚪{len(unk)}" if unk else ""))
             if both:
-                head = "、".join(both[:14]) + ("…" if len(both) > 14 else "")
+                head = "、".join(both[:8]) + (f"…＋{len(both)-8}" if len(both) > 8 else "")
                 lines.append(f"-# 　兩條都成立：{head}")
 
     tail = f"✅ 健康 {n_ok} 條"
@@ -820,6 +887,19 @@ def main():
     # 2026-08-27：每個頻道拆兩則——龐統發情報、孔明發判斷（分工看得見、各則更短，
     # 也不容易撞到 Discord 2000 字上限被切成好幾則）。沒實質內容的那則不發。
     from notify_discord import send_discord, CHANNELS
+
+    # 🔴 2026-09-09：這支跑完**不留任何痕跡**，所以「今天 Discord 到底發了沒」
+    #    從硬碟上查不出來。9/9 早上 08:45 的排程被中斷在第 135 行，
+    #    而這支在第 177 行——整天零 Discord，而且沒有任何地方看得出來。
+    # ⭐ 要能被監看，就得留下可驗證的產出物。查 exit code 不夠：
+    #    主排程今天 exit 0，Discord 一樣沒發（因為根本沒跑到這裡）。
+    sent_ok, sent_fail = [], []
+
+    def _send(ch_, msg_, persona_, tag_):
+        r = send_discord(ch_, msg_, persona=persona_)
+        (sent_ok if r else sent_fail).append(tag_)
+        return r
+
     for ch, scope in (("daily", "public"), ("private", "private")):
         if ch == "private" and not CHANNELS.get("private") and not args.dry_run:
             print("⚠️ DISCORD_WH_PRIVATE 未設定，持股密報跳過（Telegram 照舊有）")
@@ -842,14 +922,15 @@ def main():
                         print(f"\n───── {ch} / {persona}（心跳）─────\n{hb}")
                     else:
                         print(f"[{ch}/{part}→{persona}] 心跳",
-                              send_discord(ch, hb, persona=persona))
+                              _send(ch, hb, persona, f"{ch}/{part}/心跳"))
                 else:
                     print(f"[{ch}/{part}] 今天沒有實質內容，不發")
                 continue
             if args.dry_run:
                 print(f"\n───── {ch} / {persona} ─────\n{msg}")
             else:
-                print(f"[{ch}/{part}→{persona}]", send_discord(ch, msg, persona=persona))
+                print(f"[{ch}/{part}→{persona}]",
+                      _send(ch, msg, persona, f"{ch}/{part}"))
 
     # P3 預估前提檢查——**獨立一則**（Leo 2026-08-28：「多一則」），一週一次（週一）。
     # 持股→持股密報、非持股→#財報（不是#每日戰情：這是估值前提不是當日戰況，
@@ -864,10 +945,31 @@ def main():
         if args.dry_run:
             print(f"\n───── baserate / {ch} ─────\n{msg}")
         else:
-            print(f"[baserate/{scope}→{ch}]", send_discord(ch, msg, persona="龐統"))
+            print(f"[baserate/{scope}→{ch}]",
+                  _send(ch, msg, "龐統", f"baserate/{scope}"))
 
     if args.dry_run:
         print("\n(dry-run：沒發 Discord)")
+        return
+
+    # 完成標記——**這是給看門狗查的產出物**。
+    # ⚠️ 「一則都沒發」也要記下來，而且要記成 ok=False。
+    #    今天沒事所以沒發，跟根本沒跑到這裡，對讀的人是同一個畫面（Discord 空的），
+    #    但處理方式完全相反：前者不用管，後者要重跑。
+    #    只有這個檔案分得出來——沒有檔案＝沒跑到，有檔案＝跑到了。
+    import datetime as _dt
+    import json as _json
+    import io as _io
+    import os as _os
+    mark = {"date": _dt.date.today().isoformat(),
+            "ts": _dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "ok": bool(sent_ok), "sent": sent_ok, "failed": sent_fail}
+    _os.makedirs("state", exist_ok=True)
+    _tmp = _os.path.join("state", "daily_warroom_sent.json.tmp")
+    _io.open(_tmp, "w", encoding="utf-8").write(
+        _json.dumps(mark, ensure_ascii=False, indent=1))
+    _os.replace(_tmp, _os.path.join("state", "daily_warroom_sent.json"))
+    print(f"[warroom] 完成標記：成功 {len(sent_ok)} 則、失敗 {len(sent_fail)} 則")
 
 
 if __name__ == "__main__":
