@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-09 12:53",
+ "updated": "2026-09-09 15:40",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,16 +38,16 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "09/09",
-   "close": 47217.78,
-   "chg_pct": 0.24
+   "close": 47183.36,
+   "chg_pct": 0.16
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/09",
-   "close": 31.45,
-   "chg_pct": -0.18
+   "close": 31.43,
+   "chg_pct": -0.24
   },
   {
    "sym": "^TNX",
@@ -59,11 +59,72 @@
    "chg_bp": 2.2
   }
  ],
- "news": [],
+ "news": [
+  {
+   "title": "OpenAI推出ChatGPT Images 2.5：生成速度提升50% 主打精準局部修圖",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6601485",
+   "ts": "09/09 15:40"
+  },
+  {
+   "title": "健鼎與金像電8月營收雙創百億元新高 2026年有望晉身千億元大戶",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6601530",
+   "ts": "09/09 15:35"
+  },
+  {
+   "title": "王品8月營收衝新高 父親節業績首度超車母親節寫台灣餐飲業紀錄",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6601528",
+   "ts": "09/09 15:28"
+  },
+  {
+   "title": "電車充電樁全面納管！標檢局祭2大新制：30kW家用樁強制檢驗已上線 2028年起擴大至750kW",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6601507",
+   "ts": "09/09 15:26"
+  },
+  {
+   "title": "鴻華先進取得DEKRA雙證書 強化車輛資安與OTA更新管理",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6601523",
+   "ts": "09/09 15:23"
+  },
+  {
+   "title": "少子化帶來人才斷層問題 Google台灣總經理林雅芳點出挑戰與解方",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6601510",
+   "ts": "09/09 15:23"
+  },
+  {
+   "title": "OpenAI深化與三星戰略合作 布局下一代晶片與企業級AI服務",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6601508",
+   "ts": "09/09 15:10"
+  },
+  {
+   "title": "最便宜小米汽車！澎程N70/N90四分鐘所單10000台　大摩高盛花旗全喊買進",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6601360",
+   "ts": "09/09 15:00"
+  },
+  {
+   "title": "AI投資拉動美國經濟？摩根士丹利：真正AI新增貢獻約0.42個百分點",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6601359",
+   "ts": "09/09 14:50"
+  },
+  {
+   "title": "貝森特的債券回購構想 讓華爾街美債交易員不安",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6601480",
+   "ts": "09/09 14:40"
+  }
+ ],
  "inst": {
-  "date": "09/08",
-  "total_yi": -125.1,
-  "foreign_yi": 132.7,
-  "trust_yi": -72.4
+  "date": "09/09",
+  "total_yi": 220.8,
+  "foreign_yi": 209.2,
+  "trust_yi": 30.4
  }
 }
