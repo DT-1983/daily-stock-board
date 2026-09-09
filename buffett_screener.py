@@ -51,6 +51,20 @@ REINVEST_ABSURD  = 3.00   # |盈再率| > 300% 視為「structural change」不�
                           #   洪瑞泰官方表用「常利」平滑掉這種情況，我們沒有那個欄位，
                           #   所以改成明講「無法判斷」並附異常原因。
 PAYOUT_MIN       = 0.40   # 配息率下限（洪瑞泰：配息 < 40% 代表盈餘可能是假的）
+# ── 2026-09-09：對照 21 支課程逐字稿補上的三條判準 ────────────────
+# 課堂用一檔不合格的股票逐條示範（見 04_AI Report/…/D_系統核對與更正.md）：
+#   ①預期報酬>15% ②最近三年配息率**每一年**≥40% ③獲利>5億 ④上市滿2年
+# 我們原本只有①，②做成單一 TTM 數字，③④完全沒有。
+PAYOUT_YEARS     = 3      # 配息率要連續幾年達標（課堂：每一年都要）
+MIN_NET_INCOME_TWD = 5e8  # 獲利下限 5 億「台幣」。
+                          # ⚠️ 課堂是台股情境。美股用等值台幣換算，不是 5 億美元——
+                          #    5 億美元會把整個 S&P 500 洗掉，那不是他的意思。
+                          #    實際效果：這條只會擋到台股小型股，對美股幾乎不作用。
+MIN_LISTED_YEARS = 2      # 上市滿幾年（財報歷史太短，數字容易失真）
+USD_TWD_APPROX   = 31.5   # 只用在「獲利 5 億台幣等值」這一條的換算。
+                          # ⚠️ 刻意用固定值不即時抓：這條門檻只會擋台股小型股，
+                          #    美股離門檻有兩三個數量級，匯率精度完全不影響結果。
+                          #    為了一個不影響結果的數字增加一次網路呼叫不划算。
 
 # ── 配息率快取（2026-08-27）：yfinance 的 payoutRatio 時有時無，缺值時回退上次的值 ──
 _PAYOUT_CACHE_PATH = "state/payout_cache.json"
@@ -516,6 +530,27 @@ def fetch_fundamentals(ticker: str) -> dict:
         debt_to_equity = info.get("debtToEquity")           # yfinance 單位是 %（例如 150 = 1.5x）
         dividend_yield = info.get("dividendYield")          # 小數
         payout_ratio   = info.get("payoutRatio")
+        # 2026-09-09 補：上市日（課堂判準④「上市滿兩年」）。
+        # yfinance 給的是 epoch 秒；抓不到就是 None——**不要用 0 或今天代替**，
+        # 那會讓「不知道」變成「剛上市」或「很久以前」，兩種都是編造。
+        # ⚠️ 實測：這個版本的 yfinance 給的是 firstTradeDateMilliseconds（毫秒），
+        #    不是 firstTradeDateEpochUtc。我第一版寫錯 → 永遠 None → 這條判準是啞的
+        #    （幸好有印「抓不到上市日，未套用」才看得出來）。兩個都試，單位統一成秒。
+        _ft_ms = info.get("firstTradeDateMilliseconds")
+        first_trade = (float(_ft_ms) / 1000.0 if _ft_ms
+                       else info.get("firstTradeDateEpochUtc"))
+        # 2026-09-09 補：逐年股利（課堂判準②「最近三年配息率**每一年**≥40%」）。
+        # yfinance 的 payoutRatio 只有 TTM 一個值，看不出「哪一年沒配」，
+        # 而配息突然中斷正是這條規則要抓的東西。
+        # ⚠️ 抓不到就留空 dict，下游會退回 TTM 判斷**並標記**——不要假裝算過了。
+        div_by_year = {}
+        try:
+            _dv = stock.dividends
+            if _dv is not None and len(_dv):
+                for _d, _v in _dv.items():
+                    div_by_year[_d.year] = div_by_year.get(_d.year, 0.0) + float(_v)
+        except Exception:                                   # noqa: BLE001
+            pass
         # 2026-08-27 Leo 拍板「漏資料就用上次的資料（但要說明是上次的）」：
         # 實測同一檔 PSX 兩次呼叫，一次回 payoutRatio=None、一次回 0.282——
         # 缺值時舊邏輯「放行」等於讓它矇混過關，同一檔股票因此在清單裡飄進飄出。
@@ -556,6 +591,7 @@ def fetch_fundamentals(ticker: str) -> dict:
         # （實測 PSX 幾乎全中；BMY 這種大額減損/併購費用多的還有差距，已知限制）。
         changli_eps = None
         changli_basis = None
+        changli_amt = None
         ttm_ni = None            # 提到 try 外面——下面的幣別換算要用，不能只活在巢狀作用域裡
         try:
             shares = info.get("sharesOutstanding") or info.get("impliedSharesOutstanding")
@@ -584,12 +620,37 @@ def fetch_fundamentals(ticker: str) -> dict:
                         pass
                     if ttm_ni is None and info.get("trailingEps"):
                         ttm_ni = float(info["trailingEps"]) * float(shares)
-                    vals = ([ttm_ni] + ann)[:5] if ttm_ni is not None else ann[:5]
-                    if len(vals) >= 3:   # 至少要3期才算得出有意義的中位數，太少不硬算
-                        changli = float(np.mean(vals[:2]) * 0.7 + np.median(vals) * 0.3)
+                    # ── 預期常利：照講稿的 percentile 法（2026-09-09 重寫）──
+                    # 講稿段 3304-3308（Documents/Stock/巴菲特班講稿…docx）：
+                    #   今年常利 > percentile 0.7 → 取 p70 與今年常利之平均
+                    #   常利越來越低            → 取 p30 與今年常利之平均
+                    #   今年常利指過去 4 季
+                    # 🔴 舊版是 mean(近2期)*0.7 + median(5期)*0.3 ——
+                    #    **把百分位數當成加權權重**，而且丟掉了「成長/衰退」的條件判斷。
+                    hist = [float(x) for x in ann[:5] if x is not None]
+                    cur = float(ttm_ni) if ttm_ni is not None else None
+                    if cur is None and hist:
+                        cur = hist[0]          # 沒有 TTM 就用最近年度頂替
+                    if cur is not None and len(hist) >= 3:
+                        p70 = float(np.percentile(hist, 70))
+                        p30 = float(np.percentile(hist, 30))
+                        if cur > p70:
+                            changli = (p70 + cur) / 2.0          # 成長
+                            changli_case = "成長(p70)"
+                        elif cur < p30:
+                            changli = (p30 + cur) / 2.0          # 衰退
+                            changli_case = "衰退(p30)"
+                        else:
+                            # 持平：講稿段 3313「持平的不偏估計值則平均數與percentile相同」，
+                            # 但沒有明講持平要取哪一個。取中位數與今年常利的平均，
+                            # 跟上下兩種情況的形式一致。**這一步是我的推導，不是原話。**
+                            changli = (float(np.percentile(hist, 50)) + cur) / 2.0
+                            changli_case = "持平(p50)〔推導〕"
                         if changli > 0:
+                            changli_amt = changli
                             changli_eps = round(changli / float(shares), 4)
-                            changli_basis = "normalized" if fld == "Normalized Income" else "net_income"
+                            changli_basis = ("normalized" if fld == "Normalized Income"
+                                             else "net_income") + "/" + changli_case
         except Exception:
             pass
 
@@ -787,6 +848,22 @@ def fetch_fundamentals(ticker: str) -> dict:
         except Exception:
             pass
 
+        # 逐年配息率 = 該年股利 ÷ 該年 EPS。eps_history[0] 是最近一年。
+        # ⚠️ EPS ≤ 0 的年份填 None（虧損年談配息率沒有意義），
+        #    下游看到 None 會判定不合格——那是對的：虧損還配息不算「配得出現金」，
+        #    虧損不配息更不算。
+        payout_years = []
+        try:
+            import datetime as _dt
+            _y = _dt.date.today().year
+            for _i, _e in enumerate(eps_history[:PAYOUT_YEARS + 1]):
+                _yr = _y - 1 - _i          # eps_history[0] 對應去年（最近完整年度）
+                _d = div_by_year.get(_yr)
+                payout_years.append(round(_d / _e, 4)
+                                    if (_d and _e and _e > 0) else None)
+        except Exception:                                   # noqa: BLE001
+            payout_years = []
+
         return {
             "ticker":        ticker,
             "name":          name,
@@ -800,10 +877,14 @@ def fetch_fundamentals(ticker: str) -> dict:
             "eps_forward":   eps_forward,
             "eps_history":   eps_history,
             "changli_eps":   changli_eps,      # 常利EPS（MIKEON同款公式），優先用於俗貴價
-            "changli_basis": changli_basis,    # normalized / net_income
+            "changli_basis": changli_basis,
+            "changli_amt":   changli_amt,      # 常利金額（判準③「常利>5億」用）    # normalized / net_income
             "debt_to_equity": debt_to_equity,  # yfinance 單位：% (150 = 150%)
             "dividend_yield": dividend_yield,
             "payout_ratio":  payout_ratio,
+            "first_trade":   first_trade,      # 上市日 epoch 秒；None＝抓不到
+            "net_income_common": info.get("netIncomeToCommon"),   # 課堂判準③用
+            "payout_years":  payout_years,     # 逐年配息率（近→遠）；None＝該年算不出
             "payout_stale":  payout_from_cache,   # True＝此配息率取自前次快取，非本次抓到
             "reinvest_ratio": reinvest_ratio,  # 洪瑞泰盈再率
             "reinvest_method": reinvest_method,  # official_tw=FinMind正式 / official_us=EDGAR正式
@@ -916,10 +997,28 @@ def evaluate(data: dict) -> dict:
     result["has_dividend"] = div_yield > 0
     result["dividend_pct"] = f"{div_yield*100:.2f}%" if div_yield else "無配息"
     result["payout_ratio"] = payout
-    if payout is not None:
-        payout_ok = payout >= PAYOUT_MIN         # 有數字 → 照門檻
+    # 🔴 2026-09-09：課堂原話是「最近三年的配息率，**每一年**至少要 40% 以上」，
+    #    而且他舉例某檔「有一年沒有超過 40%」就判不合格。
+    #    我們原本只看 yfinance 的 payoutRatio——那是**單一 TTM 數字**，
+    #    一檔「前兩年 60%、去年 10%」的股票會過關，
+    #    而配息突然中斷正是這條規則要抓的東西。
+    # ⚠️ 逐年配息率要股利歷史，yfinance info 沒有。這裡先用**已有的年度 EPS
+    #    與年度股利**算；算不出來就退回原本的 TTM 判斷，並標記出來——
+    #    ⭐ 退回本身不是問題，**沒有標記才是**：那會讓「寬鬆判斷」偽裝成
+    #       「嚴格判斷」，而且看不出來。
+    py = data.get("payout_years") or []
+    if len(py) >= PAYOUT_YEARS:
+        recent = py[:PAYOUT_YEARS]
+        payout_ok = all((r is not None and r >= PAYOUT_MIN) for r in recent)
+        result["payout_basis"] = f"逐年{PAYOUT_YEARS}年"
+        result["payout_years_str"] = " / ".join(
+            ("N/A" if r is None else f"{r*100:.0f}%") for r in recent)
+    elif payout is not None:
+        payout_ok = payout >= PAYOUT_MIN
+        result["payout_basis"] = "TTM單一值（股利歷史不足，判斷較寬）"
     else:
-        payout_ok = div_yield > 0                # 沒數字但有配息 → 資料缺，放行；完全不配息 → 擋
+        payout_ok = div_yield > 0
+        result["payout_basis"] = "只看有沒有配息（資料缺）"
     result["payout_pass"] = payout_ok
     result["payout_stale"] = bool(data.get("payout_stale"))
 
@@ -943,10 +1042,52 @@ def evaluate(data: dict) -> dict:
     # （41 檔只剩 1 檔抓不到），代價已經很小，同一天已經在 paper_portfolio.py 用同樣邏輯堵過。
     reinvest_ok = is_financial or grade in ("ideal", "acceptable")
     result["needs_review"] = (not is_financial) and grade in ("unknown", "shrinking")
-    roe_stable  = roe_pass_years >= ROE_YEARS          # 近 4 年至少 3 年 ROE ≥ 15%
+    # 🔴 2026-09-09：課堂原話是「股東權益報酬率**最近三年**至少 15%」，
+    #    我們原本是「近 4 年至少 3 年」——允許最近 4 年裡有 1 年不及格，比課堂寬。
+    #    改成最近三年**每一年**都要達標。
+    _recent_roe = [r for r in roe_hist[:ROE_YEARS]]
+    roe_stable = (len(_recent_roe) >= ROE_YEARS
+                  and all((r is not None and r >= ROE_MIN) for r in _recent_roe))
+
+    # 課堂判準③：獲利 > 5 億（台幣）。原本完全沒有這條。
+    # ⚠️ 幣別：課堂是台股情境。美股換算成等值台幣，不是 5 億美元——
+    #    那會把整個 S&P 500 洗掉，不是他的意思。實際只擋台股小型股。
+    # 🔴 講稿原文（段 488）：「第三、**常利**沒大於5億元」——是常利不是淨利。
+    #    我前一版用 netIncomeToCommon（淨利）是錯的：淨利含處分利得與非經常項目，
+    #    一家靠賣土地美化帳面的公司會因此過關，而那正是這條要擋的。
+    #    常利＝淨利−處分利得−非常項目−其他收入（段 3325）。
+    #    我們用 changli_eps × 股數還原成金額；算不到就不套用（不知道≠不合格）。
+    _ni = data.get("changli_amt")
+    if _ni is None:
+        ni_pass = True                      # 抓不到不擋（不知道≠不合格）
+        result["ni_basis"] = "抓不到常利，未套用"
+    else:
+        # 重用這個函式上面（第 854 行附近）已經算好的 _is_tw，不要另外發明一個。
+        _fx = 1.0 if _is_tw else USD_TWD_APPROX
+        ni_pass = (float(_ni) * _fx) >= MIN_NET_INCOME_TWD
+        result["ni_basis"] = f"常利 {float(_ni)*_fx/1e8:.1f} 億台幣等值"
+    result["ni_pass"] = ni_pass
+
+    # 課堂判準④：上市滿 2 年。原本完全沒有這條。
+    _ft = data.get("first_trade")
+    if not _ft:
+        listed_pass = True                  # 抓不到不擋
+        result["listed_basis"] = "抓不到上市日，未套用"
+    else:
+        import time as _t
+        _yrs = (_t.time() - float(_ft)) / (365.25 * 86400)
+        listed_pass = _yrs >= MIN_LISTED_YEARS
+        result["listed_basis"] = f"上市 {_yrs:.1f} 年"
+    result["listed_pass"] = listed_pass
+
     quality_ok  = (roe_pass_current and roe_stable and eps > 0
-                   and reinvest_ok and payout_ok)
+                   and reinvest_ok and payout_ok and ni_pass and listed_pass)
     result["roe_stable"]  = roe_stable
+    # 2026-09-09：payout_ok / reinvest_ok 原本只當區域變數用，沒有匯出。
+    # 結果是 quality_ok=False 時**答不出是哪一條擋的**——而這正是我自己在
+    # 加這批判準時寫下要避免的事。⭐ 註解寫了不等於程式做了。
+    result["payout_ok"]   = payout_ok
+    result["reinvest_ok"] = reinvest_ok
     result["quality_ok"]  = quality_ok
 
     signal = "SKIP"
