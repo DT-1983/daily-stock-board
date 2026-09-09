@@ -848,19 +848,48 @@ def run(targets=None, notes=None):
     held_n = sum(1 for t in targets.values() if t["held"])
     print(f"今天觸發 {len(targets)} 檔（持股 {held_n}、非持股 {len(targets)-held_n}）：{sorted(targets)}")
     date = time.strftime("%Y-%m-%d")
-    verdicts = []
-    for tk in sorted(targets):
+
+    # 平行處理（2026-09-09 Leo：「可以早一點?」）
+    # 🔴 為什麼這裡是瓶頸：實測 7 天，耗時幾乎完全由觸發檔數決定——
+    #    每檔穩定 1.6～2.8 分鐘（09/02 觸發 73 檔跑了 139 分、09/01 只有 6 檔跑 13 分）。
+    #    整批的 Discord 日報排在這之後，所以觸發多的日子日報要 11 點才到。
+    # ⭐ 每一檔的 gather_material + ask_claude **彼此完全獨立**，沒有共用狀態，
+    #    而 ask_claude 是在等本機 claude 回應（不是吃 CPU），平行化收益很直接。
+    # ⚠️ 併發數不要開太大：每一個都是一個 claude 行程。3 條在實測的機器上是
+    #    「明顯變快但不會把機器塞死」的位置。要調用環境變數，不要改這裡。
+    import concurrent.futures as _cf
+    workers = max(1, int(os.environ.get("CHIEF_WORKERS", "3")))
+
+    def _one(tk):
         info = targets[tk]
-        print(f"  分析 {tk}（{'持股' if info['held'] else '非持股'}｜{'；'.join(info['triggers'])}）...")
         sig_key, ai_sig, value_m, trend_m, events = gather_material(tk, notes)
-        try:
-            v = ask_claude(tk, tk, ai_sig, value_m, trend_m, events, date,
-                           held=info["held"], triggers=info["triggers"])
-            v["held"] = info["held"]
-            v["triggers"] = info["triggers"]
-            verdicts.append(v)
-        except Exception as e:
-            print(f"  {tk} 分析失敗：{e}")
+        v = ask_claude(tk, tk, ai_sig, value_m, trend_m, events, date,
+                       held=info["held"], triggers=info["triggers"])
+        v["held"] = info["held"]
+        v["triggers"] = info["triggers"]
+        return v
+
+    verdicts = []
+    order = sorted(targets)
+    print(f"  平行分析（{workers} 條）…")
+    with _cf.ThreadPoolExecutor(max_workers=workers) as ex:
+        futs = {ex.submit(_one, tk): tk for tk in order}
+        done_n = 0
+        for fut in _cf.as_completed(futs):
+            tk = futs[fut]
+            done_n += 1
+            info = targets[tk]
+            try:
+                verdicts.append(fut.result())
+                print(f"  [{done_n}/{len(order)}] ✓ {tk}"
+                      f"（{'持股' if info['held'] else '非持股'}｜"
+                      f"{'；'.join(info['triggers'])}）")
+            except Exception as e:                          # noqa: BLE001
+                print(f"  [{done_n}/{len(order)}] ✗ {tk} 分析失敗：{e}")
+    # ⚠️ as_completed 的順序是「誰先跑完」，每天都不一樣。
+    #    寫進 jsonl 前排回代號順序，不然同樣的輸入會產生不同順序的檔案，
+    #    之後要 diff 兩天的判斷會被順序雜訊淹掉。
+    verdicts.sort(key=lambda v: str(v.get("ticker") or ""))
 
     if not verdicts:
         return []

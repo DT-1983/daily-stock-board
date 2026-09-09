@@ -318,14 +318,23 @@ def overview_line(path=OUT_PATH):
     strong = sum(1 for r in rows if r["quad"] in ("領先", "改善"))
     weak = len(rows) - strong
 
-    s = (f"📊 產業輪動：**{top['name']}（{top['mkt']}）領先全場**（RS {top['ratio']}）"
-         f"，**{bottom['name']}（{bottom['mkt']}）墊底**（RS {bottom['ratio']}）")
     # 美台各算一次（同一個題材在兩個市場是兩筆），所以講「N 個籃子」不講「N 條鏈」——
     # 寫「16 條鏈」會讓人以為有 16 個不同題材，實際是 8 個題材 × 兩個市場。
     n_us = sum(1 for r in rows if r["mkt"] == "美")
     n_tw = len(rows) - n_us
-    s += (f"｜{len(rows)} 個籃子（美{n_us}/台{n_tw}）中 "
-          f"{strong} 個領先或改善、{weak} 個弱化或落後")
+
+    # 2026-09-09 Leo：「產業輪動：分段不清楚，幫我重排」。
+    # 原本把「最強、最弱、統計」三件事用「，」和「｜」串成一行（100+ 寬），
+    # 手機折成四行且斷在括號裡。
+    # ⭐ 那其實是**三個不同的事實**，本來就該是三行——
+    #    用標點串起來只是把版面問題推給讀的人。
+    s = "\n".join([
+        "📊 **產業輪動**",
+        f"　🔵 最強　{top['name']}（{top['mkt']}）　RS {top['ratio']}",
+        f"　🔴 最弱　{bottom['name']}（{bottom['mkt']}）　RS {bottom['ratio']}",
+        f"　-# {len(rows)} 個籃子（美{n_us}/台{n_tw}）："
+        f"領先或改善 {strong}、弱化或落後 {weak}",
+    ])
     # 2026-09-01 Leo：「SuperTrend 接在前面了，請改為獨立一段」——原本用「｜」
     # 續在產業輪動後面，手機上那一行會折成 4~5 行，兩件事糊在一起看不出斷點。
     # 改由 bears_line() 另外回傳，呼叫端當獨立一行放。
