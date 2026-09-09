@@ -283,13 +283,34 @@ def alerts(store=None):
     return hit, other_ours, untrusted
 
 
+def _short_rating(s):
+    """評等縮短。「Downgrade to Sell」這種佔掉半行，資訊量卻只有最後那個字。"""
+    s = (s or "").strip()
+    low = s.lower()
+    for pre, mark in (("downgrade to ", "↓"), ("upgrade to ", "↑")):
+        if low.startswith(pre):
+            return mark + s[len(pre):]
+    return s[:14]
+
+
 def _line(r):
-    d = {"up": "▲ 調升", "down": "▼ 調降"}.get(r.get("direction"), "－")
-    tp = (f"{r['tp_old']:g} → {r['tp_new']:g}"
+    """日報用的一行。
+
+    🔴 2026-09-09 Leo 回報「格式亂」：原本一行寬 81-94（含公司全名、完整日期、
+       「持股被調降」四個字、方向箭頭），手機一行約放 40 → **每一筆都折成三行**，
+       而且斷在奇怪的位置。
+    ⭐ 拿掉的都是「已經被別的欄位表達過」的東西：
+         · 公司名（代號已經指明是誰）
+         · ▲/▼ 箭頭（110→95 本身就看得出方向）
+         · 年份（這段只列近幾天）
+       **日期不能拿掉**——這段跨好幾天，沒有日期分不出是今天還是六天前的。
+    """
+    tp = (f"{r['tp_old']:g}→{r['tp_new']:g}"
           if r.get("tp_old") and r.get("tp_new")
           else (f"新目標 {r['tp_new']:g}" if r.get("tp_new") else "無目標價"))
-    return (f"{r.get('date')}｜{r.get('name')}（{r.get('ticker')}）"
-            f"｜{r.get('broker')}｜{r.get('rating')}｜{d}　{tp}")
+    date = str(r.get("date") or "")[5:]          # 只留 MM-DD
+    return (f"**{r.get('ticker')}**　{tp}　{r.get('broker')}"
+            f"｜{_short_rating(r.get('rating'))}　-# {date}")
 
 
 def summary_lines():
@@ -301,11 +322,15 @@ def summary_lines():
         return []
     out = []
     for r in hit[:6]:
-        tag = "🔻 持股被調降" if r.get("_why") == "持股被調降" else "🎯 券商異動"
-        out.append(f"・{tag}｜{_line(r)}")
+        # 🔻持股＝這是你的持股被調降（最該看的）；🎯＝母體內其他標的的異動。
+        # 標籤壓成兩個字：「持股被調降」那四個字每一行都重複一次，
+        # 但真正要分辨的只有「是不是我的持股」，emoji＋兩字就夠了。
+        tag = "🔻持股" if r.get("_why") == "持股被調降" else "🎯"
+        out.append(f"・{tag} {_line(r)}")
     if oth:
-        out.append(f"　　（另有 {len(oth)} 筆我們母體內的異動來自其他券商，"
-                   f"未列入提醒；數字未經覆核）")
+        # 2026-09-09 縮短：原本 30 字解釋「為什麼沒列」，但那個理由固定不變，
+        # 每天重複一次就是雜訊。保留「還有幾筆」與「未覆核」這兩個會影響判讀的事實。
+        out.append(f"-# 　另有 {len(oth)} 筆其他券商異動（未覆核）")
     return out
 
 
