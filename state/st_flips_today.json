@@ -1,87 +1,61 @@
 {
 "date": "2026-09-09",
 "flips_hold": [],
-"flips_watch": [],
-"ai_alerts": [
+"flips_watch": [
 {
-"chain": "AI 伺服器",
-"market": "US",
-"sig": "🟢",
+"code": "AMD",
+"name": "",
+"word": "🔴→🟢 翻多",
+"dir": 1
+},
+{
+"code": "AUR",
+"name": "",
+"word": "🔴→🟢 翻多",
+"dir": 1
+},
+{
+"code": "CRWV",
+"name": "",
+"word": "🔴→🟢 翻多",
+"dir": 1
+},
+{
+"code": "HUT",
+"name": "",
+"word": "🔴→🟢 翻多",
+"dir": 1
+},
+{
+"code": "INTC",
+"name": "",
+"word": "🔴→🟢 翻多",
+"dir": 1
+},
+{
+"code": "NBIS",
+"name": "",
+"word": "🔴→🟢 翻多",
+"dir": 1
+},
+{
+"code": "SEDG",
+"name": "",
+"word": "🔴→🟢 翻多",
+"dir": 1
+},
+{
 "code": "TSM",
-"name": "Taiwan Semiconductor Manufacturing Co Ltd ADR",
-"reason": "觀望→買進"
+"name": "",
+"word": "🔴→🟢 翻多",
+"dir": 1
 },
 {
-"chain": "AI 伺服器",
-"market": "US",
-"sig": "🟢",
-"code": "MU",
-"name": "Micron Technology Inc",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 伺服器",
-"market": "US",
-"sig": "🟢",
-"code": "NVDA",
-"name": "NVIDIA Corp",
-"reason": "觀望→買進"
-},
-{
-"chain": "矽光子/光通訊",
-"market": "US",
-"sig": "🟢",
-"code": "PI",
-"name": "Impinj Inc",
-"reason": "觀望→買進"
-},
-{
-"chain": "矽光子/光通訊",
-"market": "US",
-"sig": "🟢",
-"code": "SWKS",
-"name": "Skyworks Solutions Inc",
-"reason": "觀望→買進"
-},
-{
-"chain": "矽光子/光通訊",
-"market": "TW",
-"sig": "🔴",
-"code": "2345",
-"name": "智邦",
-"reason": "觀望→賣出"
-},
-{
-"chain": "機器人",
-"market": "TW",
-"sig": "🔴",
-"code": "2359",
-"name": "所羅門",
-"reason": "觀望→賣出"
-},
-{
-"chain": "太陽能",
-"market": "TW",
-"sig": "🔴",
-"code": "6443",
-"name": "元晶",
-"reason": "觀望→賣出"
-},
-{
-"chain": "AI 電力/核能",
-"market": "TW",
-"sig": "🔴",
-"code": "1504",
-"name": "東元",
-"reason": "觀望→賣出"
-},
-{
-"chain": "玻璃基板/TGV",
-"market": "TW",
-"sig": "🟢",
-"code": "3481",
-"name": "群創",
-"reason": "觀望→買進"
+"code": "VRT",
+"name": "",
+"word": "🔴→🟢 翻多",
+"dir": 1
 }
-]
+],
+"ai_alerts": []
 }

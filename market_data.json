@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-09 08:46",
+ "updated": "2026-09-09 12:53",
  "indices": [
   {
    "sym": "^GSPC",
@@ -37,17 +37,17 @@
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/07",
-   "close": 47326.27,
-   "chg_pct": 1.67
+   "date": "09/09",
+   "close": 47217.78,
+   "chg_pct": 0.24
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/09",
-   "close": 31.48,
-   "chg_pct": -0.08
+   "close": 31.45,
+   "chg_pct": -0.18
   },
   {
    "sym": "^TNX",
@@ -59,68 +59,7 @@
    "chg_bp": 2.2
   }
  ],
- "news": [
-  {
-   "title": "AI資料中心有錢也蓋不了！有電土地大缺貨 舊工廠、礦場變搶手資產",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6601277",
-   "ts": "09/09 08:30"
-  },
-  {
-   "title": "財經名嘴點名輝達與博通 看好成為OpenAI GPT-6 Astra受惠股",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6601237",
-   "ts": "09/09 08:30"
-  },
-  {
-   "title": "營收速報  - 幃翔(6185)8月營收6,047萬元年增率高達43.44％",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6601270",
-   "ts": "09/09 08:21"
-  },
-  {
-   "title": "營收速報  - 精技(2414)8月營收45.56億元年增率高達79.52％",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6601269",
-   "ts": "09/09 08:21"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：環宇-KY(4991-TW)目標價調升至663元，幅度約5.24%",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6601259",
-   "ts": "09/09 08:10"
-  },
-  {
-   "title": "美股盤後：油價、美債殖利率雙升壓抑大盤，AI硬體逆勢吸金、台積電漲2.35%",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6601256",
-   "ts": "09/09 08:01"
-  },
-  {
-   "title": "記憶體漲價擠壓手機產業！瑞穗：三星韌性優於同業",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6601154",
-   "ts": "09/09 08:00"
-  },
-  {
-   "title": "美股重點新聞摘要2026年9月9日",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6601150",
-   "ts": "09/09 08:00"
-  },
-  {
-   "title": "營收速報 - 2026年9月9日台股中小型公司8月營收一覽（新增800家）",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6601253",
-   "ts": "09/09 07:56"
-  },
-  {
-   "title": "營收速報 - 2026年9月9日台股大型公司8月營收一覽（新增88家）",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6601252",
-   "ts": "09/09 07:56"
-  }
- ],
+ "news": [],
  "inst": {
   "date": "09/08",
   "total_yi": -125.1,
