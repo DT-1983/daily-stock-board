@@ -400,16 +400,19 @@ ROOM_CSS = """
 :root{--gap:10px}
 body{margin:0}
 /* 標題排（2026-09-10 Leo：「標題跟其它分頁一樣」，見 title_html()）。
-   跟其他頁一樣的眉標+大標題排版，但故意做得比 board_theme.header() 緊湊——
-   100vh 版型裡多一分是一分，不能照抄整包（那還帶 subtitle+navlinks）。 */
+   🔴 這裡原本自己又定義了一份 .roomtitle .eye / .roomtitle h1（10px/letter-
+   spacing .12em、16.5px），結果跟 BASE_CSS 本來就有的 .eye/h1（10px/.22em、
+   19px）不一樣大——Leo 比對「進出燈號」發現字級不一致。BASE_CSS 早就有
+   一份了，這裡的 markup 本來就是用同樣的 class name（.eye/h1），根本不用
+   重寫，重寫還寫錯尺寸，是自己重複發明了一份還發明壞了。全部刪掉，
+   讓它自然套用跟其他頁完全相同的規則，不用另外維護一份。
+   .roomtitle 只留「排版容器」本身的樣式（背景/邊框/間距），這是 BASE_CSS
+   的 header{} 沒有涵蓋到的（這裡用 <div> 不是 <header>，100vh 版型要更
+   緊湊，不能照搬整個 header 含 padding-bottom:14px 那麼寬鬆）。 */
 .roomtitle{padding:7px 12px 6px;background:var(--panel,#080E1A);
  border-top:2px solid var(--cy,#22D3EE);
  border-bottom:1px solid var(--hud,#16304A)}
-.roomtitle .eye{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10px;
- letter-spacing:.12em;color:var(--cy,#22D3EE);text-transform:uppercase}
-.roomtitle .eye em{color:var(--dim);font-style:normal;margin-left:3px}
 .roomtitle .titlerow{display:flex;align-items:center;gap:8px;margin-top:3px}
-.roomtitle h1{font-size:16.5px;font-weight:800;letter-spacing:-.2px;color:var(--ink)}
 /* 導覽列（2026-09-07 Leo：「最上面可以加一個其它各頁的快捷嗎? 跟其它投資頁一樣」）。
    2026-09-10：原本標題（🚦燈號戰情室 + 本機・即時標籤）跟連結、控制項
    全擠在這一排裡，Leo 說太擠——標題搬去 title_html() 自己一排，
@@ -479,14 +482,23 @@ body{margin:0}
      · 篩選列會跟著清單一起捲走（捲到 600px 時它在 -498px，根本點不到）
      · 排序後不捲回頂 → 重排發生在畫面外，看起來像沒反應
    ⭐ 「功能沒壞但使用者說壞了」＝**回饋不足**，要修的是看得見的那一半。 */
-.ctrlbar{position:sticky;top:var(--hdrh);z-index:2;background:var(--panel,#080E1A);
+/* 2026-09-10 修正：這裡原本被我改成 top:var(--hdrh)，是我自己搞混的坑——
+   這個 38px 從來就跟頁首(--hdrh，題排+導覽列)無關，是 .phead(上面那個
+   「報價組合」小標題列，sticky top:0)自己的高度，ctrlbar 要貼在它下面，
+   兩個 38px 只是數字剛好一樣。改成頁首高度後，ctrlbar 在左欄自己的捲動
+   容器裡往下貼了 98px，第一筆股票資料就會冒到篩選列上面——Leo 回報
+   「篩選做壞了，固定不住，會跑出其它股票」就是這個。改回獨立的字面值，
+   不要再共用 --hdrh。 */
+.ctrlbar{position:sticky;top:38px;z-index:2;background:var(--panel,#080E1A);
  border-bottom:1px solid var(--hud,#16304A);padding-bottom:6px}
-.q{width:calc(100% - 24px);margin:10px 12px 6px;padding:7px 10px;font:inherit;
- font-size:12.5px;border-radius:0;border:1px solid var(--hud,#16304A);
+/* 2026-09-10 Leo:「做4排就好，可以改小一點」——四排（搜尋/排序/市場/只看）
+   數量不變，只是把每排的內距/字級收窄一點，省一點高度給下面的清單。 */
+.q{width:calc(100% - 24px);margin:7px 12px 4px;padding:5px 10px;font:inherit;
+ font-size:12px;border-radius:0;border:1px solid var(--hud,#16304A);
  background:transparent;color:var(--ink)}
-.chips{display:flex;flex-wrap:wrap;gap:5px;padding:0 12px 8px;align-items:center}
-.cl{font-size:10.5px;color:var(--dim);margin-right:2px}
-.ch{font:inherit;font-size:11.5px;padding:3px 9px;border-radius:0;cursor:pointer;
+.chips{display:flex;flex-wrap:wrap;gap:4px;padding:0 12px 5px;align-items:center}
+.cl{font-size:10px;color:var(--dim);margin-right:2px}
+.ch{font:inherit;font-size:11px;padding:2px 8px;border-radius:0;cursor:pointer;
  border:1px solid var(--hud,#16304A);background:transparent;color:var(--dim);
  letter-spacing:.03em}
 .ch.on{background:var(--cy-dim,rgba(34,211,238,.10));border-color:var(--cy,#22D3EE);
