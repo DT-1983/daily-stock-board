@@ -103,7 +103,7 @@ CSS = """
 
 
 def render(key, r, d=None, px=None, fc=None):
-    from board_theme import BASE_CSS, esc, esc_b, header, nav_abs
+    from board_theme import BASE_CSS, esc, esc_b, header
 
     d = d if d is not None else stock_brief.gather(str(r.get("ticker")))
     px = px if px is not None else stock_brief._price(d)
@@ -319,7 +319,7 @@ def render(key, r, d=None, px=None, fc=None):
             + BASE_CSS + stock_brief.CSS + CSS
             + '</style></head><body><div class="wrap">'
             + header("earnings", f"{esc(name)} {esc(r.get('ticker'))}　"
-                                 f"{esc(r.get('broker'))}報告中文重點", sub, nav_abs(), eyebrow="BROKER DIGEST")
+                                 f"{esc(r.get('broker'))}報告中文重點", sub, [], eyebrow="BROKER DIGEST")
             + "".join(B) + "</div></body></html>")
 
 
