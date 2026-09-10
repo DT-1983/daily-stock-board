@@ -616,7 +616,7 @@ def _catalyst_html(ticker):
 
 
 def render(d, extra_notes=None):
-    from board_theme import BASE_CSS, esc, esc_b, header, nav_abs
+    from board_theme import BASE_CSS, esc, esc_b, header
 
     # 券商可信度標籤（2026-09-05，老墨課堂）。⚠️ 只標不濾，而且**跟目標價異動表的
     # TRUSTED 名單是兩回事**——那個名單裡沒有中信，硬對過去會撞到 CITI（花旗）。
@@ -881,7 +881,7 @@ def render(d, extra_notes=None):
             f"<title>{esc(name)} 整合報告</title><style>" + BASE_CSS + CSS + BRIEF_INTRO_CSS
             + _cp_css()
             + "</style></head><body><div class=\"wrap\">"
-            + header("earnings", f"{name} 整合報告", sub, nav_abs(),
+            + header("earnings", f"{name} 整合報告", sub, [],
                      eyebrow="STOCK DOSSIER")
             + "".join(body) + "</div></body></html>")
 

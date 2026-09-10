@@ -420,6 +420,7 @@ def header(title_icon, title, subtitle, nav_items, current=None, eyebrow=None):
     links = "".join(
         f'<a class="nl{" cur" if k == current else ""}" href="{href}">{icon(ic, 14)}{esc(lab)}</a>'
         for k, ic, lab, href in nav_items)
+    navlinks = f'<div class="navlinks">{links}</div>' if nav_items else ""
     # 眉標：全大寫加寬字距的英文小標。它不只是裝飾——寫的是這一頁的代號，
     # 七個頁面的眉標各不相同，掃一眼就知道自己在哪一頁。
     # ⚠️ 不在導覽列裡的頁面（整合報告、中文重點）不能借用 current——
@@ -428,7 +429,7 @@ def header(title_icon, title, subtitle, nav_items, current=None, eyebrow=None):
     return (f'<header><span class="eye">{esc(eye)}<em> // 隆中對</em></span>'
             f'<h1>{icon(title_icon, 21, "#22D3EE")}{esc(title)}</h1>'
             f'<div class="sub">{subtitle}</div>'
-            f'<div class="navlinks">{links}</div></header>')
+            f'{navlinks}</header>')
 
 
 def score_class(v):
