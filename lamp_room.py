@@ -1266,12 +1266,17 @@ def nav_html():
         else:
             out.append(f'<a class="nl" href="{href}">{icon(ic, 13)}{esc(lab)}</a>')
     links = "".join(out)
-    # 右側的控制項：收合／模式／軍師。
+    # 2026-09-10 Leo：「報價組合縮小後要打開的按鍵可以做在左邊嗎? 不然這樣
+    # 縮小要放大還要移到最右邊」——展開鈕（lshow）原本跟模式/軍師擺一起，
+    # 在導覽列最右邊；但收合鈕（左欄自己 .phead 裡的「«」）在最左邊，
+    # 兩顆位置對不上，滑鼠要整條移過去，跟他要收合左欄的動作方向剛好相反。
+    # 展開鈕移到導覽列最左邊（.navls 之前），跟收合鈕同一側，滑鼠不用大移動。
+    lshow = '<button class="lbtn lshow" id="lshow" title="展開左欄">» 報價組合</button>'
+    # 右側的控制項：模式／軍師。
     # ⭐ 原本這三顆都是 position:fixed 浮在畫面上，結果三個都擋到東西
     #    （模式鈕擋圖、軍師鈕蓋住送出、展開鈕蓋住中欄左上）。
     #    浮動鈕沒有「不擋東西的位置」——畫面滿的時候每個角落都有內容。
-    ctrl = ('<button class="lbtn lshow" id="lshow" title="展開左欄">» 報價組合</button>'
-            '<span class="modebar"><button class="mb" id="mode-stock">個股</button>'
+    ctrl = ('<span class="modebar"><button class="mb" id="mode-stock">個股</button>'
             '<button class="mb on" id="mode-list">列表</button></span>'
             '<button class="chatbtn" id="chatbtn">🏛️ 軍師</button>')
     # 🔴 2026-09-08 Leo：「右上少一個軍師的按鍵」。
@@ -1279,7 +1284,7 @@ def nav_html():
     #    在 1900px 的螢幕上剛好差幾十 px —— 看起來像「沒有這顆鈕」。
     #    ⭐ 修法不是縮小字，是**分成兩區**：連結自己捲，控制項固定不參與捲動。
     #       這樣不管幾個連結、螢幕多窄，控制項一定在畫面上。
-    return f'<nav class="roomnav"><span class="navls">{links}</span>{ctrl}</nav>'
+    return f'<nav class="roomnav">{lshow}<span class="navls">{links}</span>{ctrl}</nav>'
 
 
 def page_html():
