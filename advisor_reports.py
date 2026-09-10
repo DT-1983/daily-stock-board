@@ -301,9 +301,15 @@ def implied_multiple(r, price):
             f"現價 ÷ {base:g}（{lbl or '報告推導目標價所用的基數'}）")
 
 
+IMAGE_EXTS = (".png", ".jpg", ".jpeg", ".webp")
+
+
 def parse(force=False, only=None):
     store = _load(STORE, {})
-    files = sorted(glob.glob(os.path.join(PDF_DIR, "**", "*.pdf"), recursive=True))
+    files = sorted(
+        glob.glob(os.path.join(PDF_DIR, "**", "*.pdf"), recursive=True)
+        + [f for ext in IMAGE_EXTS
+           for f in glob.glob(os.path.join(PDF_DIR, "**", f"*{ext}"), recursive=True)])
     if only:
         files = [f for f in files if only in os.path.basename(f)]
     import llm_board
@@ -313,15 +319,28 @@ def parse(force=False, only=None):
         if key in store and not force:
             continue
         print(f"  解析 {key} …", flush=True)
-        try:
-            txt = pdf_text(f)
-        except Exception as e:                              # noqa: BLE001
-            print(f"    PDF 讀取失敗：{str(e)[:100]}")
-            continue
-        # 上限 16000（原本 9000）：外資報告要連目標價那一頁一起餵，9000 會切掉。
-        prompt = (f"下面是一份券商個股研究報告的節錄（程式抽取，欄位可能交錯；"
-                  f"含目標價/估值方法的那幾頁已排在最前面）。把它結構化。\n\n"
-                  f"{SCHEMA_HINT}\n\n---報告文字開始---\n{txt[:16000]}\n---報告文字結束---")
+        is_image = key.lower().endswith(IMAGE_EXTS)
+        if is_image:
+            # 圖片沒有可抽取的文字層——不走 pdfplumber，改叫本機 claude 直接
+            # 讀圖（Read 工具吃得懂圖片，跟讀 PDF 文字走同一支 llm_board、
+            # 同一份 Max plan 額度，不是另外接的付費 OCR API）。
+            # ⚠️ 截圖通常只有目標價/幾個數字，不會有完整報告內文——
+            # SCHEMA_HINT 裡本來就大半欄位是選填，抓不到的留空即可，
+            # 不強求跟完整 PDF 報告一樣齊全。
+            prompt = (f"請讀取這張圖片檔案（路徑：{f}），這是一份股票目標價／個股報告的截圖，"
+                      f"可能只有部分資訊（例如只有目標價、沒有完整報告內文）。"
+                      f"把圖片裡看得到的資訊結構化，看不到的欄位留空，不要編造。\n\n"
+                      f"{SCHEMA_HINT}")
+        else:
+            try:
+                txt = pdf_text(f)
+            except Exception as e:                          # noqa: BLE001
+                print(f"    PDF 讀取失敗：{str(e)[:100]}")
+                continue
+            # 上限 16000（原本 9000）：外資報告要連目標價那一頁一起餵，9000 會切掉。
+            prompt = (f"下面是一份券商個股研究報告的節錄（程式抽取，欄位可能交錯；"
+                      f"含目標價/估值方法的那幾頁已排在最前面）。把它結構化。\n\n"
+                      f"{SCHEMA_HINT}\n\n---報告文字開始---\n{txt[:16000]}\n---報告文字結束---")
         try:
             d = llm_board.ask_json_traditional(prompt, tries=2)
         except Exception as e:                              # noqa: BLE001
