@@ -194,21 +194,26 @@ async def cmd_pangtong(interaction: discord.Interaction, 問題: str):
     await _ask_war_room(interaction, "龐統", 問題)
 
 
-# ── #上傳報告：券商報告 PDF（目標價/失效線）（2026-09-11）──────────────
+# ── #上傳報告：券商報告 PDF／截圖（目標價/失效線）（2026-09-11）─────────
 #
 # 走 Discord 的 attachment 參數，不用讀一般訊息內容——跟其它指令一樣不用
 # 特權 intent。存進 `advisor_reports.PDF_DIR` 底下 Leo 原本手動丟檔的
 # 同一個「投顧報告」資料夾，然後就地跑一次 `advisor_reports.parse()`（只解析
 # 這一份，不是全部重跑）給即時回饋，台股/美股同一條路徑，不分市場。
-@tree.command(name="上傳報告", description="上傳券商報告 PDF（目標價/個股報告），自動解析進系統")
-@app_commands.describe(檔案="券商報告 PDF")
+# 2026-09-11：也收圖片（截圖）——advisor_reports.parse 改叫本機 claude 直接讀圖，
+# 不是額外接付費 OCR，實測過真的讀得到（含中文），只是截圖通常只有目標價，
+# 不會有完整報告內容那些欄位，抓不到的會留空。
+@tree.command(name="上傳報告", description="上傳券商報告 PDF 或目標價截圖，自動解析進系統")
+@app_commands.describe(檔案="券商報告 PDF，或目標價/報告內容截圖（PNG/JPG）")
 async def cmd_upload_report(interaction: discord.Interaction, 檔案: discord.Attachment):
     await interaction.response.defer(thinking=True)
     try:
-        if not 檔案.filename.lower().endswith(".pdf"):
-            await interaction.followup.send("目前只收 PDF，其他格式的話麻煩你手動丟進資料夾。")
-            return
         import advisor_reports
+        ok_exts = (".pdf",) + advisor_reports.IMAGE_EXTS
+        if not 檔案.filename.lower().endswith(ok_exts):
+            await interaction.followup.send(
+                f"目前只收 PDF 或截圖（{'/'.join(ok_exts)}），其他格式麻煩你手動丟進資料夾。")
+            return
         dest_dir = os.path.join(advisor_reports.PDF_DIR, "投顧報告")
         os.makedirs(dest_dir, exist_ok=True)
         dest = os.path.join(dest_dir, 檔案.filename)
