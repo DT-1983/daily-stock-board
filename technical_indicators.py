@@ -8,7 +8,7 @@
   EXCEED CHARGE   TTM Squeeze／擠壓動能：布林帶(樣本標準差) vs 凱特納通道(SMA of TR)，
                    擠壓＝布林帶縮進凱特納通道內；動能＝對 value 序列做線性迴歸取末端值
   RS 相對強弱     Weinstein/Mansfield：(股價/大盤 比值) 對其自身均線的乖離%，
-                   短線(20日)＋長線(1年)兩組
+                   短線(一季/60日)＋長線(1年)兩組
 
 2026-08-25：對照老墨 XQ 官方指標（mophyfei/MOFI_XQ）的說明頁後補上三層，
 原本這三個指標只有「基礎線」，缺了官方版真正拿來判斷的加值層——
@@ -19,9 +19,11 @@
   EXCEED CHARGE + 擠壓三級強度（微/中/極，見 squeeze_intensity）
                 + 動能四色文字標籤（見 momentum_label，圖表本來就有四色只是tile沒講出來）
   RS 相對強弱   + RS創新高偵測 + 「RS領先股價」背離訊號 + 短長RS交叉訊號（見 rs_signals）
-⚠️ RS 顯示窗口：2026-09-03 短線 30→20（對齊老墨螢幕上的短線 RS 數值，MSFT 實測 0.98 對 0.82），
-   長線維持 250。這是**顯示層**；燈四的 RS 在 combo_scan 是另一組 60/240（RS_SHORT/RS_LONG），
-   兩者刻意不同、互不影響。老墨確切公式未公開，數值以單檔對齊，別檔可能有出入（方向會對）。
+⚠️ RS 顯示窗口：2026-09-11 短線 20→60（一季）。2026-09-03 那次是拿 MSFT 的數值去湊
+   最接近的天數（0.98 對 0.82），這次 Leo 直接貼出老墨畫面截圖——下拉選單寫明
+   「短:一季　長:一年」，比湊數值準，改成直接照這個設定走。長線維持 250（＝1年）。
+   這是**顯示層**；燈四的 RS 在 combo_scan 是另一組 60/240（RS_SHORT/RS_LONG），
+   兩者刻意不同、互不影響。老墨確切公式未公開，改用他自己標的窗口設定，比對數值準。
 
 用法：
     python technical_indicators.py 3037.TW
@@ -229,7 +231,7 @@ def mansfield_rs_series(closes, bench_closes, win):
     return out
 
 
-def mansfield_rs(closes, bench_closes, short=20, long=250):  # 2026-09-03 短線 30→20 對齊老墨螢幕值(顯示層;燈四的 RS 在 combo_scan 是 60,不受此影響)
+def mansfield_rs(closes, bench_closes, short=60, long=250):  # 2026-09-11 短線 20→60（一季）：Leo 貼出老墨畫面截圖，下拉選單本來就寫「短:一季 長:一年」，比 9/3 那次用數值湊的準(顯示層;燈四的 RS 在 combo_scan 是 60,不受此影響)
     """只要最新一值的版本。**數學式不自己寫一份**——直接取序列版的最後一根。
 
     2026-09-06 之前這裡自己算，結果跟序列版差一格窗口（見上面）。
@@ -521,14 +523,25 @@ def build(ticker, disp_days=756, expanded=False, target=None):
     2026-09-01：252→756（≈3年），對齊老墨「近三年日線」；前端時間窗可切到 3 年，
     不然按鈕給了 3 年但資料只有 1 年，切了畫面不會變。"""
     try:
-        t = yf.Ticker(ticker)
-        hist = t.history(period="2y")
-        if hist.empty or len(hist) < 60:
+        # 2026-09-11：改用 price_store 而非自己直接 yf.Ticker().history()。
+        # 🔴 實測 2455.TW：yfinance 當天收盤後幾小時內，最新一根常常是
+        # 「Volume 有值、OHLC 全 NaN」（跟 price_store._download 註解裡
+        # ^GSPC 8/28 那個坑一模一樣，只是這次踩在台股個股，不是美股 ETF）。
+        # 這支原本自己抓，沒有 price_store._download 的 dropna(subset=["Close"])
+        # + `_fill_tw_gaps` 兩層保護，NaN 直接餵進 RS/SuperTrend，
+        # mansfield_rs() 的 `ser[-1]` 拿到 NaN → RS 顯示「—」，
+        # 看起來像「資料沒更新到最新一天」，其實只是這支繞過了修過的路徑。
+        # 改呼叫 price_store.get_ohlc 就自動吃到同一份修法，不用重寫一次。
+        import price_store
+        bench_ticker = _benchmark(ticker)
+        ohlc = price_store.get_ohlc([ticker, bench_ticker], period="2y")
+        hist = ohlc.get(ticker)
+        if hist is None or hist.empty or len(hist) < 60:
             return "", ""
         opens, highs, lows, closes = (hist["Open"].tolist(), hist["High"].tolist(),
                               hist["Low"].tolist(), hist["Close"].tolist())
 
-        bench = yf.Ticker(_benchmark(ticker)).history(period="2y")
+        bench = ohlc.get(bench_ticker)
         # 🔴 2026-09-03：**基準要用日期對齊，不能只把兩串 list 丟進去**。
         # 個股與指數的交易日不會完全一樣（停牌、指數有值而個股無、抓取邊界差一天），
         # 實測 3017.TW 729 根 vs ^TWII 728 根。`mansfield_rs_series` 是**右對齊**
@@ -539,7 +552,7 @@ def build(ticker, disp_days=756, expanded=False, target=None):
         # 同一個坑，這支漏掉了（同「修一個模式要掃全部同類」）。
         # 用 reindex 對齊到個股的交易日：長度必然相同，而且 i 保證是同一天。
         bench_closes = []
-        if not bench.empty:
+        if bench is not None and not bench.empty:
             bs = bench["Close"]
             if bs.index.tz is not None:
                 bs.index = bs.index.tz_localize(None)
@@ -573,9 +586,14 @@ def build(ticker, disp_days=756, expanded=False, target=None):
 
     # 2026-08-25：SuperTrend 歷史統計層另外抓 10 年資料——老墨官方版統計窗口是 10 年，
     # 2 年不夠算「歷史延續機率」這種東西。跟展示用的 2 年序列分開抓，互不影響。
+    # ⚠️ 這裡刻意不走 price_store：那份快取沒有記錄「用哪個 period 抓的」，
+    # 它只認新鮮度（STALE_HOURS），不會因為這裡要 10 年就自動重抓補齊——
+    # 對 3008.TW 才拿了 2 年，若讓 10 年這段共用同一份會靜默只拿到 2 年，
+    # 歷史延續機率反而算錯視窗。獨立抓，跟上面的 NaN 收盤問題無關（10 年統計
+    # 本來就不吃最新一根）。
     st_stats = None
     try:
-        hist10 = t.history(period="10y")
+        hist10 = yf.Ticker(ticker).history(period="10y")
         if len(hist10) >= 250:
             st10 = supertrend(hist10["High"].tolist(), hist10["Low"].tolist(), hist10["Close"].tolist())
             if st10:
@@ -615,7 +633,7 @@ def build(ticker, disp_days=756, expanded=False, target=None):
                f'{f"{rs_l:+.1f}%" if rs_l is not None else "—"}</b>')
 
     # RS 加值訊號：需要完整序列（不只最新一值），搬到這裡先算，圖表資料那段直接複用同一份
-    rs_s_series = mansfield_rs_series(closes, bench_closes, 20) if bench_closes else None
+    rs_s_series = mansfield_rs_series(closes, bench_closes, 60) if bench_closes else None
     rs_l_series = mansfield_rs_series(closes, bench_closes, 250) if bench_closes else None
     rs_sig = rs_signals(rs_s_series, rs_l_series, closes) if rs_s_series is not None else None
     rs_sub = ""
@@ -783,7 +801,7 @@ def build(ticker, disp_days=756, expanded=False, target=None):
         '<div class="tclabel">四燈歷史（由上到下 L1→L4；亮＝黃點。'
         '⚠️ L4 前 60 根是暖機期，一律不亮）</div>', f"ti_c4_{uid}", "tcbox tcbox-xs")
     _row_rs = _techrow(panel_rs,
-        '<div class="tclabel">RS 相對強弱（短線20日／長線1年，紅線＝基準；🟡長線翻正 🔵短線創新高 🩷資金比股價先動）</div>', f"ti_c3_{uid}", "tcbox tcbox-sm")
+        '<div class="tclabel">RS 相對強弱（短線一季／長線1年，紅線＝基準；🟡長線翻正 🔵短線創新高 🩷資金比股價先動）</div>', f"ti_c3_{uid}", "tcbox tcbox-sm")
     _toggle_btn = ("" if expanded else
                    f'<button class="techtoggle" onclick="ti_toggle_{uid}()" '
                    f'id="ti_btn_{uid}">展開圖表 ▾</button>')
@@ -1041,19 +1059,20 @@ function ti_draw_{uid}(){{
         pointBackgroundColor:d.mom.map(m=>m==null?'#9aa0a6':(m>=0?'#4ade80':'#ff8a8a')),order:0}}]}},
     options:{{responsive:true,maintainAspectRatio:false,plugins:{{legend:{{display:false}}, zoom:ZOOM_OPT}},
       scales:{{x:xAxisHidden, y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
-  const c3 = new Chart(document.getElementById('ti_c3_{uid}'), {{type:'line',
+  const c3 = new Chart(document.getElementById('ti_c3_{uid}'), {{type:'bar',
     data:{{datasets:[
-      {{label:'基準線(0%)',data:d.mom.map((_,i)=>({{x:i,y:0}})),borderColor:'#EF4444',borderWidth:2,
+      {{label:'基準線(0%)',type:'line',data:d.mom.map((_,i)=>({{x:i,y:0}})),borderColor:'#EF4444',borderWidth:2,
         pointRadius:0,order:3}},
-      {{label:'短線20日',data:d.rs_s.map((v,i)=>({{x:i,y:v}})),borderColor:'#EAB308',borderWidth:1.4,
+      {{label:'短線一季',data:d.rs_s.map((v,i)=>({{x:i,y:v}})),
+        backgroundColor:d.rs_s.map(v=>(v>=0?'rgba(74,222,128,.55)':'rgba(255,138,138,.55)')),
+        borderWidth:0,barPercentage:1,categoryPercentage:1,order:2}},
+      {{label:'長線1年',type:'line',data:d.rs_l.map((v,i)=>({{x:i,y:v}})),borderColor:'#4a9eff',borderWidth:1.6,
         pointRadius:0,tension:.15,order:1}},
-      {{label:'長線1年',data:d.rs_l.map((v,i)=>({{x:i,y:v}})),borderColor:'#4a9eff',borderWidth:1.4,
-        pointRadius:0,tension:.15,order:2}},
-      {{label:'🟡翻正',data:d.rs_turn.map((v,i)=>({{x:i,y:v}})),showLine:false,pointRadius:4,
+      {{label:'🟡翻正',type:'line',data:d.rs_turn.map((v,i)=>({{x:i,y:v}})),showLine:false,pointRadius:4,
         pointBackgroundColor:'#FACC15',pointBorderColor:'#1a1d23',pointBorderWidth:1,order:0}},
-      {{label:'🔵創新高',data:d.rs_newh.map((v,i)=>({{x:i,y:v}})),showLine:false,pointRadius:4,
+      {{label:'🔵創新高',type:'line',data:d.rs_newh.map((v,i)=>({{x:i,y:v}})),showLine:false,pointRadius:4,
         pointBackgroundColor:'#38BDF8',pointBorderColor:'#1a1d23',pointBorderWidth:1,order:0}},
-      {{label:'🩷資金領先',data:d.rs_lead.map((v,i)=>({{x:i,y:v}})),showLine:false,pointRadius:4.5,
+      {{label:'🩷資金領先',type:'line',data:d.rs_lead.map((v,i)=>({{x:i,y:v}})),showLine:false,pointRadius:4.5,
         pointBackgroundColor:'#F472B6',pointBorderColor:'#1a1d23',pointBorderWidth:1,order:0}}]}},
     options:{{responsive:true,maintainAspectRatio:false,
       plugins:{{legend:{{labels:{{color:'#9aa0a6',boxWidth:14,font:{{size:10}},
