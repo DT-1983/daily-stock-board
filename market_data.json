@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-10 08:47",
+ "updated": "2026-09-10 12:54",
  "indices": [
   {
    "sym": "^GSPC",
@@ -37,17 +37,17 @@
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/08",
-   "close": 47105.78,
-   "chg_pct": -0.47
+   "date": "09/10",
+   "close": 46799.86,
+   "chg_pct": -0.81
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/10",
-   "close": 31.46,
-   "chg_pct": -0.13
+   "close": 31.5,
+   "chg_pct": -0.01
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "巴克萊估標普500指數年底7950點 預測市場怎麼看？",
+   "title": "iPhone首度支援Apple Pencil！Duo讓Touch ID重返旗艦機",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6602471",
-   "ts": "09/10 08:30"
+   "url": "https://news.cnyes.com/news/id/6602744",
+   "ts": "09/10 12:40"
   },
   {
-   "title": "蘋果今年為何不推iPhone 18？新品週期大改，Pro最大驚喜是可變光圈",
+   "title": "〈焦點股〉業績亮眼推升股價上揚 光聖、前鼎逆風強漲半根停板",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6602775",
+   "ts": "09/10 12:31"
+  },
+  {
+   "title": "惠譽看台灣：證券業上半年獲利狂飆325% 但大小券商結構差距恐擴大",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6599661",
+   "ts": "09/10 12:23"
+  },
+  {
+   "title": "CBS News：美軍一架A-10機翼斷裂、8架F-15戰機受損",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6602538",
-   "ts": "09/10 08:30"
+   "url": "https://news.cnyes.com/news/id/6602774",
+   "ts": "09/10 12:22"
   },
   {
-   "title": "營收速報  - 高端疫苗(6547)8月營收2.36億元年增率高達416.86％",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6602533",
-   "ts": "09/10 08:23"
-  },
-  {
-   "title": "營收速報  - 富華新(3056)8月營收9,177萬元年增率高達50.19％",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6602531",
-   "ts": "09/10 08:23"
-  },
-  {
-   "title": "營收速報  - 三商電(2427)8月營收4.13億元年增率高達74.78％",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6602530",
-   "ts": "09/10 08:22"
-  },
-  {
-   "title": "易打難停！伊朗備戰更大規模戰爭 川普稱選後結束 但白宮幕僚卻在推演打到2029",
+   "title": "「新債王」岡拉克：Fed若不升息 長天期美債恐再遭拋售",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6602492",
-   "ts": "09/10 08:20"
+   "url": "https://news.cnyes.com/news/id/6602760",
+   "ts": "09/10 12:20"
   },
   {
-   "title": "全球晶圓代工Q2產值創新高 台積電市占72.5%稱霸、三星跌破6%",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6602442",
-   "ts": "09/10 08:14"
-  },
-  {
-   "title": "全球晶圓代工Q2產值創新高 台積電市占72.5%稱霸、三星跌破6%",
+   "title": "人類史上首次！全球老人比小孩多了",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6602442",
-   "ts": "09/10 08:14"
+   "url": "https://news.cnyes.com/news/id/6602764",
+   "ts": "09/10 12:16"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：信驊(5274-TW)EPS預估上修至194.98元，預估目標價為22500元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6602505",
-   "ts": "09/10 08:10"
-  },
-  {
-   "title": "iPhone 18 Pro全面升級A20 Pro 蘋果強攻裝置端AI、散熱與影像",
+   "title": "瘋狂買！高盛6天砸26.6億美元連收NEOS、LCN 狂攻ETF、房地產 與另類投資",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6602497",
-   "ts": "09/10 08:00"
+   "url": "https://news.cnyes.com/news/id/6602763",
+   "ts": "09/10 12:10"
+  },
+  {
+   "title": "家登8月營收創同期新高 下半年營運續強",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6602762",
+   "ts": "09/10 12:07"
+  },
+  {
+   "title": "【優分析即時新聞】微星(2377)毛利率衝上15.97%創高，RTX Spark接單熱、AI伺服器拚2026翻倍",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6602768",
+   "ts": "09/10 12:00"
+  },
+  {
+   "title": "玉山金(2884)跨入「金控2.0」！併三商壽補齊版圖，2027年迎來真正驗收期",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6602767",
+   "ts": "09/10 12:00"
   }
  ],
  "inst": {
