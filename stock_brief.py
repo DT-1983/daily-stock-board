@@ -162,7 +162,7 @@ CSS = """
 .kv .c{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:8px 10px}
 .kv .k{font-size:10px;color:var(--dim);letter-spacing:.3px}
 .kv .v{font-size:15px;font-weight:700;margin-top:3px;
- font-family:'Fira Code',monospace;font-variant-numeric:tabular-nums}
+ font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
 .kv .v.zh{font-family:inherit;font-size:14px}
 .kv .s{font-size:10.5px;color:var(--muted);margin-top:2px;line-height:1.5}
 .txt{font-size:13px;color:var(--muted);line-height:1.85;margin-top:8px}
@@ -847,7 +847,7 @@ INDEX_CSS = """
 .ix tr.hot td{background:rgba(248,113,113,.06)}
 .ix a{color:var(--ink);font-weight:700;text-decoration:none;border-bottom:1px dotted var(--line2)}
 .ix a:hover{color:#93C5FD}
-.ix .code{font-family:'Fira Code',monospace;font-variant-numeric:tabular-nums;font-size:13.5px}
+.ix .code{font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;font-size:13.5px}
 .ix /* a（2026-09-07 Leo：「投資報告，可以中文放大嗎?」）——中文名才是認得出
    哪一檔的東西，代號是拿來查的。名稱升級成可點的大字（連最新中文重點頁），
    代號降成下面一行的小連結（連整合報告）。 */
@@ -863,7 +863,7 @@ INDEX_CSS = """
 .ix .main .sub{white-space:nowrap}
 .ix .main .sub a{color:var(--dim);text-decoration:none;white-space:nowrap}
 .ix .main .sub a:hover{color:var(--accent,#60a5fa);text-decoration:underline}
-.ix .num{font-family:'Fira Code',monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ix .num{font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
 .ix .sub{display:block;font-size:11px;color:var(--dim);margin-top:2px;line-height:1.6}
 .ix .pos{color:var(--up)}.ix .neg{color:var(--down)}
 .ix .fire{color:var(--down);font-weight:700}

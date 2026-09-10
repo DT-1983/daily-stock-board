@@ -296,7 +296,11 @@ h1 svg{flex-shrink:0}
  font-size:12px;padding:6px 12px;min-height:34px;border-radius:17px;cursor:pointer;
  white-space:nowrap;font-family:inherit;font-weight:600;transition:all .18s}
 .sc[aria-pressed=true]{background:#334155;color:var(--ink);border-color:#475569}
-.sc b{font-family:'Fira Code',monospace;font-weight:600;margin-left:1px}
+/* 2026-09-10：原本寫 'Fira Code'，但這個檔案的 @import 只載了 IBM Plex Mono，
+   Fira Code 從沒被載入過，所以全站每個排序晶片的數字其實一直在用瀏覽器預設
+   monospace，跟同一頁其他數字（.num 用 IBM Plex Mono）字體不一致——
+   Leo 從 exit_review.py 那頁看出來的，根源在這裡，是共用檔案，全站都受影響。 */
+.sc b{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:600;margin-left:1px}
 .d2{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:middle}
 
 .sec{margin-top:22px;scroll-margin-top:104px}

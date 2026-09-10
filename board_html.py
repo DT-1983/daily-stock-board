@@ -100,7 +100,7 @@ h1 svg{flex-shrink:0}
  font-size:12px;padding:6px 12px;min-height:34px;border-radius:17px;cursor:pointer;
  white-space:nowrap;font-family:inherit;font-weight:600;transition:all .18s}
 .sc[aria-pressed=true]{background:#334155;color:var(--ink);border-color:#475569}
-.sc b{font-family:'Fira Code',monospace;font-weight:600;margin-left:1px}
+.sc b{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:600;margin-left:1px}
 .d2{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:middle}
 
 /* chain */

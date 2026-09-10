@@ -136,14 +136,14 @@ PAGE_CSS = """
 .lk-form{margin:12px 0 16px}
 .lk-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:14px 0 2px}
 .lk-tk{font-size:26px;font-weight:800;color:var(--ink);
- font-family:'Fira Code',monospace;font-variant-numeric:tabular-nums;letter-spacing:-.5px}
+ font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;letter-spacing:-.5px}
 .lk-nm{font-size:15px;color:var(--muted)}
 .lk-src{font-size:11.5px;color:var(--dim);margin-left:auto}
 .lk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:12px 0 4px}
 .lk-c{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
 .lk-k{font-size:10.5px;color:var(--dim);font-weight:600;letter-spacing:.3px}
 .lk-v{font-size:18px;font-weight:700;color:var(--ink);margin-top:3px;line-height:1.25;
- font-family:'Fira Code',monospace;font-variant-numeric:tabular-nums}
+ font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
 .lk-v.zh{font-family:inherit}          /* 「🟢 空方」這種中文值不要用等寬字 */
 .lk-s{font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.5}
 .lk-lamps{font-size:19px;letter-spacing:2px}
@@ -176,7 +176,7 @@ PAGE_CSS = """
 .bk-r{font-size:12.5px;color:var(--muted);line-height:1.7;padding:7px 0;
  border-top:1px solid var(--line)}
 .bk-r b{color:var(--ink)}
-.bk-t{font-family:'Fira Code',monospace;color:var(--ink);font-weight:700}
+.bk-t{font-family:'IBM Plex Mono',ui-monospace,monospace;color:var(--ink);font-weight:700}
 .bk-b{font-size:11.5px;color:var(--dim);margin-top:2px;line-height:1.6}
 .bk-w{font-size:12px;color:#FCD34D;line-height:1.7;margin-top:7px}
 .bk-up{color:var(--up);font-weight:600}
