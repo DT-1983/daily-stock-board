@@ -399,37 +399,45 @@ def right_html():
 ROOM_CSS = """
 :root{--gap:10px}
 body{margin:0}
-/* 導覽列（2026-09-07 Leo：「最上面可以加一個其它各頁的快捷嗎? 跟其它投資頁一樣」）。
-   ⚠️ 不用 board_theme.header()——那是完整頁首，在 100vh 的版型裡會吃掉一大塊。
-   這裡只放連結，38px 一條；標題在左欄的「報價組合」已經有了。 */
-/* 2026-09-08 Leo：「進出燈號跟戰情室很難分得出來」。
-   兩頁的內容本來就是同一支產生器（刻意的，避免兩份邏輯漂移），
-   所以要靠**頁首**分辨。給戰情室一條青色頂邊＋一個「本機・即時」標籤——
-   公開頁是靜態檔、沒有這條邊，一眼就分得出來。 */
-.roomnav{display:flex;align-items:center;gap:6px;height:38px;padding:0 10px;
+/* 標題排（2026-09-10 Leo：「標題跟其它分頁一樣」，見 title_html()）。
+   跟其他頁一樣的眉標+大標題排版，但故意做得比 board_theme.header() 緊湊——
+   100vh 版型裡多一分是一分，不能照抄整包（那還帶 subtitle+navlinks）。 */
+.roomtitle{padding:7px 12px 6px;background:var(--panel,#080E1A);
  border-top:2px solid var(--cy,#22D3EE);
+ border-bottom:1px solid var(--hud,#16304A)}
+.roomtitle .eye{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10px;
+ letter-spacing:.12em;color:var(--cy,#22D3EE);text-transform:uppercase}
+.roomtitle .eye em{color:var(--dim);font-style:normal;margin-left:3px}
+.roomtitle .titlerow{display:flex;align-items:center;gap:8px;margin-top:3px}
+.roomtitle h1{font-size:16.5px;font-weight:800;letter-spacing:-.2px;color:var(--ink)}
+/* 導覽列（2026-09-07 Leo：「最上面可以加一個其它各頁的快捷嗎? 跟其它投資頁一樣」）。
+   2026-09-10：原本標題（🚦燈號戰情室 + 本機・即時標籤）跟連結、控制項
+   全擠在這一排裡，Leo 說太擠——標題搬去 title_html() 自己一排，
+   這裡現在**只有**連結跟控制項，兩排各自呼吸空間比較夠。 */
+.roomnav{display:flex;align-items:center;gap:6px;height:38px;padding:0 10px;
  border-bottom:1px solid var(--hud,#16304A);background:var(--panel,#080E1A);
  white-space:nowrap;overflow:hidden}
 .rtag{font-size:9px;letter-spacing:.12em;color:var(--void,#04070E);
  background:var(--cy,#22D3EE);padding:2px 5px;border-radius:2px;
- margin-right:8px;flex:0 0 auto;font-weight:700}
+ flex:0 0 auto;font-weight:700}
 /* 連結區自己捲；控制項在外面，永遠看得到。 */
 .navls{display:flex;align-items:center;gap:6px;flex:1 1 auto;min-width:0;
  overflow-x:auto;scrollbar-width:none}
 .navls::-webkit-scrollbar{display:none}
-.rnb{font-size:12px;font-weight:700;letter-spacing:.04em;margin-right:6px;
- flex:0 0 auto;color:var(--cy,#22D3EE)}
 .roomnav .nl{padding:4px 9px;min-height:0;font-size:11.5px;flex:0 0 auto;
  border-radius:0;background:transparent}
 .roomnav .nl svg{width:13px;height:13px}
 .roomnav .nl.alt{font-size:10.5px;color:var(--dim);border-style:dashed;
  margin-left:-3px}
-/* ⚠️ 高度要扣掉導覽列，不然版型會比視窗高 38px，底下多一條捲軸。 */
+/* ⚠️ 高度要扣掉標題排+導覽列兩排的實際高度，不然版型會比視窗高，
+   底下多一條捲軸——2026-09-10 兩排化之後這個數字變了，改動時要
+   實際拿瀏覽器量過再填，不要用算的（這頁的版位數學已經因為沒量測
+   壞過好幾次，見上面幾則舊註解）。 */
 /* --lw＝左欄寬度，由拖曳把手改（存 localStorage）。
    🔴 原本這裡寫死 320px，所以 JS 設的 --lw 沒有任何人在讀——拖了不會動。 */
-:root{--lw:320px}
+:root{--lw:320px;--hdrh:98px}   /* 標題排59.7px + 導覽列38px，瀏覽器實測量出來的，不是算的 */
 .room{display:grid;grid-template-columns:var(--lw) minmax(0,1fr) 0;gap:var(--gap);
- height:calc(100vh - 38px);padding:var(--gap);box-sizing:border-box;background:var(--bg)}
+ height:calc(100vh - var(--hdrh));padding:var(--gap);box-sizing:border-box;background:var(--bg)}
 /* 收合：左欄整個不佔位。⚠️ 用 grid-template-columns 收掉而不是 display:none——
    中欄要拿到多出來的寬度，圖表才會跟著變寬。 */
 .room.lhide{grid-template-columns:0 minmax(0,1fr) 0}
@@ -471,7 +479,7 @@ body{margin:0}
      · 篩選列會跟著清單一起捲走（捲到 600px 時它在 -498px，根本點不到）
      · 排序後不捲回頂 → 重排發生在畫面外，看起來像沒反應
    ⭐ 「功能沒壞但使用者說壞了」＝**回饋不足**，要修的是看得見的那一半。 */
-.ctrlbar{position:sticky;top:38px;z-index:2;background:var(--panel,#080E1A);
+.ctrlbar{position:sticky;top:var(--hdrh);z-index:2;background:var(--panel,#080E1A);
  border-bottom:1px solid var(--hud,#16304A);padding-bottom:6px}
 .q{width:calc(100% - 24px);margin:10px 12px 6px;padding:7px 10px;font:inherit;
  font-size:12.5px;border-radius:0;border:1px solid var(--hud,#16304A);
@@ -1209,8 +1217,22 @@ ROOM_JS = r"""
 """
 
 
+def title_html():
+    """2026-09-10 Leo:「標題跟其它分頁一樣」——原本標題只是導覽列裡一個
+    12px 的小字（`.rnb`），擠在連結旁邊，跟其他頁那種「眉標+大標題」的
+    頁首完全不像。這裡不整包套 board_theme.header()（那還會帶 subtitle+
+    navlinks，100vh 版型放不下），只把「標題該長什麼樣」對齊，導覽連結
+    留在 nav_html() 自己那排。"""
+    from board_theme import icon, esc, EYEBROW
+    eye = EYEBROW.get("room", "TERMINAL")
+    return (f'<div class="roomtitle"><span class="eye">{esc(eye)}<em> // 隆中對</em></span>'
+            f'<div class="titlerow">{icon("lamp", 19, "#22D3EE")}<h1>燈號戰情室</h1>'
+            f'<span class="rtag">本機・即時</span></div></div>')
+
+
 def nav_html():
-    """細導覽列。**只有連結**，不放標題——標題在左欄的「報價組合」那裡已經有了。
+    """細導覽列。**只有連結**，不放標題——標題移到 title_html() 那排了
+    （2026-09-10 起是兩排：標題一排、連結+控制項一排，原本擠在同一排）。
 
     ⚠️ 用 nav_abs() 不是 NAV：這頁跑在 stock.talentxtrend.com，
     相對路徑會連到自己那台的 404。
@@ -1245,9 +1267,7 @@ def nav_html():
     #    在 1900px 的螢幕上剛好差幾十 px —— 看起來像「沒有這顆鈕」。
     #    ⭐ 修法不是縮小字，是**分成兩區**：連結自己捲，控制項固定不參與捲動。
     #       這樣不管幾個連結、螢幕多窄，控制項一定在畫面上。
-    return ('<nav class="roomnav"><span class="rnb">🚦 燈號戰情室</span>'
-            '<span class="rtag">本機・即時</span>'
-            f'<span class="navls">{links}</span>{ctrl}</nav>')
+    return f'<nav class="roomnav"><span class="navls">{links}</span>{ctrl}</nav>'
 
 
 def page_html():
@@ -1266,6 +1286,7 @@ def page_html():
             + Q + "width=device-width,initial-scale=1" + Q + ">"
             "<title>燈號戰情室</title>" + scripts
             + "<style>" + BASE_CSS + _combo_css() + ti_css + ROOM_CSS + "</style></head><body>"
+            + title_html()
             + nav_html()
             + '<div class="room">'
             + left_html(items, asof)
