@@ -502,6 +502,46 @@ _CATALYST_SVG = {
 <text x="320" y="137" class="tb" text-anchor="middle">① ＋ ② ＋ ③ ＝ FAU（光纖陣列組件）</text>
 <text x="320" y="153" class="tl" text-anchor="middle" fill="#5B6E8A">前兩步是零件（大立光賣）、第三步是模組（上詮等廠焊上去）</text>
 </svg>''',
+    # CPO三條件同時收緊（通道數/容差/耐熱）＋良率逐根相乘算式。
+    "cpo_conditions": '''<svg viewBox="0 0 640 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:560px">
+<style>.tl{font:600 12px 'Noto Sans TC',sans-serif;fill:#9DB0C8}.tb{font:700 13px 'Noto Sans TC',sans-serif;fill:#DCE7F5}.tn{font:700 12px 'IBM Plex Mono',monospace}</style>
+<text x="20" y="24" class="tb">通道數</text>
+<rect x="140" y="10" width="90" height="26" rx="4" fill="#0E1B2B" stroke="#16304A"/>
+<text x="185" y="27" class="tn" fill="#9DB0C8" text-anchor="middle">8~16 根</text>
+<polygon points="240,16 256,23 240,30" fill="#5B6E8A"/>
+<rect x="262" y="10" width="140" height="26" rx="4" fill="#3A1A12" stroke="#7F1D1D"/>
+<text x="332" y="27" class="tn" fill="#FCA5A5" text-anchor="middle">64~128 根</text>
+<text x="412" y="27" class="tl" fill="#5B6E8A">暴增</text>
+<text x="20" y="79" class="tb">對準容差</text>
+<rect x="140" y="65" width="90" height="26" rx="4" fill="#0E1B2B" stroke="#16304A"/>
+<text x="185" y="82" class="tn" fill="#9DB0C8" text-anchor="middle">1μm</text>
+<polygon points="240,71 256,78 240,85" fill="#5B6E8A"/>
+<rect x="262" y="65" width="140" height="26" rx="4" fill="#3A1A12" stroke="#7F1D1D"/>
+<text x="332" y="82" class="tn" fill="#FCA5A5" text-anchor="middle">0.3μm</text>
+<text x="412" y="82" class="tl" fill="#5B6E8A">收緊 3 倍</text>
+<text x="20" y="134" class="tb">耐熱</text>
+<rect x="140" y="120" width="90" height="26" rx="4" fill="#0E1B2B" stroke="#16304A"/>
+<text x="185" y="137" class="tn" fill="#9DB0C8" text-anchor="middle">85°C</text>
+<polygon points="240,126 256,133 240,140" fill="#5B6E8A"/>
+<rect x="262" y="120" width="140" height="26" rx="4" fill="#3A1A12" stroke="#7F1D1D"/>
+<text x="332" y="137" class="tn" fill="#FCA5A5" text-anchor="middle">260°C</text>
+<text x="412" y="137" class="tl" fill="#5B6E8A">回焊爐等級</text>
+<rect x="20" y="166" width="600" height="60" rx="8" fill="#0E1B2B"/>
+<text x="320" y="188" class="tl" text-anchor="middle" fill="#DCE7F5">良率逐根相乘：80 根每根 99% 合格 → 整條只剩 <tspan fill="#FCA5A5" font-weight="700">45%</tspan></text>
+<text x="320" y="210" class="tl" text-anchor="middle" fill="#DCE7F5">每根拉到 99.9% → 整條才有 <tspan fill="#86EFAC" font-weight="700">92%</tspan></text>
+</svg>''',
+    # 時程：7月送樣→2027年中量產（原貼文用詞「最快」）。
+    "timeline": '''<svg viewBox="0 0 640 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:560px">
+<style>.tl{font:600 12px 'Noto Sans TC',sans-serif;fill:#9DB0C8}.tb{font:700 13px 'Noto Sans TC',sans-serif;fill:#DCE7F5}</style>
+<line x1="60" y1="55" x2="580" y2="55" stroke="#16304A" stroke-width="2"/>
+<polygon points="580,49 596,55 580,61" fill="#16304A"/>
+<circle cx="140" cy="55" r="7" fill="#22D3EE"/>
+<text x="140" y="35" class="tb" text-anchor="middle">7 月送樣</text>
+<text x="140" y="80" class="tl" text-anchor="middle">技術驗證階段</text>
+<circle cx="480" cy="55" r="7" fill="#F5B841"/>
+<text x="480" y="35" class="tb" text-anchor="middle" fill="#F5B841">2027 年中量產</text>
+<text x="480" y="80" class="tl" text-anchor="middle">原貼文用詞：最快</text>
+</svg>''',
     # 容差堆疊示意：業界拼料誤差會疊加超標，大立光用量測補償壓到門檻內。
     "tolerance": '''<svg viewBox="0 0 640 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:560px">
 <style>.tl{font:600 12px 'Noto Sans TC',sans-serif;fill:#9DB0C8}.tn{font:700 13px 'IBM Plex Mono',monospace}</style>
