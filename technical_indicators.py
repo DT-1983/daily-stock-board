@@ -910,6 +910,17 @@ function ti_draw_{uid}(){{
       callback:function(v){{return d.dates[Math.round(v)]||'';}}}},grid:{{display:false}}}};
   const xAxisHidden = {{type:'linear',min:0,max:d.dates.length-1,offset:true,
     ticks:{{display:false}},grid:{{display:false}}}};
+  // 🔴 2026-09-11 Leo 回報兩次：「SuperTrend 跟成交量右邊天數沒對齊」。
+  // 不是天數不一樣（c1/cv/c2/c3/c4 的 x 軸都是同一組 d.dates，長度必然相同）——
+  // 是**每張圖的 y 軸刻度文字寬度不同**：價格「2,640.82」、成交量「12,000」、
+  // 動能「-400」、RS「+35.0%」、燈號那張的刻度甚至是中文「L1 ST多方」。
+  // Chart.js 每個 y 軸各自依自己的刻度文字量寬度，五張圖的左邊留白因此
+  // 各不相同，就算 x 軸資料筆數、縮放平移狀態都一樣，畫出來的柱體/K棒
+  // 還是會左右對不齊——看起來像「少了幾天」，其實是左邊留白量不同。
+  // 修法：五張圖的 y 軸統一用同一個 afterFit 鎖死寬度，不管自己內容多寬，
+  // 左邊留白永遠一樣，柱體才會垂直對齊。64px 取自最寬的那個（燈號中文標籤）。
+  const Y_GUTTER = 70;
+  const yFit = (s) => {{ s.width = Y_GUTTER; }};
   // 價格標籤（2026-09-07 Leo：「super trend 我們沒有停損線嗎?」）。
   // 線本來就有，但沒有標示 → 五條疊在一起分不出哪條是哪條。
   // ⚠️ 畫在 afterDatasetsDraw：在資料之後，才不會被 K 棒蓋住。
@@ -1020,7 +1031,7 @@ function ti_draw_{uid}(){{
            早就都縮到 9-10px 了，只有這個 tooltip 沒跟著縮，在小螢幕上
            自然佔比最大、蓋掉底下的K棒。跟著其他元素一起縮小。 */
         tooltip:{{titleFont:{{size:10}},bodyFont:{{size:10}},padding:6,boxPadding:3}}}},
-      scales:{{x:xAxis, y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
+      scales:{{x:xAxis, y:{{afterFit:yFit,ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
   // 成交量：紅漲綠跌（台股慣例），疊 20 日均量線——老墨圖上有、我們原本漏了
   const volColor = d.closes.map(function(c, i) {{
     const prev = i > 0 ? d.closes[i - 1] : c;
@@ -1032,7 +1043,7 @@ function ti_draw_{uid}(){{
       {{type:'line',label:'20日均量',data:d.vol_ma20.map((v,i)=>({{x:i,y:v}})),borderColor:'#22d3ee',
         borderWidth:1.3,pointRadius:0,tension:.2,order:1}}]}},
     options:{{responsive:true,maintainAspectRatio:false,plugins:{{legend:{{display:false}}, zoom:ZOOM_OPT}},
-      scales:{{x:xAxisHidden, y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
+      scales:{{x:xAxisHidden, y:{{afterFit:yFit,ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
   // 動能柱：多頭轉強亮綠/轉弱暗綠，空頭轉強亮紅/轉弱暗紅（TTM Squeeze 慣例）；
   // sq_on 點陣列（擠壓中金色、已釋放依動能方向上色）疊在 y=0 當擠壓/釋放標記
   const momColor = d.mom.map((v, i) => {{
@@ -1058,7 +1069,7 @@ function ti_draw_{uid}(){{
         showLine:false,pointStyle:'star',pointRadius:6.5,pointBorderColor:'#ffffff',pointBorderWidth:0.8,
         pointBackgroundColor:d.mom.map(m=>m==null?'#9aa0a6':(m>=0?'#4ade80':'#ff8a8a')),order:0}}]}},
     options:{{responsive:true,maintainAspectRatio:false,plugins:{{legend:{{display:false}}, zoom:ZOOM_OPT}},
-      scales:{{x:xAxisHidden, y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
+      scales:{{x:xAxisHidden, y:{{afterFit:yFit,ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
   const c3 = new Chart(document.getElementById('ti_c3_{uid}'), {{type:'bar',
     data:{{datasets:[
       {{label:'基準線(0%)',type:'line',data:d.mom.map((_,i)=>({{x:i,y:0}})),borderColor:'#EF4444',borderWidth:2,
@@ -1077,7 +1088,7 @@ function ti_draw_{uid}(){{
     options:{{responsive:true,maintainAspectRatio:false,
       plugins:{{legend:{{labels:{{color:'#9aa0a6',boxWidth:14,font:{{size:10}},
         filter:item=>item.text!=='基準線(0%)'}}}}, zoom:ZOOM_OPT}},
-      scales:{{x:xAxisHidden, y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
+      scales:{{x:xAxisHidden, y:{{afterFit:yFit,ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
   // 四燈歷史：四條 y 高度（L1 在上、L4 在下），亮的那天畫一個黃點。
   // 用散點而不是柱狀，因為要的是「哪幾天亮」不是量值；同一個 x 軸與縮放群組，
   // 所以跟上面四張圖一起縮放平移。
@@ -1098,7 +1109,7 @@ function ti_draw_{uid}(){{
         tooltip:{{callbacks:{{label:(c)=>c.dataset.label+' 亮',
           title:(items)=>d.dates[items[0].parsed.x] || ''}}}}}},
       scales:{{x:xAxisHidden,
-        y:{{min:0.4, max:4.6, ticks:{{stepSize:1, color:'#6b7280', font:{{size:9}},
+        y:{{min:0.4, max:4.6, afterFit:yFit, ticks:{{stepSize:1, color:'#6b7280', font:{{size:9}},
           callback:(v)=>LP_NAME[4-v] || ''}}, grid:{{color:'#1a1d23'}}}}}}}}}});
   ti_charts_{uid} = [c1, cv, c2, c3, c4];
 }}
