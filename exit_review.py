@@ -285,7 +285,10 @@ CSS = """
 .kv .c{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:8px 10px}
 .kv .k{font-size:10px;color:var(--dim)}
 .kv .v{font-size:16px;font-weight:700;margin-top:3px;
- font-family:'Fira Code',monospace;font-variant-numeric:tabular-nums}
+ /* 2026-09-10：這裡原本寫 Fira Code，全站數字一律 IBM Plex Mono（見 BASE_CSS
+    的 .num）——沒載入 Fira Code 字型檔，所以其實是退回瀏覽器預設 monospace，
+    看起來就跟其他頁面的數字字體不一樣。Leo 一眼看出來了。 */
+ font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
 .kv .s{font-size:10.5px;color:var(--muted);margin-top:2px}
 @media(max-width:900px){
  .exwrap{overflow-x:visible;margin:0;padding:0}

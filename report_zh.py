@@ -88,7 +88,7 @@ CSS = """
  border-bottom:1px solid var(--line);white-space:nowrap}
 .ft th:first-child{text-align:left}
 .ft td{padding:8px 9px;border-bottom:1px solid var(--line2);text-align:right;
- font-family:'Fira Code',monospace;font-variant-numeric:tabular-nums;color:var(--muted);
+ font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;color:var(--muted);
  white-space:nowrap}
 .ft td:first-child{text-align:left;font-family:inherit;color:var(--ink);font-weight:600}
 .ft tr.hl td{color:#FCD34D}
