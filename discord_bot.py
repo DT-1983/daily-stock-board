@@ -194,6 +194,44 @@ async def cmd_pangtong(interaction: discord.Interaction, 問題: str):
     await _ask_war_room(interaction, "龐統", 問題)
 
 
+# ── #上傳報告：券商報告 PDF（目標價/失效線）（2026-09-11）──────────────
+#
+# 走 Discord 的 attachment 參數，不用讀一般訊息內容——跟其它指令一樣不用
+# 特權 intent。存進 `advisor_reports.PDF_DIR` 底下 Leo 原本手動丟檔的
+# 同一個「投顧報告」資料夾，然後就地跑一次 `advisor_reports.parse()`（只解析
+# 這一份，不是全部重跑）給即時回饋，台股/美股同一條路徑，不分市場。
+@tree.command(name="上傳報告", description="上傳券商報告 PDF（目標價/個股報告），自動解析進系統")
+@app_commands.describe(檔案="券商報告 PDF")
+async def cmd_upload_report(interaction: discord.Interaction, 檔案: discord.Attachment):
+    await interaction.response.defer(thinking=True)
+    try:
+        if not 檔案.filename.lower().endswith(".pdf"):
+            await interaction.followup.send("目前只收 PDF，其他格式的話麻煩你手動丟進資料夾。")
+            return
+        import advisor_reports
+        dest_dir = os.path.join(advisor_reports.PDF_DIR, "投顧報告")
+        os.makedirs(dest_dir, exist_ok=True)
+        dest = os.path.join(dest_dir, 檔案.filename)
+        if os.path.exists(dest):
+            await interaction.followup.send(f"⚠️ 這個檔名已經存在，沒有覆蓋：{檔案.filename}")
+            return
+        await 檔案.save(dest)
+        store = await asyncio.to_thread(advisor_reports.parse, False, 檔案.filename)
+        rec = store.get(檔案.filename)
+        if rec and not rec.get("_notreport"):
+            msg = (f"✅ 已存並解析：{檔案.filename}\n"
+                   f"　{rec.get('name','')}（{rec.get('ticker','')}）"
+                   f"{rec.get('broker','')}　目標價 {rec.get('target','—')}")
+        elif rec and rec.get("_notreport"):
+            msg = f"⚠️ 已存檔，但抓不到股票代號——這份可能不是個股報告：{檔案.filename}"
+        else:
+            msg = f"⚠️ 已存檔但解析失敗，之後排程重跑會再試一次：{檔案.filename}"
+        await interaction.followup.send(msg)
+    except Exception as e:                                # noqa: BLE001
+        traceback.print_exc()
+        await interaction.followup.send(f"⚠️ 存檔或解析失敗：{e}")
+
+
 async def _health(request):
     # 2026-09-03：這個 port 接上 Cloudflare Tunnel 對外開放查股頁之後，健康檢查也
     # 跟著曝光了，外面打一下就看得到 bot 名稱。健檢只有本機的 service_health_check
