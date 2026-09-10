@@ -1,124 +1,124 @@
 {
- "updated": "2026-09-09 20:18",
+ "updated": "2026-09-10 08:47",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "09/08",
-   "close": 7673.52,
-   "chg_pct": -0.58
+   "date": "09/09",
+   "close": 7636.36,
+   "chg_pct": -0.48
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "09/08",
-   "close": 26421.41,
-   "chg_pct": -0.32
+   "date": "09/09",
+   "close": 26253.34,
+   "chg_pct": -0.64
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "09/08",
-   "close": 52786.07,
-   "chg_pct": -1.18
+   "date": "09/09",
+   "close": 52380.66,
+   "chg_pct": -0.77
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "09/08",
-   "close": 11887.87,
-   "chg_pct": 1.3
+   "date": "09/09",
+   "close": 11931.32,
+   "chg_pct": 0.37
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/09",
-   "close": 47183.36,
-   "chg_pct": 0.16
+   "date": "09/08",
+   "close": 47105.78,
+   "chg_pct": -0.47
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/09",
-   "close": 31.43,
-   "chg_pct": -0.22
+   "date": "09/10",
+   "close": 31.46,
+   "chg_pct": -0.13
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "09/08",
-   "close": 4.81,
+   "date": "09/09",
+   "close": 4.84,
    "fmt": "yield",
-   "chg_bp": 2.2
+   "chg_bp": 3.1
   }
  ],
  "news": [
   {
-   "title": "和椿8月營收年增132％創單月新高 受惠訂單能見度攀升、助自動化布局加速",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6601955",
-   "ts": "09/09 20:16"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：Stellantis N.V(STLA-US)EPS預估下修至0.63元，預估目標價為6.33元",
+   "title": "巴克萊估標普500指數年底7950點 預測市場怎麼看？",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6601981",
-   "ts": "09/09 20:16"
+   "url": "https://news.cnyes.com/news/id/6602471",
+   "ts": "09/10 08:30"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：Darling Ingredients Inc(DAR-US)EPS預估上修至6.72元，預估目標價為80.00元",
+   "title": "蘋果今年為何不推iPhone 18？新品週期大改，Pro最大驚喜是可變光圈",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6601980",
-   "ts": "09/09 20:16"
+   "url": "https://news.cnyes.com/news/id/6602538",
+   "ts": "09/10 08:30"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：Chime Financial, Inc. Class A(CHYM-US)EPS預估上修至0.45元，預估目標價為38.00元",
+   "title": "營收速報  - 高端疫苗(6547)8月營收2.36億元年增率高達416.86％",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6602533",
+   "ts": "09/10 08:23"
+  },
+  {
+   "title": "營收速報  - 富華新(3056)8月營收9,177萬元年增率高達50.19％",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6602531",
+   "ts": "09/10 08:23"
+  },
+  {
+   "title": "營收速報  - 三商電(2427)8月營收4.13億元年增率高達74.78％",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6602530",
+   "ts": "09/10 08:22"
+  },
+  {
+   "title": "易打難停！伊朗備戰更大規模戰爭 川普稱選後結束 但白宮幕僚卻在推演打到2029",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6601979",
-   "ts": "09/09 20:15"
+   "url": "https://news.cnyes.com/news/id/6602492",
+   "ts": "09/10 08:20"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：JBS N.V. Class A(JBS-US)EPS預估下修至0.72元，預估目標價為18.11元",
+   "title": "全球晶圓代工Q2產值創新高 台積電市占72.5%稱霸、三星跌破6%",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6602442",
+   "ts": "09/10 08:14"
+  },
+  {
+   "title": "全球晶圓代工Q2產值創新高 台積電市占72.5%稱霸、三星跌破6%",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6601978",
-   "ts": "09/09 20:15"
+   "url": "https://news.cnyes.com/news/id/6602442",
+   "ts": "09/10 08:14"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：Nebius Group N.V. Class A(NBIS-US)EPS預估下修至-2.28元，預估目標價為276.00元",
+   "title": "鉅亨速報 - Factset 最新調查：信驊(5274-TW)EPS預估上修至194.98元，預估目標價為22500元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6602505",
+   "ts": "09/10 08:10"
+  },
+  {
+   "title": "iPhone 18 Pro全面升級A20 Pro 蘋果強攻裝置端AI、散熱與影像",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6601977",
-   "ts": "09/09 20:15"
-  },
-  {
-   "title": "迎戰50年後人口減半！國發會祭3大處方：長靠出生、中靠升級、短靠「外」援",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6601932",
-   "ts": "09/09 20:14"
-  },
-  {
-   "title": "外資大買面板雙虎、倒貨金融股 三大法人合計買超220億元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6601931",
-   "ts": "09/09 20:13"
-  },
-  {
-   "title": "營收速報  - 倍力(6874)8月營收1.07億元年增率高達182.48％",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6601947",
-   "ts": "09/09 19:50"
-  },
-  {
-   "title": "營收速報  - 洋基工程(6691)8月營收52.87億元年增率高達213.7％",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6601946",
-   "ts": "09/09 19:50"
+   "url": "https://news.cnyes.com/news/id/6602497",
+   "ts": "09/10 08:00"
   }
  ],
  "inst": {

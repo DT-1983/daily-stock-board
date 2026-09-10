@@ -1,61 +1,111 @@
 {
-"date": "2026-09-09",
+"date": "2026-09-10",
 "flips_hold": [],
-"flips_watch": [
+"flips_watch": [],
+"ai_alerts": [
 {
-"code": "AMD",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1
+"chain": "Bitcoin→AI 機房",
+"market": "US",
+"sig": "🟢",
+"code": "RIOT",
+"name": "Riot Platforms Inc",
+"reason": "觀望→買進"
 },
 {
-"code": "AUR",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1
-},
-{
-"code": "CRWV",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1
-},
-{
-"code": "HUT",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1
-},
-{
-"code": "INTC",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1
-},
-{
-"code": "NBIS",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1
-},
-{
+"chain": "太陽能",
+"market": "US",
+"sig": "🟢",
 "code": "SEDG",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1
+"name": "SolarEdge Technologies Inc",
+"reason": "觀望→買進"
 },
 {
-"code": "TSM",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1
+"chain": "矽光子/光通訊",
+"market": "US",
+"sig": "🟢",
+"code": "QRVO",
+"name": "Qorvo Inc",
+"reason": "觀望→買進"
 },
 {
-"code": "VRT",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1
+"chain": "Bitcoin→AI 機房",
+"market": "US",
+"sig": "🟢",
+"code": "HUT",
+"name": "Hut 8 Corp",
+"reason": "觀望→買進"
+},
+{
+"chain": "低軌衛星",
+"market": "US",
+"sig": "🔴",
+"code": "AMZN",
+"name": "Amazon.com Inc",
+"reason": "觀望→賣出"
+},
+{
+"chain": "低軌衛星",
+"market": "US",
+"sig": "🔴",
+"code": "GOOG",
+"name": "Alphabet Inc Class C",
+"reason": "觀望→賣出"
+},
+{
+"chain": "AI 伺服器",
+"market": "US",
+"sig": "🔴",
+"code": "GOOGL",
+"name": "Alphabet Inc Class A",
+"reason": "觀望→賣出"
+},
+{
+"chain": "低軌衛星",
+"market": "US",
+"sig": "🔴",
+"code": "AVAV",
+"name": "AeroVironment Inc",
+"reason": "觀望→賣出"
+},
+{
+"chain": "AI 電力/核能",
+"market": "US",
+"sig": "🔴",
+"code": "XE",
+"name": "X-Energy Inc Class A",
+"reason": "觀望→賣出"
+},
+{
+"chain": "AI 伺服器",
+"market": "TW",
+"sig": "🟢",
+"code": "2382",
+"name": "廣達",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 伺服器",
+"market": "TW",
+"sig": "🟢",
+"code": "2317",
+"name": "鴻海",
+"reason": "觀望→買進"
+},
+{
+"chain": "矽光子/光通訊",
+"market": "TW",
+"sig": "🔴",
+"code": "3450",
+"name": "聯鈞",
+"reason": "觀望→賣出"
+},
+{
+"chain": "AI 電源/散熱",
+"market": "TW",
+"sig": "🟢",
+"code": "3017",
+"name": "奇鋐",
+"reason": "觀望→買進"
 }
-],
-"ai_alerts": []
+]
 }
