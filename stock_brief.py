@@ -450,6 +450,131 @@ def _intro_html(d, name, px, fc_rows=None, biz="", prof=None):
             '</div>')
 
 
+CATALYSTS_PATH = "state/stock_catalysts.json"
+
+# 2026-09-10 Leo 丟了一份 IG 帳號（histockhero）講大立光 CPO/FAU 技術布局的
+# 圖文，要求「補到個股財報分析裡，如果還沒有請自己建立」。
+# ⚠️ 內容是別人帳號的圖文創作，不能整段照抄（版權）——summary 是我自己
+# 濃縮改寫過的文字，不是原貼文的逐字翻譯；技術圖也是重畫，不是截圖。
+# ⭐ 這類「社群消息面」內容體質上跟上面 biz 簡介（yfinance 官方摘要）不一樣：
+# 沒有公司或分析師背書，所以獨立成一個區塊、掛明顯的來源警示，不混進
+# 「這是什麼」那段裡讓人誤以為是查證過的資料。
+_CATALYST_SVG = {
+    # 對準示意：光纖9μm要塞進晶片波導<1μm，對準才進得去、沒對準整顆報廢。
+    "align": '''<svg viewBox="0 0 640 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:560px">
+<style>.tl{font:600 12px 'Noto Sans TC',sans-serif;fill:#9DB0C8}.tb{font:700 13px 'Noto Sans TC',sans-serif;fill:#DCE7F5}.tn{font:700 12px 'IBM Plex Mono',monospace}</style>
+<text x="20" y="24" class="tl" fill="#22C55E">✓ 對準</text>
+<rect x="20" y="32" width="110" height="26" rx="4" fill="#0E1B2B" stroke="#16304A"/>
+<text x="75" y="49" class="tn" fill="#DCE7F5" text-anchor="middle">光纖 9μm</text>
+<path d="M130 45 L340 45" stroke="#22D3EE" stroke-width="2"/>
+<polygon points="332,38 346,45 332,52" fill="#22D3EE"/>
+<rect x="340" y="32" width="110" height="26" rx="4" fill="#0E2417" stroke="#166534"/>
+<text x="395" y="49" class="tn" fill="#86EFAC" text-anchor="middle">晶片 &lt;1μm</text>
+<text x="460" y="49" class="tl" fill="#86EFAC">→ 光順利進去</text>
+<text x="20" y="112" class="tl" fill="#EF4444">✕ 對不準</text>
+<rect x="20" y="120" width="110" height="26" rx="4" fill="#0E1B2B" stroke="#16304A"/>
+<text x="75" y="137" class="tn" fill="#DCE7F5" text-anchor="middle">光纖 9μm</text>
+<path d="M130 133 L330 160" stroke="#F87171" stroke-width="2" stroke-dasharray="3,3"/>
+<polygon points="318,155 334,159 322,167" fill="#F87171"/>
+<rect x="340" y="120" width="110" height="26" rx="4" fill="#2E1418" stroke="#7F1D1D"/>
+<text x="395" y="137" class="tn" fill="#FCA5A5" text-anchor="middle">晶片 &lt;1μm</text>
+<text x="460" y="137" class="tl" fill="#FCA5A5">→ 光漏掉，整顆報廢</text>
+<text x="320" y="182" class="tl" text-anchor="middle" fill="#5B6E8A">FAU＝把 9μm 粗的光纖，精準對準塞進不到 1μm 的晶片入口</text>
+</svg>''',
+    # 三步驟：FA排整齊→PMLA放大轉向→焊到晶片，三步合起來才叫FAU。
+    "fau_steps": '''<svg viewBox="0 0 640 175" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:560px">
+<style>.tl{font:600 11px 'Noto Sans TC',sans-serif;fill:#9DB0C8}.tb{font:700 13px 'Noto Sans TC',sans-serif;fill:#DCE7F5}</style>
+<rect x="20" y="10" width="178" height="92" rx="8" fill="#0C1524" stroke="#16304A"/>
+<text x="109" y="32" class="tb" text-anchor="middle" fill="#F5B841">① FA 光纖排整齊</text>
+<text x="109" y="54" class="tl" text-anchor="middle">V 槽卡住多根光纖</text>
+<text x="109" y="72" class="tl" text-anchor="middle">鎖成固定間距的一把尺</text>
+<polygon points="200,50 222,56 200,62" fill="#5B6E8A"/>
+<rect x="231" y="10" width="178" height="92" rx="8" fill="#0C1524" stroke="#16304A"/>
+<text x="320" y="32" class="tb" text-anchor="middle" fill="#22D3EE">② PMLA 稜鏡微透鏡</text>
+<text x="320" y="54" class="tl" text-anchor="middle">把細光束放大、轉向 90°</text>
+<text x="320" y="72" class="tl" text-anchor="middle">容差跟著放寬</text>
+<polygon points="411,50 433,56 411,62" fill="#5B6E8A"/>
+<rect x="442" y="10" width="178" height="92" rx="8" fill="#2E1418" stroke="#7F1D1D"/>
+<text x="531" y="32" class="tb" text-anchor="middle" fill="#FCA5A5">③ 焊到晶片</text>
+<text x="531" y="54" class="tl" text-anchor="middle" fill="#FCA5A5">要撐過 260°C 回焊爐</text>
+<text x="531" y="72" class="tl" text-anchor="middle" fill="#FCA5A5">最難、最貴的一步</text>
+<rect x="20" y="118" width="600" height="42" rx="8" fill="#0E1B2B"/>
+<text x="320" y="137" class="tb" text-anchor="middle">① ＋ ② ＋ ③ ＝ FAU（光纖陣列組件）</text>
+<text x="320" y="153" class="tl" text-anchor="middle" fill="#5B6E8A">前兩步是零件（大立光賣）、第三步是模組（上詮等廠焊上去）</text>
+</svg>''',
+    # 容差堆疊示意：業界拼料誤差會疊加超標，大立光用量測補償壓到門檻內。
+    "tolerance": '''<svg viewBox="0 0 640 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:560px">
+<style>.tl{font:600 12px 'Noto Sans TC',sans-serif;fill:#9DB0C8}.tn{font:700 13px 'IBM Plex Mono',monospace}</style>
+<line x1="210" y1="10" x2="210" y2="140" stroke="#FFB627" stroke-width="1.5" stroke-dasharray="4,3"/>
+<text x="216" y="20" class="tl" fill="#FFB627">客戶要求 &lt;0.3μm</text>
+<text x="20" y="45" class="tl" fill="#DCE7F5">業界：買最好的零件相拼</text>
+<rect x="20" y="55" width="140" height="22" rx="3" fill="#2E1418" stroke="#7F1D1D"/>
+<text x="90" y="70" class="tn" fill="#FCA5A5" text-anchor="middle">V槽 0.5μm</text>
+<rect x="160" y="55" width="196" height="22" rx="3" fill="#3A1A12" stroke="#7F1D1D"/>
+<text x="258" y="70" class="tn" fill="#FCA5A5" text-anchor="middle">+ 光纖 0.7μm = &gt;1μm ✕</text>
+<text x="20" y="105" class="tl" fill="#DCE7F5">大立光：一般零件＋自研機台量測補償</text>
+<rect x="20" y="115" width="95" height="22" rx="3" fill="#0E2417" stroke="#166534"/>
+<text x="67" y="130" class="tn" fill="#86EFAC" text-anchor="middle">&lt;0.3μm ✓</text>
+<text x="125" y="130" class="tl" fill="#5B6E8A">業界最佳約 0.5～0.8μm 做不到這裡</text>
+</svg>''',
+    # 供應鏈位置：零件(大立光) vs 模組(上詮)，上下游不是對手。
+    "supply_chain": '''<svg viewBox="0 0 640 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:560px">
+<style>.tl{font:600 12px 'Noto Sans TC',sans-serif;fill:#9DB0C8}.tb{font:700 13px 'Noto Sans TC',sans-serif;fill:#DCE7F5}
+.tk{font:700 11px 'IBM Plex Mono',monospace;fill:#22D3EE}</style>
+<rect x="20" y="10" width="600" height="50" rx="8" fill="#0C1524" stroke="#16304A"/>
+<text x="34" y="30" class="tl" fill="#5B6E8A">上游・零件（拼精度／成本）</text>
+<text x="34" y="50" class="tb">FA 光纖陣列 ＋ PMLA 稜鏡微透鏡</text>
+<text x="500" y="50" class="tk">大立光 3008</text>
+<text x="320" y="82" class="tl" text-anchor="middle" fill="#5B6E8A">↓ 零件賣給模組廠</text>
+<rect x="20" y="95" width="600" height="50" rx="8" fill="#0C1524" stroke="#16304A"/>
+<text x="34" y="115" class="tl" fill="#5B6E8A">下游・模組（拼對準／耐回焊／客戶認證）</text>
+<text x="34" y="135" class="tb">FAU 整顆（FA + 微透鏡 + 連接器 + 焊到晶片）</text>
+<text x="500" y="135" class="tk">上詮 3363</text>
+<text x="320" y="167" class="tl" text-anchor="middle" fill="#5B6E8A">↓ 模組焊到晶片上</text>
+<rect x="20" y="180" width="600" height="26" rx="6" fill="#0E1B2B"/>
+<text x="320" y="197" class="tl" text-anchor="middle" fill="#DCE7F5">平台／光引擎：台積電 COUPE → NVIDIA Spectrum-X、Rubin</text>
+</svg>''',
+}
+
+
+def _catalyst_html(ticker):
+    """近期技術／產業催化劑（社群消息面，非官方查證）。
+    讀 state/stock_catalysts.json，沒有這檔的資料就整段不出現——
+    跟上面 biz 簡介同一個原則，查不到不編。"""
+    import json as _json
+    from board_theme import esc
+    try:
+        with open(CATALYSTS_PATH, encoding="utf-8") as f:
+            all_c = _json.load(f)
+    except Exception:
+        return ""
+    items = all_c.get(str(ticker)) or all_c.get(str(ticker).split(".")[0]) or []
+    if not items:
+        return ""
+    blocks = []
+    for it in items:
+        diagrams = "".join(
+            f'<div style="margin:12px 0;padding:12px;background:var(--card,#0C1524);'
+            f'border:1px solid var(--line,#16304A);border-radius:10px;overflow-x:auto">'
+            f'{_CATALYST_SVG[k]}</div>'
+            for k in (it.get("diagrams") or []) if k in _CATALYST_SVG)
+        paras = "".join(f'<p style="margin:8px 0;line-height:1.85">{esc(p)}</p>'
+                        for p in (it.get("summary") or []))
+        risk = (f'<div class="warnbox"><b>⚠️ 要注意</b>：{esc(it["risk"])}</div>'
+                if it.get("risk") else "")
+        blocks.append(
+            f'<div style="margin-top:14px">'
+            f'<div style="font-size:11px;color:var(--dim,#5B6E8A);margin-bottom:4px">{esc(it.get("date",""))}</div>'
+            f'<h3 style="color:#F5B841;font-size:14.5px;margin-bottom:6px">{esc(it.get("title",""))}</h3>'
+            f'<div style="font-size:11.5px;color:var(--dim,#5B6E8A);border-left:2px solid var(--warn,#FFB627);'
+            f'padding-left:8px;margin-bottom:10px">📱 來源：{esc(it.get("source",""))}——'
+            f'不是公司公告或分析師報告，內容經過我改寫濃縮，具體數字/時程未經第三方查證</div>'
+            f'{paras}{diagrams}{risk}</div>')
+    return ('<div class="sb intro" style="border-left:3px solid var(--warn,#FFB627)">'
+            '<h2>近期技術／產業話題 <span class="en">Social Catalyst</span></h2>'
+            f'{"".join(blocks)}</div>')
+
+
 def render(d, extra_notes=None):
     from board_theme import BASE_CSS, esc, esc_b, header, nav_abs
 
@@ -491,6 +616,7 @@ def render(d, extra_notes=None):
 
     # ── 簡介（2026-09-07 Leo：「前面寫個簡介」）─────────────
     body.append(_intro_html(d, name, px, fc_rows, biz, prof))
+    body.append(_catalyst_html(d["ticker"]))
 
     # ── 燈號 ───────────────────────────────────────────────
     L = d.get("lamp")
