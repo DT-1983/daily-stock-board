@@ -22,7 +22,11 @@
 用法:
     python stock_brief.py 2454
     python stock_brief.py 2454 -o out.html
-    python stock_brief.py --all       # 重產所有有券商報告的個股（每日 08:45 排程）
+    python stock_brief.py --all       # 重產所有有券商報告的個股
+    # 2026-09-11：上面這行原本寫「每日 08:45 排程」，但那份排程從沒真的接進去過
+    # （Leo 發現的：board_analyze_daily.cmd 從頭到尾查過一遍，完全沒有這一步）。
+    # 現在真的排進 board_analyze_daily.cmd 了（06:00，接在 advisor_reports.py
+    # parse/check 後面），不是每天固定 08:45——時間看這支批次今天跑多久。
 """
 import io
 import os
