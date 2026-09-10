@@ -995,7 +995,13 @@ function ti_draw_{uid}(){{
         data:(d.target==null?[]:d.dates.map((_,i)=>({{x:i,y:d.target}}))),
         borderColor:'#FDE047',borderWidth:1.4,pointRadius:0,borderDash:[8,4]}}]}},
     options:{{responsive:true,maintainAspectRatio:false,interaction:{{mode:'index',intersect:false}},
-      plugins:{{legend:{{labels:{{color:'#9aa0a6',boxWidth:14,font:{{size:10}}}}}}, zoom:ZOOM_OPT}},
+      plugins:{{legend:{{labels:{{color:'#9aa0a6',boxWidth:14,font:{{size:10}}}}}}, zoom:ZOOM_OPT,
+        /* 2026-09-10 Leo:「手機版會被擋住圖」——這個 tooltip 一次疊 OHLC+
+           SuperTrend+20日平均成本+停損4倍+目標價共 6-7 行，沒指定字級時
+           Chart.js 用預設(標題14px/內容12px)，這張圖其他文字(圖例/座標)
+           早就都縮到 9-10px 了，只有這個 tooltip 沒跟著縮，在小螢幕上
+           自然佔比最大、蓋掉底下的K棒。跟著其他元素一起縮小。 */
+        tooltip:{{titleFont:{{size:10}},bodyFont:{{size:10}},padding:6,boxPadding:3}}}},
       scales:{{x:xAxis, y:{{ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
   // 成交量：紅漲綠跌（台股慣例），疊 20 日均量線——老墨圖上有、我們原本漏了
   const volColor = d.closes.map(function(c, i) {{
