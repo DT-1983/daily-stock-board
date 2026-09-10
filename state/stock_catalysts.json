@@ -14,7 +14,7 @@
         "時程：7 月送樣，最快 2027 年中量產。"
       ],
       "risk": "最關鍵的提醒：大立光今年 CPO 相關營收約等於零，目前 EPS 全部來自手機鏡頭本業。股價多出來的本益比，是市場對 CPO 未來的預期，不是已經兌現的獲利——原貼文也提到股價「一個月翻倍、然後跌停」，波動已經反映這個預期跟現實的落差。",
-      "diagrams": ["align", "fau_steps", "tolerance", "supply_chain"]
+      "diagrams": ["align", "fau_steps", "cpo_conditions", "tolerance", "supply_chain", "timeline"]
     }
   ]
 }
