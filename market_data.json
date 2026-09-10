@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-10 12:54",
+ "updated": "2026-09-10 15:40",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,16 +38,16 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "09/10",
-   "close": 46799.86,
-   "chg_pct": -0.81
+   "close": 46940.49,
+   "chg_pct": -0.51
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/10",
-   "close": 31.5,
-   "chg_pct": -0.01
+   "close": 31.52,
+   "chg_pct": 0.06
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "iPhone首度支援Apple Pencil！Duo讓Touch ID重返旗艦機",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6602744",
-   "ts": "09/10 12:40"
-  },
-  {
-   "title": "〈焦點股〉業績亮眼推升股價上揚 光聖、前鼎逆風強漲半根停板",
+   "title": "創控科技8月營收創同期新高 估下半年旺季可期",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6602775",
-   "ts": "09/10 12:31"
+   "url": "https://news.cnyes.com/news/id/6602883",
+   "ts": "09/10 15:40"
   },
   {
-   "title": "惠譽看台灣：證券業上半年獲利狂飆325% 但大小券商結構差距恐擴大",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6599661",
-   "ts": "09/10 12:23"
-  },
-  {
-   "title": "CBS News：美軍一架A-10機翼斷裂、8架F-15戰機受損",
+   "title": "不是收購卻像收購？輝達與Groq授權協議 遭美反壟斷調查",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6602774",
-   "ts": "09/10 12:22"
+   "url": "https://news.cnyes.com/news/id/6602826",
+   "ts": "09/10 15:30"
   },
   {
-   "title": "「新債王」岡拉克：Fed若不升息 長天期美債恐再遭拋售",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6602760",
-   "ts": "09/10 12:20"
-  },
-  {
-   "title": "人類史上首次！全球老人比小孩多了",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6602764",
-   "ts": "09/10 12:16"
-  },
-  {
-   "title": "瘋狂買！高盛6天砸26.6億美元連收NEOS、LCN 狂攻ETF、房地產 與另類投資",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6602763",
-   "ts": "09/10 12:10"
-  },
-  {
-   "title": "家登8月營收創同期新高 下半年營運續強",
+   "title": "台積電8月營收首度衝破5字頭 達5,148億元再攀峰",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6602762",
-   "ts": "09/10 12:07"
+   "url": "https://news.cnyes.com/news/id/6602882",
+   "ts": "09/10 15:28"
   },
   {
-   "title": "【優分析即時新聞】微星(2377)毛利率衝上15.97%創高，RTX Spark接單熱、AI伺服器拚2026翻倍",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6602768",
-   "ts": "09/10 12:00"
+   "title": "台積電8月營收首度衝破5字頭 達5,148億元再攀峰",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6602882",
+   "ts": "09/10 15:28"
   },
   {
-   "title": "玉山金(2884)跨入「金控2.0」！併三商壽補齊版圖，2027年迎來真正驗收期",
+   "title": "出貨上看3500萬支！高盛：iPhone Duo定價「實惠」　鴻海、南亞與大立光等大中華區供應商受惠",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6602889",
+   "ts": "09/10 15:05"
+  },
+  {
+   "title": "資金退至場外觀望 外資提款383億、三大法人賣超503.11億元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6602767",
-   "ts": "09/10 12:00"
+   "url": "https://news.cnyes.com/news/id/6602906",
+   "ts": "09/10 15:05"
+  },
+  {
+   "title": "日系車在中國失速！本田、日產8月銷量腰斬 豐田最後堡壘也鬆動",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6602829",
+   "ts": "09/10 14:50"
+  },
+  {
+   "title": "光罩(2338)連兩日漲停，真正在等的不是High NA EUV！14吋新品第四季才驗收",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6602873",
+   "ts": "09/10 14:30"
+  },
+  {
+   "title": "宸曜8月營收年增59%、再創歷史次高！邊緣AI專案出貨延續",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6602871",
+   "ts": "09/10 14:30"
+  },
+  {
+   "title": "【瑞薩再度喊漲】功率半導體首波漲價只是反映成本壓力AI重分配產能推動第二波？",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6602872",
+   "ts": "09/10 14:30"
   }
  ],
  "inst": {
-  "date": "09/09",
-  "total_yi": 211.3,
-  "foreign_yi": 209.2,
-  "trust_yi": 20.8
+  "date": "09/10",
+  "total_yi": -503.1,
+  "foreign_yi": -383.3,
+  "trust_yi": 17.9
  }
 }
