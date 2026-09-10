@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-10 15:40",
+ "updated": "2026-09-10 20:11",
  "indices": [
   {
    "sym": "^GSPC",
@@ -46,8 +46,8 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/10",
-   "close": 31.52,
-   "chg_pct": 0.06
+   "close": 31.6,
+   "chg_pct": 0.32
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "創控科技8月營收創同期新高 估下半年旺季可期",
+   "title": "鉅亨速報 - Factset 最新調查：玉晶光(3406-TW)目標價調升至700元，幅度約3.32%",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6602883",
-   "ts": "09/10 15:40"
+   "url": "https://news.cnyes.com/news/id/6603986",
+   "ts": "09/10 20:10"
   },
   {
-   "title": "不是收購卻像收購？輝達與Groq授權協議 遭美反壟斷調查",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6602826",
-   "ts": "09/10 15:30"
-  },
-  {
-   "title": "台積電8月營收首度衝破5字頭 達5,148億元再攀峰",
+   "title": "繳稅高峰已過！7月刷卡額降至4544億元仍創單月第5高 前7月狂刷3.33兆元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6602882",
-   "ts": "09/10 15:28"
+   "url": "https://news.cnyes.com/news/id/6603970",
+   "ts": "09/10 20:03"
   },
   {
-   "title": "台積電8月營收首度衝破5字頭 達5,148億元再攀峰",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6602882",
-   "ts": "09/10 15:28"
-  },
-  {
-   "title": "出貨上看3500萬支！高盛：iPhone Duo定價「實惠」　鴻海、南亞與大立光等大中華區供應商受惠",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6602889",
-   "ts": "09/10 15:05"
-  },
-  {
-   "title": "資金退至場外觀望 外資提款383億、三大法人賣超503.11億元",
+   "title": "公股攜手「對治」中小企綠色焦慮 臺企銀李嘉祥：金融業是企業永續最強推手",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6602906",
-   "ts": "09/10 15:05"
+   "url": "https://news.cnyes.com/news/id/6603971",
+   "ts": "09/10 20:00"
   },
   {
-   "title": "日系車在中國失速！本田、日產8月銷量腰斬 豐田最後堡壘也鬆動",
+   "title": "英國作戰通訊交給馬斯克？砸近4000萬美元採購SpaceX服務",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6602829",
-   "ts": "09/10 14:50"
+   "url": "https://news.cnyes.com/news/id/6603909",
+   "ts": "09/10 20:00"
   },
   {
-   "title": "光罩(2338)連兩日漲停，真正在等的不是High NA EUV！14吋新品第四季才驗收",
+   "title": "晶呈科8月營收年增93.12％ 受惠特殊氣體外銷日、韓市場出貨暢旺",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6602873",
-   "ts": "09/10 14:30"
+   "url": "https://news.cnyes.com/news/id/6603968",
+   "ts": "09/10 19:59"
   },
   {
-   "title": "宸曜8月營收年增59%、再創歷史次高！邊緣AI專案出貨延續",
+   "title": "營收創高只是表面，大銀微(4576) 這波真的不一樣！跟市場預期的落差在哪裡？",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6602871",
-   "ts": "09/10 14:30"
+   "url": "https://news.cnyes.com/news/id/6603964",
+   "ts": "09/10 19:30"
   },
   {
-   "title": "【瑞薩再度喊漲】功率半導體首波漲價只是反映成本壓力AI重分配產能推動第二波？",
+   "title": "說好增產卻做不到！OPEC 8月產量反減每日64萬桶",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6602872",
-   "ts": "09/10 14:30"
+   "url": "https://news.cnyes.com/news/id/6603690",
+   "ts": "09/10 19:30"
+  },
+  {
+   "title": "馬斯克：AI+機器人將在不到十年內讓全球經濟翻倍  Anthropic經濟預言在「這情況」下將成真",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6602956",
+   "ts": "09/10 19:00"
+  },
+  {
+   "title": "蘋鏈準備好了嗎？iPhone Duo 10月開賣 初期日產僅數百部",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6602832",
+   "ts": "09/10 18:31"
+  },
+  {
+   "title": "村田這次不漲了，而是直接停產不賣！部分MLCC料號退出、產能轉向其他產品",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6603207",
+   "ts": "09/10 18:00"
   }
  ],
  "inst": {
   "date": "09/10",
-  "total_yi": -503.1,
+  "total_yi": -487.5,
   "foreign_yi": -383.3,
-  "trust_yi": 17.9
+  "trust_yi": 33.5
  }
 }
