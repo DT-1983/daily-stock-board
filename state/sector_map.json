@@ -2416,5 +2416,53 @@
     "industry": "Electronic Production Equipment",
     "exchange": "TWSE",
     "asof": "2026-09-08"
+  },
+  "2002": {
+    "sector": "Non-Energy Minerals",
+    "industry": "Steel",
+    "exchange": "TWSE",
+    "asof": "2026-09-11"
+  },
+  "2002A": {
+    "sector": "Non-Energy Minerals",
+    "industry": "Steel",
+    "exchange": "TWSE",
+    "asof": "2026-09-11"
+  },
+  "1102": {
+    "sector": "Non-Energy Minerals",
+    "industry": "Construction Materials",
+    "exchange": "TWSE",
+    "asof": "2026-09-11"
+  },
+  "2027": {
+    "sector": "Non-Energy Minerals",
+    "industry": "Steel",
+    "exchange": "TWSE",
+    "asof": "2026-09-11"
+  },
+  "7610": {
+    "sector": "Non-Energy Minerals",
+    "industry": "Other Metals/Minerals",
+    "exchange": "TWSE",
+    "asof": "2026-09-11"
+  },
+  "2006": {
+    "sector": "Non-Energy Minerals",
+    "industry": "Steel",
+    "exchange": "TWSE",
+    "asof": "2026-09-11"
+  },
+  "2480": {
+    "sector": "Technology Services",
+    "industry": "Information Technology Services",
+    "exchange": "TWSE",
+    "asof": "2026-09-11"
+  },
+  "BG": {
+    "sector": "Process Industries",
+    "industry": "Agricultural Commodities/Milling",
+    "exchange": "NYSE",
+    "asof": "2026-09-11"
   }
 }
