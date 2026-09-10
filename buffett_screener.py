@@ -712,7 +712,14 @@ def fetch_fundamentals(ticker: str) -> dict:
             changli_basis = None
 
         # 歷史 ROE（從資產負債表 + 損益表計算）
+        # 2026-09-10：同一段順手抓「最新一期淨值是不是負的」——講稿段3181-3187：
+        #「賺錢的公司淨值為負，ROE不能算，改用EPS算貴淑價」。原本 roe_history 只挑
+        # eq>0 的期別（避免除以負數算出誤導的高ROE%），但沒有另外記下「最新一期到底
+        # 是不是負的」，導致這種公司的 ROE 判準永遠是 False、直接被 quality_ok 擋掉，
+        # 而不是照講稿改用 EPS 備援去評估。equity_negative=None 代表抓不到資料
+        # （不能當成「不是負的」），True/False 才是真的查到了。
         roe_history = []
+        equity_negative = None
         try:
             balance_sheet = stock.balance_sheet
             fin           = stock.financials
@@ -724,6 +731,8 @@ def fetch_fundamentals(ticker: str) -> dict:
                 if eq_label and ni_label:
                     equity_series = balance_sheet.loc[eq_label].dropna()
                     ni_series     = fin.loc[ni_label].dropna()
+                    if len(equity_series) > 0:
+                        equity_negative = float(equity_series.iloc[0]) <= 0
                     for col in equity_series.index[:4]:
                         if col in ni_series.index:
                             eq = float(equity_series[col])
@@ -857,6 +866,7 @@ def fetch_fundamentals(ticker: str) -> dict:
             "price":         price,
             "roe_current":   roe_current,
             "roe_history":   roe_history,
+            "equity_negative": equity_negative,  # 最新一期淨值<=0；None=抓不到
             "eps_ttm":       eps_ttm,
             "eps_forward":   eps_forward,
             "eps_history":   eps_history,
@@ -917,8 +927,18 @@ def evaluate(data: dict) -> dict:
     result["eps_basis"] = eps_basis
     result["eps_used"] = eps if eps > 0 else None
 
-    exp_price   = round(eps * PE_EXPENSIVE, 2) if eps > 0 else None
-    cheap_price = round(eps * PE_EXPENSIVE / CHEAP_DISCOUNT, 2) if eps > 0 else None
+    # 2026-09-10：淨值為負時 ROE 不可算，改走講稿段3181-3187的備援倍數
+    # （俗價=EPS×12、貴價=EPS×30），不是通用公式，只在這個特定情況套用。
+    # 貴價本來就是 EPS×PE_EXPENSIVE(=30)，跟備援規則一樣，不用另外分支；
+    # 只有俗價的除數（÷1.15^8 vs ÷2.5=30/12）不同，才需要判斷。
+    eq_neg = bool(data.get("equity_negative"))
+    exp_price = round(eps * PE_EXPENSIVE, 2) if eps > 0 else None
+    if eq_neg and eps > 0:
+        cheap_price = round(eps * PE_CHEAP, 2)
+        result["cheap_price_basis"] = f"淨值為負，ROE不可算，改用EPS×{PE_CHEAP}備援（講稿段3181-3187）"
+    else:
+        cheap_price = round(eps * PE_EXPENSIVE / CHEAP_DISCOUNT, 2) if eps > 0 else None
+        result["cheap_price_basis"] = None
     fair_price  = round(eps * PE_FAIR,  2) if eps > 0 else None
 
     result["cheap_price"] = cheap_price
@@ -936,6 +956,15 @@ def evaluate(data: dict) -> dict:
 
     roe_hist = data.get("roe_history", [])
     roe_pass_years = sum(1 for r in roe_hist if r and r >= ROE_MIN)
+
+    # 2026-09-10：淨值為負時，roe/roe_history 本來就抓不到有意義的數字
+    # （上面 roe_history 建構時已經把 eq<=0 的期別濾掉了），roe_pass_current
+    # 會永遠是 False，公司會被 quality_ok 直接擋掉。講稿段3181-3187的意思
+    # 是這種公司不是被排除，是**換一套判斷**——用 EPS 是否為正代替 ROE 關卡。
+    roe_fallback_active = eq_neg and eps > 0
+    if roe_fallback_active:
+        result["roe_basis"] = "淨值為負，ROE不可算，改用EPS>0代替ROE關卡（講稿段3181-3187）"
+    result["roe_fallback_active"] = roe_fallback_active
 
     result["roe_pass_current"] = roe_pass_current
     result["roe_pass_years"]   = roe_pass_years      # 歷史幾年 ROE > 15%
@@ -1039,7 +1068,8 @@ def evaluate(data: dict) -> dict:
     # 🔴 講稿原文（段 488）：「第三、**常利**沒大於5億元」——是常利不是淨利。
     #    我前一版用 netIncomeToCommon（淨利）是錯的：淨利含處分利得與非經常項目，
     #    一家靠賣土地美化帳面的公司會因此過關，而那正是這條要擋的。
-    #    常利＝淨利−處分利得−非常項目−其他收入（段 3325）。
+    #    常利＝淨利−處分利得−非常項目−其他收入（段 7169，2026-09-10 修正——
+    #    原本寫段3325，那段實際內容是折舊/現金流量表的例子，引錯了段落編號）。
     #    我們用 changli_eps × 股數還原成金額；算不到就不套用（不知道≠不合格）。
     _ni = data.get("changli_amt")
     if _ni is None:
@@ -1064,8 +1094,13 @@ def evaluate(data: dict) -> dict:
         result["listed_basis"] = f"上市 {_yrs:.1f} 年"
     result["listed_pass"] = listed_pass
 
-    quality_ok  = (roe_pass_current and roe_stable and eps > 0
+    # 2026-09-10：淨值為負這種公司 roe_pass_current/roe_stable 永遠是 False
+    # （沒有負值可以＞=15%），照講稿段3181-3187改用「EPS為正」代替 ROE 關卡，
+    # 不是放寬標準，是換一套在這個情況下才有意義的判準。
+    roe_gate_ok = roe_fallback_active or (roe_pass_current and roe_stable)
+    quality_ok  = (roe_gate_ok and eps > 0
                    and reinvest_ok and payout_ok and ni_pass and listed_pass)
+    result["roe_gate_ok"] = roe_gate_ok
     result["roe_stable"]  = roe_stable
     # 2026-09-09：payout_ok / reinvest_ok 原本只當區域變數用，沒有匯出。
     # 結果是 quality_ok=False 時**答不出是哪一條擋的**——而這正是我自己在
