@@ -41,6 +41,7 @@ import re
 import sys
 import json
 import glob
+import shutil
 import argparse
 import datetime as dt
 
@@ -303,6 +304,31 @@ def implied_multiple(r, price):
 
 IMAGE_EXTS = (".png", ".jpg", ".jpeg", ".webp")
 
+ARCHIVE_DIRNAME = "_已讀"
+
+
+def _archive(path):
+    """解析完就搬進同層的「_已讀」子資料夾——跟 Leo 原本在「投顧報告」底下
+    手動整理用的資料夾是同一個名字，不是另外發明一套歸檔規則。
+
+    ⚠️ 這支對成功解析、跟「抽不到代號判定非個股報告」兩種都要搬——後者
+    以後每天掃也一樣會跳過（已經在 store 裡），留在原地只是佔位置。
+    ⚠️ 搬檔失敗（例如檔案還開著）不能讓整批 parse 掛掉：印警告就好，
+    這份下次還是會被跳過（`key in store`），不會被反覆解析。
+    """
+    try:
+        d = os.path.dirname(path)
+        if os.path.basename(d) == ARCHIVE_DIRNAME:
+            return                                          # 已經在歸檔夾裡（重跑 --force 的情況）
+        dest_dir = os.path.join(d, ARCHIVE_DIRNAME)
+        os.makedirs(dest_dir, exist_ok=True)
+        dest = os.path.join(dest_dir, os.path.basename(path))
+        if os.path.exists(dest):
+            os.remove(dest)                                 # 同名舊檔（重跑），直接蓋掉
+        shutil.move(path, dest)
+    except Exception as e:                                  # noqa: BLE001
+        print(f"    ⚠️ 歸檔失敗（不影響解析結果）：{str(e)[:80]}")
+
 
 def parse(force=False, only=None):
     store = _load(STORE, {})
@@ -317,6 +343,9 @@ def parse(force=False, only=None):
     for f in files:
         key = os.path.basename(f)
         if key in store and not force:
+            # 已經解析過，但檔案還留在原地（例如：這支歸檔功能上線前解析的那批）
+            # ——一樣掃進去，讓「已解析」跟「已歸檔」保持一致，不用另外寫一次性腳本清。
+            _archive(f)
             continue
         print(f"  解析 {key} …", flush=True)
         is_image = key.lower().endswith(IMAGE_EXTS)
@@ -353,12 +382,14 @@ def parse(force=False, only=None):
                           "_parsed": dt.date.today().isoformat()}
             _save(STORE, store)
             print("    （抽不到代號，判定為非個股報告，記入略過名單）")
+            _archive(f)
             continue
         d["_file"] = key
         d["_parsed"] = dt.date.today().isoformat()
         d["conditions"] = conditions_for(d)
         store[key] = d
         _save(STORE, store)          # 逐份存，中途掛掉不會全丟
+        _archive(f)
         done += 1
         print(f"    ✅ {d.get('name')}({d['ticker']}) {d.get('broker')} "
               f"{d.get('date')}｜目標價 {d.get('target')}｜{len(d['conditions'])} 條失效條件")
