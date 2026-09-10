@@ -260,7 +260,9 @@ CSS = """
  border-radius:12px;background:var(--surface)}
 .fg{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .fl{font-size:11px;color:var(--dim);margin-right:2px}
-.fb{font:inherit;font-size:12px;padding:4px 10px;border-radius:999px;cursor:pointer;
+/* 2026-09-10 Leo:「出場檢視表按鍵(圓框)跟其它設計不一樣，幫我改方框」——
+   原本是 999px 全圓角，跟投資站其他頁篩選/標籤用的小方框(2-9px)不一致。 */
+.fb{font:inherit;font-size:12px;padding:4px 10px;border-radius:6px;cursor:pointer;
  border:1px solid var(--line);background:transparent;color:var(--dim)}
 .fb:hover{border-color:var(--accent,#93c5fd)}
 .fb.on{background:var(--accent,#3b82f6);border-color:var(--accent,#3b82f6);
