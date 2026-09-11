@@ -194,6 +194,7 @@ def tw_block():
 #    走 API 拿當下網址等於自動跟著換，不用我每次回來手改寫死的連結。
 NDC_API = "https://data.gov.tw/api/v2/rest/dataset/6099"
 NDC_CSV = "景氣指標與燈號.csv"
+NDC_LEAD_CSV = "領先指標構成項目.csv"     # 外銷訂單動向指數在這份裡
 
 # 分數區間 → 燈號意義（國發會定義）。⚠️ 這是官方分級不是我們自己訂的門檻。
 LIGHT_MEAN = {
@@ -202,8 +203,62 @@ LIGHT_MEAN = {
 }
 
 
+def _export_orders(raw):
+    """外銷訂單動向指數 → 帶**歷史位置**回傳，不是只給一個數字。
+
+    🔴 2026-09-12 Leo 問「我不知道什麼用意」，查歷史分布才發現課本讀法在這條數列上
+       會給出假訊號：一般說「擴散指數 50 以上＝擴張、以下＝收縮」，但這條
+       **319 個月裡有 72% 低於 50**、中位數只有 48.0。
+       也就是說 48.8 其實**略高於它自己的歷史中位數**，是正常水準不是轉弱。
+       只餵原始值給 AI，它十之八九會寫「低於 50，外銷訂單轉弱」——**那是錯的**。
+    ⭐ 所以這裡回的是百分位與「跟自己的中位數比」，並在欄位名直接寫明別拿 50 當中線。
+       （同 `chip_scan_thresholds` 的教訓：門檻要看實測分布，不要照抄通則。）
+    """
+    if not raw:
+        return None
+    try:
+        txt = raw.decode("utf-8-sig", "replace")
+        lines = [l for l in txt.splitlines() if l.strip()]
+        hdr = [c.strip('"') for c in lines[0].split(",")]
+        i = next((k for k, c in enumerate(hdr) if "外銷訂單" in c), None)
+        if i is None:
+            return None
+        rows = []
+        for l in lines[1:]:
+            p = l.split(",")
+            if len(p) > i and p[i].strip():
+                try:
+                    rows.append((p[0].strip('"'), float(p[i])))
+                except ValueError:
+                    pass
+        if len(rows) < 24:
+            return None
+        vals = [v for _, v in rows]
+        cur = vals[-1]
+        med = sorted(vals)[len(vals) // 2]
+        pct = round(sum(1 for v in vals if v < cur) / len(vals) * 100)
+        return {
+            "最新月份": rows[-1][0],
+            "最新值": cur,
+            "歷史中位數": round(med, 1),
+            "歷史百分位": pct,
+            "跟自己的中位數比": ("高於" if cur > med else "低於") + f"中位數 {abs(round(cur - med, 1))}",
+            "近6個月": [{"月": d, "值": v} for d, v in rows[-6:]],
+            "⚠️判讀注意": (
+                f"這條是**家數擴散指數**（問廠商訂單比上月多還少），不是訂單金額。"
+                f"⚠️ **不要拿 50 當中線**：這條數列 {len(vals)} 個月裡有 "
+                f"{round(sum(1 for v in vals if v < 50) / len(vals) * 100)}% 低於 50，"
+                f"中位數只有 {round(med,1)}。要判斷強弱請用上面的歷史百分位，"
+                f"不要寫「低於50所以轉弱」。"),
+            "用途": "它是國發會領先指標的成分之一，訂單先於出貨，"
+                    "用來檢查景氣燈號/GDP 這些同時指標所反映的熱度還撐不撐得住。",
+        }
+    except Exception:                                       # noqa: BLE001
+        return None
+
+
 def ndc_block():
-    """景氣對策信號＋領先/同時指標。回 None 代表這次沒抓到（下游要看得出差別）。"""
+    """景氣對策信號＋領先/同時指標＋外銷訂單。回 None 代表這次沒抓到。"""
     import subprocess
     import zipfile
     import tempfile
@@ -222,12 +277,17 @@ def ndc_block():
                 # ⚠️ 壓縮檔裡同時有 `景氣指標與燈號.csv` 跟 `schema-景氣指標與燈號.csv`，
                 #    只用 in 比對會先撈到 schema 那份（欄位定義檔，不是資料），
                 #    然後在下一步「欄位名跟預期不同」誤判成官方改格式。實測踩到。
-                name = next((n for n in z.namelist()
-                             if NDC_CSV in n and not os.path.basename(n).startswith("schema")), None)
+                def _pick(fn):
+                    return next((n for n in z.namelist()
+                                 if fn in n
+                                 and not os.path.basename(n).startswith("schema")), None)
+                name = _pick(NDC_CSV)
                 if not name:
                     print(f"  ⚠️ 景氣燈號：壓縮檔裡找不到 {NDC_CSV}")
                     return None
                 raw = z.read(name)
+                lead_name = _pick(NDC_LEAD_CSV)
+                lead_raw = z.read(lead_name) if lead_name else b""
         txt = raw.decode("utf-8-sig", "replace")
         lines = [l for l in txt.splitlines() if l.strip()]
         hdr = [c.strip('"') for c in lines[0].split(",")]
@@ -266,6 +326,9 @@ def ndc_block():
             "同時指標綜合指數": _cell(last, "同時指標綜合指數"),
             "來源": "國發會景氣指標（data.gov.tw #6099），官方月頻資料",
         }
+        ex = _export_orders(lead_raw)
+        if ex:
+            out["外銷訂單動向指數"] = ex
         print(f"  景氣對策信號    {light}燈 {out['綜合分數']}分（{out['月份']}）")
         return out
     except Exception as e:                                  # noqa: BLE001
@@ -501,13 +564,11 @@ PROMPT = """{persona}
 """
 
 
-def ask(facts):
+def _ask_once(prompt):
     exe = _claude_bin()
     if not exe:
         raise RuntimeError("找不到 claude CLI")
     import subprocess
-    prompt = PROMPT.format(persona=_kongming_persona(),
-                           facts=json.dumps(facts, ensure_ascii=False, indent=1))
     r = subprocess.run(
         [exe, "-p", "--dangerously-skip-permissions", "--output-format", "json",
          "--json-schema", json.dumps(SCHEMA, ensure_ascii=False)],
@@ -521,6 +582,35 @@ def ask(facts):
     note = out.get("structured_output")
     if not note:
         raise RuntimeError(f"沒有 structured_output：{r.stdout[:300]}")
+    return note
+
+
+def ask(facts, tries=3):
+    """問孔明，並且**驗收簡繁**。
+
+    🔴 2026-09-12 實測踩到：產出的台股標題寫「景氣**红**燈」——簡體字。
+       原因是這支自己接 `claude -p`，**繞過了 `llm_board.ask_json_traditional`
+       內建的簡繁把關與重寫重試**。記憶 `simplified_chinese_guard` 早就寫過
+       「prompt 寫繁體 ≠ 做到」，我還是靠 prompt 交代就以為夠了。
+       這裡補回同一套：抓到簡體字就把**是哪幾個字**帶回去要求整份重寫。
+    """
+    base = PROMPT.format(persona=_kongming_persona(),
+                         facts=json.dumps(facts, ensure_ascii=False, indent=1))
+    fix = ""
+    note = None
+    for a in range(tries):
+        note = _ask_once(base + fix)
+        try:
+            from llm_board import simplified_chars, walk_strings
+            bad = sorted(simplified_chars("".join(walk_strings(note))))
+        except Exception:                                   # noqa: BLE001
+            return note
+        if not bad:
+            return note
+        print(f"    ⚠️ 出現簡體字 {''.join(bad[:10])}（第 {a+1}/{tries} 次），要求重寫")
+        fix = ("\n\n⚠️ 你上一次的回答用了簡體字（" + "".join(bad[:10])
+               + "）。整份重寫，全部用繁體中文（台灣用語），一個簡體字都不能有。")
+    print(f"    ⚠️ {tries} 次仍有簡體字，這次照樣輸出但請留意")
     return note
 
 
@@ -701,7 +791,26 @@ def render(facts, note):
             f'同時指標 {esc(str(nd.get("同時指標綜合指數","")))[:6]}'
             f'　來源：國發會（官方月頻）</div>'
             f'<div class="li" style="margin-top:8px;display:flex;gap:12px;flex-wrap:wrap">'
-            f'{seq}</div></div>')
+            f'{seq}</div>')
+        ex = nd.get("外銷訂單動向指數")
+        if ex:
+            # ⚠️ 一定要把「歷史百分位」跟數字並排：只給 48.8 會被當成「低於50＝轉弱」，
+            #    但它的歷史中位數是 48.0——這條數列 72% 的時間都在 50 以下。
+            pc = ex.get("歷史百分位")
+            col = "#22C55E" if pc >= 60 else ("#FFB627" if pc >= 35 else "#EF4444")
+            light_html += (
+                f'<div style="margin-top:12px;padding-top:11px;'
+                f'border-top:1px solid var(--line,#16304A)">'
+                f'<div class="li"><b>外銷訂單動向指數</b>（領先指標成分）　'
+                f'<span style="font-family:\'IBM Plex Mono\',monospace;font-size:15px;'
+                f'color:{col};font-weight:700">{ex.get("最新值")}</span>'
+                f'　歷史百分位 <b style="color:{col}">{pc}%</b>'
+                f'（{esc(ex.get("跟自己的中位數比",""))}）</div>'
+                f'<div class="bs">⚠️ 這條 72% 的月份低於 50、中位數 '
+                f'{ex.get("歷史中位數")}，<b>不要拿 50 當強弱中線</b>；'
+                f'看的是它在自己歷史上的位置。訂單先於出貨，用來檢查'
+                f'景氣燈號／GDP 的熱度撐不撐得住。</div></div>')
+        light_html += '</div>'
 
     # 台灣 GDP（2026-09-11 Leo 指定加）——資料本來就抓了，只是沒顯示在台股頁
     tg = ((facts.get("gdp") or {}).get("tw") or {})
