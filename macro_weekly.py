@@ -453,7 +453,10 @@ _CLAIM = {
         "text": {"type": "string", "description": "一句話，繁體中文"},
         "kind": {"type": "string", "enum": ["observed", "inference", "speculation"],
                  "description": "observed=直接引用給你的數字；inference=從數字推出來的；speculation=沒有數字支撐的推測"},
-        "basis": {"type": "string", "description": "依據哪個數字或哪項事實；speculation 就寫「無數據支撐」"},
+        "basis": {"type": "string",
+                  "description": "依據哪個數字或哪項事實，**每個數字都要帶它的資料日期**"
+                                 "（例：CPI 3.35%（2026-07）、費半 -2.66%（09/10））；"
+                                 "speculation 就寫「無數據支撐」"},
     },
     "required": ["text", "kind", "basis"],
 }
@@ -483,7 +486,10 @@ _MARKET = {
         "headline": {"type": "string",
                      "description": "一句話講完結論，40字以內，先講判斷。不要把多件事塞進同一句"},
         "stance_basis": {"type": "string",
-                         "description": "這個表態最主要的依據是哪一個數字，一句話"},
+                         "description": "這個表態最主要的依據是哪一個數字，一句話。"
+                                        "**每個引用的數字後面都要加資料日期**，"
+                                        "例：「CPI 年增 3.35%（2026-07 資料）較上月再升，"
+                                        "加上費半單日 -2.66%（09/10）」"},
         "angles": {
             "type": "array",
             "description": "兩個獨立角度：結構面（政策/通膨/成長，年為單位）與 資金面"
@@ -554,6 +560,9 @@ PROMPT = """{persona}
 - 每個 claim 標 kind：observed（直接引用給的數字）／inference（從給的數字推的）／
   speculation（沒有數字支撐）。**寧可標 speculation 也不要假裝有依據**。
 - 資料缺口誠實寫進 blind_spots。
+- 🔴 **每個引用的數字都要標它的資料日期**。這份資料裡各項的資料日並不相同
+  （CPI 是月頻、可能是兩個月前；費半是昨天收盤；外資是今天）——
+  不標日期會讓人以為全部都是同一天的。日期就在各欄位的 date／月份 欄裡。
 - ⚠️ **不要在報告裡解釋資料來源之間的技術差異**（哪個 API 比較即時之類）——
   那是管線的事，讀報告的人不需要知道。
 
@@ -671,6 +680,18 @@ table.mt td.v{text-align:right;font-family:'IBM Plex Mono',ui-monospace,monospac
 .up{color:var(--up,#22C55E)}.dn{color:var(--down,#EF4444)}
 .li{margin:6px 0;line-height:1.7}
 .gap{color:var(--muted,#9DB0C8);font-size:12.5px}
+/* 資金結構列：名稱／數值／備註／資料日各自一格，手機上換行不會互相牽動
+   （2026-09-12 Leo 回報排版跑掉——原本是一整句長句硬斷行）*/
+.kv{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;align-items:baseline;
+ padding:9px 0;border-bottom:1px solid var(--line2,#0E1B2B)}
+.kv:last-child{border-bottom:0}
+.kv .k{grid-column:1;color:var(--muted,#9DB0C8);font-size:12.5px;white-space:nowrap}
+.kv .val{grid-column:2;font-family:'IBM Plex Mono',ui-monospace,monospace;
+ font-size:15px;font-weight:700;color:var(--ink,#DCE7F5);font-variant-numeric:tabular-nums}
+.kv .note{grid-column:2;font-size:12px;color:var(--muted,#9DB0C8);line-height:1.6}
+.kv .dt{grid-column:2;font-size:10.5px;color:var(--dim,#5B6E8A);
+ font-family:'IBM Plex Mono',ui-monospace,monospace}
+.sub2{font-size:12px;font-weight:400;color:var(--muted,#9DB0C8)}
 """
 
 
@@ -702,23 +723,41 @@ def render(facts, note):
               '<th style="text-align:right">變化</th><th>比較基準／資料日</th></tr>'
               + "".join(rows) + "</table>")
 
+    # 🔴 2026-09-12 Leo：「台股資金結構排版跑掉了」。原本是把一整句長句塞進 <div>，
+    #    手機寬度下就在「連 47 / 日）」「投信 82.1 億，/ 09/11）」這種地方硬斷行，
+    #    看起來像壞掉。改成 名稱／數值／備註 三欄的列式版型，欄位各自換行不互相牽動。
+    # ⭐ 每一列都帶資料日期（Leo 同時要求）——同一個區塊裡各項的資料日不一定相同，
+    #    不標的話讀的人會預設「都是今天」。
     ef = (facts.get("tw") or {}).get("ef_ratio") or {}
     inst = (facts.get("tw") or {}).get("inst_flow_yi") or {}
-    tw_bits = []
-    if ef:
-        tw_bits.append(
-            f'電金比 <b>{ef.get("ratio")}</b>／100日均線 {ef.get("ma100")}'
-            f'（{"低於" if ef.get("below_ma") else "高於"}均線連 {ef.get("streak_days")} 日）')
-    if inst:
-        tw_bits.append(
-            f'三大法人 {inst.get("total_yi")} 億（外資 {inst.get("foreign_yi")} 億／'
-            f'投信 {inst.get("trust_yi")} 億，{esc(str(inst.get("date") or ""))}）')
     rrg = facts.get("rrg") or {}
     r = rrg.get("tw")
+    tw_rows = []
+    if ef:
+        tw_rows.append((
+            "電金比",
+            f'{ef.get("ratio")} <span class="sub2">／100日均線 {ef.get("ma100")}</span>',
+            f'{"低於" if ef.get("below_ma") else "高於"}均線連 {ef.get("streak_days")} 日',
+            ef.get("date") or ""))
+    if inst:
+        tw_rows.append((
+            "三大法人",
+            f'{inst.get("total_yi")} 億',
+            f'外資 {inst.get("foreign_yi")} 億／投信 {inst.get("trust_yi")} 億',
+            inst.get("date") or ""))
     if r:
         c = r.get("counts") or {}
-        tw_bits.append(f'台股 RRG(60日)：領先 {c.get("leading",0)}／改善 {c.get("improving",0)}'
-                       f'／弱化 {c.get("weakening",0)}／落後 {c.get("lagging",0)}　共 {r.get("n")} 類')
+        tw_rows.append((
+            "RRG 象限(60日)",
+            f'領先 {c.get("leading",0)}／改善 {c.get("improving",0)}',
+            f'弱化 {c.get("weakening",0)}／落後 {c.get("lagging",0)}　共 {r.get("n")} 類',
+            r.get("date") or ""))
+    tw_tbl = "".join(
+        f'<div class="kv"><div class="k">{esc(k)}</div>'
+        f'<div class="val">{v}</div>'
+        f'<div class="note">{note}</div>'
+        f'<div class="dt">{esc(str(d))}</div></div>'
+        for k, v, note, d in tw_rows)
 
     def _claims(lst):
         out = []
@@ -757,7 +796,9 @@ def render(facts, note):
     vs = facts.get("vs_last_week") or {}
     vs_html = ""
     if not vs.get("available"):
-        vs_html = f'<div class="gap">{esc(vs.get("reason",""))}</div>'
+        # ⚠️ 沒有可比對象時**只印一次**：AI 的 week_change 被要求照抄這個 reason，
+        #    程式這裡再印一次就會同一段話出現兩遍（實測踩到）。這裡留白，讓上面那行講。
+        vs_html = ""
     else:
         mv = vs.get("moved") or {}
         vs_html = "".join(
@@ -832,8 +873,7 @@ def render(facts, note):
                       f'<div class="mw"><h2>美國總經數字</h2>{us_tbl}</div>')
     tw_pane = _market(note.get("tw") or {},
                       light_html + gdp_html
-                      + '<div class="mw"><h2>台股資金結構</h2>'
-                      + "".join(f'<div class="li">{b}</div>' for b in tw_bits) + '</div>')
+                      + f'<div class="mw"><h2>台股資金結構</h2>{tw_tbl}</div>')
 
     body = (
         f'<div class="mw"><h2>跟上週比</h2><div class="li">{esc(note.get("week_change",""))}</div>'
