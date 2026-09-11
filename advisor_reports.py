@@ -53,7 +53,12 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # → 遞迴掃**整個 Investment 目錄**，隨便丟哪個子夾都撿得到。
 # ⚠️ 這目錄裡有非個股報告的 PDF（2026-GDP Fcst / 配對交易策略研究報告…），
 # 解析後抽不到代號的會記進略過名單，**不會每天重試浪費時間**。
-PDF_DIR = r"C:\Users\Mophy\Documents\Investment"
+PDF_DIR = r"C:\Users\Mophy\Documents\Investment\投顧報告"
+# 2026-09-11：原本掃整個 Documents\Investment（含子資料夾），結果連
+# 「投顧目標價」（target_changes.py 專用、每日多檔異動彙整表）都掃進來，
+# 把裡面的彙整截圖誤判成單一個股報告（SNOW/AMZN/4911/BE 各中一份）——
+# 兩個資料夾本來就是不同系統在管，不該共用同一支掃描器。Leo：
+# 「目標價只要更新目標價就好，有報告再產出報告」，收窄範圍。
 STORE = "state/advisor_reports.json"
 TODAY_OUT = "state/advisor_reports_today.json"
 
