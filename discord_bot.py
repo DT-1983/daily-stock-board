@@ -214,7 +214,10 @@ async def cmd_upload_report(interaction: discord.Interaction, 檔案: discord.At
             await interaction.followup.send(
                 f"目前只收 PDF 或截圖（{'/'.join(ok_exts)}），其他格式麻煩你手動丟進資料夾。")
             return
-        dest_dir = os.path.join(advisor_reports.PDF_DIR, "投顧報告")
+        # 2026-09-11：PDF_DIR 已經改成直接指向「投顧報告」這層本身
+        # （原本指到 Documents\Investment 整層，會連目標價異動那個獨立
+        # 資料夾都掃進來），這裡不用再自己接一次資料夾名字。
+        dest_dir = advisor_reports.PDF_DIR
         os.makedirs(dest_dir, exist_ok=True)
         dest = os.path.join(dest_dir, 檔案.filename)
         if os.path.exists(dest):
