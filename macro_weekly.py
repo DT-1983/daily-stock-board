@@ -160,7 +160,10 @@ def tw_block():
         import market_thermometer as mt
         st = mt.status()
         if st:
+            # ⚠️ 帶一個中文 label：不然 AI 會直接把欄位名 `ef_ratio` 寫進報告正文
+            #    （實測發生過）。內部欄位名不該出現在給人看的句子裡。
             out["ef_ratio"] = {
+                "指標名稱": "電金比（電子類指數÷金融類指數）",
                 "ratio": st.get("ratio"), "ma100": st.get("ma"),
                 "below_ma": st.get("below"), "streak_days": st.get("streak"),
                 "elec": st.get("elec"), "fin": st.get("fin"),
@@ -170,7 +173,14 @@ def tw_block():
         print(f"  ⚠️ 電金比讀不到：{str(e)[:60]}")
     md = _load("market_data.json", {})
     out["inst_flow_yi"] = md.get("inst")            # 三大法人買賣超（億元）
-    out["indices"] = md.get("indices") or []
+    # 🔴 2026-09-11 Leo：「^TNX 那段看不懂」。原本把 yfinance 的 ^TNX（即時 4.94）
+    # 跟 FRED DGS10（官方定盤 4.83，晚 1-2 天）**兩個都餵給 AI**，還附註解說明差異，
+    # 結果 AI 照實寫了一整句在報告裡解釋兩者為何不同——那是**我的管線問題，
+    # 不是讀報告的人該看的東西**。同一個利率只留一個來源（FRED 官方定盤），
+    # 在這裡就濾掉，不要讓它有機會變成報告裡的一句話。
+    # ⭐ 教訓：資料層自己能解決的歧義，不要丟給 AI「解釋一下」。
+    out["indices"] = [i for i in (md.get("indices") or [])
+                      if i.get("sym") != "^TNX"]
     out["news"] = [h for h in (md.get("news") or [])][:10]
     return out
 
@@ -231,24 +241,42 @@ def gather():
         "calendar": calendar_block(),
     }
     facts["vs_last_week"] = _diff_last(facts)
-    # ⚠️ 同一件事有兩個來源時要明講，否則 AI 會把「資料日不同」當成「數字互相矛盾」。
-    # 實測：FRED DGS10（官方，落後1-2天）跟 yfinance ^TNX（即時）同一天可以差 0.1%，
-    # 兩個都對，只是量的不是同一天。
     facts["data_notes"] = [
-        "美債10年期在這份資料裡出現兩次：FRED 的 DGS10 是官方定盤價、會落後 1-2 個交易日；"
-        "indices 裡的 ^TNX 是 yfinance 即時報價。兩者不同不是矛盾，是資料日不同，"
-        "引用時要講清楚是哪一個。",
         "每月頻率的數列（失業率、CPI）標的是「較上月」，不是「較上週」——"
         "一個月才一筆，沒有週變化可言。",
+        "這些註記是給你判讀用的前提，**不要寫進報告內容**——讀報告的人不需要知道"
+        "資料管線怎麼運作。",
+        "⚠️ 引用指標時用**中文名稱**（例如「電金比」），不要把程式的欄位名"
+        "（ef_ratio、inst_flow_yi 之類）寫進給人看的句子裡。",
     ]
     return facts
 
 
+MIN_GAP_DAYS = 4        # 快照要離今天這麼多天，才配稱作「上週」
+
+
 def _diff_last(facts):
-    """跟上週快照比。第一次跑沒有上週檔案 → 明講「無對照」，不要裝作沒事。"""
-    prev = _load(SNAP, None)
+    """跟**上週**的快照比。
+
+    🔴 2026-09-11 修：原本快照是單一檔案、每跑一次就覆蓋，所以同一天跑第二次時
+    「上週」其實是「20 分鐘前」，標題卻還寫「跟上週比」——而且那一版 AI 寫
+    「首次產出無對照」、程式算出來的表卻有差異數字，**同一頁兩個說法打架**
+    （跟 dev_log 記過的「卡片與圖不同天」是同一種錯）。
+    改成快照按日期存，比對時只取**至少 4 天前**的那一份；找不到就誠實說沒有。
+    """
+    hist = _load(SNAP, {}) or {}
+    if not isinstance(hist, dict) or "us_macro" in hist:
+        hist = {}                       # 舊格式（單筆快照）直接丟掉，不硬轉
+    today = dt.date.today()
+    cand = [(d, v) for d, v in hist.items()
+            if (today - dt.date.fromisoformat(d)).days >= MIN_GAP_DAYS]
+    prev = max(cand)[1] if cand else None
     if not prev:
-        return {"available": False, "reason": "首次產出，沒有上週快照可比"}
+        n = len(hist)
+        return {"available": False,
+                "reason": (f"還沒有 {MIN_GAP_DAYS} 天以前的快照可比"
+                           f"（目前存了 {n} 份，最舊的也太近）") if n else
+                          "首次產出，沒有上週快照可比"}
     out = {"available": True, "prev_week": prev.get("week_of"), "moved": {}}
     for sid, cur in (facts.get("us_macro") or {}).items():
         old = (prev.get("us_macro") or {}).get(sid) or {}
@@ -278,59 +306,106 @@ _CLAIM = {
     "required": ["text", "kind", "basis"],
 }
 
+# 🔴 2026-09-11 Leo：「看不出市場是積極還是保守」。
+# 原本只有一段 headline 把五件事塞進一句話，讀完不知道結論是什麼。
+# 改成**強制先表態**：stance 是列舉，AI 只能選一個，躲不掉。
+STANCE = ["積極", "偏積極", "中性", "偏保守", "保守"]
+
+_ANGLE = {
+    "type": "object",
+    "properties": {
+        "name": {"type": "string", "description": "角度名稱"},
+        "verdict": {"type": "string", "enum": STANCE, "description": "這個角度的表態"},
+        "reason": {"type": "string", "description": "理由，最多兩句，繁體中文"},
+        "falsifier": {"type": "string",
+                      "description": "什麼情況代表這個角度錯了，要具體到數字或事件"},
+    },
+    "required": ["name", "verdict", "reason", "falsifier"],
+}
+
+_MARKET = {
+    "type": "object",
+    "properties": {
+        "stance": {"type": "string", "enum": STANCE,
+                   "description": "這個市場整體該積極還是保守。只能選一個，不准騎牆"},
+        "headline": {"type": "string",
+                     "description": "一句話講完結論，40字以內，先講判斷。不要把多件事塞進同一句"},
+        "stance_basis": {"type": "string",
+                         "description": "這個表態最主要的依據是哪一個數字，一句話"},
+        "angles": {
+            "type": "array",
+            "description": "兩個獨立角度：結構面（政策/通膨/成長，年為單位）與 資金面"
+                           "（利差/流向/輪動，週為單位）。⚠️ 兩邊獨立判斷，"
+                           "就算結論相反也照實寫，不要為了看起來一致而修改任一邊",
+            "items": _ANGLE, "minItems": 2, "maxItems": 2,
+        },
+        "claims": {"type": "array", "items": _CLAIM, "minItems": 3, "maxItems": 6,
+                   "description": "支撐上面判斷的事實與推論"},
+    },
+    "required": ["stance", "headline", "stance_basis", "angles", "claims"],
+}
+
 SCHEMA = {
     "type": "object",
     "properties": {
-        "headline": {"type": "string", "description": "整份報告的結論，一句話講完，繁體中文"},
-        "week_change": {"type": "string", "description": "這週跟上週相比最重要的變化；沒有上週資料就寫「首次產出，無對照」"},
-        "sections": {
-            "type": "array",
-            "description": "依序：政策與利率／通膨與成長／市場定價／台灣專章",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "title": {"type": "string"},
-                    "claims": {"type": "array", "items": _CLAIM, "minItems": 2, "maxItems": 5},
-                },
-                "required": ["title", "claims"],
-            },
-            "minItems": 3, "maxItems": 5,
-        },
-        "views": {
-            "type": "array",
-            "description": "這週的判斷。每一條都必須帶失效條件——不能被證偽的判斷不要寫",
-            "items": {
-                "type": "object",
-                "properties": {
-                    "claim": {"type": "string", "description": "判斷本身，繁體中文"},
-                    "confidence": {"type": "string", "enum": ["high", "medium", "low"]},
-                    "falsifier": {"type": "string",
-                                  "description": "什麼情況代表這個判斷錯了，要具體到數字或事件，例如「10Y-2Y 倒掛回到 -0.2% 以下」"},
-                },
-                "required": ["claim", "confidence", "falsifier"],
-            },
-            "minItems": 2, "maxItems": 5,
-        },
+        "us": _MARKET,
+        "tw": _MARKET,
+        "linkage": {"type": "string",
+                    "description": "美股與台股這週的連動關係，一句話。若兩邊表態不同要說明為什麼"},
+        "week_change": {"type": "string",
+                        "description": "**只准根據 vs_last_week 這個欄位寫**："
+                                       "available=false 就照抄它的 reason，不要自己補充；"
+                                       "available=true 就講 moved 裡最重要的那一兩項變化"},
         "watch_next": {"type": "array", "items": {"type": "string"},
                        "description": "下週要盯的事，對照行事曆", "maxItems": 6},
         "blind_spots": {"type": "array", "items": {"type": "string"},
                         "description": "這份報告看不到的東西（資料缺口），誠實列出", "maxItems": 4},
     },
-    "required": ["headline", "week_change", "sections", "views", "watch_next", "blind_spots"],
+    "required": ["us", "tw", "linkage", "week_change", "watch_next", "blind_spots"],
 }
 
-PROMPT = """你是一位總體經濟策略分析師，要寫一份給專業投資人看的**每週美股＋台股總體報告**。
+# 🔴 角色直接沿用 war_room 的「孔明」persona，**不另外發明一個分析師**
+# （2026-09-11 Leo：「可以讓孔明來判斷嗎？」）。
+# ⭐ 為什麼這個角色正好對症：孔明的鐵律本來就是「**先講判斷再講理由**，理由最多兩句」
+#    與「最重要的一句話永遠是『什麼情況代表我錯了』」——Leo 抱怨的
+#    「看不出積極還是保守」「寫得雜亂」，就是原本那版少了這兩條紀律。
+# ⚠️ 他原本的職務是判斷**一檔股票**的兩個角度；這裡把對象換成**一個市場**，
+#    但兩個角度必須獨立、相反也照實寫這條規矩原封不動搬過來。
+def _kongming_persona():
+    """從 war_room 讀孔明的 persona，讀不到就用精簡版——**不維護第二份人設**。"""
+    try:
+        import war_room
+        p = (war_room.ROLES.get("孔明") or {}).get("persona")
+        if p:
+            return p
+    except Exception:                                       # noqa: BLE001
+        pass
+    return ("你是隆中對的投資長「孔明」。你條理分明、兩面並陳，**先講判斷再講理由**，"
+            "理由最多兩句。你最重要的一句話永遠是「什麼情況代表我錯了」。")
 
-下面是程式算好的數字。**你的工作是解讀，不是產生數字**：
-- 不准寫出下面資料裡沒有的任何數字。要引用就引用給你的。
-- 每個陳述都要標 kind：observed（直接引用給的數字）／inference（從給的數字推的）／
+
+PROMPT = """{persona}
+
+=== 這次的任務跟平常不同 ===
+這次判斷的對象**不是一檔股票，是兩個市場**（美股、台股），要產出一份每週總體報告。
+你原本對個股的規矩全部照用，只是把「這檔」換成「這個市場」：
+
+1. **先表態再講理由**：每個市場都要先選 stance（積極／偏積極／中性／偏保守／保守），
+   只能選一個，**不准騎牆**。headline 40 字以內，一句話講完，不要把五件事塞進同一句。
+2. **兩個角度獨立判斷**：結構面（政策／通膨／成長，年為單位）與資金面（利差／
+   外資流向／輪動／體溫計，週為單位）。**兩邊相反也照實寫**，不要為了一致而修改任一邊。
+3. **每個角度都要有失效條件**，具體到數字或事件。不能被證偽的話不要寫。
+4. 美股跟台股**分開判斷**，兩邊 stance 可以不同；不同的話在 linkage 說明為什麼。
+
+=== 數字的規矩 ===
+- **不准寫出資料裡沒有的數字**。你的工作是解讀，數字都算好了。
+- 每個 claim 標 kind：observed（直接引用給的數字）／inference（從給的數字推的）／
   speculation（沒有數字支撐）。**寧可標 speculation 也不要假裝有依據**。
-- 每個判斷（views）都必須帶失效條件，而且要具體到數字或事件。
-  不能被證偽的話不要寫進 views。
-- 資料缺口要誠實寫進 blind_spots。例如沒有部位資料、沒有盈餘修正資料就講出來。
+- 資料缺口誠實寫進 blind_spots。
+- ⚠️ **不要在報告裡解釋資料來源之間的技術差異**（哪個 API 比較即時之類）——
+  那是管線的事，讀報告的人不需要知道。
 
-寫作風格參考 IMF WEO 第一章與 BIS 季報：先講基準情境，再講驅動力，再講雙向風險。
-不要用「可能」「或許」灌水，要嘛有依據要嘛標 speculation。全部用繁體中文（台灣用語）。
+全部用繁體中文（台灣用語）。不要用「可能」「或許」灌水。
 
 === 程式算好的資料 ===
 {facts}
@@ -342,7 +417,8 @@ def ask(facts):
     if not exe:
         raise RuntimeError("找不到 claude CLI")
     import subprocess
-    prompt = PROMPT.format(facts=json.dumps(facts, ensure_ascii=False, indent=1))
+    prompt = PROMPT.format(persona=_kongming_persona(),
+                           facts=json.dumps(facts, ensure_ascii=False, indent=1))
     r = subprocess.run(
         [exe, "-p", "--dangerously-skip-permissions", "--output-format", "json",
          "--json-schema", json.dumps(SCHEMA, ensure_ascii=False)],
@@ -372,6 +448,29 @@ CSS = """
 .mw h2{color:var(--warn,#FFB627);font-size:15px;margin:0 0 8px}
 .lead{border-left:3px solid var(--accent,#22D3EE)}
 .lead .big{font-size:16px;line-height:1.7;color:var(--ink,#DCE7F5);font-weight:600}
+/* 分頁：美股／台股（2026-09-11 Leo：「台股獨立一個分頁」）。
+   方框樣式跟資產中控台一致，不另外發明一套。 */
+.tabs{display:flex;gap:8px;margin:14px 0 4px;flex-wrap:wrap}
+.tabs button{background:none;border:1px solid var(--line,#16304A);border-radius:9px;
+ color:var(--muted,#9DB0C8);font-size:13px;font-weight:600;padding:8px 18px;cursor:pointer;
+ font-family:inherit}
+.tabs button[aria-selected=true]{background:#152238;border-color:var(--accent,#22D3EE);color:#fff}
+.pane[hidden]{display:none}
+/* 表態燈：一眼看出積極還是保守 */
+.stance{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.sv{font-size:21px;font-weight:800;letter-spacing:.04em;padding:4px 16px;border-radius:8px}
+.s-積極{background:#0E2417;color:#4ADE80;border:1px solid #166534}
+.s-偏積極{background:#0E2417;color:#86EFAC;border:1px solid #166534}
+.s-中性{background:#0E1B2B;color:#9DB0C8;border:1px solid var(--line,#16304A)}
+.s-偏保守{background:#2E1418;color:#FCA5A5;border:1px solid #7F1D1D}
+.s-保守{background:#2E1418;color:#F87171;border:1px solid #7F1D1D}
+.ang{border:1px solid var(--line,#16304A);border-radius:8px;padding:11px 13px;margin:9px 0;
+ background:var(--line2,#0E1B2B)}
+.ang .h{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:5px}
+.ang .nm{font-weight:700;color:var(--ink,#DCE7F5);font-size:13.5px}
+.ang .vd{font-size:11.5px;font-weight:700;padding:2px 10px;border-radius:5px}
+.ang .rs{line-height:1.75;color:var(--ink,#DCE7F5);font-size:13px}
+.ang .f{margin-top:7px;font-size:12px;color:#FCA5A5;line-height:1.6}
 .cl{margin:9px 0;line-height:1.8;display:flex;gap:8px;align-items:flex-start}
 .tag{flex:0 0 auto;font-size:10px;padding:2px 7px;border-radius:4px;margin-top:3px;
  font-family:'IBM Plex Mono',ui-monospace,monospace;letter-spacing:.04em;white-space:nowrap}
@@ -443,21 +542,31 @@ def render(facts, note):
             tw_bits.append(f'{lab} RRG(60日)：領先 {c.get("leading",0)}／改善 {c.get("improving",0)}'
                            f'／弱化 {c.get("weakening",0)}／落後 {c.get("lagging",0)}　共 {r.get("n")} 類')
 
-    secs = []
-    for s in (note.get("sections") or []):
-        cls = []
-        for c in (s.get("claims") or []):
+    def _claims(lst):
+        out = []
+        for c in (lst or []):
             lab, k = KIND.get(c.get("kind"), ("?", "inf"))
-            cls.append(f'<div class="cl"><span class="tag {k}">{lab}</span>'
+            out.append(f'<div class="cl"><span class="tag {k}">{lab}</span>'
                        f'<span>{esc(c.get("text",""))}'
                        f'<br><span class="bs">依據：{esc(c.get("basis",""))}</span></span></div>')
-        secs.append(f'<div class="mw"><h2>{esc(s.get("title",""))}</h2>{"".join(cls)}</div>')
+        return "".join(out)
 
-    vws = "".join(
-        f'<div class="vw"><div class="c">{esc(v.get("claim",""))}</div>'
-        f'<div class="conf">信心 {esc(v.get("confidence",""))}</div>'
-        f'<div class="f">✕ 失效條件：{esc(v.get("falsifier",""))}</div></div>'
-        for v in (note.get("views") or []))
+    def _market(m, extra=""):
+        """一個市場的分頁內容：表態 → 兩個獨立角度 → 支撐的事實。"""
+        st = m.get("stance") or "中性"
+        angs = "".join(
+            f'<div class="ang"><div class="h"><span class="nm">{esc(a.get("name",""))}</span>'
+            f'<span class="vd s-{esc(a.get("verdict","中性"))}">{esc(a.get("verdict",""))}</span></div>'
+            f'<div class="rs">{esc(a.get("reason",""))}</div>'
+            f'<div class="f">✕ 這個角度錯了，如果：{esc(a.get("falsifier",""))}</div></div>'
+            for a in (m.get("angles") or []))
+        return (f'<div class="mw lead">'
+                f'<div class="stance"><span class="sv s-{esc(st)}">{esc(st)}</span>'
+                f'<span class="big">{esc(m.get("headline",""))}</span></div>'
+                f'<div class="bs">表態依據：{esc(m.get("stance_basis",""))}</div></div>'
+                f'<div class="mw"><h2>兩個獨立角度（相反也照實寫）</h2>{angs}</div>'
+                f'<div class="mw"><h2>支撐的事實與推論</h2>{_claims(m.get("claims"))}</div>'
+                + extra)
 
     watch = "".join(f'<div class="li">· {esc(x)}</div>' for x in (note.get("watch_next") or []))
     blind = "".join(f'<div class="li gap">· {esc(x)}</div>' for x in (note.get("blind_spots") or []))
@@ -477,28 +586,45 @@ def render(facts, note):
             f'<div class="li">{esc(m["label"])}：{m["from"]:g} → {m["to"]:g}　{_sign(m["delta"])}</div>'
             for m in mv.values()) or '<div class="gap">主要指標與上週持平</div>'
 
-    sub = (f'{esc(facts.get("week_of",""))} 週　美股＋台股　'
-           f'<br>數字全部由程式從官方來源算出，AI 只做解讀且每句標示依據強度')
+    sub = (f'{esc(facts.get("week_of",""))} 週　投資長 孔明 判讀　'
+           f'<br>數字全部由程式從官方來源算出，孔明只做判斷；每句標示依據強度，每個角度都帶失效條件')
+
+    us_pane = _market(note.get("us") or {},
+                      f'<div class="mw"><h2>美國總經數字</h2>{us_tbl}</div>')
+    tw_pane = _market(note.get("tw") or {},
+                      '<div class="mw"><h2>台股資金結構</h2>'
+                      + "".join(f'<div class="li">{b}</div>' for b in tw_bits) + '</div>')
+
     body = (
-        f'<div class="mw lead"><h2>結論</h2><div class="big">{esc(note.get("headline",""))}</div>'
-        f'<div class="cl" style="margin-top:10px"><span class="tag inf">跟上週比</span>'
-        f'<span>{esc(note.get("week_change",""))}</span></div></div>'
-        + f'<div class="mw"><h2>本週指標變化</h2>{vs_html}</div>'
-        + "".join(secs)
-        + f'<div class="mw"><h2>這週的判斷（每條都帶失效條件）</h2>{vws}</div>'
-        + f'<div class="mw"><h2>美國總經數字</h2>{us_tbl}</div>'
-        + f'<div class="mw"><h2>台股與資金結構</h2>'
-        + "".join(f'<div class="li">{b}</div>' for b in tw_bits) + '</div>'
-        + f'<div class="mw"><h2>下週行事曆</h2>{cal_html}</div>'
-        + f'<div class="mw"><h2>下週要盯</h2>{watch}</div>'
-        + f'<div class="mw"><h2>這份報告看不到的東西</h2>{blind}</div>')
+        f'<div class="mw"><h2>跟上週比</h2><div class="li">{esc(note.get("week_change",""))}</div>'
+        f'{vs_html}</div>'
+        f'<div class="mw"><h2>美股 ↔ 台股</h2><div class="li">{esc(note.get("linkage",""))}</div></div>'
+        '<div class="tabs" role="tablist">'
+        '<button role="tab" aria-selected="true" data-p="us">美股</button>'
+        '<button role="tab" aria-selected="false" data-p="tw">台股</button></div>'
+        f'<div class="pane" id="p-us">{us_pane}</div>'
+        f'<div class="pane" id="p-tw" hidden>{tw_pane}</div>'
+        f'<div class="mw"><h2>下週行事曆</h2>{cal_html}</div>'
+        f'<div class="mw"><h2>下週要盯</h2>{watch}</div>'
+        f'<div class="mw"><h2>這份報告看不到的東西</h2>{blind}</div>')
+
+    js = """<script>
+document.querySelectorAll('.tabs button').forEach(function(b){
+  b.addEventListener('click', function(){
+    document.querySelectorAll('.tabs button').forEach(function(x){
+      x.setAttribute('aria-selected', x === b ? 'true' : 'false');});
+    ['us','tw'].forEach(function(k){
+      document.getElementById('p-' + k).hidden = (k !== b.dataset.p);});
+  });
+});
+</script>"""
 
     return ('<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
             '<title>每週總體報告</title><style>' + BASE_CSS + CSS
             + '</style></head><body><div class="wrap">'
             + header("gdp", "每週總體報告", sub, [], eyebrow="MACRO WEEKLY")
-            + body + "</div></body></html>")
+            + body + "</div>" + js + "</body></html>")
 
 
 def main():
@@ -530,14 +656,25 @@ def main():
     os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
     io.open(out, "w", encoding="utf-8").write(html)
 
-    # 存這週快照，下週才算得出「跟上週差多少」
+    # 存這週快照（按日期存，不覆蓋），下週才算得出「跟上週差多少」。
+    # 只留最近 8 份：夠回看兩個月，又不會讓檔案無限長大。
     os.makedirs(os.path.dirname(SNAP) or ".", exist_ok=True)
-    json.dump(facts, io.open(SNAP, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    hist = _load(SNAP, {}) or {}
+    if not isinstance(hist, dict) or "us_macro" in hist:
+        hist = {}
+    keep = {k: v for k, v in hist.items() if k != facts["week_of"]}
+    keep[facts["week_of"]] = {k: facts[k] for k in ("week_of", "us_macro", "tw", "rrg")}
+    for old in sorted(keep)[:-8]:
+        del keep[old]
+    json.dump(keep, io.open(SNAP, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
     print(f"✅ 已存 {out}（{len(html):,} bytes）")
-    print(f"   結論：{note.get('headline','')[:70]}")
-    print(f"   判斷 {len(note.get('views') or [])} 條（都帶失效條件）｜"
-          f"資料缺口 {len(note.get('blind_spots') or [])} 項")
+    for k, lab in (("us", "美股"), ("tw", "台股")):
+        m = note.get(k) or {}
+        print(f"   {lab}：【{m.get('stance','?')}】{m.get('headline','')[:46]}")
+        for a in (m.get("angles") or []):
+            print(f"      · {a.get('name','')}：{a.get('verdict','')}")
+    print(f"   資料缺口 {len(note.get('blind_spots') or [])} 項")
     return 0
 
 
