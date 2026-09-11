@@ -185,6 +185,94 @@ def tw_block():
     return out
 
 
+# ── 資料層：國發會景氣對策信號（2026-09-11 Leo：「台股加上景氣燈號」）──────
+#
+# 🔴 為什麼繞 data.gov.tw 的 API 而不是直接抓 NDC：
+#    index.ndc.gov.tw 對非瀏覽器一律回 403（實測三個路徑都擋），而 data.gov.tw
+#    的 REST API 正常回 200，**而且回的是「這份資料現在的下載網址」**——
+#    NDC 那個 Download.ashx 的參數是編碼過的亂碼，哪天他們換檔案就失效，
+#    走 API 拿當下網址等於自動跟著換，不用我每次回來手改寫死的連結。
+NDC_API = "https://data.gov.tw/api/v2/rest/dataset/6099"
+NDC_CSV = "景氣指標與燈號.csv"
+
+# 分數區間 → 燈號意義（國發會定義）。⚠️ 這是官方分級不是我們自己訂的門檻。
+LIGHT_MEAN = {
+    "紅": "熱絡（景氣過熱）", "黃紅": "轉向（由熱轉穩或由穩轉熱）",
+    "綠": "穩定", "黃藍": "轉向（由穩轉弱或由弱轉穩）", "藍": "低迷",
+}
+
+
+def ndc_block():
+    """景氣對策信號＋領先/同時指標。回 None 代表這次沒抓到（下游要看得出差別）。"""
+    import subprocess
+    import zipfile
+    import tempfile
+    try:
+        r = subprocess.run(["curl", "-sL", "--max-time", "40", "-A", "Mozilla/5.0", NDC_API],
+                           capture_output=True, timeout=60)
+        meta = json.loads(r.stdout.decode("utf-8", "replace"))
+        url = meta["result"]["distribution"][0]["resourceDownloadUrl"]
+        with tempfile.TemporaryDirectory() as td:
+            zp = os.path.join(td, "ndc.zip")
+            subprocess.run(["curl", "-sL", "--max-time", "60", "-A", "Mozilla/5.0",
+                            "-o", zp, url], check=True, timeout=90)
+            # ⚠️ 一定要用 with 關掉：Windows 上 zip handle 還開著時，
+            #    TemporaryDirectory 清不掉資料夾會丟 WinError 32（實測踩到）。
+            with zipfile.ZipFile(zp) as z:
+                # ⚠️ 壓縮檔裡同時有 `景氣指標與燈號.csv` 跟 `schema-景氣指標與燈號.csv`，
+                #    只用 in 比對會先撈到 schema 那份（欄位定義檔，不是資料），
+                #    然後在下一步「欄位名跟預期不同」誤判成官方改格式。實測踩到。
+                name = next((n for n in z.namelist()
+                             if NDC_CSV in n and not os.path.basename(n).startswith("schema")), None)
+                if not name:
+                    print(f"  ⚠️ 景氣燈號：壓縮檔裡找不到 {NDC_CSV}")
+                    return None
+                raw = z.read(name)
+        txt = raw.decode("utf-8-sig", "replace")
+        lines = [l for l in txt.splitlines() if l.strip()]
+        hdr = [c.strip('"') for c in lines[0].split(",")]
+        idx = {c: i for i, c in enumerate(hdr)}
+        need = ("景氣對策信號", "景氣對策信號綜合分數", "領先指標綜合指數", "同時指標綜合指數")
+        if any(k not in idx for k in need):
+            print("  ⚠️ 景氣燈號：欄位名跟預期不同，可能官方改格式了")
+            return None
+
+        def _cell(row, key):
+            v = row[idx[key]].strip('"').strip() if idx[key] < len(row) else ""
+            return v
+
+        rows = [l.split(",") for l in lines[1:]]
+        rows = [r for r in rows if _cell(r, "景氣對策信號")]      # 有燈號的才算
+        if not rows:
+            return None
+        last = rows[-1]
+        light = _cell(last, "景氣對策信號")
+        # 近 6 個月的分數：看的是**方向**，單月一個數字看不出轉折
+        trend = []
+        for r in rows[-6:]:
+            try:
+                trend.append({"month": _cell(r, "Date"),
+                              "score": float(_cell(r, "景氣對策信號綜合分數")),
+                              "light": _cell(r, "景氣對策信號")})
+            except ValueError:
+                continue
+        out = {
+            "月份": last[idx["Date"]].strip('"'),
+            "景氣對策信號": light,
+            "燈號意義": LIGHT_MEAN.get(light, "（未知燈號）"),
+            "綜合分數": trend[-1]["score"] if trend else None,
+            "近6個月分數走勢": trend,
+            "領先指標綜合指數": _cell(last, "領先指標綜合指數"),
+            "同時指標綜合指數": _cell(last, "同時指標綜合指數"),
+            "來源": "國發會景氣指標（data.gov.tw #6099），官方月頻資料",
+        }
+        print(f"  景氣對策信號    {light}燈 {out['綜合分數']}分（{out['月份']}）")
+        return out
+    except Exception as e:                                  # noqa: BLE001
+        print(f"  ⚠️ 景氣燈號抓不到：{str(e)[:70]}")
+        return None
+
+
 def gdp_block():
     g = _load("gdp_data.json", {})
     return {k: g.get(k) for k in ("us", "tw", "asof", "updated") if k in g}
@@ -236,6 +324,7 @@ def gather():
         "week_of": dt.date.today().isoformat(),
         "us_macro": fred_block(),
         "tw": tw_block(),
+        "tw_景氣燈號": ndc_block(),
         "gdp": gdp_block(),
         "rrg": rrg_block(),
         "calendar": calendar_block(),
@@ -535,12 +624,11 @@ def render(facts, note):
             f'三大法人 {inst.get("total_yi")} 億（外資 {inst.get("foreign_yi")} 億／'
             f'投信 {inst.get("trust_yi")} 億，{esc(str(inst.get("date") or ""))}）')
     rrg = facts.get("rrg") or {}
-    for mkt, lab in (("us", "美股"), ("tw", "台股")):
-        r = rrg.get(mkt)
-        if r:
-            c = r.get("counts") or {}
-            tw_bits.append(f'{lab} RRG(60日)：領先 {c.get("leading",0)}／改善 {c.get("improving",0)}'
-                           f'／弱化 {c.get("weakening",0)}／落後 {c.get("lagging",0)}　共 {r.get("n")} 類')
+    r = rrg.get("tw")
+    if r:
+        c = r.get("counts") or {}
+        tw_bits.append(f'台股 RRG(60日)：領先 {c.get("leading",0)}／改善 {c.get("improving",0)}'
+                       f'／弱化 {c.get("weakening",0)}／落後 {c.get("lagging",0)}　共 {r.get("n")} 類')
 
     def _claims(lst):
         out = []
@@ -589,10 +677,53 @@ def render(facts, note):
     sub = (f'{esc(facts.get("week_of",""))} 週　投資長 孔明 判讀　'
            f'<br>數字全部由程式從官方來源算出，孔明只做判斷；每句標示依據強度，每個角度都帶失效條件')
 
+    # 景氣對策信號（2026-09-11 Leo 指定加）
+    LCOL = {"紅": "#EF4444", "黃紅": "#FFB627", "綠": "#22C55E",
+            "黃藍": "#38BDF8", "藍": "#3B82F6"}
+    nd = facts.get("tw_景氣燈號")
+    light_html = ""
+    if nd:
+        lt = nd.get("景氣對策信號") or ""
+        seq = "".join(
+            f'<span style="color:{LCOL.get(t.get("light"),"#9DB0C8")};'
+            f'font-family:\'IBM Plex Mono\',monospace">{esc(str(t.get("month")))[-2:]}月'
+            f' {t.get("score"):g}</span>'
+            for t in (nd.get("近6個月分數走勢") or []))
+        light_html = (
+            f'<div class="mw"><h2>景氣對策信號</h2>'
+            f'<div class="stance" style="margin-bottom:6px">'
+            f'<span class="sv" style="background:#0E1B2B;color:{LCOL.get(lt,"#9DB0C8")};'
+            f'border:1px solid {LCOL.get(lt,"#16304A")}">{esc(lt)}燈</span>'
+            f'<span class="big">綜合分數 {nd.get("綜合分數")}　'
+            f'{esc(nd.get("燈號意義",""))}</span></div>'
+            f'<div class="bs">{esc(str(nd.get("月份","")))}　'
+            f'領先指標 {esc(str(nd.get("領先指標綜合指數","")))[:6]}／'
+            f'同時指標 {esc(str(nd.get("同時指標綜合指數","")))[:6]}'
+            f'　來源：國發會（官方月頻）</div>'
+            f'<div class="li" style="margin-top:8px;display:flex;gap:12px;flex-wrap:wrap">'
+            f'{seq}</div></div>')
+
+    # 台灣 GDP（2026-09-11 Leo 指定加）——資料本來就抓了，只是沒顯示在台股頁
+    tg = ((facts.get("gdp") or {}).get("tw") or {})
+    gdp_html = ""
+    if tg.get("actual"):
+        act = tg["actual"][-5:]
+        cells = "".join(
+            f'<tr><td>{esc(a.get("period",""))}</td>'
+            f'<td class="v">{a.get("value")}%</td></tr>' for a in reversed(act))
+        ann = (tg.get("annual") or {})
+        annl = "".join(f'<div class="li">{esc(y)} 年全年：<b>{v}%</b></div>'
+                       for y, v in sorted(ann.items(), reverse=True)[:2])
+        gdp_html = (f'<div class="mw"><h2>台灣 GDP（主計總處，年增率）</h2>'
+                    f'<table class="mt"><tr><th>季別</th>'
+                    f'<th style="text-align:right">年增率</th></tr>{cells}</table>'
+                    f'{annl}</div>')
+
     us_pane = _market(note.get("us") or {},
                       f'<div class="mw"><h2>美國總經數字</h2>{us_tbl}</div>')
     tw_pane = _market(note.get("tw") or {},
-                      '<div class="mw"><h2>台股資金結構</h2>'
+                      light_html + gdp_html
+                      + '<div class="mw"><h2>台股資金結構</h2>'
                       + "".join(f'<div class="li">{b}</div>' for b in tw_bits) + '</div>')
 
     body = (
@@ -627,9 +758,44 @@ document.querySelectorAll('.tabs button').forEach(function(b){
             + body + "</div>" + js + "</body></html>")
 
 
+def discord_text(facts, note):
+    """Discord 版：**摘要不是全文**。
+
+    ⚠️ 網頁版有依據標籤、六個月燈號走勢、表格——那些在手機聊天視窗裡是雜訊。
+    這裡只留「一眼要看到的」：兩個市場的表態＋一句話＋兩個角度的分歧＋
+    最重要的失效條件，其餘引導回報告本身。
+    """
+    L = []
+    nd = facts.get("tw_景氣燈號") or {}
+    for k, lab in (("us", "🇺🇸 美股"), ("tw", "🇹🇼 台股")):
+        m = note.get(k) or {}
+        L.append(f"**{lab}：【{m.get('stance','?')}】**")
+        L.append(m.get("headline", ""))
+        for a in (m.get("angles") or []):
+            L.append(f"· {a.get('name','')}：**{a.get('verdict','')}**")
+        fs = [a.get("falsifier") for a in (m.get("angles") or []) if a.get("falsifier")]
+        if fs:
+            L.append(f"✕ 失效條件：{fs[0]}")
+        L.append("")
+    if nd:
+        L.append(f"🚦 景氣對策信號：**{nd.get('景氣對策信號')}燈** "
+                 f"{nd.get('綜合分數')}分（{nd.get('燈號意義')}，{nd.get('月份')}）")
+    tg = ((facts.get("gdp") or {}).get("tw") or {}).get("actual") or []
+    if tg:
+        L.append(f"📈 台灣 GDP：{tg[-1].get('period')} 年增 **{tg[-1].get('value')}%**")
+    if note.get("linkage"):
+        L.append(f"\n🔗 {note['linkage']}")
+    bs = note.get("blind_spots") or []
+    if bs:
+        L.append(f"\n⚠️ 這份報告看不到：{bs[0]}")
+    L.append(f"\n_完整版（含每句依據標示）在 obis：每日看板／{OUT_NAME}_")
+    return "\n".join(x for x in L if x is not None)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--data", action="store_true", help="只印算出來的數字，不叫 AI")
+    ap.add_argument("--no-discord", action="store_true", help="不推 Discord（改東西時用）")
     ap.add_argument("--weekly", action="store_true",
                     help="排程用：只有週六才真的跑，其餘日子直接結束（exit 0）")
     ap.add_argument("-o", "--output", default="")
@@ -667,6 +833,16 @@ def main():
     for old in sorted(keep)[:-8]:
         del keep[old]
     json.dump(keep, io.open(SNAP, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+
+    # 推 Discord #財報（2026-09-11 Leo 指定）。以「孔明」的身分發，跟報告的判讀者一致。
+    # ⚠️ 推播失敗不影響報告——notify_discord 本來就設計成失敗只印警告不 raise。
+    if not a.no_discord:
+        try:
+            from notify_discord import send_discord
+            ok = send_discord("earnings", discord_text(facts, note), persona="孔明")
+            print(f"   Discord #財報：{'已推送' if ok else '沒推成功（見上面訊息）'}")
+        except Exception as e:                              # noqa: BLE001
+            print(f"   ⚠️ Discord 推播失敗（報告已存檔，不影響）：{str(e)[:80]}")
 
     print(f"✅ 已存 {out}（{len(html):,} bytes）")
     for k, lab in (("us", "美股"), ("tw", "台股")):
