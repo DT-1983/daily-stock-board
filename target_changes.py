@@ -46,6 +46,7 @@ import re
 import sys
 import json
 import glob
+import shutil
 import argparse
 import datetime as dt
 
@@ -97,6 +98,27 @@ def _save(p, o):
     json.dump(o, open(p, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 
 
+ARCHIVE_DIRNAME = "_已讀"
+
+
+def _archive(path):
+    """讀完就搬進同層的「_已讀」子資料夾——跟 advisor_reports.py 那邊同一套做法、
+    同一個資料夾命名（Leo 原本手動整理用的資料夾名字）。搬檔失敗不擋流程。
+    """
+    try:
+        d = os.path.dirname(path)
+        if os.path.basename(d) == ARCHIVE_DIRNAME:
+            return
+        dest_dir = os.path.join(d, ARCHIVE_DIRNAME)
+        os.makedirs(dest_dir, exist_ok=True)
+        dest = os.path.join(dest_dir, os.path.basename(path))
+        if os.path.exists(dest):
+            os.remove(dest)
+        shutil.move(path, dest)
+    except Exception as e:                                  # noqa: BLE001
+        print(f"    ⚠️ 歸檔失敗（不影響解析結果）：{str(e)[:80]}")
+
+
 def parse(force=False):
     """讀 IMG_DIR 裡還沒讀過的截圖。回 {檔名: [異動, ...]}。"""
     import llm_board
@@ -108,6 +130,7 @@ def parse(force=False):
     for f in sorted(files):
         key = os.path.basename(f)
         if key in store and not force:
+            _archive(f)                                     # 已讀過但還留在原地（歸檔功能上線前那批）
             continue
         print(f"  讀 {key} …", flush=True)
         prompt = (
@@ -127,6 +150,7 @@ def parse(force=False):
             continue
         store[key] = {"_read": dt.date.today().isoformat(), "rows": rows}
         _save(STORE, store)
+        _archive(f)
         done += 1
         n_tr = sum(1 for r in rows if is_trusted(r.get("broker")))
         print(f"    ✅ {len(rows)} 筆異動（其中可信券商 {n_tr} 筆）")
