@@ -1,124 +1,124 @@
 {
- "updated": "2026-09-10 20:11",
+ "updated": "2026-09-11 08:46",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "09/09",
-   "close": 7636.36,
-   "chg_pct": -0.48
+   "date": "09/10",
+   "close": 7591.7,
+   "chg_pct": -0.58
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "09/09",
-   "close": 26253.34,
-   "chg_pct": -0.64
+   "date": "09/10",
+   "close": 26081.72,
+   "chg_pct": -0.65
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "09/09",
-   "close": 52380.66,
-   "chg_pct": -0.77
+   "date": "09/10",
+   "close": 52064.1,
+   "chg_pct": -0.6
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "09/09",
-   "close": 11931.32,
-   "chg_pct": 0.37
+   "date": "09/10",
+   "close": 11614.17,
+   "chg_pct": -2.66
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/10",
-   "close": 46940.49,
-   "chg_pct": -0.51
+   "date": "09/09",
+   "close": 47183.36,
+   "chg_pct": 0.16
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/10",
-   "close": 31.6,
-   "chg_pct": 0.32
+   "date": "09/11",
+   "close": 31.61,
+   "chg_pct": 0.45
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "09/09",
-   "close": 4.84,
+   "date": "09/10",
+   "close": 4.94,
    "fmt": "yield",
-   "chg_bp": 3.1
+   "chg_bp": 10.7
   }
  ],
  "news": [
   {
-   "title": "鉅亨速報 - Factset 最新調查：玉晶光(3406-TW)目標價調升至700元，幅度約3.32%",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6603986",
-   "ts": "09/10 20:10"
-  },
-  {
-   "title": "繳稅高峰已過！7月刷卡額降至4544億元仍創單月第5高 前7月狂刷3.33兆元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6603970",
-   "ts": "09/10 20:03"
-  },
-  {
-   "title": "公股攜手「對治」中小企綠色焦慮 臺企銀李嘉祥：金融業是企業永續最強推手",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6603971",
-   "ts": "09/10 20:00"
-  },
-  {
-   "title": "英國作戰通訊交給馬斯克？砸近4000萬美元採購SpaceX服務",
+   "title": "輝達黃仁勳：網路安全極可能成為AI下一個重要應用領域",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6603909",
-   "ts": "09/10 20:00"
+   "url": "https://news.cnyes.com/news/id/6604262",
+   "ts": "09/11 08:46"
   },
   {
-   "title": "晶呈科8月營收年增93.12％ 受惠特殊氣體外銷日、韓市場出貨暢旺",
+   "title": "美債回購未達上限！10年期殖利率逼近5% 貝森特喊話：美債市場狀況非常好",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6604191",
+   "ts": "09/11 08:40"
+  },
+  {
+   "title": "「我不會放棄輝達股票！」財經名嘴力挺黃仁勳 建議砸5000億美元回購",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6604188",
+   "ts": "09/11 08:30"
+  },
+  {
+   "title": "【美股收盤】油價單日暴漲7%、美債殖利率突破4.95% 美股連4黑 英特爾重挫逾5.5%",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6604251",
+   "ts": "09/11 08:30"
+  },
+  {
+   "title": "【摺疊手機產業】研究機構預測出爐！滲透率不到3%，蘋果能改變嗎？",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6604250",
+   "ts": "09/11 08:30"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：中砂(1560-TW)EPS預估上修至14.95元，預估目標價為860元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6603968",
-   "ts": "09/10 19:59"
+   "url": "https://news.cnyes.com/news/id/6604228",
+   "ts": "09/11 08:10"
   },
   {
-   "title": "營收創高只是表面，大銀微(4576) 這波真的不一樣！跟市場預期的落差在哪裡？",
+   "title": "營收速報 - 2026年9月11日台股中小型公司8月營收一覽（新增1835家）",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6603964",
-   "ts": "09/10 19:30"
+   "url": "https://news.cnyes.com/news/id/6604210",
+   "ts": "09/11 07:55"
   },
   {
-   "title": "說好增產卻做不到！OPEC 8月產量反減每日64萬桶",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6603690",
-   "ts": "09/10 19:30"
+   "title": "營收速報 - 2026年9月11日台股大型公司8月營收一覽（新增188家）",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6604209",
+   "ts": "09/11 07:55"
   },
   {
-   "title": "馬斯克：AI+機器人將在不到十年內讓全球經濟翻倍  Anthropic經濟預言在「這情況」下將成真",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6602956",
-   "ts": "09/10 19:00"
+   "title": "AI大趨勢尚處極早期！台積電高盛大會最新研判：智能體將把算力需求擴至CPU  N3、CoWoS產能仍非常吃緊",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6603670",
+   "ts": "09/11 06:20"
   },
   {
-   "title": "蘋鏈準備好了嗎？iPhone Duo 10月開賣 初期日產僅數百部",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6602832",
-   "ts": "09/10 18:31"
-  },
-  {
-   "title": "村田這次不漲了，而是直接停產不賣！部分MLCC料號退出、產能轉向其他產品",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6603207",
-   "ts": "09/10 18:00"
+   "title": "〈台股盤前要聞〉台指期夜盤險守4萬6、台積電8月營收首度突破5000億元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6604161",
+   "ts": "09/11 05:10"
   }
  ],
  "inst": {

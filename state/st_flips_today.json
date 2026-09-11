@@ -1,19 +1,142 @@
 {
-"date": "2026-09-10",
+"date": "2026-09-11",
 "flips_hold": [],
 "flips_watch": [
 {
-"code": "GOOG",
-"name": "",
-"word": "🟢→🔴 翻空",
-"dir": -1
-},
-{
-"code": "GOOGL",
+"code": "3665",
 "name": "",
 "word": "🟢→🔴 翻空",
 "dir": -1
 }
 ],
-"ai_alerts": []
+"ai_alerts": [
+{
+"chain": "太陽能",
+"market": "US",
+"sig": "🟢",
+"code": "BE",
+"name": "Bloom Energy Corp Class A",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 伺服器",
+"market": "US",
+"sig": "🟢",
+"code": "INTC",
+"name": "Intel Corp",
+"reason": "觀望→買進"
+},
+{
+"chain": "機器人",
+"market": "US",
+"sig": "🔴",
+"code": "MP",
+"name": "MP Materials Corp Ordinary Shares - Class A",
+"reason": "觀望→賣出"
+},
+{
+"chain": "矽光子/光通訊",
+"market": "US",
+"sig": "🟢",
+"code": "PI",
+"name": "Impinj Inc",
+"reason": "觀望→買進"
+},
+{
+"chain": "機器人",
+"market": "US",
+"sig": "🔴",
+"code": "NDSN",
+"name": "Nordson Corp",
+"reason": "觀望→賣出"
+},
+{
+"chain": "太陽能",
+"market": "US",
+"sig": "🔴",
+"code": "HASI",
+"name": "HA Sustainable Infrastructure Capital Inc",
+"reason": "觀望→賣出"
+},
+{
+"chain": "AI 電源/散熱",
+"market": "US",
+"sig": "🔴",
+"code": "MPWR",
+"name": "Monolithic Power Systems, Inc.",
+"reason": "觀望→賣出"
+},
+{
+"chain": "太陽能",
+"market": "US",
+"sig": "🔴",
+"code": "NXT",
+"name": "Nextpower Inc Class A",
+"reason": "觀望→賣出"
+},
+{
+"chain": "矽光子/光通訊",
+"market": "TW",
+"sig": "🔴",
+"code": "4979",
+"name": "華星光",
+"reason": "觀望→賣出"
+},
+{
+"chain": "矽光子/光通訊",
+"market": "TW",
+"sig": "🟢",
+"code": "4908",
+"name": "前鼎",
+"reason": "觀望→買進"
+},
+{
+"chain": "低軌衛星",
+"market": "TW",
+"sig": "🟢",
+"code": "6271",
+"name": "同欣電",
+"reason": "觀望→買進"
+},
+{
+"chain": "太陽能",
+"market": "TW",
+"sig": "🔴",
+"code": "6443",
+"name": "元晶",
+"reason": "觀望→賣出"
+},
+{
+"chain": "AI 電力/核能",
+"market": "TW",
+"sig": "🟢",
+"code": "1503",
+"name": "士電",
+"reason": "觀望→買進"
+},
+{
+"chain": "玻璃基板/TGV",
+"market": "TW",
+"sig": "🟢",
+"code": "2409",
+"name": "AUO CORPORATION",
+"reason": "觀望→買進"
+},
+{
+"chain": "玻璃基板/TGV",
+"market": "TW",
+"sig": "🟢",
+"code": "3481",
+"name": "群創",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 電源/散熱",
+"market": "TW",
+"sig": "🔴",
+"code": "2308",
+"name": "台達電",
+"reason": "觀望→賣出"
+}
+]
 }
