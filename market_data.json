@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-11 08:46",
+ "updated": "2026-09-11 12:51",
  "indices": [
   {
    "sym": "^GSPC",
@@ -37,9 +37,9 @@
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/09",
-   "close": 47183.36,
-   "chg_pct": 0.16
+   "date": "09/11",
+   "close": 46375.66,
+   "chg_pct": -1.2
   },
   {
    "sym": "TWD=X",
@@ -47,7 +47,7 @@
    "grp": "FX",
    "date": "09/11",
    "close": 31.61,
-   "chg_pct": 0.45
+   "chg_pct": 0.47
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "輝達黃仁勳：網路安全極可能成為AI下一個重要應用領域",
+   "title": "日元近期強升非短線反彈？ 知名資管機構：低估修正啟動 回調即布局多頭",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6604262",
-   "ts": "09/11 08:46"
+   "url": "https://news.cnyes.com/news/id/6604429",
+   "ts": "09/11 12:50"
   },
   {
-   "title": "美債回購未達上限！10年期殖利率逼近5% 貝森特喊話：美債市場狀況非常好",
+   "title": "盤中速報 - 櫃買市場加權指數下跌-8.1點至397.14點，跌幅2%",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6604473",
+   "ts": "09/11 12:41"
+  },
+  {
+   "title": "iPhone Duo就是跟風華為、三星做的！古爾曼爆料：庫克2020年亞洲行後拍板",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6604191",
-   "ts": "09/11 08:40"
+   "url": "https://news.cnyes.com/news/id/6604449",
+   "ts": "09/11 12:40"
   },
   {
-   "title": "「我不會放棄輝達股票！」財經名嘴力挺黃仁勳 建議砸5000億美元回購",
+   "title": "全球富豪榜洗牌！美國科技富豪首度全面霸榜 LVMH創辦人跌出前10",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6604188",
-   "ts": "09/11 08:30"
+   "url": "https://news.cnyes.com/news/id/6604195",
+   "ts": "09/11 12:40"
   },
   {
-   "title": "【美股收盤】油價單日暴漲7%、美債殖利率突破4.95% 美股連4黑 英特爾重挫逾5.5%",
+   "title": "AI電力配置需求方殷  松川獲兩投顧評「強力買進」目標價提高至500元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6604464",
+   "ts": "09/11 12:35"
+  },
+  {
+   "title": "〈焦點股〉萊德光電8月營收年月雙增 盤中翻紅逆勢站回500元大關",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6588810",
+   "ts": "09/11 12:34"
+  },
+  {
+   "title": "108億天價薪酬也留不住！Meta挖來AI頂尖人才Tulloch不到一年轉投Anthropic",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6604251",
-   "ts": "09/11 08:30"
+   "url": "https://news.cnyes.com/news/id/6604457",
+   "ts": "09/11 12:32"
   },
   {
-   "title": "【摺疊手機產業】研究機構預測出爐！滲透率不到3%，蘋果能改變嗎？",
+   "title": "法人還低估？力積電(6770)營收衝破70億！年增76%只是前菜，DRAM漲價45%效應11月才來",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6604467",
+   "ts": "09/11 12:30"
+  },
+  {
+   "title": "黃仁勳看見AI未來？輝達明年營收為何能大增70%",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6604250",
-   "ts": "09/11 08:30"
+   "url": "https://news.cnyes.com/news/id/6604199",
+   "ts": "09/11 12:30"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：中砂(1560-TW)EPS預估上修至14.95元，預估目標價為860元",
+   "title": "〈焦點股〉大東電受台電部分訂單遞延影響8月營收 跌逾半根停板",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6604228",
-   "ts": "09/11 08:10"
-  },
-  {
-   "title": "營收速報 - 2026年9月11日台股中小型公司8月營收一覽（新增1835家）",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6604210",
-   "ts": "09/11 07:55"
-  },
-  {
-   "title": "營收速報 - 2026年9月11日台股大型公司8月營收一覽（新增188家）",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6604209",
-   "ts": "09/11 07:55"
-  },
-  {
-   "title": "AI大趨勢尚處極早期！台積電高盛大會最新研判：智能體將把算力需求擴至CPU  N3、CoWoS產能仍非常吃緊",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6603670",
-   "ts": "09/11 06:20"
-  },
-  {
-   "title": "〈台股盤前要聞〉台指期夜盤險守4萬6、台積電8月營收首度突破5000億元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6604161",
-   "ts": "09/11 05:10"
+   "url": "https://news.cnyes.com/news/id/6604348",
+   "ts": "09/11 12:27"
   }
  ],
  "inst": {
