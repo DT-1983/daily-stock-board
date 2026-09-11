@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-11 12:51",
+ "updated": "2026-09-11 15:40",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,8 +38,8 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "09/11",
-   "close": 46375.66,
-   "chg_pct": -1.2
+   "close": 46184.85,
+   "chg_pct": -1.61
   },
   {
    "sym": "TWD=X",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "日元近期強升非短線反彈？ 知名資管機構：低估修正啟動 回調即布局多頭",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6604429",
-   "ts": "09/11 12:50"
-  },
-  {
-   "title": "盤中速報 - 櫃買市場加權指數下跌-8.1點至397.14點，跌幅2%",
+   "title": "蔚華科(3055)迎戰玻璃基板浪潮，TSV檢測驗收成功！TGV概念能否撐起狂飆股價？",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6604473",
-   "ts": "09/11 12:41"
+   "url": "https://news.cnyes.com/news/id/6604581",
+   "ts": "09/11 15:30"
   },
   {
-   "title": "iPhone Duo就是跟風華為、三星做的！古爾曼爆料：庫克2020年亞洲行後拍板",
+   "title": "大摩看空Nike 目標價僅31美元、華爾街最低",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6604449",
-   "ts": "09/11 12:40"
+   "url": "https://news.cnyes.com/news/id/6604198",
+   "ts": "09/11 15:30"
   },
   {
-   "title": "全球富豪榜洗牌！美國科技富豪首度全面霸榜 LVMH創辦人跌出前10",
+   "title": "想住新一點？台北市難度最高 新竹縣近4成是20年內新屋",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6604550",
+   "ts": "09/11 15:27"
+  },
+  {
+   "title": "BOJ下周傳升息1碼！基準利率衝1.25%創31年新高 恐釋加速緊縮訊號",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6604195",
-   "ts": "09/11 12:40"
+   "url": "https://news.cnyes.com/news/id/6604529",
+   "ts": "09/11 15:20"
   },
   {
-   "title": "AI電力配置需求方殷  松川獲兩投顧評「強力買進」目標價提高至500元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6604464",
-   "ts": "09/11 12:35"
-  },
-  {
-   "title": "〈焦點股〉萊德光電8月營收年月雙增 盤中翻紅逆勢站回500元大關",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6588810",
-   "ts": "09/11 12:34"
-  },
-  {
-   "title": "108億天價薪酬也留不住！Meta挖來AI頂尖人才Tulloch不到一年轉投Anthropic",
+   "title": "川普拋出5000美元「分紅」計畫 共和黨內部反應平淡且分歧嚴重",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6604457",
-   "ts": "09/11 12:32"
+   "url": "https://news.cnyes.com/news/id/6604503",
+   "ts": "09/11 15:10"
   },
   {
-   "title": "法人還低估？力積電(6770)營收衝破70億！年增76%只是前菜，DRAM漲價45%效應11月才來",
+   "title": "毛利率跳上24.2%、中國市場意外轉正！巨大(9921)終結13個月衰退，股價為何仍跌停？",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6604467",
-   "ts": "09/11 12:30"
+   "url": "https://news.cnyes.com/news/id/6604539",
+   "ts": "09/11 15:00"
   },
   {
-   "title": "黃仁勳看見AI未來？輝達明年營收為何能大增70%",
+   "title": "晟銘電(3013) 轉折浮現，Sidecar增溫與ASIC放量預期能否撐起 2027？獲利關鍵看這個！",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6604538",
+   "ts": "09/11 15:00"
+  },
+  {
+   "title": "台灣8月二手機回收增值榜摺疊機成新寵 三星Z Fold8 Ultra回收價破5.8萬創天價",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6604530",
+   "ts": "09/11 14:53"
+  },
+  {
+   "title": "DeepSeek引發需求疑慮 南韓記憶體晶片股復甦遇阻",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6604199",
-   "ts": "09/11 12:30"
+   "url": "https://news.cnyes.com/news/id/6604500",
+   "ts": "09/11 14:30"
   },
   {
-   "title": "〈焦點股〉大東電受台電部分訂單遞延影響8月營收 跌逾半根停板",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6604348",
-   "ts": "09/11 12:27"
+   "title": "中國工信部印發「AI+軟體」行動方案 目標2028年涵蓋2萬家軟體企業",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6604445",
+   "ts": "09/11 14:30"
   }
  ],
  "inst": {
-  "date": "09/10",
-  "total_yi": -487.5,
-  "foreign_yi": -383.3,
-  "trust_yi": 33.5
+  "date": "09/11",
+  "total_yi": -1123.7,
+  "foreign_yi": -892.7,
+  "trust_yi": 71.0
  }
 }
