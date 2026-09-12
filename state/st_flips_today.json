@@ -1,22 +1,16 @@
 {
-"date": "2026-09-11",
+"date": "2026-09-12",
 "flips_hold": [],
 "flips_watch": [
 {
-"code": "NDSN",
+"code": "ETN",
 "name": "",
-"word": "🟢→🔴 翻空",
-"dir": -1
+"word": "🔴→🟢 翻多",
+"dir": 1
 },
 {
-"code": "VRT",
-"name": "",
-"word": "🟢→🔴 翻空",
-"dir": -1
-},
-{
-"code": "XE",
-"name": "",
+"code": "6285",
+"name": "啟碁",
 "word": "🟢→🔴 翻空",
 "dir": -1
 }
