@@ -946,17 +946,28 @@ def main():
     ap.add_argument("--data", action="store_true", help="只印算出來的數字，不叫 AI")
     ap.add_argument("--no-discord", action="store_true", help="不推 Discord（改東西時用）")
     ap.add_argument("--weekly", action="store_true",
-                    help="排程用：只有週六才真的跑，其餘日子直接結束（exit 0）")
+                    help="排程用：只有週一才真的跑，其餘日子直接結束（exit 0）")
     ap.add_argument("-o", "--output", default="")
     a = ap.parse_args()
 
     # ⚠️ 星期幾的判斷放在 Python 不放 .cmd：cmd 的 %DATE% 格式跟系統地區設定綁定，
     #    在不同語系機器上剖析方式不一樣，是典型會靜默壞掉的東西。
-    # 週六跑的理由：美股週五收盤已經入帳，整週資料完整，而且 Leo 週末讀得到、
-    #    趕得上下週一開盤。
-    if a.weekly and dt.date.today().weekday() != 5:       # 0=一 … 5=六
+    #
+    # 🔴 2026-09-12 修：原本設「週六跑」，但 Leo 問「今天早上有跑嗎」才查出
+    #    `BoardAnalyzeDaily` 這個工作排程的觸發是 **Monday–Friday，不含週末**
+    #    （XML: <DaysOfWeek><Monday/>…<Friday/>）。也就是說原本的設定會讓這份
+    #    報告**永遠不會自動產出，而且完全沒有錯誤訊息**——典型的靜默失效。
+    #    我當時假設「daily 批次」＝每天都跑，沒去查觸發設定就寫了註解說
+    #    「每天呼叫但只有週六才真的跑」，那句註解本身就是錯的。
+    # ⭐ 教訓：**把工作掛到既有排程上之前，先查那個排程「實際上」哪幾天會跑**，
+    #    不要從名字（daily）推斷。
+    #
+    # 改成週一的理由（其實比週六更好）：週一 06:00 時，上週五的美股收盤已經入帳、
+    # 台股上週也收完，整週資料完整；而且 Leo 在台股 9:00 開盤前就讀得到。
+    WEEKDAY = 0                                           # 0=週一
+    if a.weekly and dt.date.today().weekday() != WEEKDAY:
         print(f"今天是週{'一二三四五六日'[dt.date.today().weekday()]}，"
-              f"每週總體報告只在週六產出，跳過。")
+              f"每週總體報告只在週一產出，跳過。")
         return 0
 
     facts = gather()
