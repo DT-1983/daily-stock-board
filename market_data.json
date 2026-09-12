@@ -1,37 +1,37 @@
 {
- "updated": "2026-09-11 20:10",
+ "updated": "2026-09-12 12:44",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "09/10",
-   "close": 7591.7,
-   "chg_pct": -0.58
+   "date": "09/11",
+   "close": 7656.98,
+   "chg_pct": 0.86
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "09/10",
-   "close": 26081.72,
-   "chg_pct": -0.65
+   "date": "09/11",
+   "close": 26333.04,
+   "chg_pct": 0.96
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "09/10",
-   "close": 52064.1,
-   "chg_pct": -0.6
+   "date": "09/11",
+   "close": 52573.29,
+   "chg_pct": 0.98
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "09/10",
-   "close": 11614.17,
-   "chg_pct": -2.66
+   "date": "09/11",
+   "close": 11824.0,
+   "chg_pct": 1.81
   },
   {
    "sym": "^TWII",
@@ -45,80 +45,80 @@
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/11",
-   "close": 31.64,
-   "chg_pct": 0.55
+   "date": "09/12",
+   "close": 31.63,
+   "chg_pct": -0.03
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "09/10",
-   "close": 4.94,
+   "date": "09/11",
+   "close": 4.97,
    "fmt": "yield",
-   "chg_bp": 10.7
+   "chg_bp": 3.1
   }
  ],
  "news": [
   {
-   "title": "下一個SK海力士？鎧俠赴美上市有望打開全球資金大門",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6604768",
-   "ts": "09/11 20:00"
-  },
-  {
-   "title": "美股撤資潮湧現 美銀警告「市場冷漠」恐釀波動風暴",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6604754",
-   "ts": "09/11 19:50"
-  },
-  {
-   "title": "攸泰衛星應用相關專案逐步貢獻 營收比重提升至1成",
+   "title": "搶攻AI與電力人才！台電獎學金招考11類科 大學碩士生最高可拿40萬",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6604799",
-   "ts": "09/11 19:48"
+   "url": "https://news.cnyes.com/news/id/6605046",
+   "ts": "09/12 12:38"
   },
   {
-   "title": "新創指數躍全球第二！創櫃板輔導600家35家轉上市櫃 簡立忠揭示新創發展藍圖",
+   "title": "黃崇仁告別式政商大咖、親友近千人弔祭  賴清德總統親蒞並頒褒揚令",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6604783",
-   "ts": "09/11 19:47"
+   "url": "https://news.cnyes.com/news/id/6605057",
+   "ts": "09/12 12:37"
   },
   {
-   "title": "台玻8月營收年月雙增 法人估玻纖布營收比重年底將超越50％",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6604784",
-   "ts": "09/11 19:41"
-  },
-  {
-   "title": "天二8月自結EPS0.31元 9月以來股價漲逾2成",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6604785",
-   "ts": "09/11 19:39"
-  },
-  {
-   "title": "美債5%魔王關要破了？油價狂飆引爆全球債市風暴",
+   "title": "甲骨文法說會少了熟悉身影！82歲艾里森淡出鎂光燈 雙CEO掌舵迎AI轉型",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6604766",
-   "ts": "09/11 19:39"
+   "url": "https://news.cnyes.com/news/id/6604974",
+   "ts": "09/12 12:30"
   },
   {
-   "title": "AI大單報到！Oracle積壓訂單衝6,640億美元 盤前股價勁揚5.5%",
+   "title": "庫克承認了？蘋果看華為、三星才做摺疊iPhone",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6604791",
-   "ts": "09/11 19:30"
+   "url": "https://news.cnyes.com/news/id/6605038",
+   "ts": "09/12 12:18"
   },
   {
-   "title": "人工智慧熱潮與服務業勁揚 助推英國7月經濟創18個月最大增幅",
+   "title": "華爾街點名6檔潛力股！Robinhood還能漲42%、ServiceTitan喊到110美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6604665",
-   "ts": "09/11 19:10"
+   "url": "https://news.cnyes.com/news/id/6604987",
+   "ts": "09/12 12:13"
   },
   {
-   "title": "神秘金庫竟爆指揮部憲兵爆集體簽賭 央行回應了",
+   "title": "SpaceX終於揭示太空資料中心重要時間表",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6604970",
+   "ts": "09/12 12:10"
+  },
+  {
+   "title": "iPhone Duo螢幕一片250美元！三星獨拿蘋果3年訂單",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6604959",
+   "ts": "09/12 12:01"
+  },
+  {
+   "title": "〈熱門股〉光罩爆量周漲23.7% 創兩個月來新高",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6604753",
-   "ts": "09/11 18:54"
+   "url": "https://news.cnyes.com/news/id/6604631",
+   "ts": "09/12 11:27"
+  },
+  {
+   "title": "從產線到舞台！2026日月光好聲音各廠區員工同台獻唱",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6605028",
+   "ts": "09/12 11:26"
+  },
+  {
+   "title": "〈熱門股〉運錩營運亮眼 8月以來大漲4成創逾4年波段新高",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6605018",
+   "ts": "09/12 11:24"
   }
  ],
  "inst": {
