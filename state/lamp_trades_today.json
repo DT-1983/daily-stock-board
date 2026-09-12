@@ -1,13 +1,8 @@
 {
- "date": "2026-09-11",
+ "date": "2026-09-12",
  "lamp_date": "2026-09-11",
- "buy": [
-  "ORCL"
- ],
- "half_sell": [
-  "MA",
-  "NDSN"
- ],
+ "buy": [],
+ "half_sell": [],
  "full_exit": [],
  "held": 12,
  "cash": 0.0
