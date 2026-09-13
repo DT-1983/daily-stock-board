@@ -2464,5 +2464,41 @@
     "industry": "Agricultural Commodities/Milling",
     "exchange": "NYSE",
     "asof": "2026-09-11"
+  },
+  "2368": {
+    "sector": "Electronic Technology",
+    "industry": "Electronic Components",
+    "exchange": "TWSE",
+    "asof": "2026-09-14"
+  },
+  "2645": {
+    "sector": "Transportation",
+    "industry": "Other Transportation",
+    "exchange": "TWSE",
+    "asof": "2026-09-14"
+  },
+  "ADI": {
+    "sector": "Electronic Technology",
+    "industry": "Semiconductors",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-14"
+  },
+  "RKLB": {
+    "sector": "Electronic Technology",
+    "industry": "Aerospace & Defense",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-14"
+  },
+  "CGNX": {
+    "sector": "Electronic Technology",
+    "industry": "Electronic Equipment/Instruments",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-14"
+  },
+  "RIVN": {
+    "sector": "Consumer Durables",
+    "industry": "Motor Vehicles",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-14"
   }
 }
