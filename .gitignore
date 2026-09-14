@@ -178,3 +178,6 @@ state/warroom_watchdog_attempts.json
 # 所以**只靠 tools/backup_ai_projects.py 保存**——那支的副檔名白名單
 # 已於同日補上 .jsonl，動那份白名單前要先想到這裡。
 state/macro_stance_log.jsonl
+
+# 券商影音逐字稿抓取工具：repo 是 public，這支不進版控（見 dev_log 2026-09-14）
+vimeo_transcript.py
