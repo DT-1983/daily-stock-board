@@ -35,7 +35,18 @@ CSS_EXTRA = """
      .xtra 11px  = .nrow .mt（附註）                                        */
 .mwgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
 @media(max-width:700px){.mwgrid{grid-template-columns:1fr}}
-.mwcard{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:12px 14px}
+/* 2026-09-14 Leo：「按鍵太小，或直接做整張卡片的點選功能」
+   → 整張卡就是 <summary>，點哪裡都能展開（手機的點擊目標大很多）。
+   ⚠️ summary 預設是 list-item，一定要 display:block，否則裡面的區塊元素排版會歪。*/
+.mwcard{background:var(--surface);border:1px solid var(--line);border-radius:11px}
+.mwhead{display:block;cursor:pointer;padding:12px 14px;list-style:none;
+ border-radius:11px;transition:background .15s,border-color .15s}
+.mwhead::-webkit-details-marker{display:none}
+.mwcard:hover{border-color:#2B4C6F}
+.mwhead:hover{background:#0E1B2B}
+.mwhead:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.mwcard[open]{border-color:#2B4C6F}
+.mwcard[open] .mwhead{background:#0E1B2B;border-bottom-left-radius:0;border-bottom-right-radius:0}
 .mwcard .mkt{font-size:11.5px;color:var(--muted);font-weight:600;margin-bottom:7px}
 .mwcard .hl{font-size:13.5px;line-height:1.65;color:var(--ink);margin-top:8px}
 .mwcard .ang{font-size:11.5px;color:var(--muted);margin-top:7px;line-height:1.8}
@@ -44,15 +55,18 @@ CSS_EXTRA = """
  padding-top:7px;border-top:1px solid var(--line2)}
 .stc{display:inline-block;font-size:17px;font-weight:800;letter-spacing:.04em;
  padding:3px 13px;border-radius:7px}
+/* 展開提示列：做成看得出可按的樣子（原本 11px 純文字太不明顯）*/
+.mwhint{display:flex;align-items:center;justify-content:space-between;gap:8px;
+ margin-top:10px;padding:8px 11px;border:1px solid var(--line);border-radius:8px;
+ font-size:12.5px;font-weight:600;color:#93C5FD;background:#0B1422}
+.mwhead:hover .mwhint{border-color:var(--accent);background:#152238}
+/* ⚠️ 一定要 inline-block：transform 對非替換的 inline 元素（純 <span>）無效，
+   少了這行 rotate(90deg) 會被算成不旋轉（實測 computed 是單位矩陣）。*/
+.mwhint .cv{display:inline-block;font-size:11px;color:var(--dim);transition:transform .18s}
+.mwcard[open] .mwhint .cv{transform:rotate(90deg)}
+.mwcard[open] .mwhint{color:var(--muted)}
 /* 展開細節：用 <details> 不用 JS，靜態頁最不容易壞 */
-.mwmore{margin-top:9px;border-top:1px solid var(--line2);padding-top:7px}
-.mwmore>summary{cursor:pointer;font-size:11px;color:var(--muted);list-style:none;
- padding:2px 0}
-.mwmore>summary::-webkit-details-marker{display:none}
-.mwmore>summary::before{content:"▸ ";color:var(--dim)}
-.mwmore[open]>summary::before{content:"▾ "}
-.mwmore>summary:hover{color:#93C5FD}
-.mwd{font-size:11.5px;line-height:1.75;margin-top:7px}
+.mwd{font-size:11.5px;line-height:1.75;padding:2px 14px 13px}
 .mwd .lbl{color:var(--dim);font-size:11px}
 .mwd .blk{margin:8px 0;padding-left:9px;border-left:2px solid var(--line)}
 .mwd .rs{color:var(--ink)}
@@ -251,13 +265,17 @@ def macro_block():
                 + (f'<br><span class="bs">依據：{esc(c["basis"])}</span>' if c.get("basis") else "")
                 + '</div>' for c in cls)
             det += f'<div class="blk"><span class="lbl">支撐的事實與推論</span>{rows}</div>'
-        more = (f'<details class="mwmore"><summary>看依據與失效條件</summary>'
-                f'<div class="mwd">{det}</div></details>') if det else ""
-
-        return (f'<div class="mwcard"><div class="mkt">{label}</div>'
+        # 整張卡＝可點的 <summary>（Leo：按鍵太小／直接做整張卡點選）
+        head = (f'<div class="mkt">{label}</div>'
                 f'<span class="stc stc-{esc(st)}">{esc(st)}</span>'
                 f'<div class="hl">{esc(mk.get("headline",""))}</div>'
-                f'<div class="ang">{angs}</div>{xtra}{more}</div>')
+                f'<div class="ang">{angs}</div>{xtra}')
+        if not det:
+            return f'<div class="mwcard"><div class="mwhead">{head}</div></div>'
+        return (f'<details class="mwcard"><summary class="mwhead">{head}'
+                f'<div class="mwhint"><span>看依據與失效條件</span>'
+                f'<span class="cv">▶</span></div></summary>'
+                f'<div class="mwd">{det}</div></details>')
 
     link = esc(d.get("linkage") or "")
     return (f'<div class="hsec"><h2>{icon("gdp", 16, "#3B82F6")}每週總體判讀</h2>'
