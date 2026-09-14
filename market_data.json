@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-14 17:18",
+ "updated": "2026-09-14 17:29",
  "indices": [
   {
    "sym": "^GSPC",
@@ -46,8 +46,8 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/14",
-   "close": 31.75,
-   "chg_pct": 0.35
+   "close": 31.76,
+   "chg_pct": 0.4
   },
   {
    "sym": "^TNX",
@@ -60,6 +60,18 @@
   }
  ],
  "news": [
+  {
+   "title": "創見攻高速運算 推64GB工業用DDR5",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6605797",
+   "ts": "09/14 17:22"
+  },
+  {
+   "title": "通訊行：iPhone18 Pro預約量較上代成長4%  官網交期已排到雙十連假",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6605798",
+   "ts": "09/14 17:21"
+  },
   {
    "title": "台北晶華首發！35名印尼技術人力抵台 銜接房務接待即戰力",
    "mkt": "TW",
@@ -89,18 +101,6 @@
    "mkt": "US",
    "url": "https://news.cnyes.com/news/id/6605586",
    "ts": "09/14 17:10"
-  },
-  {
-   "title": "國泰金前8月賺近千億 對保留盈餘影響數突破2000億元再創新高",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6605778",
-   "ts": "09/14 17:09"
-  },
-  {
-   "title": "樺漢總座：2026年是物理AI元年 未來4-10年可望維持高速成長",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6605777",
-   "ts": "09/14 17:07"
   },
   {
    "title": "英國內部裂痕擴大！蘇格蘭、威爾斯、北愛聯手爭取公投權  川普挺愛爾蘭統一",
