@@ -51,6 +51,15 @@ from llm_board import _claude_bin
 SNAP = "state/macro_weekly.json"      # 上週快照，用來算「跟上週差多少」
 OUT_NAME = "每週總體報告.html"
 
+# 🔴 給投資站首頁用的精簡版（2026-09-14 Leo：「整合在投資資訊首頁」）。
+# 為什麼寫在 docs/ 而不是 state/：首頁 `home_html.py` 是在 **GitHub Actions
+# 的 ubuntu runner** 上跑的（market-home.yml / tw-board.yml），只讀得到
+# **repo 裡有的檔案**。而每日批次的 git 步驟是 `git add docs`（整個資料夾）
+# 但 state/ 只有 `git add -u`（僅已追蹤檔）——所以放 state/ 的新檔**永遠不會
+# 被推上去**，Actions 那邊就永遠讀不到。放 docs/ 才會跟著 commit。
+# ⚠️ 這份是**公開的**（GitHub Pages）：只放公開數字與判讀，不放任何持股資訊。
+PUBLIC_JSON = "docs/macro_weekly.json"
+
 
 # ── 資料層：FRED ────────────────────────────────────────────────────
 # 🔴 用**公開 CSV 端點**，不是 api.stlouisfed.org——公開 CSV 免申請 key。
@@ -981,6 +990,34 @@ def main():
     out = a.output or op.daily(OUT_NAME)
     os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
     io.open(out, "w", encoding="utf-8").write(html)
+
+    # 首頁用的精簡公開版（美股／台股分開，跟報告本身的分頁一致）
+    nd = facts.get("tw_景氣燈號") or {}
+    tgdp = ((facts.get("gdp") or {}).get("tw") or {}).get("actual") or []
+    pub = {
+        "week_of": facts.get("week_of"),
+        "generated": facts.get("generated"),
+        "linkage": note.get("linkage", ""),
+        "report_note": "完整版（含每句依據標示與失效條件）在 obis：每日看板／" + OUT_NAME,
+    }
+    for k in ("us", "tw"):
+        m = note.get(k) or {}
+        pub[k] = {
+            "stance": m.get("stance"),
+            "headline": m.get("headline"),
+            "stance_basis": m.get("stance_basis"),
+            "angles": [{"name": a.get("name"), "verdict": a.get("verdict")}
+                       for a in (m.get("angles") or [])],
+        }
+    if nd:
+        pub["tw"]["景氣燈號"] = {"light": nd.get("景氣對策信號"),
+                                 "score": nd.get("綜合分數"),
+                                 "month": nd.get("月份")}
+    if tgdp:
+        pub["tw"]["GDP"] = {"period": tgdp[-1].get("period"), "value": tgdp[-1].get("value")}
+    os.makedirs(os.path.dirname(PUBLIC_JSON) or ".", exist_ok=True)
+    json.dump(pub, io.open(PUBLIC_JSON, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    print(f"   首頁用摘要 → {PUBLIC_JSON}")
 
     # 存這週快照（按日期存，不覆蓋），下週才算得出「跟上週差多少」。
     # 只留最近 8 份：夠回看兩個月，又不會讓檔案無限長大。
