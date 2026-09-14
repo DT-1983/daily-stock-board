@@ -1006,8 +1006,13 @@ def main():
             "stance": m.get("stance"),
             "headline": m.get("headline"),
             "stance_basis": m.get("stance_basis"),
-            "angles": [{"name": a.get("name"), "verdict": a.get("verdict")}
+            # 角度帶上理由與失效條件、claims 帶上依據強度——首頁要能「點下去看得到資料」
+            # （2026-09-14 Leo），不是只給一個結論。這些全是公開數字與判讀，可公開。
+            "angles": [{"name": a.get("name"), "verdict": a.get("verdict"),
+                        "reason": a.get("reason"), "falsifier": a.get("falsifier")}
                        for a in (m.get("angles") or [])],
+            "claims": [{"text": c.get("text"), "kind": c.get("kind"), "basis": c.get("basis")}
+                       for c in (m.get("claims") or [])],
         }
     if nd:
         pub["tw"]["景氣燈號"] = {"light": nd.get("景氣對策信號"),
