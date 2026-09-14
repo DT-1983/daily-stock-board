@@ -1,6 +1,6 @@
 {
- "date": "2026-09-07",
- "prev_date": "2026-08-28",
+ "date": "2026-09-14",
+ "prev_date": "2026-09-07",
  "checks": [
   {
    "ticker": "00407A.TW",
@@ -8,7 +8,7 @@
    "track_record": null,
    "pe": {
     "forward_pe": null,
-    "trailing_pe": 44.456215,
+    "trailing_pe": 43.6338,
     "ps": null,
     "price": null
    },
@@ -21,7 +21,7 @@
    "track_record": null,
    "pe": {
     "forward_pe": null,
-    "trailing_pe": 32.71416,
+    "trailing_pe": 32.653522,
     "ps": null,
     "price": null
    },
@@ -34,7 +34,7 @@
    "track_record": null,
    "pe": {
     "forward_pe": null,
-    "trailing_pe": 32.27237,
+    "trailing_pe": 32.122265,
     "ps": null,
     "price": null
    },
@@ -47,7 +47,7 @@
    "track_record": null,
    "pe": {
     "forward_pe": null,
-    "trailing_pe": 33.608154,
+    "trailing_pe": 33.56588,
     "ps": null,
     "price": null
    },
@@ -60,7 +60,7 @@
    "track_record": null,
    "pe": {
     "forward_pe": null,
-    "trailing_pe": 44.321728,
+    "trailing_pe": 43.83042,
     "ps": null,
     "price": null
    },
@@ -72,20 +72,20 @@
    "requirement": {
     "kind": "tw_monthly",
     "tier": "normal",
-    "fy": 151419104640.0,
+    "fy": 150814666670.0,
     "year": 2026,
-    "analysts": 4,
-    "ytd": 85211435000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 13241533928.0,
-    "hist_n": 260,
-    "prev_avg": 13349085600.0,
-    "need_yoy": -0.008056856868158824,
-    "yoy_max": 4.2319753090793295,
-    "yoy_med": -0.0033283321745525285,
+    "analysts": 3,
+    "ytd": 98726969000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 13021924417.5,
+    "hist_n": 261,
+    "prev_avg": 13632663000.0,
+    "need_yoy": -0.0447996537800428,
+    "yoy_max": 4.273205993567664,
+    "yoy_med": -0.0003774522107994338,
     "yoy_n": 20,
-    "excess": -4.240032165947488
+    "excess": -4.318005647347706
    },
    "track_record": {
     "n": 23,
@@ -94,12 +94,12 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 21.705946,
+    "forward_pe": 18.215612,
     "trailing_pe": null,
-    "ps": 1.2551266,
-    "price": 24.6
+    "ps": 1.2500246,
+    "price": 24.5
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -112,11 +112,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 10.574074,
-    "trailing_pe": 17.732918,
-    "ps": 0.9020752,
-    "price": 28.55,
-    "implied_growth": 0.6770185266341056
+    "forward_pe": 10.537037,
+    "trailing_pe": 17.670807,
+    "ps": 0.89891565,
+    "price": 28.45,
+    "implied_growth": 0.6770185964042834
    },
    "prev_tier": null,
    "changed": false
@@ -129,17 +129,17 @@
     "fy": 40379020230.0,
     "year": 2026,
     "analysts": 17,
-    "ytd": 23459298000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 3383944446.0,
-    "hist_n": 260,
-    "prev_avg": 3170638000.0,
-    "need_yoy": 0.06727555968231003,
-    "yoy_max": 0.3784638724119298,
-    "yoy_med": 0.06734491537327658,
+    "ytd": 26770332000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 3402172057.5,
+    "hist_n": 261,
+    "prev_avg": 3126079000.0,
+    "need_yoy": 0.08831928351778706,
+    "yoy_max": 0.35866880880115826,
+    "yoy_med": 0.05527287635976985,
     "yoy_n": 20,
-    "excess": -0.3111883127296198
+    "excess": -0.2703495252833712
    },
    "track_record": {
     "n": 25,
@@ -148,11 +148,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 11.736724,
-    "trailing_pe": 12.971405,
-    "ps": 2.224535,
-    "price": 313.0,
-    "implied_growth": 0.10519809445974881
+    "forward_pe": 10.822381,
+    "trailing_pe": 11.961028,
+    "ps": 2.0504103,
+    "price": 288.5,
+    "implied_growth": 0.10521224488400471
    },
    "prev_tier": "normal",
    "changed": false
@@ -162,20 +162,20 @@
    "requirement": {
     "kind": "tw_monthly",
     "tier": "normal",
-    "fy": 35336421080.0,
+    "fy": 35272337130.0,
     "year": 2026,
-    "analysts": 10,
+    "analysts": 11,
     "ytd": 23616164000.0,
     "months_done": 8,
     "months_left": 4,
-    "need_avg": 2930064270.0,
+    "need_avg": 2914043282.5,
     "hist_n": 261,
     "prev_avg": 2572151500.0,
-    "need_yoy": 0.13914917919881464,
+    "need_yoy": 0.13292054628197447,
     "yoy_max": 0.2616060576809165,
     "yoy_med": 0.08001667281461433,
     "yoy_n": 20,
-    "excess": -0.12245687848210185
+    "excess": -0.12868551139894202
    },
    "track_record": {
     "n": 24,
@@ -184,11 +184,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 11.386459,
+    "forward_pe": 11.381138,
     "trailing_pe": 13.458903,
     "ps": 1.4308819,
     "price": 196.5,
-    "implied_growth": 0.1820095255250116
+    "implied_growth": 0.18256214800312587
    },
    "prev_tier": "normal",
    "changed": false
@@ -198,20 +198,20 @@
    "requirement": {
     "kind": "tw_monthly",
     "tier": "low_coverage",
-    "fy": 43093000000.0,
+    "fy": 40897000000.0,
     "year": 2026,
-    "analysts": 2,
-    "ytd": 24093014000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 3799997200.0,
-    "hist_n": 260,
-    "prev_avg": 3088297800.0,
-    "need_yoy": 0.23045037949384284,
-    "yoy_max": 0.5492529069460981,
-    "yoy_med": 0.0603461148865545,
+    "analysts": 1,
+    "ytd": 26939479000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 3489380250.0,
+    "hist_n": 261,
+    "prev_avg": 3146012500.0,
+    "need_yoy": 0.10914379710824407,
+    "yoy_max": 0.5308993253149341,
+    "yoy_med": 0.06218160633565506,
     "yoy_n": 20,
-    "excess": -0.31880252745225524
+    "excess": -0.42175552820669004
    },
    "track_record": {
     "n": 24,
@@ -220,11 +220,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 15.168128,
-    "trailing_pe": 28.660221,
-    "ps": 2.761579,
-    "price": 207.5,
-    "implied_growth": 0.8895028443852795
+    "forward_pe": 16.516762,
+    "trailing_pe": 27.862068,
+    "ps": 2.6883805,
+    "price": 202.0,
+    "implied_growth": 0.6868964994470466
    },
    "prev_tier": "low_coverage",
    "changed": false
@@ -234,20 +234,20 @@
    "requirement": {
     "kind": "tw_monthly",
     "tier": "normal",
-    "fy": 67805285710.0,
+    "fy": 66791399999.0,
     "year": 2026,
-    "analysts": 7,
-    "ytd": 36316904000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 6297676342.0,
-    "hist_n": 260,
-    "prev_avg": 5028754600.0,
-    "need_yoy": 0.2523332003514349,
-    "yoy_max": 1.2545704178468777,
-    "yoy_med": 0.008412456726497153,
+    "analysts": 5,
+    "ytd": 41725219000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 6266545249.75,
+    "hist_n": 261,
+    "prev_avg": 5128620750.0,
+    "need_yoy": 0.22187729512851972,
+    "yoy_max": 1.2324488996849743,
+    "yoy_med": -0.0052035738118075825,
     "yoy_n": 20,
-    "excess": -1.0022372174954428
+    "excess": -1.0105716045564546
    },
    "track_record": {
     "n": 24,
@@ -256,11 +256,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 16.11413,
-    "trailing_pe": 25.602837,
-    "ps": 2.7884696,
-    "price": 72.2,
-    "implied_growth": 0.5888438904241187
+    "forward_pe": 15.642444,
+    "trailing_pe": 24.645391,
+    "ps": 2.6841917,
+    "price": 69.5,
+    "implied_growth": 0.5755460591708048
    },
    "prev_tier": "normal",
    "changed": false
@@ -273,17 +273,17 @@
     "fy": 30069540420.0,
     "year": 2026,
     "analysts": 4,
-    "ytd": 16434079000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 2727092284.0,
-    "hist_n": 260,
-    "prev_avg": 2314656800.0,
-    "need_yoy": 0.17818429237543976,
-    "yoy_max": 0.4309759047507886,
-    "yoy_med": 0.028595460835098008,
+    "ytd": 18936577000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 2783240855.0,
+    "hist_n": 261,
+    "prev_avg": 2318979750.0,
+    "need_yoy": 0.20020058605513902,
+    "yoy_max": 0.4698591439789559,
+    "yoy_med": 0.03268835720641383,
     "yoy_n": 20,
-    "excess": -0.25279161237534886
+    "excess": -0.2696585579238169
    },
    "track_record": {
     "n": 25,
@@ -292,11 +292,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 15.846025,
-    "trailing_pe": 18.616423,
-    "ps": 2.928631,
-    "price": 165.5,
-    "implied_growth": 0.17483236332140084
+    "forward_pe": 15.798152,
+    "trailing_pe": 18.560179,
+    "ps": 2.9197834,
+    "price": 165.0,
+    "implied_growth": 0.17483228418108654
    },
    "prev_tier": "normal",
    "changed": false
@@ -309,17 +309,17 @@
     "fy": 29309855270.0,
     "year": 2026,
     "analysts": 7,
-    "ytd": 12262069000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 3409557254.0,
-    "hist_n": 260,
-    "prev_avg": 2338519000.0,
-    "need_yoy": 0.4579985255625463,
-    "yoy_max": 1.0256002305006438,
-    "yoy_med": 0.09245279895375491,
+    "ytd": 14178496000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 3782839817.5,
+    "hist_n": 261,
+    "prev_avg": 2497278250.0,
+    "need_yoy": 0.5147850735095298,
+    "yoy_max": 1.0463849645394188,
+    "yoy_med": 0.11879324018636561,
     "yoy_n": 20,
-    "excess": -0.5676017049380975
+    "excess": -0.5315998910298889
    },
    "track_record": {
     "n": 23,
@@ -328,11 +328,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 31.2183,
-    "trailing_pe": 53.7464,
-    "ps": 10.737596,
-    "price": 746.0,
-    "implied_growth": 0.7216312227123194
+    "forward_pe": 29.795483,
+    "trailing_pe": 51.29683,
+    "ps": 10.248215,
+    "price": 712.0,
+    "implied_growth": 0.7216310942165294
    },
    "prev_tier": "normal",
    "changed": false
@@ -345,17 +345,17 @@
     "fy": 5329506260.0,
     "year": 2026,
     "analysts": 1,
-    "ytd": 2800079000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 505885452.0,
-    "hist_n": 260,
-    "prev_avg": 399246200.0,
-    "need_yoy": 0.2671014827442315,
-    "yoy_max": 0.8197656153149895,
-    "yoy_med": 0.08088129498867436,
+    "ytd": 3260150000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 517339065.0,
+    "hist_n": 261,
+    "prev_avg": 397926000.0,
+    "need_yoy": 0.30008862200509645,
+    "yoy_max": 0.6925174201830653,
+    "yoy_med": 0.06955295853125976,
     "yoy_n": 20,
-    "excess": -0.552664132570758
+    "excess": -0.39242879817796883
    },
    "track_record": {
     "n": 24,
@@ -364,30 +364,12 @@
     "bias": "共識偏樂觀"
    },
    "pe": {
-    "forward_pe": 92.22221,
+    "forward_pe": 87.68518,
     "trailing_pe": null,
-    "ps": 2.9230225,
-    "price": 49.8
+    "ps": 2.779219,
+    "price": 47.35
    },
    "prev_tier": "low_coverage",
-   "changed": false
-  },
-  {
-   "ticker": "1580.TWO",
-   "requirement": null,
-   "track_record": {
-    "n": 25,
-    "beats": 9,
-    "median_surprise": -5.9,
-    "bias": "共識大致中性"
-   },
-   "pe": {
-    "forward_pe": null,
-    "trailing_pe": 9.014952,
-    "ps": 1.0524513,
-    "price": 102.5
-   },
-   "prev_tier": null,
    "changed": false
   },
   {
@@ -398,17 +380,17 @@
     "fy": 1515000000.0,
     "year": 2026,
     "analysts": 1,
-    "ytd": 894243000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 124151400.0,
-    "hist_n": 187,
-    "prev_avg": 104177600.0,
-    "need_yoy": 0.191728356191734,
-    "yoy_max": 0.7080097474856557,
-    "yoy_med": 0.036263795451572545,
+    "ytd": 1027337000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 121915750.0,
+    "hist_n": 188,
+    "prev_avg": 107311500.0,
+    "need_yoy": 0.13609212432963846,
+    "yoy_max": 0.7543010287887957,
+    "yoy_med": 0.035998071295996636,
     "yoy_n": 14,
-    "excess": -0.5162813912939217
+    "excess": -0.6182089044591572
    },
    "track_record": {
     "n": 25,
@@ -417,11 +399,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 62.248997,
-    "trailing_pe": 76.35468,
-    "ps": 9.865586,
-    "price": 155.0,
-    "implied_growth": 0.22660096836580346
+    "forward_pe": 59.036144,
+    "trailing_pe": 72.05882,
+    "ps": 9.356394,
+    "price": 147.0,
+    "implied_growth": 0.22058818746698639
    },
    "prev_tier": "low_coverage",
    "changed": false
@@ -434,17 +416,17 @@
     "fy": 192596500000.0,
     "year": 2026,
     "analysts": 2,
-    "ytd": 106481838000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 17222932400.0,
-    "hist_n": 260,
-    "prev_avg": 13765202400.0,
-    "need_yoy": 0.2511935458355483,
-    "yoy_max": 1.3075261594096101,
-    "yoy_med": 0.006538101475417779,
+    "ytd": 120910665000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 17921458750.0,
+    "hist_n": 261,
+    "prev_avg": 14069001750.0,
+    "need_yoy": 0.2738258952878445,
+    "yoy_max": 1.4059056904689915,
+    "yoy_med": 0.016498752314711318,
     "yoy_n": 20,
-    "excess": -1.0563326135740618
+    "excess": -1.132079795181147
    },
    "track_record": {
     "n": 24,
@@ -453,11 +435,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 8.329718,
-    "trailing_pe": 11.601209,
-    "ps": 0.9797123,
-    "price": 38.4,
-    "implied_growth": 0.39274931036080707
+    "forward_pe": 8.112799,
+    "trailing_pe": 11.299094,
+    "ps": 0.95419896,
+    "price": 37.4,
+    "implied_growth": 0.3927491609246081
    },
    "prev_tier": "low_coverage",
    "changed": false
@@ -472,11 +454,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 16.937172,
-    "trailing_pe": 17.026316,
-    "ps": 1.732251,
-    "price": 32.35,
-    "implied_growth": 0.005263216314978836
+    "forward_pe": 16.125654,
+    "trailing_pe": 16.210526,
+    "ps": 1.6492529,
+    "price": 30.8,
+    "implied_growth": 0.005263166380724771
    },
    "prev_tier": null,
    "changed": false
@@ -489,17 +471,17 @@
     "fy": 9663000000.0,
     "year": 2026,
     "analysts": 1,
-    "ytd": 4867010000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 959198000.0,
-    "hist_n": 260,
-    "prev_avg": 532301600.0,
-    "need_yoy": 0.8019821845359849,
-    "yoy_max": 1.0067516548506115,
-    "yoy_med": 0.030787391883273063,
+    "ytd": 5779410000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 970897500.0,
+    "hist_n": 261,
+    "prev_avg": 538094000.0,
+    "need_yoy": 0.8043269391593291,
+    "yoy_max": 0.9543869435820451,
+    "yoy_med": 0.055250653008793726,
     "yoy_n": 20,
-    "excess": -0.20476947031462656
+    "excess": -0.15006000442271605
    },
    "track_record": {
     "n": 11,
@@ -508,13 +490,13 @@
     "bias": "共識偏樂觀"
    },
    "pe": {
-    "forward_pe": 15.490196,
-    "trailing_pe": 32.916668,
-    "ps": 9.64943,
-    "price": 118.5,
-    "implied_growth": 1.1250000968354437
+    "forward_pe": 17.500034,
+    "trailing_pe": 37.172012,
+    "ps": 10.901432,
+    "price": 127.5,
+    "implied_growth": 1.1241108445846448
    },
-   "prev_tier": null,
+   "prev_tier": "low_coverage",
    "changed": false
   },
   {
@@ -522,20 +504,20 @@
    "requirement": {
     "kind": "tw_monthly",
     "tier": "normal",
-    "fy": 29902714440.0,
+    "fy": 29626183650.0,
     "year": 2026,
-    "analysts": 14,
+    "analysts": 16,
     "ytd": 19277366000.0,
     "months_done": 8,
     "months_left": 4,
-    "need_avg": 2656337110.0,
+    "need_avg": 2587204412.5,
     "hist_n": 243,
     "prev_avg": 2148299750.0,
-    "need_yoy": 0.23648346093230233,
+    "need_yoy": 0.2043032693645288,
     "yoy_max": 1.3046518976982027,
     "yoy_med": 0.12769314255405906,
     "yoy_n": 19,
-    "excess": -1.0681684367659003
+    "excess": -1.1003486283336739
    },
    "track_record": {
     "n": 25,
@@ -544,11 +526,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 31.997547,
-    "trailing_pe": 55.25114,
-    "ps": 4.867213,
-    "price": 363.0,
-    "implied_growth": 0.7267304896840998
+    "forward_pe": 31.644957,
+    "trailing_pe": 54.64231,
+    "ps": 4.81358,
+    "price": 359.0,
+    "implied_growth": 0.7267304234289211
    },
    "prev_tier": "normal",
    "changed": false
@@ -561,17 +543,17 @@
     "fy": 91556104220.0,
     "year": 2026,
     "analysts": 1,
-    "ytd": 56974756000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 6916269644.0,
-    "hist_n": 260,
-    "prev_avg": 7399164400.0,
-    "need_yoy": -0.06526341758266652,
-    "yoy_max": 4.339058346316591,
-    "yoy_med": 0.01598779910765802,
+    "ytd": 65313310000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 6560698555.0,
+    "hist_n": 261,
+    "prev_avg": 7256688250.0,
+    "need_yoy": -0.09591009989990962,
+    "yoy_max": 4.332024016963539,
+    "yoy_med": 0.001462430735162279,
     "yoy_n": 20,
-    "excess": -4.404321763899258
+    "excess": -4.427934116863448
    },
    "track_record": {
     "n": 25,
@@ -580,13 +562,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 21.493055,
-    "trailing_pe": 17.005495,
-    "ps": 1.0758547,
-    "price": 30.95,
-    "implied_growth": -0.2087911653322433
+    "forward_pe": 21.11111,
+    "trailing_pe": 16.703297,
+    "ps": 1.056736,
+    "price": 30.4,
+    "implied_growth": -0.2087911530942712
    },
-   "prev_tier": null,
+   "prev_tier": "low_coverage",
    "changed": false
   },
   {
@@ -594,20 +576,20 @@
    "requirement": {
     "kind": "tw_monthly",
     "tier": "normal",
-    "fy": 218913608600.0,
+    "fy": 219444672680.0,
     "year": 2026,
     "analysts": 10,
-    "ytd": 115117861000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 20759149520.0,
-    "hist_n": 260,
-    "prev_avg": 15087429800.0,
-    "need_yoy": 0.3759235201213662,
-    "yoy_max": 2.0740317914793347,
-    "yoy_med": -0.032669531303471944,
+    "ytd": 134710261000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 21183602920.0,
+    "hist_n": 261,
+    "prev_avg": 14947090000.0,
+    "need_yoy": 0.41723926998499383,
+    "yoy_max": 2.0634651487966114,
+    "yoy_med": -0.01695637329756805,
     "yoy_n": 20,
-    "excess": -1.6981082713579685
+    "excess": -1.6462258788116175
    },
    "track_record": {
     "n": 24,
@@ -616,13 +598,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 21.42895,
-    "trailing_pe": 36.363636,
-    "ps": 3.771572,
-    "price": 308.0,
-    "implied_growth": 0.6969397007319538
+    "forward_pe": 19.036583,
+    "trailing_pe": 32.665096,
+    "ps": 3.3919656,
+    "price": 277.0,
+    "implied_growth": 0.7159117263849293
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -630,20 +612,20 @@
    "requirement": {
     "kind": "tw_monthly",
     "tier": "normal",
-    "fy": 283204786670.0,
+    "fy": 283170786670.0,
     "year": 2026,
     "analysts": 19,
     "ytd": 178659250000.0,
     "months_done": 8,
     "months_left": 4,
-    "need_avg": 26136384167.5,
+    "need_avg": 26127884167.5,
     "hist_n": 261,
     "prev_avg": 20434180000.0,
-    "need_yoy": 0.27905226280183504,
+    "need_yoy": 0.27863629308834503,
     "yoy_max": 0.401885250614479,
     "yoy_med": 0.07971796543158871,
     "yoy_n": 20,
-    "excess": -0.12283298781264396
+    "excess": -0.12324895752613396
    },
    "track_record": {
     "n": 24,
@@ -652,13 +634,13 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 18.039896,
-    "trailing_pe": 19.726858,
-    "ps": 6.50217,
-    "price": 130.0,
-    "implied_growth": 0.09351284508513813
+    "forward_pe": 19.496964,
+    "trailing_pe": 21.32018,
+    "ps": 7.027345,
+    "price": 140.5,
+    "implied_growth": 0.09351281563632186
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -666,20 +648,20 @@
    "requirement": {
     "kind": "tw_monthly",
     "tier": "normal",
-    "fy": 778366671540.0,
+    "fy": 777976528690.0,
     "year": 2026,
     "analysts": 21,
-    "ytd": 409681924000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 73736949508.0,
-    "hist_n": 260,
-    "prev_avg": 53306727600.0,
-    "need_yoy": 0.3832578518288188,
-    "yoy_max": 4.22013857677194,
-    "yoy_med": 0.06984724708639578,
+    "ytd": 474267973000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 75927138922.5,
+    "hist_n": 261,
+    "prev_avg": 54668470000.0,
+    "need_yoy": 0.38886526223433737,
+    "yoy_max": 4.522430063370754,
+    "yoy_med": 0.07148386510788196,
     "yoy_n": 20,
-    "excess": -3.8368807249431214
+    "excess": -4.1335648011364166
    },
    "track_record": {
     "n": 24,
@@ -688,13 +670,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 28.439554,
-    "trailing_pe": 58.139538,
-    "ps": 7.2425227,
-    "price": 1825.0,
-    "implied_growth": 1.044319612044549
+    "forward_pe": 25.248196,
+    "trailing_pe": 51.54311,
+    "ps": 6.4289794,
+    "price": 1620.0,
+    "implied_growth": 1.0414571401457753
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -724,13 +706,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 18.547884,
-    "trailing_pe": 40.503246,
-    "ps": 3.8190794,
-    "price": 249.5,
-    "implied_growth": 1.1837124924870133
+    "forward_pe": 16.466358,
+    "trailing_pe": 35.957794,
+    "ps": 3.3904853,
+    "price": 221.5,
+    "implied_growth": 1.183712633965568
    },
-   "prev_tier": null,
+   "prev_tier": "low_coverage",
    "changed": false
   },
   {
@@ -743,10 +725,10 @@
     "bias": "共識偏樂觀"
    },
    "pe": {
-    "forward_pe": 8.345589,
+    "forward_pe": 7.720588,
     "trailing_pe": null,
-    "ps": 0.6360255,
-    "price": 11.35
+    "ps": 0.5883936,
+    "price": 10.5
    },
    "prev_tier": null,
    "changed": false
@@ -756,20 +738,20 @@
    "requirement": {
     "kind": "tw_monthly",
     "tier": "normal",
-    "fy": 10863462646050.0,
+    "fy": 10862391822440.0,
     "year": 2026,
     "analysts": 18,
     "ytd": 6511139275000.0,
     "months_done": 8,
     "months_left": 4,
-    "need_avg": 1088080842762.5,
+    "need_avg": 1087813136860.0,
     "hist_n": 261,
     "prev_avg": 859978325500.0,
-    "need_yoy": 0.2652421700626919,
+    "need_yoy": 0.2649308762840441,
     "yoy_max": 0.6430873205737688,
     "yoy_med": 0.12254567640002567,
     "yoy_n": 20,
-    "excess": -0.3778451505110769
+    "excess": -0.3781564442897247
    },
    "track_record": {
     "n": 24,
@@ -778,11 +760,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 11.069385,
-    "trailing_pe": 16.953642,
-    "ps": 0.3852524,
-    "price": 256.0,
-    "implied_growth": 0.5315793966873497
+    "forward_pe": 10.724198,
+    "trailing_pe": 16.423841,
+    "ps": 0.37321326,
+    "price": 248.0,
+    "implied_growth": 0.5314749876867249
    },
    "prev_tier": "normal",
    "changed": false
@@ -795,17 +777,17 @@
     "fy": 181264748590.0,
     "year": 2026,
     "analysts": 14,
-    "ytd": 98753163000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 16502317118.0,
-    "hist_n": 260,
-    "prev_avg": 11681628400.0,
-    "need_yoy": 0.4126726645405019,
-    "yoy_max": 1.3999479418488967,
-    "yoy_med": 0.1070837651996337,
+    "ytd": 115085359000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 16544847397.5,
+    "hist_n": 261,
+    "prev_avg": 11912273000.0,
+    "need_yoy": 0.3888908856857125,
+    "yoy_max": 1.2085269828877387,
+    "yoy_med": 0.10507605860264935,
     "yoy_n": 20,
-    "excess": -0.9872752773083948
+    "excess": -0.8196360972020262
    },
    "track_record": {
     "n": 24,
@@ -814,13 +796,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 17.78036,
-    "trailing_pe": 37.87062,
-    "ps": 7.6108055,
-    "price": 562.0,
-    "implied_growth": 1.1299130051360038
+    "forward_pe": 17.210882,
+    "trailing_pe": 36.632996,
+    "ps": 7.3828154,
+    "price": 544.0,
+    "implied_growth": 1.128478714803808
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -828,20 +810,20 @@
    "requirement": {
     "kind": "tw_monthly",
     "tier": "rare",
-    "fy": 5435232994770.0,
+    "fy": 5434703120270.0,
     "year": 2026,
     "analysts": 40,
-    "ytd": 2872064238000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 512633751354.0,
-    "hist_n": 260,
-    "prev_avg": 342568606400.0,
-    "need_yoy": 0.49644112676052843,
-    "yoy_max": 0.44433502400678937,
-    "yoy_med": 0.16454221816143466,
+    "ytd": 3386869575000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 511958386317.5,
+    "hist_n": 261,
+    "prev_avg": 344267835250.0,
+    "need_yoy": 0.48709328580094247,
+    "yoy_max": 0.478054928834835,
+    "yoy_med": 0.18543143440786958,
     "yoy_n": 20,
-    "excess": 0.05210610275373906
+    "excess": 0.009038356966107441
    },
    "track_record": {
     "n": 24,
@@ -850,11 +832,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 16.956417,
+    "forward_pe": 16.957918,
     "trailing_pe": 28.17066,
     "ps": 14.074343,
     "price": 2410.0,
-    "implied_growth": 0.661356877458251
+    "implied_growth": 0.6612098254042744
    },
    "prev_tier": "rare",
    "changed": false
@@ -886,13 +868,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 3.3284464,
-    "trailing_pe": 19.184124,
-    "ps": 5.3450046,
-    "price": 174.0,
-    "implied_growth": 4.763687226569129
+    "forward_pe": 3.3696291,
+    "trailing_pe": 18.90849,
+    "ps": 5.2682085,
+    "price": 171.5,
+    "implied_growth": 4.6114454852019175
    },
-   "prev_tier": null,
+   "prev_tier": "low_coverage",
    "changed": false
   },
   {
@@ -900,20 +882,20 @@
    "requirement": {
     "kind": "tw_monthly",
     "tier": "normal",
-    "fy": 399817006130.0,
+    "fy": 400113914660.0,
     "year": 2026,
-    "analysts": 10,
-    "ytd": 205131072000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 38937186826.0,
-    "hist_n": 260,
-    "prev_avg": 24385488000.0,
-    "need_yoy": 0.5967360106141817,
-    "yoy_max": 1.086512816613748,
-    "yoy_med": 0.1498854823712672,
+    "analysts": 11,
+    "ytd": 246003583000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 38527582915.0,
+    "hist_n": 261,
+    "prev_avg": 24072408000.0,
+    "need_yoy": 0.600487284653866,
+    "yoy_max": 0.9643291638286569,
+    "yoy_med": 0.1744891753367095,
     "yoy_n": 20,
-    "excess": -0.4897768059995664
+    "excess": -0.3638418791747908
    },
    "track_record": {
     "n": 24,
@@ -922,47 +904,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 18.873158,
-    "trailing_pe": 33.22259,
-    "ps": 3.7785602,
-    "price": 2100.0,
-    "implied_growth": 0.7603090060497557
-   },
-   "prev_tier": "low_coverage",
-   "changed": true
-  },
-  {
-   "ticker": "2356.TW",
-   "requirement": {
-    "kind": "tw_monthly",
-    "tier": "normal",
-    "fy": 993404112690.0,
-    "year": 2026,
-    "analysts": 8,
-    "ytd": 560357927000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 86609237138.0,
-    "hist_n": 260,
-    "prev_avg": 58627444200.0,
-    "need_yoy": 0.47728147320465997,
-    "yoy_max": 0.6299795973107829,
-    "yoy_med": 0.02753003842910884,
-    "yoy_n": 20,
-    "excess": -0.15269812410612293
-   },
-   "track_record": {
-    "n": 25,
-    "beats": 13,
-    "median_surprise": 1.1,
-    "bias": "共識大致中性"
-   },
-   "pe": {
-    "forward_pe": 15.534132,
-    "trailing_pe": 21.915585,
-    "ps": 0.29612434,
-    "price": 67.5,
-    "implied_growth": 0.4108020325821875
+    "forward_pe": 16.770082,
+    "trailing_pe": 29.760025,
+    "ps": 3.3917077,
+    "price": 1885.0,
+    "implied_growth": 0.7745903090992639
    },
    "prev_tier": "normal",
    "changed": false
@@ -975,26 +921,62 @@
     "fy": 5010000000.0,
     "year": 2026,
     "analysts": 1,
-    "ytd": 2758356000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 450328800.0,
-    "hist_n": 260,
-    "prev_avg": 337534400.0,
-    "need_yoy": 0.3341715688830531,
-    "yoy_max": 0.4662657206391576,
-    "yoy_med": 0.014329871119150406,
+    "ytd": 3034216000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 493946000.0,
+    "hist_n": 261,
+    "prev_avg": 337665250.0,
+    "need_yoy": 0.4628274600362341,
+    "yoy_max": 0.5335135243989035,
+    "yoy_med": 0.021625863555081004,
     "yoy_n": 20,
-    "excess": -0.1320941517561045
+    "excess": -0.07068606436266944
    },
    "track_record": null,
    "pe": {
     "forward_pe": null,
-    "trailing_pe": 21.19403,
-    "ps": 5.6279907,
-    "price": 142.0
+    "trailing_pe": 19.076006,
+    "ps": 5.073118,
+    "price": 128.0
    },
    "prev_tier": "low_coverage",
+   "changed": false
+  },
+  {
+   "ticker": "2368.TW",
+   "requirement": {
+    "kind": "tw_monthly",
+    "tier": "rare",
+    "fy": 106326785820.0,
+    "year": 2026,
+    "analysts": 8,
+    "ytd": 64058925000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 10566965205.0,
+    "hist_n": 261,
+    "prev_avg": 5580290250.0,
+    "need_yoy": 0.893622863971995,
+    "yoy_max": 0.6958698448086289,
+    "yoy_med": 0.0734269481244556,
+    "yoy_n": 20,
+    "excess": 0.19775301916336607
+   },
+   "track_record": {
+    "n": 23,
+    "beats": 12,
+    "median_surprise": 0.6,
+    "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 16.06766,
+    "trailing_pe": 36.759457,
+    "ps": 6.78748,
+    "price": 1030.0,
+    "implied_growth": 1.2877915639240558
+   },
+   "prev_tier": null,
    "changed": false
   },
   {
@@ -1002,20 +984,20 @@
    "requirement": {
     "kind": "tw_monthly",
     "tier": "rare",
-    "fy": 4052351649660.0,
+    "fy": 4027626994040.0,
     "year": 2026,
-    "analysts": 18,
-    "ytd": 2212088287000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 368052672532.0,
-    "hist_n": 260,
-    "prev_avg": 195110756600.0,
-    "need_yoy": 0.8863781728167415,
-    "yoy_max": 0.6862770018780722,
-    "yoy_med": 0.08742609298681359,
+    "analysts": 19,
+    "ytd": 2636059219000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 347891943760.0,
+    "hist_n": 261,
+    "prev_avg": 205686484250.0,
+    "need_yoy": 0.6913699751761886,
+    "yoy_max": 0.5947528358533061,
+    "yoy_med": 0.07157405650443627,
     "yoy_n": 20,
-    "excess": 0.2001011709386693
+    "excess": 0.09661713932288252
    },
    "track_record": {
     "n": 24,
@@ -1024,11 +1006,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 10.804506,
-    "trailing_pe": 15.245251,
-    "ps": 0.47465494,
-    "price": 345.0,
-    "implied_growth": 0.4110086106666977
+    "forward_pe": 10.538309,
+    "trailing_pe": 14.882794,
+    "ps": 0.46296054,
+    "price": 336.5,
+    "implied_growth": 0.4122563686451024
    },
    "prev_tier": "rare",
    "changed": false
@@ -1060,47 +1042,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 24.007185,
-    "trailing_pe": 85.46401,
-    "ps": 14.877922,
-    "price": 5415.0,
-    "implied_growth": 2.559934661227462
-   },
-   "prev_tier": null,
-   "changed": false
-  },
-  {
-   "ticker": "2385.TW",
-   "requirement": {
-    "kind": "tw_monthly",
-    "tier": "normal",
-    "fy": 90872666670.0,
-    "year": 2026,
-    "analysts": 3,
-    "ytd": 52316431000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 7711247134.0,
-    "hist_n": 260,
-    "prev_avg": 7968767400.0,
-    "need_yoy": -0.032316198111140726,
-    "yoy_max": 1.6636127443738613,
-    "yoy_med": 0.04751620942357304,
-    "yoy_n": 20,
-    "excess": -1.695928942485002
-   },
-   "track_record": {
-    "n": 24,
-    "beats": 17,
-    "median_surprise": 7.9,
-    "bias": "共識大致中性"
-   },
-   "pe": {
-    "forward_pe": 11.656118,
-    "trailing_pe": 12.514156,
-    "ps": 0.86336,
-    "price": 110.5,
-    "implied_growth": 0.07361267276120587
+    "forward_pe": 23.785511,
+    "trailing_pe": 84.741745,
+    "ps": 14.740544,
+    "price": 5365.0,
+    "implied_growth": 2.562746455184419
    },
    "prev_tier": "normal",
    "changed": false
@@ -1110,20 +1056,20 @@
    "requirement": {
     "kind": "tw_monthly",
     "tier": "normal",
-    "fy": 358636657730.0,
+    "fy": 362456265820.0,
     "year": 2026,
     "analysts": 10,
     "ytd": 220193882000.0,
     "months_done": 8,
     "months_left": 4,
-    "need_avg": 34610693932.5,
+    "need_avg": 35565595955.0,
     "hist_n": 261,
     "prev_avg": 9189439500.0,
-    "need_yoy": 2.7663552747150684,
+    "need_yoy": 2.8702682524869987,
     "yoy_max": 3.012845162851102,
     "yoy_med": 0.026377584367421436,
     "yoy_n": 20,
-    "excess": -0.24648988813603356
+    "excess": -0.14257691036410325
    },
    "track_record": {
     "n": 24,
@@ -1132,13 +1078,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 5.012126,
-    "trailing_pe": 17.300314,
-    "ps": 8.514389,
-    "price": 496.0,
-    "implied_growth": 2.451691757150558
+    "forward_pe": 4.907726,
+    "trailing_pe": 17.213688,
+    "ps": 8.462891,
+    "price": 493.0,
+    "implied_growth": 2.5074672057894025
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -1149,17 +1095,17 @@
     "fy": 283403533110.0,
     "year": 2026,
     "analysts": 8,
-    "ytd": 160292620000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 24622182622.0,
-    "hist_n": 260,
-    "prev_avg": 23825290000.0,
-    "need_yoy": 0.03344734196309895,
-    "yoy_max": 0.7353073230321523,
-    "yoy_med": 0.03902507605886352,
+    "ytd": 183394270000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 25002315777.5,
+    "hist_n": 261,
+    "prev_avg": 23646748250.0,
+    "need_yoy": 0.05732574784357514,
+    "yoy_max": 0.7056212781654454,
+    "yoy_med": 0.06279211690102837,
     "yoy_n": 20,
-    "excess": -0.7018599810690533
+    "excess": -0.6482955303218703
    },
    "track_record": {
     "n": 24,
@@ -1168,13 +1114,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 53.498352,
-    "trailing_pe": 111.666664,
-    "ps": 0.7224383,
-    "price": 26.8,
-    "implied_growth": 1.0872916608720957
+    "forward_pe": 60.28546,
+    "trailing_pe": 125.833336,
+    "ps": 0.81409097,
+    "price": 30.2,
+    "implied_growth": 1.087291628860425
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -1185,17 +1131,17 @@
     "fy": 248367478690.0,
     "year": 2026,
     "analysts": 5,
-    "ytd": 141236769000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 21426141938.0,
-    "hist_n": 260,
-    "prev_avg": 20879315400.0,
-    "need_yoy": 0.026189869137184463,
-    "yoy_max": 0.1915149967238099,
-    "yoy_med": 0.007152969408857013,
+    "ytd": 164546265000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 20955303422.5,
+    "hist_n": 261,
+    "prev_avg": 21459948000.0,
+    "need_yoy": -0.023515647731299216,
+    "yoy_max": 0.19133852289376652,
+    "yoy_med": 0.0135907165831326,
     "yoy_n": 20,
-    "excess": -0.16532512758662543
+    "excess": -0.21485417062506573
    },
    "track_record": {
     "n": 22,
@@ -1204,13 +1150,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 25.480799,
-    "trailing_pe": 27.120316,
-    "ps": 4.3549576,
-    "price": 137.5,
-    "implied_growth": 0.06434323350692406
+    "forward_pe": 26.036743,
+    "trailing_pe": 27.603142,
+    "ps": 4.449975,
+    "price": 140.5,
+    "implied_growth": 0.06016109618626242
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -1218,20 +1164,20 @@
    "requirement": {
     "kind": "tw_monthly",
     "tier": "normal",
-    "fy": 662611035840.0,
+    "fy": 662699410840.0,
     "year": 2026,
     "analysts": 24,
-    "ytd": 349808051000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 62560596968.0,
-    "hist_n": 260,
-    "prev_avg": 49812942000.0,
-    "need_yoy": 0.25591050149176087,
-    "yoy_max": 1.0619805940473035,
-    "yoy_med": 0.10018906088328983,
+    "ytd": 413991412000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 62176999710.0,
+    "hist_n": 261,
+    "prev_avg": 51129516750.0,
+    "need_yoy": 0.21606859720613336,
+    "yoy_max": 1.0509015332170106,
+    "yoy_med": 0.10310926154218825,
     "yoy_n": 20,
-    "excess": -0.8060700925555426
+    "excess": -0.8348329360108773
    },
    "track_record": {
     "n": 24,
@@ -1240,98 +1186,13 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 30.737877,
-    "trailing_pe": 72.98727,
-    "ps": 11.87884,
-    "price": 4415.0,
-    "implied_growth": 1.3745058905662222
+    "forward_pe": 31.655548,
+    "trailing_pe": 75.76008,
+    "ps": 12.336237,
+    "price": 4585.0,
+    "implied_growth": 1.3932638916881173
    },
    "prev_tier": "normal",
-   "changed": false
-  },
-  {
-   "ticker": "2597.TW",
-   "requirement": null,
-   "track_record": null,
-   "pe": {
-    "forward_pe": null,
-    "trailing_pe": 14.5189,
-    "ps": 1.5684702,
-    "price": 169.0
-   },
-   "prev_tier": null,
-   "changed": false
-  },
-  {
-   "ticker": "2618.TW",
-   "requirement": {
-    "kind": "tw_monthly",
-    "tier": "normal",
-    "fy": 257301449390.0,
-    "year": 2026,
-    "analysts": 3,
-    "ytd": 150739178000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 21312454278.0,
-    "hist_n": 260,
-    "prev_avg": 18317814400.0,
-    "need_yoy": 0.1634823790986768,
-    "yoy_max": 0.551284154262784,
-    "yoy_med": 0.05863482989519997,
-    "yoy_n": 20,
-    "excess": -0.3878017751641072
-   },
-   "track_record": {
-    "n": 24,
-    "beats": 14,
-    "median_surprise": 11.9,
-    "bias": "共識大致中性"
-   },
-   "pe": {
-    "forward_pe": 8.778815,
-    "trailing_pe": 9.023355,
-    "ps": 0.9628781,
-    "price": 42.5,
-    "implied_growth": 0.027855695785820922
-   },
-   "prev_tier": "normal",
-   "changed": false
-  },
-  {
-   "ticker": "2731.TW",
-   "requirement": {
-    "kind": "tw_monthly",
-    "tier": "low_coverage",
-    "fy": 32687000000.0,
-    "year": 2026,
-    "analysts": 1,
-    "ytd": 19425403000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 2652319400.0,
-    "hist_n": 167,
-    "prev_avg": 2484100400.0,
-    "need_yoy": 0.0677182774093994,
-    "yoy_max": 3.9580897768865926,
-    "yoy_med": 0.10630570712864218,
-    "yoy_n": 12,
-    "excess": -3.890371499477193
-   },
-   "track_record": {
-    "n": 23,
-    "beats": 14,
-    "median_surprise": 4.9,
-    "bias": "共識大致中性"
-   },
-   "pe": {
-    "forward_pe": 9.320389,
-    "trailing_pe": 8.921933,
-    "ps": 0.4264742,
-    "price": 144.0,
-    "implied_growth": -0.04275100534966958
-   },
-   "prev_tier": "low_coverage",
    "changed": false
   },
   {
@@ -1379,13 +1240,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 14.537242,
-    "trailing_pe": 17.980885,
-    "ps": 2.0818622,
-    "price": 150.5,
-    "implied_growth": 0.23688420403264931
+    "forward_pe": 14.344056,
+    "trailing_pe": 17.720764,
+    "ps": 2.0541961,
+    "price": 148.5,
+    "implied_growth": 0.23540817185878238
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -1393,20 +1254,20 @@
    "requirement": {
     "kind": "tw_monthly",
     "tier": "normal",
-    "fy": 362968021800.0,
+    "fy": 374132018170.0,
     "year": 2026,
-    "analysts": 5,
+    "analysts": 6,
     "ytd": 185040310000.0,
     "months_done": 7,
     "months_left": 5,
-    "need_avg": 35585542360.0,
+    "need_avg": 37818341634.0,
     "hist_n": 260,
     "prev_avg": 36444740200.0,
-    "need_yoy": -0.02357535916801512,
+    "need_yoy": 0.037689977386640816,
     "yoy_max": 22.756805487000584,
     "yoy_med": 0.148891255344076,
     "yoy_n": 20,
-    "excess": -22.780380846168597
+    "excess": -22.719115509613943
    },
    "track_record": {
     "n": 24,
@@ -1415,13 +1276,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 13.026704,
-    "trailing_pe": 16.288952,
-    "ps": 2.076,
-    "price": 115.0,
-    "implied_growth": 0.25042773674753005
+    "forward_pe": 12.589694,
+    "trailing_pe": 15.651558,
+    "ps": 1.994765,
+    "price": 110.5,
+    "implied_growth": 0.24320400479948123
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -1432,17 +1293,17 @@
     "fy": 105309530360.0,
     "year": 2026,
     "analysts": 4,
-    "ytd": 62596086000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 8542688872.0,
-    "hist_n": 260,
-    "prev_avg": 8057143600.0,
-    "need_yoy": 0.06026270550769386,
-    "yoy_max": 102.85476801579468,
-    "yoy_med": 0.1068185419633958,
+    "ytd": 72435387000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 8218535840.0,
+    "hist_n": 261,
+    "prev_avg": 8009343250.0,
+    "need_yoy": 0.02611856970919546,
+    "yoy_max": 3.3764036141690212,
+    "yoy_med": 0.08083087151747281,
     "yoy_n": 20,
-    "excess": -102.79450531028698
+    "excess": -3.3502850444598256
    },
    "track_record": {
     "n": 21,
@@ -1451,13 +1312,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 15.999677,
-    "trailing_pe": 20.542454,
-    "ps": 7.3984714,
-    "price": 43.55,
-    "implied_growth": 0.28392929432262903
+    "forward_pe": 16.925175,
+    "trailing_pe": 21.839624,
+    "ps": 7.8656535,
+    "price": 46.3,
+    "implied_growth": 0.290363260645754
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -1487,13 +1348,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 15.001349,
-    "trailing_pe": 16.847292,
-    "ps": 2.4112904,
-    "price": 68.4,
-    "implied_growth": 0.12305180020810136
+    "forward_pe": 14.716235,
+    "trailing_pe": 16.527094,
+    "ps": 2.4001274,
+    "price": 67.1,
+    "implied_growth": 0.12305178600368927
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -1504,17 +1365,17 @@
     "fy": 43514074380.0,
     "year": 2026,
     "analysts": 4,
-    "ytd": 24444279000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 3813959076.0,
-    "hist_n": 260,
-    "prev_avg": 3393394400.0,
-    "need_yoy": 0.12393627926067174,
-    "yoy_max": 2.504522204151036,
-    "yoy_med": 0.03916518908997113,
+    "ytd": 28305294000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 3802195095.0,
+    "hist_n": 261,
+    "prev_avg": 3426417250.0,
+    "need_yoy": 0.1096707778365289,
+    "yoy_max": 2.656871643571084,
+    "yoy_med": 0.04230032470868972,
     "yoy_n": 20,
-    "excess": -2.3805859248903642
+    "excess": -2.5472008657345553
    },
    "track_record": {
     "n": 24,
@@ -1523,11 +1384,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 11.269317,
-    "trailing_pe": 13.72315,
-    "ps": 1.7557994,
-    "price": 115.0,
-    "implied_growth": 0.21774460688256458
+    "forward_pe": 11.318314,
+    "trailing_pe": 13.799283,
+    "ps": 1.7634333,
+    "price": 115.5,
+    "implied_growth": 0.2191995203525896
    },
    "prev_tier": "normal",
    "changed": false
@@ -1537,20 +1398,20 @@
    "requirement": {
     "kind": "tw_monthly",
     "tier": "normal",
-    "fy": 66231301720.0,
+    "fy": 66337607410.0,
     "year": 2026,
     "analysts": 19,
     "ytd": 39087872000.0,
     "months_done": 8,
     "months_left": 4,
-    "need_avg": 6785857430.0,
+    "need_avg": 6812433852.5,
     "hist_n": 261,
     "prev_avg": 5854007750.0,
-    "need_yoy": 0.1591814906633835,
+    "need_yoy": 0.16372135867090365,
     "yoy_max": 1.008997483906164,
     "yoy_med": 0.098188382895672,
     "yoy_n": 20,
-    "excess": -0.8498159932427805
+    "excess": -0.8452761252352603
    },
    "track_record": {
     "n": 24,
@@ -1559,13 +1420,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 36.084106,
-    "trailing_pe": 39.37008,
-    "ps": 15.098802,
-    "price": 7400.0,
-    "implied_growth": 0.0910643040456649
+    "forward_pe": 32.274796,
+    "trailing_pe": 35.461372,
+    "ps": 13.588921,
+    "price": 6660.0,
+    "implied_growth": 0.09873264574623475
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -1578,11 +1439,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 28.524944,
-    "trailing_pe": 13.242699,
-    "ps": 3.1761801,
-    "price": 131.5,
-    "implied_growth": -0.5357502191765915
+    "forward_pe": 28.308025,
+    "trailing_pe": 13.1419935,
+    "ps": 3.1520267,
+    "price": 130.5,
+    "implied_growth": -0.5357502510330552
    },
    "prev_tier": null,
    "changed": false
@@ -1592,20 +1453,20 @@
    "requirement": {
     "kind": "tw_monthly",
     "tier": "normal",
-    "fy": 220735270520.0,
+    "fy": 220899020520.0,
     "year": 2026,
     "analysts": 16,
-    "ytd": 116749062000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 20797241704.0,
-    "hist_n": 260,
-    "prev_avg": 14980093400.0,
-    "need_yoy": 0.388325235942788,
-    "yoy_max": 1.213523052058664,
-    "yoy_med": 0.10203899094398405,
+    "ytd": 136230130000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 21167222630.0,
+    "hist_n": 261,
+    "prev_avg": 15569577750.0,
+    "need_yoy": 0.3595245144011694,
+    "yoy_max": 1.2849939081687114,
+    "yoy_med": 0.08814969858287602,
     "yoy_n": 20,
-    "excess": -0.825197816115876
+    "excess": -0.925469393767542
    },
    "track_record": {
     "n": 23,
@@ -1614,11 +1475,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 23.122173,
-    "trailing_pe": 48.074333,
-    "ps": 7.5803127,
-    "price": 3570.0,
-    "implied_growth": 1.07914424825037
+    "forward_pe": 21.610973,
+    "trailing_pe": 45.454544,
+    "ps": 7.1556454,
+    "price": 3370.0,
+    "implied_growth": 1.1033085368252507
    },
    "prev_tier": "normal",
    "changed": false
@@ -1628,20 +1489,20 @@
    "requirement": {
     "kind": "tw_monthly",
     "tier": "normal",
-    "fy": 36120579430.0,
+    "fy": 36097149520.0,
     "year": 2026,
-    "analysts": 5,
+    "analysts": 6,
     "ytd": 23834577000.0,
     "months_done": 8,
     "months_left": 4,
-    "need_avg": 3071500607.5,
+    "need_avg": 3065643130.0,
     "hist_n": 261,
     "prev_avg": 2603938500.0,
-    "need_yoy": 0.179559581572299,
+    "need_yoy": 0.17731011312287137,
     "yoy_max": 2.9239335086544376,
     "yoy_med": 0.07804114272964457,
     "yoy_n": 20,
-    "excess": -2.7443739270821386
+    "excess": -2.746623395531566
    },
    "track_record": {
     "n": 24,
@@ -1650,11 +1511,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 19.138186,
-    "trailing_pe": 25.449102,
-    "ps": 2.5160925,
-    "price": 340.0,
-    "implied_growth": 0.3297551816039408
+    "forward_pe": 18.141008,
+    "trailing_pe": 24.101797,
+    "ps": 2.3828876,
+    "price": 322.0,
+    "implied_growth": 0.3285809145776244
    },
    "prev_tier": "normal",
    "changed": false
@@ -1667,17 +1528,17 @@
     "fy": 184158251740.0,
     "year": 2026,
     "analysts": 18,
-    "ytd": 96589910000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 17513668348.0,
-    "hist_n": 260,
-    "prev_avg": 11474766200.0,
-    "need_yoy": 0.52627670514106,
-    "yoy_max": 0.3622826673167956,
-    "yoy_med": 0.12405242409121775,
+    "ytd": 114335429000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 17455705685.0,
+    "hist_n": 261,
+    "prev_avg": 11504306250.0,
+    "need_yoy": 0.5173192807693205,
+    "yoy_max": 0.35960975853594057,
+    "yoy_med": 0.14417888876075557,
     "yoy_n": 20,
-    "excess": 0.16399403782426436
+    "excess": 0.15770952223337997
    },
    "track_record": {
     "n": 24,
@@ -1686,11 +1547,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 23.98495,
-    "trailing_pe": 59.537956,
-    "ps": 9.928975,
-    "price": 902.0,
-    "implied_growth": 1.482304778621594
+    "forward_pe": 25.979263,
+    "trailing_pe": 64.531044,
+    "ps": 10.754555,
+    "price": 977.0,
+    "implied_growth": 1.4839443674749355
    },
    "prev_tier": "unprecedented",
    "changed": false
@@ -1703,17 +1564,17 @@
     "fy": 203882918930.0,
     "year": 2026,
     "analysts": 5,
-    "ytd": 115381747000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 17700234386.0,
-    "hist_n": 260,
-    "prev_avg": 17606701400.0,
-    "need_yoy": 0.0053123514663571125,
-    "yoy_max": 0.6261876508040567,
-    "yoy_med": 0.06509818933634914,
+    "ytd": 132164611000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 17929576982.5,
+    "hist_n": 261,
+    "prev_avg": 18141342250.0,
+    "need_yoy": -0.011673076037138297,
+    "yoy_max": 0.6216257694392144,
+    "yoy_med": 0.061116735306338876,
     "yoy_n": 20,
-    "excess": -0.6208752993376996
+    "excess": -0.6332988454763527
    },
    "track_record": {
     "n": 24,
@@ -1722,11 +1583,29 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 20.945753,
-    "trailing_pe": 22.562141,
-    "ps": 1.7845644,
-    "price": 118.0,
-    "implied_growth": 0.07717020247493611
+    "forward_pe": 21.478271,
+    "trailing_pe": 23.135756,
+    "ps": 1.8299346,
+    "price": 121.0,
+    "implied_growth": 0.07717031785286643
+   },
+   "prev_tier": "normal",
+   "changed": false
+  },
+  {
+   "ticker": "3055.TW",
+   "requirement": null,
+   "track_record": {
+    "n": 15,
+    "beats": 7,
+    "median_surprise": -14.4,
+    "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": 40.518784,
+    "price": 154.5
    },
    "prev_tier": null,
    "changed": false
@@ -1758,13 +1637,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 80.56965,
-    "trailing_pe": 303.05927,
-    "ps": 97.1478,
-    "price": 3170.0,
-    "implied_growth": 2.761456950601126
+    "forward_pe": 71.419785,
+    "trailing_pe": 263.1086,
+    "ps": 86.11525,
+    "price": 2810.0,
+    "implied_growth": 2.6839735655883032
    },
-   "prev_tier": null,
+   "prev_tier": "unprecedented",
    "changed": false
   },
   {
@@ -1775,17 +1654,17 @@
     "fy": 21662015170.0,
     "year": 2026,
     "analysts": 12,
-    "ytd": 11739377000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 1984527634.0,
-    "hist_n": 203,
-    "prev_avg": 1567877600.0,
-    "need_yoy": 0.2657414290503288,
-    "yoy_max": 0.640637739518396,
-    "yoy_med": 0.08001635825406783,
-    "yoy_n": 15,
-    "excess": -0.37489631046806715
+    "ytd": 13676774000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 1996310292.5,
+    "hist_n": 204,
+    "prev_avg": 1588846250.0,
+    "need_yoy": 0.25645278295492724,
+    "yoy_max": 0.6627775502436122,
+    "yoy_med": 0.12566238629329818,
+    "yoy_n": 16,
+    "excess": -0.40632476728868494
    },
    "track_record": {
     "n": 25,
@@ -1794,13 +1673,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 45.251057,
-    "trailing_pe": 52.882355,
-    "ps": 1.8991886,
-    "price": 449.5,
-    "implied_growth": 0.16864353024947
+    "forward_pe": 44.04302,
+    "trailing_pe": 51.289566,
+    "ps": 1.8484873,
+    "price": 437.5,
+    "implied_growth": 0.16453335852082818
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -1813,11 +1692,42 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 12.899262,
-    "trailing_pe": 12.758203,
-    "ps": 2.5201118,
-    "price": 210.0,
-    "implied_growth": -0.010935431809974916
+    "forward_pe": 12.837837,
+    "trailing_pe": 12.689739,
+    "ps": 2.5081112,
+    "price": 209.0,
+    "implied_growth": -0.011536055489721586
+   },
+   "prev_tier": null,
+   "changed": false
+  },
+  {
+   "ticker": "3147.TWO",
+   "requirement": {
+    "kind": "tw_monthly",
+    "tier": "low_coverage",
+    "fy": 16623000000.0,
+    "year": 2026,
+    "analysts": 1,
+    "ytd": 11956758000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 1166560500.0,
+    "hist_n": 176,
+    "prev_avg": 633880500.0,
+    "need_yoy": 0.8403476680541522,
+    "yoy_max": 0.6904419986881911,
+    "yoy_med": 0.24506104699125553,
+    "yoy_n": 13,
+    "excess": 0.14990566936596106
+   },
+   "track_record": null,
+   "pe": {
+    "forward_pe": 8.646322,
+    "trailing_pe": 13.752334,
+    "ps": 0.76833045,
+    "price": 221.0,
+    "implied_growth": 0.590541504237293
    },
    "prev_tier": null,
    "changed": false
@@ -1826,21 +1736,21 @@
    "ticker": "3189.TW",
    "requirement": {
     "kind": "tw_monthly",
-    "tier": "low_coverage",
-    "fy": 52146606620.0,
+    "tier": "rare",
+    "fy": 52748497850.0,
     "year": 2026,
-    "analysts": 2,
+    "analysts": 5,
     "ytd": 32959684000.0,
     "months_done": 8,
     "months_left": 4,
-    "need_avg": 4796730655.0,
+    "need_avg": 4947203462.5,
     "hist_n": 261,
     "prev_avg": 3599469250.0,
-    "need_yoy": 0.3326216510948108,
+    "need_yoy": 0.37442581638945804,
     "yoy_max": 0.35423979322232335,
     "yoy_med": 0.12903195142477641,
     "yoy_n": 20,
-    "excess": -0.021618142127512563
+    "excess": 0.020186023167134692
    },
    "track_record": {
     "n": 23,
@@ -1849,13 +1759,49 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 30.943962,
-    "trailing_pe": 142.93193,
-    "ps": 9.639283,
-    "price": 819.0,
-    "implied_growth": 3.619057184726377
+    "forward_pe": 31.05731,
+    "trailing_pe": 142.95653,
+    "ps": 9.674592,
+    "price": 822.0,
+    "implied_growth": 3.6029913730455077
    },
    "prev_tier": "low_coverage",
+   "changed": true
+  },
+  {
+   "ticker": "3217.TWO",
+   "requirement": {
+    "kind": "tw_monthly",
+    "tier": "low_coverage",
+    "fy": 4109000000.0,
+    "year": 2026,
+    "analysts": 1,
+    "ytd": 2534741000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 393564750.0,
+    "hist_n": 261,
+    "prev_avg": 360812250.0,
+    "need_yoy": 0.09077435702363212,
+    "yoy_max": 0.9109075470755708,
+    "yoy_med": 0.06649674604457112,
+    "yoy_n": 20,
+    "excess": -0.8201331900519386
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 14,
+    "median_surprise": 4.8,
+    "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 10.316815,
+    "trailing_pe": 10.071372,
+    "ps": 2.814163,
+    "price": 127.0,
+    "implied_growth": -0.02379057877843116
+   },
+   "prev_tier": null,
    "changed": false
   },
   {
@@ -1863,20 +1809,20 @@
    "requirement": {
     "kind": "tw_monthly",
     "tier": "normal",
-    "fy": 4047181801920.0,
+    "fy": 4073354308160.0,
     "year": 2026,
-    "analysts": 5,
-    "ytd": 2049964840000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 399443392384.0,
-    "hist_n": 260,
-    "prev_avg": 219404073600.0,
-    "need_yoy": 0.8205833001634844,
-    "yoy_max": 1.2670122887639441,
-    "yoy_med": 0.11764681556255963,
+    "analysts": 7,
+    "ytd": 2510029903000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 390831101290.0,
+    "hist_n": 261,
+    "prev_avg": 231094443250.0,
+    "need_yoy": 0.6912180829341512,
+    "yoy_max": 1.3456294962886437,
+    "yoy_med": 0.14406855609594715,
     "yoy_n": 20,
-    "excess": -0.44642898860045976
+    "excess": -0.6544114133544925
    },
    "track_record": {
     "n": 25,
@@ -1885,11 +1831,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 8.439617,
-    "trailing_pe": 16.045382,
-    "ps": 0.20777167,
-    "price": 198.0,
-    "implied_growth": 0.9011978861126044
+    "forward_pe": 7.8183184,
+    "trailing_pe": 15.056819,
+    "ps": 0.19465476,
+    "price": 185.5,
+    "implied_growth": 0.9258385537227547
    },
    "prev_tier": "normal",
    "changed": false
@@ -1902,17 +1848,17 @@
     "fy": 38292890500.0,
     "year": 2026,
     "analysts": 12,
-    "ytd": 21014269000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 3455724300.0,
-    "hist_n": 260,
-    "prev_avg": 2362818000.0,
-    "need_yoy": 0.46254358143538776,
-    "yoy_max": 0.6938644978942989,
-    "yoy_med": 0.15441361504216222,
+    "ytd": 24155518000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 3534343125.0,
+    "hist_n": 261,
+    "prev_avg": 2483780250.0,
+    "need_yoy": 0.42296933273384396,
+    "yoy_max": 0.7902151115019245,
+    "yoy_med": 0.12771745618003383,
     "yoy_n": 20,
-    "excess": -0.23132091645891117
+    "excess": -0.3672457787680805
    },
    "track_record": {
     "n": 25,
@@ -1921,11 +1867,46 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 19.758043,
-    "trailing_pe": 34.96586,
-    "ps": 4.4866524,
-    "price": 1485.0,
-    "implied_growth": 0.7697025965577662
+    "forward_pe": 18.094908,
+    "trailing_pe": 32.05279,
+    "ps": 4.108988,
+    "price": 1360.0,
+    "implied_growth": 0.7713707082677626
+   },
+   "prev_tier": "normal",
+   "changed": false
+  },
+  {
+   "ticker": "3363.TWO",
+   "requirement": {
+    "kind": "tw_monthly",
+    "tier": "low_coverage",
+    "fy": 2344235980.0,
+    "year": 2026,
+    "analysts": 2,
+    "ytd": 1186482000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 289438495.0,
+    "hist_n": 261,
+    "prev_avg": 141365500.0,
+    "need_yoy": 1.0474478921660517,
+    "yoy_max": 0.5923757771839353,
+    "yoy_med": 0.10733796429186526,
+    "yoy_n": 20,
+    "excess": 0.4550721149821164
+   },
+   "track_record": {
+    "n": 15,
+    "beats": 3,
+    "median_surprise": -30.2,
+    "bias": "共識偏樂觀"
+   },
+   "pe": {
+    "forward_pe": 40.23634,
+    "trailing_pe": null,
+    "ps": 45.26554,
+    "price": 681.0
    },
    "prev_tier": null,
    "changed": false
@@ -1938,17 +1919,17 @@
     "fy": 13667000000.0,
     "year": 2026,
     "analysts": 1,
-    "ytd": 6282055000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 1476989000.0,
-    "hist_n": 260,
-    "prev_avg": 672455200.0,
-    "need_yoy": 1.1964124896349975,
-    "yoy_max": 1.537907773539489,
-    "yoy_med": 0.056805139703860474,
+    "ytd": 7530036000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 1534241000.0,
+    "hist_n": 261,
+    "prev_avg": 691828500.0,
+    "need_yoy": 1.2176608798278763,
+    "yoy_max": 1.5346797230590141,
+    "yoy_med": 0.04319604001871613,
     "yoy_n": 20,
-    "excess": -0.3414952839044916
+    "excess": -0.3170188432311378
    },
    "track_record": {
     "n": 24,
@@ -1957,11 +1938,11 @@
     "bias": "共識偏樂觀"
    },
    "pe": {
-    "forward_pe": 1.5221971,
-    "trailing_pe": 117.647064,
-    "ps": 9.345535,
-    "price": 580.0,
-    "implied_growth": 76.28766793735187
+    "forward_pe": 1.3437327,
+    "trailing_pe": 104.06504,
+    "ps": 8.249851,
+    "price": 512.0,
+    "implied_growth": 76.44474775377573
    },
    "prev_tier": "low_coverage",
    "changed": false
@@ -1974,17 +1955,17 @@
     "fy": 253383923180.0,
     "year": 2026,
     "analysts": 2,
-    "ytd": 149135217000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 20849741236.0,
-    "hist_n": 259,
-    "prev_avg": 19064296000.0,
-    "need_yoy": 0.09365387717437867,
-    "yoy_max": 1.7601613902216897,
-    "yoy_med": 0.04421012060297236,
+    "ytd": 167831820000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 21388025795.0,
+    "hist_n": 260,
+    "prev_avg": 19157290750.0,
+    "need_yoy": 0.11644313771246595,
+    "yoy_max": 1.7512157327716626,
+    "yoy_med": 0.0473948833374398,
     "yoy_n": 20,
-    "excess": -1.666507513047311
+    "excess": -1.6347725950591967
    },
    "track_record": {
     "n": 23,
@@ -1993,34 +1974,34 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 47.046726,
-    "trailing_pe": 62.17949,
-    "ps": 1.580537,
-    "price": 48.5,
-    "implied_growth": 0.32165392337821763
+    "forward_pe": 46.189156,
+    "trailing_pe": 61.15385,
+    "ps": 1.5544662,
+    "price": 47.7,
+    "implied_growth": 0.32398717136117416
    },
-   "prev_tier": null,
+   "prev_tier": "low_coverage",
    "changed": false
   },
   {
    "ticker": "3491.TWO",
    "requirement": {
     "kind": "tw_monthly",
-    "tier": "rare",
-    "fy": 4485142500.0,
+    "tier": "low_coverage",
+    "fy": 4439218000.0,
     "year": 2026,
-    "analysts": 6,
-    "ytd": 2152323000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 466563900.0,
-    "hist_n": 250,
-    "prev_avg": 238388200.0,
-    "need_yoy": 0.9571602117890063,
-    "yoy_max": 0.7075558259447277,
-    "yoy_med": 0.15843781981318283,
+    "analysts": 2,
+    "ytd": 2473503000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 491428750.0,
+    "hist_n": 251,
+    "prev_avg": 256421750.0,
+    "need_yoy": 0.9164862185052556,
+    "yoy_max": 0.7764285189962354,
+    "yoy_med": 0.13985845792197704,
     "yoy_n": 19,
-    "excess": 0.2496043858442787
+    "excess": 0.14005769950902014
    },
    "track_record": {
     "n": 23,
@@ -2029,14 +2010,14 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 42.093983,
-    "trailing_pe": 120.4964,
-    "ps": 36.342594,
-    "price": 1505.0,
-    "implied_growth": 1.862556389591358
+    "forward_pe": 39.576733,
+    "trailing_pe": 113.65462,
+    "ps": 30.07449,
+    "price": 1415.0,
+    "implied_growth": 1.8717534618130305
    },
-   "prev_tier": null,
-   "changed": false
+   "prev_tier": "rare",
+   "changed": true
   },
   {
    "ticker": "3576.TW",
@@ -2048,11 +2029,11 @@
     "bias": "共識偏樂觀"
    },
    "pe": {
-    "forward_pe": 13.192307,
-    "trailing_pe": 32.35849,
-    "ps": 10.563695,
-    "price": 17.15,
-    "implied_growth": 1.452830274492551
+    "forward_pe": 12.615385,
+    "trailing_pe": 30.943398,
+    "ps": 10.101726,
+    "price": 16.4,
+    "implied_growth": 1.4528302544868823
    },
    "prev_tier": null,
    "changed": false
@@ -2065,17 +2046,17 @@
     "fy": 55657750000.0,
     "year": 2026,
     "analysts": 4,
-    "ytd": 31513132000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 4828923600.0,
-    "hist_n": 226,
-    "prev_avg": 4462420200.0,
-    "need_yoy": 0.08213108214237641,
-    "yoy_max": 0.5039866858773159,
-    "yoy_med": 0.10652852843976701,
+    "ytd": 36244642000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 4853277000.0,
+    "hist_n": 227,
+    "prev_avg": 4417570750.0,
+    "need_yoy": 0.09863028226542836,
+    "yoy_max": 0.519572708323601,
+    "yoy_med": 0.09429175902508402,
     "yoy_n": 17,
-    "excess": -0.42185560373493947
+    "excess": -0.42094242605817267
    },
    "track_record": {
     "n": 25,
@@ -2084,26 +2065,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 10.720887,
-    "trailing_pe": 12.441498,
-    "ps": 0.6572237,
-    "price": 159.5,
-    "implied_growth": 0.1604914779905804
+    "forward_pe": 10.250379,
+    "trailing_pe": 11.886205,
+    "ps": 0.62838006,
+    "price": 152.5,
+    "implied_growth": 0.15958687966562013
    },
    "prev_tier": "normal",
-   "changed": false
-  },
-  {
-   "ticker": "3633.TWO",
-   "requirement": null,
-   "track_record": null,
-   "pe": {
-    "forward_pe": null,
-    "trailing_pe": 9.831081,
-    "ps": 0.8585673,
-    "price": 145.5
-   },
-   "prev_tier": null,
    "changed": false
   },
   {
@@ -2114,17 +2082,17 @@
     "fy": 32524010500.0,
     "year": 2026,
     "analysts": 6,
-    "ytd": 15792903000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 3346221500.0,
-    "hist_n": 214,
-    "prev_avg": 1731845400.0,
-    "need_yoy": 0.9321710240417533,
-    "yoy_max": 0.43923657005759686,
-    "yoy_med": 0.19571509245786012,
+    "ytd": 19018791000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 3376304875.0,
+    "hist_n": 215,
+    "prev_avg": 1742356000.0,
+    "need_yoy": 0.9377813001476163,
+    "yoy_max": 0.43917039809697056,
+    "yoy_med": 0.22831284880825242,
     "yoy_n": 16,
-    "excess": 0.4929344539841565
+    "excess": 0.49861090205064573
    },
    "track_record": {
     "n": 24,
@@ -2133,13 +2101,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 41.220226,
-    "trailing_pe": 133.3409,
-    "ps": 37.72959,
-    "price": 5875.0,
-    "implied_growth": 2.2348415556964683
+    "forward_pe": 40.448444,
+    "trailing_pe": 129.8716,
+    "ps": 37.023167,
+    "price": 5765.0,
+    "implied_growth": 2.210793473291581
    },
-   "prev_tier": null,
+   "prev_tier": "unprecedented",
    "changed": false
   },
   {
@@ -2169,13 +2137,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 18.686466,
-    "trailing_pe": 39.372246,
-    "ps": 5.0820336,
-    "price": 2145.0,
-    "implied_growth": 1.1069926223610178
+    "forward_pe": 16.334324,
+    "trailing_pe": 34.479588,
+    "ps": 4.442337,
+    "price": 1875.0,
+    "implied_growth": 1.1108671531187948
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -2186,17 +2154,17 @@
     "fy": 74355000000.0,
     "year": 2026,
     "analysts": 1,
-    "ytd": 43518882000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 6167223600.0,
-    "hist_n": 190,
-    "prev_avg": 5007348600.0,
-    "need_yoy": 0.2316345620514617,
-    "yoy_max": 0.27694996170229214,
-    "yoy_med": -0.03941674092162384,
+    "ytd": 49883020000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 6117995000.0,
+    "hist_n": 191,
+    "prev_avg": 4889211000.0,
+    "need_yoy": 0.25132562288680127,
+    "yoy_max": 0.3029459725626227,
+    "yoy_med": -0.07252695206903614,
     "yoy_n": 14,
-    "excess": -0.045315399650830424
+    "excess": -0.05162034967582141
    },
    "track_record": {
     "n": 24,
@@ -2205,13 +2173,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 11.332179,
-    "trailing_pe": 17.994505,
-    "ps": 0.39744774,
-    "price": 65.5,
-    "implied_growth": 0.5879121747017939
+    "forward_pe": 10.67474,
+    "trailing_pe": 13.501094,
+    "ps": 0.37093925,
+    "price": 61.7,
+    "implied_growth": 0.26477028948714443
    },
-   "prev_tier": null,
+   "prev_tier": "low_coverage",
    "changed": false
   },
   {
@@ -2222,17 +2190,17 @@
     "fy": 7046000000.0,
     "year": 2026,
     "analysts": 1,
-    "ytd": 3711162000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 666967600.0,
-    "hist_n": 260,
-    "prev_avg": 599890000.0,
-    "need_yoy": 0.11181649969161023,
-    "yoy_max": 0.3725678602399347,
-    "yoy_med": 0.07140089157417151,
+    "ytd": 4237083000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 702229250.0,
+    "hist_n": 261,
+    "prev_avg": 635393000.0,
+    "need_yoy": 0.10518883588582195,
+    "yoy_max": 0.4039735191949476,
+    "yoy_med": 0.06850281870117891,
     "yoy_n": 20,
-    "excess": -0.2607513605483245
+    "excess": -0.29878468330912566
    },
    "track_record": {
     "n": 25,
@@ -2241,27 +2209,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 12.727272,
-    "trailing_pe": 11.063218,
-    "ps": 2.8772879,
-    "price": 77.0,
-    "implied_growth": -0.13074710747126317
+    "forward_pe": 12.8099165,
+    "trailing_pe": 11.135057,
+    "ps": 2.8959718,
+    "price": 77.5,
+    "implied_growth": -0.13074710518214538
    },
    "prev_tier": "low_coverage",
-   "changed": false
-  },
-  {
-   "ticker": "4441.TW",
-   "requirement": null,
-   "track_record": null,
-   "pe": {
-    "forward_pe": 8.689176,
-    "trailing_pe": 9.53159,
-    "ps": 1.5208988,
-    "price": 175.0,
-    "implied_growth": 0.09694981434373062
-   },
-   "prev_tier": null,
    "changed": false
   },
   {
@@ -2272,17 +2226,17 @@
     "fy": 3498000000.0,
     "year": 2026,
     "analysts": 1,
-    "ytd": 1924491000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 314701800.0,
-    "hist_n": 148,
-    "prev_avg": 243865600.0,
-    "need_yoy": 0.2904722929351249,
-    "yoy_max": 0.6329252466307127,
-    "yoy_med": 0.1545116800248003,
+    "ytd": 2240139000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 314465250.0,
+    "hist_n": 149,
+    "prev_avg": 250426250.0,
+    "need_yoy": 0.2557199974044255,
+    "yoy_max": 0.6179485025091851,
+    "yoy_med": 0.24871289844051914,
     "yoy_n": 11,
-    "excess": -0.3424529536955878
+    "excess": -0.36222850510475957
    },
    "track_record": {
     "n": 21,
@@ -2291,10 +2245,10 @@
     "bias": "共識偏樂觀"
    },
    "pe": {
-    "forward_pe": 54.52915,
+    "forward_pe": 52.10762,
     "trailing_pe": null,
-    "ps": 2.2862275,
-    "price": 60.8
+    "ps": 2.1847007,
+    "price": 58.1
    },
    "prev_tier": "low_coverage",
    "changed": false
@@ -2326,32 +2280,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 37.988827,
-    "trailing_pe": 73.006134,
-    "ps": 8.580301,
-    "price": 238.0,
-    "implied_growth": 0.9217791062619545
+    "forward_pe": 38.627296,
+    "trailing_pe": 74.00612,
+    "ps": 8.724508,
+    "price": 242.0,
+    "implied_growth": 0.9159021641069567
    },
    "prev_tier": "low_coverage",
-   "changed": false
-  },
-  {
-   "ticker": "4763.TW",
-   "requirement": null,
-   "track_record": {
-    "n": 18,
-    "beats": 9,
-    "median_surprise": 7.9,
-    "bias": "共識大致中性"
-   },
-   "pe": {
-    "forward_pe": 0.47587514,
-    "trailing_pe": 12.062349,
-    "ps": 4.6188374,
-    "price": 50.3,
-    "implied_growth": 24.347718311151954
-   },
-   "prev_tier": null,
    "changed": false
   },
   {
@@ -2362,17 +2297,17 @@
     "fy": 25601000000.0,
     "year": 2026,
     "analysts": 3,
-    "ytd": 14816198000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 2156960400.0,
-    "hist_n": 111,
-    "prev_avg": 1971133200.0,
-    "need_yoy": 0.09427429866231263,
-    "yoy_max": 0.26547612919072305,
-    "yoy_med": 0.069726253265469,
+    "ytd": 17036921000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 2141019750.0,
+    "hist_n": 112,
+    "prev_avg": 1977639750.0,
+    "need_yoy": 0.08261363071813266,
+    "yoy_max": 0.21120737452841487,
+    "yoy_med": 0.06933347980323745,
     "yoy_n": 8,
-    "excess": -0.17120183052841043
+    "excess": -0.1285937438102822
    },
    "track_record": {
     "n": 16,
@@ -2381,31 +2316,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 12.719031,
-    "trailing_pe": 14.792646,
-    "ps": 1.7195972,
-    "price": 346.0,
-    "implied_growth": 0.16303246686009332
+    "forward_pe": 12.388189,
+    "trailing_pe": 14.407867,
+    "ps": 1.6748679,
+    "price": 337.0,
+    "implied_growth": 0.16303254656511923
    },
    "prev_tier": "normal",
-   "changed": false
-  },
-  {
-   "ticker": "4908.TWO",
-   "requirement": null,
-   "track_record": {
-    "n": 22,
-    "beats": 12,
-    "median_surprise": 5.2,
-    "bias": "共識大致中性"
-   },
-   "pe": {
-    "forward_pe": null,
-    "trailing_pe": 90.160645,
-    "ps": 19.143099,
-    "price": 224.5
-   },
-   "prev_tier": null,
    "changed": false
   },
   {
@@ -2416,17 +2333,17 @@
     "fy": 5943000000.0,
     "year": 2026,
     "analysts": 1,
-    "ytd": 2991363000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 590327400.0,
-    "hist_n": 199,
-    "prev_avg": 368421600.0,
-    "need_yoy": 0.6023148479893687,
-    "yoy_max": 1.2470391854108418,
-    "yoy_med": 0.08891131213213721,
+    "ytd": 3537229000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 601442750.0,
+    "hist_n": 200,
+    "prev_avg": 361241750.0,
+    "need_yoy": 0.6649314482614481,
+    "yoy_max": 1.224453378862147,
+    "yoy_med": 0.07109796293493864,
     "yoy_n": 15,
-    "excess": -0.6447243374214731
+    "excess": -0.5595219306006989
    },
    "track_record": {
     "n": 25,
@@ -2435,13 +2352,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 44.515217,
-    "trailing_pe": 104.13908,
-    "ps": 18.999165,
-    "price": 629.0,
-    "implied_growth": 1.3394040738923052
+    "forward_pe": 37.579617,
+    "trailing_pe": 87.76859,
+    "ps": 16.03904,
+    "price": 531.0,
+    "implied_growth": 1.3355371077890443
    },
-   "prev_tier": null,
+   "prev_tier": "low_coverage",
    "changed": false
   },
   {
@@ -2450,9 +2367,9 @@
    "track_record": null,
    "pe": {
     "forward_pe": null,
-    "trailing_pe": 13.38851,
-    "ps": 3.7917306,
-    "price": 137.5
+    "trailing_pe": 12.755598,
+    "ps": 3.6124852,
+    "price": 131.0
    },
    "prev_tier": null,
    "changed": false
@@ -2465,17 +2382,17 @@
     "fy": 2433000000.0,
     "year": 2026,
     "analysts": 1,
-    "ytd": 1335332000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 219533600.0,
-    "hist_n": 175,
-    "prev_avg": 191663000.0,
-    "need_yoy": 0.14541460793163008,
-    "yoy_max": 0.32812424941912943,
-    "yoy_med": 0.07230791781599022,
+    "ytd": 1540711000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 223072250.0,
+    "hist_n": 176,
+    "prev_avg": 189392000.0,
+    "need_yoy": 0.1778335410154599,
+    "yoy_max": 0.37549973283204463,
+    "yoy_med": 0.06909891975099658,
     "yoy_n": 13,
-    "excess": -0.18270964148749935
+    "excess": -0.19766619181658474
    },
    "track_record": {
     "n": 25,
@@ -2484,47 +2401,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 11.121617,
-    "trailing_pe": 9.699355,
-    "ps": 3.8746161,
-    "price": 135.5,
-    "implied_growth": -0.12788266310555374
-   },
-   "prev_tier": "low_coverage",
-   "changed": false
-  },
-  {
-   "ticker": "5288.TW",
-   "requirement": {
-    "kind": "tw_monthly",
-    "tier": "low_coverage",
-    "fy": 9365000000.0,
-    "year": 2026,
-    "analysts": 1,
-    "ytd": 5322003000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 808599400.0,
-    "hist_n": 145,
-    "prev_avg": 556289000.0,
-    "need_yoy": 0.45355993018017604,
-    "yoy_max": 0.5176229410522319,
-    "yoy_med": -0.005756577521313311,
-    "yoy_n": 11,
-    "excess": -0.0640630108720559
-   },
-   "track_record": {
-    "n": 25,
-    "beats": 15,
-    "median_surprise": 3.0,
-    "bias": "共識大致中性"
-   },
-   "pe": {
-    "forward_pe": 9.0,
-    "trailing_pe": 12.62525,
-    "ps": 1.6867957,
-    "price": 189.0,
-    "implied_growth": 0.4028055555555554
+    "forward_pe": 11.080578,
+    "trailing_pe": 9.670487,
+    "ps": 3.8603191,
+    "price": 135.0,
+    "implied_growth": -0.12725789214244954
    },
    "prev_tier": "low_coverage",
    "changed": false
@@ -2537,17 +2418,17 @@
     "fy": 89987904000.0,
     "year": 2026,
     "analysts": 3,
-    "ytd": 47498814000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 8497818000.0,
-    "hist_n": 260,
-    "prev_avg": 6617536600.0,
-    "need_yoy": 0.2841361542299592,
-    "yoy_max": 4.99467957548475,
-    "yoy_med": 0.15136868001979153,
+    "ytd": 54215496000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 8943102000.0,
+    "hist_n": 261,
+    "prev_avg": 6768363500.0,
+    "need_yoy": 0.32130935343528755,
+    "yoy_max": 5.259031153024624,
+    "yoy_med": 0.14896028912587056,
     "yoy_n": 20,
-    "excess": -4.7105434212547905
+    "excess": -4.937721799589337
    },
    "track_record": {
     "n": 24,
@@ -2556,13 +2437,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 10.914024,
-    "trailing_pe": 19.64668,
-    "ps": 1.4253669,
-    "price": 183.5,
-    "implied_growth": 0.800131647135832
+    "forward_pe": 10.467947,
+    "trailing_pe": 18.86388,
+    "ps": 1.3671094,
+    "price": 176.0,
+    "implied_growth": 0.8020610918263151
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -2576,9 +2457,9 @@
    },
    "pe": {
     "forward_pe": null,
-    "trailing_pe": 10.116732,
-    "ps": 0.34558025,
-    "price": 78.0
+    "trailing_pe": 10.220493,
+    "ps": 0.34912467,
+    "price": 78.8
    },
    "prev_tier": null,
    "changed": false
@@ -2593,11 +2474,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 37.883957,
-    "trailing_pe": 462.5,
-    "ps": 6.8191113,
-    "price": 111.0,
-    "implied_growth": 11.208333992143428
+    "forward_pe": 35.665527,
+    "trailing_pe": 435.4167,
+    "ps": 6.419794,
+    "price": 104.5,
+    "implied_growth": 11.208334956048736
    },
    "prev_tier": null,
    "changed": false
@@ -2629,13 +2510,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 19.452251,
-    "trailing_pe": 80.03096,
-    "ps": 5.0372725,
-    "price": 517.0,
-    "implied_growth": 3.1142261633370856
+    "forward_pe": 19.151249,
+    "trailing_pe": 78.79257,
+    "ps": 4.9593263,
+    "price": 509.0,
+    "implied_growth": 3.114226179190715
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -2646,17 +2527,17 @@
     "fy": 12644666670.0,
     "year": 2026,
     "analysts": 3,
-    "ytd": 7102470000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 1108439334.0,
-    "hist_n": 260,
-    "prev_avg": 948950800.0,
-    "need_yoy": 0.16806828552123032,
-    "yoy_max": 0.7843636310202402,
-    "yoy_med": 0.02785980049283432,
+    "ytd": 8276432000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 1092058667.5,
+    "hist_n": 261,
+    "prev_avg": 947757750.0,
+    "need_yoy": 0.15225506465127814,
+    "yoy_max": 0.6774912171051903,
+    "yoy_med": 0.043484850042590395,
     "yoy_n": 20,
-    "excess": -0.6162953454990099
+    "excess": -0.5252361524539122
    },
    "track_record": {
     "n": 25,
@@ -2665,11 +2546,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 21.788095,
-    "trailing_pe": 26.749437,
-    "ps": 4.2565207,
-    "price": 237.0,
-    "implied_growth": 0.2277088474233293
+    "forward_pe": 20.225237,
+    "trailing_pe": 24.802706,
+    "ps": 3.9512007,
+    "price": 220.0,
+    "implied_growth": 0.22632461612192722
    },
    "prev_tier": "normal",
    "changed": false
@@ -2679,20 +2560,20 @@
    "requirement": {
     "kind": "tw_monthly",
     "tier": "rare",
-    "fy": 60358206120.0,
+    "fy": 60401723290.0,
     "year": 2026,
-    "analysts": 13,
+    "analysts": 12,
     "ytd": 36178244000.0,
     "months_done": 8,
     "months_left": 4,
-    "need_avg": 6044990530.0,
+    "need_avg": 6055869822.5,
     "hist_n": 261,
     "prev_avg": 2995162750.0,
-    "need_yoy": 1.0182511050526388,
+    "need_yoy": 1.0218833926470272,
     "yoy_max": 0.8284958135873357,
     "yoy_med": 0.10361803376636924,
     "yoy_n": 20,
-    "excess": 0.18975529146530312
+    "excess": 0.1933875790596915
    },
    "track_record": {
     "n": 25,
@@ -2701,13 +2582,13 @@
     "bias": "共識偏樂觀"
    },
    "pe": {
-    "forward_pe": 18.107803,
+    "forward_pe": 18.118444,
     "trailing_pe": 68.97423,
     "ps": 9.488507,
     "price": 1365.0,
-    "implied_growth": 2.809088822095094
+    "implied_growth": 2.8068517362749255
    },
-   "prev_tier": null,
+   "prev_tier": "rare",
    "changed": false
   },
   {
@@ -2718,17 +2599,17 @@
     "fy": 161152741750.0,
     "year": 2026,
     "analysts": 4,
-    "ytd": 85507279000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 15129092550.0,
-    "hist_n": 260,
-    "prev_avg": 9096642800.0,
-    "need_yoy": 0.6631512177217731,
-    "yoy_max": 1.2589690635214783,
-    "yoy_med": 0.05307510090251011,
+    "ytd": 101211112000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 14985407437.5,
+    "hist_n": 261,
+    "prev_avg": 9204287250.0,
+    "need_yoy": 0.628089935752494,
+    "yoy_max": 1.2661160709983372,
+    "yoy_med": 0.060832710855772465,
     "yoy_n": 20,
-    "excess": -0.5958178457997052
+    "excess": -0.6380261352458432
    },
    "track_record": {
     "n": 25,
@@ -2737,49 +2618,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 16.733095,
-    "trailing_pe": 26.965672,
-    "ps": 0.9571523,
-    "price": 243.5,
-    "implied_growth": 0.611517295515265
+    "forward_pe": 15.289994,
+    "trailing_pe": 24.640089,
+    "ps": 0.87460524,
+    "price": 222.5,
+    "implied_growth": 0.6115172445456813
    },
    "prev_tier": "normal",
-   "changed": false
-  },
-  {
-   "ticker": "6412.TW",
-   "requirement": {
-    "kind": "tw_monthly",
-    "tier": "low_coverage",
-    "fy": 33962578000.0,
-    "year": 2026,
-    "analysts": 2,
-    "ytd": 21227616000.0,
-    "months_done": 8,
-    "months_left": 4,
-    "need_avg": 3183740500.0,
-    "hist_n": 167,
-    "prev_avg": 2724233500.0,
-    "need_yoy": 0.16867386734653977,
-    "yoy_max": 0.1568001429431236,
-    "yoy_med": 0.04497268590675607,
-    "yoy_n": 12,
-    "excess": 0.011873724403416164
-   },
-   "track_record": {
-    "n": 25,
-    "beats": 15,
-    "median_surprise": 2.1,
-    "bias": "共識大致中性"
-   },
-   "pe": {
-    "forward_pe": 11.206623,
-    "trailing_pe": 12.835821,
-    "ps": 0.9369477,
-    "price": 77.4,
-    "implied_growth": 0.14537813933778265
-   },
-   "prev_tier": "low_coverage",
    "changed": false
   },
   {
@@ -2790,17 +2635,17 @@
     "fy": 19379000000.0,
     "year": 2026,
     "analysts": 1,
-    "ytd": 7616960000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 2352408000.0,
-    "hist_n": 151,
-    "prev_avg": 938417400.0,
-    "need_yoy": 1.5067821632463336,
-    "yoy_max": 2.369543762266469,
-    "yoy_med": 0.05015317679351439,
+    "ytd": 9245137000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 2533465750.0,
+    "hist_n": 152,
+    "prev_avg": 1011652500.0,
+    "need_yoy": 1.5042845740014483,
+    "yoy_max": 2.7305903229104294,
+    "yoy_med": 0.04880307855940669,
     "yoy_n": 11,
-    "excess": -0.8627615990201352
+    "excess": -1.226305748908981
    },
    "track_record": {
     "n": 20,
@@ -2809,13 +2654,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 933.5106,
-    "trailing_pe": 50.503597,
-    "ps": 11.834812,
-    "price": 1755.0,
-    "implied_growth": -0.9458992784870359
+    "forward_pe": 888.29785,
+    "trailing_pe": 48.071384,
+    "ps": 11.261616,
+    "price": 1670.0,
+    "implied_growth": -0.9458837100641412
    },
-   "prev_tier": null,
+   "prev_tier": "low_coverage",
    "changed": false
   },
   {
@@ -2828,10 +2673,10 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 11.497696,
+    "forward_pe": 10.691244,
     "trailing_pe": null,
-    "ps": 9.216917,
-    "price": 24.95
+    "ps": 8.570439,
+    "price": 23.2
    },
    "prev_tier": null,
    "changed": false
@@ -2844,17 +2689,17 @@
     "fy": 23235000000.0,
     "year": 2026,
     "analysts": 1,
-    "ytd": 13465486000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 1953902800.0,
-    "hist_n": 120,
-    "prev_avg": 1931556200.0,
-    "need_yoy": 0.011569220714364947,
-    "yoy_max": 0.26461674460685236,
-    "yoy_med": 0.1770223734177605,
+    "ytd": 15337993000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 1974251750.0,
+    "hist_n": 121,
+    "prev_avg": 1926571500.0,
+    "need_yoy": 0.02474875705365731,
+    "yoy_max": 0.2815431821226366,
+    "yoy_med": 0.18251135706259425,
     "yoy_n": 9,
-    "excess": -0.2530475238924874
+    "excess": -0.2567944250689793
    },
    "track_record": {
     "n": 16,
@@ -2863,13 +2708,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 12.079207,
-    "trailing_pe": 12.398374,
-    "ps": 2.0534294,
-    "price": 61.0,
-    "implied_growth": 0.02642284381747917
+    "forward_pe": 11.841583,
+    "trailing_pe": 12.154471,
+    "ps": 2.0130339,
+    "price": 59.8,
+    "implied_growth": 0.026422818638352608
    },
-   "prev_tier": null,
+   "prev_tier": "low_coverage",
    "changed": false
   },
   {
@@ -2880,17 +2725,17 @@
     "fy": 2986000000.0,
     "year": 2026,
     "analysts": 1,
-    "ytd": 1655490000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 266102000.0,
-    "hist_n": 107,
-    "prev_avg": 231293600.0,
-    "need_yoy": 0.1504944365084031,
-    "yoy_max": 0.31106457581070157,
-    "yoy_med": 0.03133590100666028,
-    "yoy_n": 7,
-    "excess": -0.16057013930229846
+    "ytd": 1930789000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 263802750.0,
+    "hist_n": 108,
+    "prev_avg": 237085500.0,
+    "need_yoy": 0.11269035854153886,
+    "yoy_max": 0.28338573173864745,
+    "yoy_med": 0.12357737447840034,
+    "yoy_n": 8,
+    "excess": -0.1706953731971086
    },
    "track_record": {
     "n": 8,
@@ -2899,13 +2744,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 16.450716,
-    "trailing_pe": 22.37256,
-    "ps": 7.8657665,
-    "price": 355.5,
-    "implied_growth": 0.3599748485111529
+    "forward_pe": 15.548357,
+    "trailing_pe": 21.145374,
+    "ps": 7.434311,
+    "price": 336.0,
+    "implied_growth": 0.35997481920437013
    },
-   "prev_tier": null,
+   "prev_tier": "low_coverage",
    "changed": false
   },
   {
@@ -2916,17 +2761,17 @@
     "fy": 33331000000.0,
     "year": 2026,
     "analysts": 2,
-    "ytd": 18909030000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 2884394000.0,
-    "hist_n": 106,
-    "prev_avg": 2580226400.0,
-    "need_yoy": 0.11788407404869594,
-    "yoy_max": 0.5686153609414089,
-    "yoy_med": 0.17954845779081974,
+    "ytd": 21585489000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 2936377750.0,
+    "hist_n": 107,
+    "prev_avg": 2763875250.0,
+    "need_yoy": 0.06241327281323561,
+    "yoy_max": 0.554269569881793,
+    "yoy_med": 0.1342153856051782,
     "yoy_n": 7,
-    "excess": -0.4507312868927129
+    "excess": -0.4918562970685574
    },
    "track_record": {
     "n": 25,
@@ -2935,11 +2780,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 9.597631,
-    "trailing_pe": 11.351462,
-    "ps": 1.2276025,
-    "price": 275.5,
-    "implied_growth": 0.18273582303799762
+    "forward_pe": 9.580213,
+    "trailing_pe": 11.335531,
+    "ps": 1.2253746,
+    "price": 275.0,
+    "implied_growth": 0.18322327488960832
    },
    "prev_tier": "low_coverage",
    "changed": false
@@ -2952,17 +2797,17 @@
     "fy": 10931000000.0,
     "year": 2026,
     "analysts": 1,
-    "ytd": 5567476000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 1072704800.0,
-    "hist_n": 225,
-    "prev_avg": 822229800.0,
-    "need_yoy": 0.304628949230495,
-    "yoy_max": 4.628103841456096,
-    "yoy_med": 0.07307867916272492,
+    "ytd": 6417217000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 1128445750.0,
+    "hist_n": 226,
+    "prev_avg": 799203500.0,
+    "need_yoy": 0.41196297313512775,
+    "yoy_max": 5.058604318009127,
+    "yoy_med": 0.07564196369464482,
     "yoy_n": 17,
-    "excess": -4.323474892225601
+    "excess": -4.646641344873999
    },
    "track_record": {
     "n": 25,
@@ -2972,83 +2817,22 @@
    },
    "pe": {
     "forward_pe": null,
-    "trailing_pe": 14.597949,
-    "ps": 2.0325947,
-    "price": 270.5
+    "trailing_pe": 14.578834,
+    "ps": 2.0288377,
+    "price": 270.0
    },
    "prev_tier": "low_coverage",
    "changed": false
   },
   {
-   "ticker": "6826.TWO",
+   "ticker": "6903.TWO",
    "requirement": null,
    "track_record": null,
    "pe": {
     "forward_pe": null,
-    "trailing_pe": 14.485222,
-    "ps": 2.039877,
-    "price": 446.0
-   },
-   "prev_tier": null,
-   "changed": false
-  },
-  {
-   "ticker": "6914.TW",
-   "requirement": null,
-   "track_record": null,
-   "pe": {
-    "forward_pe": null,
-    "trailing_pe": 14.595899,
-    "ps": 1.6257889,
-    "price": 121.0
-   },
-   "prev_tier": null,
-   "changed": false
-  },
-  {
-   "ticker": "6996.TWO",
-   "requirement": null,
-   "track_record": null,
-   "pe": {
-    "forward_pe": null,
-    "trailing_pe": 12.2251835,
-    "ps": 2.5421302,
-    "price": 183.5
-   },
-   "prev_tier": null,
-   "changed": false
-  },
-  {
-   "ticker": "8027.TWO",
-   "requirement": {
-    "kind": "tw_monthly",
-    "tier": "low_coverage",
-    "fy": 2175000000.0,
-    "year": 2026,
-    "analysts": 1,
-    "ytd": 1198802000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 195239600.0,
-    "hist_n": 200,
-    "prev_avg": 200679800.0,
-    "need_yoy": -0.027108856995073705,
-    "yoy_max": 1.9579310718249991,
-    "yoy_med": 0.0387989044856869,
-    "yoy_n": 14,
-    "excess": -1.9850399288200729
-   },
-   "track_record": {
-    "n": 8,
-    "beats": 1,
-    "median_surprise": -78.2,
-    "bias": "共識偏樂觀"
-   },
-   "pe": {
-    "forward_pe": null,
-    "trailing_pe": 550.0,
-    "ps": 9.148485,
-    "price": 181.5
+    "trailing_pe": 13.514129,
+    "ps": 2.9853652,
+    "price": 296.5
    },
    "prev_tier": null,
    "changed": false
@@ -3080,11 +2864,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 24.59736,
-    "trailing_pe": 123.39181,
-    "ps": 14.540007,
-    "price": 1055.0,
-    "implied_growth": 4.016465588176943
+    "forward_pe": 25.180237,
+    "trailing_pe": 126.61196,
+    "ps": 14.884556,
+    "price": 1080.0,
+    "implied_growth": 4.02822749444336
    },
    "prev_tier": "unprecedented",
    "changed": false
@@ -3097,17 +2881,17 @@
     "fy": 39748627320.0,
     "year": 2026,
     "analysts": 12,
-    "ytd": 21726014000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 3604522664.0,
-    "hist_n": 260,
-    "prev_avg": 2706912200.0,
-    "need_yoy": 0.3315994009705967,
-    "yoy_max": 1.0083379109197845,
-    "yoy_med": 0.037248623438917106,
+    "ytd": 25172156000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 3644117830.0,
+    "hist_n": 261,
+    "prev_avg": 2549556000.0,
+    "need_yoy": 0.4293146845960629,
+    "yoy_max": 1.1676046069063646,
+    "yoy_med": 0.04047124807608271,
     "yoy_n": 20,
-    "excess": -0.6767385099491878
+    "excess": -0.7382899223103017
    },
    "track_record": {
     "n": 25,
@@ -3116,13 +2900,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 11.317244,
-    "trailing_pe": 14.5161295,
-    "ps": 4.7262316,
-    "price": 148.5,
-    "implied_growth": 0.28265587452210084
+    "forward_pe": 11.126718,
+    "trailing_pe": 14.27175,
+    "ps": 4.646665,
+    "price": 146.0,
+    "implied_growth": 0.28265585593164144
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -3133,17 +2917,17 @@
     "fy": 9224000000.0,
     "year": 2026,
     "analysts": 1,
-    "ytd": 5187490000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 807302000.0,
-    "hist_n": 260,
-    "prev_avg": 699486400.0,
-    "need_yoy": 0.1541353770423557,
-    "yoy_max": 0.3693382898086366,
-    "yoy_med": 0.12715063420565387,
+    "ytd": 5992016000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 807996000.0,
+    "hist_n": 261,
+    "prev_avg": 692447250.0,
+    "need_yoy": 0.16687011176663646,
+    "yoy_max": 0.3502396314966969,
+    "yoy_med": 0.10048481752082683,
     "yoy_n": 20,
-    "excess": -0.2152029127662809
+    "excess": -0.18336951973006044
    },
    "track_record": {
     "n": 25,
@@ -3152,11 +2936,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 12.368779,
-    "trailing_pe": 13.869209,
-    "ps": 2.533205,
-    "price": 254.5,
-    "implied_growth": 0.12130785100129926
+    "forward_pe": 12.004276,
+    "trailing_pe": 13.46049,
+    "ps": 2.4585526,
+    "price": 247.0,
+    "implied_growth": 0.12130794060383132
    },
    "prev_tier": "low_coverage",
    "changed": false
@@ -3169,17 +2953,17 @@
     "fy": 11922594000.0,
     "year": 2026,
     "analysts": 1,
-    "ytd": 6345634000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 1115392000.0,
-    "hist_n": 238,
-    "prev_avg": 699998800.0,
-    "need_yoy": 0.5934198744340704,
-    "yoy_max": 0.5758819526409902,
-    "yoy_med": 0.042618318389267884,
+    "ytd": 7401876000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 1130179500.0,
+    "hist_n": 239,
+    "prev_avg": 709660500.0,
+    "need_yoy": 0.5925636272555679,
+    "yoy_max": 0.9940490967053341,
+    "yoy_med": -0.006900935950152509,
     "yoy_n": 18,
-    "excess": 0.017537921793080224
+    "excess": -0.40148546944976626
    },
    "track_record": {
     "n": 17,
@@ -3188,13 +2972,13 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 21.695107,
-    "trailing_pe": 74.62687,
-    "ps": 13.307623,
-    "price": 500.0,
-    "implied_growth": 2.4398018871259772
+    "forward_pe": 21.044254,
+    "trailing_pe": 72.49626,
+    "ps": 12.908394,
+    "price": 485.0,
+    "implied_growth": 2.444943213477656
    },
-   "prev_tier": null,
+   "prev_tier": "low_coverage",
    "changed": false
   },
   {
@@ -3202,20 +2986,20 @@
    "requirement": {
     "kind": "tw_monthly",
     "tier": "normal",
-    "fy": 82261367310.0,
+    "fy": 82170181820.0,
     "year": 2026,
     "analysts": 9,
-    "ytd": 47008941000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 7050485262.0,
-    "hist_n": 260,
-    "prev_avg": 7013692200.0,
-    "need_yoy": 0.005245890602384895,
-    "yoy_max": 2.0456451267358142,
-    "yoy_med": 0.06664694322414566,
+    "ytd": 54379286000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 6947723955.0,
+    "hist_n": 261,
+    "prev_avg": 6871581500.0,
+    "need_yoy": 0.011080775946556098,
+    "yoy_max": 2.125200463062489,
+    "yoy_med": 0.06713564743806244,
     "yoy_n": 20,
-    "excess": -2.040399236133429
+    "excess": -2.114119687115933
    },
    "track_record": {
     "n": 25,
@@ -3224,14 +3008,14 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 13.236992,
-    "trailing_pe": 14.0040655,
-    "ps": 0.8296848,
-    "price": 68.9,
-    "implied_growth": 0.05794923045960876
+    "forward_pe": 13.175,
+    "trailing_pe": 13.780488,
+    "ps": 0.81643873,
+    "price": 67.8,
+    "implied_growth": 0.045957343453510324
    },
-   "prev_tier": "low_coverage",
-   "changed": true
+   "prev_tier": "normal",
+   "changed": false
   },
   {
    "ticker": "9911.TW",
@@ -3241,17 +3025,17 @@
     "fy": 10851000000.0,
     "year": 2026,
     "analysts": 1,
-    "ytd": 6407458000.0,
-    "months_done": 7,
-    "months_left": 5,
-    "need_avg": 888708400.0,
-    "hist_n": 260,
-    "prev_avg": 854628200.0,
-    "need_yoy": 0.03987722380328673,
-    "yoy_max": 0.25919695724206515,
-    "yoy_med": 0.07251571173754323,
+    "ytd": 7276268000.0,
+    "months_done": 8,
+    "months_left": 4,
+    "need_avg": 893683000.0,
+    "hist_n": 261,
+    "prev_avg": 864889250.0,
+    "need_yoy": 0.03329183476381514,
+    "yoy_max": 0.29369106908229337,
+    "yoy_med": 0.08015338329475807,
     "yoy_n": 20,
-    "excess": -0.21931973343877842
+    "excess": -0.2603992343184782
    },
    "track_record": {
     "n": 24,
@@ -3260,11 +3044,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 13.075684,
-    "trailing_pe": 12.589148,
-    "ps": 1.6847134,
-    "price": 81.2,
-    "implied_growth": -0.03720921980066216
+    "forward_pe": 13.172303,
+    "trailing_pe": 12.682172,
+    "ps": 1.697162,
+    "price": 81.8,
+    "implied_growth": -0.03720921087223694
    },
    "prev_tier": "low_coverage",
    "changed": false
@@ -3279,11 +3063,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 8.787414,
-    "trailing_pe": 12.610132,
-    "ps": 2.2096548,
-    "price": 114.5,
-    "implied_growth": 0.4350219529886723
+    "forward_pe": 8.710668,
+    "trailing_pe": 12.5,
+    "ps": 2.1903567,
+    "price": 113.5,
+    "implied_growth": 0.43502197535252174
    },
    "prev_tier": null,
    "changed": false
@@ -3314,10 +3098,10 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 22.931334,
+    "forward_pe": 22.894392,
     "trailing_pe": null,
-    "ps": 15.034584,
-    "price": 105.53
+    "ps": 15.010365,
+    "price": 105.36
    },
    "prev_tier": "unprecedented",
    "changed": false
@@ -3327,19 +3111,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 477707130910.0,
-    "analysts": 36,
+    "fy": 477766430870.0,
+    "analysts": 40,
     "ytd": 364357000000.0,
     "q_done": 3,
     "q_left": 1,
-    "need_avg": 113350130910.0,
+    "need_avg": 113409430870.0,
     "hist_n": 5,
     "last_q": 109417000000.0,
-    "need_qoq": 0.0359462506740269,
+    "need_qoq": 0.0364882136231115,
     "qoq_max": 0.40296293404641537,
     "qoq_med": 0.08964651835467263,
     "qoq_n": 4,
-    "excess": -0.36701668337238846
+    "excess": -0.36647472042330387
    },
    "track_record": {
     "n": 24,
@@ -3348,11 +3132,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 33.4195,
-    "trailing_pe": 36.60984,
-    "ps": 10.003149,
-    "price": 319.97,
-    "implied_growth": 0.09546342704109878
+    "forward_pe": 34.703167,
+    "trailing_pe": 38.148106,
+    "ps": 10.38768,
+    "price": 332.27,
+    "implied_growth": 0.09926872092106165
    },
    "prev_tier": "normal",
    "changed": false
@@ -3383,48 +3167,48 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 10.054001,
-    "trailing_pe": 7.6760564,
-    "ps": 1.7393979,
-    "price": 98.1,
-    "implied_growth": -0.2365172432348076
+    "forward_pe": 9.848001,
+    "trailing_pe": 7.5187793,
+    "ps": 1.7037588,
+    "price": 96.09,
+    "implied_growth": -0.23651720790848818
    },
    "prev_tier": "normal",
    "changed": false
   },
   {
-   "ticker": "ACN",
+   "ticker": "ADI",
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 73587678730.0,
-    "analysts": 26,
-    "ytd": 55504335000.0,
+    "fy": 15134186930.0,
+    "analysts": 29,
+    "ytd": 10805627000.0,
     "q_done": 3,
     "q_left": 1,
-    "need_avg": 18083343730.0,
+    "need_avg": 4328559930.0,
     "hist_n": 5,
-    "last_q": 18718144000.0,
-    "need_qoq": -0.03391363321064311,
-    "qoq_max": 0.06511980386741278,
-    "qoq_med": 0.03735732290050375,
+    "last_q": 4021899000.0,
+    "need_qoq": 0.07624779488495359,
+    "qoq_max": 0.14657071262739851,
+    "qoq_med": 0.10995938970019026,
     "qoq_n": 4,
-    "excess": -0.0990334370780559
+    "excess": -0.07032291774244492
    },
    "track_record": {
     "n": 24,
-    "beats": 21,
-    "median_surprise": 4.0,
+    "beats": 22,
+    "median_surprise": 5.6,
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 12.740905,
-    "trailing_pe": 14.901836,
-    "ps": 1.5630766,
-    "price": 186.72,
-    "implied_growth": 0.16960576976282304
+    "forward_pe": 23.169638,
+    "trailing_pe": 45.039238,
+    "ps": 13.221949,
+    "price": 378.78,
+    "implied_growth": 0.9438904483531421
    },
-   "prev_tier": "normal",
+   "prev_tier": null,
    "changed": false
   },
   {
@@ -3453,11 +3237,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 7.984816,
-    "trailing_pe": 7.1414533,
-    "ps": 2.5502133,
-    "price": 145.4,
-    "implied_growth": -0.10562080578938826
+    "forward_pe": 7.770643,
+    "trailing_pe": 6.9533167,
+    "ps": 2.48181,
+    "price": 141.5,
+    "implied_growth": -0.10518129580782432
    },
    "prev_tier": "normal",
    "changed": false
@@ -3488,11 +3272,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 6.2202444,
+    "forward_pe": 6.2391896,
     "trailing_pe": 5.5393257,
     "ps": 0.8079977,
     "price": 14.79,
-    "implied_growth": -0.10946815851801583
+    "implied_growth": -0.1121722442927523
    },
    "prev_tier": "low_coverage",
    "changed": false
@@ -3523,11 +3307,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 10.662095,
-    "trailing_pe": 10.06516,
-    "ps": 4.094448,
-    "price": 75.69,
-    "implied_growth": -0.055986651779035945
+    "forward_pe": 10.273307,
+    "trailing_pe": 9.698138,
+    "ps": 3.945146,
+    "price": 72.93,
+    "implied_growth": -0.05598674311981533
    },
    "prev_tier": "low_coverage",
    "changed": false
@@ -3558,11 +3342,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 9.40204,
-    "trailing_pe": 5.1976376,
-    "ps": 0.93580186,
-    "price": 259.57,
-    "implied_growth": -0.4471798035319994
+    "forward_pe": 9.189781,
+    "trailing_pe": 5.081314,
+    "ps": 0.9146754,
+    "price": 253.71,
+    "implied_growth": -0.44706908684766267
    },
    "prev_tier": "normal",
    "changed": false
@@ -3593,33 +3377,33 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 24.639132,
-    "trailing_pe": 39.199135,
-    "ps": 11.702068,
-    "price": 454.71,
-    "implied_growth": 0.5909300295156501
+    "forward_pe": 24.735582,
+    "trailing_pe": 39.38654,
+    "ps": 11.747877,
+    "price": 456.49,
+    "implied_growth": 0.5923029423766943
    },
-   "prev_tier": "unprecedented",
-   "changed": true
+   "prev_tier": "normal",
+   "changed": false
   },
   {
    "ticker": "AMD",
    "requirement": {
     "kind": "us_quarterly",
     "tier": "unprecedented",
-    "fy": 50813933620.0,
-    "analysts": 46,
+    "fy": 50833550950.0,
+    "analysts": 49,
     "ytd": 21789000000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 14512466810.0,
+    "need_avg": 14522275475.0,
     "hist_n": 5,
     "last_q": 11536000000.0,
-    "need_qoq": 0.2580155001733704,
+    "need_qoq": 0.25886576586338417,
     "qoq_max": 0.20312296681847752,
     "qoq_med": 0.12513410709060757,
     "qoq_n": 4,
-    "excess": 0.05489253335489286
+    "excess": 0.055742799044906644
    },
    "track_record": {
     "n": 24,
@@ -3628,48 +3412,13 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 30.90922,
-    "trailing_pe": 121.82908,
-    "ps": 18.874739,
-    "price": 477.57,
-    "implied_growth": 2.941512597212094
+    "forward_pe": 33.276188,
+    "trailing_pe": 131.66582,
+    "ps": 20.398724,
+    "price": 516.13,
+    "implied_growth": 2.956757907486278
    },
    "prev_tier": "unprecedented",
-   "changed": false
-  },
-  {
-   "ticker": "AMZN",
-   "requirement": {
-    "kind": "us_quarterly",
-    "tier": "rare",
-    "fy": 828276165220.0,
-    "analysts": 56,
-    "ytd": 181519000000.0,
-    "q_done": 1,
-    "q_left": 3,
-    "need_avg": 215585721740.0,
-    "hist_n": 5,
-    "last_q": 181519000000.0,
-    "need_qoq": 0.18767579008258095,
-    "qoq_max": 0.18436578989726304,
-    "qoq_med": 0.07731246828165239,
-    "qoq_n": 4,
-    "excess": 0.0033100001853179073
-   },
-   "track_record": {
-    "n": 24,
-    "beats": 20,
-    "median_surprise": 25.4,
-    "bias": "共識偏保守"
-   },
-   "pe": {
-    "forward_pe": 24.855967,
-    "trailing_pe": 20.797264,
-    "ps": 3.5947423,
-    "price": 258.51,
-    "implied_growth": -0.16328887948716708
-   },
-   "prev_tier": "rare",
    "changed": false
   },
   {
@@ -3677,19 +3426,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "rare",
-    "fy": 12665972690.0,
+    "fy": 12665968690.0,
     "analysts": 25,
     "ytd": 5744700000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 3460636345.0,
+    "need_avg": 3460634345.0,
     "hist_n": 5,
     "last_q": 3035700000.0,
-    "need_qoq": 0.13997969002207067,
+    "need_qoq": 0.13997903119544097,
     "qoq_max": 0.12059800664451825,
     "qoq_med": 0.08891389983117604,
     "qoq_n": 4,
-    "excess": 0.019381683377552417
+    "excess": 0.01938102455092272
    },
    "track_record": {
     "n": 24,
@@ -3698,11 +3447,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 37.552223,
-    "trailing_pe": 61.322784,
-    "ps": 23.186108,
-    "price": 193.78,
-    "implied_growth": 0.6330001022842244
+    "forward_pe": 38.67813,
+    "trailing_pe": 63.3619,
+    "ps": 23.881285,
+    "price": 199.59,
+    "implied_growth": 0.6381841624711431
    },
    "prev_tier": "rare",
    "changed": false
@@ -3734,9 +3483,9 @@
    },
    "pe": {
     "forward_pe": null,
-    "trailing_pe": 42.399998,
-    "ps": 2.3632514,
-    "price": 4.24
+    "trailing_pe": 40.6,
+    "ps": 2.262925,
+    "price": 4.06
    },
    "prev_tier": "low_coverage",
    "changed": false
@@ -3769,8 +3518,8 @@
    "pe": {
     "forward_pe": null,
     "trailing_pe": null,
-    "ps": 12.263957,
-    "price": 26.37
+    "ps": 12.28721,
+    "price": 26.42
    },
    "prev_tier": "normal",
    "changed": false
@@ -3803,76 +3552,8 @@
    "pe": {
     "forward_pe": null,
     "trailing_pe": null,
-    "ps": 210.31429,
-    "price": 62.31
-   },
-   "prev_tier": "normal",
-   "changed": false
-  },
-  {
-   "ticker": "AUR",
-   "requirement": {
-    "kind": "us_quarterly",
-    "tier": "unprecedented",
-    "fy": 15008500.0,
-    "analysts": 12,
-    "ytd": 3000000.0,
-    "q_done": 2,
-    "q_left": 2,
-    "need_avg": 6004250.0,
-    "hist_n": 5,
-    "last_q": 2000000.0,
-    "need_qoq": 2.002125,
-    "qoq_max": 1.0,
-    "qoq_med": 0.0,
-    "qoq_n": 4,
-    "excess": 1.002125
-   },
-   "track_record": {
-    "n": 19,
-    "beats": 14,
-    "median_surprise": 21.7,
-    "bias": "共識大致中性"
-   },
-   "pe": {
-    "forward_pe": null,
-    "trailing_pe": null,
-    "ps": 2541.269,
-    "price": 6.34
-   },
-   "prev_tier": "unknown",
-   "changed": true
-  },
-  {
-   "ticker": "AVAV",
-   "requirement": {
-    "kind": "us_quarterly",
-    "tier": "normal",
-    "fy": 2190289640.0,
-    "analysts": 19,
-    "ytd": 0,
-    "q_done": 0,
-    "q_left": 4,
-    "need_avg": 547572410.0,
-    "hist_n": 5,
-    "last_q": 641616000.0,
-    "need_qoq": -0.14657301251839105,
-    "qoq_max": 0.6530667151427014,
-    "qoq_med": 0.5724148071903834,
-    "qoq_n": 4,
-    "excess": -0.7996397276610925
-   },
-   "track_record": {
-    "n": 23,
-    "beats": 14,
-    "median_surprise": 15.7,
-    "bias": "共識大致中性"
-   },
-   "pe": {
-    "forward_pe": 32.942753,
-    "trailing_pe": null,
-    "ps": 3.7187998,
-    "price": 144.65
+    "ps": 202.04482,
+    "price": 59.86
    },
    "prev_tier": "normal",
    "changed": false
@@ -3881,20 +3562,20 @@
    "ticker": "AVGO",
    "requirement": {
     "kind": "us_quarterly",
-    "tier": "unprecedented",
-    "fy": 105965770270.0,
-    "analysts": 36,
-    "ytd": 41498000000.0,
-    "q_done": 2,
-    "q_left": 2,
-    "need_avg": 32233885135.0,
+    "tier": "normal",
+    "fy": 105963966570.0,
+    "analysts": 38,
+    "ytd": 71089000000.0,
+    "q_done": 3,
+    "q_left": 1,
+    "need_avg": 34874966570.0,
     "hist_n": 5,
-    "last_q": 22187000000.0,
-    "need_qoq": 0.4528275627619778,
-    "qoq_max": 0.1489306612811352,
-    "qoq_med": 0.12932547642928793,
+    "last_q": 29591000000.0,
+    "need_qoq": 0.17856667804399984,
+    "qoq_max": 0.33370892865191326,
+    "qoq_med": 0.1489306612811352,
     "qoq_n": 4,
-    "excess": 0.3038969014808426
+    "excess": -0.15514225060791342
    },
    "track_record": {
     "n": 24,
@@ -3903,33 +3584,33 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 18.474785,
-    "trailing_pe": 45.64987,
-    "ps": 19.10929,
-    "price": 357.895,
-    "implied_growth": 1.4709283490985143
+    "forward_pe": 18.674767,
+    "trailing_pe": 46.054707,
+    "ps": 19.39314,
+    "price": 361.99,
+    "implied_growth": 1.4661462710619095
    },
    "prev_tier": "unprecedented",
-   "changed": false
+   "changed": true
   },
   {
    "ticker": "BA",
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 98022416670.0,
+    "fy": 98022424360.0,
     "analysts": 26,
     "ytd": 22217000000.0,
     "q_done": 1,
     "q_left": 3,
-    "need_avg": 25268472223.333332,
+    "need_avg": 25268474786.666668,
     "hist_n": 5,
     "last_q": 22217000000.0,
-    "need_qoq": 0.13734852695383415,
+    "need_qoq": 0.1373486423309478,
     "qoq_max": 0.16685473943373008,
     "qoq_med": 0.029136226901590012,
     "qoq_n": 4,
-    "excess": -0.029506212479895932
+    "excess": -0.02950609710278229
    },
    "track_record": {
     "n": 24,
@@ -3938,11 +3619,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 51.50649,
-    "trailing_pe": 76.34892,
-    "ps": 1.7834295,
-    "price": 212.25,
-    "implied_growth": 0.4823165003089904
+    "forward_pe": 51.449986,
+    "trailing_pe": 75.70144,
+    "ps": 1.7683051,
+    "price": 210.45,
+    "implied_growth": 0.47135977840693677
    },
    "prev_tier": "normal",
    "changed": false
@@ -3952,19 +3633,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 124016771690.0,
+    "fy": 124009855030.0,
     "analysts": 12,
     "ytd": 30272000000.0,
     "q_done": 1,
     "q_left": 3,
-    "need_avg": 31248257230.0,
+    "need_avg": 31245951676.666668,
     "hist_n": 5,
     "last_q": 30272000000.0,
-    "need_qoq": 0.03224951209038052,
+    "need_qoq": 0.03217335084126138,
     "qoq_max": 0.1100825975505555,
     "qoq_med": 0.023503261305250822,
     "qoq_n": 4,
-    "excess": -0.07783308546017498
+    "excess": -0.07790924670929411
    },
    "track_record": {
     "n": 24,
@@ -3973,11 +3654,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 11.842728,
-    "trailing_pe": 14.475751,
-    "ps": 3.8471134,
-    "price": 62.68,
-    "implied_growth": 0.22233247272081247
+    "forward_pe": 11.841551,
+    "trailing_pe": 14.47806,
+    "ps": 3.8477268,
+    "price": 62.69,
+    "implied_growth": 0.22264895873859758
    },
    "prev_tier": "normal",
    "changed": false
@@ -3987,19 +3668,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 45770591680.0,
+    "fy": 45775235840.0,
     "analysts": 17,
     "ytd": 24277000000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 10746795840.0,
+    "need_avg": 10749117920.0,
     "hist_n": 5,
     "last_q": 10872000000.0,
-    "need_qoq": -0.011516203090507715,
+    "need_qoq": -0.011302619573215544,
     "qoq_max": 0.18405797101449273,
     "qoq_med": 0.1719706242350061,
     "qoq_n": 4,
-    "excess": -0.19557417410500044
+    "excess": -0.19536059058770827
    },
    "track_record": {
     "n": 24,
@@ -4008,10 +3689,10 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 10.336538,
+    "forward_pe": 10.161714,
     "trailing_pe": null,
-    "ps": 1.2289231,
-    "price": 14.19
+    "ps": 1.208138,
+    "price": 13.95
    },
    "prev_tier": "normal",
    "changed": false
@@ -4042,11 +3723,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 8.134049,
-    "trailing_pe": 10.344828,
-    "ps": 3.2227726,
-    "price": 27.0,
-    "implied_growth": 0.2717931745923834
+    "forward_pe": 8.043671,
+    "trailing_pe": 10.190841,
+    "ps": 3.1804411,
+    "price": 26.7,
+    "implied_growth": 0.26693906302234405
    },
    "prev_tier": "normal",
    "changed": false
@@ -4077,11 +3758,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 51.394985,
-    "trailing_pe": 332.7237,
-    "ps": 23.9234,
-    "price": 252.87,
-    "implied_growth": 5.4738553771345595
+    "forward_pe": 56.04527,
+    "trailing_pe": 358.11688,
+    "ps": 26.08802,
+    "price": 275.75,
+    "implied_growth": 5.389778834146039
    },
    "prev_tier": "normal",
    "changed": false
@@ -4090,20 +3771,20 @@
    "ticker": "BEN",
    "requirement": {
     "kind": "us_quarterly",
-    "tier": "low_coverage",
-    "fy": 9386358860.0,
-    "analysts": 2,
+    "tier": "normal",
+    "fy": 8770290660.0,
+    "analysts": 4,
     "ytd": 4622000000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 2382179430.0,
+    "need_avg": 2074145330.0,
     "hist_n": 5,
     "last_q": 2294900000.0,
-    "need_qoq": 0.03803190988714111,
+    "need_qoq": -0.09619359013464635,
     "qoq_max": 0.1355135658914728,
     "qoq_med": -0.007082817766778993,
     "qoq_n": 4,
-    "excess": -0.09748165600433167
+    "excess": -0.23170715602611913
    },
    "track_record": {
     "n": 24,
@@ -4112,68 +3793,33 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 10.972277,
-    "trailing_pe": 23.625849,
-    "ps": 1.8924627,
-    "price": 34.73,
-    "implied_growth": 1.1532311843749476
+    "forward_pe": 10.590087,
+    "trailing_pe": 22.891157,
+    "ps": 1.8336128,
+    "price": 33.65,
+    "implied_growth": 1.1615645839359012
    },
    "prev_tier": "low_coverage",
-   "changed": false
-  },
-  {
-   "ticker": "BMY",
-   "requirement": {
-    "kind": "us_quarterly",
-    "tier": "normal",
-    "fy": 49847661160.0,
-    "analysts": 23,
-    "ytd": 24462000000.0,
-    "q_done": 2,
-    "q_left": 2,
-    "need_avg": 12692830580.0,
-    "hist_n": 5,
-    "last_q": 12973000000.0,
-    "need_qoq": -0.02159634779927544,
-    "qoq_max": 0.12916702933240498,
-    "qoq_med": 0.022991327115038374,
-    "qoq_n": 4,
-    "excess": -0.15076337713168042
-   },
-   "track_record": {
-    "n": 24,
-    "beats": 22,
-    "median_surprise": 7.5,
-    "bias": "共識偏保守"
-   },
-   "pe": {
-    "forward_pe": 10.189144,
-    "trailing_pe": 14.718061,
-    "ps": 2.7750616,
-    "price": 66.82,
-    "implied_growth": 0.4444845415866141
-   },
-   "prev_tier": "normal",
-   "changed": false
+   "changed": true
   },
   {
    "ticker": "BNY",
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 22268145790.0,
+    "fy": 22267675760.0,
     "analysts": 11,
     "ytd": 5336000000.0,
     "q_done": 1,
     "q_left": 3,
-    "need_avg": 5644048596.666667,
+    "need_avg": 5643891920.0,
     "hist_n": 5,
     "last_q": 5336000000.0,
-    "need_qoq": 0.0577302467516243,
+    "need_qoq": 0.057700884557721155,
     "qoq_max": 0.05931299338596108,
     "qoq_med": 0.04504504504504503,
     "qoq_n": 4,
-    "excess": -0.0015827466343367735
+    "excess": -0.001612108828239922
    },
    "track_record": {
     "n": 24,
@@ -4182,11 +3828,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 16.088528,
-    "trailing_pe": 19.234539,
-    "ps": 5.222723,
-    "price": 164.84,
-    "implied_growth": 0.1955437439646437
+    "forward_pe": 15.871002,
+    "trailing_pe": 18.980164,
+    "ps": 5.153653,
+    "price": 162.66,
+    "implied_growth": 0.19590206087807172
    },
    "prev_tier": "normal",
    "changed": false
@@ -4209,19 +3855,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 14207863780.0,
+    "fy": 14207841780.0,
     "analysts": 15,
     "ytd": 7181000000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 3513431890.0,
+    "need_avg": 3513420890.0,
     "hist_n": 5,
     "last_q": 3648000000.0,
-    "need_qoq": -0.03688818804824556,
+    "need_qoq": -0.036891203399122774,
     "qoq_max": 0.03255024058873479,
     "qoq_med": -0.005291005291005346,
     "qoq_n": 4,
-    "excess": -0.06943842863698035
+    "excess": -0.06944144398785757
    },
    "track_record": {
     "n": 24,
@@ -4230,11 +3876,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 11.36748,
-    "trailing_pe": 33.270935,
-    "ps": 0.95898116,
-    "price": 67.54,
-    "implied_growth": 1.926852301477548
+    "forward_pe": 11.222731,
+    "trailing_pe": 32.83251,
+    "ps": 0.9463444,
+    "price": 66.65,
+    "implied_growth": 1.9255365739408705
    },
    "prev_tier": "normal",
    "changed": false
@@ -4265,11 +3911,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 29.92412,
-    "trailing_pe": 40.826424,
-    "ps": 4.108945,
-    "price": 157.59,
-    "implied_growth": 0.3643316495188498
+    "forward_pe": 28.505672,
+    "trailing_pe": 38.891193,
+    "ps": 3.9141748,
+    "price": 150.12,
+    "implied_growth": 0.3643317372065462
    },
    "prev_tier": "rare",
    "changed": false
@@ -4279,19 +3925,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 95791331330.0,
+    "fy": 95783262580.0,
     "analysts": 16,
     "ytd": 49428000000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 23181665665.0,
+    "need_avg": 23177631290.0,
     "hist_n": 5,
     "last_q": 24765000000.0,
-    "need_qoq": -0.06393435634968703,
+    "need_qoq": -0.06409726266908944,
     "qoq_max": 0.2538383324860194,
     "qoq_med": 0.020036009417847778,
     "qoq_n": 4,
-    "excess": -0.3177726888357064
+    "excess": -0.31793559515510883
    },
    "track_record": {
     "n": 24,
@@ -4300,11 +3946,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 10.6898155,
-    "trailing_pe": 14.840518,
-    "ps": 2.8272054,
-    "price": 137.72,
-    "implied_growth": 0.38828570053430767
+    "forward_pe": 10.775198,
+    "trailing_pe": 14.975189,
+    "ps": 2.849787,
+    "price": 138.82,
+    "implied_growth": 0.38978318542267165
    },
    "prev_tier": "normal",
    "changed": false
@@ -4314,19 +3960,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "unprecedented",
-    "fy": 593167940.0,
-    "analysts": 11,
+    "fy": 593169440.0,
+    "analysts": 8,
     "ytd": 254902000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 169132970.0,
+    "need_avg": 169133720.0,
     "hist_n": 5,
     "last_q": 133243000.0,
-    "need_qoq": 0.26935726454673037,
+    "need_qoq": 0.26936289336025165,
     "qoq_max": 0.09521695887686077,
     "qoq_med": 0.021700171103740784,
     "qoq_n": 4,
-    "excess": 0.1741403056698696
+    "excess": 0.17414593448339089
    },
    "track_record": {
     "n": 23,
@@ -4335,11 +3981,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 29.823986,
-    "trailing_pe": 196.91891,
-    "ps": 13.625691,
-    "price": 145.72,
-    "implied_growth": 5.6027026031999885
+    "forward_pe": 30.89718,
+    "trailing_pe": 199.95946,
+    "ps": 13.836079,
+    "price": 147.97,
+    "implied_growth": 5.471770562879849
    },
    "prev_tier": "unprecedented",
    "changed": false
@@ -4370,11 +4016,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 8.930233,
-    "trailing_pe": 10.59009,
-    "ps": 1.1790287,
-    "price": 23.51,
-    "implied_growth": 0.18586939444917072
+    "forward_pe": 8.641548,
+    "trailing_pe": 10.247747,
+    "ps": 1.1409146,
+    "price": 22.75,
+    "implied_growth": 0.18586936044329105
    },
    "prev_tier": "normal",
    "changed": false
@@ -4405,13 +4051,48 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 22.408022,
-    "trailing_pe": 29.252445,
-    "ps": 3.3873913,
-    "price": 298.96,
-    "implied_growth": 0.3054452106482224
+    "forward_pe": 21.342937,
+    "trailing_pe": 27.862034,
+    "ps": 3.226384,
+    "price": 284.75,
+    "implied_growth": 0.30544516905053887
    },
    "prev_tier": "normal",
+   "changed": false
+  },
+  {
+   "ticker": "CGNX",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 1145407160.0,
+    "analysts": 19,
+    "ytd": 559700000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 292853580.0,
+    "hist_n": 5,
+    "last_q": 291263000.0,
+    "need_qoq": 0.005460975132440371,
+    "qoq_max": 0.11160088802174295,
+    "qoq_med": 0.08503298725585529,
+    "qoq_n": 4,
+    "excess": -0.10613991288930258
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 21,
+    "median_surprise": 16.6,
+    "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 31.726114,
+    "trailing_pe": 61.750004,
+    "ps": 9.921055,
+    "price": 64.22,
+    "implied_growth": 0.9463462811739249
+   },
+   "prev_tier": null,
    "changed": false
   },
   {
@@ -4419,19 +4100,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 286620034750.0,
-    "analysts": 15,
+    "fy": 286456282570.0,
+    "analysts": 16,
     "ytd": 139688000000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 73466017375.0,
+    "need_avg": 73384141285.0,
     "hist_n": 5,
     "last_q": 71396000000.0,
-    "need_qoq": 0.028993464269706948,
+    "need_qoq": 0.027846676074289922,
     "qoq_max": 0.04545188309025949,
     "qoq_med": 0.03843625825341346,
     "qoq_n": 4,
-    "excess": -0.016458418820552545
+    "excess": -0.01760520701596957
    },
    "track_record": {
     "n": 24,
@@ -4440,11 +4121,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 8.436079,
-    "trailing_pe": 11.684036,
-    "ps": 0.2643696,
-    "price": 282.52,
-    "implied_growth": 0.3850078928848344
+    "forward_pe": 8.384122,
+    "trailing_pe": 11.616054,
+    "ps": 0.2627227,
+    "price": 280.76,
+    "implied_growth": 0.3854824631607221
    },
    "prev_tier": "normal",
    "changed": false
@@ -4471,46 +4152,11 @@
    "track_record": null,
    "pe": {
     "forward_pe": null,
-    "trailing_pe": 6.4444447,
-    "ps": 0.5214395,
-    "price": 24.94
+    "trailing_pe": 6.397933,
+    "ps": 0.5176761,
+    "price": 24.76
    },
    "prev_tier": "normal",
-   "changed": false
-  },
-  {
-   "ticker": "CLS",
-   "requirement": {
-    "kind": "us_quarterly",
-    "tier": "unprecedented",
-    "fy": 20579781320.0,
-    "analysts": 15,
-    "ytd": 8745600000.0,
-    "q_done": 2,
-    "q_left": 2,
-    "need_avg": 5917090660.0,
-    "hist_n": 5,
-    "last_q": 4698600000.0,
-    "need_qoq": 0.25933057932149994,
-    "qoq_max": 0.1610081541882875,
-    "qoq_med": 0.1443018159048215,
-    "qoq_n": 4,
-    "excess": 0.09832242513321243
-   },
-   "track_record": {
-    "n": 24,
-    "beats": 24,
-    "median_surprise": 10.0,
-    "bias": "共識偏保守"
-   },
-   "pe": {
-    "forward_pe": 15.981585,
-    "trailing_pe": 32.468815,
-    "ps": 2.5259426,
-    "price": 312.35,
-    "implied_growth": 1.0316392272731396
-   },
-   "prev_tier": "unprecedented",
    "changed": false
   },
   {
@@ -4518,19 +4164,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 18265234810.0,
+    "fy": 18265223700.0,
     "analysts": 9,
     "ytd": 8629000000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 4818117405.0,
+    "need_avg": 4818111850.0,
     "hist_n": 5,
     "last_q": 4803000000.0,
-    "need_qoq": 0.0031474921923797528,
+    "need_qoq": 0.0031463356235685858,
     "qoq_max": 0.25535807631991636,
     "qoq_med": 0.17231188906569672,
     "qoq_n": 4,
-    "excess": -0.2522105841275366
+    "excess": -0.2522117406963478
    },
    "track_record": {
     "n": 24,
@@ -4539,11 +4185,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 21.016989,
-    "trailing_pe": 57.6,
-    "ps": 1.2734388,
-    "price": 14.4,
-    "implied_growth": 1.7406399651253568
+    "forward_pe": 19.820189,
+    "trailing_pe": 54.32,
+    "ps": 1.2009234,
+    "price": 13.58,
+    "implied_growth": 1.7406398596905408
    },
    "prev_tier": "normal",
    "changed": false
@@ -4574,11 +4220,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 20.197329,
-    "trailing_pe": 68.41262,
-    "ps": 7.7544074,
-    "price": 281.86,
-    "implied_growth": 2.387211249566713
+    "forward_pe": 21.881992,
+    "trailing_pe": 74.118935,
+    "ps": 8.401204,
+    "price": 305.37,
+    "implied_growth": 2.3872115024994063
    },
    "prev_tier": "unprecedented",
    "changed": false
@@ -4609,11 +4255,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 6.846012,
-    "trailing_pe": 8.687459,
-    "ps": 1.3543372,
-    "price": 132.31,
-    "implied_growth": 0.26898097753845596
+    "forward_pe": 6.6825066,
+    "trailing_pe": 8.479974,
+    "ps": 1.3219912,
+    "price": 129.15,
+    "implied_growth": 0.2689810138010189
    },
    "prev_tier": "normal",
    "changed": false
@@ -4623,28 +4269,28 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "unprecedented",
-    "fy": 12899139590.0,
-    "analysts": 37,
+    "fy": 12899115690.0,
+    "analysts": 36,
     "ytd": 4653000000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 4123069795.0,
+    "need_avg": 4123057845.0,
     "hist_n": 5,
     "last_q": 2575000000.0,
-    "need_qoq": 0.6011921533980582,
+    "need_qoq": 0.6011875126213593,
     "qoq_max": 0.3219636822604943,
     "qoq_med": 0.23917228103946098,
     "qoq_n": 4,
-    "excess": 0.2792284711375639
+    "excess": 0.27922383036086496
    },
    "track_record": null,
    "pe": {
     "forward_pe": null,
     "trailing_pe": null,
-    "ps": 6.493453,
-    "price": 89.36
+    "ps": 6.466566,
+    "price": 88.99
    },
-   "prev_tier": null,
+   "prev_tier": "unprecedented",
    "changed": false
   },
   {
@@ -4673,11 +4319,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 19.431942,
-    "trailing_pe": 37.0,
-    "ps": 4.985996,
-    "price": 31.82,
-    "implied_growth": 0.9040814345781807
+    "forward_pe": 19.016678,
+    "trailing_pe": 36.2093,
+    "ps": 4.879444,
+    "price": 31.14,
+    "implied_growth": 0.9040812491014467
    },
    "prev_tier": "normal",
    "changed": false
@@ -4708,13 +4354,13 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 30.571552,
-    "trailing_pe": 38.61526,
-    "ps": 3.9016275,
-    "price": 693.53,
-    "implied_growth": 0.2631108816457861
+    "forward_pe": 29.758331,
+    "trailing_pe": 37.603786,
+    "ps": 3.8015454,
+    "price": 675.74,
+    "implied_growth": 0.2636389453427346
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -4739,9 +4385,9 @@
    "track_record": null,
    "pe": {
     "forward_pe": null,
-    "trailing_pe": 12.986667,
-    "ps": 0.81622756,
-    "price": 29.22
+    "trailing_pe": 13.035398,
+    "ps": 0.8227732,
+    "price": 29.46
    },
    "prev_tier": "normal",
    "changed": false
@@ -4772,11 +4418,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 15.991874,
-    "trailing_pe": 36.0099,
-    "ps": 3.6082,
-    "price": 36.37,
-    "implied_growth": 1.2517623638105206
+    "forward_pe": 15.983079,
+    "trailing_pe": 35.990097,
+    "ps": 3.6062162,
+    "price": 36.35,
+    "implied_growth": 1.2517624420175864
    },
    "prev_tier": "normal",
    "changed": false
@@ -4785,20 +4431,20 @@
    "ticker": "ETN",
    "requirement": {
     "kind": "us_quarterly",
-    "tier": "unprecedented",
-    "fy": 32773261110.0,
+    "tier": "rare",
+    "fy": 32644503310.0,
     "analysts": 25,
     "ytd": 7451000000.0,
     "q_done": 1,
     "q_left": 3,
-    "need_avg": 8440753703.333333,
+    "need_avg": 8397834436.666667,
     "hist_n": 5,
     "last_q": 7451000000.0,
-    "need_qoq": 0.132835015881537,
+    "need_qoq": 0.12707481367154294,
     "qoq_max": 0.10208562019758505,
     "qoq_med": 0.05613040396881641,
     "qoq_n": 4,
-    "excess": 0.030749395683951963
+    "excess": 0.024989193473957894
    },
    "track_record": {
     "n": 24,
@@ -4807,13 +4453,13 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 25.571014,
-    "trailing_pe": 41.83809,
-    "ps": 5.3131638,
-    "price": 410.85,
-    "implied_growth": 0.636152950367944
+    "forward_pe": 26.366879,
+    "trailing_pe": 43.272636,
+    "ps": 5.500938,
+    "price": 425.37,
+    "implied_growth": 0.64117398953437
    },
-   "prev_tier": "rare",
+   "prev_tier": "unprecedented",
    "changed": true
   },
   {
@@ -4842,11 +4488,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 7.908566,
-    "trailing_pe": 15.95122,
-    "ps": 0.7998611,
-    "price": 45.78,
-    "implied_growth": 1.0169547804241628
+    "forward_pe": 7.623526,
+    "trailing_pe": 15.3763075,
+    "ps": 0.7710326,
+    "price": 44.13,
+    "implied_growth": 1.0169548185445945
    },
    "prev_tier": "normal",
    "changed": false
@@ -4856,19 +4502,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 5038973010.0,
-    "analysts": 30,
+    "fy": 5035922270.0,
+    "analysts": 31,
     "ytd": 2100433000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 1469270005.0,
+    "need_avg": 1467744635.0,
     "hist_n": 5,
     "last_q": 1056193000.0,
-    "need_qoq": 0.3910999268126185,
+    "need_qoq": 0.38965571159816426,
     "qoq_max": 0.45360882998988306,
     "qoq_med": 0.05513099615263073,
     "qoq_n": 4,
-    "excess": -0.06250890317726454
+    "excess": -0.0639531183917188
    },
    "track_record": {
     "n": 24,
@@ -4877,11 +4523,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 8.845697,
-    "trailing_pe": 12.612585,
-    "ps": 4.085517,
-    "price": 204.45,
-    "implied_growth": 0.4258441138103646
+    "forward_pe": 9.021346,
+    "trailing_pe": 12.8871765,
+    "ps": 4.1770387,
+    "price": 209.03,
+    "implied_growth": 0.42852036713811903
    },
    "prev_tier": "normal",
    "changed": false
@@ -4891,19 +4537,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "unprecedented",
-    "fy": 19217109460.0,
+    "fy": 19251109460.0,
     "analysts": 11,
     "ytd": 8649000000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 5284054730.0,
+    "need_avg": 5301054730.0,
     "hist_n": 5,
     "last_q": 4505000000.0,
-    "need_qoq": 0.17293112763595997,
+    "need_qoq": 0.17670471254162035,
     "qoq_max": 0.08711389961389959,
     "qoq_med": 0.06162610046607986,
     "qoq_n": 4,
-    "excess": 0.08581722802206038
+    "excess": 0.08959081292772075
    },
    "track_record": {
     "n": 24,
@@ -4912,11 +4558,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 35.713627,
-    "trailing_pe": 70.779816,
-    "ps": 7.8190355,
-    "price": 154.3,
-    "implied_growth": 0.9818714016361316
+    "forward_pe": 38.2541,
+    "trailing_pe": 77.03703,
+    "ps": 8.432193,
+    "price": 166.4,
+    "implied_growth": 1.013824139111886
    },
    "prev_tier": "unprecedented",
    "changed": false
@@ -4926,19 +4572,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "rare",
-    "fy": 498084756170.0,
+    "fy": 498401688800.0,
     "analysts": 51,
     "ytd": 229692000000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 134196378085.0,
+    "need_avg": 134354844400.0,
     "hist_n": 5,
     "last_q": 119796000000.0,
-    "need_qoq": 0.12020750346422249,
+    "need_qoq": 0.121530304851581,
     "qoq_max": 0.11219783870400413,
     "qoq_med": 0.09008517143481098,
     "qoq_n": 4,
-    "excess": 0.00800966476021836
+    "excess": 0.009332466147576879
    },
    "track_record": {
     "n": 24,
@@ -4947,48 +4593,13 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 22.573368,
-    "trailing_pe": 16.83283,
-    "ps": 9.197426,
-    "price": 335.31,
-    "implied_growth": -0.2543057819285096
+    "forward_pe": 22.553036,
+    "trailing_pe": 16.83141,
+    "ps": 9.201266,
+    "price": 335.45,
+    "implied_growth": -0.2536964868055901
    },
    "prev_tier": "rare",
-   "changed": false
-  },
-  {
-   "ticker": "GOOGL",
-   "requirement": {
-    "kind": "us_quarterly",
-    "tier": "rare",
-    "fy": 498084756170.0,
-    "analysts": 51,
-    "ytd": 229692000000.0,
-    "q_done": 2,
-    "q_left": 2,
-    "need_avg": 134196378085.0,
-    "hist_n": 5,
-    "last_q": 119796000000.0,
-    "need_qoq": 0.12020750346422249,
-    "qoq_max": 0.11219783870400413,
-    "qoq_med": 0.09008517143481098,
-    "qoq_n": 4,
-    "excess": 0.00800966476021836
-   },
-   "track_record": {
-    "n": 24,
-    "beats": 20,
-    "median_surprise": 12.7,
-    "bias": "共識偏保守"
-   },
-   "pe": {
-    "forward_pe": 22.785429,
-    "trailing_pe": 16.97392,
-    "ps": 9.28383,
-    "price": 338.46,
-    "implied_growth": -0.2550537450929715
-   },
-   "prev_tier": null,
    "changed": false
   },
   {
@@ -4996,19 +4607,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 33933460189.0,
-    "analysts": 17,
+    "fy": 33948823510.0,
+    "analysts": 18,
     "ytd": 16038000000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 8947730094.5,
+    "need_avg": 8955411755.0,
     "hist_n": 5,
     "last_q": 8409000000.0,
-    "need_qoq": 0.06406589303127608,
+    "need_qoq": 0.06497939766916394,
     "qoq_max": 0.10224144710971284,
     "qoq_med": 0.07024793388429762,
     "qoq_n": 4,
-    "excess": -0.03817555407843676
+    "excess": -0.037262049440548894
    },
    "track_record": {
     "n": 24,
@@ -5017,11 +4628,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 10.023124,
-    "trailing_pe": 15.688679,
-    "ps": 3.0093658,
-    "price": 49.89,
-    "implied_growth": 0.5652484195546221
+    "forward_pe": 9.669533,
+    "trailing_pe": 15.087774,
+    "ps": 2.9032025,
+    "price": 48.13,
+    "implied_growth": 0.5603415387278787
    },
    "prev_tier": "normal",
    "changed": false
@@ -5030,20 +4641,20 @@
    "ticker": "HASI",
    "requirement": {
     "kind": "us_quarterly",
-    "tier": "low_coverage",
-    "fy": 114267500.0,
-    "analysts": 2,
+    "tier": "normal",
+    "fy": 108511670.0,
+    "analysts": 3,
     "ytd": 245016000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": -65374250.0,
+    "need_avg": -68252165.0,
     "hist_n": 5,
     "last_q": 120790000.0,
-    "need_qoq": -1.5412223694014404,
+    "need_qoq": -1.565048141402434,
     "qoq_max": 0.20282429830191973,
     "qoq_med": 0.11398742528914063,
     "qoq_n": 4,
-    "excess": -1.7440466677033601
+    "excess": -1.7678724397043537
    },
    "track_record": {
     "n": 24,
@@ -5052,14 +4663,14 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 11.512684,
-    "trailing_pe": 58.98462,
-    "ps": 38.688595,
-    "price": 38.34,
-    "implied_growth": 4.123446452625643
+    "forward_pe": 11.223704,
+    "trailing_pe": 57.49231,
+    "ps": 37.709778,
+    "price": 37.37,
+    "implied_growth": 4.122400768944014
    },
    "prev_tier": "low_coverage",
-   "changed": false
+   "changed": true
   },
   {
    "ticker": "HENKY",
@@ -5067,9 +4678,9 @@
    "track_record": null,
    "pe": {
     "forward_pe": null,
-    "trailing_pe": 14.985293,
-    "ps": 1.614571,
-    "price": 20.38
+    "trailing_pe": 14.233577,
+    "ps": 1.5448545,
+    "price": 19.5
    },
    "prev_tier": null,
    "changed": false
@@ -5100,11 +4711,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 10.10819,
-    "trailing_pe": 9.562543,
-    "ps": 1.2785454,
-    "price": 138.37,
-    "implied_growth": -0.05398068299072345
+    "forward_pe": 9.961355,
+    "trailing_pe": 9.417128,
+    "ps": 1.2599729,
+    "price": 136.36,
+    "implied_growth": -0.054633832445485475
    },
    "prev_tier": "normal",
    "changed": false
@@ -5130,11 +4741,11 @@
    },
    "track_record": null,
    "pe": {
-    "forward_pe": 11.309427,
-    "trailing_pe": 15.301429,
-    "ps": 5.4416447,
-    "price": 107.11,
-    "implied_growth": 0.3529800404565149
+    "forward_pe": 11.118316,
+    "trailing_pe": 15.042857,
+    "ps": 5.3480225,
+    "price": 105.3,
+    "implied_growth": 0.35297980377603944
    },
    "prev_tier": "normal",
    "changed": false
@@ -5165,11 +4776,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 20.107214,
-    "trailing_pe": 27.245417,
-    "ps": 3.911765,
-    "price": 460.72,
-    "implied_growth": 0.3550070636339775
+    "forward_pe": 20.093248,
+    "trailing_pe": 27.242603,
+    "ps": 3.9090483,
+    "price": 460.4,
+    "implied_growth": 0.3558088269253432
    },
    "prev_tier": "normal",
    "changed": false
@@ -5202,8 +4813,8 @@
    "pe": {
     "forward_pe": null,
     "trailing_pe": null,
-    "ps": 36.26419,
-    "price": 93.545
+    "ps": 38.22384,
+    "price": 98.6
    },
    "prev_tier": "normal",
    "changed": false
@@ -5213,19 +4824,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "rare",
-    "fy": 4624684480.0,
-    "analysts": 18,
+    "fy": 4623919970.0,
+    "analysts": 19,
     "ytd": 1091000000.0,
     "q_done": 1,
     "q_left": 3,
-    "need_avg": 1177894826.6666667,
+    "need_avg": 1177639990.0,
     "hist_n": 5,
     "last_q": 1091000000.0,
-    "need_qoq": 0.0796469538649558,
+    "need_qoq": 0.07941337305224572,
     "qoq_max": 0.06918819188191883,
     "qoq_med": 0.023607176581680767,
     "qoq_n": 4,
-    "excess": 0.010458761983036968
+    "excess": 0.010225181170326891
    },
    "track_record": {
     "n": 24,
@@ -5234,11 +4845,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 35.78345,
-    "trailing_pe": 40.63687,
-    "ps": 7.3322697,
-    "price": 218.22,
-    "implied_growth": 0.13563309295218873
+    "forward_pe": 33.817043,
+    "trailing_pe": 38.445065,
+    "ps": 6.9367933,
+    "price": 206.45,
+    "implied_growth": 0.13685472144918176
    },
    "prev_tier": "rare",
    "changed": false
@@ -5248,19 +4859,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 63033331360.0,
-    "analysts": 40,
+    "fy": 63045547670.0,
+    "analysts": 41,
     "ytd": 29705000000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 16664165680.0,
+    "need_avg": 16670273835.0,
     "hist_n": 5,
     "last_q": 16128000000.0,
-    "need_qoq": 0.03324439980158722,
+    "need_qoq": 0.03362312965029757,
     "qoq_max": 0.1878912867349194,
     "qoq_med": 0.06174663659693591,
     "qoq_n": 4,
-    "excess": -0.15464688693333217
+    "excess": -0.15426815708462183
    },
    "track_record": {
     "n": 24,
@@ -5269,10 +4880,10 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 46.910885,
+    "forward_pe": 50.34258,
     "trailing_pe": null,
-    "ps": 8.879382,
-    "price": 95.8
+    "ps": 9.541164,
+    "price": 102.94
    },
    "prev_tier": "normal",
    "changed": false
@@ -5281,20 +4892,20 @@
    "ticker": "IOT",
    "requirement": {
     "kind": "us_quarterly",
-    "tier": "rare",
-    "fy": 2045576150.0,
+    "tier": "normal",
+    "fy": 2045557100.0,
     "analysts": 21,
-    "ytd": 478844000.0,
-    "q_done": 1,
-    "q_left": 3,
-    "need_avg": 522244050.0,
+    "ytd": 987281000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 529138050.0,
     "hist_n": 5,
-    "last_q": 478844000.0,
-    "need_qoq": 0.09063505024600915,
+    "last_q": 508437000.0,
+    "need_qoq": 0.040715073843957006,
     "qoq_max": 0.07775897149647992,
     "qoq_med": 0.06808341847466792,
     "qoq_n": 4,
-    "excess": 0.01287607874952923
+    "excess": -0.03704389765252292
    },
    "track_record": {
     "n": 19,
@@ -5303,47 +4914,13 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 42.61228,
-    "trailing_pe": 268.0,
-    "ps": 12.67891,
-    "price": 40.2,
-    "implied_growth": 5.289266849837652
+    "forward_pe": 40.683067,
+    "trailing_pe": 255.86667,
+    "ps": 12.165031,
+    "price": 38.38,
+    "implied_growth": 5.2892669817641815
    },
-   "prev_tier": null,
-   "changed": false
-  },
-  {
-   "ticker": "IREN",
-   "requirement": {
-    "kind": "us_quarterly",
-    "tier": "unprecedented",
-    "fy": 2819337630.0,
-    "analysts": 14,
-    "ytd": 0,
-    "q_done": 0,
-    "q_left": 4,
-    "need_avg": 704834407.5,
-    "hist_n": 5,
-    "last_q": 137225000.0,
-    "need_qoq": 4.136341100382583,
-    "qoq_max": 0.28299660423296236,
-    "qoq_med": -0.05228081080147795,
-    "qoq_n": 4,
-    "excess": 3.853344496149621
-   },
-   "track_record": {
-    "n": 14,
-    "beats": 6,
-    "median_surprise": -2.5,
-    "bias": "共識大致中性"
-   },
-   "pe": {
-    "forward_pe": null,
-    "trailing_pe": null,
-    "ps": 24.902924,
-    "price": 44.68
-   },
-   "prev_tier": "normal",
+   "prev_tier": "rare",
    "changed": true
   },
   {
@@ -5351,19 +4928,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 11773956380.0,
-    "analysts": 32,
+    "fy": 11756674650.0,
+    "analysts": 31,
     "ytd": 5663100000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 3055428190.0,
+    "need_avg": 3046787325.0,
     "hist_n": 5,
     "last_q": 2892300000.0,
-    "need_qoq": 0.05640085399163297,
+    "need_qoq": 0.053413312934342816,
     "qoq_max": 0.14414594227775335,
     "qoq_med": 0.04385015158077099,
     "qoq_n": 4,
-    "excess": -0.08774508828612038
+    "excess": -0.09073262934341053
    },
    "track_record": {
     "n": 24,
@@ -5372,11 +4949,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 30.37902,
-    "trailing_pe": 42.004585,
-    "ps": 11.906453,
-    "price": 366.7,
-    "implied_growth": 0.3826840036314534
+    "forward_pe": 30.529533,
+    "trailing_pe": 42.382317,
+    "ps": 11.986002,
+    "price": 369.15,
+    "implied_growth": 0.38823993802984136
    },
    "prev_tier": "normal",
    "changed": false
@@ -5387,9 +4964,9 @@
    "track_record": null,
    "pe": {
     "forward_pe": null,
-    "trailing_pe": 17.407408,
-    "ps": 0.0065097543,
-    "price": 14.1
+    "trailing_pe": 18.13253,
+    "ps": 0.006948354,
+    "price": 15.05
    },
    "prev_tier": null,
    "changed": false
@@ -5399,29 +4976,64 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "unprecedented",
-    "fy": 3422795573810.0,
+    "fy": 3424220573810.0,
     "analysts": 4,
     "ytd": 676024000000.0,
     "q_done": 1,
     "q_left": 3,
-    "need_avg": 915590524603.3334,
+    "need_avg": 916065524603.3334,
     "hist_n": 5,
     "last_q": 676024000000.0,
-    "need_qoq": 0.3543757686166962,
+    "need_qoq": 0.3550784063928698,
     "qoq_max": 0.2678213560139113,
     "qoq_med": 0.1144808121573011,
     "qoq_n": 4,
-    "excess": 0.08655441260278485
+    "excess": 0.08725705037895848
    },
    "track_record": null,
    "pe": {
-    "forward_pe": 3.4020443,
-    "trailing_pe": 11.282486,
-    "ps": 0.012003242,
-    "price": 39.94,
-    "implied_growth": 2.3163842105171883
+    "forward_pe": 3.416525,
+    "trailing_pe": 10.929155,
+    "ps": 0.0120543325,
+    "price": 40.11,
+    "implied_growth": 2.1989097108904514
    },
    "prev_tier": "unprecedented",
+   "changed": false
+  },
+  {
+   "ticker": "JCI",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 25556071210.0,
+    "analysts": 20,
+    "ytd": 18553000000.0,
+    "q_done": 3,
+    "q_left": 1,
+    "need_avg": 7003071210.0,
+    "hist_n": 5,
+    "last_q": 6614000000.0,
+    "need_qoq": 0.05882540217719989,
+    "qoq_max": 0.07684793226961895,
+    "qoq_med": 0.06444150693985451,
+    "qoq_n": 4,
+    "excess": -0.018022530092419053
+   },
+   "track_record": {
+    "n": 24,
+    "beats": 20,
+    "median_surprise": 2.7,
+    "bias": "共識偏保守"
+   },
+   "pe": {
+    "forward_pe": 24.134521,
+    "trailing_pe": 41.129578,
+    "ps": 3.5384798,
+    "price": 146.01,
+    "implied_growth": 0.7041804144362345
+   },
+   "prev_tier": null,
    "changed": false
   },
   {
@@ -5429,19 +5041,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 207979301910.0,
+    "fy": 207887756460.0,
     "analysts": 11,
     "ytd": 102685000000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 52647150955.0,
+    "need_avg": 52601378230.0,
     "hist_n": 5,
     "last_q": 52852000000.0,
-    "need_qoq": -0.0038758995875274316,
+    "need_qoq": -0.00474195432528568,
     "qoq_max": 0.08815180365097386,
     "qoq_med": 0.060582345032408336,
     "qoq_n": 4,
-    "excess": -0.09202770323850129
+    "excess": -0.09289375797625954
    },
    "track_record": {
     "n": 24,
@@ -5450,11 +5062,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 14.341591,
-    "trailing_pe": 15.359315,
-    "ps": 5.116418,
-    "price": 358.64,
-    "implied_growth": 0.07096311699308688
+    "forward_pe": 14.256049,
+    "trailing_pe": 15.269182,
+    "ps": 5.0820365,
+    "price": 356.23,
+    "implied_growth": 0.07106688536213634
    },
    "prev_tier": "normal",
    "changed": false
@@ -5485,11 +5097,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 13.825248,
-    "trailing_pe": 37.26712,
-    "ps": 4.494614,
-    "price": 81.615,
-    "implied_growth": 1.6955841949453636
+    "forward_pe": 14.590071,
+    "trailing_pe": 39.328766,
+    "ps": 4.7432594,
+    "price": 86.13,
+    "implied_growth": 1.6955842778283947
    },
    "prev_tier": "normal",
    "changed": false
@@ -5504,11 +5116,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 17.183485,
-    "trailing_pe": 12.24183,
-    "ps": 0.005934865,
-    "price": 18.73,
-    "implied_growth": -0.2875816518011335
+    "forward_pe": 16.669724,
+    "trailing_pe": 11.5,
+    "ps": 0.0057250517,
+    "price": 18.17,
+    "implied_growth": -0.3101265503855972
    },
    "prev_tier": null,
    "changed": false
@@ -5518,32 +5130,32 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 151121677750.0,
-    "analysts": 21,
+    "fy": 150467581650.0,
+    "analysts": 12,
     "ytd": 46121000000.0,
     "q_done": 1,
     "q_left": 3,
-    "need_avg": 35000225916.666664,
+    "need_avg": 34782193883.333336,
     "hist_n": 5,
     "last_q": 46121000000.0,
-    "need_qoq": -0.24112170341782124,
+    "need_qoq": -0.2458490951338146,
     "qoq_max": 0.32817854571634264,
     "qoq_med": 0.025576656132785924,
     "qoq_n": 4,
-    "excess": -0.5693002491341639
+    "excess": -0.5740276408501572
    },
    "track_record": {
     "n": 24,
     "beats": 23,
-    "median_surprise": 7.3,
+    "median_surprise": 6.5,
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 10.586456,
-    "trailing_pe": 34.263157,
-    "ps": 0.24148141,
-    "price": 58.59,
-    "implied_growth": 2.2365087050850634
+    "forward_pe": 10.62535,
+    "trailing_pe": 31.616217,
+    "ps": 0.23344922,
+    "price": 58.49,
+    "implied_growth": 1.9755459349574367
    },
    "prev_tier": "normal",
    "changed": false
@@ -5553,19 +5165,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 14749241680.0,
+    "fy": 14749604990.0,
     "analysts": 16,
     "ytd": 7268700000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 3740270840.0,
+    "need_avg": 3740452495.0,
     "hist_n": 5,
     "last_q": 3731100000.0,
-    "need_qoq": 0.002457945378038673,
+    "need_qoq": 0.0025066320924125307,
     "qoq_max": 0.054698100407055694,
     "qoq_med": 0.01026280724633577,
     "qoq_n": 4,
-    "excess": -0.05224015502901702
+    "excess": -0.052191468314643163
    },
    "track_record": {
     "n": 24,
@@ -5574,11 +5186,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 16.49257,
-    "trailing_pe": 27.03805,
-    "ps": 1.8476987,
-    "price": 326.89,
-    "implied_growth": 0.639407927327275
+    "forward_pe": 15.703634,
+    "trailing_pe": 25.768404,
+    "ps": 1.760935,
+    "price": 311.54,
+    "implied_growth": 0.6409198023845946
    },
    "prev_tier": "normal",
    "changed": false
@@ -5609,11 +5221,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 19.050655,
-    "trailing_pe": 25.904043,
-    "ps": 3.714588,
-    "price": 256.45,
-    "implied_growth": 0.3597455310591684
+    "forward_pe": 18.259794,
+    "trailing_pe": 24.802021,
+    "ps": 3.5565598,
+    "price": 245.54,
+    "implied_growth": 0.3582859149451523
    },
    "prev_tier": "normal",
    "changed": false
@@ -5623,19 +5235,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "unprecedented",
-    "fy": 6279624110.0,
-    "analysts": 21,
+    "fy": 6316700270.0,
+    "analysts": 23,
     "ytd": 0,
     "q_done": 0,
     "q_left": 4,
-    "need_avg": 1569906027.5,
+    "need_avg": 1579175067.5,
     "hist_n": 5,
     "last_q": 1006300000.0,
-    "need_qoq": 0.5600775390042732,
+    "need_qoq": 0.569288549637285,
     "qoq_max": 0.2467216185837393,
     "qoq_med": 0.24480455220188024,
     "qoq_n": 4,
-    "excess": 0.31335592042053384
+    "excess": 0.3225669310535457
    },
    "track_record": {
     "n": 24,
@@ -5644,13 +5256,47 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 26.46316,
+    "forward_pe": 23.350882,
     "trailing_pe": null,
-    "ps": 26.227129,
-    "price": 881.255
+    "ps": 27.589445,
+    "price": 927.03
    },
-   "prev_tier": "normal",
-   "changed": true
+   "prev_tier": "unprecedented",
+   "changed": false
+  },
+  {
+   "ticker": "MARA",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 700939770.0,
+    "analysts": 7,
+    "ytd": 349495000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 175722385.0,
+    "hist_n": 5,
+    "last_q": 174881000.0,
+    "need_qoq": 0.004811185892120928,
+    "qoq_max": 0.0583894165251484,
+    "qoq_med": 0.001529087014786823,
+    "qoq_n": 4,
+    "excess": -0.05357823063302747
+   },
+   "track_record": {
+    "n": 23,
+    "beats": 11,
+    "median_surprise": -24.7,
+    "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": null,
+    "trailing_pe": null,
+    "ps": 5.754484,
+    "price": 11.98
+   },
+   "prev_tier": null,
+   "changed": false
   },
   {
    "ticker": "MCK",
@@ -5678,11 +5324,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 17.990135,
-    "trailing_pe": 24.32985,
-    "ps": 0.25758457,
-    "price": 907.99,
-    "implied_growth": 0.35239952340546643
+    "forward_pe": 17.465483,
+    "trailing_pe": 23.639313,
+    "ps": 0.25007257,
+    "price": 881.51,
+    "implied_growth": 0.35348750446809873
    },
    "prev_tier": "normal",
    "changed": false
@@ -5692,19 +5338,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 450034050.0,
-    "analysts": 10,
+    "fy": 447403680.0,
+    "analysts": 11,
     "ytd": 199139000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 125447525.0,
+    "need_avg": 124132340.0,
     "hist_n": 5,
     "last_q": 108490000.0,
-    "need_qoq": 0.1563049589823946,
+    "need_qoq": 0.14418232095123984,
     "qoq_max": 0.7205846066242763,
     "qoq_med": 0.1968140850974638,
     "qoq_n": 4,
-    "excess": -0.5642796476418817
+    "excess": -0.5764022856730364
    },
    "track_record": {
     "n": 23,
@@ -5713,12 +5359,12 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 61.622086,
+    "forward_pe": 56.622383,
     "trailing_pe": null,
-    "ps": 23.332066,
-    "price": 54.53
+    "ps": 21.612003,
+    "price": 50.51
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -5747,11 +5393,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 35.097088,
-    "trailing_pe": 74.62561,
-    "ps": 18.374962,
-    "price": 1223.86,
-    "implied_growth": 1.1262621559942523
+    "forward_pe": 35.401066,
+    "trailing_pe": 75.18027,
+    "ps": 18.53411,
+    "price": 1234.46,
+    "implied_growth": 1.1236724905402564
    },
    "prev_tier": "normal",
    "changed": false
@@ -5761,19 +5407,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "unprecedented",
-    "fy": 12043363200.0,
-    "analysts": 34,
+    "fy": 12050224690.0,
+    "analysts": 36,
     "ytd": 5157100000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 3443131600.0,
+    "need_avg": 3446562345.0,
     "hist_n": 5,
     "last_q": 2739300000.0,
-    "need_qoq": 0.25693848793487395,
+    "need_qoq": 0.25819090461066696,
     "qoq_max": 0.13297212341798326,
     "qoq_med": 0.08973723351512142,
     "qoq_n": 4,
-    "excess": 0.12396636451689069
+    "excess": 0.1252187811926837
    },
    "track_record": {
     "n": 24,
@@ -5782,11 +5428,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 33.26216,
-    "trailing_pe": 74.02318,
-    "ps": 21.259157,
-    "price": 223.55,
-    "implied_growth": 1.2254471748076492
+    "forward_pe": 35.067394,
+    "trailing_pe": 78.17881,
+    "ps": 22.452637,
+    "price": 236.1,
+    "implied_growth": 1.2293875045291363
    },
    "prev_tier": "unprecedented",
    "changed": false
@@ -5796,19 +5442,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "rare",
-    "fy": 391082621760.0,
+    "fy": 391082295220.0,
     "analysts": 49,
     "ytd": 0,
     "q_done": 0,
     "q_left": 4,
-    "need_avg": 97770655440.0,
+    "need_avg": 97770573805.0,
     "hist_n": 5,
     "last_q": 90007000000.0,
-    "need_qoq": 0.08625612941215688,
+    "need_qoq": 0.08625522242714445,
     "qoq_max": 0.08591318196076547,
     "qoq_med": 0.04634815186744423,
     "qoq_n": 4,
-    "excess": 0.0003429474513914066
+    "excess": 0.0003420404663789789
    },
    "track_record": {
     "n": 24,
@@ -5817,11 +5463,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 21.19773,
-    "trailing_pe": 27.853958,
-    "ps": 11.181764,
-    "price": 499.7,
-    "implied_growth": 0.3140066412771556
+    "forward_pe": 21.025343,
+    "trailing_pe": 27.62709,
+    "ps": 11.090689,
+    "price": 495.63,
+    "implied_growth": 0.3139899786652707
    },
    "prev_tier": "rare",
    "changed": false
@@ -5831,19 +5477,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 129736157460.0,
+    "fy": 129738438170.0,
     "analysts": 41,
     "ytd": 78959000000.0,
     "q_done": 3,
     "q_left": 1,
-    "need_avg": 50777157460.0,
+    "need_avg": 50779438170.0,
     "hist_n": 5,
     "last_q": 41456000000.0,
-    "need_qoq": 0.22484459330374373,
+    "need_qoq": 0.224899608500579,
     "qoq_max": 0.74888221065748,
     "qoq_med": 0.737468566638726,
     "qoq_n": 4,
-    "excess": -0.5240376173537362
+    "excess": -0.523982602156901
    },
    "track_record": {
     "n": 24,
@@ -5852,11 +5498,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 6.5575776,
-    "trailing_pe": 22.98937,
-    "ps": 12.718278,
-    "price": 1016.59,
-    "implied_growth": 2.50577170447819
+    "forward_pe": 6.24902,
+    "trailing_pe": 22.024843,
+    "ps": 12.20121,
+    "price": 975.26,
+    "implied_growth": 2.524527525916064
    },
    "prev_tier": "normal",
    "changed": false
@@ -5866,19 +5512,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "unprecedented",
-    "fy": 3342963390.0,
-    "analysts": 17,
+    "fy": 3343354320.0,
+    "analysts": 18,
     "ytd": 981300000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 1180831695.0,
+    "need_avg": 1181027160.0,
     "hist_n": 5,
     "last_q": 582300000.0,
-    "need_qoq": 1.0278751416795466,
+    "need_qoq": 1.0282108191653787,
     "qoq_max": 0.7523056653491436,
     "qoq_med": 0.5585215605749487,
     "qoq_n": 4,
-    "excess": 0.2755694763304031
+    "excess": 0.27590515381623515
    },
    "track_record": {
     "n": 24,
@@ -5889,10 +5535,10 @@
    "pe": {
     "forward_pe": null,
     "trailing_pe": null,
-    "ps": 42.41754,
-    "price": 226.39
+    "ps": 42.07279,
+    "price": 224.55
    },
-   "prev_tier": null,
+   "prev_tier": "unprecedented",
    "changed": false
   },
   {
@@ -5921,13 +5567,13 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 24.598028,
-    "trailing_pe": 32.255318,
-    "ps": 5.952881,
-    "price": 318.36,
-    "implied_growth": 0.3112969055893424
+    "forward_pe": 24.29747,
+    "trailing_pe": 31.861197,
+    "ps": 5.880144,
+    "price": 314.47,
+    "implied_growth": 0.31129689634352875
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -5935,19 +5581,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 411345229510.0,
-    "analysts": 48,
+    "fy": 411292753830.0,
+    "analysts": 50,
     "ytd": 177836000000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 116754614755.0,
+    "need_avg": 116728376915.0,
     "hist_n": 5,
     "last_q": 96221000000.0,
-    "need_qoq": 0.21340055450473394,
+    "need_qoq": 0.21312787141060685,
     "qoq_max": 0.2195622874013221,
     "qoq_med": 0.1979831784754944,
     "qoq_n": 4,
-    "excess": -0.006161732896588168
+    "excess": -0.006434415990715259
    },
    "track_record": {
     "n": 24,
@@ -5956,33 +5602,33 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 14.902219,
-    "trailing_pe": 29.159492,
-    "ps": 18.359913,
-    "price": 230.36,
-    "implied_growth": 0.9567214788616378
+    "forward_pe": 14.022135,
+    "trailing_pe": 27.631645,
+    "ps": 17.39792,
+    "price": 218.29,
+    "implied_growth": 0.9705733114108512
    },
-   "prev_tier": "unprecedented",
-   "changed": true
+   "prev_tier": "normal",
+   "changed": false
   },
   {
    "ticker": "NVT",
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 5453291580.0,
+    "fy": 5453310330.0,
     "analysts": 16,
     "ytd": 2713300000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 1369995790.0,
+    "need_avg": 1370005165.0,
     "hist_n": 5,
     "last_q": 1471300000.0,
-    "need_qoq": -0.06885353768775915,
+    "need_qoq": -0.06884716577176642,
     "qoq_max": 0.18462157809983903,
     "qoq_med": 0.16433861441829944,
     "qoq_n": 4,
-    "excess": -0.2534751157875982
+    "excess": -0.25346874387160545
    },
    "track_record": {
     "n": 23,
@@ -5991,11 +5637,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 24.152914,
-    "trailing_pe": 43.341667,
-    "ps": 5.2243886,
-    "price": 156.03,
-    "implied_growth": 0.794469478920846
+    "forward_pe": 25.135874,
+    "trailing_pe": 45.105556,
+    "ps": 5.437007,
+    "price": 162.38,
+    "implied_growth": 0.7944693707487553
    },
    "prev_tier": "normal",
    "changed": false
@@ -6028,10 +5674,10 @@
    "pe": {
     "forward_pe": null,
     "trailing_pe": null,
-    "ps": 84.327446,
-    "price": 11.8
+    "ps": 83.11256,
+    "price": 11.63
    },
-   "prev_tier": null,
+   "prev_tier": "unprecedented",
    "changed": false
   },
   {
@@ -6039,19 +5685,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "unprecedented",
-    "fy": 4329532840.0,
-    "analysts": 24,
+    "fy": 4344095520.0,
+    "analysts": 25,
     "ytd": 935170000.0,
     "q_done": 1,
     "q_left": 3,
-    "need_avg": 1131454280.0,
+    "need_avg": 1136308506.6666667,
     "hist_n": 5,
     "last_q": 935170000.0,
-    "need_qoq": 0.20989154913010477,
+    "need_qoq": 0.21508229163325043,
     "qoq_max": 0.06206921615369154,
     "qoq_med": 0.047457168213474565,
     "qoq_n": 4,
-    "excess": 0.14782233297641323
+    "excess": 0.1530130754795589
    },
    "track_record": {
     "n": 13,
@@ -6060,48 +5706,13 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 14.62388,
-    "trailing_pe": 21.834625,
-    "ps": 3.5761275,
-    "price": 84.5,
-    "implied_growth": 0.493080153830584
+    "forward_pe": 14.356355,
+    "trailing_pe": 21.418606,
+    "ps": 3.5079904,
+    "price": 82.89,
+    "implied_growth": 0.49192507429636567
    },
    "prev_tier": "unprecedented",
-   "changed": false
-  },
-  {
-   "ticker": "ON",
-   "requirement": {
-    "kind": "us_quarterly",
-    "tier": "rare",
-    "fy": 6560421810.0,
-    "analysts": 29,
-    "ytd": 3116800000.0,
-    "q_done": 2,
-    "q_left": 2,
-    "need_avg": 1721810905.0,
-    "hist_n": 5,
-    "last_q": 1603500000.0,
-    "need_qoq": 0.0737829154973495,
-    "qoq_max": 0.05960483711094966,
-    "qoq_med": 0.055967862735752716,
-    "qoq_n": 4,
-    "excess": 0.01417807838639984
-   },
-   "track_record": {
-    "n": 24,
-    "beats": 22,
-    "median_surprise": 6.3,
-    "bias": "共識偏保守"
-   },
-   "pe": {
-    "forward_pe": 16.422688,
-    "trailing_pe": 48.61438,
-    "ps": 4.6722255,
-    "price": 74.38,
-    "implied_growth": 1.9601962845546352
-   },
-   "prev_tier": "rare",
    "changed": false
   },
   {
@@ -6109,19 +5720,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 1437593870.0,
+    "fy": 1439179290.0,
     "analysts": 11,
     "ytd": 635078000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 401257935.0,
+    "need_avg": 402050645.0,
     "hist_n": 5,
     "last_q": 343129000.0,
-    "need_qoq": 0.1694084003392311,
+    "need_qoq": 0.17171863934555232,
     "qoq_max": 0.22307315083435308,
     "qoq_med": 0.17530459087032324,
     "qoq_n": 4,
-    "excess": -0.05366475049512198
+    "excess": -0.05135451148880077
    },
    "track_record": {
     "n": 24,
@@ -6130,11 +5741,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 22.995697,
-    "trailing_pe": 100.00373,
-    "ps": 14.624723,
-    "price": 268.01,
-    "implied_growth": 3.348801864975
+    "forward_pe": 24.064987,
+    "trailing_pe": 105.34083,
+    "ps": 15.347746,
+    "price": 281.26,
+    "implied_growth": 3.3773483027437328
    },
    "prev_tier": "normal",
    "changed": false
@@ -6144,19 +5755,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 59193260870.0,
-    "analysts": 8,
+    "fy": 59419009660.0,
+    "analysts": 9,
     "ytd": 30163000000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 14515130435.0,
+    "need_avg": 14628004830.0,
     "hist_n": 5,
     "last_q": 17693000000.0,
-    "need_qoq": -0.17961168626010282,
+    "need_qoq": -0.17323207878822133,
     "qoq_max": 0.41884522854851647,
     "qoq_med": 0.18042408178720182,
     "qoq_n": 4,
-    "excess": -0.5984569148086193
+    "excess": -0.5920773073367378
    },
    "track_record": {
     "n": 24,
@@ -6165,81 +5776,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 13.684043,
-    "trailing_pe": 21.965813,
-    "ps": 0.3466793,
-    "price": 25.7,
-    "implied_growth": 0.6052136784428404
-   },
-   "prev_tier": "normal",
-   "changed": false
-  },
-  {
-   "ticker": "PEG",
-   "requirement": {
-    "kind": "us_quarterly",
-    "tier": "normal",
-    "fy": 12842334320.0,
-    "analysts": 12,
-    "ytd": 6402000000.0,
-    "q_done": 2,
-    "q_left": 2,
-    "need_avg": 3220167160.0,
-    "hist_n": 5,
-    "last_q": 2554000000.0,
-    "need_qoq": 0.2608328739232577,
-    "qoq_max": 0.3200686106346484,
-    "qoq_med": 0.15008912655971485,
-    "qoq_n": 4,
-    "excess": -0.05923573671139071
-   },
-   "track_record": {
-    "n": 24,
-    "beats": 19,
-    "median_surprise": 3.7,
-    "bias": "共識偏保守"
-   },
-   "pe": {
-    "forward_pe": 15.77341,
-    "trailing_pe": 18.333332,
-    "ps": 2.9280305,
-    "price": 73.7,
-    "implied_growth": 0.1622935053358785
-   },
-   "prev_tier": null,
-   "changed": false
-  },
-  {
-   "ticker": "PGR",
-   "requirement": {
-    "kind": "us_quarterly",
-    "tier": "normal",
-    "fy": 87318487500.0,
-    "analysts": 8,
-    "ytd": 45779000000.0,
-    "q_done": 2,
-    "q_left": 2,
-    "need_avg": 20769743750.0,
-    "hist_n": 5,
-    "last_q": 23599000000.0,
-    "need_qoq": -0.11988881944150176,
-    "qoq_max": 0.06397655545536529,
-    "qoq_med": 0.023050693339395245,
-    "qoq_n": 4,
-    "excess": -0.18386537489686705
-   },
-   "track_record": {
-    "n": 24,
-    "beats": 14,
-    "median_surprise": 1.6,
-    "bias": "共識大致中性"
-   },
-   "pe": {
-    "forward_pe": 13.437346,
-    "trailing_pe": 10.991466,
-    "ps": 1.3978603,
-    "price": 218.95,
-    "implied_growth": -0.18202106279022645
+    "forward_pe": 13.792812,
+    "trailing_pe": 22.307693,
+    "ps": 0.35207504,
+    "price": 26.1,
+    "implied_growth": 0.617341916934705
    },
    "prev_tier": "normal",
    "changed": false
@@ -6270,11 +5811,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 10.002158,
-    "trailing_pe": 19.782236,
-    "ps": 0.6997216,
-    "price": 69.04,
-    "implied_growth": 0.9777967914524048
+    "forward_pe": 9.596509,
+    "trailing_pe": 18.979942,
+    "ps": 0.6713435,
+    "price": 66.24,
+    "implied_growth": 0.977796509126392
    },
    "prev_tier": "normal",
    "changed": false
@@ -6284,19 +5825,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 16406306050.0,
+    "fy": 16393613750.0,
     "analysts": 13,
     "ytd": 7391529000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 4507388525.0,
+    "need_avg": 4501042375.0,
     "hist_n": 5,
     "last_q": 3982957000.0,
-    "need_qoq": 0.13166888947081268,
+    "need_qoq": 0.1300755632059296,
     "qoq_max": 0.16851191642717245,
     "qoq_med": 0.046755595431255736,
     "qoq_n": 4,
-    "excess": -0.03684302695635977
+    "excess": -0.038436353221242836
    },
    "track_record": {
     "n": 24,
@@ -6305,11 +5846,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 11.062448,
-    "trailing_pe": 12.71195,
-    "ps": 1.444866,
-    "price": 124.45,
-    "implied_growth": 0.14910822631663434
+    "forward_pe": 10.530215,
+    "trailing_pe": 12.079674,
+    "ps": 1.3730001,
+    "price": 118.26,
+    "implied_growth": 0.1471440991470736
    },
    "prev_tier": "normal",
    "changed": false
@@ -6340,10 +5881,10 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 61.559814,
+    "forward_pe": 63.07589,
     "trailing_pe": null,
-    "ps": 14.192249,
-    "price": 172.57
+    "ps": 14.541771,
+    "price": 176.82
    },
    "prev_tier": "normal",
    "changed": false
@@ -6376,30 +5917,30 @@
    "pe": {
     "forward_pe": null,
     "trailing_pe": null,
-    "ps": 4.0746765,
-    "price": 2.17
+    "ps": 3.9432352,
+    "price": 2.1
    },
-   "prev_tier": "unprecedented",
-   "changed": true
+   "prev_tier": "rare",
+   "changed": false
   },
   {
    "ticker": "PWR",
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 39590244570.0,
-    "analysts": 23,
+    "fy": 39581485960.0,
+    "analysts": 25,
     "ytd": 17431784000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 11079230285.0,
+    "need_avg": 11074850980.0,
     "hist_n": 5,
     "last_q": 9556997000.0,
-    "need_qoq": 0.1592794561931954,
+    "need_qoq": 0.15882122595622872,
     "qoq_max": 0.21361974615948331,
     "qoq_med": 0.1267385372553136,
     "qoq_n": 4,
-    "excess": -0.054340289966287925
+    "excess": -0.0547985202032546
    },
    "track_record": {
     "n": 24,
@@ -6408,11 +5949,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 31.790665,
-    "trailing_pe": 71.44279,
-    "ps": 2.8529255,
-    "price": 624.41,
-    "implied_growth": 1.2472883156108878
+    "forward_pe": 32.99909,
+    "trailing_pe": 74.607796,
+    "ps": 2.9724963,
+    "price": 650.58,
+    "implied_growth": 1.2609046491888107
    },
    "prev_tier": "normal",
    "changed": false
@@ -6443,13 +5984,13 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 13.007199,
-    "trailing_pe": 23.860788,
-    "ps": 2.4893005,
-    "price": 102.84,
-    "implied_growth": 0.8344293802224445
+    "forward_pe": 14.753889,
+    "trailing_pe": 27.127907,
+    "ps": 2.8235793,
+    "price": 116.65,
+    "implied_growth": 0.838695343309144
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -6480,10 +6021,44 @@
    "pe": {
     "forward_pe": null,
     "trailing_pe": null,
-    "ps": 12.128206,
-    "price": 21.8
+    "ps": 11.944614,
+    "price": 21.47
    },
    "prev_tier": "normal",
+   "changed": false
+  },
+  {
+   "ticker": "RKLB",
+   "requirement": {
+    "kind": "us_quarterly",
+    "tier": "normal",
+    "fy": 958307660.0,
+    "analysts": 20,
+    "ytd": 434414000.0,
+    "q_done": 2,
+    "q_left": 2,
+    "need_avg": 261946830.0,
+    "hist_n": 5,
+    "last_q": 234066000.0,
+    "need_qoq": 0.11911524954500008,
+    "qoq_max": 0.16829716293649044,
+    "qoq_med": 0.15844725303069374,
+    "qoq_n": 4,
+    "excess": -0.04918191339149036
+   },
+   "track_record": {
+    "n": 20,
+    "beats": 10,
+    "median_surprise": 0.5,
+    "bias": "共識大致中性"
+   },
+   "pe": {
+    "forward_pe": 1381.6946,
+    "trailing_pe": null,
+    "ps": 52.33197,
+    "price": 62.95
+   },
+   "prev_tier": null,
    "changed": false
   },
   {
@@ -6491,19 +6066,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 1319335130.0,
-    "analysts": 21,
+    "fy": 1308053930.0,
+    "analysts": 22,
     "ytd": 656746000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 331294565.0,
+    "need_avg": 325653965.0,
     "hist_n": 5,
     "last_q": 346245000.0,
-    "need_qoq": -0.04317877514476742,
+    "need_qoq": -0.05946955190688674,
     "qoq_max": 0.1753383385908116,
     "qoq_med": 0.11511718158717676,
     "qoq_n": 4,
-    "excess": -0.21851711373557903
+    "excess": -0.23480789049769835
    },
    "track_record": {
     "n": 24,
@@ -6512,12 +6087,12 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 35.266094,
+    "forward_pe": 39.528576,
     "trailing_pe": null,
-    "ps": 1.5793821,
-    "price": 34.2
+    "ps": 1.6015488,
+    "price": 34.68
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -6546,24 +6121,24 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 50.57794,
+    "forward_pe": 50.52062,
     "trailing_pe": null,
-    "ps": 8.599242,
-    "price": 220.58
+    "ps": 8.589497,
+    "price": 220.33
    },
-   "prev_tier": "rare",
-   "changed": true
+   "prev_tier": "normal",
+   "changed": false
   },
   {
    "ticker": "SSUMY",
    "requirement": null,
    "track_record": null,
    "pe": {
-    "forward_pe": 3.9829931,
-    "trailing_pe": 15.012821,
-    "ps": 0.007381587,
-    "price": 11.71,
-    "implied_growth": 2.769230983603763
+    "forward_pe": 4.0816326,
+    "trailing_pe": 14.814815,
+    "ps": 0.007564393,
+    "price": 12.0,
+    "implied_growth": 2.6296297221851863
    },
    "prev_tier": null,
    "changed": false
@@ -6573,19 +6148,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 3947568640.0,
+    "fy": 3947680010.0,
     "analysts": 22,
     "ytd": 2913900000.0,
     "q_done": 3,
     "q_left": 1,
-    "need_avg": 1033668640.0,
+    "need_avg": 1033780010.0,
     "hist_n": 5,
     "last_q": 934800000.0,
-    "need_qoq": 0.10576448438168584,
+    "need_qoq": 0.10588362216516911,
     "qoq_max": 0.14010362694300516,
     "qoq_med": -0.00943096322983994,
     "qoq_n": 4,
-    "excess": -0.034339142561319314
+    "excess": -0.034220004777836044
    },
    "track_record": {
     "n": 24,
@@ -6594,13 +6169,13 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 14.884075,
-    "trailing_pe": 38.35233,
-    "ps": 2.7734857,
-    "price": 74.02,
-    "implied_growth": 1.5767358737442536
+    "forward_pe": 17.802988,
+    "trailing_pe": 45.777203,
+    "ps": 3.3104227,
+    "price": 88.35,
+    "implied_growth": 1.5713213422376064
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -6608,19 +6183,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 19851749690.0,
+    "fy": 19849367330.0,
     "analysts": 17,
     "ytd": 14573000000.0,
     "q_done": 3,
     "q_left": 1,
-    "need_avg": 5278749690.0,
+    "need_avg": 5276367330.0,
     "hist_n": 5,
     "last_q": 5160000000.0,
-    "need_qoq": 0.02301350581395356,
+    "need_qoq": 0.022551808139534835,
     "qoq_max": 0.08768971332209108,
     "qoq_med": 0.0474194971327746,
     "qoq_n": 4,
-    "excess": -0.06467620750813752
+    "excess": -0.06513790518255624
    },
    "track_record": {
     "n": 24,
@@ -6629,13 +6204,13 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 16.166811,
-    "trailing_pe": 20.455883,
-    "ps": 3.130945,
-    "price": 208.65,
-    "implied_growth": 0.2653010541163623
+    "forward_pe": 16.427252,
+    "trailing_pe": 20.739727,
+    "ps": 3.1806142,
+    "price": 211.96,
+    "implied_growth": 0.2625195620058669
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -6643,19 +6218,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "rare",
-    "fy": 21282927220.0,
+    "fy": 21283307900.0,
     "analysts": 10,
     "ytd": 5152000000.0,
     "q_done": 1,
     "q_left": 3,
-    "need_avg": 5376975740.0,
+    "need_avg": 5377102633.333333,
     "hist_n": 5,
     "last_q": 5152000000.0,
-    "need_qoq": 0.043667651397515606,
+    "need_qoq": 0.04369228131469982,
     "qoq_max": 0.04010427110487269,
     "qoq_med": 0.01796284956113503,
     "qoq_n": 4,
-    "excess": 0.0035633802926429148
+    "excess": 0.0035880102098271305
    },
    "track_record": {
     "n": 24,
@@ -6664,11 +6239,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 10.376571,
-    "trailing_pe": 11.873564,
-    "ps": 3.3160076,
-    "price": 51.65,
-    "implied_growth": 0.14426663683022056
+    "forward_pe": 10.13377,
+    "trailing_pe": 11.586207,
+    "ps": 3.235756,
+    "price": 50.4,
+    "implied_growth": 0.1433264224469275
    },
    "prev_tier": "rare",
    "changed": false
@@ -6699,11 +6274,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 12.572527,
-    "trailing_pe": 10.245458,
-    "ps": 0.97843206,
-    "price": 265.05,
-    "implied_growth": -0.18509158898604872
+    "forward_pe": 12.508017,
+    "trailing_pe": 10.192887,
+    "ps": 0.9734117,
+    "price": 263.69,
+    "implied_growth": -0.18509168959396205
    },
    "prev_tier": "normal",
    "changed": false
@@ -6713,19 +6288,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 54008821952480.0,
-    "analysts": 15,
+    "fy": 54021300040320.0,
+    "analysts": 16,
     "ytd": 13525400000000.0,
     "q_done": 1,
     "q_left": 3,
-    "need_avg": 13494473984160.0,
+    "need_avg": 13498633346773.334,
     "hist_n": 5,
     "last_q": 13525400000000.0,
-    "need_qoq": -0.002286513954485647,
+    "need_qoq": -0.001978991617746284,
     "qoq_max": 0.0872091590602797,
     "qoq_med": 0.07367051173552652,
     "qoq_n": 4,
-    "excess": -0.08949567301476535
+    "excess": -0.08918815067802599
    },
    "track_record": {
     "n": 24,
@@ -6734,11 +6309,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 12.491128,
-    "trailing_pe": 8.91094,
-    "ps": 0.004492451,
-    "price": 197.11,
-    "implied_growth": -0.28661847032549825
+    "forward_pe": 12.560203,
+    "trailing_pe": 8.666375,
+    "ps": 0.004517294,
+    "price": 198.2,
+    "implied_growth": -0.31001314230351207
    },
    "prev_tier": "normal",
    "changed": false
@@ -6769,11 +6344,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 10.6387205,
-    "trailing_pe": 11.022088,
-    "ps": 3.0845382,
-    "price": 109.78,
-    "implied_growth": 0.03603511343304877
+    "forward_pe": 10.302044,
+    "trailing_pe": 10.671687,
+    "ps": 2.986478,
+    "price": 106.29,
+    "implied_growth": 0.0358805495297827
    },
    "prev_tier": "normal",
    "changed": false
@@ -6783,19 +6358,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 106100660190.0,
-    "analysts": 45,
+    "fy": 106133563670.0,
+    "analysts": 44,
     "ytd": 50623000000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 27738830095.0,
+    "need_avg": 27755281835.0,
     "hist_n": 5,
     "last_q": 28236000000.0,
-    "need_qoq": -0.017607660610568066,
+    "need_qoq": -0.017025009385182033,
     "qoq_max": 0.261267700004467,
     "qoq_med": 0.2488886913229018,
     "qoq_n": 4,
-    "excess": -0.27887536061503504
+    "excess": -0.278292709389649
    },
    "track_record": {
     "n": 24,
@@ -6804,11 +6379,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 164.03375,
-    "trailing_pe": 321.8909,
-    "ps": 13.496133,
-    "price": 354.08,
-    "implied_growth": 0.9623455538875383
+    "forward_pe": 169.29648,
+    "trailing_pe": 332.21817,
+    "ps": 13.929131,
+    "price": 365.44,
+    "implied_growth": 0.9623454072996673
    },
    "prev_tier": "normal",
    "changed": false
@@ -6818,19 +6393,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "unprecedented",
-    "fy": 5435232994770.0,
+    "fy": 5434703120270.0,
     "analysts": 40,
     "ytd": 2404483690000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 1515374652385.0,
+    "need_avg": 1515109715135.0,
     "hist_n": 5,
     "last_q": 1270380250000.0,
-    "need_qoq": 0.19285123677339921,
+    "need_qoq": 0.19264268720723576,
     "qoq_max": 0.12016259292891318,
     "qoq_med": 0.0841351635359402,
     "qoq_n": 4,
-    "excess": 0.07268864384448603
+    "excess": 0.07248009427832258
    },
    "track_record": {
     "n": 24,
@@ -6839,11 +6414,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 19.619719,
-    "trailing_pe": 31.841871,
-    "ps": 0.5009649,
-    "price": 428.91,
-    "implied_growth": 0.6229524490131586
+    "forward_pe": 19.76,
+    "trailing_pe": 31.94985,
+    "ps": 0.5060223,
+    "price": 433.24,
+    "implied_growth": 0.6168952429149797
    },
    "prev_tier": "unprecedented",
    "changed": false
@@ -6874,11 +6449,11 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 7.0634317,
-    "trailing_pe": 6.9244895,
-    "ps": 0.55196595,
-    "price": 169.65,
-    "implied_growth": -0.019670636866213287
+    "forward_pe": 7.279103,
+    "trailing_pe": 7.138832,
+    "ps": 0.5688194,
+    "price": 174.83,
+    "implied_growth": -0.019270368890232814
    },
    "prev_tier": "normal",
    "changed": false
@@ -6909,11 +6484,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 10.133453,
-    "trailing_pe": 22.23898,
-    "ps": 1.1368032,
-    "price": 95.85,
-    "implied_growth": 1.1946102675958534
+    "forward_pe": 9.98227,
+    "trailing_pe": 21.907192,
+    "ps": 1.119843,
+    "price": 94.42,
+    "implied_growth": 1.1946102439625457
    },
    "prev_tier": "normal",
    "changed": false
@@ -6944,48 +6519,13 @@
     "bias": "共識偏保守"
    },
    "pe": {
-    "forward_pe": 30.75191,
-    "trailing_pe": 63.325058,
-    "ps": 9.408057,
-    "price": 280.53,
-    "implied_growth": 1.059223573430073
+    "forward_pe": 28.179111,
+    "trailing_pe": 58.15837,
+    "ps": 8.62095,
+    "price": 257.06,
+    "implied_growth": 1.0638823559763826
    },
-   "prev_tier": null,
-   "changed": false
-  },
-  {
-   "ticker": "VZ",
-   "requirement": {
-    "kind": "us_quarterly",
-    "tier": "normal",
-    "fy": 140875620550.0,
-    "analysts": 20,
-    "ytd": 68693000000.0,
-    "q_done": 2,
-    "q_left": 2,
-    "need_avg": 36091310275.0,
-    "hist_n": 5,
-    "last_q": 34253000000.0,
-    "need_qoq": 0.05366859180217798,
-    "qoq_max": 0.07569261701309826,
-    "qoq_med": -0.005429732868757253,
-    "qoq_n": 4,
-    "excess": -0.022024025210920284
-   },
-   "track_record": {
-    "n": 23,
-    "beats": 21,
-    "median_surprise": 2.6,
-    "bias": "共識偏保守"
-   },
-   "pe": {
-    "forward_pe": 9.496788,
-    "trailing_pe": 13.057292,
-    "ps": 1.4998411,
-    "price": 50.14,
-    "implied_growth": 0.3749166560314918
-   },
-   "prev_tier": "normal",
+   "prev_tier": "rare",
    "changed": false
   },
   {
@@ -6993,28 +6533,28 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 213446750.0,
-    "analysts": 6,
+    "fy": 209495070.0,
+    "analysts": 7,
     "ytd": 90025000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 61710875.0,
+    "need_avg": 59735035.0,
     "hist_n": 4,
     "last_q": 50119000.0,
-    "need_qoq": 0.23128703685229146,
+    "need_qoq": 0.19186406352880137,
     "qoq_max": 1.3586500384183462,
     "qoq_med": 0.2559264271036936,
     "qoq_n": 3,
-    "excess": -1.1273630015660547
+    "excess": -1.1667859748895448
    },
    "track_record": null,
    "pe": {
     "forward_pe": null,
     "trailing_pe": null,
-    "ps": 33.877182,
-    "price": 17.71
+    "ps": 28.559366,
+    "price": 14.93
    },
-   "prev_tier": null,
+   "prev_tier": "normal",
    "changed": false
   },
   {
@@ -7022,19 +6562,19 @@
    "requirement": {
     "kind": "us_quarterly",
     "tier": "normal",
-    "fy": 26055498790.0,
-    "analysts": 34,
+    "fy": 26065117680.0,
+    "analysts": 35,
     "ytd": 12674534000.0,
     "q_done": 2,
     "q_left": 2,
-    "need_avg": 6690482395.0,
+    "need_avg": 6695291840.0,
     "hist_n": 5,
     "last_q": 6617687000.0,
-    "need_qoq": 0.011000126630346774,
+    "need_qoq": 0.011726882821747164,
     "qoq_max": 0.09259603222600798,
     "qoq_med": 0.022490119301018296,
     "qoq_n": 4,
-    "excess": -0.08159590559566121
+    "excess": -0.08086914940426082
    },
    "track_record": {
     "n": 24,
@@ -7043,11 +6583,11 @@
     "bias": "共識大致中性"
    },
    "pe": {
-    "forward_pe": 16.05363,
-    "trailing_pe": 147.78572,
-    "ps": 1.985539,
-    "price": 82.76,
-    "implied_growth": 8.20575097345585
+    "forward_pe": 15.331372,
+    "trailing_pe": 141.44643,
+    "ps": 1.900369,
+    "price": 79.21,
+    "implied_growth": 8.225947292910249
    },
    "prev_tier": "normal",
    "changed": false
