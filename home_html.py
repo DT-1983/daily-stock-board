@@ -26,6 +26,23 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 GDP_STATUS_COLOR = {"尚未到頂": "#22C55E", "接近高點": "#EAB308", "已過高點": "#EF4444"}
 
 CSS_EXTRA = """
+/* 每週總體報告摘要（2026-09-14 Leo：「整合在投資資訊首頁，一樣要分美、台股」）*/
+.mwgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+@media(max-width:700px){.mwgrid{grid-template-columns:1fr}}
+.mwcard{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:12px 14px}
+.mwcard .mkt{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:7px}
+.mwcard .hl{font-size:13px;line-height:1.65;color:var(--ink);margin-top:8px}
+.mwcard .ang{font-size:11.5px;color:var(--muted);margin-top:7px;line-height:1.8}
+.mwcard .ang b{color:var(--ink);font-weight:600}
+.mwcard .xtra{font-size:11.5px;color:var(--dim);margin-top:8px;
+ padding-top:7px;border-top:1px solid var(--line2)}
+.stc{display:inline-block;font-size:16px;font-weight:800;letter-spacing:.04em;
+ padding:3px 13px;border-radius:7px}
+.stc-積極{background:#0E2417;color:#4ADE80;border:1px solid #166534}
+.stc-偏積極{background:#0E2417;color:#86EFAC;border:1px solid #166534}
+.stc-中性{background:#0E1B2B;color:#9DB0C8;border:1px solid var(--line)}
+.stc-偏保守{background:#2E1418;color:#FCA5A5;border:1px solid #7F1D1D}
+.stc-保守{background:#2E1418;color:#F87171;border:1px solid #7F1D1D}
 .idxgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:12px 0}
 @media(max-width:700px){.idxgrid{grid-template-columns:repeat(2,1fr)}}
 .idx{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:11px 13px}
@@ -153,6 +170,50 @@ def build_summaries():
     return s
 
 
+def macro_block():
+    """每週總體報告摘要（美股／台股分開）。
+
+    來源 `docs/macro_weekly.json` 由本機的 `macro_weekly.py` 週一產出後，
+    跟著每日批次的 `git add docs` 進 repo；這支在 GitHub Actions 上跑，
+    只讀得到 repo 裡的東西，所以才走 docs/ 不走 state/。
+    ⚠️ 沒有這個檔就整段不顯示——首頁其他區塊照常，不要因為多一段而壞掉。
+    """
+    d = _load("docs/macro_weekly.json") or _load("macro_weekly.json")
+    if not d or not d.get("us"):
+        return ""
+
+    def card(key, label):
+        mk = d.get(key) or {}
+        st = mk.get("stance") or "中性"
+        angs = "".join(
+            f'<div>· {esc(a.get("name",""))}：<b>{esc(a.get("verdict",""))}</b></div>'
+            for a in (mk.get("angles") or []))
+        xtra = ""
+        if key == "tw":
+            bits = []
+            lt = mk.get("景氣燈號") or {}
+            if lt.get("light"):
+                bits.append(f'景氣對策信號 {esc(lt["light"])}燈 {lt.get("score")}分'
+                            f'（{esc(str(lt.get("month","")))}）')
+            g = mk.get("GDP") or {}
+            if g.get("value") is not None:
+                bits.append(f'GDP {esc(g.get("period",""))} 年增 {g.get("value")}%')
+            if bits:
+                xtra = f'<div class="xtra">{"　".join(bits)}</div>'
+        return (f'<div class="mwcard"><div class="mkt">{label}</div>'
+                f'<span class="stc stc-{esc(st)}">{esc(st)}</span>'
+                f'<div class="hl">{esc(mk.get("headline",""))}</div>'
+                f'<div class="ang">{angs}</div>{xtra}</div>')
+
+    link = esc(d.get("linkage") or "")
+    return (f'<div class="hsec"><h2>{icon("gdp", 16, "#3B82F6")}每週總體判讀</h2>'
+            f'<div class="hnote">投資長 孔明 每週一判讀 · '
+            f'{esc(d.get("week_of",""))} 週 · 數字全部取自官方公開來源</div>'
+            f'<div class="mwgrid">{card("us", "🇺🇸 美股")}{card("tw", "🇹🇼 台股")}</div>'
+            + (f'<div class="hnote" style="margin-top:2px">🔗 {link}</div>' if link else "")
+            + '</div>')
+
+
 def build():
     m = _load("market_data.json") or {"updated": "—", "indices": [], "news": []}
     s = build_summaries()
@@ -202,6 +263,7 @@ def build():
 <div class="hsec"><h2>{icon("board", 16, "#3B82F6")}大盤行情</h2>
 <div class="hnote">漲跌為對前一交易日收盤；美股為美東前一晚收盤</div>
 <div class="idxgrid">{idx_html}</div></div>
+{macro_block()}
 <div class="hsec"><h2>{icon("earnings", 16, "#3B82F6")}今日頭條</h2>
 <div class="hnote">鉅亨網 台股 5 條＋國際 5 條，依發布時間排序</div>
 <div class="newsbox">{news_html}</div></div>
