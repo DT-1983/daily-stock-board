@@ -309,6 +309,10 @@ def implied_multiple(r, price):
 
 IMAGE_EXTS = (".png", ".jpg", ".jpeg", ".webp")
 
+# 影音研究報告的逐字稿（vimeo_transcript.py 產出）——本來就是純文字，
+# 少走 pdfplumber 那一步，其餘流程（結構化→失效條件→歸檔）完全共用。
+TEXT_EXTS = (".txt",)
+
 ARCHIVE_DIRNAME = "_已讀"
 
 
@@ -339,7 +343,7 @@ def parse(force=False, only=None):
     store = _load(STORE, {})
     files = sorted(
         glob.glob(os.path.join(PDF_DIR, "**", "*.pdf"), recursive=True)
-        + [f for ext in IMAGE_EXTS
+        + [f for ext in IMAGE_EXTS + TEXT_EXTS
            for f in glob.glob(os.path.join(PDF_DIR, "**", f"*{ext}"), recursive=True)])
     if only:
         files = [f for f in files if only in os.path.basename(f)]
@@ -365,6 +369,22 @@ def parse(force=False, only=None):
                       f"可能只有部分資訊（例如只有目標價、沒有完整報告內文）。"
                       f"把圖片裡看得到的資訊結構化，看不到的欄位留空，不要編造。\n\n"
                       f"{SCHEMA_HINT}")
+        elif key.lower().endswith(TEXT_EXTS):
+            # 影音逐字稿：純文字直接讀。提示詞要另外寫——逐字稿是口語、
+            # 沒有 PDF 那種欄位標題，而且自動字幕會把公司名聽錯（「聚陽」→「巨陽」），
+            # 不先講清楚的話 LLM 會照著錯字填 name。檔頭已經帶了代號／來源。
+            try:
+                with open(f, encoding="utf-8") as fh:
+                    txt = fh.read()
+            except Exception as e:                          # noqa: BLE001
+                print(f"    逐字稿讀取失敗：{str(e)[:100]}")
+                continue
+            prompt = (f"下面是一份券商『影音』研究報告的逐字稿（自動字幕，口語、"
+                      f"沒有標題欄位，專有名詞與公司名可能有聽打錯誤——檔頭的"
+                      f"【股票代號】才是正確的，不要用內文聽到的名稱去改）。把它結構化。\n"
+                      f"⚠️ 逐字稿常常只講「維持買進」而沒有明確數字目標價，"
+                      f"抓不到就把 target 留空，不要從殖利率或本益比自己回推。\n\n"
+                      f"{SCHEMA_HINT}\n\n---逐字稿開始---\n{txt[:16000]}\n---逐字稿結束---")
         else:
             try:
                 txt = pdf_text(f)
