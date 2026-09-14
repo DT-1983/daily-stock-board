@@ -249,6 +249,13 @@ def macro_block():
         basis = mk.get("stance_basis")
         if basis:
             det += f'<div class="blk"><span class="lbl">表態依據</span><br>{esc(basis)}</div>'
+        # 2026-09-14 Leo 問「偏積極是以什麼為標準」——照實講沒有量化門檻，不要讓
+        # 這個徽章看起來像有計分規則算出來的。
+        dis = d.get("stance_disclaimer")
+        if dis:
+            det += (f'<div class="blk" style="border-left-color:#7F1D1D">'
+                    f'<span class="lbl">⚠️ 這個表態怎麼來的</span><br>'
+                    f'<span style="color:#FCA5A5">{esc(dis)}</span></div>')
         for a in angles:
             if not (a.get("reason") or a.get("falsifier")):
                 continue

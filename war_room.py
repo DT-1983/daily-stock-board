@@ -450,6 +450,33 @@ def material_chen():
     except Exception as e:                                  # noqa: BLE001
         m.append(f"（verdict_review 取用失敗：{str(e)[:120]}）")
 
+    # 【每週總體表態】2026-09-14 Leo：「讓陳壽記下來回測」。
+    # ⚠️ 這裡**只報樣本與分布，不給準確率**——表態目前是 AI 的相對判斷、
+    #    沒有量化門檻（見 macro_weekly.STANCE_DISCLAIMER），而且評估窗口與
+    #    中性帶還沒照實測分布訂。樣本不足就下結論＝拿雜訊當訊號。
+    ms = _jsonl("state/macro_stance_log.jsonl")
+    if ms:
+        from collections import Counter as _C
+        m.append(f"【每週總體表態累積】共 {len(ms)} 筆"
+                 f"（{len({r.get('week_of') for r in ms})} 個週次 × 美台兩市場）")
+        for mkt, nm in (("us", "美股"), ("tw", "台股")):
+            rows = [r for r in ms if r.get("market") == mkt]
+            if not rows:
+                continue
+            c = _C(r.get("stance") for r in rows if r.get("stance"))
+            withb = sum(1 for r in rows if r.get("bench_close") is not None)
+            m.append(f"  {nm}：" + "、".join(f"{k} {n}" for k, n in c.most_common())
+                     + f"｜有基準指數的 {withb}/{len(rows)}")
+        last = ms[-1]
+        m.append(f"  最新：{last.get('week_of')} {last.get('market')} "
+                 f"{last.get('stance')}（基準 {last.get('bench_sym')} "
+                 f"{last.get('bench_close')} @{last.get('bench_date')}）")
+        m.append("  🔴 **表態沒有量化門檻**（AI 相對判斷），而且評估窗口／中性帶"
+                 "還沒用實測分布校準。**樣本 < 12 週時不得下任何關於準確率的結論**"
+                 "——可以描述分布，不能講「準不準」。")
+    else:
+        m.append("【每週總體表態累積】還沒有紀錄（macro_weekly.py 每週一產出時寫入）")
+
     tj = _jsonl("state/trade_journal.jsonl")
     filled = [t for t in tj if t.get("status") == "filled"]
     m.append(f"【Leo 的交易紀錄】共 {len(tj)} 筆（已成交 {len(filled)} 筆）")
