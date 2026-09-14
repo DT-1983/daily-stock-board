@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-14 08:46",
+ "updated": "2026-09-14 13:07",
  "indices": [
   {
    "sym": "^GSPC",
@@ -37,17 +37,17 @@
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/11",
-   "close": 46184.85,
-   "chg_pct": -1.61
+   "date": "09/14",
+   "close": 45980.35,
+   "chg_pct": -0.44
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/14",
-   "close": 31.65,
-   "chg_pct": 0.03
+   "close": 31.7,
+   "chg_pct": 0.21
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "OpenAI傳擬牽手三星代工AI晶片？下一代ASIC成合作新焦點",
+   "title": "古爾曼：蘋果iPhone Duo有望成行業標準　引爆十年換機週期",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6605219",
-   "ts": "09/14 08:40"
+   "url": "https://news.cnyes.com/news/id/6605339",
+   "ts": "09/14 13:00"
   },
   {
-   "title": "Anthropic、OpenAI、Google 傳討論合作成立AI產業標準機構",
+   "title": "獨家代理！富強鑫攜手中科先峰 跨足半導體玻璃基板先進封裝",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6605562",
+   "ts": "09/14 12:57"
+  },
+  {
+   "title": "營收速報  - 元大金(2885)8月營收195.86億元年增率高達57.94％",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6605576",
+   "ts": "09/14 12:50"
+  },
+  {
+   "title": "【優分析即時新聞】裕民(2606)第二季獲利年增逾2倍創16年新高，美伊戰事燃煤替代效應撐盤",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6605564",
+   "ts": "09/14 12:30"
+  },
+  {
+   "title": "DeepSeek傳下單16萬顆昇騰950DT規模接近華為去年全年出貨五分之一",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6605337",
-   "ts": "09/14 08:34"
+   "url": "https://news.cnyes.com/news/id/6605563",
+   "ts": "09/14 12:30"
   },
   {
-   "title": "美債殖利率創高！崩盤前奏？微軟、輝達認證的AI獲利新模式，受惠產業名單！",
+   "title": "〈焦點股〉玖鼎電力買回庫藏股 谷底反彈漲逾半根停板",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6604528",
-   "ts": "09/14 08:30"
+   "url": "https://news.cnyes.com/news/id/6605552",
+   "ts": "09/14 12:17"
   },
   {
-   "title": "升息=必崩盤？ 這件事→快做！主力竟在等這個？",
+   "title": "〈房產〉台灣三井不動產迎來台10周年慶 進一步拓展物流設施領域",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6605386",
-   "ts": "09/14 08:23"
+   "url": "https://news.cnyes.com/news/id/6605543",
+   "ts": "09/14 12:14"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：南亞科(2408-TW)EPS預估上修至62.92元，預估目標價為617.5元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6605360",
-   "ts": "09/14 08:11"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：信驊(5274-TW)EPS預估上修至197.49元，預估目標價為22500元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6605359",
-   "ts": "09/14 08:11"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：日月光投控(3711-TW)EPS預估上修至18.68元，預估目標價為700元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6605358",
-   "ts": "09/14 08:11"
-  },
-  {
-   "title": "AI是否形成泡沫不是重點？高盛銀行業務主管：「問錯」問題了",
+   "title": "川普稱美國可能留在伊朗「保留石油」！伊朗戰爭料「年底前」結束",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6605042",
-   "ts": "09/14 08:10"
+   "url": "https://news.cnyes.com/news/id/6605321",
+   "ts": "09/14 12:10"
   },
   {
-   "title": "322.7億美元！油價破百+債券殖利率飆升　美股基金單周贖回規模創今年高",
+   "title": "南韓半導體出口暴增209%，ICT出口逼近600億美元創新高",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6605191",
-   "ts": "09/14 08:01"
+   "url": "https://news.cnyes.com/news/id/6605547",
+   "ts": "09/14 12:00"
   },
   {
-   "title": "Anthropic首度開放外部人員監督AI訓練！模型開發恐拉長一至兩年，晶片升級需求會受影響嗎？",
+   "title": "AI行為準則今公布！微軟執行長納德拉：支持AI審慎發展與嵌入式評估機制",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6605343",
-   "ts": "09/14 08:01"
+   "url": "https://news.cnyes.com/news/id/6605330",
+   "ts": "09/14 12:00"
   }
  ],
  "inst": {
