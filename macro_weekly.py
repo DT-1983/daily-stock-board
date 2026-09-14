@@ -1031,7 +1031,12 @@ def main():
     if not isinstance(hist, dict) or "us_macro" in hist:
         hist = {}
     keep = {k: v for k, v in hist.items() if k != facts["week_of"]}
-    keep[facts["week_of"]] = {k: facts[k] for k in ("week_of", "us_macro", "tw", "rrg")}
+    # ⚠️ 2026-09-14：原本只存 us_macro/tw/rrg，害「拿產出物回頭對帳來源」時
+    #    景氣燈號與 GDP 都查不到，兩次驗證都得繞去別的檔案找（第一次還誤判成
+    #    11 個數字捏造）。**快照要存到足以自我對帳**，不然驗證方法自己有盲區。
+    keep[facts["week_of"]] = {k: facts[k] for k in
+                              ("week_of", "us_macro", "tw", "tw_景氣燈號", "gdp", "rrg")
+                              if k in facts}
     for old in sorted(keep)[:-8]:
         del keep[old]
     json.dump(keep, io.open(SNAP, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
