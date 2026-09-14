@@ -1,37 +1,37 @@
 {
- "updated": "2026-09-14 17:29",
+ "updated": "2026-09-14 21:54",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "09/11",
-   "close": 7656.98,
-   "chg_pct": 0.86
+   "date": "09/14",
+   "close": 7615.33,
+   "chg_pct": -0.54
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "09/11",
-   "close": 26333.04,
-   "chg_pct": 0.96
+   "date": "09/14",
+   "close": 26114.64,
+   "chg_pct": -0.83
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "09/11",
-   "close": 52573.29,
-   "chg_pct": 0.98
+   "date": "09/14",
+   "close": 52437.1,
+   "chg_pct": -0.26
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "09/11",
-   "close": 11824.0,
-   "chg_pct": 1.81
+   "date": "09/14",
+   "close": 11216.88,
+   "chg_pct": -5.13
   },
   {
    "sym": "^TWII",
@@ -46,85 +46,85 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/14",
-   "close": 31.76,
-   "chg_pct": 0.4
+   "close": 31.81,
+   "chg_pct": 0.54
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "09/11",
-   "close": 4.97,
+   "date": "09/14",
+   "close": 4.98,
    "fmt": "yield",
-   "chg_bp": 3.1
+   "chg_bp": 1.0
   }
  ],
  "news": [
   {
-   "title": "創見攻高速運算 推64GB工業用DDR5",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6605797",
-   "ts": "09/14 17:22"
-  },
-  {
-   "title": "通訊行：iPhone18 Pro預約量較上代成長4%  官網交期已排到雙十連假",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6605798",
-   "ts": "09/14 17:21"
-  },
-  {
-   "title": "台北晶華首發！35名印尼技術人力抵台 銜接房務接待即戰力",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6605672",
-   "ts": "09/14 17:18"
-  },
-  {
-   "title": "瑩碩思覺失調症新藥完成全球首例給藥 搶進逾百億美元長效針劑市場",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6605794",
-   "ts": "09/14 17:15"
-  },
-  {
-   "title": "NOR Flash下半年價格走勢分化 高容量產品漲幅上看110%",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6605780",
-   "ts": "09/14 17:13"
-  },
-  {
-   "title": "iPhone 18 Pro賣不動？美英德日等待時間縮短 中港反而拉長",
+   "title": "盤中速報 - Workday公司(WDAY-US)大漲5.01%，報195美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6605696",
-   "ts": "09/14 17:10"
+   "url": "https://news.cnyes.com/news/id/6606147",
+   "ts": "09/14 21:54"
   },
   {
-   "title": "高盛：AI資本支出貢獻標普500半數獲利成長 集中度風險加劇",
+   "title": "盤中速報 - 埃森哲(ACN-US)大漲5.12%，報193.32美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6605586",
-   "ts": "09/14 17:10"
+   "url": "https://news.cnyes.com/news/id/6606146",
+   "ts": "09/14 21:54"
   },
   {
-   "title": "英國內部裂痕擴大！蘇格蘭、威爾斯、北愛聯手爭取公投權  川普挺愛爾蘭統一",
+   "title": "盤中速報 - 直覺(INTU-US)大漲5.13%，報338.08美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6605513",
-   "ts": "09/14 16:40"
+   "url": "https://news.cnyes.com/news/id/6606145",
+   "ts": "09/14 21:51"
   },
   {
-   "title": "美股漲勢卡關 高盛揭三重阻力、點名四大投資機會",
+   "title": "盤中速報 - 亞德諾(ADI-US)大跌5.08%，報359.54美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6605575",
-   "ts": "09/14 16:20"
+   "url": "https://news.cnyes.com/news/id/6606144",
+   "ts": "09/14 21:49"
   },
   {
-   "title": "川普：柴油短缺因俄烏局勢 已要求烏克蘭停止襲擊俄國煉油廠",
+   "title": "盤中速報 - Verisk Analytics Inc(VRSK-US)大漲5.09%，報185.16美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6605649",
-   "ts": "09/14 16:10"
+   "url": "https://news.cnyes.com/news/id/6606143",
+   "ts": "09/14 21:49"
+  },
+  {
+   "title": "長波段投資人必看！半導體先衝、機器人接棒：信邦(3023) 原來大行情在這一年！？",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6606045",
+   "ts": "09/14 20:30"
+  },
+  {
+   "title": "公股4金2銀前8月合賺1213億創新高！兆豐金穩坐獲利王 華南金年增近4成居冠",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6605818",
+   "ts": "09/14 20:21"
+  },
+  {
+   "title": "環宇-KY受惠基板缺料逐步舒緩 營運有望逐季成長",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6606013",
+   "ts": "09/14 20:11"
+  },
+  {
+   "title": "「台股儀表板」要來了！林修銘揭三大核心項目：強化風險教育與數據透明",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6606007",
+   "ts": "09/14 20:06"
+  },
+  {
+   "title": "高檔震盪選股難！外資近一月瘋買主動式ETF 囤貨00403A、00988A雙冠",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6605996",
+   "ts": "09/14 20:01"
   }
  ],
  "inst": {
   "date": "09/14",
-  "total_yi": -497.0,
+  "total_yi": -483.6,
   "foreign_yi": -369.6,
-  "trust_yi": 23.5
+  "trust_yi": 37.0
  }
 }
