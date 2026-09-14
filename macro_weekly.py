@@ -475,6 +475,19 @@ _CLAIM = {
 # 改成**強制先表態**：stance 是列舉，AI 只能選一個，躲不掉。
 STANCE = ["積極", "偏積極", "中性", "偏保守", "保守"]
 
+# 🔴 2026-09-14 Leo 問「偏積極是以什麼為標準？」——**目前沒有標準**。
+# 這五個等級是給 AI 選的詞，沒有門檻、沒有加權、沒有計分規則，
+# 所以它**不可稽核也不可重現**：我沒辦法解釋為什麼是偏積極而不是中性。
+# ⚠️ 這違反 `feedback_no_self_change_criteria`（不自己訂投資門檻）與
+#    `chip_scan_thresholds`（門檻先看實測分布）——電金比的 N=32 是回測出來的、
+#    景氣燈號的紅黃綠是國發會官方分級，**這五級什麼都不是**。
+# Leo 決定：先照實標註（不假裝有標準），同時把每週表態記進 log 給陳壽累積樣本，
+# 等樣本夠了再回測、再決定要不要改成程式計分。
+STANCE_DISCLAIMER = ("這是投資長 孔明 綜合判斷後選的相對用詞，"
+                     "**目前沒有量化門檻**（不像景氣燈號有國發會官方分級）。"
+                     "每週表態已在累積紀錄，樣本足夠後會由復盤官 陳壽 回測驗證。")
+STANCE_LOG = "state/macro_stance_log.jsonl"
+
 _ANGLE = {
     "type": "object",
     "properties": {
@@ -789,7 +802,9 @@ def render(facts, note):
         return (f'<div class="mw lead">'
                 f'<div class="stance"><span class="sv s-{esc(st)}">{esc(st)}</span>'
                 f'<span class="big">{esc(m.get("headline",""))}</span></div>'
-                f'<div class="bs">表態依據：{esc(m.get("stance_basis",""))}</div></div>'
+                f'<div class="bs">表態依據：{esc(m.get("stance_basis",""))}</div>'
+                f'<div class="bs" style="margin-top:6px;color:#FCA5A5">'
+                f'⚠️ 這個表態怎麼來的：{esc(STANCE_DISCLAIMER)}</div></div>'
                 f'<div class="mw"><h2>兩個獨立角度（相反也照實寫）</h2>{angs}</div>'
                 f'<div class="mw"><h2>支撐的事實與推論</h2>{_claims(m.get("claims"))}</div>'
                 + extra)
@@ -916,6 +931,43 @@ document.querySelectorAll('.tabs button').forEach(function(b){
             + body + "</div>" + js + "</body></html>")
 
 
+def _log_stance(facts, note):
+    """把每週表態記進 log，給陳壽（復盤官）之後回測用。
+
+    ⭐ **一定要存下判斷當下的基準指數**——`verdict_review` 評估孔明的個股判斷
+    就是靠基準價，沒存價格的判斷事後永遠評不了（那支的 material 裡就在數
+    「有基準價的判斷 X/Y」）。總體表態同理：沒有當下的指數點位，
+    之後無法回答「這個偏積極後來對不對」。
+    ⚠️ 這支只負責**記錄**，不做評估——評估的門檻（看幾個交易日、中性帶多寬）
+    要等樣本夠了照實測分布訂，現在訂就是拍腦袋（同 verdict_review 檔頭的警語）。
+    """
+    idx = {i.get("sym"): i for i in ((facts.get("tw") or {}).get("indices") or [])}
+    bench = {"us": idx.get("^GSPC") or {}, "tw": idx.get("^TWII") or {}}
+    try:
+        with io.open(STANCE_LOG, "a", encoding="utf-8") as f:
+            for k in ("us", "tw"):
+                m = note.get(k) or {}
+                b = bench.get(k) or {}
+                f.write(json.dumps({
+                    "ts": facts.get("generated"),
+                    "week_of": facts.get("week_of"),
+                    "market": k,
+                    "stance": m.get("stance"),
+                    "headline": m.get("headline"),
+                    "angles": [{"name": a.get("name"), "verdict": a.get("verdict"),
+                                "falsifier": a.get("falsifier")}
+                               for a in (m.get("angles") or [])],
+                    # 基準：判斷當下的指數收盤與日期，之後才評估得了
+                    "bench_sym": b.get("sym"),
+                    "bench_close": b.get("close"),
+                    "bench_date": b.get("date"),
+                    "method": "llm_judgment_no_threshold",   # 之後若改程式計分，這欄要換
+                }, ensure_ascii=False) + "\n")
+        print(f"   表態已記錄 → {STANCE_LOG}（給陳壽回測）")
+    except Exception as e:                                  # noqa: BLE001
+        print(f"   ⚠️ 表態紀錄寫入失敗（不影響報告）：{str(e)[:80]}")
+
+
 def discord_text(facts, note):
     """Discord 版：**摘要不是全文**。
 
@@ -991,6 +1043,8 @@ def main():
     os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
     io.open(out, "w", encoding="utf-8").write(html)
 
+    _log_stance(facts, note)
+
     # 首頁用的精簡公開版（美股／台股分開，跟報告本身的分頁一致）
     nd = facts.get("tw_景氣燈號") or {}
     tgdp = ((facts.get("gdp") or {}).get("tw") or {}).get("actual") or []
@@ -999,6 +1053,8 @@ def main():
         "generated": facts.get("generated"),
         "linkage": note.get("linkage", ""),
         "report_note": "完整版（含每句依據標示與失效條件）在 obis：每日看板／" + OUT_NAME,
+        # 首頁也要照實說明表態沒有量化標準（2026-09-14 Leo 問「以什麼為標準」）
+        "stance_disclaimer": STANCE_DISCLAIMER.replace("**", ""),
     }
     for k in ("us", "tw"):
         m = note.get(k) or {}
