@@ -1278,7 +1278,7 @@ def main():
             try:
                 out, d, n = build_one(tk)
                 ok += 1
-                print(f"  ✅ {d['ticker']:8} {os.path.basename(out)}  ({n:,} bytes)  {_stat(d)}")
+                print(f"  ✅ {d['ticker']:8} {os.path.basename(out)}  ({n:,} 字)  {_stat(d)}")
             except Exception as e:                          # noqa: BLE001
                 fail += 1
                 # 一檔壞掉不能讓其餘 N-1 檔跟著不產出（排程裡尤其重要）。
@@ -1301,7 +1301,7 @@ def main():
     if not a.ticker:
         ap.error("要給代號，或用 --all 重產全部")
     out, d, n = build_one(a.ticker, a.output)
-    print(f"✅ 已存 {out}（{n:,} bytes）")
+    print(f"✅ 已存 {out}（{n:,} 字）")
     print(f"   {_stat(d)}")
     return 0
 
