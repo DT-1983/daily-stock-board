@@ -172,3 +172,9 @@ thesis_repricing.py
 state/daily_warroom_sent.json
 state/us_close_probe.jsonl
 state/warroom_watchdog_attempts.json
+
+# 每週總體表態紀錄（2026-09-14）：給陳壽回測用的累積樣本。
+# 跟 advisor_verdicts 同一批不進公開 repo。⚠️ 它同時因隱私被 gitignore，
+# 所以**只靠 tools/backup_ai_projects.py 保存**——那支的副檔名白名單
+# 已於同日補上 .jsonl，動那份白名單前要先想到這裡。
+state/macro_stance_log.jsonl
