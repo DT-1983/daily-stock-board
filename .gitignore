@@ -179,5 +179,5 @@ state/warroom_watchdog_attempts.json
 # 已於同日補上 .jsonl，動那份白名單前要先想到這裡。
 state/macro_stance_log.jsonl
 
-# 券商影音逐字稿抓取工具：repo 是 public，這支不進版控（見 dev_log 2026-09-14）
-vimeo_transcript.py
+# 本機專用的外部資料抓取工具，不進版控（理由見 obis 私人開發日誌 2026-09-14）
+video_transcript.py
