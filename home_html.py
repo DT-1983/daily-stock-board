@@ -26,18 +26,44 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 GDP_STATUS_COLOR = {"尚未到頂": "#22C55E", "接近高點": "#EAB308", "已過高點": "#EF4444"}
 
 CSS_EXTRA = """
-/* 每週總體報告摘要（2026-09-14 Leo：「整合在投資資訊首頁，一樣要分美、台股」）*/
+/* 每週總體報告摘要（2026-09-14 Leo：「整合在投資資訊首頁，一樣要分美、台股」）
+   ⚠️ 字級一律對齊首頁既有的角色，不要自己另訂一套（Leo：「字體大小要一致」）：
+     .mkt 11.5px = .idx .nm（卡片標籤）
+     .stc 17px   = .idx .px（卡片的主數字／結論）
+     .hl  13.5px = .nrow .tt／.entry .en（卡片主文）
+     .ang 11.5px = .entry .es（次要說明）
+     .xtra 11px  = .nrow .mt（附註）                                        */
 .mwgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
 @media(max-width:700px){.mwgrid{grid-template-columns:1fr}}
 .mwcard{background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:12px 14px}
-.mwcard .mkt{font-size:12px;color:var(--muted);font-weight:600;margin-bottom:7px}
-.mwcard .hl{font-size:13px;line-height:1.65;color:var(--ink);margin-top:8px}
+.mwcard .mkt{font-size:11.5px;color:var(--muted);font-weight:600;margin-bottom:7px}
+.mwcard .hl{font-size:13.5px;line-height:1.65;color:var(--ink);margin-top:8px}
 .mwcard .ang{font-size:11.5px;color:var(--muted);margin-top:7px;line-height:1.8}
 .mwcard .ang b{color:var(--ink);font-weight:600}
-.mwcard .xtra{font-size:11.5px;color:var(--dim);margin-top:8px;
+.mwcard .xtra{font-size:11px;color:var(--dim);margin-top:8px;
  padding-top:7px;border-top:1px solid var(--line2)}
-.stc{display:inline-block;font-size:16px;font-weight:800;letter-spacing:.04em;
+.stc{display:inline-block;font-size:17px;font-weight:800;letter-spacing:.04em;
  padding:3px 13px;border-radius:7px}
+/* 展開細節：用 <details> 不用 JS，靜態頁最不容易壞 */
+.mwmore{margin-top:9px;border-top:1px solid var(--line2);padding-top:7px}
+.mwmore>summary{cursor:pointer;font-size:11px;color:var(--muted);list-style:none;
+ padding:2px 0}
+.mwmore>summary::-webkit-details-marker{display:none}
+.mwmore>summary::before{content:"▸ ";color:var(--dim)}
+.mwmore[open]>summary::before{content:"▾ "}
+.mwmore>summary:hover{color:#93C5FD}
+.mwd{font-size:11.5px;line-height:1.75;margin-top:7px}
+.mwd .lbl{color:var(--dim);font-size:11px}
+.mwd .blk{margin:8px 0;padding-left:9px;border-left:2px solid var(--line)}
+.mwd .rs{color:var(--ink)}
+.mwd .fx{color:#FCA5A5;font-size:11px;margin-top:3px}
+.mwd .cl{margin:5px 0;color:var(--muted)}
+.mwd .tg{display:inline-block;font-size:9.5px;padding:1px 6px;border-radius:4px;
+ margin-right:5px;font-weight:600}
+.tg-observed{background:#0E2417;color:#86EFAC;border:1px solid #166534}
+.tg-inference{background:#0E1B2B;color:#9DB0C8;border:1px solid var(--line)}
+.tg-speculation{background:#2E1418;color:#FCA5A5;border:1px solid #7F1D1D}
+.mwd .bs{color:var(--dim);font-size:10px}
 .stc-積極{background:#0E2417;color:#4ADE80;border:1px solid #166534}
 .stc-偏積極{background:#0E2417;color:#86EFAC;border:1px solid #166534}
 .stc-中性{background:#0E1B2B;color:#9DB0C8;border:1px solid var(--line)}
@@ -182,12 +208,15 @@ def macro_block():
     if not d or not d.get("us"):
         return ""
 
+    KIND = {"observed": "有數據", "inference": "推論", "speculation": "推測·無數據"}
+
     def card(key, label):
         mk = d.get(key) or {}
         st = mk.get("stance") or "中性"
+        angles = mk.get("angles") or []
         angs = "".join(
             f'<div>· {esc(a.get("name",""))}：<b>{esc(a.get("verdict",""))}</b></div>'
-            for a in (mk.get("angles") or []))
+            for a in angles)
         xtra = ""
         if key == "tw":
             bits = []
@@ -200,16 +229,45 @@ def macro_block():
                 bits.append(f'GDP {esc(g.get("period",""))} 年增 {g.get("value")}%')
             if bits:
                 xtra = f'<div class="xtra">{"　".join(bits)}</div>'
+
+        # 展開後才顯示的細節（2026-09-14 Leo：「可以做點下去看得到資料嗎？」）
+        det = ""
+        basis = mk.get("stance_basis")
+        if basis:
+            det += f'<div class="blk"><span class="lbl">表態依據</span><br>{esc(basis)}</div>'
+        for a in angles:
+            if not (a.get("reason") or a.get("falsifier")):
+                continue
+            det += (f'<div class="blk"><span class="lbl">{esc(a.get("name",""))}</span>'
+                    f'　<b>{esc(a.get("verdict",""))}</b>'
+                    f'<div class="rs">{esc(a.get("reason",""))}</div>'
+                    + (f'<div class="fx">✕ 失效條件：{esc(a["falsifier"])}</div>'
+                       if a.get("falsifier") else "") + '</div>')
+        cls = mk.get("claims") or []
+        if cls:
+            rows = "".join(
+                f'<div class="cl"><span class="tg tg-{esc(c.get("kind","inference"))}">'
+                f'{esc(KIND.get(c.get("kind"), "推論"))}</span>{esc(c.get("text",""))}'
+                + (f'<br><span class="bs">依據：{esc(c["basis"])}</span>' if c.get("basis") else "")
+                + '</div>' for c in cls)
+            det += f'<div class="blk"><span class="lbl">支撐的事實與推論</span>{rows}</div>'
+        more = (f'<details class="mwmore"><summary>看依據與失效條件</summary>'
+                f'<div class="mwd">{det}</div></details>') if det else ""
+
         return (f'<div class="mwcard"><div class="mkt">{label}</div>'
                 f'<span class="stc stc-{esc(st)}">{esc(st)}</span>'
                 f'<div class="hl">{esc(mk.get("headline",""))}</div>'
-                f'<div class="ang">{angs}</div>{xtra}</div>')
+                f'<div class="ang">{angs}</div>{xtra}{more}</div>')
 
     link = esc(d.get("linkage") or "")
     return (f'<div class="hsec"><h2>{icon("gdp", 16, "#3B82F6")}每週總體判讀</h2>'
             f'<div class="hnote">投資長 孔明 每週一判讀 · '
             f'{esc(d.get("week_of",""))} 週 · 數字全部取自官方公開來源</div>'
-            f'<div class="mwgrid">{card("us", "🇺🇸 美股")}{card("tw", "🇹🇼 台股")}</div>'
+            # ⚠️ 不要用 🇺🇸🇹🇼 這種 regional indicator 國旗 emoji：
+            #    Windows 內建字型不支援，會退化成 "us" / "tw" 兩個字母
+            #    （2026-09-14 Leo 截圖就是這樣）。手機看得到、桌機看不到＝更難發現。
+            #    Discord 那邊維持用國旗沒問題（Discord 有自己的 emoji 字型）。
+            f'<div class="mwgrid">{card("us", "美股")}{card("tw", "台股")}</div>'
             + (f'<div class="hnote" style="margin-top:2px">🔗 {link}</div>' if link else "")
             + '</div>')
 
