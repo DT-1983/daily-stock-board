@@ -470,97 +470,91 @@
  },
  "TSLA": {
   "2026Q3": {
-   "fetched": "2026-09-07",
+   "fetched": "2026-09-14",
    "items": [
     {
      "type": "metric",
-     "label": "本季總營收",
-     "value": "282億美元，年增26%",
+     "label": "本季總交付量與年增率",
+     "value": "480,126輛，年增25%",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "服務及其他業務營收成長",
-     "value": "季度營收成長50%",
+     "label": "本季總產量與年增率",
+     "value": "451,758輛，年增10%",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "儲能部署量",
-     "value": "13.5 GWh，年增41%",
+     "label": "FSD訂閱滲透率（北美）",
+     "value": "北美Q2交付車輛中FSD訂閱滲透率達55%",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "各地區交車量季增",
-     "value": "美洲季增60%、亞太季增27%、歐非中東季增12%",
-     "speaker": "Vaibhav Taneja，財務長"
-    },
-    {
-     "type": "metric",
-     "label": "FSD全球付費用戶數",
-     "value": "累計近150萬用戶",
+     "label": "全球累計付費FSD客戶數",
+     "value": "約150萬名付費客戶，其中55%為一次性買斷、45%為訂閱制",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "FSD北美滲透率",
-     "value": "本季北美交車約55%搭配FSD訂閱",
-     "speaker": "Vaibhav Taneja，財務長"
+     "label": "服務暨其他業務毛利率",
+     "value": "14.1%，創歷史新高",
+     "speaker": ""
     },
     {
      "type": "metric",
-     "label": "訂單庫存水位",
-     "value": "本季底訂單庫存為2023年以來最大規模",
-     "speaker": "Vaibhav Taneja，財務長"
+     "label": "超級充電網路規模",
+     "value": "8,704座充電站、82,357個充電樁，年增17%",
+     "speaker": ""
     },
     {
-     "type": "guidance",
-     "label": "全年資本支出指引",
-     "value": "全年資本支出超過250億美元，聚焦擴大機器人計程車車隊、AI算力產能與Optimus產線",
+     "type": "metric",
+     "label": "儲能業務本季部署量",
+     "value": "13.5 GWh，年增41%、季增53%，為公司史上單季第二高",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "儲能業務毛利率",
+     "value": "20.4%，較上季39.5%大幅下滑，主因認列2.4億美元保固費用",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "無監督自駕（Robotaxi）累計里程",
+     "value": "超過38萬英里，涵蓋六座城市、七個美國市場，未發生重大安全事故，週成長率呈雙位數複合增長",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "車載AI訓練運算容量",
+     "value": "德州Cortex 1及2廠區，站內AI訓練運算容量超過205百萬瓦，較2026上半年初倍增",
      "speaker": ""
     },
     {
      "type": "guidance",
-     "label": "儲能業務長期毛利率目標",
-     "value": "預期儲能業務毛利率將回歸正常化，落在中低20%區間",
-     "speaker": "Vaibhav Taneja，財務長"
-    },
-    {
-     "type": "guidance",
-     "label": "未來資本支出成長方向",
-     "value": "未來2到3年資本支出將持續成長，用於擴大機器人計程車車隊、擴充Optimus產能、投資半導體晶圓廠、建置太陽能製造產能與AI算力基礎設施",
-     "speaker": "Vaibhav Taneja，財務長"
-    },
-    {
-     "type": "guidance",
-     "label": "德州鋰精煉產能目標",
-     "value": "目標達到年產30 GWh電池級鋰的產能",
+     "label": "2026全年資本支出計畫",
+     "value": "全年資本支出目標超過250億美元，且預計未來2-3年將持續成長，用途涵蓋Robotaxi車隊擴張、Optimus產線、Terafab半導體廠、太陽能製造、AI運算基礎設施與電池產能",
      "speaker": ""
     },
     {
      "type": "guidance",
-     "label": "Tesla Semi量產與自駕時程",
-     "value": "Semi維持2026年量產計畫，自動駕駛軟體版本預計2027年初上線",
+     "label": "新增舉債額度",
+     "value": "正在籌措最高300億美元的新增舉債額度，以支應資本支出擴張",
      "speaker": ""
     },
     {
      "type": "guidance",
-     "label": "FSD貨幣化結構與未來成長來源",
-     "value": "目前FSD營收55%來自一次性買斷、45%來自訂閱，預期未來FSD貨幣化的成長主要將來自訂閱",
-     "speaker": "Vaibhav Taneja，財務長"
+     "label": "Optimus產能規劃",
+     "value": "Gen 3產線已於Fremont安裝並開始爬坡，目標年產能100萬台；Gen 4目標達成10倍產能規模，願景年產能上看1,000萬台",
+     "speaker": ""
     },
     {
      "type": "guidance",
-     "label": "下一代Optimus產能目標",
-     "value": "相對Optimus 3的年產100萬台，目標是未來達到年產1000萬台的野心規模",
-     "speaker": "Elon Musk，執行長"
-    },
-    {
-     "type": "quote",
-     "label": "本季基調代表發言",
-     "value": "我們正在打造的，是我們認為史上最雄心勃勃的先進基礎設施製造產能建設計畫。",
-     "speaker": "Elon Musk，執行長"
+     "label": "儲能業務毛利率長期展望",
+     "value": "管理層預期儲能毛利率長期將回歸中低20%區間常態水準",
+     "speaker": ""
     }
    ]
   },
@@ -662,96 +656,96 @@
  },
  "TEM": {
   "2026Q3": {
-   "fetched": "2026-09-07",
+   "fetched": "2026-09-14",
    "items": [
     {
      "type": "metric",
-     "label": "核心業務量成長率",
-     "value": "本季加速至年增31%",
+     "label": "本季總營收年增幅度",
+     "value": "總營收3.825億美元，年增22%",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "診斷部門營收年增",
-     "value": "年增20%，達2.893億美元",
+     "label": "Diagnostics部門營收",
+     "value": "2.893億美元，年增20%",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "數據與應用部門營收年增",
-     "value": "年增28%，達9,320萬美元",
+     "label": "Data and apps部門營收",
+     "value": "9,320萬美元，年增28%",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "Insights（數據授權與建模）營收年增",
-     "value": "年增36%",
+     "label": "遺傳性癌症檢測(Hereditary cancer testing)營收",
+     "value": "1.074億美元，年增5%",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "遺傳性癌症檢測營收年增",
-     "value": "年增5%，達1.074億美元",
-     "speaker": ""
+     "label": "MRD檢測量季增幅度",
+     "value": "MRD檢測量從Q1約6,500例成長至Q2約9,000例，季增38%",
+     "speaker": "Eric Lefkofsky，創辦人暨執行長"
     },
     {
      "type": "metric",
-     "label": "演算法附加率（Algorithm Attach Rate）",
-     "value": "本季升至45%，上一季為40%",
-     "speaker": ""
+     "label": "實體腫瘤演算法搭載率(algorithm attach rate)",
+     "value": "本季達45%，較上季的40%小幅提升",
+     "speaker": "Jim Rogers，財務長"
     },
     {
      "type": "metric",
-     "label": "MRD（微小殘留病灶）檢測量",
-     "value": "本季約9,000例，較上季約6,500例季增38%",
-     "speaker": ""
+     "label": "本季GAAP獲利表現",
+     "value": "GAAP淨利潤500萬美元(560萬美元)，為公司首次單季轉為GAAP獲利",
+     "speaker": "Eric Lefkofsky，創辦人暨執行長"
     },
     {
      "type": "metric",
-     "label": "本季數據業務簽約總額",
-     "value": "約2億美元的新簽約（bookings），涵蓋BioNTech、AstraZeneca、GSK、BMS、Merck、Daiichi Sankyo等大型多年期數據授權與建模合約",
+     "label": "本季新簽約金額(bookings)",
+     "value": "本季資料授權暨建模相關新簽約金額約2億美元，包含與BioNTech、Daiichi Sankyo、Level Set Bio、Insight Pharmaceuticals等簽訂的多年期合約",
+     "speaker": "Eric Lefkofsky，創辦人暨執行長"
+    },
+    {
+     "type": "guidance",
+     "label": "2026全年營收展望",
+     "value": "上調至15.95億至16.05億美元，年增約25%",
      "speaker": ""
     },
     {
      "type": "guidance",
-     "label": "全年營收展望上修",
-     "value": "2026全年營收展望上修至15.95億至16.05億美元，年增約25%",
+     "label": "2026全年調整後EBITDA展望",
+     "value": "上調至約6,500萬美元",
      "speaker": ""
     },
     {
      "type": "guidance",
-     "label": "全年調整後EBITDA展望",
-     "value": "預計2026全年調整後EBITDA約6,500萬美元，較2025年改善約7,200萬美元",
+     "label": "xT CDx伴隨式診斷對平均售價的提升",
+     "value": "預期每檢測平均售價提升200美元，自2027年起每年增加約8,500萬美元營收",
      "speaker": ""
     },
     {
      "type": "guidance",
-     "label": "自由現金流轉正時程",
-     "value": "預計2026年底前實現正自由現金流（FCF）",
+     "label": "xF液態切片產品上市時程與訂價",
+     "value": "預計2027年下半年獲批上市，ADLT訂價目標為每檢測7,500美元",
+     "speaker": "Eric Lefkofsky，創辦人暨執行長"
+    },
+    {
+     "type": "guidance",
+     "label": "xT CDx與xF合計對2028年營收的貢獻",
+     "value": "管理層預期兩項產品合計在2028年帶來約4億美元的營收增量",
      "speaker": ""
     },
     {
      "type": "guidance",
-     "label": "數據業務中長期成長目標",
-     "value": "管理層表示希望維持數據業務中長期成長率在30%以上",
-     "speaker": ""
-    },
-    {
-     "type": "guidance",
-     "label": "新產品定價與營收增量時程",
-     "value": "xT CDx腫瘤專用版取得FDA核准後可採統一定價，預期每案均價（ASP）提升200美元，自2027年起每年增加約8,500萬美元營收；xF液態切片預計2027年下半年獲批，另增550美元均價；兩項合計預計於2028年帶來約4億美元營收增量",
-     "speaker": ""
-    },
-    {
-     "type": "guidance",
-     "label": "遺傳性癌症檢測成長目標",
-     "value": "目標在2026年底前恢復至中段雙位數（mid-teens）成長",
-     "speaker": ""
+     "label": "資料事業(data licensing/modeling)長期成長目標",
+     "value": "管理層表示希望維持接近30%以上的長期成長率",
+     "speaker": "Eric Lefkofsky，創辦人暨執行長"
     },
     {
      "type": "quote",
      "label": "本季基調代表發言",
-     "value": "數據業務簡直是熱火朝天，我們簽約的動能是這麼多年來最強的一次。",
+     "value": "本季對Tempus來說是非常出色的一季。整體營收成長22%至3.825億美元，這也是公司首次完全消化(lapping)Ambry整合效益後的一季。",
      "speaker": "Eric Lefkofsky，創辦人暨執行長"
     }
    ]
@@ -759,194 +753,194 @@
  },
  "TWST": {
   "2026Q3": {
-   "fetched": "2026-09-07",
+   "fetched": "2026-09-14",
    "items": [
     {
      "type": "metric",
-     "label": "DNA合成與蛋白質解決方案（DSPS）部門營收",
-     "value": "5660萬美元，年增39%，季增6%",
+     "label": "DNA合成與蛋白質解決方案(DSPS)部門營收",
+     "value": "5,660萬美元，年增39%，季增6%",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "次世代定序（NGS）應用部門營收",
-     "value": "6180萬美元，年增12%，季增8%",
-     "speaker": ""
-    },
-    {
-     "type": "metric",
-     "label": "治療藥物（Therapeutics）客群營收",
-     "value": "4040萬美元，年增49%，主要受惠AI驅動藥物發現需求成長",
-     "speaker": ""
-    },
-    {
-     "type": "metric",
-     "label": "學術與政府客群營收",
-     "value": "1550萬美元，年增32%，季增21%",
+     "label": "NGS應用部門營收",
+     "value": "6,180萬美元，年增12%，季增8%",
      "speaker": ""
     },
     {
      "type": "metric",
      "label": "美洲地區營收",
-     "value": "7730萬美元，年增30%，為最大市場",
+     "value": "7,730萬美元，年增30%",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "NGS服務客戶數與商業化產品採用情況",
-     "value": "本季服務657家NGS客戶，其中182家已採用商業化產品",
+     "label": "EMEA(歐洲中東非洲)地區營收",
+     "value": "3,360萬美元，年增9%",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "基因合成出貨量",
-     "value": "本季出貨36.9萬個基因，去年同期為23.7萬個",
+     "label": "治療藥物(Therapeutics)產業別營收",
+     "value": "4,040萬美元，年增49%",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "複雜基因（Complex Genes）搶先體驗計畫成果",
-     "value": "已收到逾1800個構築體訂單，來自100多筆訂單，絕大多數在12天交期內完成交付；正式上線已於法說會前兩週完成",
+     "label": "診斷(Diagnostics)產業別營收",
+     "value": "4,380萬美元，年增15%",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "現金與約當現金部位",
-     "value": "截至2026年6月30日，現金、約當現金與短期投資合計1.668億美元",
+     "label": "NGS應用客戶數",
+     "value": "本季服務657家NGS應用客戶，其中182家已採用商業化產品",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "本季毛利率",
+     "value": "52.8%，季增120個基點；增量營收約70%可轉化為毛利",
      "speaker": ""
     },
     {
      "type": "guidance",
-     "label": "FY2026第四季營收展望",
-     "value": "預期營收落在1.23億至1.24億美元之間，中位數約年增25%；DSPS與NGS兩部門皆預期季增，NGS預期重回年增逾20%的水準",
-     "speaker": ""
-    },
-    {
-     "type": "guidance",
-     "label": "FY2026全年營收與毛利率展望上修",
-     "value": "全年營收展望上調至4.56億至4.57億美元（中位數較先前展望上調1200萬美元），約年增21%；全年毛利率預期超過52%",
+     "label": "全年(FY2026)毛利率目標",
+     "value": "預期FY2026全年毛利率高於52%",
      "speaker": ""
     },
     {
      "type": "guidance",
      "label": "長期毛利率目標",
-     "value": "管理層設定長期毛利率目標為超過60%",
+     "value": "隨業務成熟，目標毛利率提升至60%以上",
      "speaker": ""
     },
     {
      "type": "guidance",
-     "label": "獲利能力展望",
-     "value": "FY2026第四季目標為調整後EBITDA打平；FY2027承諾維持調整後EBITDA打平或轉正；第四季營運費用預期較本季減少逾500萬美元（不含一次性人員轉任費用）",
+     "label": "獲利能力時程目標",
+     "value": "預期FY2026第四季達到調整後EBITDA打平，並在FY2027維持此目標",
      "speaker": ""
     },
     {
      "type": "guidance",
-     "label": "AI驅動藥物發現訂單成長展望",
-     "value": "管理層預期FY2027 AI驅動藥物發現訂單可望再度呈現三位數百分比年增，重演FY2026的成長態勢（FY2025基期約為2500萬美元訂單）",
+     "label": "FY2026全年營收展望",
+     "value": "上修至4.56億至4.57億美元，中位數較先前預估上調1,200萬美元，年增約21%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "FY2026第四季營收展望",
+     "value": "1.23億至1.24億美元，中位數年增約25%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "AI輔助藥物發現訂單成長目標",
+     "value": "根據目前需求訊號，FY2026與FY2027皆設定三位數百分比成長目標",
      "speaker": ""
     },
     {
      "type": "quote",
-     "label": "本季基調代表發言",
-     "value": "生物學正變得日益數位化、數據驅動且由AI賦能；我們看到這個機會正在成熟為一個持久的成長引擎，相信FY2027年AI驅動藥物發現的訂單有機會再次呈現三位數百分比的成長，與FY2026年相比。",
-     "speaker": "Emily Leproust，執行長（CEO）"
+     "label": "本季基調發言",
+     "value": "生物學正變得越來越數位化、數據驅動且由人工智慧賦能。",
+     "speaker": "Emily Leproust，執行長暨共同創辦人"
     }
    ]
   }
  },
  "CRCL": {
   "2026Q3": {
-   "fetched": "2026-09-07",
+   "fetched": "2026-09-14",
    "items": [
     {
+     "type": "metric",
+     "label": "本季總營收與準備金利息收入",
+     "value": "7.01億美元,年增7%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Adjusted EBITDA",
+     "value": "1.43億美元,年增8%,利潤率50%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "USDC流通量規模",
+     "value": "733億美元,年增19%(同期整體數位資產市場規模下滑40%)",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "鏈上交易量",
+     "value": "單季14.8兆美元,年增151%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "每日平均鑄造/贖回金額",
+     "value": "19億美元,年增105%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "USDC占穩定幣交易量市佔率",
+     "value": "2026年6月達70%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Circle Payments Network營運狀況",
+     "value": "已有175家金融機構加入,年化支付量達230億美元(統計至7月31日)",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "USYC資產規模",
+     "value": "超過30億美元,年增達10倍",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "準備金報酬率",
+     "value": "3.48%,較去年同期下降66個基點,主因SOFR利率下滑",
+     "speaker": ""
+    },
+    {
      "type": "guidance",
-     "label": "全年RLDC利潤率財測上調",
-     "value": "全年RLDC利潤率財測區間上調至41.7%至43.7%（原財測為38%至40%）",
-     "speaker": "Jeremy Fox-Geen，財務長"
+     "label": "2026全年Other Revenue展望上修",
+     "value": "由原先1.5億至1.7億美元上修至3.1億至3.3億美元,主要因Arc代幣預售(token presale)貢獻約1.8億美元,其餘產品貢獻1.3億至1.5億美元",
+     "speaker": "Jeremy Fox-Geen(CFO)"
     },
     {
      "type": "guidance",
-     "label": "全年其他收入財測大幅上調",
-     "value": "全年其他收入財測區間上調至3.1億至3.3億美元（原財測為1.5億至1.7億美元）",
-     "speaker": "Jeremy Fox-Geen，財務長"
+     "label": "RLDC(Revenue Less Distribution Costs)利潤率展望上修",
+     "value": "由原先38%至40%上修至41.7%至43.7%;若不含Arc營收,預期接近先前指導區間的中點",
+     "speaker": "Jeremy Fox-Geen(CFO)"
     },
     {
      "type": "guidance",
-     "label": "全年調整後營運費用財測維持不變但偏高標",
-     "value": "調整後營運費用財測區間維持5.7億至5.85億美元不變，但預期將落在區間高標",
-     "speaker": "Jeremy Fox-Geen，財務長"
+     "label": "多年期營收成長目標",
+     "value": "管理層目標為整個週期年複合成長率(CAGR)40%",
+     "speaker": "Jeremy Fox-Geen(CFO)"
     },
     {
      "type": "guidance",
-     "label": "中長期USDC流通量成長目標",
-     "value": "跨週期來看，USDC流通量年複合成長率（CAGR）40%是可達成的目標",
-     "speaker": "Jeremy Fox-Geen，財務長"
+     "label": "2026年調整後營運費用展望維持不變",
+     "value": "維持5.7億至5.85億美元區間,但預期將落在區間高端",
+     "speaker": "Jeremy Fox-Geen(CFO)"
     },
     {
      "type": "guidance",
-     "label": "Arc Mainnet主網正式上線時程",
-     "value": "Arc Mainnet將於本季（2026年）9月16日正式上線",
-     "speaker": "Jeremy Allaire，共同創辦人／執行長／董事長"
-    },
-    {
-     "type": "guidance",
-     "label": "持續加碼平台投資的資本配置立場",
-     "value": "考量資產負債表穩健、且看好投資平台建設的長期報酬相當吸引人，現在是持續加碼此類投資的正確時機",
-     "speaker": "Jeremy Fox-Geen，財務長"
-    },
-    {
-     "type": "metric",
-     "label": "Circle Payments Network（CPN）合作金融機構家數",
-     "value": "已有175家金融機構加入CPN，較上季增加30%",
-     "speaker": ""
-    },
-    {
-     "type": "metric",
-     "label": "CPN年化支付量成長",
-     "value": "CPN年化支付量本季末達150億美元；截至2026年7月31日（近30日移動年化基準）已成長至230億美元",
-     "speaker": ""
-    },
-    {
-     "type": "metric",
-     "label": "Arc Token預售金額與未來認列收入",
-     "value": "本季Arc Token預售收入達2.42億美元，預計於達成特定里程碑後，於2026年認列1.8億美元收入",
-     "speaker": ""
-    },
-    {
-     "type": "metric",
-     "label": "USDC平台持有規模與占比",
-     "value": "USDC平台持有量達124億美元，年增106%，占USDC總流通量17%",
-     "speaker": ""
-    },
-    {
-     "type": "metric",
-     "label": "USYC代幣化貨幣市場基金規模",
-     "value": "USYC規模突破30億美元，較去年同期成長十倍",
-     "speaker": ""
-    },
-    {
-     "type": "metric",
-     "label": "USDC鏈上交易量成長",
-     "value": "USDC單季鏈上交易量達14.8兆美元，年增151%",
-     "speaker": ""
-    },
-    {
-     "type": "metric",
-     "label": "USDC於穩定幣交易量的市占率",
-     "value": "根據Visa數據，2026年6月USDC占整體穩定幣交易量70%",
-     "speaker": ""
-    },
-    {
-     "type": "metric",
-     "label": "x402協議AI代理支付結算占比",
-     "value": "在x402協議下，USDC結算了99.3%的AI代理（agentic）支付交易量",
-     "speaker": ""
+     "label": "Arc區塊鏈主網上線時程",
+     "value": "預計2026年9月16日上線,BlackRock、Mastercard、Visa、DTCC等機構將擔任驗證者(validator)",
+     "speaker": "Jeremy Allaire(CEO)"
     },
     {
      "type": "quote",
-     "label": "本季管理層基調代表發言",
-     "value": "Circle目前處於顯著的領先地位，我們在信任、流動性、法規地位、技術與網路規模等面向，都建立了深厚且持久的競爭護城河。",
-     "speaker": "Jeremy Allaire，共同創辦人／執行長／董事長"
+     "label": "本季基調代表發言",
+     "value": "以現在700多億美元的規模來看,我們認為USDC這個產品仍處於非常早期的階段——貨幣的潛在市場規模大約是120兆美元。",
+     "speaker": "Jeremy Fox-Geen(CFO)"
     }
    ]
   }
@@ -1026,188 +1020,194 @@
  },
  "HOOD": {
   "2026Q3": {
-   "fetched": "2026-09-07",
+   "fetched": "2026-09-14",
    "items": [
     {
      "type": "metric",
-     "label": "本季總營收",
-     "value": "13.1億美元，年增32%，創單季新高",
-     "speaker": ""
+     "label": "淨存款季度成長",
+     "value": "本季淨存款達220億美元，年增28%，創歷史新高；7月淨存款仍朝約40億美元的水準推進",
+     "speaker": "Shiv Verma（財務長）"
     },
     {
      "type": "metric",
-     "label": "交易相關營收",
-     "value": "7.76億美元，年增44%",
-     "speaker": ""
+     "label": "新增出資客戶數",
+     "value": "單季新增近100萬名出資客戶，為歷來單季新增最多的一次",
+     "speaker": "Vladimir Tenev（董事長暨執行長）"
     },
     {
      "type": "metric",
-     "label": "選擇權營收與合約量",
-     "value": "營收3.42億美元，年增29%；交易量7.74億口合約，創歷史新高",
-     "speaker": ""
+     "label": "Gold訂閱戶數與滲透率",
+     "value": "Gold訂閱戶數達480萬，創歷史新高，佔淨出資帳戶比例達17%，創新高滲透率",
+     "speaker": "Shiv Verma（財務長）"
     },
     {
      "type": "metric",
-     "label": "事件合約營收",
-     "value": "營收1.56億美元，年增達10倍；合約量136億口",
-     "speaker": ""
+     "label": "保證金餘額成長",
+     "value": "保證金帳戶餘額達216億美元，年增127%，創歷史新高",
+     "speaker": "Shiv Verma（財務長）"
     },
     {
      "type": "metric",
-     "label": "加密貨幣營收",
-     "value": "1.00億美元，年減38%",
-     "speaker": ""
+     "label": "選擇權業務營收與合約量",
+     "value": "選擇權營收3.42億美元，年增29%，合約交易量達7.74億口，創歷史紀錄",
+     "speaker": "Shiv Verma（財務長）"
     },
     {
      "type": "metric",
-     "label": "淨新增存款",
-     "value": "217億美元，年化成長率28%，創紀錄",
-     "speaker": ""
+     "label": "股票業務營收與名目交易量",
+     "value": "股票營收1.29億美元，年增95%；股票名目交易量年增85%",
+     "speaker": "Shiv Verma（財務長）"
     },
     {
      "type": "metric",
-     "label": "調整後EBITDA利潤率",
-     "value": "57%，創歷史新高獲利能力",
-     "speaker": ""
+     "label": "事件合約（預測市場）營收暴增",
+     "value": "事件合約營收1.56億美元，年增達10倍，合約交易量136億口",
+     "speaker": "法說會摘要"
     },
     {
      "type": "metric",
-     "label": "總資金帳戶數",
-     "value": "2,840萬戶，年增190萬戶；本季單季新增近100萬戶",
-     "speaker": ""
+     "label": "加密貨幣業務營收衰退",
+     "value": "加密貨幣營收1億美元，年減38%",
+     "speaker": "法說會摘要"
     },
     {
      "type": "metric",
-     "label": "Robinhood Gold訂閱數與滲透率",
-     "value": "480萬人，滲透率17%，創歷史新高",
-     "speaker": ""
+     "label": "平台總資產規模",
+     "value": "平台總資產達3690億美元，年增32%，反映淨存款增加與股票市值上升",
+     "speaker": "Shiv Verma（財務長）"
     },
     {
      "type": "metric",
-     "label": "Trump Accounts兒童帳戶簽約數",
-     "value": "累計700萬個簽約帳戶",
-     "speaker": ""
+     "label": "銀行業務存款規模",
+     "value": "自2025年11月銀行業務（Robinhood Banking）開始推出以來，銀行存款已累積超過30億美元",
+     "speaker": "Shiv Verma（財務長）"
     },
     {
      "type": "metric",
-     "label": "年營收達1億美元以上業務線數量",
-     "value": "累計13項業務線ARR達1億美元以上，本季新增Robinhood Legend與信用卡2項",
-     "speaker": ""
+     "label": "Trump帳戶（兒童投資帳戶）簽署與注資規模",
+     "value": "已有700萬名兒童註冊Trump帳戶，累計注資金額已超過15億美元",
+     "speaker": "Vladimir Tenev（董事長暨執行長）"
     },
     {
      "type": "guidance",
-     "label": "2026全年調整後營運費用(含股權激勵)展望",
-     "value": "由原先26.8億至28.25億美元下修至26.75億至27.75億美元",
-     "speaker": ""
+     "label": "2026年調整後營運費用展望下修",
+     "value": "將2026年調整後營運費用（含股權激勵）指引區間由原本27億至28.25億美元下修至26.75億至27.75億美元",
+     "speaker": "Shiv Verma（財務長）"
     },
     {
      "type": "guidance",
-     "label": "7月營運動能展望",
-     "value": "淨存款(不含Trump Accounts資金流入)追蹤約40億美元；股票/選擇權/事件合約日均交易量與第二季相近；加密貨幣交易量略低於第二季",
-     "speaker": ""
+     "label": "長期調整後EBITDA利潤率目標",
+     "value": "在持續加碼行銷與成長性投資的同時，仍維持約57%的調整後EBITDA利潤率目標",
+     "speaker": "Shiv Verma（財務長）"
     },
     {
      "type": "guidance",
-     "label": "產品與國際擴張路線圖",
-     "value": "Robinhood Social預計於2026年第三季底推出；持續推動新加坡作為亞太樞紐、印尼直接申牌等國際擴張計畫",
-     "speaker": ""
+     "label": "未來十年十倍成長願景與國際擴張規劃",
+     "value": "管理層表示相信公司能在未來十年將business規模擴大十倍，成長動能包括國際擴張（如新加坡作為東南亞/APAC樞紐、收購WonderFi拓展APAC與加拿大市場）及2026年期中選舉相關事件合約業務的擴大布局",
+     "speaker": "Vladimir Tenev（董事長暨執行長）"
     },
     {
      "type": "quote",
-     "label": "本季基調發言",
-     "value": "我們現在已經有13項業務達到這個里程碑，反映我們持續快速為客戶推出新產品的步調，其中包含本季新增的2項——Robinhood Legend和信用卡。",
-     "speaker": "Shiv Verma，財務長"
+     "label": "本季基調代表發言",
+     "value": "Robinhood存在的意義就是要讓每個人都能成為擁有者……我相信廣泛的（財富）擁有權，是一個自由、穩定且繁榮社會不可或缺的基礎。",
+     "speaker": "Vladimir Tenev（董事長暨執行長）"
     }
    ]
   }
  },
  "SHOP": {
   "2026Q3": {
-   "fetched": "2026-09-07",
+   "fetched": "2026-09-14",
    "items": [
     {
      "type": "metric",
-     "label": "GMV年增幅度",
-     "value": "本季GMV（Gross Merchandise Volume）以固定匯率計算年增32%，達1,156億美元，是連續第五季GMV年增率超過30%",
+     "label": "國際市場GMV年增率",
+     "value": "國際GMV年增37%",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "商家解決方案營收",
-     "value": "Merchant Solutions營收年增37%，達28億美元",
+     "label": "北美GMV年增率",
+     "value": "北美GMV年增28%",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "訂閱解決方案營收",
-     "value": "Subscription Solutions營收年增22%，達8.02億美元",
+     "label": "歐洲GMV年增率（固定匯率）",
+     "value": "歐洲GMV以固定匯率計算年增34%",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "B2B業務GMV成長",
-     "value": "B2B GMV年增76%",
+     "label": "線下（實體店/POS）GMV年增率",
+     "value": "Shopify POS（線下）GMV年增32%",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "實體零售POS GMV成長",
-     "value": "Point-of-Sale（POS）GMV年增32%",
+     "label": "B2B GMV年增率",
+     "value": "B2B GMV年增76%，延續前幾季強勁趨勢",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "支付滲透率",
-     "value": "Shopify Payments滲透率達全球GMV的68%，年增3個百分點；歐洲支付滲透率年增3.5個百分點",
+     "label": "Shop Pay GMV年增率",
+     "value": "Shop Pay GMV年增53%",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "月經常性收入（MRR）與Plus占比",
-     "value": "MRR年增19%達2.21億美元；Shopify Plus的MRR占總MRR的34%",
+     "label": "高GMV商家留存率",
+     "value": "年GMV達100萬美元以上的商家留存率為92%，年GMV達1000萬美元以上的商家留存率提升至97%",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "自由現金流與利潤率",
-     "value": "自由現金流達6.54億美元，FCF利潤率18%（排除會計原則變動影響後年增2個百分點）",
+     "label": "Shop Pay累計GMV里程碑",
+     "value": "Shop Pay於2026年6月累計加速GMV突破4000億美元",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "大型商家留存率",
-     "value": "年GMV逾100萬美元的商家留存率92%；年GMV逾1,000萬美元的商家留存率97%",
-     "speaker": ""
-    },
-    {
-     "type": "metric",
-     "label": "AI助理Sidekick使用量",
-     "value": "Sidekick日活躍商家數年增3.6倍、日對話次數年增4.8倍，本季對話總數達3,400萬次；商家透過Sidekick建立的自訂App數量從上季1.2萬個增加到本季3.6萬個",
+     "label": "AI助理Sidekick使用量成長",
+     "value": "每日使用Sidekick的活躍商家數年增3.6倍、每日對話次數年增4.8倍，本季共3400萬次對話；透過Sidekick建立的客製化App數達3.6萬個（上季為1.2萬個）",
      "speaker": ""
     },
     {
      "type": "guidance",
-     "label": "下季（Q3）營收成長展望",
-     "value": "管理層預期Q3營收年增率落在30%出頭（low 30s）",
+     "label": "第三季營收成長展望",
+     "value": "預期第三季營收年增率為30%出頭（low 30s）",
      "speaker": ""
     },
     {
      "type": "guidance",
-     "label": "下季（Q3）毛利成長展望",
-     "value": "管理層預期Q3毛利金額年增率落在20%中至高段（mid- to high-20s）",
+     "label": "第三季毛利金額成長展望",
+     "value": "預期第三季毛利金額年增率為中高段20%（mid- to high-20s）",
      "speaker": ""
     },
     {
      "type": "guidance",
-     "label": "下季（Q3）營運費用展望",
-     "value": "管理層預期Q3營運費用（operating expenses）占營收比重落在33%至34%",
+     "label": "第三季營業費用占營收比展望",
+     "value": "預期第三季營業費用約為營收的33%至34%",
      "speaker": ""
     },
     {
      "type": "guidance",
-     "label": "下季（Q3）自由現金流利潤率展望",
-     "value": "管理層預期Q3自由現金流利潤率落在高十幾%至20%出頭（high teens to low 20s），其中含不到1個百分點來自會計原則變動帶來的挹注",
+     "label": "第三季自由現金流利潤率展望",
+     "value": "預期第三季自由現金流利潤率為高10%多到20%出頭（high teens to low 20s）",
      "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "第三季股票薪酬費用展望",
+     "value": "預估第三季股票薪酬（stock-based compensation）約為1.5億美元",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "本季基調代表發言",
+     "value": "目錄（catalog）未來多年將是Shopify最重要的資產之一。",
+     "speaker": "Harley Finkelstein，總裁（President）"
     }
    ]
   }
@@ -3100,6 +3100,97 @@
      "label": "本季基調代表發言",
      "value": "我們的核心成長引擎——Telco Plus 與 Telco Plus Tech——兩者營收都繳出強勁的年增成長，進一步鞏固了我們身為市場領導者、作為一家由AI驅動之ICT公司的地位。",
      "speaker": "Jamie Lin（董事長）"
+    }
+   ]
+  }
+ },
+ "TXG": {
+  "2026Q3": {
+   "fetched": "2026-09-14",
+   "items": [
+    {
+     "type": "metric",
+     "label": "美洲區營收年增（不含前一年度和解收入）",
+     "value": "8500萬美元，年增6%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "EMEA區營收年增",
+     "value": "4000萬美元，年增15%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "亞太區營收年減",
+     "value": "2600萬美元，年減19%，其中包含400萬美元前一年度中國提前拉貨的高基期影響",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "空間學耗材營收年增",
+     "value": "4230萬美元，年增16%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "單細胞耗材營收年增",
+     "value": "8850萬美元，年增3%，Flex Apex反應體積呈雙位數成長",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "儀器總營收年減",
+     "value": "770萬美元，年減47%（其中空間學儀器460萬美元、年減48%；單細胞儀器310萬美元、年減46%）",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "服務營收年增",
+     "value": "1070萬美元，較去年同期850萬美元成長",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "調整後毛利率",
+     "value": "74%，較去年同期（排除和解收入後）67%大幅提升",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "本季產品營收結構占比",
+     "value": "空間學耗材占28%、單細胞耗材占59%、儀器占5%、服務占7%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Atera訂單狀況",
+     "value": "截至2026年6月30日，Atera已收到的訂購訂單已大幅超越全年40台出貨目標",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "Atera出貨與產能擴充計畫",
+     "value": "2026年全年規劃出貨40台，且多數集中在第四季交貨；產能為目前主要瓶頸，管理層表示會持續投入、預期在2027年繼續擴大產能",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "Flex Apex客戶轉換展望",
+     "value": "預期到2026年底前達到「絕大多數」客戶完成轉換，為2027年的成長軌跡打下基礎",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "Atera單台儀器營收拉動潛力",
+     "value": "單台Atera儀器最大營收拉動潛力約150萬至300萬美元，約為Xenium系統產能的兩倍",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "本季基調代表發言",
+     "value": "如今，多數重要的生物數據生成工作，至少有部分是以訓練AI模型為目標而設計的。",
+     "speaker": "Serge Saxonov，執行長暨共同創辦人"
     }
    ]
   }
