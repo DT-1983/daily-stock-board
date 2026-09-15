@@ -100,6 +100,11 @@ tr.detail>td{padding:0 6px 14px;background:rgba(255,255,255,.02)}
 .seg{padding:2px}
 .seg button{padding:3px 11px;min-height:26px;font-size:12px}
 .sc{padding:2px 10px;min-height:24px;font-size:11.5px}
+/* 個股一句話簡介（2026-09-16）——跟 lookup_page.py 同一份規則，兩邊各自
+   內嵌 <style> 互不共用，複製一份數字才會一致，不是忘了 import。 */
+.lk-intro{font-size:12.5px;line-height:1.85;color:var(--muted);margin:0 0 10px;
+          padding:9px 12px;background:var(--surface);border:1px solid var(--line2,#0E1B2B);
+          border-left:2px solid var(--accent);border-radius:0 6px 6px 0}
 """
 
 # 象限四色與中文——優先從輪動頁 import，兩頁永遠同色；import 不到（缺套件）才用這份副本
@@ -295,7 +300,28 @@ def _row_html(r):
             f'<td>{_fmt(r.get("rs_short"),1,"%")}</td>'
             f'<td class="srcs">{esc("/".join(r.get("src") or []))}</td></tr>'
             + (f'<tr class="detail" id="{tid}" data-mkt="{mkt}" style="display:none">'
-               f'<td colspan="11">{r["chart"]}</td></tr>' if r.get("chart") else ""))
+               f'<td colspan="11">{_intro_cached(r["ticker"])}{r["chart"]}</td></tr>'
+               if r.get("chart") else ""))
+
+
+def _intro_cached(ticker):
+    """個股一句話簡介，**只顯示快取裡已經有的**（2026-09-16 Leo：「像查的功能一樣」）。
+
+    這頁是靜態產出（`docs/combo.html`，312 檔一次產完），不是活的伺服器，
+    沒有頁面可以輪詢——跟 lookup_page/lamp_room 那套「先出頁面、背景生成」
+    的做法接不上。所以只做「快取有就顯示」，快取沒有就**什麼都不顯示**
+    （不要為了填版面現場叫 28 秒一次的本機 claude，312 檔全叫會拖垮整支
+    批次；也不要編一句話——那是 company_intro.py 本來就不准的事）。
+    快取會隨時間自然補齊：`stock_brief.py`／`lamp_room.py` 只要查過這檔，
+    這裡下次產出就會撈到。
+    """
+    try:
+        import company_intro as ci
+        hit = (ci._load() or {}).get(str(ticker).upper())
+        txt = hit.get("text") if hit else ""
+    except Exception:                                       # noqa: BLE001
+        txt = ""
+    return f'<div class="lk-intro">{esc(txt)}</div>' if txt else ""
 
 
 def _table(rows):

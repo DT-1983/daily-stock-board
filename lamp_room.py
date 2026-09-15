@@ -174,7 +174,20 @@ def _combo_css():
     try:
         import combo_html as ch
         from board_theme import LOOKUP_CSS
-        return ch.CSS + LOOKUP_CSS
+        # .lk-intro 系列不在 LOOKUP_CSS 裡（那是 lookup_page.py 自己內嵌的樣式，
+        # 兩邊各自 <style> 互不共用）——複製同一份規則，數字跟排版才會一致。
+        intro_css = """
+.lk-intro{font-size:12.5px;line-height:1.85;color:var(--muted);margin:6px 0 10px;
+          padding:9px 12px;background:var(--surface);border:1px solid var(--line2,#0E1B2B);
+          border-left:2px solid var(--accent);border-radius:0 6px 6px 0}
+.lk-intro-wait{color:var(--dim)}
+.lk-gen{font-size:11px;color:var(--dim);opacity:.75}
+.lkdot{display:inline-block;width:4px;height:4px;margin-left:5px;border-radius:50%;
+       background:var(--accent);vertical-align:middle;animation:lkpulse 1.1s ease-in-out infinite}
+@keyframes lkpulse{0%,100%{opacity:.25}50%{opacity:1}}
+@media(prefers-reduced-motion:reduce){.lkdot{animation:none;opacity:.7}}
+"""
+        return ch.CSS + LOOKUP_CSS + intro_css
     except Exception:                                   # noqa: BLE001
         return ""
 
@@ -235,6 +248,38 @@ def live_lamps(tk):
         return cs.scan_one(tk, sym, df, b.dropna().tolist())
     except Exception:                                       # noqa: BLE001
         return None            # 算不出來就不顯示，不要讓整頁掛掉
+
+
+def _intro(r):
+    """個股一句話簡介（2026-09-16 Leo：「進出燈號加上這家在做什麼，像查的功能一樣」）。
+
+    不重寫一套——直接借用 `lookup_page._intro()` 同一份邏輯跟同一份快取
+    （`state/company_intro.json`），戰情室跟查股頁講的必須是同一段話，
+    不能各寫各的、兩邊敘述不一樣。行為完全比照：
+      · 快取有 → 立刻顯示
+      · 快取沒有 → 先讓卡片出來，前端輪詢 `/lookup/intro`（discord_bot.py
+        已經有這支端點，兩邊共用同一道 gate，不用另外開路由）補進來
+    """
+    from board_theme import esc
+    tk = str(r.get("tk") or "")
+    if not tk:
+        return ""
+    txt = ""
+    try:
+        import company_intro as ci
+        hit = (ci._load() or {}).get(tk.upper())
+        if hit and hit.get("text"):
+            txt = hit["text"]
+    except Exception:                                       # noqa: BLE001
+        pass
+    if txt:
+        return f'<div class="lk-intro">{esc(txt)}</div>'
+    sec = esc(str(r.get("sec") or ""))
+    import lookup_page
+    return (f'<div class="lk-intro lk-intro-wait" id="lkintro" '
+            f'data-tk="{esc(tk)}">{sec}{"　" if sec else ""}'
+            f'<span class="lk-gen">簡介產生中<i class="lkdot"></i></span></div>'
+            + lookup_page.INTRO_JS)
 
 
 def detail_html(ticker):
@@ -307,6 +352,8 @@ def detail_html(ticker):
         + esc(_asof) + '）；下面的圖是<b>現抓的</b>（到最新交易日）。'
         '掃描之後又有交易日的話，兩者會不一樣。</div>')
 
+    intro = _intro(r)
+
     cards = "".join([
         f'<div class="dc"><div class="k">燈數</div><div class="v">{r["lit"]} / 4'
         f'<span class="asof">{esc(_row_asof)}</span></div>'
@@ -343,7 +390,7 @@ def detail_html(ticker):
     except Exception as e:                                  # noqa: BLE001
         tech = (f'<div class="warn">技術圖產生失敗（上面的數字仍然有效）：'
                 f'{esc(str(e)[:140])}</div>')
-    return head + '<div class="dcards">' + cards + "</div>" + tech
+    return head + intro + '<div class="dcards">' + cards + "</div>" + tech
 
 
 # ── 右欄：軍師 ────────────────────────────────────────────────────────
