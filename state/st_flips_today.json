@@ -1,16 +1,52 @@
 {
-"date": "2026-09-14",
+"date": "2026-09-15",
 "flips_hold": [],
 "flips_watch": [
 {
-"code": "3008",
+"code": "CEG",
 "name": "",
 "word": "🟢→🔴 翻空",
 "dir": -1
 },
 {
-"code": "3081",
-"name": "聯亞",
+"code": "CWEN",
+"name": "",
+"word": "🟢→🔴 翻空",
+"dir": -1
+},
+{
+"code": "FCX",
+"name": "",
+"word": "🟢→🔴 翻空",
+"dir": -1
+},
+{
+"code": "GLW",
+"name": "",
+"word": "🟢→🔴 翻空",
+"dir": -1
+},
+{
+"code": "SCCO",
+"name": "",
+"word": "🟢→🔴 翻空",
+"dir": -1
+},
+{
+"code": "XYZ",
+"name": "",
+"word": "🟢→🔴 翻空",
+"dir": -1
+},
+{
+"code": "2314",
+"name": "台揚",
+"word": "🔴→🟢 翻多",
+"dir": 1
+},
+{
+"code": "4979",
+"name": "華星光",
 "word": "🟢→🔴 翻空",
 "dir": -1
 }
