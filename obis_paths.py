@@ -16,6 +16,7 @@
     Investment/
     ├── 每日看板/          程式自動更新的儀表板（每天／每週被覆寫）
     ├── 個股整合報告/       索引 + 每檔一份（stock_brief.py）
+    ├── 軍師資料庫/         純 Markdown，給 AI 讀不是給人讀（2026-09-15）
     ├── 財報懶人包/         每檔每季一份（earnings_infographic.py）
     ├── 產業鏈深度報告/     每月一次的深度解讀
     └── 存檔/              一次性報告，產出後不會再更新
@@ -26,6 +27,16 @@
 會被程式覆寫的進 `每日看板/`（看到舊日期就代表那支壞了），
 一次性產出的進 `存檔/`（舊日期是正常的，因為本來就不會更新）。
 兩者混在一起時，**「這個檔案過期了」跟「這個檔案本來就是那天的」分不出來**。
+
+## 軍師資料庫（2026-09-15，Leo：「讓AGENT有需要可以直接讀」）
+
+跟其他資料夾不同的地方：**這裡的東西不是給 Leo 看的**，是把
+`state/advisor_verdicts.jsonl`（投資長逐日判斷）＋`state/thesis_conditions.json`
+（失效線／燈號登錄簿）轉成一檔一股的 Markdown，讓**任何一個 Claude session**
+（不只是這個專案裡的）都能透過 obis 這個全域已知的路徑找到、讀懂。
+參考 Leo 自己在「老墨」那邊的同一套做法：抓成 MD、分類放 Obsidian、給 AI 當 DB，
+「我自己懶得讀」。所以格式不用排版給人看，濃度優先。
+每天覆寫，看到舊日期＝那支壞了（跟 `每日看板/` 同一個判準）。
 """
 import os
 
@@ -33,11 +44,12 @@ ROOT = r"C:\Users\Mophy\Documents\Google drive\BB-8 工作區\04_AI Report\Inves
 
 DAILY = os.path.join(ROOT, "每日看板")
 BRIEFS = os.path.join(ROOT, "個股整合報告")
+ADVISOR_DB = os.path.join(ROOT, "軍師資料庫")
 EARNINGS = os.path.join(ROOT, "財報懶人包")
 CHAINS = os.path.join(ROOT, "產業鏈深度報告")
 ARCHIVE = os.path.join(ROOT, "存檔")
 
-ALL_DIRS = (DAILY, BRIEFS, EARNINGS, CHAINS, ARCHIVE)
+ALL_DIRS = (DAILY, BRIEFS, ADVISOR_DB, EARNINGS, CHAINS, ARCHIVE)
 
 
 def available():
@@ -73,6 +85,11 @@ def daily(name):
 def brief(name):
     """個股整合報告（索引也在這裡——它用相對路徑連同資料夾的個股頁）。"""
     return os.path.join(ensure(BRIEFS), name)
+
+
+def advisor_db(name):
+    """軍師資料庫：一檔一份 Markdown，給 AI 讀的（見上方模組說明）。"""
+    return os.path.join(ensure(ADVISOR_DB), name)
 
 
 def earnings(name):
