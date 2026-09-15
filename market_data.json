@@ -1,124 +1,124 @@
 {
- "updated": "2026-09-14 21:54",
+ "updated": "2026-09-15 13:03",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
    "date": "09/14",
-   "close": 7615.33,
-   "chg_pct": -0.54
+   "close": 7619.98,
+   "chg_pct": -0.48
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
    "date": "09/14",
-   "close": 26114.64,
-   "chg_pct": -0.83
+   "close": 26186.41,
+   "chg_pct": -0.56
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
    "date": "09/14",
-   "close": 52437.1,
-   "chg_pct": -0.26
+   "close": 52421.2,
+   "chg_pct": -0.29
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
    "date": "09/14",
-   "close": 11216.88,
-   "chg_pct": -5.13
+   "close": 11131.28,
+   "chg_pct": -5.86
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/14",
-   "close": 45862.52,
-   "chg_pct": -0.7
+   "date": "09/15",
+   "close": 45638.27,
+   "chg_pct": -0.49
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/14",
-   "close": 31.81,
-   "chg_pct": 0.54
+   "date": "09/15",
+   "close": 31.79,
+   "chg_pct": 0.36
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
    "date": "09/14",
-   "close": 4.98,
+   "close": 4.96,
    "fmt": "yield",
-   "chg_bp": 1.0
+   "chg_bp": -1.4
   }
  ],
  "news": [
   {
-   "title": "盤中速報 - Workday公司(WDAY-US)大漲5.01%，報195美元",
+   "title": "輝達客戶集中度升高 CFO揭密「一筆生意賺兩次」",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6606147",
-   "ts": "09/14 21:54"
+   "url": "https://news.cnyes.com/news/id/6606668",
+   "ts": "09/15 12:50"
   },
   {
-   "title": "盤中速報 - 埃森哲(ACN-US)大漲5.12%，報193.32美元",
+   "title": "AI領袖齊喊放慢腳步！晶片股淪「痛苦交易」SOXX重挫近6% 投資人重新檢視支出",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6606146",
-   "ts": "09/14 21:54"
+   "url": "https://news.cnyes.com/news/id/6606409",
+   "ts": "09/15 12:40"
   },
   {
-   "title": "盤中速報 - 直覺(INTU-US)大漲5.13%，報338.08美元",
+   "title": "北約戰機緊急升空 在立陶宛擊落越境無人機",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6606145",
-   "ts": "09/14 21:51"
+   "url": "https://news.cnyes.com/news/id/6606680",
+   "ts": "09/15 12:39"
   },
   {
-   "title": "盤中速報 - 亞德諾(ADI-US)大跌5.08%，報359.54美元",
+   "title": "市場震盪籌碼大「洗牌」 台股主動ETF受益人數單月驟減16.5萬 資金急湧海外資產",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6606688",
+   "ts": "09/15 12:39"
+  },
+  {
+   "title": "貿聯梁華哲：跨國佈局併購有二大考量 近年不少標的主動來洽談",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6606669",
+   "ts": "09/15 12:33"
+  },
+  {
+   "title": "7大舉措促進智能家居消費！陸八部門：加速制定實施互聯互通等國家標準",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6606144",
-   "ts": "09/14 21:49"
+   "url": "https://news.cnyes.com/news/id/6606660",
+   "ts": "09/15 12:30"
   },
   {
-   "title": "盤中速報 - Verisk Analytics Inc(VRSK-US)大漲5.09%，報185.16美元",
+   "title": "搶救產業K型化！龔明鑫：明年起年投250億推升百萬中小企業AI轉型",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6606661",
+   "ts": "09/15 12:25"
+  },
+  {
+   "title": "黃仁勳轟「AI末日論」缺乏科學依據、RSI非「失控黑魔法」！川普力挺：AI是未來20至25年的石油",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6606143",
-   "ts": "09/14 21:49"
+   "url": "https://news.cnyes.com/news/id/6606617",
+   "ts": "09/15 12:10"
   },
   {
-   "title": "長波段投資人必看！半導體先衝、機器人接棒：信邦(3023) 原來大行情在這一年！？",
+   "title": "國泰00770最後申購日！今年多配一次 配息6元明除息",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6606045",
-   "ts": "09/14 20:30"
+   "url": "https://news.cnyes.com/news/id/6606666",
+   "ts": "09/15 11:49"
   },
   {
-   "title": "公股4金2銀前8月合賺1213億創新高！兆豐金穩坐獲利王 華南金年增近4成居冠",
+   "title": "〈焦點股〉美時前8月營收突破200億關卡躍居生技營收王 走揚收復5日線",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6605818",
-   "ts": "09/14 20:21"
-  },
-  {
-   "title": "環宇-KY受惠基板缺料逐步舒緩 營運有望逐季成長",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6606013",
-   "ts": "09/14 20:11"
-  },
-  {
-   "title": "「台股儀表板」要來了！林修銘揭三大核心項目：強化風險教育與數據透明",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6606007",
-   "ts": "09/14 20:06"
-  },
-  {
-   "title": "高檔震盪選股難！外資近一月瘋買主動式ETF 囤貨00403A、00988A雙冠",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6605996",
-   "ts": "09/14 20:01"
+   "url": "https://news.cnyes.com/news/id/6606645",
+   "ts": "09/15 11:45"
   }
  ],
  "inst": {
