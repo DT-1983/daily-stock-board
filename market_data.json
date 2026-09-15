@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-15 15:40",
+ "updated": "2026-09-15 20:37",
  "indices": [
   {
    "sym": "^GSPC",
@@ -46,85 +46,85 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/15",
-   "close": 31.85,
-   "chg_pct": 0.56
+   "close": 31.82,
+   "chg_pct": 0.44
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "09/14",
-   "close": 4.96,
+   "date": "09/15",
+   "close": 5.01,
    "fmt": "yield",
-   "chg_bp": -1.4
+   "chg_bp": 5.1
   }
  ],
  "news": [
   {
-   "title": "「零日到期選擇權」壓抑美股波動！高盛：Fed升息初期 兩大類股表現佳",
+   "title": "升級後故障照樣收錢？蘋果「軟體不保固」條款遭印度調查",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6606761",
-   "ts": "09/15 15:30"
+   "url": "https://news.cnyes.com/news/id/6607137",
+   "ts": "09/15 20:20"
   },
   {
-   "title": "〈房產〉7月房市預售量年增22%創今年新高 唯台中獨衰退年月雙減",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6606794",
-   "ts": "09/15 15:14"
-  },
-  {
-   "title": "英國要被一分為四？蘇格蘭、威爾斯、北愛爾蘭齊向倫敦施壓謀求自決",
+   "title": "鉅亨速報 - Factset 最新調查：SpaceX(SPCX-US)EPS預估上修至-0.02元，預估目標價為212.00元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6606612",
-   "ts": "09/15 15:10"
+   "url": "https://news.cnyes.com/news/id/6607214",
+   "ts": "09/15 20:15"
   },
   {
-   "title": "靜待Fed開會 外資再砍626億、三大法人聯手賣超791.24億元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6606805",
-   "ts": "09/15 15:01"
-  },
-  {
-   "title": "晶技8月營收14.15億元創同期新高 單月每股稅前賺0.82元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6606789",
-   "ts": "09/15 14:56"
-  },
-  {
-   "title": "日本國防支出擬提高至GDP 3.5% 日債繃緊神經",
+   "title": "鉅亨速報 - Factset 最新調查：Pilgrim`s Pride Corp.(PPC-US)EPS預估下修至2.36元，預估目標價為31.00元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6606763",
-   "ts": "09/15 14:40"
+   "url": "https://news.cnyes.com/news/id/6607213",
+   "ts": "09/15 20:15"
   },
   {
-   "title": "華擎子公司東擎首推英特爾次世代架構工業電腦 加速邊緣AI市場部署",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6606773",
-   "ts": "09/15 14:32"
-  },
-  {
-   "title": "〈台股盤後〉觀望氣氛濃！成交量創今年次低 下挫351點回測季線支撐",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6606764",
-   "ts": "09/15 14:28"
-  },
-  {
-   "title": "記憶體佔據半邊天！今年Q2全球半導體收入4250億美元創史高　全年估暴增五成至1.25兆",
+   "title": "鉅亨速報 - Factset 最新調查：蔚來汽車(NIO-US)EPS預估上修至-0.09元，預估目標價為5.94元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6606689",
-   "ts": "09/15 14:20"
+   "url": "https://news.cnyes.com/news/id/6607212",
+   "ts": "09/15 20:15"
   },
   {
-   "title": "拋售猛烈！10年期美債殖利率升破5% 創20年新高",
+   "title": "鉅亨速報 - Factset 最新調查：紐約時報NYT-US的目標價調升至78元，幅度約3.31%",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6606760",
-   "ts": "09/15 14:11"
+   "url": "https://news.cnyes.com/news/id/6607211",
+   "ts": "09/15 20:15"
+  },
+  {
+   "title": "能率亞洲現增案完成募集4.61億元 現增股9/18上櫃買賣",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6607194",
+   "ts": "09/15 20:01"
+  },
+  {
+   "title": "建構全台環島車充電路網 交通部：截至目前公共充電樁已逾1.6萬槍",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6607156",
+   "ts": "09/15 19:57"
+  },
+  {
+   "title": "永虹先進單日股價重挫逾6成遭停牌 原因有這些",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6607155",
+   "ts": "09/15 19:47"
+  },
+  {
+   "title": "桂盟擬辦理私募現金增資發行4500張 將引進策略投資人",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6607154",
+   "ts": "09/15 19:45"
+  },
+  {
+   "title": "佳邦庫藏股提前半個月達陣 斥1.53億元買回2000張均價76.56元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6607145",
+   "ts": "09/15 19:44"
   }
  ],
  "inst": {
   "date": "09/15",
-  "total_yi": -791.2,
+  "total_yi": -789.0,
   "foreign_yi": -627.0,
-  "trust_yi": -22.2
+  "trust_yi": -19.9
  }
 }
