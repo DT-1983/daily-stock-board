@@ -264,17 +264,25 @@ def held_universe():
     見下方那段註解——Leo 剛買的部位原本要等券商對帳來源更新才會進監控，
     中間那段空窗期它沒有任何失效條件在被檢查，而且看起來跟正常一樣。
 
-    ⚠️ 這個集合**刻意含同一檔的多種寫法**（2303 與 2303.TW、BRK-B 與 BRK.B），
-    因為它的用途是「比對進來的代號算不算持股」，多一種寫法只會讓比對更寬鬆。
-    但拿它來**數有幾檔**會高估——要數量請用 norm_ticker() 正規化後再去重。
+    🔴 2026-09-15 拿掉 `holdings.json`（手動清單）那個來源：它是 2026-09-03
+    之後就沒人再更新的靜態快照，聯集邏輯「任一來源說有就算持有」只會加不會減——
+    Leo 賣掉 HPE、今天賣掉 XYZ 之後，這份手動清單從沒被改過，兩檔就這樣永遠卡在
+    「持股」，被推進 Discord 持股密報（Leo 2026-09-15 抓到：「HPE 已經不在持股
+    為何還會推在持股密報」）。跟 2026-09-03 那次「手動清單漏了新買的」是同一個
+    形狀反過來（那次是該加沒加，這次是該減沒減），同屬 silent_failure_pattern
+    的「手動清單與自動來源並存 → 手動那份默默過期」。
+    移除前已核對：`trade_plan.load_holdings()`＋`trade_journal.jsonl`＋
+    `monitored_holdings()` 這三個活來源的聯集，完整涵蓋 holdings.json 原本 60 檔
+    （0 檔會因為拿掉它而漏掉監控）。這份檔案本身留著不刪（Leo 決定要不要清），
+    但沒有任何程式再讀它決定持股狀態了。
     """
-    holdings = set(_load_json("holdings.json", []) or [])
+    holdings = set()
     try:
         from trade_plan import load_holdings
         active, _legacy = load_holdings()
         holdings |= {r.get("ticker") for r in active if r.get("ticker")}
     except Exception as e:
-        print(f"trade_plan.load_holdings 讀取失敗（退回只用holdings.json）：{e}")
+        print(f"trade_plan.load_holdings 讀取失敗（held_universe 這輪會少算持股）：{e}")
     try:
         # 2026-08-31：小孩的券商帳戶持股也算「持有」——否則會被當成進場機會評估，
         # 語意完全錯（那些已經在手上了）。load_holdings 是風控母體不含小孩，

@@ -214,10 +214,24 @@ def ask_claude(hits, date):
 
 
 def run():
-    if not os.path.exists("holdings.json"):
-        print("找不到 holdings.json，跳過")
+    # 2026-09-15：改讀 investment_chief.held_universe()，不再讀 holdings.json——
+    # 那是 2026-09-03 之後沒人更新的手動清單，賣掉的股票（HPE/XYZ）會一直留著、
+    # 新買的又不會自動進去。held_universe() 是三個活來源（券商對帳/交易紀錄/
+    # 小孩監控母體）的聯集，同一份定義投資長那邊也在用，不會漂移。見 dev_log 2026-09-15。
+    from investment_chief import held_universe, norm_ticker
+    raw = held_universe()
+    # held_universe() 刻意同一檔留兩種寫法（2303 與 2303.TW）方便「in」比對，
+    # 但這裡是逐檔打 yfinance API，兩種都打會浪費一半的呼叫——去重，
+    # 台股优先留帶 .TW/.TWO 後綴的那個（yfinance 需要後綴才查得到）。
+    by_norm = {}
+    for tk in raw:
+        k = norm_ticker(tk)
+        if k not in by_norm or "." in tk:
+            by_norm[k] = tk
+    tickers = sorted(by_norm.values())
+    if not tickers:
+        print("held_universe() 是空的，跳過")
         return None
-    tickers = json.load(open("holdings.json", encoding="utf-8"))
     hits = scan(tickers)
     if not hits:
         print("今天持股無事件型新聞，不寫入（沒訊號不用硬湊一筆）")
