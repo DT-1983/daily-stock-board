@@ -1,5 +1,5 @@
 {
- "date": "2026-09-11",
+ "date": "2026-09-14",
  "period": 60,
  "mode": "daily",
  "chains": {
@@ -15,9 +15,9 @@
    "squeeze": {
     "on": true,
     "level": "極壓",
-    "momentum_up": false
+    "momentum_up": true
    },
-   "summary": "弱化象限(RS 100.43/動能 98.59)｜SuperTrend多頭｜極壓蓄力中，動能偏空"
+   "summary": "弱化象限(RS 100.43/動能 98.59)｜SuperTrend多頭｜極壓蓄力中，動能偏多"
   },
   "us:矽光子/光通訊": {
    "members_used": 8,
@@ -29,11 +29,11 @@
    "rrg_from": null,
    "supertrend": "多頭",
    "squeeze": {
-    "on": true,
-    "level": "極壓",
+    "on": false,
+    "level": null,
     "momentum_up": true
    },
-   "summary": "落後象限(RS 98.33/動能 98.56)｜SuperTrend多頭｜極壓蓄力中，動能偏多"
+   "summary": "落後象限(RS 98.33/動能 98.56)｜SuperTrend多頭｜未擠壓"
   },
   "us:低軌衛星": {
    "members_used": 7,
@@ -45,11 +45,11 @@
    "rrg_from": null,
    "supertrend": "空頭",
    "squeeze": {
-    "on": false,
-    "level": null,
+    "on": true,
+    "level": "微壓",
     "momentum_up": false
    },
-   "summary": "落後象限(RS 98.85/動能 98.65)｜SuperTrend空頭｜未擠壓"
+   "summary": "落後象限(RS 98.85/動能 98.65)｜SuperTrend空頭｜微壓蓄力中，動能偏空"
   },
   "us:太陽能": {
    "members_used": 8,
@@ -62,10 +62,10 @@
    "supertrend": "空頭",
    "squeeze": {
     "on": true,
-    "level": "微壓",
+    "level": "中壓",
     "momentum_up": false
    },
-   "summary": "落後象限(RS 98.9/動能 98.46)｜SuperTrend空頭｜微壓蓄力中，動能偏空"
+   "summary": "落後象限(RS 98.9/動能 98.46)｜SuperTrend空頭｜中壓蓄力中，動能偏空"
   },
   "us:Bitcoin→AI 機房": {
    "members_used": 8,
@@ -75,13 +75,13 @@
     "quadrant": "落後"
    },
    "rrg_from": null,
-   "supertrend": "多頭",
+   "supertrend": "空頭",
    "squeeze": {
-    "on": false,
-    "level": null,
-    "momentum_up": false
+    "on": true,
+    "level": "極壓",
+    "momentum_up": true
    },
-   "summary": "落後象限(RS 99.01/動能 98.61)｜SuperTrend多頭｜未擠壓"
+   "summary": "落後象限(RS 99.01/動能 98.61)｜SuperTrend空頭｜極壓蓄力中，動能偏多"
   },
   "us:AI 電力/核能": {
    "members_used": 7,
@@ -110,10 +110,10 @@
    "supertrend": "多頭",
    "squeeze": {
     "on": true,
-    "level": "中壓",
+    "level": "微壓",
     "momentum_up": false
    },
-   "summary": "落後象限(RS 99.8/動能 98.98)｜SuperTrend多頭｜中壓蓄力中，動能偏空"
+   "summary": "落後象限(RS 99.8/動能 98.98)｜SuperTrend多頭｜微壓蓄力中，動能偏空"
   },
   "us:玻璃基板/TGV": {
    "members_used": 6,
@@ -173,11 +173,11 @@
    "rrg_from": null,
    "supertrend": "多頭",
    "squeeze": {
-    "on": true,
-    "level": "微壓",
+    "on": false,
+    "level": null,
     "momentum_up": true
    },
-   "summary": "弱化象限(RS 101.54/動能 99.65)｜SuperTrend多頭｜微壓蓄力中，動能偏多"
+   "summary": "弱化象限(RS 101.54/動能 99.65)｜SuperTrend多頭｜未擠壓"
   },
   "tw:矽光子/光通訊": {
    "members_used": 8,
@@ -238,10 +238,10 @@
    "supertrend": "空頭",
    "squeeze": {
     "on": true,
-    "level": "中壓",
+    "level": "微壓",
     "momentum_up": false
    },
-   "summary": "落後象限(RS 99.18/動能 99.15)｜SuperTrend空頭｜中壓蓄力中，動能偏空"
+   "summary": "落後象限(RS 99.18/動能 99.15)｜SuperTrend空頭｜微壓蓄力中，動能偏空"
   },
   "tw:AI 電力/核能": {
    "members_used": 5,
@@ -270,10 +270,10 @@
    "supertrend": "多頭",
    "squeeze": {
     "on": true,
-    "level": "微壓",
-    "momentum_up": false
+    "level": "極壓",
+    "momentum_up": true
    },
-   "summary": "弱化象限(RS 100.52/動能 99.01)｜SuperTrend多頭｜微壓蓄力中，動能偏空"
+   "summary": "弱化象限(RS 100.52/動能 99.01)｜SuperTrend多頭｜極壓蓄力中，動能偏多"
   },
   "tw:AI 材料/被動元件": {
    "members_used": 8,
@@ -286,10 +286,10 @@
    "supertrend": "多頭",
    "squeeze": {
     "on": true,
-    "level": "微壓",
+    "level": "極壓",
     "momentum_up": true
    },
-   "summary": "弱化象限(RS 100.94/動能 99.16)｜SuperTrend多頭｜微壓蓄力中，動能偏多"
+   "summary": "弱化象限(RS 100.94/動能 99.16)｜SuperTrend多頭｜極壓蓄力中，動能偏多"
   },
   "tw:AI 電源/散熱": {
    "members_used": 6,
