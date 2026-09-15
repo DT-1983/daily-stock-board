@@ -2500,5 +2500,65 @@
     "industry": "Motor Vehicles",
     "exchange": "NASDAQ",
     "asof": "2026-09-14"
+  },
+  "4904": {
+    "sector": "Communications",
+    "industry": "Wireless Telecommunications",
+    "exchange": "TWSE",
+    "asof": "2026-09-15"
+  },
+  "6561": {
+    "sector": "Communications",
+    "industry": "Specialty Telecommunications",
+    "exchange": "TPEX",
+    "asof": "2026-09-15"
+  },
+  "6170": {
+    "sector": "Communications",
+    "industry": "Wireless Telecommunications",
+    "exchange": "TPEX",
+    "asof": "2026-09-15"
+  },
+  "KO": {
+    "sector": "Consumer Non-Durables",
+    "industry": "Beverages: Non-Alcoholic",
+    "exchange": "NYSE",
+    "asof": "2026-09-15"
+  },
+  "PM": {
+    "sector": "Consumer Non-Durables",
+    "industry": "Tobacco",
+    "exchange": "NYSE",
+    "asof": "2026-09-15"
+  },
+  "PEP": {
+    "sector": "Consumer Non-Durables",
+    "industry": "Food: Specialty/Candy",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-15"
+  },
+  "BUD": {
+    "sector": "Consumer Non-Durables",
+    "industry": "Beverages: Alcoholic",
+    "exchange": "NYSE",
+    "asof": "2026-09-15"
+  },
+  "UL": {
+    "sector": "Consumer Non-Durables",
+    "industry": "Household/Personal Care",
+    "exchange": "NYSE",
+    "asof": "2026-09-15"
+  },
+  "BTI": {
+    "sector": "Consumer Non-Durables",
+    "industry": "Tobacco",
+    "exchange": "NYSE",
+    "asof": "2026-09-15"
+  },
+  "MO": {
+    "sector": "Consumer Non-Durables",
+    "industry": "Tobacco",
+    "exchange": "NYSE",
+    "asof": "2026-09-15"
   }
 }
