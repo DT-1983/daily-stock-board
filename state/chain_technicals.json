@@ -1,5 +1,5 @@
 {
- "date": "2026-09-14",
+ "date": "2026-09-15",
  "period": 60,
  "mode": "daily",
  "chains": {
@@ -139,13 +139,13 @@
     "quadrant": "領先"
    },
    "rrg_from": null,
-   "supertrend": "多頭",
+   "supertrend": "空頭",
    "squeeze": {
     "on": false,
     "level": null,
-    "momentum_up": true
+    "momentum_up": false
    },
-   "summary": "領先象限(RS 102.11/動能 101.79)｜SuperTrend多頭｜未擠壓"
+   "summary": "領先象限(RS 102.11/動能 101.79)｜SuperTrend空頭｜未擠壓"
   },
   "us:AI 電源/散熱": {
    "members_used": 4,
@@ -191,7 +191,7 @@
    "squeeze": {
     "on": false,
     "level": null,
-    "momentum_up": true
+    "momentum_up": false
    },
    "summary": "領先象限(RS 101.66/動能 100.49)｜SuperTrend多頭｜未擠壓"
   },
@@ -206,10 +206,10 @@
    "supertrend": "多頭",
    "squeeze": {
     "on": true,
-    "level": "中壓",
+    "level": "微壓",
     "momentum_up": false
    },
-   "summary": "領先象限(RS 100.89/動能 100.15)｜SuperTrend多頭｜中壓蓄力中，動能偏空"
+   "summary": "領先象限(RS 100.89/動能 100.15)｜SuperTrend多頭｜微壓蓄力中，動能偏空"
   },
   "tw:低軌衛星": {
    "members_used": 6,
@@ -254,10 +254,10 @@
    "supertrend": "多頭",
    "squeeze": {
     "on": true,
-    "level": "極壓",
+    "level": "微壓",
     "momentum_up": false
    },
-   "summary": "領先象限(RS 101.01/動能 101.76)｜SuperTrend多頭｜極壓蓄力中，動能偏空"
+   "summary": "領先象限(RS 101.01/動能 101.76)｜SuperTrend多頭｜微壓蓄力中，動能偏空"
   },
   "tw:玻璃基板/TGV": {
    "members_used": 8,
@@ -271,9 +271,9 @@
    "squeeze": {
     "on": true,
     "level": "極壓",
-    "momentum_up": true
+    "momentum_up": false
    },
-   "summary": "弱化象限(RS 100.52/動能 99.01)｜SuperTrend多頭｜極壓蓄力中，動能偏多"
+   "summary": "弱化象限(RS 100.52/動能 99.01)｜SuperTrend多頭｜極壓蓄力中，動能偏空"
   },
   "tw:AI 材料/被動元件": {
    "members_used": 8,
@@ -286,10 +286,10 @@
    "supertrend": "多頭",
    "squeeze": {
     "on": true,
-    "level": "極壓",
-    "momentum_up": true
+    "level": "微壓",
+    "momentum_up": false
    },
-   "summary": "弱化象限(RS 100.94/動能 99.16)｜SuperTrend多頭｜極壓蓄力中，動能偏多"
+   "summary": "弱化象限(RS 100.94/動能 99.16)｜SuperTrend多頭｜微壓蓄力中，動能偏空"
   },
   "tw:AI 電源/散熱": {
    "members_used": 6,
