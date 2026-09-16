@@ -1,124 +1,124 @@
 {
- "updated": "2026-09-15 20:37",
+ "updated": "2026-09-16 08:47",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "09/14",
-   "close": 7619.98,
-   "chg_pct": -0.48
+   "date": "09/15",
+   "close": 7585.73,
+   "chg_pct": -0.45
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "09/14",
-   "close": 26186.41,
-   "chg_pct": -0.56
+   "date": "09/15",
+   "close": 25981.57,
+   "chg_pct": -0.78
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "09/14",
-   "close": 52421.2,
-   "chg_pct": -0.29
+   "date": "09/15",
+   "close": 52093.11,
+   "chg_pct": -0.63
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "09/14",
-   "close": 11131.28,
-   "chg_pct": -5.86
+   "date": "09/15",
+   "close": 11175.55,
+   "chg_pct": 0.4
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/15",
-   "close": 45511.49,
-   "chg_pct": -0.77
+   "date": "09/14",
+   "close": 45862.52,
+   "chg_pct": -0.7
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/15",
-   "close": 31.82,
-   "chg_pct": 0.44
+   "date": "09/16",
+   "close": 31.86,
+   "chg_pct": 0.45
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
    "date": "09/15",
-   "close": 5.01,
+   "close": 5.0,
    "fmt": "yield",
-   "chg_bp": 5.1
+   "chg_bp": 3.5
   }
  ],
  "news": [
   {
-   "title": "升級後故障照樣收錢？蘋果「軟體不保固」條款遭印度調查",
+   "title": "投資人主動送錢！OpenAI傳洽談新募資 估值衝上1.2兆美元大增41%",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6607137",
-   "ts": "09/15 20:20"
+   "url": "https://news.cnyes.com/news/id/6607504",
+   "ts": "09/16 08:40"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：SpaceX(SPCX-US)EPS預估上修至-0.02元，預估目標價為212.00元",
+   "title": "美商應材深化印度半導體佈局3.75億美元擴建設備製造、研發基地",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6607214",
-   "ts": "09/15 20:15"
+   "url": "https://news.cnyes.com/news/id/6607575",
+   "ts": "09/16 08:30"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：Pilgrim`s Pride Corp.(PPC-US)EPS預估下修至2.36元，預估目標價為31.00元",
+   "title": "油價飆逾4%、美債殖利率升破5%美股全面收黑靜待聯準會升息決策",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6607213",
-   "ts": "09/15 20:15"
+   "url": "https://news.cnyes.com/news/id/6607572",
+   "ts": "09/16 08:30"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：蔚來汽車(NIO-US)EPS預估上修至-0.09元，預估目標價為5.94元",
+   "title": "美國消費韌性背後：加薪與通膨陷入拉鋸戰 而通膨正在勝出",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6607212",
-   "ts": "09/15 20:15"
+   "url": "https://news.cnyes.com/news/id/6607463",
+   "ts": "09/16 08:30"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：紐約時報NYT-US的目標價調升至78元，幅度約3.31%",
+   "title": "加密貨幣法案闖關美國參議院失敗！比特幣跌超5%創六月來最大跌幅 以太幣崩逾8.3%",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6607211",
-   "ts": "09/15 20:15"
+   "url": "https://news.cnyes.com/news/id/6607513",
+   "ts": "09/16 08:20"
   },
   {
-   "title": "能率亞洲現增案完成募集4.61億元 現增股9/18上櫃買賣",
+   "title": "鉅亨速報 - Factset 最新調查：國巨(2327-TW)EPS預估下修至19.83元，預估目標價為1125元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6607194",
-   "ts": "09/15 20:01"
+   "url": "https://news.cnyes.com/news/id/6607543",
+   "ts": "09/16 08:10"
   },
   {
-   "title": "建構全台環島車充電路網 交通部：截至目前公共充電樁已逾1.6萬槍",
+   "title": "鉅亨速報 - Factset 最新調查：文曄(3036-TW)EPS預估下修至25.8元，預估目標價為300元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6607156",
-   "ts": "09/15 19:57"
+   "url": "https://news.cnyes.com/news/id/6607542",
+   "ts": "09/16 08:10"
   },
   {
-   "title": "永虹先進單日股價重挫逾6成遭停牌 原因有這些",
+   "title": "鉅亨速報 - Factset 最新調查：全新(2455-TW)目標價調升至512.5元，幅度約7.33%",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6607155",
-   "ts": "09/15 19:47"
+   "url": "https://news.cnyes.com/news/id/6607541",
+   "ts": "09/16 08:10"
   },
   {
-   "title": "桂盟擬辦理私募現金增資發行4500張 將引進策略投資人",
+   "title": "營收速報 - 2026年9月16日台股中小型公司8月營收一覽（新增25家）",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6607154",
-   "ts": "09/15 19:45"
+   "url": "https://news.cnyes.com/news/id/6607525",
+   "ts": "09/16 07:55"
   },
   {
-   "title": "佳邦庫藏股提前半個月達陣 斥1.53億元買回2000張均價76.56元",
+   "title": "營收速報 - 2026年9月16日台股大型公司8月營收一覽（新增15家）",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6607145",
-   "ts": "09/15 19:44"
+   "url": "https://news.cnyes.com/news/id/6607524",
+   "ts": "09/16 07:55"
   }
  ],
  "inst": {
