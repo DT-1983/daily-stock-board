@@ -187,3 +187,6 @@ video_transcript.py
 # 跟 code_is_data_privacy 那條規則是同一件事，比 video_transcript.py 更嚴重，
 # 絕對不能進公開 repo。obis 私人區的 HTML 產出物才是給 Leo 看的那份。
 bulk_shipping_report.py
+
+# 2026-09-16：同上一條，這支也把統一投顧的個股評論直接寫死在程式碼裡。
+revenue_report.py
