@@ -135,6 +135,11 @@ state/target_changes_today.json
 # 跟 advisor_reports.json 同一個理由不能進公開 repo；revenue/yoy/mom 數字本身
 # 是公開資訊，但整份檔案混在一起，不拆開處理。
 state/monthly_revenue.json
+
+# 產業筆記登錄簿（industry_notes.py，2026-09-16）：目前收的都是公開社群貼文
+# 整理出來的事實，但跟 advisor_reports.json 同一個「輸入來源可能之後換成
+# 機密內容」的道理一樣先擋起來，不要之後漏改這裡才驚覺已經進公開 repo。
+state/industry_notes.json
 bt_sector_gics.json
 
 # 每週總體報告的週快照（2026-09-14）。理由跟上面兩個不同——這份**不是**敏感內容

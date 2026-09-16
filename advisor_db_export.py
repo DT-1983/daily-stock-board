@@ -36,6 +36,8 @@ CONDITIONS_PATH = "state/thesis_conditions.json"
 # 這是第一種「查過的事實」資料源，之後同類型的（不管什麼主題）都照這個
 # 模式加：獨立存一份 state/*.json，這裡多讀一份、render() 多一段。
 MONTHLY_REVENUE_PATH = "state/monthly_revenue.json"
+# 2026-09-16：第三種事實來源——industry-note-intake skill 那套一次性產業筆記
+# （社群貼文/券商影音整理）查到的個股事實，見 industry_notes.py。
 
 STATUS_ICON = {"triggered": "🔴已觸發", "active": "⏳追蹤中"}
 
@@ -147,7 +149,20 @@ def _revenue_block(rev):
     return "\n".join(out) + "\n"
 
 
-def render(tk, verdict, cond_entry, reports=None, revenue=None):
+def _industry_notes_block(notes):
+    """一次性產業筆記查到的個股事實（2026-09-16，見檔頭）。可以有多筆——
+    同一檔股票在不同主題的筆記各出現一次都留著，不像月營收只留最新快照。"""
+    if not notes:
+        return None
+    out = []
+    for n in sorted(notes, key=lambda x: x.get("date") or "", reverse=True):
+        out.append(f"- **{_safe(n.get('topic'))}**　{n.get('date','?')}")
+        out.append(f"  {_safe(n.get('summary'))}")
+        out.append(f"  （來源：{_safe(n.get('source'))}；完整報告：{_safe(n.get('report_path'))}）")
+    return "\n".join(out) + "\n"
+
+
+def render(tk, verdict, cond_entry, reports=None, revenue=None, notes=None):
     name = tkname(tk)
     held = bool((verdict or {}).get("held") or (cond_entry or {}).get("held")
                 or any(r.get("_manual_held") for r in (reports or [])))
@@ -168,6 +183,11 @@ def render(tk, verdict, cond_entry, reports=None, revenue=None):
         out.append("## 月營收（事實，FinMind 官方申報數字）")
         out.append("")
         out.append(rb)
+    nb = _industry_notes_block(notes)
+    if nb:
+        out.append("## 相關產業筆記（事實，社群貼文/券商影音整理，FinMind核對過）")
+        out.append("")
+        out.append(nb)
     out.append("## 投資長判斷（AI，可能還沒輪到這檔——見上面「最後更新」）")
     out.append("")
     va = (verdict or {}).get("trend_angle")
@@ -233,14 +253,17 @@ def main():
     verdicts, conditions = _dedupe(verdicts, conditions)
     reports = _reports_by_ticker()
     revenues = _revenue_by_ticker()
-    # 2026-09-16：verdicts/conditions/reports/revenues 現在全部都是用
+    import industry_notes
+    notes = industry_notes.by_ticker()
+    # 2026-09-16：verdicts/conditions/reports/revenues/notes 現在全部都是用
     # norm_ticker() 正規化後的代號當 key（_dedupe 那邊已經統一），直接取聯集，
     # **不用再挑一個「顯示用原始代號」**——那正是昨天分裂成兩個檔案的根因
     # （挑代表這件事本身就會因為兩次執行資料不同而選到不同結果）。
     # 正規化後的代號本身就拿來當檔名/查表用，穩定、不會因為執行順序改變。
-    tickers = sorted(set(verdicts) | set(conditions) | set(reports) | set(revenues))
+    tickers = sorted(set(verdicts) | set(conditions) | set(reports)
+                     | set(revenues) | set(notes))
     print(f"軍師資料庫：{len(tickers)} 檔（verdicts {len(verdicts)} / conditions {len(conditions)} "
-         f"/ 券商目標價 {len(reports)} / 月營收 {len(revenues)}）")
+         f"/ 券商目標價 {len(reports)} / 月營收 {len(revenues)} / 產業筆記 {len(notes)}）")
 
     if not op.available():
         print("obis 不在這台機器上，略過（跟其他 obis 輸出一樣的行為）")
@@ -252,18 +275,19 @@ def main():
         c = conditions.get(tk)
         rs = reports.get(tk)
         rv = revenues.get(tk)
+        nt = notes.get(tk)
         held = bool((v or {}).get("held") or (c or {}).get("held"))
         name = tkname(tk)
         fn = (f"{tk}_{name.split(' ', 1)[1]}.md" if " " in name else f"{tk}.md").replace("/", "_")
         try:
-            content = render(tk, v, c, rs, rv)
+            content = render(tk, v, c, rs, rv, nt)
             io.open(op.advisor_db(fn), "w", encoding="utf-8").write(content)
         except Exception as e:                                  # noqa: BLE001
             print(f"  [WARN] {tk} 產生失敗：{str(e)[:120]}")
             continue
         j = (v or {}).get("trend_angle", {}).get("judgment", "")
         icon = J_ICON.get(j, "⚪") if v else "📄"
-        tag = j if v else "（只有券商目標價，投資長還沒判斷）"
+        tag = j if v else "（只有事實資料，投資長還沒判斷）"
         index.append(f"- [{name}]({fn})　{'🟢持有' if held else ''}{icon}{tag}")
 
     io.open(op.advisor_db("_索引.md"), "w", encoding="utf-8").write("\n".join(index))
