@@ -1,55 +1,146 @@
 {
-"date": "2026-09-15",
+"date": "2026-09-16",
 "flips_hold": [],
 "flips_watch": [
 {
-"code": "CEG",
-"name": "",
+"code": "3450",
+"name": "聯鈞",
 "word": "🟢→🔴 翻空",
 "dir": -1
-},
-{
-"code": "CWEN",
-"name": "",
-"word": "🟢→🔴 翻空",
-"dir": -1
-},
-{
-"code": "FCX",
-"name": "",
-"word": "🟢→🔴 翻空",
-"dir": -1
-},
-{
-"code": "GLW",
-"name": "",
-"word": "🟢→🔴 翻空",
-"dir": -1
-},
-{
-"code": "SCCO",
-"name": "",
-"word": "🟢→🔴 翻空",
-"dir": -1
-},
-{
-"code": "XYZ",
-"name": "",
-"word": "🟢→🔴 翻空",
-"dir": -1
-},
-{
-"code": "2314",
-"name": "台揚",
-"word": "🔴→🟢 翻多",
-"dir": 1
 },
 {
 "code": "4979",
 "name": "華星光",
+"word": "🔴→🟢 翻多",
+"dir": 1
+},
+{
+"code": "6442",
+"name": "",
 "word": "🟢→🔴 翻空",
 "dir": -1
 }
 ],
-"ai_alerts": []
+"ai_alerts": [
+{
+"chain": "機器人",
+"market": "US",
+"sig": "🟢",
+"code": "CGNX",
+"name": "Cognex Corp",
+"reason": "觀望→買進"
+},
+{
+"chain": "關鍵金屬/原物料",
+"market": "US",
+"sig": "🔴",
+"code": "FCX",
+"name": "Freeport-McMoRan, Inc.",
+"reason": "觀望→賣出"
+},
+{
+"chain": "關鍵金屬/原物料",
+"market": "US",
+"sig": "🔴",
+"code": "PAAS",
+"name": "Pan American Silver Corp.",
+"reason": "觀望→賣出"
+},
+{
+"chain": "太陽能",
+"market": "US",
+"sig": "🔴",
+"code": "CWEN",
+"name": "Clearway Energy Inc Class C",
+"reason": "觀望→賣出"
+},
+{
+"chain": "矽光子/光通訊",
+"market": "US",
+"sig": "🔴",
+"code": "AVGO",
+"name": "Broadcom Inc",
+"reason": "觀望→賣出"
+},
+{
+"chain": "低軌衛星",
+"market": "US",
+"sig": "🔴",
+"code": "ASTS",
+"name": "AST SpaceMobile Inc Ordinary Shares - Class A",
+"reason": "觀望→賣出"
+},
+{
+"chain": "太陽能",
+"market": "US",
+"sig": "🔴",
+"code": "NXT",
+"name": "Nextpower Inc Class A",
+"reason": "觀望→賣出"
+},
+{
+"chain": "太陽能",
+"market": "US",
+"sig": "🔴",
+"code": "HASI",
+"name": "HA Sustainable Infrastructure Capital Inc",
+"reason": "觀望→賣出"
+},
+{
+"chain": "AI 電力/核能",
+"market": "US",
+"sig": "🔴",
+"code": "HUBB",
+"name": "Hubbell Inc",
+"reason": "觀望→賣出"
+},
+{
+"chain": "玻璃基板/TGV",
+"market": "US",
+"sig": "🔴",
+"code": "AMAT",
+"name": "Applied Materials Inc",
+"reason": "觀望→賣出"
+},
+{
+"chain": "關鍵金屬/原物料",
+"market": "US",
+"sig": "🔴",
+"code": "CCJ",
+"name": "Cameco Corporation",
+"reason": "觀望→賣出"
+},
+{
+"chain": "太陽能",
+"market": "US",
+"sig": "🔴",
+"code": "PLUG",
+"name": "Plug Power Inc",
+"reason": "觀望→賣出"
+},
+{
+"chain": "Bitcoin→AI 機房",
+"market": "US",
+"sig": "🔴",
+"code": "APLD",
+"name": "Applied Digital Corp",
+"reason": "觀望→賣出"
+},
+{
+"chain": "AI 伺服器",
+"market": "TW",
+"sig": "🔴",
+"code": "2368",
+"name": "金像電",
+"reason": "觀望→賣出"
+},
+{
+"chain": "AI 材料/被動元件",
+"market": "TW",
+"sig": "🔴",
+"code": "8358",
+"name": "CO-TECH DEVELOPMENT CORP",
+"reason": "觀望→賣出"
+}
+]
 }
