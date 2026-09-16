@@ -561,15 +561,31 @@ def sec5_watch(date):
                 lines.append(f"　　📄 {tk} {q}｜{str(it.get('value',''))[:60]}")
         except Exception:                                   # noqa: BLE001
             pass
-    # 投顧報告失效線（2026-09-03，路線圖第 5 項）。零成本：只比對現價，
-    # 資料由 advisor_reports.check() 寫進 state/advisor_reports_today.json。
+    if len(lines) == 1:
+        lines.append("近10天無排定事件/財報。")
+    return lines
+
+
+def sec_reports_today(date):
+    """今日報告更新——目標價異動＋新解析投顧報告，只列有變的（2026-09-16 Leo：
+    「目標價、報告html摘要推送到discord，只要摘要更新了什麼就好，要細目我上
+    Google drive看就好」）。原本 advisor_reports/target_changes 的摘要是掛在
+    ⑤近日要看底下（那段主軸是「未來的行事曆」），改獨立成一段——這兩件事問的
+    是「今天發生了什麼」，跟「接下來要注意什麼」是不同方向，混在一起會找不到。
+    公開／私人兩邊都掛（不像其他段落分開寫，這段兩邊內容完全一樣，直接共用）。"""
+    lines = ["**🆕 今日報告更新**"]
+    # 投顧報告失效線（2026-09-03，路線圖第 5 項）。零成本：只比對現價。
     # 全健康時也給一行計數——沒有那行的話「健康」跟「壞掉」長得一樣
     # （同 silent_failure_pattern：沒被檢查 ≠ 檢查過沒事）。
     try:
         import advisor_reports
         lines += advisor_reports.summary_lines()
+        # 這跟上面那行不一樣：上面問「舊報告有沒有失效」，這裡問「今天有沒有
+        # 新報告進來」（影音研究報告那批大多是第一次出現的股票，不會被失效線
+        # 或 target_changes 的異動邏輯抓到，因為兩者都需要「舊值」才能比對）。
+        lines += advisor_reports.new_today_lines(date)
     except Exception as e:                                  # noqa: BLE001
-        lines.append(f"・📑 投顧報告失效線讀取失敗：{str(e)[:60]}")
+        lines.append(f"・📑 投顧報告讀取失敗：{str(e)[:60]}")
     # 券商目標價／評等異動（2026-09-03，Leo：「做異動提醒」）。
     # **只推 target_changes.TRUSTED 名單內的券商 ∩ 我們母體內**——Leo 明講
     # 那份異動表裡他只信高盛。其餘只給一行計數，數字未經覆核不進判斷。
@@ -579,7 +595,7 @@ def sec5_watch(date):
     except Exception as e:                                  # noqa: BLE001
         lines.append(f"・🎯 券商異動讀取失敗：{str(e)[:60]}")
     if len(lines) == 1:
-        lines.append("近10天無排定事件/財報。")
+        return []
     return lines
 
 
@@ -854,13 +870,14 @@ def compose(date=None, scope="public", part="all"):
 
     if priv:
         research = [sec2_signals(date, "private"), sec_setup(date, "private"),
-                    sec4_research(notes, "private"), sec_thesis(date)]
+                    sec4_research(notes, "private"), sec_reports_today(date),
+                    sec_thesis(date)]
         chief = [sec3_chief(date, "private")]
     else:
         research = [sec1_market(notes), sec2_signals(date, "public"),
                     sec_rrg_turn(date, "public"), sec_setup(date, "public"),
                     sec4_research(notes, "public", date), sec5_watch(date),
-                    sec_thesis(date, "public")]
+                    sec_reports_today(date), sec_thesis(date, "public")]
         chief = [sec3_chief(date, "public")]
 
     if part == "research":
