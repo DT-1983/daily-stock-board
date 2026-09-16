@@ -1,43 +1,43 @@
 {
   "1227": {
-    "price": 28.15,
+    "price": 28.05,
     "cheap": 14.19,
     "expensive": 43.41,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "TW",
     "name": "佳格",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "1733": {
-    "price": 29.9,
+    "price": 30.25,
     "cheap": 17.57,
     "expensive": 53.75,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "TW",
     "name": "五鼎",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "2105": {
-    "price": 30.0,
+    "price": 29.9,
     "cheap": 16.89,
     "expensive": 51.67,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "TW",
     "name": "正新",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "2317": {
-    "price": 246.5,
+    "price": 248.0,
     "cheap": 130.58,
     "expensive": 399.44,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "TW",
     "name": "鴻海",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "2412": {
     "price": 143.5,
@@ -47,606 +47,606 @@
     "eps_basis": "changli_normalized",
     "market": "TW",
     "name": "中華電",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "2454": {
-    "price": 4430.0,
+    "price": 4530.0,
     "cheap": 628.0,
     "expensive": 1921.08,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "TW",
     "name": "聯發科",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "3017": {
-    "price": 3115.0,
+    "price": 3175.0,
     "cheap": 487.83,
     "expensive": 1492.28,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "TW",
     "name": "奇鋐",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "3045": {
-    "price": 124.0,
+    "price": 124.5,
     "cheap": 49.0,
     "expensive": 149.9,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "TW",
     "name": "台灣大",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "6592": {
-    "price": 59.7,
+    "price": 59.6,
     "cheap": 109.01,
     "expensive": 333.45,
     "icon": "🟢",
     "eps_basis": "changli_normalized",
     "market": "TW",
     "name": "和潤企業",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "AAOI": {
-    "price": 95.29,
+    "price": 96.74,
     "cheap": 45.13,
     "expensive": 138.06,
     "icon": "🟡",
     "eps_basis": "forward",
     "market": "US",
     "name": "Applied Optoelectronics, Inc.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "AAPL": {
-    "price": 331.34,
+    "price": 332.41,
     "cheap": 76.79,
     "expensive": 234.89,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Apple Inc.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "ACGL": {
-    "price": 97.04,
+    "price": 96.97,
     "cheap": 129.38,
     "expensive": 395.77,
     "icon": "🟢",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Arch Capital Group Ltd.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "AER": {
-    "price": 138.32,
+    "price": 142.21,
     "cheap": 159.1,
     "expensive": 486.68,
     "icon": "🟢",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "AerCap Holdings N.V.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "AES": {
-    "price": 14.8,
+    "price": 14.81,
     "cheap": 22.02,
     "expensive": 67.36,
     "icon": "🟢",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "The AES Corporation",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "AGO": {
-    "price": 71.36,
+    "price": 71.29,
     "cheap": 91.81,
     "expensive": 280.84,
     "icon": "🟢",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Assured Guaranty Ltd.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "ALL": {
-    "price": 257.21,
+    "price": 254.85,
     "cheap": 351.67,
     "expensive": 1075.76,
     "icon": "🟢",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "The Allstate Corporation",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "AMD": {
-    "price": 504.2,
+    "price": 512.5,
     "cheap": 25.2,
     "expensive": 77.09,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Advanced Micro Devices, Inc.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "API": {
-    "price": 3.96,
+    "price": 4.0,
     "cheap": 0.98,
     "expensive": 3.0,
     "icon": "🔴",
     "eps_basis": "ttm_fallback",
     "market": "US",
     "name": "Agora, Inc.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "BA": {
-    "price": 209.69,
+    "price": 201.96,
     "cheap": 40.11,
     "expensive": 122.71,
     "icon": "🔴",
     "eps_basis": "forward",
     "market": "US",
     "name": "The Boeing Company",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "BAC": {
-    "price": 59.52,
+    "price": 57.9,
     "cheap": 42.14,
     "expensive": 128.92,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Bank of America Corporation",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "BAYRY": {
-    "price": 14.03,
+    "price": 14.02,
     "cheap": 3.9,
     "expensive": 11.92,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Bayer Aktiengesellschaft",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "BCS": {
-    "price": 25.44,
+    "price": 25.34,
     "cheap": 23.79,
     "expensive": 72.78,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Barclays PLC",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "BEN": {
-    "price": 33.29,
+    "price": 32.72,
     "cheap": 14.81,
     "expensive": 45.3,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Franklin Templeton Inc.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "BNY": {
-    "price": 154.67,
+    "price": 153.47,
     "cheap": 81.09,
     "expensive": 248.05,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "The Bank of New York Mellon Corporation",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "BWA": {
-    "price": 62.49,
+    "price": 62.27,
     "cheap": 40.47,
     "expensive": 123.79,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "BorgWarner Inc.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "C": {
-    "price": 136.17,
+    "price": 132.95,
     "cheap": 94.92,
     "expensive": 290.35,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Citigroup Inc.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "CCL": {
-    "price": 22.11,
+    "price": 22.35,
     "cheap": 20.23,
     "expensive": 61.88,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Carnival Corporation Ltd.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "CI": {
-    "price": 288.9,
+    "price": 280.45,
     "cheap": 194.71,
     "expensive": 595.62,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "The Cigna Group",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "CICHY": {
-    "price": 24.48,
-    "cheap": 38.43,
-    "expensive": 117.55,
+    "price": 24.32,
+    "cheap": 38.53,
+    "expensive": 117.85,
     "icon": "🟢",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "China Construction Bank Corporation",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "CNH": {
-    "price": 14.0,
+    "price": 13.52,
     "cheap": 5.59,
     "expensive": 17.09,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "CNH Industrial N.V.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "COHR": {
-    "price": 271.17,
+    "price": 289.93,
     "cheap": 32.14,
     "expensive": 98.3,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Coherent Corp.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "CPA": {
-    "price": 125.76,
+    "price": 128.21,
     "cheap": 213.28,
     "expensive": 652.43,
     "icon": "🟢",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Copa Holdings, S.A.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "CVSA": {
-    "price": 126.28,
+    "price": 127.2,
     "cheap": 74.89,
     "expensive": 229.09,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Covista Inc.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "DNKEY": {
-    "price": 28.92,
+    "price": 28.51,
     "cheap": 21.74,
     "expensive": 66.49,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Danske Bank A/S",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "FNF": {
-    "price": 43.62,
+    "price": 43.02,
     "cheap": 26.05,
     "expensive": 79.7,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Fidelity National Financial, Inc.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "GLW": {
-    "price": 143.57,
+    "price": 144.16,
     "cheap": 16.29,
     "expensive": 49.84,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Corning Incorporated",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "GOOG": {
-    "price": 341.43,
+    "price": 339.36,
     "cheap": 198.76,
     "expensive": 608.0,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Alphabet Inc.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "GSK": {
-    "price": 50.01,
+    "price": 50.29,
     "cheap": 33.91,
     "expensive": 103.72,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "GSK plc",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "HENKY": {
-    "price": 19.41,
-    "cheap": 15.67,
-    "expensive": 47.92,
+    "price": 19.49,
+    "cheap": 15.63,
+    "expensive": 47.82,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Henkel AG & Co. KGaA",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "HIG": {
-    "price": 136.03,
+    "price": 134.94,
     "cheap": 133.7,
     "expensive": 408.99,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "The Hartford Insurance Group, Inc.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "HSBC": {
-    "price": 102.22,
-    "cheap": 78.14,
-    "expensive": 239.03,
+    "price": 100.84,
+    "cheap": 78.16,
+    "expensive": 239.09,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "HSBC Holdings plc",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "ITOCY": {
-    "price": 15.0,
-    "cheap": 4.65,
-    "expensive": 14.23,
+    "price": 14.88,
+    "cheap": 4.6,
+    "expensive": 14.06,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "ITOCHU Corporation",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "IX": {
-    "price": 39.69,
-    "cheap": 19.8,
-    "expensive": 60.58,
+    "price": 39.59,
+    "cheap": 19.64,
+    "expensive": 60.09,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "ORIX Corporation",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "JPM": {
-    "price": 352.49,
+    "price": 348.92,
     "cheap": 211.56,
     "expensive": 647.15,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "JPMorgan Chase & Co.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "KNBWY": {
-    "price": 18.25,
-    "cheap": 7.93,
-    "expensive": 24.25,
+    "price": 18.32,
+    "cheap": 7.88,
+    "expensive": 24.1,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Kirin Holdings Company, Limited",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "KR": {
-    "price": 62.25,
+    "price": 61.14,
     "cheap": 22.36,
     "expensive": 68.41,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "The Kroger Co.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "LH": {
-    "price": 323.97,
+    "price": 324.51,
     "cheap": 122.5,
     "expensive": 374.72,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Labcorp Holdings Inc.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "LITE": {
-    "price": 838.96,
+    "price": 919.4,
     "cheap": 41.14,
     "expensive": 125.85,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Lumentum Holdings Inc.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "MCK": {
-    "price": 899.56,
+    "price": 887.29,
     "cheap": 464.4,
     "expensive": 1160.99,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "McKesson Corporation",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "MRVL": {
-    "price": 221.7,
+    "price": 229.71,
     "cheap": 20.68,
     "expensive": 63.27,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Marvell Technology, Inc.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "MSFT": {
-    "price": 497.12,
+    "price": 490.3,
     "cheap": 159.86,
     "expensive": 489.03,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Microsoft Corporation",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "MU": {
-    "price": 927.6,
+    "price": 926.55,
     "cheap": 202.43,
     "expensive": 619.24,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Micron Technology, Inc.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "NVDA": {
-    "price": 212.17,
+    "price": 213.9,
     "cheap": 52.44,
     "expensive": 160.42,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "NVIDIA Corporation",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "PAA": {
-    "price": 25.77,
+    "price": 25.42,
     "cheap": 13.01,
     "expensive": 39.81,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Plains All American Pipeline, L.P.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "PHIN": {
-    "price": 61.5,
+    "price": 61.15,
     "cheap": 48.27,
     "expensive": 147.65,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "PHINIA Inc.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "PHM": {
-    "price": 119.47,
+    "price": 117.55,
     "cheap": 118.26,
     "expensive": 361.75,
-    "icon": "🟡",
+    "icon": "🟢",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "PulteGroup, Inc.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "SPCX": {
-    "price": 143.49,
+    "price": 150.88,
     "cheap": 17.1,
     "expensive": 52.29,
     "icon": "🔴",
     "eps_basis": "forward",
     "market": "US",
     "name": "Space Exploration Technologies Corp.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "SSUMY": {
-    "price": 11.47,
-    "cheap": 4.73,
-    "expensive": 14.46,
+    "price": 11.51,
+    "cheap": 4.67,
+    "expensive": 14.29,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Sumitomo Corporation",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "TFC": {
-    "price": 50.46,
+    "price": 48.44,
     "cheap": 45.0,
     "expensive": 137.66,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Truist Financial Corporation",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "THC": {
-    "price": 260.85,
+    "price": 265.78,
     "cheap": 206.82,
     "expensive": 632.65,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Tenet Healthcare Corporation",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "TM": {
-    "price": 195.47,
-    "cheap": 218.97,
-    "expensive": 669.82,
+    "price": 192.21,
+    "cheap": 217.26,
+    "expensive": 664.6,
     "icon": "🟢",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Toyota Motor Corporation",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "TSLA": {
-    "price": 356.58,
+    "price": 358.08,
     "cheap": 12.88,
     "expensive": 39.41,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Tesla, Inc.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "TSM": {
-    "price": 413.75,
-    "cheap": 103.85,
-    "expensive": 317.69,
+    "price": 417.72,
+    "cheap": 103.78,
+    "expensive": 317.45,
     "icon": "🔴",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Taiwan Semiconductor Manufacturing Company Limited",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "UHS": {
-    "price": 176.85,
+    "price": 181.21,
     "cheap": 265.22,
     "expensive": 811.31,
     "icon": "🟢",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Universal Health Services, Inc.",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   },
   "UNM": {
-    "price": 95.88,
+    "price": 94.82,
     "cheap": 55.11,
     "expensive": 168.58,
     "icon": "🟡",
     "eps_basis": "changli_normalized",
     "market": "US",
     "name": "Unum Group",
-    "updated_at": "2026-09-16 06:27"
+    "updated_at": "2026-09-17 06:27"
   }
 }
