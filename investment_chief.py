@@ -473,6 +473,23 @@ def today_tickers():
     except Exception as e:                                  # noqa: BLE001
         print(f"里程碑失效檢查失敗（不影響其他觸發）：{e}")
 
+    # 今天新解析的投顧報告（不分持股與否，2026-09-16 Leo：「新增目標價自動變
+    # 觸發事件」）。原本這裡完全沒有這個來源——advisor_reports.py 把目標價寫進
+    # 登錄簿只是「記下來」，不代表投資長會去看；今天手動登記裕民/新興/慧洋等
+    # 7 檔（都不是持股）就撞到這個洞，登記了但投資長從沒判斷過、軍師資料庫裡
+    # 也沒有這幾檔。跟「巴菲特清單到俗價」是同一種缺口（本來就有的觸發源清單
+    # 漏了一種「有新資料進來」的狀況）。
+    try:
+        import advisor_reports
+        store = advisor_reports._load(advisor_reports.STORE, {})
+        for r in store.values():
+            if (r.get("_parsed") == date and r.get("ticker")
+                    and not r.get("_notreport") and not r.get("_superseded_by")):
+                add(r["ticker"], f"新增投顧報告（{r.get('broker','')}，"
+                                  f"目標價{r.get('target','—')}）")
+    except Exception as e:                                  # noqa: BLE001
+        print(f"新增投顧報告觸發檢查失敗（不影響其他觸發）：{e}")
+
     return targets, notes
 
 
