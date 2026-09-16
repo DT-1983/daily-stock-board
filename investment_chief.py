@@ -656,6 +656,22 @@ def gather_material(ticker, notes):
     except Exception as e:                                  # noqa: BLE001
         value_material += f"\n（券商研究報告查詢失敗：{e}）"
 
+    # 2026-09-16：一次性產業筆記（industry-note-intake skill，社群貼文/券商影音
+    # 整理，FinMind 核對過）。⚠️ 原本只把這些事實寫進軍師資料庫的 md 匯出檔，
+    # **這裡才是真正接進孔明判斷用的材料**——Leo 問起才發現兩者是分開的：md
+    # 匯出是給「剛好有人去 obis 翻」的情境，這裡才會讓 /孔明、軍議、每日排程
+    # 判斷真的「看得到」這些事實，不用等人剛好去翻檔案。
+    try:
+        import industry_notes
+        _notes = industry_notes.by_ticker().get(norm_ticker(ticker))
+        if _notes:
+            value_material += (f"\n相關產業筆記（{len(_notes)} 則，"
+                               f"社群貼文/券商影音整理，FinMind核對過）：")
+            for _n in sorted(_notes, key=lambda x: x.get("date") or "", reverse=True)[:5]:
+                value_material += f"\n  {_n.get('date')}｜{_n.get('topic')}：{_n.get('summary')}"
+    except Exception as e:                                  # noqa: BLE001
+        value_material += f"\n（產業筆記查詢失敗：{e}）"
+
     trend_material = ""
     # 2026-08-27：所屬七鏈的技術面（chain_technicals.py 每日算）——**當參考不當門檻**，
     # 只是多一份背景材料給投資長，不擋任何個股訊號（Leo 明確決定，維持多鏡頭獨立原則）。
