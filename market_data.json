@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-16 08:47",
+ "updated": "2026-09-16 12:58",
  "indices": [
   {
    "sym": "^GSPC",
@@ -37,17 +37,17 @@
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/14",
-   "close": 45862.52,
-   "chg_pct": -0.7
+   "date": "09/16",
+   "close": 45767.19,
+   "chg_pct": 0.56
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/16",
-   "close": 31.86,
-   "chg_pct": 0.45
+   "close": 31.75,
+   "chg_pct": 0.09
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "投資人主動送錢！OpenAI傳洽談新募資 估值衝上1.2兆美元大增41%",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6607504",
-   "ts": "09/16 08:40"
-  },
-  {
-   "title": "美商應材深化印度半導體佈局3.75億美元擴建設備製造、研發基地",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6607575",
-   "ts": "09/16 08:30"
-  },
-  {
-   "title": "油價飆逾4%、美債殖利率升破5%美股全面收黑靜待聯準會升息決策",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6607572",
-   "ts": "09/16 08:30"
-  },
-  {
-   "title": "美國消費韌性背後：加薪與通膨陷入拉鋸戰 而通膨正在勝出",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6607463",
-   "ts": "09/16 08:30"
-  },
-  {
-   "title": "加密貨幣法案闖關美國參議院失敗！比特幣跌超5%創六月來最大跌幅 以太幣崩逾8.3%",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6607513",
-   "ts": "09/16 08:20"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：國巨(2327-TW)EPS預估下修至19.83元，預估目標價為1125元",
+   "title": "〈焦點股〉雙鴻Q3營收可望成長雙位數 股價回神漲逾半根停板",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6607543",
-   "ts": "09/16 08:10"
+   "url": "https://news.cnyes.com/news/id/6607858",
+   "ts": "09/16 12:53"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：文曄(3036-TW)EPS預估下修至25.8元，預估目標價為300元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6607542",
-   "ts": "09/16 08:10"
+   "title": "美債殖利率升不停美股為何沒跌？分析：10年期殖利率非關鍵、這「兩大」風險才是重點",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6607726",
+   "ts": "09/16 12:50"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：全新(2455-TW)目標價調升至512.5元，幅度約7.33%",
+   "title": "台北市電腦公會攜六組台灣原創遊戲團隊  前進東京電玩展拓海外市場",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6607541",
-   "ts": "09/16 08:10"
+   "url": "https://news.cnyes.com/news/id/6607769",
+   "ts": "09/16 12:42"
   },
   {
-   "title": "營收速報 - 2026年9月16日台股中小型公司8月營收一覽（新增25家）",
+   "title": "百容新廠資產18日完成過戶 半導體應用能見度到明年並將續擴張",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6607525",
-   "ts": "09/16 07:55"
+   "url": "https://news.cnyes.com/news/id/6607838",
+   "ts": "09/16 12:40"
   },
   {
-   "title": "營收速報 - 2026年9月16日台股大型公司8月營收一覽（新增15家）",
+   "title": "馬斯克 奧特曼聯手踩煞車 OpenAI 取消上市：AI三巨頭在害怕什麼？",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6607779",
+   "ts": "09/16 12:40"
+  },
+  {
+   "title": "台康生技竹北微生物商業化生產廠啟用 已承接日本訂單",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6607524",
-   "ts": "09/16 07:55"
+   "url": "https://news.cnyes.com/news/id/6607839",
+   "ts": "09/16 12:33"
+  },
+  {
+   "title": "〈房產〉新北重劃區的「預售與成屋價差」塭仔圳每坪價差僅6.4萬元最低",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6607812",
+   "ts": "09/16 12:33"
+  },
+  {
+   "title": "AI還是氣候變遷會讓人類走向滅亡？Grok毫不猶豫給答案",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6607785",
+   "ts": "09/16 12:30"
+  },
+  {
+   "title": "美光推512GB DDR5 RDIMM 運作功耗降低逾6成",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6573466",
+   "ts": "09/16 12:29"
+  },
+  {
+   "title": "從規模紅利到創新引擎！外商投資回升、美企創4年高　德經濟學家：中國市場成全球競爭力「健身房」",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6607770",
+   "ts": "09/16 12:20"
   }
  ],
  "inst": {
