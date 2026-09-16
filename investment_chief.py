@@ -490,6 +490,16 @@ def today_tickers():
     except Exception as e:                                  # noqa: BLE001
         print(f"新增投顧報告觸發檢查失敗（不影響其他觸發）：{e}")
 
+    # 2026-09-16：industry-note-intake skill 那套一次性產業筆記（社群貼文/券商
+    # 影音整理）查到的個股事實，一樣要觸發——跟上面投顧報告同一個理由，不等
+    # 有人剛好問到才判斷。
+    try:
+        import industry_notes
+        for tk, line in industry_notes.new_today_lines(date):
+            add(tk, line)
+    except Exception as e:                                  # noqa: BLE001
+        print(f"新增產業筆記觸發檢查失敗（不影響其他觸發）：{e}")
+
     return targets, notes
 
 
