@@ -284,7 +284,7 @@ def implied_multiple(r, price):
     """
     mult, tgt = r.get("valuation_multiple"), r.get("target")
     base = r.get("valuation_eps")
-    if base is None and r.get("valuation_kind", "").upper() == "PBR":
+    if base is None and (r.get("valuation_kind") or "").upper() == "PBR":
         base = r.get("bps")
     if not price or not mult or not base:
         return None
