@@ -523,6 +523,34 @@ def summary_lines():
     return out
 
 
+def new_today_lines(date=None):
+    """今天新解析的投顧報告（2026-09-16 Leo：「目標價、報告html摘要推送到discord，
+    只要摘要更新了什麼就好，要細目我上Google drive看就好」）。
+
+    跟 summary_lines()／target_changes.summary_lines() 是不同的問題：
+    那兩支問的是「值不值得信」「價格動了沒」，這支問的是「今天有沒有新東西進來」。
+    影音研究報告（video_transcript.py 那批）大多是第一次出現的股票，
+    在 target_changes 裡沒有「前次目標價」可比，不會被那邊的異動邏輯抓到，
+    但顯然是「今天更新了什麼」的一部分——不分券商信任層級，這裡只回報
+    「有沒有」，不是「準不準」（可信度那把關留給 target_changes 自己的邏輯）。
+    """
+    date = date or dt.date.today().isoformat()
+    store = _load(STORE, {})
+    fresh = [r for r in store.values()
+             if r.get("_parsed") == date and r.get("ticker")
+             and not r.get("_notreport") and not r.get("_superseded_by")]
+    if not fresh:
+        return []
+    out = ["・📑 今日新解析投顧報告："]
+    for r in fresh[:8]:
+        out.append(f"　· {r.get('name')}({r['ticker']}) {r.get('broker')}"
+                   f"｜{r.get('rating') or '—'}｜目標價 {r.get('target') or '—'}"
+                   f"（整合報告已更新）")
+    if len(fresh) > 8:
+        out.append(f"　...另有 {len(fresh) - 8} 檔，obis 個股整合報告資料夾可查")
+    return out
+
+
 def listing():
     store = _load(STORE, {})
     for k, r in sorted(store.items(), key=lambda x: str(x[1].get("date"))):
