@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-16 15:40",
+ "updated": "2026-09-16 20:34",
  "indices": [
   {
    "sym": "^GSPC",
@@ -46,8 +46,8 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/16",
-   "close": 31.76,
-   "chg_pct": 0.13
+   "close": 31.77,
+   "chg_pct": 0.16
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "觀光署攜手群聯響應「百工百業挺國旅」 量身打造14支專屬旅遊路線",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6607961",
-   "ts": "09/16 15:32"
-  },
-  {
-   "title": "漢測(7856)35萬人搶1048張！AI測試點火，營運能見度延伸至2027年",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6607975",
-   "ts": "09/16 15:30"
-  },
-  {
-   "title": "貝萊德執行長：若AI進度落後 將使技術成為「大公司專屬」",
+   "title": "貝森特救美債碰壁！殖利率愈救愈高 Fed恐不願接手爛攤子",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6607896",
-   "ts": "09/16 15:20"
+   "url": "https://news.cnyes.com/news/id/6608298",
+   "ts": "09/16 20:30"
   },
   {
-   "title": "高盛、野村異口同聲：油價牽動美債 能源才是市場真正關鍵",
+   "title": "鉅亨速報 - Factset 最新調查：歐特培UGP-US的目標價調升至7.23元，幅度約6.19%",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6607535",
-   "ts": "09/16 15:20"
+   "url": "https://news.cnyes.com/news/id/6608307",
+   "ts": "09/16 20:15"
   },
   {
-   "title": "聚焦AI下世代光通訊布局 鴻騰董座盧松青：未來十年進入大規模部署",
+   "title": "鉅亨速報 - Factset 最新調查：美國航空集團(AAL-US)EPS預估下修至-0.1元，預估目標價為17.00元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6608306",
+   "ts": "09/16 20:15"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：赫克拉礦業(HL-US)EPS預估下修至0.73元，預估目標價為21.00元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6608305",
+   "ts": "09/16 20:15"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：美國航空集團AAL-US的目標價調降至17元，幅度約5.56%",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6608304",
+   "ts": "09/16 20:15"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：健鼎(3044-TW)EPS預估上修至32.27元，預估目標價為700元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6607942",
-   "ts": "09/16 15:12"
+   "url": "https://news.cnyes.com/news/id/6608300",
+   "ts": "09/16 20:10"
   },
   {
-   "title": "三星不再全押自家晶圓代工 HBM基礎裸晶傳採台積電製程",
+   "title": "〈鴻騰科技日〉盧松青：AI需求不錯產能滿載 光通訊產品明年進一步放量",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6607939",
-   "ts": "09/16 15:11"
+   "url": "https://news.cnyes.com/news/id/6608267",
+   "ts": "09/16 20:04"
   },
   {
-   "title": "三星不再全押自家晶圓代工 HBM基礎裸晶傳採台積電製程",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6607939",
-   "ts": "09/16 15:11"
-  },
-  {
-   "title": "合勤控參與環境部產品數位護照試行 打造永續透明網通設備",
+   "title": "國科會：法令著重「人類自主」降低AI風險 首年已培育14萬AI人才達標",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6607936",
-   "ts": "09/16 15:11"
+   "url": "https://news.cnyes.com/news/id/6608266",
+   "ts": "09/16 19:56"
   },
   {
-   "title": "《財富》500強論壇廣州登場！外資首席經濟學家：油價衝擊短暫有限 明年Fed恐降息、中國續寬鬆",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6607909",
-   "ts": "09/16 15:00"
+   "title": "新光三越周年慶10/1開打 打造全台寶可夢盛會 估業績衝破194億元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6608239",
+   "ts": "09/16 19:50"
   },
   {
-   "title": "SK海力士傳與英特爾洽談合作！擬赴美生產記憶體晶片",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6607891",
-   "ts": "09/16 15:00"
+   "title": "東洋Lipo-AB海外需求旺 Q4新產線啟動產能提升2倍",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6608253",
+   "ts": "09/16 19:48"
   }
  ],
  "inst": {
   "date": "09/16",
-  "total_yi": -213.8,
+  "total_yi": -203.1,
   "foreign_yi": -179.8,
-  "trust_yi": 95.7
+  "trust_yi": 106.5
  }
 }
