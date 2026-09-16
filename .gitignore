@@ -181,3 +181,9 @@ state/macro_stance_log.jsonl
 
 # 本機專用的外部資料抓取工具，不進版控（理由見 obis 私人開發日誌 2026-09-14）
 video_transcript.py
+
+# 2026-09-16：這支把券商影音報告的內容直接寫死在程式碼裡（產業分析文字、
+# 逐字稿摘要），不是只有「怎麼抓」，是連「抓到的機密內容本身」都在原始碼裡——
+# 跟 code_is_data_privacy 那條規則是同一件事，比 video_transcript.py 更嚴重，
+# 絕對不能進公開 repo。obis 私人區的 HTML 產出物才是給 Leo 看的那份。
+bulk_shipping_report.py
