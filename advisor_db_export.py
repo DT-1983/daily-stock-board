@@ -32,6 +32,10 @@ from investment_chief import norm_ticker                       # noqa: E402
 
 VERDICTS_PATH = "state/advisor_verdicts.jsonl"
 CONDITIONS_PATH = "state/thesis_conditions.json"
+# 2026-09-16 Leo：「不是只有券商目標價，還要加上相關的資料（不只限於營收）」。
+# 這是第一種「查過的事實」資料源，之後同類型的（不管什麼主題）都照這個
+# 模式加：獨立存一份 state/*.json，這裡多讀一份、render() 多一段。
+MONTHLY_REVENUE_PATH = "state/monthly_revenue.json"
 
 STATUS_ICON = {"triggered": "🔴已觸發", "active": "⏳追蹤中"}
 
@@ -126,7 +130,24 @@ def _reports_block(reports):
     return "\n".join(lines) + "\n"
 
 
-def render(tk, verdict, cond_entry, reports=None):
+def _revenue_block(rev):
+    """月營收事實（2026-09-16，跟券商目標價同一層級：查過的事實，不用等 AI）。"""
+    if not rev:
+        return None
+    hi = "　★歷史單月新高" if rev.get("record_high") else ""
+
+    def _pct(v):
+        return "—" if v is None else f"{v:+.1f}%"
+    out = [f"- {rev.get('period','?')} 營收 {rev.get('revenue',0)/1e8:,.1f} 億"
+          f"｜YoY {_pct(rev.get('yoy'))}｜MoM {_pct(rev.get('mom'))}{hi}"]
+    if rev.get("comment"):
+        out.append(f"- 備註：{_safe(rev['comment'])}"
+                   f"（來源：{_safe(rev.get('comment_source',''))}）")
+    out.append(f"- 資料源：{_safe(rev.get('data_source',''))}，查證日 {rev.get('fetched','?')}")
+    return "\n".join(out) + "\n"
+
+
+def render(tk, verdict, cond_entry, reports=None, revenue=None):
     name = tkname(tk)
     held = bool((verdict or {}).get("held") or (cond_entry or {}).get("held")
                 or any(r.get("_manual_held") for r in (reports or [])))
@@ -142,6 +163,11 @@ def render(tk, verdict, cond_entry, reports=None):
     out.append("## 券商目標價（事實，來自登錄簿，不用等投資長判斷）")
     out.append("")
     out.append(_reports_block(reports))
+    rb = _revenue_block(revenue)
+    if rb:
+        out.append("## 月營收（事實，FinMind 官方申報數字）")
+        out.append("")
+        out.append(rb)
     out.append("## 投資長判斷（AI，可能還沒輪到這檔——見上面「最後更新」）")
     out.append("")
     va = (verdict or {}).get("trend_angle")
@@ -194,23 +220,33 @@ def _reports_by_ticker():
     return out
 
 
+def _revenue_by_ticker():
+    """月營收事實（見檔頭 2026-09-16），一樣要正規化代號才能跟其他來源比對。"""
+    if not os.path.exists(MONTHLY_REVENUE_PATH):
+        return {}
+    d = json.load(io.open(MONTHLY_REVENUE_PATH, encoding="utf-8"))
+    return {norm_ticker(tk): r for tk, r in d.items()}
+
+
 def main():
     verdicts = _latest_verdicts()
     conditions = json.load(io.open(CONDITIONS_PATH, encoding="utf-8")) \
         if os.path.exists(CONDITIONS_PATH) else {}
     verdicts, conditions = _dedupe(verdicts, conditions)
     reports = _reports_by_ticker()
-    # reports 的 key 是 norm_ticker() 正規化後的（跟 verdicts/conditions 的原始
-    # 代號不一定同一種寫法）——比對時要正規化兩邊，不能直接 tickers | set(reports)。
-    import advisor_reports as ar
+    revenues = _revenue_by_ticker()
+    # 每個來源的 key 是 norm_ticker() 正規化後的（同一檔股票不同來源的原始代號
+    # 寫法不一定一樣）——比對時要正規化全部，不能直接對原始代號取聯集。
     norm_map = {}                                            # norm代號 -> 選定的顯示用原始代號
     for tk in set(verdicts) | set(conditions):
         norm_map.setdefault(norm_ticker(tk), tk)
     for ntk in reports:
         norm_map.setdefault(ntk, reports[ntk][0]["ticker"])
+    for ntk in revenues:
+        norm_map.setdefault(ntk, ntk)
     tickers = sorted(norm_map)
     print(f"軍師資料庫：{len(tickers)} 檔（verdicts {len(verdicts)} / conditions {len(conditions)} "
-         f"/ 券商目標價 {len(reports)}）")
+         f"/ 券商目標價 {len(reports)} / 月營收 {len(revenues)}）")
 
     if not op.available():
         print("obis 不在這台機器上，略過（跟其他 obis 輸出一樣的行為）")
@@ -222,11 +258,12 @@ def main():
         v = verdicts.get(tk)
         c = conditions.get(tk)
         rs = reports.get(ntk)
+        rv = revenues.get(ntk)
         held = bool((v or {}).get("held") or (c or {}).get("held"))
         name = tkname(tk)
         fn = (f"{tk}_{name.split(' ', 1)[1]}.md" if " " in name else f"{tk}.md").replace("/", "_")
         try:
-            content = render(tk, v, c, rs)
+            content = render(tk, v, c, rs, rv)
             io.open(op.advisor_db(fn), "w", encoding="utf-8").write(content)
         except Exception as e:                                  # noqa: BLE001
             print(f"  [WARN] {tk} 產生失敗：{str(e)[:120]}")
