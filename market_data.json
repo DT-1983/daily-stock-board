@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-16 12:58",
+ "updated": "2026-09-16 15:40",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,16 +38,16 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "09/16",
-   "close": 45767.19,
-   "chg_pct": 0.56
+   "close": 45848.9,
+   "chg_pct": 0.74
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/16",
-   "close": 31.75,
-   "chg_pct": 0.09
+   "close": 31.76,
+   "chg_pct": 0.13
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "〈焦點股〉雙鴻Q3營收可望成長雙位數 股價回神漲逾半根停板",
+   "title": "觀光署攜手群聯響應「百工百業挺國旅」 量身打造14支專屬旅遊路線",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6607858",
-   "ts": "09/16 12:53"
+   "url": "https://news.cnyes.com/news/id/6607961",
+   "ts": "09/16 15:32"
   },
   {
-   "title": "美債殖利率升不停美股為何沒跌？分析：10年期殖利率非關鍵、這「兩大」風險才是重點",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6607726",
-   "ts": "09/16 12:50"
-  },
-  {
-   "title": "台北市電腦公會攜六組台灣原創遊戲團隊  前進東京電玩展拓海外市場",
+   "title": "漢測(7856)35萬人搶1048張！AI測試點火，營運能見度延伸至2027年",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6607769",
-   "ts": "09/16 12:42"
+   "url": "https://news.cnyes.com/news/id/6607975",
+   "ts": "09/16 15:30"
   },
   {
-   "title": "百容新廠資產18日完成過戶 半導體應用能見度到明年並將續擴張",
+   "title": "貝萊德執行長：若AI進度落後 將使技術成為「大公司專屬」",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6607896",
+   "ts": "09/16 15:20"
+  },
+  {
+   "title": "高盛、野村異口同聲：油價牽動美債 能源才是市場真正關鍵",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6607535",
+   "ts": "09/16 15:20"
+  },
+  {
+   "title": "聚焦AI下世代光通訊布局 鴻騰董座盧松青：未來十年進入大規模部署",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6607838",
-   "ts": "09/16 12:40"
+   "url": "https://news.cnyes.com/news/id/6607942",
+   "ts": "09/16 15:12"
   },
   {
-   "title": "馬斯克 奧特曼聯手踩煞車 OpenAI 取消上市：AI三巨頭在害怕什麼？",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6607779",
-   "ts": "09/16 12:40"
-  },
-  {
-   "title": "台康生技竹北微生物商業化生產廠啟用 已承接日本訂單",
+   "title": "三星不再全押自家晶圓代工 HBM基礎裸晶傳採台積電製程",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6607839",
-   "ts": "09/16 12:33"
+   "url": "https://news.cnyes.com/news/id/6607939",
+   "ts": "09/16 15:11"
   },
   {
-   "title": "〈房產〉新北重劃區的「預售與成屋價差」塭仔圳每坪價差僅6.4萬元最低",
+   "title": "三星不再全押自家晶圓代工 HBM基礎裸晶傳採台積電製程",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6607939",
+   "ts": "09/16 15:11"
+  },
+  {
+   "title": "合勤控參與環境部產品數位護照試行 打造永續透明網通設備",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6607812",
-   "ts": "09/16 12:33"
+   "url": "https://news.cnyes.com/news/id/6607936",
+   "ts": "09/16 15:11"
   },
   {
-   "title": "AI還是氣候變遷會讓人類走向滅亡？Grok毫不猶豫給答案",
+   "title": "《財富》500強論壇廣州登場！外資首席經濟學家：油價衝擊短暫有限 明年Fed恐降息、中國續寬鬆",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6607785",
-   "ts": "09/16 12:30"
+   "url": "https://news.cnyes.com/news/id/6607909",
+   "ts": "09/16 15:00"
   },
   {
-   "title": "美光推512GB DDR5 RDIMM 運作功耗降低逾6成",
+   "title": "SK海力士傳與英特爾洽談合作！擬赴美生產記憶體晶片",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6573466",
-   "ts": "09/16 12:29"
-  },
-  {
-   "title": "從規模紅利到創新引擎！外商投資回升、美企創4年高　德經濟學家：中國市場成全球競爭力「健身房」",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6607770",
-   "ts": "09/16 12:20"
+   "url": "https://news.cnyes.com/news/id/6607891",
+   "ts": "09/16 15:00"
   }
  ],
  "inst": {
-  "date": "09/15",
-  "total_yi": -789.0,
-  "foreign_yi": -627.0,
-  "trust_yi": -19.9
+  "date": "09/16",
+  "total_yi": -213.8,
+  "foreign_yi": -179.8,
+  "trust_yi": 95.7
  }
 }
