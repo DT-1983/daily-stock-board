@@ -106,9 +106,30 @@ def _conditions_block(conds, angle_filter=None):
     return "\n".join(lines) + "\n"
 
 
-def render(tk, verdict, cond_entry):
+def _reports_block(reports):
+    """券商目標價——直接讀 advisor_reports.json，零 AI 成本，**不等投資長判斷完**。
+
+    2026-09-16 Leo：「新增目標價自動變觸發事件」之後才發現，投資長從觸發到
+    真的判斷完要跑好一陣子（每檔 1.6~2.8 分鐘），中間這段空窗期軍師資料庫
+    完全沒有這幾檔的檔案——但目標價這種事實其實早就有、不用等 AI。
+    這段直接秀原始登錄簿內容，跟下面「投資長判斷」段落分開放、清楚標明
+    誰是事實（這段）誰是判斷（下段，可能還沒有）。"""
+    if not reports:
+        return "（無券商報告登記）\n"
+    lines = []
+    for r in sorted(reports, key=lambda x: x.get("date") or "", reverse=True):
+        lines.append(f"- **{r.get('broker','')}**　{r.get('date','?')}"
+                     f"｜評等：{r.get('rating') or '—'}"
+                     f"｜目標價：{r.get('target') or '—'}"
+                     + (f"　⚠️ {r['_note'][:60]}" if r.get("_manual_entry") and r.get("_note")
+                        else ""))
+    return "\n".join(lines) + "\n"
+
+
+def render(tk, verdict, cond_entry, reports=None):
     name = tkname(tk)
-    held = bool((verdict or {}).get("held") or (cond_entry or {}).get("held"))
+    held = bool((verdict or {}).get("held") or (cond_entry or {}).get("held")
+                or any(r.get("_manual_held") for r in (reports or [])))
     ts = (verdict or {}).get("ts") or (cond_entry or {}).get("source_date") or "?"
     price = (verdict or {}).get("price")
     price_asof = (verdict or {}).get("price_asof")
@@ -118,7 +139,10 @@ def render(tk, verdict, cond_entry):
                 f"｜最後更新：{ts}"
                 + (f"｜參考價 {price}（{price_asof}）" if price is not None else ""))
     out.append("")
-    out.append("## 投資長判斷")
+    out.append("## 券商目標價（事實，來自登錄簿，不用等投資長判斷）")
+    out.append("")
+    out.append(_reports_block(reports))
+    out.append("## 投資長判斷（AI，可能還沒輪到這檔——見上面「最後更新」）")
     out.append("")
     va = (verdict or {}).get("trend_angle")
     ha = (verdict or {}).get("value_angle")
@@ -156,34 +180,61 @@ def _dedupe(verdicts, conditions):
     return merged_v, merged_c
 
 
+def _reports_by_ticker():
+    """券商目標價登錄簿，依 norm_ticker() 收斂成 {正規化代號: [report,...]}——
+    跟 _dedupe() 同一個理由，同一檔股票的不同代號寫法不能拆成兩份檔案。"""
+    import advisor_reports as ar
+    store = ar.active()
+    out = {}
+    for r in store.values():
+        tk = r.get("ticker")
+        if not tk:
+            continue
+        out.setdefault(norm_ticker(tk), []).append(r)
+    return out
+
+
 def main():
     verdicts = _latest_verdicts()
     conditions = json.load(io.open(CONDITIONS_PATH, encoding="utf-8")) \
         if os.path.exists(CONDITIONS_PATH) else {}
     verdicts, conditions = _dedupe(verdicts, conditions)
-    tickers = sorted(set(verdicts) | set(conditions))
-    print(f"軍師資料庫：{len(tickers)} 檔（verdicts {len(verdicts)} / conditions {len(conditions)}）")
+    reports = _reports_by_ticker()
+    # reports 的 key 是 norm_ticker() 正規化後的（跟 verdicts/conditions 的原始
+    # 代號不一定同一種寫法）——比對時要正規化兩邊，不能直接 tickers | set(reports)。
+    import advisor_reports as ar
+    norm_map = {}                                            # norm代號 -> 選定的顯示用原始代號
+    for tk in set(verdicts) | set(conditions):
+        norm_map.setdefault(norm_ticker(tk), tk)
+    for ntk in reports:
+        norm_map.setdefault(ntk, reports[ntk][0]["ticker"])
+    tickers = sorted(norm_map)
+    print(f"軍師資料庫：{len(tickers)} 檔（verdicts {len(verdicts)} / conditions {len(conditions)} "
+         f"/ 券商目標價 {len(reports)}）")
 
     if not op.available():
         print("obis 不在這台機器上，略過（跟其他 obis 輸出一樣的行為）")
         return
 
     index = ["# 軍師資料庫索引", "", "AI 專用，非給人讀。逐檔內容見同資料夾其他檔案。", ""]
-    for tk in tickers:
+    for ntk in tickers:
+        tk = norm_map[ntk]                                   # 顯示/查表用原始代號
         v = verdicts.get(tk)
         c = conditions.get(tk)
+        rs = reports.get(ntk)
         held = bool((v or {}).get("held") or (c or {}).get("held"))
         name = tkname(tk)
         fn = (f"{tk}_{name.split(' ', 1)[1]}.md" if " " in name else f"{tk}.md").replace("/", "_")
         try:
-            content = render(tk, v, c)
+            content = render(tk, v, c, rs)
             io.open(op.advisor_db(fn), "w", encoding="utf-8").write(content)
         except Exception as e:                                  # noqa: BLE001
             print(f"  [WARN] {tk} 產生失敗：{str(e)[:120]}")
             continue
         j = (v or {}).get("trend_angle", {}).get("judgment", "")
-        icon = J_ICON.get(j, "⚪")
-        index.append(f"- [{name}]({fn})　{'🟢持有' if held else ''}{icon}{j}")
+        icon = J_ICON.get(j, "⚪") if v else "📄"
+        tag = j if v else "（只有券商目標價，投資長還沒判斷）"
+        index.append(f"- [{name}]({fn})　{'🟢持有' if held else ''}{icon}{tag}")
 
     io.open(op.advisor_db("_索引.md"), "w", encoding="utf-8").write("\n".join(index))
     print(f"已寫入 {len(tickers)} 檔 + 索引 → {op.ADVISOR_DB}")
