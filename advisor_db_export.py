@@ -187,22 +187,20 @@ def render(tk, verdict, cond_entry, reports=None, revenue=None):
 def _dedupe(verdicts, conditions):
     """2303 / 2303.TW 這類同一檔的不同寫法，兩份來源不見得用同一種——
     直接 union 會產生兩個檔案講同一檔股票（2026-09-15 實測抓到：006208 /
-    006208.TW 各自生出一份）。用 investment_chief 自己的 norm_ticker() 收斂，
-    同一正規化 key 只留一組，優先選有 verdict 的那個原始代號當檔名。"""
-    canon = {}          # norm key -> 選定的原始代號
-    for tk in set(verdicts) | set(conditions):
-        k = norm_ticker(tk)
-        if k not in canon or (tk in verdicts and canon[k] not in verdicts):
-            canon[k] = tk
+    006208.TW 各自生出一份）。
+
+    2026-09-16 重寫：原本挑一個「代表用」的原始代號當 key，同一檔股票兩次
+    執行剛好遇到不同寫法（一次只有 "2606"、一次多了 "2606.TW"）就會挑到不同
+    代表，寫出兩個檔案講同一檔股票（實測抓到：裕民同時有 2606_裕民.md 跟
+    2606.TW_裕民.md）。改成直接用**正規化後的代號當 key**，不挑代表——
+    不管來源當下用哪種寫法，同一檔股票永遠落在同一把 key，檔名/查找都穩定。"""
     merged_v, merged_c = {}, {}
-    for tk in verdicts:
+    for tk, v in verdicts.items():
         k = norm_ticker(tk)
-        pick = canon[k]
-        if pick not in merged_v or verdicts[tk].get("ts", "") >= merged_v[pick].get("ts", ""):
-            merged_v[pick] = verdicts[tk]
-    for tk in conditions:
-        k = norm_ticker(tk)
-        merged_c[canon[k]] = conditions[tk]
+        if k not in merged_v or v.get("ts", "") >= merged_v[k].get("ts", ""):
+            merged_v[k] = v
+    for tk, c in conditions.items():
+        merged_c[norm_ticker(tk)] = c
     return merged_v, merged_c
 
 
@@ -235,16 +233,12 @@ def main():
     verdicts, conditions = _dedupe(verdicts, conditions)
     reports = _reports_by_ticker()
     revenues = _revenue_by_ticker()
-    # 每個來源的 key 是 norm_ticker() 正規化後的（同一檔股票不同來源的原始代號
-    # 寫法不一定一樣）——比對時要正規化全部，不能直接對原始代號取聯集。
-    norm_map = {}                                            # norm代號 -> 選定的顯示用原始代號
-    for tk in set(verdicts) | set(conditions):
-        norm_map.setdefault(norm_ticker(tk), tk)
-    for ntk in reports:
-        norm_map.setdefault(ntk, reports[ntk][0]["ticker"])
-    for ntk in revenues:
-        norm_map.setdefault(ntk, ntk)
-    tickers = sorted(norm_map)
+    # 2026-09-16：verdicts/conditions/reports/revenues 現在全部都是用
+    # norm_ticker() 正規化後的代號當 key（_dedupe 那邊已經統一），直接取聯集，
+    # **不用再挑一個「顯示用原始代號」**——那正是昨天分裂成兩個檔案的根因
+    # （挑代表這件事本身就會因為兩次執行資料不同而選到不同結果）。
+    # 正規化後的代號本身就拿來當檔名/查表用，穩定、不會因為執行順序改變。
+    tickers = sorted(set(verdicts) | set(conditions) | set(reports) | set(revenues))
     print(f"軍師資料庫：{len(tickers)} 檔（verdicts {len(verdicts)} / conditions {len(conditions)} "
          f"/ 券商目標價 {len(reports)} / 月營收 {len(revenues)}）")
 
@@ -253,12 +247,11 @@ def main():
         return
 
     index = ["# 軍師資料庫索引", "", "AI 專用，非給人讀。逐檔內容見同資料夾其他檔案。", ""]
-    for ntk in tickers:
-        tk = norm_map[ntk]                                   # 顯示/查表用原始代號
+    for tk in tickers:                                       # tk 現在就是正規化代號
         v = verdicts.get(tk)
         c = conditions.get(tk)
-        rs = reports.get(ntk)
-        rv = revenues.get(ntk)
+        rs = reports.get(tk)
+        rv = revenues.get(tk)
         held = bool((v or {}).get("held") or (c or {}).get("held"))
         name = tkname(tk)
         fn = (f"{tk}_{name.split(' ', 1)[1]}.md" if " " in name else f"{tk}.md").replace("/", "_")
