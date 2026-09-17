@@ -334,26 +334,54 @@ def _row_html(r):
             f'<td class="srcs">{esc("/".join(r.get("src") or []))}</td></tr>'
             + (f'<tr class="detail" id="{tid}" data-mkt="{mkt}" style="display:none">'
                f'<td colspan="12">{_intro_cached(r["ticker"])}'
-               f'{_chip_cached(r["ticker"])}{r["chart"]}</td></tr>'
+               f'{_tech_chip_html(r)}</td></tr>'
                if r.get("chart") else ""))
 
 
-def _chip_cached(ticker):
-    """展開列補一行「近5天投信買賣超」（2026-09-18，對標老墨「點進個股看籌碼」）。
+def _tech_chip_html(r):
+    """技術分析／籌碼面 兩個分頁（2026-09-18，Leo：「進出燈號…我指的是籌碼分析」
+    「像之前給你老墨的頁面一樣，一個可以看技術分析、一個看籌碼面」）。
 
-    跟 _intro_cached 同一個精神：只有台股才查（三大法人/投信是T86/櫃買的概念，
-    美股沒有），資料是現成的歷史檔（chip_scan.recent_flow_line() 有行程內快取，
-    這裡呼叫上百次也不會重複讀檔），不用額外打API、不會拖慢產頁速度。
+    取代原本的「近5天投信買賣超」一行文字摘要——那只是過渡版本，這裡換成
+    完整的籌碼面時間序列圖（chip_scan.chart_html()）。只有台股、且真的查得到
+    籌碼資料才會有第二個分頁；美股或查無資料就直接退回只顯示技術分析，
+    不擺一個永遠是空的分頁騙人點進去。
     """
-    import re as _re
-    if not _re.match(r"^\d{4,6}[A-Z]?(\.TWO?)?$", str(ticker)):
+    chart = r.get("chart") or ""
+    if not chart:
         return ""
+    uid = "dv_" + esc(r["ticker"]).replace(".", "_").replace("-", "_")
     try:
         import chip_scan as _cs
-        line = _cs.recent_flow_line(ticker)
+        chip = _cs.chart_html(r["ticker"], uid=uid)
     except Exception:                                       # noqa: BLE001
-        line = None
-    return f'<div class="lk-intro">🏦 {esc(line)}</div>' if line else ""
+        chip = ""
+    if not chip:
+        return chart
+    Q = chr(34)
+    return (
+        '<div class="ctrl" style="position:static;padding:6px 0;border:0;margin:0">'
+        '<div class="seg" role="group" aria-label="切換視角">'
+        '<button data-tv="tech" aria-pressed="true">技術分析</button>'
+        '<button data-tv="chip" aria-pressed="false">籌碼面</button>'
+        '</div></div>'
+        f'<div id="{uid}_tech">{chart}</div>'
+        f'<div id="{uid}_chip" style="display:none">{chip}</div>'
+        '<script>(function(){'
+        f'var tech=document.getElementById({Q}{uid}_tech{Q}),'
+        f'chip=document.getElementById({Q}{uid}_chip{Q}),'
+        'box=tech.previousElementSibling;'
+        'box.querySelectorAll(".seg button[data-tv]").forEach(function(b){'
+        'b.addEventListener("click",function(){'
+        'box.querySelectorAll(".seg button[data-tv]").forEach(function(x){'
+        'x.setAttribute("aria-pressed",x===b?"true":"false");});'
+        'var showChip=b.dataset.tv==="chip";'
+        'tech.style.display=showChip?"none":"";'
+        'chip.style.display=showChip?"":"none";'
+        f'if(showChip&&window.chip_draw_{uid}){{window.chip_draw_{uid}();}}'
+        '});});'
+        '})();</script>'
+    )
 
 
 def _intro_cached(ticker):
