@@ -581,7 +581,8 @@ body{margin:0}
    原本 auto-fit minmax(180px) 會折成兩排，把圖擠下去。改成單排橫向捲，
    欄位再多也只佔一排；窄螢幕靠自己捲，不吃圖的高度。 */
 .dcards{display:flex;gap:1px;background:var(--hud,#16304A);margin-bottom:10px;
- overflow-x:auto;-webkit-overflow-scrolling:touch}
+ overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.dcards::-webkit-scrollbar{display:none}
 .dc{flex:1 0 150px}
 .dc{background:var(--surface);padding:9px 12px;min-width:0}
 .dc .k{font-size:9px;color:var(--dim);letter-spacing:.14em;text-transform:uppercase;
