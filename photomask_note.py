@@ -59,6 +59,10 @@ CSS = """
 .stk-card .hi{color:#F5B841;font-weight:700}
 .stk-card .warn{color:var(--down);font-weight:700}
 .stk-card .d{font-size:12.5px;line-height:1.75;color:var(--muted);margin-top:4px}
+.rpt-chart{margin:14px 0 18px;background:var(--surface);border:1px solid var(--line);
+  border-radius:10px;padding:14px 16px}
+.rpt-chart .cap{font-size:11.5px;color:var(--dim);margin-top:8px;line-height:1.6}
+.rpt-chart svg{width:100%;height:auto;display:block}
 """
 
 
@@ -137,6 +141,150 @@ SKIPPED_NOTE = ("原文另提到「景美科技（興櫃）」「漢民測試（
                 "沒進slide 7的正式分類表，三者本次都未逐一核實，供讀者自行留意。")
 
 
+# ── 重畫的示意圖（2026-09-17，Leo：「以後會用得到」）───────────────────
+# 原文是 IG 圖卡，圖打不開／版權不能照搬，改用同一批數字自己畫成 inline SVG，
+# 跟 board_theme 的色票（var(--ink)/(--accent)/(--up)/(--down)/(--line)）同一套，
+# 不额外接圖表庫（跟這專案其他報告一致，離線也看得到）。
+
+def _svg_mask_compare():
+    """光罩尺寸比較（6吋分割曝光 vs 12吋單次曝光），對應原文 slide 1。"""
+    def panel(x0, title, split):
+        s = [f'<g transform="translate({x0},0)">']
+        s.append(f'<text x="130" y="18" text-anchor="middle" font-size="13" '
+                 f'font-weight="700" fill="var(--ink)">{esc(title)}</text>')
+        # EUV 曝光機
+        s.append('<rect x="90" y="34" width="80" height="26" rx="4" '
+                 'fill="var(--card)" stroke="var(--line)"/>')
+        s.append('<text x="130" y="51" text-anchor="middle" font-size="10.5" '
+                 'fill="var(--muted)">EUV曝光機</text>')
+        s.append('<path d="M110,60 L110,80 M150,60 L150,80" stroke="var(--dim)" '
+                 'stroke-width="1.5"/>')
+        # 光罩
+        s.append('<rect x="70" y="80" width="120" height="22" rx="3" '
+                 'fill="var(--cy-dim)" stroke="var(--accent)"/>')
+        s.append('<text x="130" y="95" text-anchor="middle" font-size="10.5" '
+                 'fill="var(--accent)">光罩</text>')
+        if split:
+            s.append('<line x1="130" y1="102" x2="130" y2="160" stroke="var(--down)" '
+                     'stroke-width="1.5" stroke-dasharray="4,3"/>')
+            s.append('<ellipse cx="130" cy="150" rx="90" ry="26" fill="none" '
+                     'stroke="var(--line)" stroke-width="1.5"/>')
+            s.append('<text x="90" y="196" text-anchor="middle" font-size="10" '
+                     'fill="var(--muted)">第1次曝光</text>')
+            s.append('<text x="170" y="196" text-anchor="middle" font-size="10" '
+                     'fill="var(--muted)">第2次曝光</text>')
+            s.append('<text x="130" y="212" text-anchor="middle" font-size="10" '
+                     'fill="var(--down)">紅線＝接合線（stitching）</text>')
+        else:
+            s.append('<ellipse cx="130" cy="150" rx="90" ry="26" fill="none" '
+                     'stroke="var(--up)" stroke-width="1.5"/>')
+            s.append('<text x="130" y="196" text-anchor="middle" font-size="10" '
+                     'fill="var(--muted)">單一大型AI晶片</text>')
+            s.append('<text x="130" y="212" text-anchor="middle" font-size="10" '
+                     'fill="var(--up)">一次成像，無接合線</text>')
+        s.append('</g>')
+        return "".join(s)
+    body = panel(0, "現況｜6吋光罩（切兩次曝光）", True) \
+         + panel(320, "規劃｜12吋光罩（單次曝光）", False)
+    return (f'<div class="rpt-chart"><svg viewBox="0 0 620 230" '
+           f'xmlns="http://www.w3.org/2000/svg">{body}</svg>'
+           f'<div class="cap">示意圖（依原文概念重繪，非原圖）——大面積AI晶片在6吋光罩下'
+           f'得切兩次曝光再拼接，接合線拖累良率；12吋光罩讓大晶粒一次成像。</div></div>')
+
+
+def _svg_na_bar():
+    """七個微影世代的最高數值孔徑（NA），對應原文 slide 3 表格數字。"""
+    gens = [("g-Line", 0.38, "1984"), ("i-Line", 0.65, "1998"), ("KrF", 0.80, "2001"),
+            ("ArF", 0.93, "2004"), ("ArFi", 1.35, "2007"), ("EUV", 0.33, "2012"),
+            ("High NA", 0.75, "2023可達*")]
+    w, h, pad_l, pad_b, pad_t = 620, 220, 40, 34, 14
+    plot_h = h - pad_b - pad_t
+    maxv = 1.35
+    bw = (w - pad_l - 20) / len(gens)
+    bars = []
+    for i, (name, v, yr) in enumerate(gens):
+        x = pad_l + i * bw + bw * 0.2
+        bh = plot_h * (v / maxv)
+        y = pad_t + (plot_h - bh)
+        color = "var(--accent)" if name != "High NA" else "var(--warn)"
+        bars.append(f'<rect x="{x:.1f}" y="{y:.1f}" width="{bw*0.6:.1f}" height="{bh:.1f}" '
+                    f'rx="3" fill="{color}"/>')
+        bars.append(f'<text x="{x+bw*0.3:.1f}" y="{y-6:.1f}" text-anchor="middle" '
+                    f'font-size="11" font-weight="700" fill="var(--ink)">{v}</text>')
+        bars.append(f'<text x="{x+bw*0.3:.1f}" y="{h-pad_b+16:.1f}" text-anchor="middle" '
+                    f'font-size="10.5" fill="var(--muted)">{esc(name)}</text>')
+        bars.append(f'<text x="{x+bw*0.3:.1f}" y="{h-pad_b+29:.1f}" text-anchor="middle" '
+                    f'font-size="9.5" fill="var(--dim)">{esc(yr)}</text>')
+    axis = (f'<line x1="{pad_l}" y1="{pad_t+plot_h}" x2="{w-16}" y2="{pad_t+plot_h}" '
+           f'stroke="var(--line)"/>')
+    return (f'<div class="rpt-chart"><svg viewBox="0 0 {w} {h}" '
+           f'xmlns="http://www.w3.org/2000/svg">{axis}{"".join(bars)}</svg>'
+           f'<div class="cap">七個微影世代的最高數值孔徑（NA，數字愈高解析度愈好）'
+           f'——ArFi(浸潤式)其實比EUV/HighNA更高，但EUV靠更短波長（13.5nm vs 193nm）'
+           f'仍刻得更細；HighNA的0.75是ASML揭露的理論可達值。資料來源：ASML/ZEISS。'
+           f'</div></div>')
+
+
+def _svg_layers_line():
+    """單次曝光可支援層數的十年演進，對應原文 slide 6。"""
+    pts = [(2026, 1), (2028, 2), (2031, 4), (2033, 8), (2034, 9.5)]
+    marks = [(2028, 2, "1.0nm／2層"), (2031, 4, "0.7nm／>4層"), (2033, 8, "0.5nm／>8層")]
+    w, h, pad_l, pad_b, pad_t, pad_r = 620, 230, 40, 30, 16, 20
+    x0, x1, y0, y1 = 2026, 2034, 0, 10
+    def px(x):
+        return pad_l + (x - x0) / (x1 - x0) * (w - pad_l - pad_r)
+    def py(y):
+        return pad_t + (1 - (y - y0) / (y1 - y0)) * (h - pad_t - pad_b)
+    grid = []
+    for yv in range(0, 11, 2):
+        gy = py(yv)
+        grid.append(f'<line x1="{pad_l}" y1="{gy:.1f}" x2="{w-pad_r}" y2="{gy:.1f}" '
+                    f'stroke="var(--grid)"/>')
+        grid.append(f'<text x="{pad_l-8}" y="{gy+3:.1f}" text-anchor="end" font-size="9.5" '
+                    f'fill="var(--dim)">{yv}</text>')
+    for yr in range(2026, 2035):
+        grid.append(f'<text x="{px(yr):.1f}" y="{h-8}" text-anchor="middle" font-size="9.5" '
+                    f'fill="var(--dim)">{yr}</text>')
+    path = "M " + " L ".join(f"{px(x):.1f},{py(y):.1f}" for x, y in pts)
+    labels = []
+    for x, y, t in marks:
+        labels.append(f'<circle cx="{px(x):.1f}" cy="{py(y):.1f}" r="3.5" fill="var(--warn)"/>')
+        labels.append(f'<text x="{px(x):.1f}" y="{py(y)-10:.1f}" text-anchor="middle" '
+                      f'font-size="10" font-weight="700" fill="var(--warn)">{esc(t)}</text>')
+    return (f'<div class="rpt-chart"><svg viewBox="0 0 {w} {h}" '
+           f'xmlns="http://www.w3.org/2000/svg">{"".join(grid)}'
+           f'<path d="{path}" fill="none" stroke="var(--accent)" stroke-width="2.5"/>'
+           f'{"".join(labels)}</svg>'
+           f'<div class="cap">0.55NA High NA EUV 單次曝光可支援層數（ASML規劃目標，'
+           f'y軸為層數）——十年內從2層拉高到8層以上，靠金屬氧化物光阻(MOR)＋乾式顯影'
+           f'達成。資料來源：ASML。</div></div>')
+
+
+def _svg_timeline():
+    """12吋光罩產業倡議時程，對應原文 slide 4。"""
+    nodes = [("2026年9月", "ASML、台積電成立產業倡議", "SPIE BACUS前夕"),
+             ("2030年", "台積電導入HighNA量產", "沿用6吋光罩"),
+             ("2031年", "建立12吋光罩試產線", "Pilot Line"),
+             ("2033年", "微影系統全面就緒", "先進製程量產")]
+    w, h = 620, 150
+    n = len(nodes)
+    xs = [60 + i * (w - 120) / (n - 1) for i in range(n)]
+    line = f'<line x1="{xs[0]}" y1="40" x2="{xs[-1]}" y2="40" stroke="var(--line)" stroke-width="2"/>'
+    parts = [line]
+    for x, (date, title, sub) in zip(xs, nodes):
+        parts.append(f'<circle cx="{x:.1f}" cy="40" r="5" fill="var(--accent)"/>')
+        parts.append(f'<text x="{x:.1f}" y="22" text-anchor="middle" font-size="11" '
+                     f'font-weight="700" fill="var(--warn)">{esc(date)}</text>')
+        parts.append(f'<text x="{x:.1f}" y="66" text-anchor="middle" font-size="11" '
+                     f'fill="var(--ink)">{esc(title)}</text>')
+        parts.append(f'<text x="{x:.1f}" y="82" text-anchor="middle" font-size="10" '
+                     f'fill="var(--dim)">{esc(sub)}</text>')
+    return (f'<div class="rpt-chart"><svg viewBox="0 0 {w} {h}" '
+           f'xmlns="http://www.w3.org/2000/svg">{"".join(parts)}</svg>'
+           f'<div class="cap">資料來源：台積電／ASML 2026-09-08 產業倡議公告。'
+           f'</div></div>')
+
+
 def _stock_card(code, name, role, comment, m, q):
     def _pct(v, warn_if_neg=True):
         if v is None:
@@ -190,6 +338,11 @@ def build():
         '9/9雙雙跳空漲停，但本篇核實發現兩者體質不同——家登有營收動能撐著，'
         '台灣光罩本業其實在衰退，是題材先跑。</p></div>')
 
+    body.append(_svg_mask_compare())
+
+    body.append('<div class="rpt-sec"><h2>產業倡議時程</h2></div>')
+    body.append(_svg_timeline())
+
     body.append('<div class="rpt-sec"><h2>技術背景</h2>'
         '<p>公式 <b>CD = k1 × λ / NA</b>（k1製程係數、λ波長、NA數值孔徑）決定'
         '微影能刻多細的線寬。EUV波長13.5nm四十年沒變，這波是靠拉高NA吃解析度——'
@@ -204,6 +357,9 @@ def build():
         '名詞解釋——<b>EPE</b>：邊緣放置誤差（微影套準精度）；<b>OPO</b>：產品'
         '疊對；<b>MMO</b>：機台匹配疊對；<b>WpH</b>：每小時晶圓產出（產能指標）。'
         '</p></div>')
+
+    body.append(_svg_na_bar())
+    body.append(_svg_layers_line())
 
     for group in (GROUP1, GROUP2):
         body.append(f'<div class="rpt-sec"><h2>相關台股（已核對 FinMind 數字）</h2>'
