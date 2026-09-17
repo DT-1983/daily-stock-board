@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-17 13:01",
+ "updated": "2026-09-17 15:40",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,8 +38,8 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "09/17",
-   "close": 46521.21,
-   "chg_pct": 1.47
+   "close": 46288.0,
+   "chg_pct": 0.96
   },
   {
    "sym": "TWD=X",
@@ -47,7 +47,7 @@
    "grp": "FX",
    "date": "09/17",
    "close": 31.87,
-   "chg_pct": 0.31
+   "chg_pct": 0.3
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "昇騰960提前明年Q1上市！華為：首個採用NPO技術的昇騰960超節點明年Q3上市  未來晶片一年一代演進",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6608881",
-   "ts": "09/17 13:00"
-  },
-  {
-   "title": "聯發科天璣9600 Pro未跟進WMCM，2奈米手機晶片走向技術分流",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6608933",
-   "ts": "09/17 13:00"
-  },
-  {
-   "title": "M31擴大與Rambus技術合作 強化MIPI一站式解決方案",
+   "title": "CCL「降級鬼故事」重擊PCB！台光電、聯茂、台燿同步重挫，真正改變的是「這件事」!?",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6608928",
-   "ts": "09/17 12:59"
+   "url": "https://news.cnyes.com/news/id/6609044",
+   "ts": "09/17 15:31"
   },
   {
-   "title": "杏輝三大引擎齊發力推升營運 積極進軍東協市場",
+   "title": "信昌電(6173)高階MLCC需求爆發！AI占比估衝16%、漲價效益下半年陸續反映",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6608927",
-   "ts": "09/17 12:57"
+   "url": "https://news.cnyes.com/news/id/6609043",
+   "ts": "09/17 15:31"
   },
   {
-   "title": "燃油成本高漲重壓航空業 美國航空公司考慮削減航班",
+   "title": "川普顧問納瓦羅痛批聯準會主席華許：升息是「愚蠢決策」",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6608638",
-   "ts": "09/17 12:54"
+   "url": "https://news.cnyes.com/news/id/6608978",
+   "ts": "09/17 15:20"
   },
   {
-   "title": "力抗通膨！Fed如預期升息1碼 國泰世華銀預估12月恐再升1碼",
+   "title": "弘塑(3131)訂單看到2030年，產能卻只夠三分之一，接單爆量卻出不了貨？",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6608909",
-   "ts": "09/17 12:18"
+   "url": "https://news.cnyes.com/news/id/6609006",
+   "ts": "09/17 15:00"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：義隆(2458-TW)目標價調降至174元，幅度約3.33%",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6608911",
-   "ts": "09/17 12:10"
-  },
-  {
-   "title": "台德半導體交流會登場 國科會：深化雙方半導體晶片與產業創新策略",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6608872",
-   "ts": "09/17 12:08"
-  },
-  {
-   "title": "股票業務扛基本盤！高盛預警Q3業績：固定收益業務略顯疲弱　整體支出將增加",
+   "title": "抗升息利空！光通訊股Lumentum、Coherent逆勢大漲 資金押注AI實體訂單",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6608839",
-   "ts": "09/17 12:00"
+   "url": "https://news.cnyes.com/news/id/6608604",
+   "ts": "09/17 15:00"
   },
   {
-   "title": "OpenAI 1.2兆美元估值可望讓甲骨文走出AI放緩陰霾？",
+   "title": "華為調整合作模式！股價年跌7成的賽力斯能讓問界順利「單飛」？是利空出盡還是預期落空？",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6608573",
-   "ts": "09/17 12:00"
+   "url": "https://news.cnyes.com/news/id/6608645",
+   "ts": "09/17 14:50"
+  },
+  {
+   "title": "愛立信攜手聯發科突破5G定位精準度 加速自駕車、無人機與智慧製造應用",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6608970",
+   "ts": "09/17 14:17"
+  },
+  {
+   "title": "華許不顧川普施壓升息 凸顯Fed政策獨立性",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6608567",
+   "ts": "09/17 14:10"
+  },
+  {
+   "title": "〈台股盤後〉台積電、台塑四寶齊發力 上漲439點收復4萬6及月線",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6608950",
+   "ts": "09/17 14:03"
+  },
+  {
+   "title": "華許抗通膨決心安撫市場！美股期指反彈、美債殖利率回到5%以下 焦點轉向日銀決策",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6608916",
+   "ts": "09/17 14:00"
   }
  ],
  "inst": {
-  "date": "09/16",
-  "total_yi": -203.1,
-  "foreign_yi": -179.8,
-  "trust_yi": 106.5
+  "date": "09/17",
+  "total_yi": 214.8,
+  "foreign_yi": 121.9,
+  "trust_yi": 77.1
  }
 }
