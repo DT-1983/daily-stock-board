@@ -2566,5 +2566,17 @@
     "industry": "Regional Banks",
     "exchange": "TWSE",
     "asof": "2026-09-17"
+  },
+  "3532": {
+    "sector": "Producer Manufacturing",
+    "industry": "Industrial Machinery",
+    "exchange": "TWSE",
+    "asof": "2026-09-17"
+  },
+  "VLO": {
+    "sector": "Energy Minerals",
+    "industry": "Oil Refining/Marketing",
+    "exchange": "NYSE",
+    "asof": "2026-09-18"
   }
 }
