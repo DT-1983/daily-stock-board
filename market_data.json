@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-17 08:46",
+ "updated": "2026-09-17 13:01",
  "indices": [
   {
    "sym": "^GSPC",
@@ -14,7 +14,7 @@
    "name": "那斯達克",
    "grp": "US",
    "date": "09/16",
-   "close": 25978.42,
+   "close": 25978.43,
    "chg_pct": -0.01
   },
   {
@@ -37,17 +37,17 @@
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/15",
-   "close": 45511.49,
-   "chg_pct": -0.77
+   "date": "09/17",
+   "close": 46521.21,
+   "chg_pct": 1.47
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/17",
-   "close": 31.86,
-   "chg_pct": 0.26
+   "close": 31.87,
+   "chg_pct": 0.31
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "聯準會睽違3年啟動升息循環通膨降溫延至2029年、今年還要再升",
+   "title": "昇騰960提前明年Q1上市！華為：首個採用NPO技術的昇騰960超節點明年Q3上市  未來晶片一年一代演進",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6608685",
-   "ts": "09/17 08:30"
+   "url": "https://news.cnyes.com/news/id/6608881",
+   "ts": "09/17 13:00"
   },
   {
-   "title": "聯準會睽違3年首度升息美股震盪收低、道瓊重挫631點",
+   "title": "聯發科天璣9600 Pro未跟進WMCM，2奈米手機晶片走向技術分流",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6608684",
-   "ts": "09/17 08:30"
+   "url": "https://news.cnyes.com/news/id/6608933",
+   "ts": "09/17 13:00"
   },
   {
-   "title": "日本製鐵砸9億歐元升級歐洲產能斯洛伐克新電弧爐2030年投產",
+   "title": "M31擴大與Rambus技術合作 強化MIPI一站式解決方案",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6608928",
+   "ts": "09/17 12:59"
+  },
+  {
+   "title": "杏輝三大引擎齊發力推升營運 積極進軍東協市場",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6608927",
+   "ts": "09/17 12:57"
+  },
+  {
+   "title": "燃油成本高漲重壓航空業 美國航空公司考慮削減航班",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6608683",
-   "ts": "09/17 08:30"
+   "url": "https://news.cnyes.com/news/id/6608638",
+   "ts": "09/17 12:54"
   },
   {
-   "title": "順天堂藥廠攜手元樟生技　SeepPlug™ 介質切入家庭園藝　合作場域自契作端延伸至消費端",
+   "title": "力抗通膨！Fed如預期升息1碼 國泰世華銀預估12月恐再升1碼",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6607708",
-   "ts": "09/17 08:30"
+   "url": "https://news.cnyes.com/news/id/6608909",
+   "ts": "09/17 12:18"
   },
   {
-   "title": "中國電動車破冰？比亞迪有望列習近平訪美代表團名單",
+   "title": "鉅亨速報 - Factset 最新調查：義隆(2458-TW)目標價調降至174元，幅度約3.33%",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6608911",
+   "ts": "09/17 12:10"
+  },
+  {
+   "title": "台德半導體交流會登場 國科會：深化雙方半導體晶片與產業創新策略",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6608872",
+   "ts": "09/17 12:08"
+  },
+  {
+   "title": "股票業務扛基本盤！高盛預警Q3業績：固定收益業務略顯疲弱　整體支出將增加",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6608626",
-   "ts": "09/17 08:22"
+   "url": "https://news.cnyes.com/news/id/6608839",
+   "ts": "09/17 12:00"
   },
   {
-   "title": "川普科技顧問：AI安全擔憂是「套路」　不需要新的監管法規",
+   "title": "OpenAI 1.2兆美元估值可望讓甲骨文走出AI放緩陰霾？",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6608648",
-   "ts": "09/17 08:20"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：視陽(6782-TW)EPS預估上修至18.14元，預估目標價為251.5元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6608652",
-   "ts": "09/17 08:10"
-  },
-  {
-   "title": "營收速報 - 2026年9月17日台股中小型公司8月營收一覽（新增23家）",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6608635",
-   "ts": "09/17 07:55"
-  },
-  {
-   "title": "營收速報 - 2026年9月17日台股大型公司8月營收一覽（新增13家）",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6608634",
-   "ts": "09/17 07:55"
-  },
-  {
-   "title": "不再一條龍！三星客製化HBM擬採雙軌並行：自廠或台積電製造基礎裸片任客戶挑",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6608075",
-   "ts": "09/17 06:00"
+   "url": "https://news.cnyes.com/news/id/6608573",
+   "ts": "09/17 12:00"
   }
  ],
  "inst": {
