@@ -504,6 +504,23 @@ def sec4_research(notes, scope="public", date=None):
                     lines += ls
                     lines.append("-# [完整清單＋七鏈標註]"
                                  "(https://dt-1983.github.io/daily-stock-board/chip.html)")
+        # 2026-09-17：投信單獨版（Leo 對標老墨「零式系統」——三大法人合計會把
+        # 投信的訊號稀釋掉，他個人特別偏好投信單獨看）。跟上面同一份 events 結構、
+        # 同一套 gap 判斷，只是換一份資料源。
+        ce_t = _cs._load(_cs.OUT_TRUST_PATH, {})
+        cd_t = ce_t.get("date")
+        if cd_t and ce_t.get("events"):
+            try:
+                gap_t = (datetime.date.fromisoformat(date) - datetime.date.fromisoformat(cd_t)).days
+            except Exception:
+                gap_t = 99
+            if 0 <= gap_t <= 3:
+                ls_t = _cs.summary_lines_trust(ce_t["events"], max_each=2)
+                if ls_t:
+                    when_t = "" if gap_t == 0 else f"・{cd_t}"
+                    lines.append("")
+                    lines.append(f"**🔍 投信單獨異動**（{len(ce_t['events'])} 筆{when_t}）")
+                    lines += ls_t
     except Exception as e:
         # 不要完全靜默——2026-08-28 第一版寫錯（sec4_research 當時沒有 date 參數，
         # 引用了不存在的變數）就是被 `except: pass` 吞掉，畫面上看起來像「今天沒有

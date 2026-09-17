@@ -35,9 +35,17 @@ import requests
 if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
     sys.stdout.reconfigure(encoding="utf-8")
 
-HIST_PATH = "state/chip_history.json"     # {date: {code: 買賣超股數}}
+HIST_PATH = "state/chip_history.json"     # {date: {code: 三大法人買賣超股數}}
 OUT_PATH = "state/chip_events.json"
 NAMES_PATH = "state/chip_names.json"      # {code: name}
+# 2026-09-17（Leo 對標老墨「零式系統」逐字稿：三大法人要拆開看，他個人特別偏好
+# 投信單獨的訊號，理由是投信慢慢吃股份的動機跟外資/自營不一樣，合計會稀釋訊號）。
+# 用**獨立的一份歷史檔＋一套偵測函式**，不去動 HIST_PATH／detect()／calibrate()——
+# 那套三大法人合計的異常/連買連賣邏輯已經校準過、正常運作，沒有理由冒風險去改
+# 它的資料結構，投信單獨判斷用同一套「跟自己近20日均值比」方法論，接到平行的
+# 一份檔案上就好。
+HIST_TRUST_PATH = "state/chip_history_trust.json"   # {date: {code: 投信買賣超股數}}
+OUT_TRUST_PATH = "state/chip_events_trust.json"
 
 TWSE_URL = "https://www.twse.com.tw/rwd/zh/fund/T86"
 TPEX_URL = "https://www.tpex.org.tw/www/zh-tw/insti/dailyTrade"
@@ -69,7 +77,14 @@ def _num(s):
 
 
 def fetch_twse(date_str):
-    """證交所 T86。date_str: YYYYMMDD。回 {code: (name, 買賣超股數)}。"""
+    """證交所 T86。date_str: YYYYMMDD。回 {code: (name, 三大法人合計, 投信買賣超)}。
+
+    2026-09-17：欄位順序用 6488 環球晶當天資料逐欄跟 FinMind
+    TaiwanStockInstitutionalInvestorsBuySell 交叉核對過（Investment_Trust
+    buy/sell 完全對上 row[8]/row[9]），確認 row[10]＝投信買賣超股數：
+    0代號 1名稱 2-4外陸資(不含自營) 5-7外資自營商 8-10投信 11自營合計
+    12-14自營自行 15-17自營避險 18三大法人合計。
+    """
     try:
         r = requests.get(TWSE_URL, params={"date": date_str, "selectType": "ALL",
                                            "response": "json"}, timeout=30)
@@ -86,13 +101,20 @@ def fetch_twse(date_str):
         if len(code) != 4 or not code.isdigit():
             continue               # 只留4位數普通股，濾掉 ETF/權證/特別股
         v = _num(row[18])          # 三大法人買賣超股數（最後一欄）
+        trust = _num(row[10])      # 投信買賣超股數
         if v is not None:
-            out[code] = (str(row[1]).strip(), v)
+            out[code] = (str(row[1]).strip(), v, trust)
     return out
 
 
 def fetch_tpex(date_str):
-    """櫃買 dailyTrade。回 {code: (name, 買賣超股數)}。"""
+    """櫃買 dailyTrade。回 {code: (name, 三大法人合計, 投信買賣超)}。
+
+    2026-09-17：欄位順序同樣用 6488 環球晶交叉核對過（Investment_Trust
+    buy=42600/sell=154000 對上 row[11]/row[12]），確認 row[13]＝投信買賣超股數：
+    0代號 1名稱 2-4外資(不含自營) 5-7外資自營商 8-10外資合計 11-13投信
+    14-16自營自行 17-19自營避險 20-22自營合計 23三大法人合計。
+    """
     d = f"{date_str[:4]}/{date_str[4:6]}/{date_str[6:]}"
     try:
         r = requests.get(TPEX_URL, params={"type": "Daily", "sect": "AL", "date": d,
@@ -111,8 +133,9 @@ def fetch_tpex(date_str):
         if len(code) != 4 or not code.isdigit():
             continue
         v = _num(row[23])          # 三大法人買賣超股數合計（最後一欄）
+        trust = _num(row[13])      # 投信買賣超股數
         if v is not None:
-            out[code] = (str(row[1]).strip(), v)
+            out[code] = (str(row[1]).strip(), v, trust)
     return out
 
 
@@ -152,8 +175,13 @@ def _save(path, obj):
 
 
 def collect(dates):
-    """抓多天寫進歷史。回實際新增的天數。"""
+    """抓多天寫進歷史。回實際新增的天數。
+
+    2026-09-17：同一次抓回來的資料，除了原本的三大法人合計（HIST_PATH），
+    也順手把投信單獨的買賣超存進 HIST_TRUST_PATH——反正 fetch_twse/fetch_tpex
+    已經解析出這個數字了，不多打一次 API，只是多存一份。"""
     hist = _load(HIST_PATH, {})
+    hist_trust = _load(HIST_TRUST_PATH, {})
     names = _load(NAMES_PATH, {})
     added = 0
     today = dt.date.today()
@@ -177,21 +205,30 @@ def collect(dates):
             # 留給明天重抓。同 [[cache_negative_result_bug]]。
             if d < today:
                 hist[key] = {}     # 過去的日期還是空 → 真的是非交易日/休市
+                hist_trust[key] = {}
             else:
                 print(f"  {key} 尚未公布（當日資料收盤後才有），不寫入，明天重抓")
             continue
-        hist[key] = {c: v for c, (n, v) in data.items()}
-        names.update({c: n for c, (n, v) in data.items()})
+        hist[key] = {c: v for c, (n, v, t) in data.items()}
+        hist_trust[key] = {c: t for c, (n, v, t) in data.items() if t is not None}
+        names.update({c: n for c, (n, v, t) in data.items()})
         added += 1
         print(f"  {key} 取得 {len(data)} 檔")
     _save(HIST_PATH, hist)
+    _save(HIST_TRUST_PATH, hist_trust)
     _save(NAMES_PATH, names)
     return added
 
 
-def detect(date_str=None):
-    """對最新一天算異常＋連買連賣。回 events list。"""
-    hist = _load(HIST_PATH, {})
+def _detect_from(hist_path, who, date_str=None):
+    """對最新一天算異常＋連買連賣。回 events list。
+
+    2026-09-17 從 detect() 抽出來，讓「三大法人合計」跟「投信單獨」共用同一套
+    方法論（跟自己近20日均值比、連續天數）——差別只在讀哪份歷史檔、事件文字
+    要不要標明「投信」，數學邏輯完全一樣，不要維護兩份幾乎一樣的程式碼。
+    `who`：事件文字前綴，例如「」（三大法人，維持原文字不變）或「投信」。
+    """
+    hist = _load(hist_path, {})
     names = _load(NAMES_PATH, {})
     days = sorted(d for d in hist if hist[d])      # 只看有資料的交易日
     if not days:
@@ -204,17 +241,17 @@ def detect(date_str=None):
 
     events = []
     for code, v in hist[today].items():
-        if abs(v) < MIN_SHARES:
+        if v is None or abs(v) < MIN_SHARES:
             continue
         nm = names.get(code, code)
         # ① 異常：跟自己近20日的平均絕對值比（每檔自己的基準，不用全市場統一門檻——
         #    跟 base_rate 同一個思路：大型股天天幾萬張，小型股幾百張就算大）
-        vals = [abs(hist[d][code]) for d in past if code in hist[d]]
+        vals = [abs(hist[d][code]) for d in past if hist[d].get(code) is not None]
         if len(vals) >= MIN_HISTORY:
             avg = sum(vals) / len(vals)
             if avg > 0 and abs(v) > avg * ANOMALY_MULT:
                 events.append({"code": code, "name": nm,
-                               "event": "異常大買" if v > 0 else "異常大賣",
+                               "event": f"{who}異常大買" if v > 0 else f"{who}異常大賣",
                                "kind": "anomaly", "shares": v,
                                "vs_avg": round(abs(v) / avg, 1)})
         # ② 連買/連賣：從今天往回數同方向的連續天數
@@ -228,9 +265,19 @@ def detect(date_str=None):
         need = STREAK_BUY if sign > 0 else STREAK_SELL
         if streak >= need:
             events.append({"code": code, "name": nm,
-                           "event": f"法人連{'買' if sign > 0 else '賣'} {streak} 天",
+                           "event": f"{who}連{'買' if sign > 0 else '賣'} {streak} 天",
                            "kind": "streak", "days": streak, "shares": v})
     return events
+
+
+def detect(date_str=None):
+    """三大法人合計版（原本的邏輯，行為不變）。"""
+    return _detect_from(HIST_PATH, "", date_str)
+
+
+def detect_trust(date_str=None):
+    """投信單獨版（2026-09-17 新增，對標老墨「投信慢慢吃股份」的訊號）。"""
+    return _detect_from(HIST_TRUST_PATH, "投信", date_str)
 
 
 def calibrate():
@@ -310,6 +357,40 @@ def summary_lines(events, max_each=4):
     return out
 
 
+def summary_lines_trust(events, max_each=4):
+    """投信單獨版的 summary_lines（2026-09-17）——跟 summary_lines() 版面邏輯
+    一樣，但事件文字帶「投信」前綴（來自 detect_trust() 的 who="投信"），
+    分組要對到那個前綴，不能沿用 summary_lines() 的固定 key。"""
+    if not events:
+        return []
+    groups = {"投信異常大買": [], "投信異常大賣": [], "投信連買": [], "投信連賣": []}
+    for e in events:
+        if e["kind"] == "anomaly":
+            groups[e["event"]].append(e)
+        elif "連買" in e["event"]:
+            groups["投信連買"].append(e)
+        else:
+            groups["投信連賣"].append(e)
+    icons = {"投信異常大買": "🟢", "投信異常大賣": "🔴", "投信連買": "📈", "投信連賣": "📉"}
+    out = []
+    for k, lst in groups.items():
+        if not lst:
+            continue
+        lst.sort(key=lambda e: -(e.get("vs_avg") or e.get("days") or 0))
+        if out:
+            out.append("")
+        n_show = 3 if k == "投信連賣" else max_each
+        out.append(f"{icons[k]} **{k}**（{len(lst)} 檔）")
+        for e in lst[:n_show]:
+            lots = abs(e.get("shares") or 0) / 1000
+            detail = (f"{e['vs_avg']:.1f} 倍" if e.get("vs_avg")
+                      else f"連 {e.get('days')} 天")
+            out.append(f"　{e['code']} {e['name']}　{detail}・{lots:,.0f} 張")
+        if len(lst) > n_show:
+            out.append(f"-# 　…還有 {len(lst)-n_show} 檔")
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--date", default=None, help="YYYYMMDD，預設今天")
@@ -346,6 +427,17 @@ def main():
                      "events": events})
     print(f"\n✅ {len(events)} 筆籌碼異常 → {OUT_PATH}")
     for l in summary_lines(events):
+        print(" ", l)
+
+    # 2026-09-17：投信單獨版，跟三大法人合計版平行跑、平行存，兩份互不影響。
+    events_trust = detect_trust()
+    hist_trust = _load(HIST_TRUST_PATH, {})
+    days_trust = sorted(x for x in hist_trust if hist_trust[x])
+    _save(OUT_TRUST_PATH, {"date": days_trust[-1] if days_trust else None,
+                          "generated_at": dt.datetime.now().isoformat(timespec="seconds"),
+                          "events": events_trust})
+    print(f"\n✅ {len(events_trust)} 筆投信異常 → {OUT_TRUST_PATH}")
+    for l in summary_lines_trust(events_trust):
         print(" ", l)
 
 
