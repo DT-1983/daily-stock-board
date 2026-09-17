@@ -1,15 +1,13 @@
 {
- "date": "2026-09-16",
- "lamp_date": "2026-09-16",
+ "date": "2026-09-17",
+ "lamp_date": "2026-09-17",
  "buy": [
-  "3231.TW",
-  "3363.TWO"
+  "6830.TW"
  ],
- "half_sell": [],
- "full_exit": [
-  "6442.TW",
-  "ORCL"
+ "half_sell": [
+  "PAAS"
  ],
- "held": 12,
+ "full_exit": [],
+ "held": 13,
  "cash": 0.0
 }
