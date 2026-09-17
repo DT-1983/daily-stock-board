@@ -258,7 +258,7 @@ def build():
 
 def main():
     html = build()
-    dst = op.archive("DWDM薄膜濾光片產業筆記.html")
+    dst = op.archive("2026-09-16_DWDM薄膜濾光片產業筆記.html")
     io.open(dst, "w", encoding="utf-8").write(html)
     print(f"已存 {dst}（{len(html):,} 字）")
 

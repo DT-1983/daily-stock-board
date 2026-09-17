@@ -430,7 +430,7 @@ def build():
 
 def main():
     html = build()
-    dst = op.archive("12吋光罩HighNA_EUV產業筆記.html")
+    dst = op.archive("2026-09-17_12吋光罩HighNA_EUV產業筆記.html")
     io.open(dst, "w", encoding="utf-8").write(html)
     print(f"已存 {dst}（{len(html):,} 字）")
 
