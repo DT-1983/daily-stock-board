@@ -1453,6 +1453,30 @@ function updateChartPoints(pts, trailDs) {
             return [head,
                     'RS-Ratio ' + p.ratio.toFixed(1) + '／RS-Momentum ' + p.momentum.toFixed(1),
                     '資金規模 ' + fmtSize(p.size)];
+          },
+          // 2026-09-17 Leo反饋「可以顯示最後一天的rs就好嗎？不用列出好幾天」——
+          // mode:'point' 會把同一顆泡泡的所有殘影軌跡點（不同天，座標幾乎沒動）
+          // 全部視為「同一個像素位置」一起塞進同一個tooltip，點到一顆穩定在領先
+          // 象限好幾天的籃子，就會看到自己好幾天的殘影數字疊在一起。這裡不改
+          // interaction.mode（改了會連「點中間殘影看那天數值」這個2026-08-26
+          // 特地做的功能一起弄丟），只在tooltip組裝前**依名稱去重，同名只留
+          // 日期最新的一筆**（現在這顆主泡泡沒有date欄位，視為最新）。
+          filter: function(item, index, array) {
+            function pick(it) {
+              var m = it.dataset && it.dataset._meta;
+              return m ? m[it.dataIndex]
+                       : (it.datasetIndex === 0 ? (window._rrgCurPts && window._rrgCurPts[it.dataIndex]) : null);
+            }
+            var p = pick(item);
+            if (!p) return false;
+            var pd = p.date || '9999-99-99';
+            return !array.some(function(o, i) {
+              if (o === item) return false;
+              var op = pick(o);
+              if (!op || op.name !== p.name) return false;
+              var od = op.date || '9999-99-99';
+              return od > pd || (od === pd && i < index);
+            });
           }}}
         },
         scales: {
