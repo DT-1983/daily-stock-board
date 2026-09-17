@@ -200,3 +200,8 @@ bulk_shipping_report.py
 
 # 2026-09-16：同上一條，這支也把統一投顧的個股評論直接寫死在程式碼裡。
 revenue_report.py
+
+# 2026-09-17：同上，這兩支也把統一投顧影音報告的內容（總經評論／產業評論）
+# 直接寫死在程式碼裡。
+silicon_wafer_note.py
+macro_fomc_note.py
