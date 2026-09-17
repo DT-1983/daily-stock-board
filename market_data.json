@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-17 15:40",
+ "updated": "2026-09-17 20:33",
  "indices": [
   {
    "sym": "^GSPC",
@@ -46,8 +46,8 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/17",
-   "close": 31.87,
-   "chg_pct": 0.3
+   "close": 31.83,
+   "chg_pct": 0.17
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "CCL「降級鬼故事」重擊PCB！台光電、聯茂、台燿同步重挫，真正改變的是「這件事」!?",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6609044",
-   "ts": "09/17 15:31"
-  },
-  {
-   "title": "信昌電(6173)高階MLCC需求爆發！AI占比估衝16%、漲價效益下半年陸續反映",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6609043",
-   "ts": "09/17 15:31"
-  },
-  {
-   "title": "川普顧問納瓦羅痛批聯準會主席華許：升息是「愚蠢決策」",
+   "title": "通膨恐破4%！英國央行11月就要升息？分析師：觀望時間正在縮短",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6608978",
-   "ts": "09/17 15:20"
+   "url": "https://news.cnyes.com/news/id/6609292",
+   "ts": "09/17 20:30"
   },
   {
-   "title": "弘塑(3131)訂單看到2030年，產能卻只夠三分之一，接單爆量卻出不了貨？",
+   "title": "英王查爾斯三世召集AI巨頭峰會 呼籲負責人管控技術",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6609275",
+   "ts": "09/17 20:20"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：歐特培(UGP-US)EPS預估上修至0.85元，預估目標價為7.57元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6609362",
+   "ts": "09/17 20:15"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：華納兄弟探索(WBD-US)EPS預估上修至-1.16元，預估目標價為31.00元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6609361",
+   "ts": "09/17 20:15"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：傑富瑞金融集團(JEF-US)EPS預估上修至3.7元，預估目標價為61.00元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6609360",
+   "ts": "09/17 20:15"
+  },
+  {
+   "title": "新增5檔股票明起抓去關  飆股全友、聯一光處置期至9/30",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6609006",
-   "ts": "09/17 15:00"
+   "url": "https://news.cnyes.com/news/id/6609348",
+   "ts": "09/17 20:14"
   },
   {
-   "title": "抗升息利空！光通訊股Lumentum、Coherent逆勢大漲 資金押注AI實體訂單",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6608604",
-   "ts": "09/17 15:00"
-  },
-  {
-   "title": "華為調整合作模式！股價年跌7成的賽力斯能讓問界順利「單飛」？是利空出盡還是預期落空？",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6608645",
-   "ts": "09/17 14:50"
-  },
-  {
-   "title": "愛立信攜手聯發科突破5G定位精準度 加速自駕車、無人機與智慧製造應用",
+   "title": "TIE開幕 中光電無人機搶下美警消大單 宇隆機器人攻北美市場",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6608970",
-   "ts": "09/17 14:17"
+   "url": "https://news.cnyes.com/news/id/6609339",
+   "ts": "09/17 20:11"
   },
   {
-   "title": "華許不顧川普施壓升息 凸顯Fed政策獨立性",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6608567",
-   "ts": "09/17 14:10"
-  },
-  {
-   "title": "〈台股盤後〉台積電、台塑四寶齊發力 上漲439點收復4萬6及月線",
+   "title": "鉅亨速報 - Factset 最新調查：國巨(2327-TW)EPS預估下修至19.73元，預估目標價為1040元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6608950",
-   "ts": "09/17 14:03"
+   "url": "https://news.cnyes.com/news/id/6609352",
+   "ts": "09/17 20:10"
   },
   {
-   "title": "華許抗通膨決心安撫市場！美股期指反彈、美債殖利率回到5%以下 焦點轉向日銀決策",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6608916",
-   "ts": "09/17 14:00"
+   "title": "〈央行理監事會〉M2年增率超過參考區間上限 楊金龍給2個理由 不宜解讀貨幣寬鬆",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6609349",
+   "ts": "09/17 20:07"
+  },
+  {
+   "title": "戴墨鏡口罩也能辨識！車輛中心「AI駕駛」視線追蹤技術亮相 導入首輛Level 3智駕電巴",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6609286",
+   "ts": "09/17 20:07"
   }
  ],
  "inst": {
   "date": "09/17",
-  "total_yi": 214.8,
+  "total_yi": 254.7,
   "foreign_yi": 121.9,
-  "trust_yi": 77.1
+  "trust_yi": 117.0
  }
 }
