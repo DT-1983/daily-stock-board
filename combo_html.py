@@ -85,11 +85,18 @@ table.cb tr:hover td{background:rgba(255,255,255,.03)}
 .qb{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:5px;
   color:#fff;margin-right:6px;letter-spacing:.3px}
 .qsec{font-size:11.5px;color:var(--muted)}
+.qind{color:var(--dim)}
+/* 2026-09-17：目標價來源標籤（投顧原文 vs yfinance市場共識），對標老墨截圖
+   會標「統一投顧錄音＋日期」——我們也要讓人分得清這是誰的判斷。 */
+.tgtsrc{display:inline-block;font-size:9px;font-weight:700;padding:0 4px;border-radius:4px;
+  margin-left:4px;letter-spacing:.2px;vertical-align:1px}
+.tgtadv{background:rgba(245,184,65,.18);color:#F5B841}
+.tgtcon{background:rgba(148,163,184,.18);color:var(--dim)}
 .expbtn{background:none;border:1px solid var(--line);border-radius:6px;color:var(--dim);
   cursor:pointer;font-family:inherit;font-size:11px;padding:2px 7px}
 .expbtn:hover{border-color:#4a9eff;color:#93C5FD}
 tr.detail>td{padding:0 6px 14px;background:rgba(255,255,255,.02)}
-@media(max-width:760px){table.cb th:nth-child(n+9),table.cb td:nth-child(n+9){display:none}
+@media(max-width:760px){table.cb th:nth-child(n+10),table.cb td:nth-child(n+10){display:none}
   .qsec{display:none}}
 /* 2026-09-03 Leo：工具欄太寬擋住圖 → 本頁專屬縮窄（不動 board_theme 全站標準）。
    主因是 .seg button min-height:38px、.sc 34px，四列疊起來很高。*/
@@ -277,15 +284,40 @@ def _row_html(r):
     # 類股象限（純顯示）：標籤顯示 60 日象限，滑鼠停上去看 20/60/120 三週期＋細分類
     q = r.get("quad") or {}
     q60 = q.get("60")
+    # 2026-09-17：兩層產業標籤（對標老墨截圖的「半導體業‧封測」）——sector_zh 是
+    # 一級（輪動籃子中文名），industry 是 TradingView 原始二級分類，目前沒有中文
+    # 對照表所以維持英文；資料本來就有抓，只是原本頁面只顯示一級，這裡補二級。
+    sec2 = r.get("industry")
+    sec_label = esc(r.get("sector_zh") or "")
+    if sec2:
+        sec_label += f'<span class="qind">‧{esc(sec2)}</span>'
     if q60 in QLAB:
         tip = "　".join(f"{n}日 {QLAB.get(q.get(n), '—')}" for n in ("20", "60", "120"))
         tip += f"｜{r.get('industry') or ''}｜輪動快照 {r.get('quad_date') or ''}"
         qh = (f'<span class="qb" style="background:{QCOL[q60]}" title="{esc(tip)}">{QLAB[q60]}</span>'
-              f'<span class="qsec">{esc(r.get("sector_zh") or "")}</span>')
+              f'<span class="qsec">{sec_label}</span>')
         qv = q60
     else:
         qh = '<span class="dimv" title="ETF 或查無類股分類">—</span>'
         qv = "none"
+    # 2026-09-17：目標價來源標籤（對標老墨截圖的「投顧目標價 統一投顧錄音 日期」）——
+    # advisor_reports 解析出來的投顧原文目標價優先於 yfinance 市場共識，來源要標出來
+    # 讓人分得清這是誰的判斷，不是我們自己算的。距目標%不管來源都算同一個公式。
+    tgt_src = r.get("target_source")
+    if tgt_src == "advisor":
+        tgt_tip = f"投顧原文目標價｜{esc(r.get('target_broker') or '')}　{esc(r.get('target_date') or '')}"
+        tgth = (f'<span title="{tgt_tip}">{_fmt(r.get("target"))}'
+               f'<span class="tgtsrc tgtadv">投顧</span></span>')
+    elif tgt_src == "consensus":
+        tgth = (f'<span title="yfinance市場共識均值，非單一投顧判斷">{_fmt(r.get("target"))}'
+               f'<span class="tgtsrc tgtcon">共識</span></span>')
+    else:
+        tgth = _fmt(r.get("target"))
+    tpct = r.get("target_pct")
+    if tpct is None:
+        tpcth = "—"
+    else:
+        tpcth = f'<span class="{"pos" if tpct >= 0 else "neg"}">{tpct:+.1f}%</span>'
     return (f'<tr data-mkt="{mkt}" data-lit="{r["lit"]}" data-rr="{rrok}" data-quad="{qv}" '
             f'data-tk="{esc(r["ticker"])}" '
             f'data-src="{esc(srcs)}" data-tid="{tid}">'
@@ -295,12 +327,13 @@ def _row_html(r):
             f'<td>{lamps}</td>'
             f'<td>{r["lit"]}/4</td>'
             f'<td>{_fmt(r["price"])}</td>'
-            f'<td>{_fmt(r.get("target"))}</td>'
+            f'<td>{tgth}</td>'
+            f'<td>{tpcth}</td>'
             f'<td>{rrh}</td><td>{gaph}</td>'
             f'<td>{_fmt(r.get("rs_short"),1,"%")}</td>'
             f'<td class="srcs">{esc("/".join(r.get("src") or []))}</td></tr>'
             + (f'<tr class="detail" id="{tid}" data-mkt="{mkt}" style="display:none">'
-               f'<td colspan="11">{_intro_cached(r["ticker"])}{r["chart"]}</td></tr>'
+               f'<td colspan="12">{_intro_cached(r["ticker"])}{r["chart"]}</td></tr>'
                if r.get("chart") else ""))
 
 
@@ -328,7 +361,9 @@ def _table(rows):
     if not rows:
         return '<div class="cbnote">這一組目前沒有標的。</div>'
     head = ("<tr><th>代號</th><th>名稱</th><th>類股象限</th><th>燈號</th><th>燈</th><th>現價</th>"
-            "<th>市場共識目標</th><th>風報比</th><th>距停損／翻多門檻</th><th>RS60</th><th>來源</th></tr>")
+            "<th title=\"優先顯示投顧原文目標價，沒有才退回yfinance市場共識\">目標價</th>"
+            "<th>距目標</th>"
+            "<th>風報比</th><th>距停損／翻多門檻</th><th>RS60</th><th>來源</th></tr>")
     return ('<table class="cb">' + head
             + "".join(_row_html(r) for r in rows) + "</table>")
 
