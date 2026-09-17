@@ -124,6 +124,17 @@ def format_discord(row):
     quad_line = f"類股象限（60日）：{QLAB.get(q60, '—')}" + (f"（{row.get('sector_zh')}）" if row.get("sector_zh") else "")
     src_note = "（今日掃描快取）" if row.get("src") == "cache" else "（即時查詢）"
     name = row.get("name") or ""
+    # 2026-09-18（Leo 對標老墨「點進個股看籌碼」）：三大法人/投信買賣超是台股
+    # 才有的概念（T86/櫃買dailyTrade），美股不查——chip_scan._is_tw() 判斷。
+    chip_line = ""
+    if CS._is_tw(row["ticker"]):
+        try:
+            import chip_scan as _cs
+            fl = _cs.recent_flow_line(row["ticker"])
+            if fl:
+                chip_line = f"🏦 {fl}\n"
+        except Exception:                                    # noqa: BLE001
+            pass
     # 2026-09-03：附視覺化頁連結（K線/成交量/動能/RS 四張圖）。
     # ⚠️ 網址**不帶 key**——Discord 訊息會存在對方伺服器上，token 不放進去。
     # 已授權過的裝置點了就進得去；沒授權的會看到「這台裝置還沒授權」的說明頁。
@@ -135,6 +146,7 @@ def format_discord(row):
         f"{rr_line}\n"
         f"RS60 {row.get('rs_short')}%\n"
         f"{quad_line}\n"
+        f"{chip_line}"
         f"{src_note}\n"
         f"📊 [看圖表版]({page})"
     )

@@ -333,8 +333,27 @@ def _row_html(r):
             f'<td>{_fmt(r.get("rs_short"),1,"%")}</td>'
             f'<td class="srcs">{esc("/".join(r.get("src") or []))}</td></tr>'
             + (f'<tr class="detail" id="{tid}" data-mkt="{mkt}" style="display:none">'
-               f'<td colspan="12">{_intro_cached(r["ticker"])}{r["chart"]}</td></tr>'
+               f'<td colspan="12">{_intro_cached(r["ticker"])}'
+               f'{_chip_cached(r["ticker"])}{r["chart"]}</td></tr>'
                if r.get("chart") else ""))
+
+
+def _chip_cached(ticker):
+    """展開列補一行「近5天投信買賣超」（2026-09-18，對標老墨「點進個股看籌碼」）。
+
+    跟 _intro_cached 同一個精神：只有台股才查（三大法人/投信是T86/櫃買的概念，
+    美股沒有），資料是現成的歷史檔（chip_scan.recent_flow_line() 有行程內快取，
+    這裡呼叫上百次也不會重複讀檔），不用額外打API、不會拖慢產頁速度。
+    """
+    import re as _re
+    if not _re.match(r"^\d{4,6}[A-Z]?(\.TWO?)?$", str(ticker)):
+        return ""
+    try:
+        import chip_scan as _cs
+        line = _cs.recent_flow_line(ticker)
+    except Exception:                                       # noqa: BLE001
+        line = None
+    return f'<div class="lk-intro">🏦 {esc(line)}</div>' if line else ""
 
 
 def _intro_cached(ticker):
