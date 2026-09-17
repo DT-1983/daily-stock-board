@@ -64,17 +64,24 @@ def _rows(events, chains):
     return out
 
 
-def render(data, chains):
+def render(data, chains, label="三大法人", page_title="籌碼異動"):
+    """2026-09-17 加 label/page_title 參數，讓「投信單獨版」（chip_html_trust.py）
+    能重用同一套 render 邏輯——預設值維持原本文字，既有呼叫端（chip.html 主頁）
+    行為完全不變。"""
     ev = data.get("events") or []
     rows = _rows(ev, chains)
     date = data.get("date", "")
     n_chain = sum(1 for r in rows if r["chains"])
 
+    buy_label = "異常大買" if label == "三大法人" else f"{label}異常大買"
+    sell_label = "異常大賣" if label == "三大法人" else f"{label}異常大賣"
+    streak_buy_label = "法人連買" if label == "三大法人" else f"{label}連買"
+    streak_sell_label = "法人連賣" if label == "三大法人" else f"{label}連賣"
     groups = [
-        ("異常大買", "🟢", [r for r in rows if r["kind"] == "anomaly" and r["buy"]], "mult"),
-        ("異常大賣", "🔴", [r for r in rows if r["kind"] == "anomaly" and not r["buy"]], "mult"),
-        ("法人連買", "📈", [r for r in rows if r["kind"] == "streak" and r["buy"]], "days"),
-        ("法人連賣", "📉", [r for r in rows if r["kind"] == "streak" and not r["buy"]], "days"),
+        (buy_label, "🟢", [r for r in rows if r["kind"] == "anomaly" and r["buy"]], "mult"),
+        (sell_label, "🔴", [r for r in rows if r["kind"] == "anomaly" and not r["buy"]], "mult"),
+        (streak_buy_label, "📈", [r for r in rows if r["kind"] == "streak" and r["buy"]], "days"),
+        (streak_sell_label, "📉", [r for r in rows if r["kind"] == "streak" and not r["buy"]], "days"),
     ]
 
     secs = []
@@ -105,20 +112,31 @@ def render(data, chains):
             f'<th>七鏈守備清單</th></tr></thead><tbody>'
             + "".join(trs) + '</tbody></table></section>')
 
-    sub = (f'{len(ev)} 筆・資料日 {esc(date)}・三大法人買賣超（上市＋上櫃約 1,870 檔全掃）'
+    sub = (f'{len(ev)} 筆・資料日 {esc(date)}・{esc(label)}買賣超（上市＋上櫃約 1,870 檔全掃）'
            f'　|　<b>{n_chain} 檔在七鏈守備清單內</b>（整列淺色標示）')
-    hdr = header("chip", "籌碼異動", sub, NAV, "chip")
+    hdr = header("chip", page_title, sub, NAV, "chip")
 
+    note_extra = (
+        '<p><b>為什麼看投信單獨</b>：三大法人合計會把外資（可能是避險/套利，'
+        '跟個股看法無關）、自營（短線操作）的量混進來，稀釋掉投信的訊號。'
+        '投信通常是判斷「有沒有人在慢慢吃下這家公司股份」比較乾淨的指標'
+        '（對標老墨「零式系統」的判讀邏輯）。</p>'
+        if label != "三大法人" else "")
     note = (
         '<div class="note"><b>怎麼看</b>'
-        '<p><b>異常大買／大賣</b>：今天的買賣超是這檔<b>自己近 20 日平均的幾倍</b>'
+        f'<p><b>異常大買／大賣</b>：今天的{esc(label)}買賣超是這檔'
+        '<b>自己近 20 日平均的幾倍</b>'
         '（每檔跟自己比，不是跟全市場比——大型股天天幾萬張、小型股幾百張就算大）。'
         '門檻 5 倍，實測約 9% 的股票會觸發。</p>'
-        '<p><b>法人連買／連賣</b>：連續同方向的天數，門檻 5 天。</p>'
+        f'<p><b>{esc(label)}連買／連賣</b>：連續同方向的天數，門檻 5 天。</p>'
+        + note_extra +
         '<p><b>七鏈守備清單</b>：有標的代表這檔在你追蹤的產業鏈裡——'
         '清單外的異動多半跟你的方向無關，這欄是用來快速過濾的。</p>'
         '<p class="disc">資料來源：臺灣證券交易所 T86、櫃買中心公開資料。'
-        '本頁僅彙整統計公開資訊，非投資建議。</p></div>')
+        '本頁僅彙整統計公開資訊，非投資建議。'
+        + (' <a href="chip_trust.html">→ 看投信單獨版</a>' if label == "三大法人"
+           else ' <a href="chip.html">→ 看三大法人合計版</a>')
+        + '</p></div>')
 
     css = BASE_CSS + """
 section{margin:22px 0}
@@ -144,7 +162,7 @@ tr.hit td.c{color:var(--accent);font-weight:600}
 """
     return (f'<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width,initial-scale=1">'
-            f'<title>籌碼異動</title><style>{css}</style></head><body>'
+            f'<title>{esc(page_title)}</title><style>{css}</style></head><body>'
             # header 要包在 .wrap 裡（首頁的做法），否則標題貼齊視窗左緣、
             # 跟下面的內容對不齊——.wrap 才有 max-width + 置中。
             + '<div class="wrap">'
@@ -155,16 +173,33 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("-o", "--output", default="docs/chip.html")
     a = ap.parse_args()
+    chains = _chain_map()
     try:
         data = json.load(open("state/chip_events.json", encoding="utf-8"))
     except Exception as e:
         print(f"讀不到 state/chip_events.json（先跑 chip_scan.py）：{e}")
         return
-    html = render(data, _chain_map())
+    html = render(data, chains)
     for out in (a.output, os.path.join(OBIS, "籌碼異動.html")):
         try:
             os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
             io.open(out, "w", encoding="utf-8").write(html)
+            print(f"✅ {out}")
+        except Exception as e:
+            print(f"⚠️ 寫入 {out} 失敗（不影響其他輸出）：{e}")
+
+    # 2026-09-17：投信單獨版，同一套 render()，換資料源＋label。
+    try:
+        data_t = json.load(open("state/chip_events_trust.json", encoding="utf-8"))
+    except Exception as e:
+        print(f"讀不到 state/chip_events_trust.json（先跑 chip_scan.py，不影響上面主頁）：{e}")
+        return
+    html_t = render(data_t, chains, label="投信", page_title="投信單獨異動")
+    trust_out = os.path.join(os.path.dirname(a.output) or ".", "chip_trust.html")
+    for out in (trust_out, os.path.join(OBIS, "投信單獨異動.html")):
+        try:
+            os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
+            io.open(out, "w", encoding="utf-8").write(html_t)
             print(f"✅ {out}")
         except Exception as e:
             print(f"⚠️ 寫入 {out} 失敗（不影響其他輸出）：{e}")
