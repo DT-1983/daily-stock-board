@@ -284,7 +284,7 @@ def scan_one(tk, sym, df, bench_closes):
             "asof": str(df.index[-1])[:10]}
 
 
-def add_rr(row, tgt):
+def add_rr(row, tgt, advisor=None):
     """補目標價與風報比。沒有目標價就明確標 None——不要拿貴價之類的東西硬湊，
     那會做出一個看起來像但意義不同的數字。
 
@@ -296,23 +296,67 @@ def add_rr(row, tgt):
 
     改成：**目標價一律填**（有就填），**風報比才維持空方不算**——
     空方沒有「持有中的停損」可言，談賠率無意義，這個原始設計是對的，不動。
+
+    2026-09-17（Leo 對標老墨截圖，補「投顧目標價＋來源＋日期」跟「距目標%」）：
+    `advisor` 有給（來自 advisor_reports.active() 逐檔取最新一筆）就**優先用投顧
+    原文目標價**，target_source 標成 "advisor"；沒有才退回 yfinance 市場共識，
+    target_source 標 "consensus"——跟軍師資料庫那邊「事實優先於推論」是同一個
+    排序，market 共識是均值、不是任何人真正給出的判斷。距目標%不管來源都算，
+    因為公式一樣（(目標價-現價)/現價），只是分子的目標價從哪來不同。
     """
     row["target"] = None
     row["rr"] = None
     row["target_n"] = None
+    row["target_source"] = None
+    row["target_broker"] = None
+    row["target_date"] = None
+    row["target_pct"] = None
+    if advisor and advisor.get("target") is not None:
+        row["target"] = round(float(advisor["target"]), 2)
+        row["target_source"] = "advisor"
+        row["target_broker"] = advisor.get("broker")
+        row["target_date"] = advisor.get("date")
+    elif tgt and tgt.get("mean") is not None:
+        row["target"] = round(float(tgt["mean"]), 2)
+        row["target_low"] = tgt.get("low")
+        row["target_high"] = tgt.get("high")
+        row["target_source"] = "consensus"
+    if row["target"] is not None and row.get("price"):
+        row["target_pct"] = round((row["target"] - row["price"]) / row["price"] * 100, 1)
+    # 風報比：只用市場共識均值算（沿用既有邏輯，投顧目標價的風報比意義不同——
+    # 那是「這份報告」的賠率不是「市場」的賠率，不能混進同一個欄位），
+    # 空方不給（沒有持有中的停損）；沒有 SuperTrend 線也算不出來。
     if not tgt or tgt.get("mean") is None:
         return row
-    # 目標價本身跟多空無關，先填
-    row["target"] = round(float(tgt["mean"]), 2)
-    row["target_low"] = tgt.get("low")
-    row["target_high"] = tgt.get("high")
-    # 風報比：空方不給（沒有持有中的停損）；沒有 SuperTrend 線也算不出來
     if not row.get("bull") or not row.get("st_line"):
         return row
     mean, px, sl = float(tgt["mean"]), row["price"], row["st_line"]
     if px > sl:
         row["rr"] = round((mean - px) / (px - sl), 2)
     return row
+
+
+def _advisor_targets():
+    """{norm_ticker: {target, broker, date}}——每檔只取最新一筆有目標價的報告。
+
+    跟 advisor_db_export._reports_by_ticker() 同一個資料源（state/advisor_reports.json），
+    這裡只挑「有目標價」的（Note類報告 target=None 對 combo 列表沒有意義）。
+    """
+    try:
+        import advisor_reports as ar
+        from investment_chief import norm_ticker
+    except Exception as e:                               # noqa: BLE001
+        print(f"  [warn] 讀投顧報告失敗（不影響其他欄位）：{str(e)[:60]}")
+        return {}
+    out = {}
+    for r in ar.active().values():
+        tk, tgt = r.get("ticker"), r.get("target")
+        if not tk or tgt is None:
+            continue
+        k = norm_ticker(tk)
+        if k not in out or (r.get("date") or "") >= (out[k].get("date") or ""):
+            out[k] = {"target": tgt, "broker": r.get("broker"), "date": r.get("date")}
+    return out
 
 
 # ── 批次掃描 ────────────────────────────────────────────────────
@@ -379,8 +423,10 @@ def scan_all(force_targets=False):
         rows.append(r)
 
     tgt = price_targets([r["ticker"] for r in rows], force=force_targets)
+    advisor = _advisor_targets()
+    from investment_chief import norm_ticker
     for r in rows:
-        add_rr(r, tgt.get(r["ticker"]))
+        add_rr(r, tgt.get(r["ticker"]), advisor.get(norm_ticker(r["ticker"])))
     attach_sector(rows)
     rows.sort(key=lambda r: (-r["lit"], -(r["rr"] if r["rr"] is not None else -99)))
     print(f"  算出 {len(rows)} 檔，跳過 {len(skipped)} 檔")
@@ -487,6 +533,40 @@ def diff_state(rows):
     return new, lost
 
 
+# ── 自訂觀察清單增刪查（2026-09-17 抽出來給 Discord /加自選 共用，
+#    原本只有 main() 的 --add/--remove/--list 分支在用，CLI 跟指令不該各寫一套）──
+def add_to_watchlist(tk):
+    """回 (ok, name, message)。ok=False 代表已經在清單裡，不算錯誤。"""
+    tk = tk.strip()
+    wl = _load(WATCHLIST_PATH, [])
+    if any(r.get("ticker") == tk for r in wl):
+        return False, None, f"{tk} 已經在清單裡"
+    import tw_symbol
+    import yfinance as yf
+    sym = tw_symbol.resolve(tk)
+    try:
+        nm = (yf.Ticker(sym).info or {}).get("longName") or tk
+    except Exception:                                   # noqa: BLE001
+        nm = tk
+    wl.append({"ticker": tk, "name": nm, "added": time.strftime("%Y-%m-%d")})
+    _save(WATCHLIST_PATH, wl)
+    return True, nm, f"已加入：{tk} {nm}"
+
+
+def remove_from_watchlist(tk):
+    tk = tk.strip()
+    wl = _load(WATCHLIST_PATH, [])
+    n = len(wl)
+    wl = [r for r in wl if r.get("ticker") != tk]
+    _save(WATCHLIST_PATH, wl)
+    removed = n - len(wl)
+    return removed, f"已移除 {removed} 筆" if removed else f"{tk} 不在清單裡"
+
+
+def list_watchlist():
+    return _load(WATCHLIST_PATH, [])
+
+
 def main():
     ap = argparse.ArgumentParser(description="COMBO 四燈共振掃描")
     ap.add_argument("--add", metavar="TICKER", help="加進自訂觀察清單")
@@ -496,30 +576,16 @@ def main():
     ap.add_argument("--top", type=int, default=20, help="終端機顯示前幾名")
     a = ap.parse_args()
 
-    wl = _load(WATCHLIST_PATH, [])
     if a.add:
-        tk = a.add.strip()
-        if any(r.get("ticker") == tk for r in wl):
-            print(f"{tk} 已經在清單裡")
-        else:
-            import tw_symbol
-            import yfinance as yf
-            sym = tw_symbol.resolve(tk)
-            try:
-                nm = (yf.Ticker(sym).info or {}).get("longName") or tk
-            except Exception:                           # noqa: BLE001
-                nm = tk
-            wl.append({"ticker": tk, "name": nm, "added": time.strftime("%Y-%m-%d")})
-            _save(WATCHLIST_PATH, wl)
-            print(f"已加入：{tk} {nm}")
+        _ok, _nm, msg = add_to_watchlist(a.add)
+        print(msg)
         return 0
     if a.remove:
-        n = len(wl)
-        wl = [r for r in wl if r.get("ticker") != a.remove.strip()]
-        _save(WATCHLIST_PATH, wl)
-        print(f"已移除 {n - len(wl)} 筆")
+        _n, msg = remove_from_watchlist(a.remove)
+        print(msg)
         return 0
     if a.list:
+        wl = list_watchlist()
         print(f"自訂觀察清單 {len(wl)} 檔：")
         for r in wl:
             print(f"  {r['ticker']:10} {r.get('name','')}　（{r.get('added','')} 加入）")

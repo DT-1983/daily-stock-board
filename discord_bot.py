@@ -96,6 +96,58 @@ async def cmd_lookup(interaction: discord.Interaction, 代號: str):
     await interaction.followup.send(msg)
 
 
+# ── #加自選／移除自選／自選清單：combo_scan 的自訂觀察清單（2026-09-17）─────
+#
+# 對標老墨截圖左下角「加自選股：輸入代號」——這個功能原本只有 CLI
+# （combo_scan.py --add/--remove/--list）能用，Leo 在手機上動不了。
+# 邏輯已經抽成 combo_scan.add_to_watchlist() 等函式，這裡只是接殼，
+# 跟 CLI 走同一份 state/combo_watchlist.json，兩邊不會不同步。
+@tree.command(name="加自選", description="加一檔進COMBO燈號的自訂觀察清單")
+@app_commands.describe(代號="股票代號，例：2454 / COST / BRK.B")
+async def cmd_add_watchlist(interaction: discord.Interaction, 代號: str):
+    await interaction.response.defer(thinking=True)
+    try:
+        import combo_scan
+        _ok, _nm, msg = await asyncio.to_thread(combo_scan.add_to_watchlist, 代號)
+    except Exception as e:                                # noqa: BLE001
+        traceback.print_exc()
+        msg = f"⚠️ 加入失敗：{e}"
+    await interaction.followup.send(msg)
+
+
+@tree.command(name="移除自選", description="從COMBO燈號的自訂觀察清單移除一檔")
+@app_commands.describe(代號="股票代號")
+async def cmd_remove_watchlist(interaction: discord.Interaction, 代號: str):
+    await interaction.response.defer(thinking=True)
+    try:
+        import combo_scan
+        _n, msg = await asyncio.to_thread(combo_scan.remove_from_watchlist, 代號)
+    except Exception as e:                                # noqa: BLE001
+        traceback.print_exc()
+        msg = f"⚠️ 移除失敗：{e}"
+    await interaction.followup.send(msg)
+
+
+@tree.command(name="自選清單", description="列出COMBO燈號的自訂觀察清單")
+async def cmd_list_watchlist(interaction: discord.Interaction):
+    await interaction.response.defer(thinking=True)
+    try:
+        import combo_scan
+        wl = await asyncio.to_thread(combo_scan.list_watchlist)
+        if not wl:
+            msg = "自選清單目前是空的。"
+        else:
+            lines = [f"**自選清單（{len(wl)} 檔）**"]
+            lines += [f"　{r['ticker']} {r.get('name','')}（{r.get('added','')} 加入）"
+                     for r in wl]
+            msg = "\n".join(lines)
+    except Exception as e:                                # noqa: BLE001
+        traceback.print_exc()
+        msg = f"⚠️ 查詢失敗：{e}"
+    for i in range(0, len(msg), 1900):
+        await interaction.followup.send(msg[i:i + 1900])
+
+
 # ── #軍議：仲達（風險官）／陳壽（復盤官）─────────────────────────
 # 路線圖第 1 項階段 3。材料組裝＋提問都在 war_room.py，這裡只負責 Discord 的殼。
 #
