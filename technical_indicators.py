@@ -1125,6 +1125,7 @@ function ti_side_{uid}(){{
 }}
 {_autodraw}
 </script>
+</div>
 </div>"""
 
     def _lbl(dir_, bars):

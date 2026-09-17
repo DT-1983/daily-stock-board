@@ -418,6 +418,86 @@ def recent_flow_line(code, days=5):
            f"累計{'買超' if total_lots >= 0 else '賣超'}{abs(total_lots):,.0f}張")
 
 
+def chart_html(code, days=60, uid=None):
+    """個股籌碼面時間序列圖（2026-09-18，對標老墨「籌碼分析」分頁的「法人力度」，
+    Leo：「進出燈號…我指的是籌碼分析」「像之前給你老墨的頁面一樣，一個可以看
+    技術分析、一個看籌碼面」）。
+
+    只做查得到資料的那塊——三大法人合計／投信單獨的**每日買賣超（張）**長條圖，
+    切換算法沿用跟 chip.html 同一套 `.seg` 按鈕（BASE_CSS 既有元件，不必另外
+    寫 CSS）。**刻意不做的部分**：老墨截圖裡的「分點力度」（分點/大戶集中度）
+    要 XQ 那種付費看盤軟體才有的逐筆分點資料，FinMind／證交所免費資料源查不到，
+    做不出來；「占股本比」算法切換也是 v2 再說，這版先給看得到、算得出來的
+    股數版本，不假裝有分點力度那塊。
+
+    嵌進頁面前提：呼叫端已經載入 Chart.js（跟 technical_indicators 用同一顆
+    全域 `Chart`）——combo.html／lamp_room／lookup_page 本來就因為技術面圖表
+    載過了，這裡不重複載 CDN。
+
+    回傳空字串：非台股，或近 `days` 天完全查不到資料（新掛牌/太冷門/美股)。
+    """
+    import re as _re
+    if not _re.match(r"^\d{4,6}[A-Z]?(\.TWO?)?$", str(code)):
+        return ""
+    flow = recent_flow(code, days)["days"]
+    dates = [d["date"][5:].replace("-", "/") for d in flow]
+    total = [None if d["total"] is None else round(d["total"] / 1000, 1) for d in flow]
+    trust = [None if d["trust"] is None else round(d["trust"] / 1000, 1) for d in flow]
+    if not any(v is not None for v in total) and not any(v is not None for v in trust):
+        return ""
+    uid = uid or _re.sub(r"[.\-]", "_", str(code))
+    Q = chr(34)
+    data_json = json.dumps({"dates": dates, "total": total, "trust": trust}, ensure_ascii=False)
+    # ⚠️ 這個分頁預設是隱藏的（外層技術分析／籌碼面切換），Chart.js 在容器
+    # display:none 時建圖會量到 0 寬高、畫出來是壓扁的一條線——跟
+    # technical_indicators.py 處理「展開圖表」同一個坑（見該檔 _autodraw 說明）。
+    # 所以這裡不在載入當下就建圖，改成掛一個 window.chip_draw_{uid}()，
+    # 由外層切分頁的地方（combo_html._tech_chip_html）在**第一次真的顯示**
+    # 這個分頁時才呼叫，容器此時才有真正的寬度可以量。
+    return f"""<div class="chipchart">
+<div class="tclabel">籌碼面 - 法人力度（每日買賣超，單位：張；{Q}三大法人合計{Q}／{Q}投信單獨{Q}切換）</div>
+<div class="ctrl" style="position:static;padding:0 0 8px;border:0;margin:0">
+<div class="seg" role="group" aria-label="切換算法">
+<button data-cv="total" aria-pressed="true">三大法人合計</button>
+<button data-cv="trust" aria-pressed="false">投信單獨</button>
+</div></div>
+<div class="tcbox"><canvas id="chip_c_{uid}"></canvas></div>
+</div>
+<script>
+window.chip_draw_{uid} = function(){{
+  if (window.chip_drawn_{uid}) return;
+  window.chip_drawn_{uid} = true;
+  var d = {data_json};
+  var css = getComputedStyle(document.documentElement);
+  var up = (css.getPropertyValue('--up') || '#22C55E').trim() || '#22C55E';
+  var dn = (css.getPropertyValue('--down') || '#EF4444').trim() || '#EF4444';
+  function colorize(arr){{ return arr.map(function(v){{ return v==null?'transparent':(v>=0?up:dn); }}); }}
+  var canvas = document.getElementById({Q}chip_c_{uid}{Q});
+  var chart = new Chart(canvas, {{type:'bar',
+    data:{{labels:d.dates, datasets:[
+      {{label:'三大法人合計(張)', data:d.total, backgroundColor:colorize(d.total), borderRadius:2}},
+      {{label:'投信單獨(張)', data:d.trust, backgroundColor:colorize(d.trust), borderRadius:2, hidden:true}}
+    ]}},
+    options:{{responsive:true, maintainAspectRatio:false,
+      plugins:{{legend:{{display:false}}, tooltip:{{callbacks:{{label:function(c){{
+        return c.dataset.label+'：'+(c.parsed.y==null?'—':c.parsed.y.toLocaleString()+' 張');
+      }}}}}}}},
+      scales:{{x:{{ticks:{{color:'#9aa0a6',maxRotation:0,autoSkip:true,font:{{size:9}}}},grid:{{display:false}}}},
+               y:{{ticks:{{color:'#9aa0a6',font:{{size:10}}}},grid:{{color:'rgba(255,255,255,.06)'}}}}}}}}
+  }});
+  canvas.closest('.chipchart').querySelectorAll('.seg button[data-cv]').forEach(function(b){{
+    b.addEventListener('click', function(){{
+      canvas.closest('.chipchart').querySelectorAll('.seg button[data-cv]').forEach(function(x){{
+        x.setAttribute('aria-pressed', x===b?'true':'false'); }});
+      chart.data.datasets[0].hidden = (b.dataset.cv !== 'total');
+      chart.data.datasets[1].hidden = (b.dataset.cv !== 'trust');
+      chart.update();
+    }});
+  }});
+}};
+</script>"""
+
+
 def summary_lines(events, max_each=4):
     """給日報/Discord 用。分四類，每類最多列 max_each 檔。
 
