@@ -1,5 +1,5 @@
 {
- "date": "2026-09-16",
+ "date": "2026-09-17",
  "period": 60,
  "mode": "daily",
  "chains": {
@@ -46,10 +46,10 @@
    "supertrend": "空頭",
    "squeeze": {
     "on": true,
-    "level": "微壓",
+    "level": "中壓",
     "momentum_up": false
    },
-   "summary": "落後象限(RS 98.85/動能 98.65)｜SuperTrend空頭｜微壓蓄力中，動能偏空"
+   "summary": "落後象限(RS 98.85/動能 98.65)｜SuperTrend空頭｜中壓蓄力中，動能偏空"
   },
   "us:太陽能": {
    "members_used": 8,
@@ -62,10 +62,10 @@
    "supertrend": "空頭",
    "squeeze": {
     "on": true,
-    "level": "中壓",
+    "level": "極壓",
     "momentum_up": false
    },
-   "summary": "落後象限(RS 98.9/動能 98.46)｜SuperTrend空頭｜中壓蓄力中，動能偏空"
+   "summary": "落後象限(RS 98.9/動能 98.46)｜SuperTrend空頭｜極壓蓄力中，動能偏空"
   },
   "us:Bitcoin→AI 機房": {
    "members_used": 8,
@@ -93,11 +93,11 @@
    "rrg_from": null,
    "supertrend": "空頭",
    "squeeze": {
-    "on": false,
-    "level": null,
+    "on": true,
+    "level": "微壓",
     "momentum_up": false
    },
-   "summary": "改善象限(RS 99.45/動能 101.05)｜SuperTrend空頭｜未擠壓"
+   "summary": "改善象限(RS 99.45/動能 101.05)｜SuperTrend空頭｜微壓蓄力中，動能偏空"
   },
   "us:機器人": {
    "members_used": 8,
@@ -303,7 +303,7 @@
    "squeeze": {
     "on": false,
     "level": null,
-    "momentum_up": true
+    "momentum_up": false
    },
    "summary": "領先象限(RS 102.53/動能 102.0)｜SuperTrend多頭｜未擠壓"
   }
