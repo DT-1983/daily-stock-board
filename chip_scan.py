@@ -46,6 +46,12 @@ NAMES_PATH = "state/chip_names.json"      # {code: name}
 # 一份檔案上就好。
 HIST_TRUST_PATH = "state/chip_history_trust.json"   # {date: {code: 投信買賣超股數}}
 OUT_TRUST_PATH = "state/chip_events_trust.json"
+# 2026-09-18：投信「占股本比」——老墨逐字稿講的第二種算法（占股本比 vs 占成交量比，
+# 他個人偏好占股本比）。股本很少變（只有增減資才會動），90天快取夠用；
+# 只在「已經被偵測出事件」的30-40檔上查，不是對全市場~1900檔都查，
+# 不會拖慢每日批次（見 shares_outstanding() 的說明）。
+SHARES_PATH = "state/shares_outstanding.json"       # {code: {shares, asof}}
+SHARES_CACHE_DAYS = 90
 
 TWSE_URL = "https://www.twse.com.tw/rwd/zh/fund/T86"
 TPEX_URL = "https://www.tpex.org.tw/www/zh-tw/insti/dailyTrade"
@@ -311,6 +317,59 @@ def calibrate():
         print(f"  門檻 {m}x → {hit} 檔觸發（{hit/n:.1%}）")
 
 
+def shares_outstanding(codes):
+    """{code: 已發行股數 或 None}。只查傳進來的代號（通常是當天事件的30-40檔），
+    不是全市場——股本查詢是逐檔打 FinMind，全市場~1900檔會很慢，但事件觸發後
+    的子集合小很多，這樣做才划算。
+
+    2026-09-18：資料源 FinMind `TaiwanStockShareholding` 的 `NumberOfSharesIssued`
+    欄位（跟外資持股比同一個資料集，本來就有這個數字，不用另外找資料源）。
+    股本只有增減資才會動，用 90 天快取——跟 sector_map()/price_targets() 同一個
+    「查過的東西留久一點」的慣例。
+    """
+    cache = _load(SHARES_PATH, {})
+    today = dt.date.today()
+
+    def fresh(e):
+        try:
+            return bool(e) and e.get("shares") is not None and \
+                (today - dt.date.fromisoformat(e["asof"])).days < SHARES_CACHE_DAYS
+        except Exception:                                   # noqa: BLE001
+            return False
+
+    out = {}
+    need = []
+    for c in codes:
+        e = cache.get(c)
+        if fresh(e):
+            out[c] = e["shares"]
+        else:
+            need.append(c)
+    if need:
+        try:
+            from fundamentals_reality import _fm
+        except Exception as e:                              # noqa: BLE001
+            print(f"  [warn] 股本查詢模組載入失敗：{str(e)[:60]}")
+            for c in need:
+                out[c] = None
+            need = []
+        for c in need:
+            shares = None
+            try:
+                rows = _fm("TaiwanStockShareholding", c, "2026-01-01")
+                if rows:
+                    shares = rows[-1].get("NumberOfSharesIssued")
+            except Exception:                                # noqa: BLE001
+                pass
+            out[c] = shares
+            cache[c] = {"shares": shares, "asof": today.isoformat()}
+            time.sleep(0.15)
+        _save(SHARES_PATH, cache)
+        print(f"  股本查詢：補查 {len(need)} 檔，"
+             f"{sum(1 for c in need if out.get(c))} 檔查到")
+    return out
+
+
 def summary_lines(events, max_each=4):
     """給日報/Discord 用。分四類，每類最多列 max_each 檔。
 
@@ -360,7 +419,12 @@ def summary_lines(events, max_each=4):
 def summary_lines_trust(events, max_each=4):
     """投信單獨版的 summary_lines（2026-09-17）——跟 summary_lines() 版面邏輯
     一樣，但事件文字帶「投信」前綴（來自 detect_trust() 的 who="投信"），
-    分組要對到那個前綴，不能沿用 summary_lines() 的固定 key。"""
+    分組要對到那個前綴，不能沿用 summary_lines() 的固定 key。
+
+    2026-09-18 加占股本比：只查「真的會顯示出來」的那些檔（每組最多 max_each，
+    通常十幾檔），不是整份 events（可能有 35 檔但只顯示一小部分）——
+    再省一點 FinMind 查詢量。
+    """
     if not events:
         return []
     groups = {"投信異常大買": [], "投信異常大賣": [], "投信連買": [], "投信連賣": []}
@@ -371,12 +435,19 @@ def summary_lines_trust(events, max_each=4):
             groups["投信連買"].append(e)
         else:
             groups["投信連賣"].append(e)
+    for k in groups:
+        groups[k].sort(key=lambda e: -(e.get("vs_avg") or e.get("days") or 0))
+    shown_codes = set()
+    for k, lst in groups.items():
+        n_show = 3 if k == "投信連賣" else max_each
+        shown_codes.update(e["code"] for e in lst[:n_show])
+    shares = shares_outstanding(sorted(shown_codes)) if shown_codes else {}
+
     icons = {"投信異常大買": "🟢", "投信異常大賣": "🔴", "投信連買": "📈", "投信連賣": "📉"}
     out = []
     for k, lst in groups.items():
         if not lst:
             continue
-        lst.sort(key=lambda e: -(e.get("vs_avg") or e.get("days") or 0))
         if out:
             out.append("")
         n_show = 3 if k == "投信連賣" else max_each
@@ -385,7 +456,10 @@ def summary_lines_trust(events, max_each=4):
             lots = abs(e.get("shares") or 0) / 1000
             detail = (f"{e['vs_avg']:.1f} 倍" if e.get("vs_avg")
                       else f"連 {e.get('days')} 天")
-            out.append(f"　{e['code']} {e['name']}　{detail}・{lots:,.0f} 張")
+            so = shares.get(e["code"])
+            pct = (f"　占股本{e.get('shares', 0)/so*100:+.2f}%"
+                  if so else "")
+            out.append(f"　{e['code']} {e['name']}　{detail}・{lots:,.0f} 張{pct}")
         if len(lst) > n_show:
             out.append(f"-# 　…還有 {len(lst)-n_show} 檔")
     return out

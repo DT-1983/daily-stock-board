@@ -45,20 +45,28 @@ def _chain_map():
     return out
 
 
-def _rows(events, chains):
-    """整理成表格列，並標註七鏈歸屬。"""
+def _rows(events, chains, shares=None):
+    """整理成表格列，並標註七鏈歸屬。
+
+    2026-09-18 加 shares（{code: 股本}，只有投信頁會傳）→ 算「占股本比」，
+    跟「倍數」是兩種不同的比較基準：倍數是跟自己比、占股本比是跨公司比。
+    """
+    shares = shares or {}
     out = []
     for e in events:
         code = e["code"]
         kind = "anomaly" if e["kind"] == "anomaly" else "streak"
         buy = ("買" in e["event"])
+        so = shares.get(code)
+        v = e.get("shares")
         out.append({
             "code": code, "name": e.get("name", code),
             "event": e["event"], "buy": buy, "kind": kind,
             # 異常看倍數、連續看天數——兩種訊號的「強度」單位本來就不同，
             # 硬湊成同一欄會沒辦法比較，所以分開存、表格分開排序。
             "mult": e.get("vs_avg"), "days": e.get("days"),
-            "lots": abs(e.get("shares") or 0) / 1000,
+            "lots": abs(v or 0) / 1000,
+            "shares_pct": (v / so * 100) if (so and v is not None) else None,
             "chains": chains.get(code, []),
         })
     return out
@@ -69,7 +77,12 @@ def render(data, chains, label="三大法人", page_title="籌碼異動"):
     能重用同一套 render 邏輯——預設值維持原本文字，既有呼叫端（chip.html 主頁）
     行為完全不變。"""
     ev = data.get("events") or []
-    rows = _rows(ev, chains)
+    shares = {}
+    if label == "投信" and ev:
+        # 只查這頁會顯示的~30-40檔，不是全市場——見 chip_scan.shares_outstanding()。
+        import chip_scan as _cs
+        shares = _cs.shares_outstanding(sorted({e["code"] for e in ev}))
+    rows = _rows(ev, chains, shares)
     date = data.get("date", "")
     n_chain = sum(1 for r in rows if r["chains"])
 
@@ -98,17 +111,28 @@ def render(data, chains, label="三大法人", page_title="籌碼異動"):
             # 在七鏈裡的整列加底色——這是全頁最重要的視覺區分，
             # 不在清單裡的股票對 Leo 沒有行動意義（見檔頭說明）
             cls = ' class="hit"' if r["chains"] else ""
+            # 2026-09-18：占股本比只有投信頁有資料（label=="投信"），三大法人頁
+            # 這欄整個不畫——不要空著一欄看起來像資料漏抓，直接不產生這個<td>。
+            pct_td = ""
+            if label == "投信":
+                sp = r.get("shares_pct")
+                pct_td = (f'<td class="n">{sp:+.2f}%</td>' if sp is not None
+                          else '<td class="n no">—</td>')
             trs.append(
                 f'<tr{cls}><td class="c">{esc(r["code"])}</td>'
                 f'<td>{esc(r["name"])}</td>'
                 f'<td class="n">{strength}</td>'
                 f'<td class="n">{r["lots"]:,.0f}</td>'
+                f'{pct_td}'
                 f'<td>{ch or "<span class=\'no\'>—</span>"}</td></tr>')
+        pct_th = ('<th class="n" title="投信當日買賣超股數÷已發行股數，正=買超">'
+                 '占股本比</th>') if label == "投信" else ""
         secs.append(
             f'<section><h2>{ic} {esc(title)}'
             f'<span class="cnt">{len(lst)} 檔</span></h2>'
             f'<table><thead><tr><th>代號</th><th>名稱</th>'
             f'<th class="n">強度（{unit}）</th><th class="n">張數</th>'
+            f'{pct_th}'
             f'<th>七鏈守備清單</th></tr></thead><tbody>'
             + "".join(trs) + '</tbody></table></section>')
 
