@@ -225,6 +225,51 @@ def _svg_na_bar():
            f'</div></div>')
 
 
+def _svg_resolution_log():
+    """微影解析度40年演進（log scale），對應原文 slide 2。
+
+    ⚠️ 原文圖表本身的資料點也是「依ASML原圖概略重繪」（TechNews自己的圖說寫的），
+    這裡進一步簡化成每個世代一個代表點（首發年份 × 該世代量產等級關鍵尺寸），
+    數值是半導體微影公開的世代級常識（g-Line~800nm、...、HighNA個位數nm），
+    不是原圖的精確座標——標示清楚是示意，不是逐點照描。"""
+    gens = [("g-Line", 1978, 800), ("i-Line", 1984, 400), ("KrF", 1991, 180),
+            ("ArF", 1998, 90), ("ArFi", 2005, 45), ("EUV", 2010, 15),
+            ("High NA", 2023, 8)]
+    w, h, pad_l, pad_b, pad_t, pad_r = 620, 240, 46, 34, 16, 20
+    x0, x1 = 1978, 2025
+    import math
+    def px(yr):
+        return pad_l + (yr - x0) / (x1 - x0) * (w - pad_l - pad_r)
+    def py(nm):
+        # log scale：1000nm 在頂部，1nm 在底部
+        lo, hi = math.log10(1), math.log10(1000)
+        return pad_t + (1 - (math.log10(nm) - lo) / (hi - lo)) * (h - pad_t - pad_b)
+    grid = []
+    for nm in (1, 10, 100, 1000):
+        gy = py(nm)
+        grid.append(f'<line x1="{pad_l}" y1="{gy:.1f}" x2="{w-pad_r}" y2="{gy:.1f}" '
+                    f'stroke="var(--grid)"/>')
+        grid.append(f'<text x="{pad_l-6}" y="{gy+3:.1f}" text-anchor="end" font-size="9.5" '
+                    f'fill="var(--dim)">{nm}</text>')
+    path = "M " + " L ".join(f"{px(yr):.1f},{py(nm):.1f}" for _, yr, nm in gens)
+    marks = []
+    for name, yr, nm in gens:
+        marks.append(f'<circle cx="{px(yr):.1f}" cy="{py(nm):.1f}" r="4" fill="var(--accent)"/>')
+        marks.append(f'<text x="{px(yr):.1f}" y="{py(nm)-9:.1f}" text-anchor="middle" '
+                     f'font-size="10" font-weight="700" fill="var(--ink)">{esc(name)}</text>')
+        marks.append(f'<text x="{px(yr):.1f}" y="{h-pad_b+16:.1f}" text-anchor="middle" '
+                     f'font-size="9.5" fill="var(--dim)">{yr}</text>')
+    return (f'<div class="rpt-chart"><svg viewBox="0 0 {w} {h}" '
+           f'xmlns="http://www.w3.org/2000/svg">{"".join(grid)}'
+           f'<path d="{path}" fill="none" stroke="var(--warn)" stroke-width="2"/>'
+           f'{"".join(marks)}</svg>'
+           f'<div class="cap">微影解析度40年演進（示意，依各世代公開規格級距繪製，'
+           f'非原圖精確座標；縱軸為對數尺度nm，愈低愈細）——CD=k1×λ/NA 這條公式'
+           f'四十年來讓製程關鍵尺寸從次微米（g-Line）一路推進到個位數奈米'
+           f'（High NA），對照上方NA長條圖：光靠拉高NA就能吃到大半解析度進步，'
+           f'波長（λ）反而在EUV世代後就沒再變過。</div></div>')
+
+
 def _svg_layers_line():
     """單次曝光可支援層數的十年演進，對應原文 slide 6。"""
     pts = [(2026, 1), (2028, 2), (2031, 4), (2033, 8), (2034, 9.5)]
@@ -359,6 +404,7 @@ def build():
         '</p></div>')
 
     body.append(_svg_na_bar())
+    body.append(_svg_resolution_log())
     body.append(_svg_layers_line())
 
     for group in (GROUP1, GROUP2):
