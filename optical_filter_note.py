@@ -56,6 +56,7 @@ CSS = """
 .stk-card .d{font-size:12.5px;line-height:1.75;color:var(--muted);margin-top:4px}
 .rpt-chart{margin:14px 0 18px;background:var(--surface);border:1px solid var(--line);
   border-radius:10px;padding:14px 16px}
+.rpt-chart.narrow{max-width:460px;margin-left:auto;margin-right:auto}
 .rpt-chart .cap{font-size:11.5px;color:var(--dim);margin-top:8px;line-height:1.6}
 .rpt-chart svg{width:100%;height:auto;display:block}
 """
@@ -93,37 +94,42 @@ def _svg_loss_reduction():
 
 
 def _svg_tff_stack():
-    """TFF薄膜濾光片結構：1.5mm玻璃鍍100~200層薄膜，靠光學共振分色。"""
+    """TFF薄膜濾光片結構：1.5mm玻璃鍍100~200層薄膜，靠光學共振分色。
+
+    2026-09-17 Leo反饋「圖畫太大、字交疊」重畫：原版玻璃基板/鍍膜兩個標籤中心點
+    只隔18個viewBox單位、各自兩行文字，anchor="middle"必然互相蓋到；改成單一
+    合併標籤放在兩者正下方，並收窄外層容器（narrow class）避免整張圖被撐得過大。"""
     parts = []
-    # 玻璃基板
-    parts.append('<rect x="80" y="60" width="30" height="120" fill="var(--card)" '
-                 'stroke="var(--line)"/>')
-    parts.append('<text x="95" y="195" text-anchor="middle" font-size="10.5" '
-                 'fill="var(--muted)">玻璃基板</text>')
-    parts.append('<text x="95" y="208" text-anchor="middle" font-size="9.5" '
-                 'fill="var(--dim)">約1.5mm</text>')
-    # 鍍膜層（示意畫幾條代表100~200層）
-    for i in range(14):
-        y = 62 + i * 8.3
-        parts.append(f'<rect x="110" y="{y:.1f}" width="7" height="7" '
+    gx, gy, gw, gh = 150, 60, 34, 120                       # 玻璃基板
+    cx, cw = gx + gw + 8, 16                                # 鍍膜層（跟玻璃隔開8單位）
+    parts.append(f'<rect x="{gx}" y="{gy}" width="{gw}" height="{gh}" '
+                 f'fill="var(--card)" stroke="var(--line)"/>')
+    n = 14
+    layer_h = gh / n
+    for i in range(n):
+        ly = gy + i * layer_h
+        parts.append(f'<rect x="{cx}" y="{ly:.1f}" width="{cw}" height="{layer_h-1.2:.1f}" '
                      f'fill="var(--accent)" opacity="{0.35+0.5*(i%2)}"/>')
-    parts.append('<text x="113" y="195" text-anchor="middle" font-size="10.5" '
-                 'fill="var(--accent)">鍍膜</text>')
-    parts.append('<text x="113" y="208" text-anchor="middle" font-size="9.5" '
-                 'fill="var(--dim)">100~200層</text>')
-    # 入射光與分色後光路
-    parts.append('<line x1="20" y1="120" x2="80" y2="120" stroke="var(--warn)" '
-                 'stroke-width="2"/>')
-    parts.append('<text x="50" y="112" text-anchor="middle" font-size="10" '
-                 'fill="var(--warn)">多波長入射光</text>')
-    parts.append('<line x1="117" y1="120" x2="200" y2="120" stroke="var(--up)" '
-                 'stroke-width="2"/>')
-    parts.append('<text x="200" y="115" font-size="10.5" fill="var(--up)">通過（目標波長）</text>')
-    parts.append('<text x="200" y="130" font-size="9.5" fill="var(--dim)">誤差需壓在±0.05nm</text>')
-    parts.append('<line x1="113" y1="60" x2="113" y2="20" stroke="var(--down)" '
-                 'stroke-width="2" stroke-dasharray="3,2"/>')
-    parts.append('<text x="118" y="30" font-size="10.5" fill="var(--down)">反射（其他波長）</text>')
-    return (f'<div class="rpt-chart"><svg viewBox="0 0 400 220" '
+    parts.append(f'<text x="{(gx+cx+cw)/2:.0f}" y="{gy+gh+22}" text-anchor="middle" '
+                 f'font-size="11" fill="var(--muted)">玻璃基板（約1.5mm）'
+                 f'<tspan fill="var(--accent)">＋鍍膜（100~200層）</tspan></text>')
+    # 入射光與分色後光路——跟基板/鍍膜block保持垂直/水平方向明確分開，不共用同一條y
+    ray_y = gy + gh / 2
+    parts.append(f'<line x1="20" y1="{ray_y}" x2="{gx}" y2="{ray_y}" '
+                 f'stroke="var(--warn)" stroke-width="2.5"/>')
+    parts.append(f'<text x="20" y="{ray_y-12}" font-size="11" '
+                 f'fill="var(--warn)">多波長入射光</text>')
+    parts.append(f'<line x1="{cx+cw}" y1="{ray_y}" x2="330" y2="{ray_y}" '
+                 f'stroke="var(--up)" stroke-width="2.5"/>')
+    parts.append(f'<text x="{cx+cw+8}" y="{ray_y-16}" font-size="11" '
+                 f'fill="var(--up)">通過（目標波長）</text>')
+    parts.append(f'<text x="{cx+cw+8}" y="{ray_y-2}" font-size="10" '
+                 f'fill="var(--dim)">誤差需壓在±0.05nm</text>')
+    parts.append(f'<line x1="{cx+cw/2}" y1="{gy}" x2="{cx+cw/2}" y2="20" '
+                 f'stroke="var(--down)" stroke-width="2.5" stroke-dasharray="4,3"/>')
+    parts.append(f'<text x="{cx+cw/2+10}" y="32" font-size="11" '
+                 f'fill="var(--down)">反射（其他波長）</text>')
+    return (f'<div class="rpt-chart narrow"><svg viewBox="0 0 460 230" '
            f'xmlns="http://www.w3.org/2000/svg">{"".join(parts)}</svg>'
            f'<div class="cap">TFF薄膜濾光片結構示意——玻璃基板鍍上百層薄膜，靠光學'
            f'共振效應，讓目標波長通過、其他波長反射走，達成分波。窄門（50GHz/0.4nm）'
