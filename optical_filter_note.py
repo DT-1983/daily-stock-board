@@ -54,7 +54,80 @@ CSS = """
   font-variant-numeric:tabular-nums;color:var(--ink)}
 .stk-card .up{color:var(--up)}.stk-card .hi{color:#F5B841;font-weight:700}
 .stk-card .d{font-size:12.5px;line-height:1.75;color:var(--muted);margin-top:4px}
+.rpt-chart{margin:14px 0 18px;background:var(--surface);border:1px solid var(--line);
+  border-radius:10px;padding:14px 16px}
+.rpt-chart .cap{font-size:11.5px;color:var(--dim);margin-top:8px;line-height:1.6}
+.rpt-chart svg{width:100%;height:auto;display:block}
 """
+
+
+# ── 重畫的示意圖（2026-09-17，Leo：「以後會用得到」）───────────────────
+# 原文是 IG 圖卡，版權不能照搬，改用同一批描述數字自己畫成 inline SVG，
+# 跟 photomask_note.py 那份同一套色票／不接圖表庫的做法。
+
+def _svg_loss_reduction():
+    """兩級架構把最壞情況訊號損耗次數從95次壓到18次。"""
+    bars = [("單層寬帶\n（無分段）", 95, "var(--down)"), ("50GHz兩級架構\n（先寬門分段、段內再細分）", 18, "var(--up)")]
+    w, h, pad_l, pad_b, pad_t = 620, 210, 40, 46, 16
+    plot_h = h - pad_b - pad_t
+    maxv = 100
+    bw = 160
+    xs = [160, 400]
+    parts = []
+    for x, (label, v, color) in zip(xs, bars):
+        bh = plot_h * (v / maxv)
+        y = pad_t + (plot_h - bh)
+        parts.append(f'<rect x="{x-bw/2:.0f}" y="{y:.1f}" width="{bw}" height="{bh:.1f}" '
+                     f'rx="4" fill="{color}"/>')
+        parts.append(f'<text x="{x}" y="{y-10:.1f}" text-anchor="middle" font-size="18" '
+                     f'font-weight="800" fill="var(--ink)">{v}次</text>')
+        for i, ln in enumerate(label.split("\n")):
+            parts.append(f'<text x="{x}" y="{h-pad_b+18+i*14}" text-anchor="middle" '
+                         f'font-size="11" fill="var(--muted)">{esc(ln)}</text>')
+    axis = f'<line x1="{pad_l}" y1="{pad_t+plot_h}" x2="580" y2="{pad_t+plot_h}" stroke="var(--line)"/>'
+    return (f'<div class="rpt-chart"><svg viewBox="0 0 {w} {h}" '
+           f'xmlns="http://www.w3.org/2000/svg">{axis}{"".join(parts)}</svg>'
+           f'<div class="cap">最壞情況下訊號要經過的濾波損耗次數——單層寬帶做法遇到'
+           f'最邊緣波長要穿過近全部濾波器；分兩級（先寬門粗分、段內再細分）大幅'
+           f'減少最壞情況的穿越次數，訊號損耗跟著降。</div></div>')
+
+
+def _svg_tff_stack():
+    """TFF薄膜濾光片結構：1.5mm玻璃鍍100~200層薄膜，靠光學共振分色。"""
+    parts = []
+    # 玻璃基板
+    parts.append('<rect x="80" y="60" width="30" height="120" fill="var(--card)" '
+                 'stroke="var(--line)"/>')
+    parts.append('<text x="95" y="195" text-anchor="middle" font-size="10.5" '
+                 'fill="var(--muted)">玻璃基板</text>')
+    parts.append('<text x="95" y="208" text-anchor="middle" font-size="9.5" '
+                 'fill="var(--dim)">約1.5mm</text>')
+    # 鍍膜層（示意畫幾條代表100~200層）
+    for i in range(14):
+        y = 62 + i * 8.3
+        parts.append(f'<rect x="110" y="{y:.1f}" width="7" height="7" '
+                     f'fill="var(--accent)" opacity="{0.35+0.5*(i%2)}"/>')
+    parts.append('<text x="113" y="195" text-anchor="middle" font-size="10.5" '
+                 'fill="var(--accent)">鍍膜</text>')
+    parts.append('<text x="113" y="208" text-anchor="middle" font-size="9.5" '
+                 'fill="var(--dim)">100~200層</text>')
+    # 入射光與分色後光路
+    parts.append('<line x1="20" y1="120" x2="80" y2="120" stroke="var(--warn)" '
+                 'stroke-width="2"/>')
+    parts.append('<text x="50" y="112" text-anchor="middle" font-size="10" '
+                 'fill="var(--warn)">多波長入射光</text>')
+    parts.append('<line x1="117" y1="120" x2="200" y2="120" stroke="var(--up)" '
+                 'stroke-width="2"/>')
+    parts.append('<text x="200" y="115" font-size="10.5" fill="var(--up)">通過（目標波長）</text>')
+    parts.append('<text x="200" y="130" font-size="9.5" fill="var(--dim)">誤差需壓在±0.05nm</text>')
+    parts.append('<line x1="113" y1="60" x2="113" y2="20" stroke="var(--down)" '
+                 'stroke-width="2" stroke-dasharray="3,2"/>')
+    parts.append('<text x="118" y="30" font-size="10.5" fill="var(--down)">反射（其他波長）</text>')
+    return (f'<div class="rpt-chart"><svg viewBox="0 0 400 220" '
+           f'xmlns="http://www.w3.org/2000/svg">{"".join(parts)}</svg>'
+           f'<div class="cap">TFF薄膜濾光片結構示意——玻璃基板鍍上百層薄膜，靠光學'
+           f'共振效應，讓目標波長通過、其他波長反射走，達成分波。窄門（50GHz/0.4nm）'
+           f'代表鍍膜精度要求極高，能穩定做到的廠不多，這是定價權的來源。</div></div>')
 
 
 def fetch(code):
@@ -142,6 +215,8 @@ def build():
         '濾光片，<b>前鼎、光環</b>在同一條光路上，<b>聯一光</b>則是題材熱度'
         '跑在營收數字前面。</p></div>')
 
+    body.append(_svg_tff_stack())
+
     body.append('<div class="rpt-sec"><h2>技術背景</h2>'
         '<p>三種舊做法各卡一關：CWDM（粗分波）簡單但頻寬不夠，整條光譜塞不下'
         '18色以上；AWG（陣列波導光柵）怕溫度飄移，得靠恆溫供電；單一顏色'
@@ -149,11 +224,14 @@ def build():
         '架構——不插電、不怕溫飄，且用「先寬門分段、段內再細分」的方式把'
         '最壞情況的訊號損耗次數從95次壓到18次。AWG不是被淘汰，是並存的'
         '另一條路線：玻璃濾光片贏在物理特性，難在良率控制（中心波長誤差要'
-        '壓到±0.05nm等級）。</p>'
-        '<p>製造門檻：窄門鍍膜（誤差±0.05nm）、15~20年電信級可靠度認證'
-        '（Telcordia）、高階鍍膜設備客製化交期長、主要對手在中國但美系客戶'
-        '去中化是台廠機會。目前瓶頸是產能不是需求，訂單能見度已拉長到4個月。'
-        '</p></div>')
+        '壓到±0.05nm等級）。</p></div>')
+
+    body.append(_svg_loss_reduction())
+
+    body.append('<div class="rpt-sec"><p>製造門檻：窄門鍍膜（誤差±0.05nm）、'
+        '15~20年電信級可靠度認證（Telcordia）、高階鍍膜設備客製化交期長、'
+        '主要對手在中國但美系客戶去中化是台廠機會。目前瓶頸是產能不是需求，'
+        '訂單能見度已拉長到4個月。</p></div>')
 
     body.append('<div class="rpt-sec"><h2>相關台股（已核對 FinMind 數字）</h2>'
         + "".join(rows) + '</div>')
