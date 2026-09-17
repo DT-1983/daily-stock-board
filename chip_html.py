@@ -72,14 +72,19 @@ def _rows(events, chains, shares=None):
     return out
 
 
-def render(data, chains, label="三大法人", page_title="籌碼異動"):
-    """2026-09-17 加 label/page_title 參數，讓「投信單獨版」（chip_html_trust.py）
-    能重用同一套 render 邏輯——預設值維持原本文字，既有呼叫端（chip.html 主頁）
-    行為完全不變。"""
+def _view(data, chains, label):
+    """組一種算法（三大法人合計 或 投信單獨）的 sub/secs/note，回 (sub, secs_html, n_chain)。
+
+    2026-09-18 從 render() 抽出來——Leo 反饋「兩個按鈕變兩排不好看，做在一起，
+    點進去再有兩個按鍵」：老墨逐字稿原文是「法人買賣超：可選三大法人個別或
+    全部；兩種算法可切換」——講的是**同一個畫面裡切換**，不是兩個分頁。
+    改成一頁生兩份內容、用按鈕切換顯示哪一份，不再是 chip.html／chip_trust.html
+    兩個檔案。
+    """
     ev = data.get("events") or []
     shares = {}
     if label == "投信" and ev:
-        # 只查這頁會顯示的~30-40檔，不是全市場——見 chip_scan.shares_outstanding()。
+        # 只查這個view會顯示的~30-40檔，不是全市場——見 chip_scan.shares_outstanding()。
         import chip_scan as _cs
         shares = _cs.shares_outstanding(sorted({e["code"] for e in ev}))
     rows = _rows(ev, chains, shares)
@@ -111,8 +116,8 @@ def render(data, chains, label="三大法人", page_title="籌碼異動"):
             # 在七鏈裡的整列加底色——這是全頁最重要的視覺區分，
             # 不在清單裡的股票對 Leo 沒有行動意義（見檔頭說明）
             cls = ' class="hit"' if r["chains"] else ""
-            # 2026-09-18：占股本比只有投信頁有資料（label=="投信"），三大法人頁
-            # 這欄整個不畫——不要空著一欄看起來像資料漏抓，直接不產生這個<td>。
+            # 占股本比只有投信版有資料——三大法人版這欄整個不畫，不要空著一欄
+            # 看起來像資料漏抓，直接不產生這個<td>。
             pct_td = ""
             if label == "投信":
                 sp = r.get("shares_pct")
@@ -138,17 +143,13 @@ def render(data, chains, label="三大法人", page_title="籌碼異動"):
 
     sub = (f'{len(ev)} 筆・資料日 {esc(date)}・{esc(label)}買賣超（上市＋上櫃約 1,870 檔全掃）'
            f'　|　<b>{n_chain} 檔在七鏈守備清單內</b>（整列淺色標示）')
-    # 2026-09-18：加了「投信異動」獨立nav分頁後，投信頁的目前分頁要標成
-    # chip_trust，不然導覽列會一直亮著「籌碼異動」那個舊分頁，讓人以為
-    # 還停在三大法人合計頁——這正是 Leo 反饋「點進去還是舊的」的根因之一。
-    current = "chip_trust" if label == "投信" else "chip"
-    hdr = header("chip", page_title, sub, NAV, current)
 
     note_extra = (
         '<p><b>為什麼看投信單獨</b>：三大法人合計會把外資（可能是避險/套利，'
         '跟個股看法無關）、自營（短線操作）的量混進來，稀釋掉投信的訊號。'
         '投信通常是判斷「有沒有人在慢慢吃下這家公司股份」比較乾淨的指標'
-        '（對標老墨「零式系統」的判讀邏輯）。</p>'
+        '（對標老墨「零式系統」的判讀邏輯：法人買賣超可選三大法人個別或全部、'
+        '兩種算法可切換，他個人偏好投信占股本比）。</p>'
         if label != "三大法人" else "")
     note = (
         '<div class="note"><b>怎麼看</b>'
@@ -161,12 +162,54 @@ def render(data, chains, label="三大法人", page_title="籌碼異動"):
         '<p><b>七鏈守備清單</b>：有標的代表這檔在你追蹤的產業鏈裡——'
         '清單外的異動多半跟你的方向無關，這欄是用來快速過濾的。</p>'
         '<p class="disc">資料來源：臺灣證券交易所 T86、櫃買中心公開資料。'
-        '本頁僅彙整統計公開資訊，非投資建議。'
-        + (' <a href="chip_trust.html">→ 看投信單獨版</a>' if label == "三大法人"
-           else ' <a href="chip.html">→ 看三大法人合計版</a>')
-        + '</p></div>')
+        '本頁僅彙整統計公開資訊，非投資建議。</p></div>')
+
+    return sub, "".join(secs) + note
+
+
+def render(data, data_trust, chains):
+    """一頁兩份內容，按鈕切換（2026-09-18 取代原本 chip.html／chip_trust.html
+    兩個分頁的做法）。預設顯示三大法人合計。"""
+    sub1, body1 = _view(data, chains, "三大法人")
+    sub2, body2 = _view(data_trust, chains, "投信")
+
+    toggle = (
+        '<div class="ctrl"><div class="seg" role="group" aria-label="切換算法">'
+        '<button data-view="total" aria-pressed="true">三大法人合計</button>'
+        '<button data-view="trust" aria-pressed="false">投信單獨</button>'
+        '</div></div>')
+    views = (
+        f'<div class="viewbox" data-view="total">'
+        f'<div class="sub2">{sub1}</div>{body1}</div>'
+        f'<div class="viewbox" data-view="trust" style="display:none">'
+        f'<div class="sub2">{sub2}</div>{body2}</div>')
+    view_js = """<script>
+(function(){
+  document.querySelectorAll('.seg button[data-view]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var v = b.dataset.view;
+      document.querySelectorAll('.seg button[data-view]').forEach(function(x){
+        x.setAttribute('aria-pressed', x === b ? 'true' : 'false');
+      });
+      document.querySelectorAll('.viewbox').forEach(function(el){
+        el.style.display = (el.dataset.view === v) ? '' : 'none';
+      });
+    });
+  });
+})();
+</script>"""
+
+    hdr = header("chip", "籌碼異動", "三大法人合計／投信單獨——按鈕切換算法", NAV, "chip")
 
     css = BASE_CSS + """
+.ctrl{padding:6px 0 14px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+.seg button{background:var(--card2);border:none;color:var(--muted);cursor:pointer;
+  font-family:inherit;font-size:13px;font-weight:600;padding:8px 16px}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#04121a}
+.sub2{font-size:12.5px;color:var(--muted);margin:0 0 16px}
+.sub2 b{color:var(--ink)}
 section{margin:22px 0}
 h2{font-size:16px;margin:0 0 10px;display:flex;align-items:center;gap:8px}
 .cnt{font-size:12px;color:var(--muted);font-weight:400;
@@ -190,11 +233,11 @@ tr.hit td.c{color:var(--accent);font-weight:600}
 """
     return (f'<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width,initial-scale=1">'
-            f'<title>{esc(page_title)}</title><style>{css}</style></head><body>'
+            f'<title>籌碼異動</title><style>{css}</style></head><body>'
             # header 要包在 .wrap 裡（首頁的做法），否則標題貼齊視窗左緣、
             # 跟下面的內容對不齊——.wrap 才有 max-width + 置中。
             + '<div class="wrap">'
-            + hdr + "".join(secs) + note + '</div></body></html>')
+            + hdr + toggle + views + '</div>' + view_js + '</body></html>')
 
 
 def main():
@@ -207,27 +250,16 @@ def main():
     except Exception as e:
         print(f"讀不到 state/chip_events.json（先跑 chip_scan.py）：{e}")
         return
-    html = render(data, chains)
+    try:
+        data_trust = json.load(open("state/chip_events_trust.json", encoding="utf-8"))
+    except Exception as e:
+        print(f"讀不到 state/chip_events_trust.json（先跑 chip_scan.py）：{e}")
+        data_trust = {"events": []}
+    html = render(data, data_trust, chains)
     for out in (a.output, os.path.join(OBIS, "籌碼異動.html")):
         try:
             os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
             io.open(out, "w", encoding="utf-8").write(html)
-            print(f"✅ {out}")
-        except Exception as e:
-            print(f"⚠️ 寫入 {out} 失敗（不影響其他輸出）：{e}")
-
-    # 2026-09-17：投信單獨版，同一套 render()，換資料源＋label。
-    try:
-        data_t = json.load(open("state/chip_events_trust.json", encoding="utf-8"))
-    except Exception as e:
-        print(f"讀不到 state/chip_events_trust.json（先跑 chip_scan.py，不影響上面主頁）：{e}")
-        return
-    html_t = render(data_t, chains, label="投信", page_title="投信單獨異動")
-    trust_out = os.path.join(os.path.dirname(a.output) or ".", "chip_trust.html")
-    for out in (trust_out, os.path.join(OBIS, "投信單獨異動.html")):
-        try:
-            os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
-            io.open(out, "w", encoding="utf-8").write(html_t)
             print(f"✅ {out}")
         except Exception as e:
             print(f"⚠️ 寫入 {out} 失敗（不影響其他輸出）：{e}")

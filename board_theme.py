@@ -92,7 +92,6 @@ NAV = [
     ("rotation", "rotation", "產業輪動", "rotation.html"),
     ("combo", "lamp", "進出燈號", "combo.html"),
     ("chip", "chip", "籌碼異動", "chip.html"),
-    ("chip_trust", "chip", "投信異動", "chip_trust.html"),
     ("portfolio", "portfolio", "策略賽馬", "portfolios.html"),
     ("board", "board", "產業鏈看板", "board.html"),
     ("earnings", "earnings", "財報分析", "earnings.html"),
@@ -409,8 +408,7 @@ h1 svg{flex-shrink:0}
 # 查不到就退回 TERMINAL——新頁面忘了加不會壞，只是少一個代號。
 EYEBROW = {
     "board": "SECTOR BOARD", "combo": "SIGNAL MATRIX", "lamp": "SIGNAL MATRIX",
-    "rotation": "ROTATION RRG", "chip": "CHIP FLOW", "chip_trust": "TRUST FLOW",
-    "earnings": "EARNINGS DESK",
+    "rotation": "ROTATION RRG", "chip": "CHIP FLOW", "earnings": "EARNINGS DESK",
     "race": "PAPER BOOK", "gdp": "MACRO WATCH", "ark": "ARK TRACKER",
     "buffett": "VALUE SCREEN", "home": "COMMAND", "lookup": "LOOKUP",
     "room": "WAR ROOM", "trades": "TRADE LOG",
