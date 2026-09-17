@@ -138,7 +138,11 @@ def render(data, chains, label="三大法人", page_title="籌碼異動"):
 
     sub = (f'{len(ev)} 筆・資料日 {esc(date)}・{esc(label)}買賣超（上市＋上櫃約 1,870 檔全掃）'
            f'　|　<b>{n_chain} 檔在七鏈守備清單內</b>（整列淺色標示）')
-    hdr = header("chip", page_title, sub, NAV, "chip")
+    # 2026-09-18：加了「投信異動」獨立nav分頁後，投信頁的目前分頁要標成
+    # chip_trust，不然導覽列會一直亮著「籌碼異動」那個舊分頁，讓人以為
+    # 還停在三大法人合計頁——這正是 Leo 反饋「點進去還是舊的」的根因之一。
+    current = "chip_trust" if label == "投信" else "chip"
+    hdr = header("chip", page_title, sub, NAV, current)
 
     note_extra = (
         '<p><b>為什麼看投信單獨</b>：三大法人合計會把外資（可能是避險/套利，'
