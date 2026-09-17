@@ -52,6 +52,7 @@ OUT_TRUST_PATH = "state/chip_events_trust.json"
 # 不會拖慢每日批次（見 shares_outstanding() 的說明）。
 SHARES_PATH = "state/shares_outstanding.json"       # {code: {shares, asof}}
 SHARES_CACHE_DAYS = 90
+_RECENT_FLOW_CACHE = None    # recent_flow() 的行程內快取，見該函式說明
 
 TWSE_URL = "https://www.twse.com.tw/rwd/zh/fund/T86"
 TPEX_URL = "https://www.tpex.org.tw/www/zh-tw/insti/dailyTrade"
@@ -368,6 +369,53 @@ def shares_outstanding(codes):
         print(f"  股本查詢：補查 {len(need)} 檔，"
              f"{sum(1 for c in need if out.get(c))} 檔查到")
     return out
+
+
+def recent_flow(code, days=5):
+    """單一個股近N個交易日的三大法人合計＋投信買賣超（2026-09-18，接個股查詢用）。
+
+    對標老墨「零式系統」的「點進個股看籌碼」——之前 chip_scan 只做了
+    「全市場掃描找異常」（chip.html/chip_trust.html），這支是反過來：
+    「已經知道要看哪一檔，給它最近幾天的籌碼走勢」。直接讀現有的兩份歷史檔
+    （HIST_PATH/HIST_TRUST_PATH），不用另外抓資料——這兩份本來就是全市場逐日
+    存的，任何一檔隨時查得到，只是之前沒有一個函式把它組成「單檔視角」。
+
+    回傳 {"days": [{"date","total","trust"}, ...]}（由舊到新），查不到回空list。
+
+    ⚠️ 兩份歷史檔各約1MB，combo.html這種一次要查上百檔的呼叫端如果每檔都重新
+    load 一次會很浪費（跑一次生頁面要重複解析上百MB的JSON）。用模組層級快取，
+    只在**同一個 process** 裡的第一次呼叫真的讀檔，之後直接沿用——這是一次性
+    腳本的常見做法（跑完就結束，不用擔心資料過期），跟 chip_scan 其他常駐/
+    重跑一次的用法一致。
+    """
+    global _RECENT_FLOW_CACHE
+    if _RECENT_FLOW_CACHE is None:
+        _RECENT_FLOW_CACHE = (_load(HIST_PATH, {}), _load(HIST_TRUST_PATH, {}))
+    hist, hist_trust = _RECENT_FLOW_CACHE
+    all_days = sorted(set(hist) | set(hist_trust))
+    have_data = [d for d in all_days if hist.get(d) or hist_trust.get(d)]
+    out = []
+    for d in have_data[-days:]:
+        out.append({"date": d, "total": (hist.get(d) or {}).get(code),
+                    "trust": (hist_trust.get(d) or {}).get(code)})
+    return {"days": out}
+
+
+def recent_flow_line(code, days=5):
+    """recent_flow() 的一行文字版，給 /查 這種空間有限的地方用。
+
+    只講「投信」（老墨個人偏好那個），三大法人合計太容易被外資避險單洗掉方向，
+    放進一行摘要反而混淆——完整兩者都要看的人，去查 chip.html/chip_trust.html。
+    """
+    flow = recent_flow(code, days)["days"]
+    trust_vals = [d["trust"] for d in flow if d.get("trust") is not None]
+    if not trust_vals:
+        return None
+    n_buy = sum(1 for v in trust_vals if v > 0)
+    n_sell = sum(1 for v in trust_vals if v < 0)
+    total_lots = sum(trust_vals) / 1000
+    return (f"投信近{len(trust_vals)}天：買{n_buy}天／賣{n_sell}天，"
+           f"累計{'買超' if total_lots >= 0 else '賣超'}{abs(total_lots):,.0f}張")
 
 
 def summary_lines(events, max_each=4):
