@@ -1,124 +1,124 @@
 {
- "updated": "2026-09-16 20:34",
+ "updated": "2026-09-17 08:46",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "09/15",
-   "close": 7585.73,
+   "date": "09/16",
+   "close": 7551.81,
    "chg_pct": -0.45
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "09/15",
-   "close": 25981.57,
-   "chg_pct": -0.78
+   "date": "09/16",
+   "close": 25978.42,
+   "chg_pct": -0.01
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "09/15",
-   "close": 52093.11,
-   "chg_pct": -0.63
+   "date": "09/16",
+   "close": 51461.9,
+   "chg_pct": -1.21
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "09/15",
-   "close": 11175.55,
-   "chg_pct": 0.4
+   "date": "09/16",
+   "close": 11246.11,
+   "chg_pct": 0.63
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/16",
-   "close": 45848.9,
-   "chg_pct": 0.74
+   "date": "09/15",
+   "close": 45511.49,
+   "chg_pct": -0.77
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/16",
-   "close": 31.77,
-   "chg_pct": 0.16
+   "date": "09/17",
+   "close": 31.86,
+   "chg_pct": 0.26
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "09/15",
-   "close": 5.0,
+   "date": "09/16",
+   "close": 5.01,
    "fmt": "yield",
-   "chg_bp": 3.5
+   "chg_bp": 1.0
   }
  ],
  "news": [
   {
-   "title": "貝森特救美債碰壁！殖利率愈救愈高 Fed恐不願接手爛攤子",
+   "title": "聯準會睽違3年啟動升息循環通膨降溫延至2029年、今年還要再升",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6608298",
-   "ts": "09/16 20:30"
+   "url": "https://news.cnyes.com/news/id/6608685",
+   "ts": "09/17 08:30"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：歐特培UGP-US的目標價調升至7.23元，幅度約6.19%",
+   "title": "聯準會睽違3年首度升息美股震盪收低、道瓊重挫631點",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6608307",
-   "ts": "09/16 20:15"
+   "url": "https://news.cnyes.com/news/id/6608684",
+   "ts": "09/17 08:30"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：美國航空集團(AAL-US)EPS預估下修至-0.1元，預估目標價為17.00元",
+   "title": "日本製鐵砸9億歐元升級歐洲產能斯洛伐克新電弧爐2030年投產",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6608306",
-   "ts": "09/16 20:15"
+   "url": "https://news.cnyes.com/news/id/6608683",
+   "ts": "09/17 08:30"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：赫克拉礦業(HL-US)EPS預估下修至0.73元，預估目標價為21.00元",
+   "title": "順天堂藥廠攜手元樟生技　SeepPlug™ 介質切入家庭園藝　合作場域自契作端延伸至消費端",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6607708",
+   "ts": "09/17 08:30"
+  },
+  {
+   "title": "中國電動車破冰？比亞迪有望列習近平訪美代表團名單",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6608305",
-   "ts": "09/16 20:15"
+   "url": "https://news.cnyes.com/news/id/6608626",
+   "ts": "09/17 08:22"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：美國航空集團AAL-US的目標價調降至17元，幅度約5.56%",
+   "title": "川普科技顧問：AI安全擔憂是「套路」　不需要新的監管法規",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6608304",
-   "ts": "09/16 20:15"
+   "url": "https://news.cnyes.com/news/id/6608648",
+   "ts": "09/17 08:20"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：健鼎(3044-TW)EPS預估上修至32.27元，預估目標價為700元",
+   "title": "鉅亨速報 - Factset 最新調查：視陽(6782-TW)EPS預估上修至18.14元，預估目標價為251.5元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6608300",
-   "ts": "09/16 20:10"
+   "url": "https://news.cnyes.com/news/id/6608652",
+   "ts": "09/17 08:10"
   },
   {
-   "title": "〈鴻騰科技日〉盧松青：AI需求不錯產能滿載 光通訊產品明年進一步放量",
+   "title": "營收速報 - 2026年9月17日台股中小型公司8月營收一覽（新增23家）",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6608267",
-   "ts": "09/16 20:04"
+   "url": "https://news.cnyes.com/news/id/6608635",
+   "ts": "09/17 07:55"
   },
   {
-   "title": "國科會：法令著重「人類自主」降低AI風險 首年已培育14萬AI人才達標",
+   "title": "營收速報 - 2026年9月17日台股大型公司8月營收一覽（新增13家）",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6608266",
-   "ts": "09/16 19:56"
+   "url": "https://news.cnyes.com/news/id/6608634",
+   "ts": "09/17 07:55"
   },
   {
-   "title": "新光三越周年慶10/1開打 打造全台寶可夢盛會 估業績衝破194億元",
+   "title": "不再一條龍！三星客製化HBM擬採雙軌並行：自廠或台積電製造基礎裸片任客戶挑",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6608239",
-   "ts": "09/16 19:50"
-  },
-  {
-   "title": "東洋Lipo-AB海外需求旺 Q4新產線啟動產能提升2倍",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6608253",
-   "ts": "09/16 19:48"
+   "url": "https://news.cnyes.com/news/id/6608075",
+   "ts": "09/17 06:00"
   }
  ],
  "inst": {

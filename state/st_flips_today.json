@@ -1,13 +1,110 @@
 {
-"date": "2026-09-16",
+"date": "2026-09-17",
 "flips_hold": [],
 "flips_watch": [
 {
-"code": "CRWV",
+"code": "XYZ",
 "name": "",
-"word": "🟢→🔴 翻空",
-"dir": -1
+"word": "🔴→🟢 翻多",
+"dir": 1
 }
 ],
-"ai_alerts": []
+"ai_alerts": [
+{
+"chain": "AI 伺服器",
+"market": "US",
+"sig": "🟢",
+"code": "ANET",
+"name": "Arista Networks Inc",
+"reason": "觀望→買進"
+},
+{
+"chain": "矽光子/光通訊",
+"market": "US",
+"sig": "🟢",
+"code": "PI",
+"name": "Impinj Inc",
+"reason": "觀望→買進"
+},
+{
+"chain": "矽光子/光通訊",
+"market": "US",
+"sig": "🟢",
+"code": "QRVO",
+"name": "Qorvo Inc",
+"reason": "觀望→買進"
+},
+{
+"chain": "矽光子/光通訊",
+"market": "US",
+"sig": "🟢",
+"code": "SWKS",
+"name": "Skyworks Solutions Inc",
+"reason": "觀望→買進"
+},
+{
+"chain": "Bitcoin→AI 機房",
+"market": "US",
+"sig": "🔴",
+"code": "XYZ",
+"name": "Block Inc Class A",
+"reason": "觀望→賣出"
+},
+{
+"chain": "AI 電力/核能",
+"market": "US",
+"sig": "🔴",
+"code": "XE",
+"name": "X-Energy Inc Class A",
+"reason": "觀望→賣出"
+},
+{
+"chain": "玻璃基板/TGV",
+"market": "US",
+"sig": "🔴",
+"code": "ONTO",
+"name": "Onto Innovation Inc.",
+"reason": "觀望→賣出"
+},
+{
+"chain": "太陽能",
+"market": "US",
+"sig": "🔴",
+"code": "FSLR",
+"name": "First Solar Inc",
+"reason": "觀望→賣出"
+},
+{
+"chain": "矽光子/光通訊",
+"market": "TW",
+"sig": "🔴",
+"code": "2345",
+"name": "智邦",
+"reason": "觀望→賣出"
+},
+{
+"chain": "矽光子/光通訊",
+"market": "TW",
+"sig": "🟢",
+"code": "3105",
+"name": "穩懋",
+"reason": "觀望→買進"
+},
+{
+"chain": "低軌衛星",
+"market": "TW",
+"sig": "🔴",
+"code": "6285",
+"name": "啟碁",
+"reason": "觀望→賣出"
+},
+{
+"chain": "低軌衛星",
+"market": "TW",
+"sig": "🟢",
+"code": "3105",
+"name": "穩懋",
+"reason": "觀望→買進"
+}
+]
 }
