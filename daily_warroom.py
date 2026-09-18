@@ -339,7 +339,13 @@ def sec_setup(date, scope="public"):
     hit.sort(key=lambda x: (x[0], x[1], x[2], x[3]))
 
     for _k, _rp, _tg, _rr, r, q, n in hit[:10]:
-        mark = "📑" if n in has_report else "　"
+        # 2026-09-19 Leo：「Meta 凸出來了 沒有對齊」——原本用全形空格「　」
+        # 當沒有 📑 時的佔位符，想讓兩種情況對齊成同一欄。但 Discord 訊息本文
+        # 不是等寬字型，全形空格跟 📑 這個 emoji 的實際渲染寬度**不保證一樣**
+        # （手機版尤其明顯），沒有報告的那些行就會比有報告的往左「凸出來」。
+        # 改成不佔位、只在有報告時才附加標記——每一行的粗體代號永遠是行首
+        # 第一個字元，不必依賴猜寬度的假對齊。
+        mark = " 📑" if n in has_report else ""
         qs = ("🔵 " + QL[q]) if q == "leading" else (QL.get(q, "—"))
         gap = r.get("gap_pct")
         # ⚠️ 停損很近時風報比的分母趨近 0，數字會被放大——標出來，不要只給大數字
@@ -355,7 +361,7 @@ def sec_setup(date, scope="public"):
             warn = f"　⚠️停損僅 {gap:.1f}%"
         else:
             warn = f"　停損 {gap:.1f}%"
-        lines.append(f"{mark} **{tkname(r.get('ticker'))}**　風報比 {r.get('rr'):.1f}"
+        lines.append(f"**{tkname(r.get('ticker'))}**{mark}　風報比 {r.get('rr'):.1f}"
                      f"　{qs}{warn}")
     if len(hit) > 10:
         # 篩選條件的名稱在下一行的連結已經講過，這裡不用重複第二次。
@@ -377,22 +383,20 @@ def sec_setup(date, scope="public"):
 def sec_rrg_turn(date, scope="public"):
     """🔄 剛轉進 RRG 領先象限的類股（2026-09-05，Leo：「rrg 轉到領先（2-3天以上）」）。
 
-    只放**公開版**：講的是類股輪動與母體內的個股，不是持股資訊；持股用 💼 標。
+    只放**公開版**：講的是類股輪動，不是持股資訊。
 
     ⚠️ 這一段**只列不判斷**。9/5 的回測只證明「產業在領先象限」當**過濾條件**
     有幫助（12 格全改善但幅度不大）；**沒測過「剛轉進領先」本身是進場訊號**。
+
+    2026-09-19 Leo：「母體內拿掉，只要顯示產業變化」——原本每個類股下面會展開
+    母體內符合的個股（代號/燈數/風報比），拿掉後這裡只剩類股層級的轉進資訊，
+    個股細節本來就查得到（進出燈號頁），不用在日報裡重複列一次。
     """
     if scope != "public":
         return []
     try:
         import rrg_turns
-        from investment_chief import held_universe, norm_ticker
-        try:
-            held = {norm_ticker(t) for t in held_universe()}
-        except Exception:                                   # noqa: BLE001
-            held = set()
-        body = rrg_turns.lines(period="60", min_days=2, max_days=20,
-                               top_stocks=4, held=held)
+        body = rrg_turns.lines(period="60", min_days=2, max_days=20)
     except Exception as e:                                  # noqa: BLE001
         return [f"**🔄 剛轉進領先象限的類股**", f"・讀取失敗：{str(e)[:60]}"]
     if not body:
@@ -407,7 +411,7 @@ def sec_rrg_turn(date, scope="public"):
             #    （「產業轉強」不等於買進訊號）。縮的是解釋，留的是警告——
             #    ⭐ 說明看過就會了，警告是每天都要成立的前提。
             + [f"-# 🔗 [輪動雷達]({_P}/rotation.html)　[進出燈號]({_P}/combo.html)",
-               "-# 💼＝持股　⚠️「剛轉進領先」沒回測過，不是買進訊號"])
+               "-# ⚠️「剛轉進領先」沒回測過，不是買進訊號"])
 
 
 def sec3_chief(date, scope="public"):
