@@ -436,13 +436,32 @@ def _broker(row):
         risks = (f'<div class="bk-b">報告自列風險：{esc("、".join(r["risks"]))}</div>'
                  if r.get("risks") else "")
         items.append(f'<div class="bk-r">{head_}{basis}{vm}{thesis}{risks}</div>')
+    # 2026-09-19 Leo（對標老墨畫面「投顧目標價1,430 中位數‧3家 ⚠️異議：摩根士丹利
+    # Overweight‧首選1,666元(+32%)」）：多家券商同時 cover 時，除了看「共識」，
+    # 更有用的是「誰跟大家不一樣」——一堆都樂觀裡唯一被下修/唯一特別樂觀的那家，
+    # 訊息量比一致樂觀更高（同 industry-note-intake skill 4b 的判讀邏輯）。
+    # 用中位數（不是均值，避免單一極端值把共識拉走）當基準，抓離中位數最遠的
+    # 那份報告點名出來；差距夠小（<10%）就不算「異議」，大家看法本來就接近。
     warn = ""
-    tgs = [r["target"] for r in rs if r.get("target")]
-    if len(rs) >= 3 and len(tgs) >= 2:
-        warn = (f'<div class="bk-w">⚠️ {len(rs)} 家券商同時出報告，目標價 '
-                f'{min(tgs):,.0f}～{max(tgs):,.0f}（差 {(max(tgs) / min(tgs) - 1) * 100:.0f}%）'
-                f'——差異多半來自<b>倍數與用哪一年 EPS</b>，不是基本面。'
-                f'多家同時推代表這個看法已經擁擠。</div>')
+    tgs_full = [(r["target"], r.get("broker"), r.get("rating")) for r in rs if r.get("target")]
+    if len(rs) >= 2 and len(tgs_full) >= 2:
+        tgs_sorted = sorted(t for t, _, _ in tgs_full)
+        n = len(tgs_sorted)
+        median = (tgs_sorted[n // 2] if n % 2
+                  else (tgs_sorted[n // 2 - 1] + tgs_sorted[n // 2]) / 2)
+        outlier = max(tgs_full, key=lambda x: abs(x[0] - median))
+        out_t, out_b, out_r = outlier
+        out_pct = (out_t / median - 1) * 100 if median else 0
+        dissent = ""
+        if abs(out_pct) >= 10:
+            dissent = (f'　<span class="bk-o">⚠️異議：<b>{esc(out_b)}</b>'
+                       f'{esc(out_r or "")}‧{out_t:,.0f}元'
+                       f'（比中位數{"偏多" if out_pct > 0 else "偏空"}{abs(out_pct):.0f}%）</span>')
+        rng = (f'（範圍 {min(tgs_sorted):,.0f}～{max(tgs_sorted):,.0f}）' if n >= 3 else "")
+        note = ("——差異多半來自<b>倍數與用哪一年 EPS</b>，不是基本面。多家同時推代表這個看法已經擁擠。"
+                if n >= 3 else "")
+        warn = (f'<div class="bk-w">📊 目標價中位數 <b>{median:,.0f}</b>元‧{n}家'
+                f'{rng}{dissent}{note}</div>')
     # 券商目標價異動（2026-09-04，Leo：「那兩張圖的其他券商目標價不參考嗎？」）
     # ⚠️ 分清楚兩件事：**「不主動吵你」不等於「看不到」**。
     #   日報推播只推可信名單（Leo 指定只信高盛）——那是「要不要當訊號叫你」的判斷；
