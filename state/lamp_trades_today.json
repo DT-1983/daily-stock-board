@@ -1,12 +1,8 @@
 {
- "date": "2026-09-17",
- "lamp_date": "2026-09-17",
- "buy": [
-  "6830.TW"
- ],
- "half_sell": [
-  "PAAS"
- ],
+ "date": "2026-09-18",
+ "lamp_date": "2026-09-18",
+ "buy": [],
+ "half_sell": [],
  "full_exit": [],
  "held": 13,
  "cash": 0.0
