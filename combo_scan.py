@@ -605,7 +605,57 @@ def main():
               f"{r['gap_pct']:>8.1f}%{r['rs_short']:>7.1f}%  {'/'.join(r['src'])}")
     new, lost = diff_state(rows)
     print(f"{NL}狀態變化：新成立 {len(new)} 檔　剛失效 {len(lost)} 檔")
+    if _check_staleness(rows):
+        # 🔴 board_analyze_daily.cmd 每一步都靠 errorlevel 判斷要不要進 FAILED
+        # 清單、推播 Telegram（見該檔 2026-08-19 的說明）。這裡回非0，不用
+        # 另外接新的通知管道——既有那條「批次失敗才推播」的線直接就會接住，
+        # 跟其他步驟一樣的待遇。之前踩到的坑正是「回傳碼一律是0，所以那條線
+        # 從沒被觸發過」。
+        return 1
     return 0
+
+
+def _check_staleness(rows, max_stale_frac=0.15):
+    """批次回報成功≠資料真的更新——2026-09-19 查MSFT/聯發科時發現：某次排程
+    166/168檔美股的yfinance抓價靜默失敗、退回舊快取（asof卡在兩三天前），
+    但排程本身的 errorlevel 還是 0，完全沒有任何警訊。這裡在存檔後多加一層
+    「這批資料實際上新不新」的檢查，不看回傳碼看真正的asof分布。
+
+    做法：抓這次掃描**真正拿到的最新資料日**（不是寫死今天的日期——遇到
+    連假，最新交易日本來就該是上一個工作日，不該被誤判成過期）當基準，
+    算「沒對到這個最新日期」的比例。
+
+    ⚠️ 基準故意用「拿到過的最新日期」而不是「多數股票共同的日期」——
+    166/168檔美股卡住那次，卡住的166檔本身就是全體的多數，用「多數共識」
+    當基準會把**過期的那群自己拿來當正常基準**，完全偵測不到（這裡第一版
+    真的這樣寫過，用166/168美股+2/168美股+115/115台股的組合測過才抓到
+    這個邏輯漏洞：「多數」不等於「正常」，出事那天過期的才是多數）。
+    只要有任何一檔真的拿到最新資料，就證明那天的資料源是可用的，其他
+    對不上這個日期的就是那次抓價失敗，不是「大家都比較舊」的正常情況。
+
+    比例太高（預設15%）才視為批次抓價出問題，不是少數幾檔本來就冷門查不到。
+    回 True＝偵測到大範圍過期（呼叫端應該讓批次回傳非0），False＝正常。
+    """
+    from collections import Counter
+    asofs = [r.get("asof") for r in rows if r.get("asof")]
+    if len(asofs) < 20:          # 樣本太少判斷不出「大範圍」，不強行下結論
+        return False
+    latest = max(asofs)
+    stale = [r for r in rows if r.get("asof") and r["asof"] != latest]
+    frac = len(stale) / len(rows) if rows else 0
+    if frac < max_stale_frac:
+        return False
+    by_date = Counter(r["asof"] for r in stale)
+    print(f"\n🔴🔴 警告：{len(stale)}/{len(rows)}（{frac*100:.0f}%）檔的資料日"
+          f"沒對到這次掃描實際拿到的最新日期（{latest}）——"
+          f"疑似這次排程抓價時大量靜默失敗、退回舊快取，不是這幾檔本來就"
+          f"查不到資料。回傳碼不會反映這個問題，只有這段檢查抓得到。")
+    for dt_, n in by_date.most_common(6):
+        print(f"    {dt_}：{n} 檔")
+    stale_us = sum(1 for r in stale if not r["ticker"][:1].isdigit())
+    stale_tw = len(stale) - stale_us
+    print(f"    美股 {stale_us} 檔／台股 {stale_tw} 檔過期")
+    return True
 
 
 if __name__ == "__main__":
