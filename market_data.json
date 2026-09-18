@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-18 15:40",
+ "updated": "2026-09-18 20:12",
  "indices": [
   {
    "sym": "^GSPC",
@@ -45,9 +45,9 @@
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/18",
-   "close": 31.82,
-   "chg_pct": -0.12
+   "date": "09/17",
+   "close": 31.86,
+   "chg_pct": 0.27
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "突破記憶體牆瓶頸 AI晶片產業加速邁向「記憶體解耦」新架構",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6610040",
-   "ts": "09/18 15:40"
-  },
-  {
-   "title": "部分條款難接受！李在明為3500億美元對美投資案「夜不能寐」",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6610055",
-   "ts": "09/18 15:20"
-  },
-  {
-   "title": "摩根大通看好比特幣跑贏黃金！估ETF規模將達3倍",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6609587",
-   "ts": "09/18 15:10"
-  },
-  {
-   "title": "〈蘋果新機開賣〉iPhone 18 Pro系列開賣 電信三雄端不同資費策略搶客",
+   "title": "200G PD量產、缺料出貨緩解 環宇-KY Q3業績有望逐季加溫",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6610084",
-   "ts": "09/18 15:01"
+   "url": "https://news.cnyes.com/news/id/6610423",
+   "ts": "09/18 20:07"
   },
   {
-   "title": "光焱科技(7728)矽光子占比一年衝4倍！NightJar-H年底迎HVM驗證、新廠年產能上看250台",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6610098",
-   "ts": "09/18 15:00"
-  },
-  {
-   "title": "陸十部門釋政策利多力挺創新藥產業　A股相關族群大爆發瑞康醫藥強勢漲停",
+   "title": "晶片管制不能照搬！美國擬放行中國新藥授權交易 大型藥廠鬆口氣",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6610041",
-   "ts": "09/18 15:00"
+   "url": "https://news.cnyes.com/news/id/6610395",
+   "ts": "09/18 20:00"
   },
   {
-   "title": "生醫與無人機大升級！台康生、聚陽、采鈺及愛國者綠能通過經部A+計畫",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6610082",
-   "ts": "09/18 14:59"
-  },
-  {
-   "title": "〈東京電玩展〉智寶《電鋸甜心2》估明年上半年上市 銷售可望逾百萬套",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6610013",
-   "ts": "09/18 14:42"
-  },
-  {
-   "title": "美歐裂痕加深 德國總理：跨大西洋無條件友誼恐成過去",
+   "title": "掌舵逾半世紀 巴菲特卸任波克夏董事長 告別信感歎「歲月老人總會獲勝」",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6610008",
-   "ts": "09/18 14:40"
+   "url": "https://news.cnyes.com/news/id/6610380",
+   "ts": "09/18 19:40"
   },
   {
-   "title": "不只賣系統！騰雲(6870)8月營收創新高、前8月年增45%！海外占比下一步拚過半",
+   "title": "〈台幣〉熱錢回流股匯雙漲 爆量走升收31.808元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6610078",
-   "ts": "09/18 14:30"
+   "url": "https://news.cnyes.com/news/id/6610388",
+   "ts": "09/18 19:33"
+  },
+  {
+   "title": "中國限制出口3年價格飆近10倍！西方搶救鎵鍺供應鏈仍追不上",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6610384",
+   "ts": "09/18 19:30"
+  },
+  {
+   "title": "明年1月漲定了？台電揭前8月虧203億兩大禍首 去年盈餘760億成凍漲「底氣」",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6610362",
+   "ts": "09/18 19:28"
+  },
+  {
+   "title": "蕭美琴肯定藥華藥研發新藥躍上國際舞台 期盼生技業成為台灣「護體神山」",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6610317",
+   "ts": "09/18 19:02"
+  },
+  {
+   "title": "破兆巨量是真反彈還是主力抓交替？實質賣壓暴衝！這波反彈要「打帶跑」！",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6610363",
+   "ts": "09/18 18:56"
+  },
+  {
+   "title": "英特爾陳立武：全球晶圓代工無法95%依賴單一廠商 CPU需求僅能滿足一半客戶",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6610169",
+   "ts": "09/18 18:40"
+  },
+  {
+   "title": "升息為何讓日元重摔、日股大漲？解析日銀決策被解讀不夠鷹派的三大關鍵",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6610150",
+   "ts": "09/18 18:00"
   }
  ],
  "inst": {
   "date": "09/18",
-  "total_yi": 1165.9,
+  "total_yi": 1194.5,
   "foreign_yi": 869.9,
-  "trust_yi": 52.9
+  "trust_yi": 81.5
  }
 }
