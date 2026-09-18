@@ -205,3 +205,6 @@ revenue_report.py
 # 直接寫死在程式碼裡。
 silicon_wafer_note.py
 macro_fomc_note.py
+
+# 2026-09-19：同上，這支把統一投顧影音報告的個股評論直接寫死在程式碼裡。
+fiber_optic_note.py
