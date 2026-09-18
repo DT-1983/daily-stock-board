@@ -585,9 +585,14 @@ def summary_lines_trust(events, max_each=4):
             detail = (f"{e['vs_avg']:.1f} 倍" if e.get("vs_avg")
                       else f"連 {e.get('days')} 天")
             so = shares.get(e["code"])
-            pct = (f"　占股本{e.get('shares', 0)/so*100:+.2f}%"
-                  if so else "")
-            out.append(f"　{e['code']} {e['name']}　{detail}・{lots:,.0f} 張{pct}")
+            line = f"　{e['code']} {e['name']}　{detail}・{lots:,.0f} 張"
+            # 2026-09-19 Leo：「投信連買列斷成兩排」——原本把「占股本±%」接在同一行
+            # 尾巴，手機版 Discord 寬度不夠會從中間硬折行（曾折在「占股本」跟「+0.05%」
+            # 中間，變成怪異的斷句）。改成自己另起一行、縮排對齊，斷行位置固定，
+            # 不再讓渲染器自己決定要從哪裡折。
+            if so:
+                line += f"\n　　占股本{e.get('shares', 0)/so*100:+.2f}%"
+            out.append(line)
         if len(lst) > n_show:
             out.append(f"-# 　…還有 {len(lst)-n_show} 檔")
     return out
