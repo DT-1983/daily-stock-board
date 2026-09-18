@@ -1,124 +1,124 @@
 {
- "updated": "2026-09-17 20:33",
+ "updated": "2026-09-18 08:46",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "09/16",
-   "close": 7551.81,
-   "chg_pct": -0.45
+   "date": "09/17",
+   "close": 7637.76,
+   "chg_pct": 1.14
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "09/16",
-   "close": 25978.43,
-   "chg_pct": -0.01
+   "date": "09/17",
+   "close": 26418.3,
+   "chg_pct": 1.69
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "09/16",
-   "close": 51461.9,
-   "chg_pct": -1.21
+   "date": "09/17",
+   "close": 51778.04,
+   "chg_pct": 0.61
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "09/16",
-   "close": 11246.11,
-   "chg_pct": 0.63
+   "date": "09/17",
+   "close": 11599.49,
+   "chg_pct": 3.14
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/17",
-   "close": 46288.0,
-   "chg_pct": 0.96
+   "date": "09/16",
+   "close": 45848.9,
+   "chg_pct": 0.74
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/17",
-   "close": 31.83,
-   "chg_pct": 0.17
+   "date": "09/18",
+   "close": 31.85,
+   "chg_pct": -0.04
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "09/16",
-   "close": 5.01,
+   "date": "09/17",
+   "close": 4.95,
    "fmt": "yield",
-   "chg_bp": 1.0
+   "chg_bp": -5.9
   }
  ],
  "news": [
   {
-   "title": "通膨恐破4%！英國央行11月就要升息？分析師：觀望時間正在縮短",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6609292",
-   "ts": "09/17 20:30"
-  },
-  {
-   "title": "英王查爾斯三世召集AI巨頭峰會 呼籲負責人管控技術",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6609275",
-   "ts": "09/17 20:20"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：歐特培(UGP-US)EPS預估上修至0.85元，預估目標價為7.57元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6609362",
-   "ts": "09/17 20:15"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：華納兄弟探索(WBD-US)EPS預估上修至-1.16元，預估目標價為31.00元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6609361",
-   "ts": "09/17 20:15"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：傑富瑞金融集團(JEF-US)EPS預估上修至3.7元，預估目標價為61.00元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6609360",
-   "ts": "09/17 20:15"
-  },
-  {
-   "title": "新增5檔股票明起抓去關  飆股全友、聯一光處置期至9/30",
+   "title": "QUANTRON、HyperView結盟攻零排放商用車 鴻海成關鍵製造夥伴",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6609348",
-   "ts": "09/17 20:14"
+   "url": "https://news.cnyes.com/news/id/6609634",
+   "ts": "09/18 08:41"
   },
   {
-   "title": "TIE開幕 中光電無人機搶下美警消大單 宇隆機器人攻北美市場",
+   "title": "泰福CDMO與澳洲Q-Sera簽訂長期供貨協議 攜手打入日本醫材廠供應鏈",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6609339",
-   "ts": "09/17 20:11"
+   "url": "https://news.cnyes.com/news/id/6609511",
+   "ts": "09/18 08:31"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：國巨(2327-TW)EPS預估下修至19.73元，預估目標價為1040元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6609352",
-   "ts": "09/17 20:10"
+   "title": "聯準會升息後美股反而大漲那斯達克漲1.7%、英特爾AMD領軍晶片股反攻",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6609674",
+   "ts": "09/18 08:30"
   },
   {
-   "title": "〈央行理監事會〉M2年增率超過參考區間上限 楊金龍給2個理由 不宜解讀貨幣寬鬆",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6609349",
-   "ts": "09/17 20:07"
+   "title": "亞馬遜砸24億美元鎖定資料中心發電機Generac暴漲18%、AI缺電商機持續變現",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6609673",
+   "ts": "09/18 08:30"
   },
   {
-   "title": "戴墨鏡口罩也能辨識！車輛中心「AI駕駛」視線追蹤技術亮相 導入首輛Level 3智駕電巴",
+   "title": "美股重點新聞摘要2026年9月18日",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6609364",
+   "ts": "09/18 08:15"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：奇鋐(3017-TW)EPS預估上修至104.03元，預估目標價為4000元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6609286",
-   "ts": "09/17 20:07"
+   "url": "https://news.cnyes.com/news/id/6609654",
+   "ts": "09/18 08:10"
+  },
+  {
+   "title": "0918台股盤前｜台積電狂飆、台塑四寶暴衝，加權指數大漲 439.10 點強登月線！塑膠原料與貨櫃航運強勢領攻，CCL 銅箔基板重挫回檔，法人目標價鎖定禾榮科、南亞、昇達科",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6609204",
+   "ts": "09/18 08:10"
+  },
+  {
+   "title": "費半漲超3%！美科技股強彈 ARM飆逾8%、閃迪漲超6% 川普擬對伊朗恢復大規模作戰",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6609635",
+   "ts": "09/18 08:00"
+  },
+  {
+   "title": "營收速報 - 2026年9月18日台股中小型公司8月營收一覽（新增4家）",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6609643",
+   "ts": "09/18 07:55"
+  },
+  {
+   "title": "英特爾飆近8%、美光漲逾5% 晶片股強勢反彈持續",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6609619",
+   "ts": "09/18 07:50"
   }
  ],
  "inst": {
