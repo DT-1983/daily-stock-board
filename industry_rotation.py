@@ -874,7 +874,7 @@ def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdi
         for k, v in (("index", "加權指數"), ("equal", "等權類股"))
     )
     range_btns = "".join(
-        f'<button data-r="{k}" aria-pressed="{"true" if k == "3m" else "false"}">{label}</button>'
+        f'<button data-r="{k}" aria-pressed="{"true" if k == "1m" else "false"}">{label}</button>'
         for k, label, _ in RANGE_DAYS
     )
 
@@ -1142,8 +1142,9 @@ def _rrg_script(payload, holdings, payload_ind=None, holdings_ind=None):
     lines.append("var curGran = 'sector';")   # sector=粗分類 / industry=細分類
     lines.append("function RRGD(){return (curGran==='industry'&&window.RRG_DATA_IND)?window.RRG_DATA_IND:window.RRG_DATA;}")
     lines.append("function RRGH(){return (curGran==='industry'&&window.RRG_DATA_IND)?(window.RRG_HOLDINGS_IND||{}):window.RRG_HOLDINGS;}")
-    # 2026-08-26：預設週期改 60 日（Leo 指定）；回放範圍3個月／尾巴8週本來就已經是預設值。
-    lines.append("var rrgChart = null, curM = 'us', curP = '60', curBench = 'index', curRange = '3m', tailDays = 10;")
+    # 2026-08-26：預設週期改 60 日（Leo 指定）。
+    # 2026-09-19：預設回放範圍 3個月→1個月（Leo 指定）。
+    lines.append("var rrgChart = null, curM = 'us', curP = '60', curBench = 'index', curRange = '1m', tailDays = 10;")
     lines.append("var hoveredKey = null, _lastFullFrames = [], _lastUptoIdx = -1, _lastAllPts = [];")
     lines.append("var selectedKeys = new Set();")  # 2026-08-26：只看勾選的幾個產業
     lines.append("var expandedKeys = new Set();")  # 2026-08-26：展開看前幾大成分股的籃子
@@ -1438,7 +1439,18 @@ function updateChartPoints(pts, trailDs) {
         onClick: function(evt, elements) {
           var hit = elements.find(function(e) { return e.datasetIndex === 0; });
           var key = hit && window._rrgCurPts && window._rrgCurPts[hit.index] ? window._rrgCurPts[hit.index].key : null;
-          if (key) toggleSelect(key);
+          if (key) { toggleSelect(key); return; }
+          // 2026-09-19 Leo：「點選象限就會選到該象限的產業」——沒點到任何泡泡
+          // （點的是空白背景，含象限標籤文字本身），改成判斷點在哪個象限，
+          // 整個象限的產業一起勾選；再點同一象限一次＝取消（跟點單顆泡泡
+          // 的 toggle 手感一致）。
+          var pos = Chart.helpers.getRelativePosition(evt, rrgChart);
+          var xVal = rrgChart.scales.x.getValueForPixel(pos.x);
+          var yVal = rrgChart.scales.y.getValueForPixel(pos.y);
+          if (xVal == null || yVal == null) return;
+          var q = xVal >= 100 ? (yVal >= 100 ? 'leading' : 'weakening')
+                               : (yVal >= 100 ? 'improving' : 'lagging');
+          selectQuadrant(q);
         },
         plugins: {
           legend: {display: false},
@@ -1650,6 +1662,27 @@ function clearSelection() {
   document.querySelectorAll('.rrgrow[data-key]').forEach(function(r) { r.classList.remove('sel'); });
   document.getElementById('selInfo').textContent = '';
   document.getElementById('selClear').style.display = 'none';
+  renderChart();
+}
+
+// 點圖表象限背景＝整象限一起勾選（2026-09-19 Leo：「點選象限就會選到該象限的
+// 產業」）。用 _lastAllPts（未篩選的完整清單）而不是 window._rrgCurPts——
+// 後者如果已經在篩選狀態中，就查不到被篩掉的其他象限成員了。
+// 已經整象限選好時再點同一象限＝清空（跟單點 toggleSelect 同一種手感）。
+function selectQuadrant(q) {
+  var keysInQ = (_lastAllPts || []).filter(function(p) { return p.quadrant === q; })
+                                    .map(function(p) { return p.key; });
+  if (!keysInQ.length) return;
+  var same = selectedKeys.size === keysInQ.length &&
+             keysInQ.every(function(k) { return selectedKeys.has(k); });
+  selectedKeys.clear();
+  if (!same) keysInQ.forEach(function(k) { selectedKeys.add(k); });
+  document.querySelectorAll('.rrgrow[data-key]').forEach(function(r) {
+    r.classList.toggle('sel', selectedKeys.has(r.dataset.key));
+  });
+  var info = document.getElementById('selInfo');
+  info.textContent = selectedKeys.size ? ('已選 ' + selectedKeys.size + ' 檔（只顯示在圖表上）') : '';
+  document.getElementById('selClear').style.display = selectedKeys.size ? '' : 'none';
   renderChart();
 }
 
