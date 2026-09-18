@@ -86,6 +86,11 @@ table.cb tr:hover td{background:rgba(255,255,255,.03)}
   color:#fff;margin-right:6px;letter-spacing:.3px}
 .qsec{font-size:11.5px;color:var(--muted)}
 .qind{color:var(--dim)}
+/* 2026-09-19 Leo：「可以加一個這個個股在我們的分類裡是什麼產業嗎」——.qsec 在窄螢幕
+   （表格欄位擠不下）被 .qsec{display:none} 藏起來，手機看不到分類。展開列裡另外
+   用這個獨立 class 顯示同一份 sec_label，不吃到上面那條 mobile 隱藏規則。 */
+.detailsec{font-size:12px;color:var(--muted);margin:2px 0 8px}
+.detailsec .qind{color:var(--dim)}
 /* 2026-09-17：目標價來源標籤（投顧原文 vs yfinance市場共識），對標老墨截圖
    會標「統一投顧錄音＋日期」——我們也要讓人分得清這是誰的判斷。 */
 .tgtsrc{display:inline-block;font-size:9px;font-weight:700;padding:0 4px;border-radius:4px;
@@ -333,7 +338,9 @@ def _row_html(r):
             f'<td>{_fmt(r.get("rs_short"),1,"%")}</td>'
             f'<td class="srcs">{esc("/".join(r.get("src") or []))}</td></tr>'
             + (f'<tr class="detail" id="{tid}" data-mkt="{mkt}" style="display:none">'
-               f'<td colspan="12">{_intro_cached(r["ticker"])}'
+               f'<td colspan="12">'
+               f'{(f"<div class=" + chr(34) + "detailsec" + chr(34) + f">🏷️ 分類：{sec_label}</div>" if sec_label else "")}'
+               f'{_intro_cached(r["ticker"])}'
                f'{_tech_chip_html(r)}</td></tr>'
                if r.get("chart") else ""))
 
@@ -434,6 +441,13 @@ def attach_charts(rows, limit=None):
         todo = todo[:limit]
     print(f"  產技術面圖表 {len(todo)} 檔…")
     ok = 0
+    # 2026-09-19 Leo：「為什麼只有金居有公司說明？其他沒有」——_intro_cached()
+    # 只顯示快取裡已經有的（見該函式說明：不對全部 312 檔現場叫本機 claude，
+    # 太慢），所以哪些檔有介紹全看「剛好有沒有被查過」，金居是這次測試 bug
+    # 時剛好查過才有。但這裡的 todo 本來就已經縮到「打點成立」那 56 檔
+    # （不是全部 312 檔），跟現場叫本機 claude 那個成本疑慮的範圍不一樣——
+    # 主動幫這 56 檔補齊快取是可負擔的，之後每天重跑只有新進榜的才要重叫。
+    import company_intro as ci
     for i, r in enumerate(todo, 1):
         try:
             h = ti.build_html(r.get("symbol") or r["ticker"])
@@ -442,6 +456,10 @@ def attach_charts(rows, limit=None):
                 ok += 1
         except Exception as e:                          # noqa: BLE001
             print(f"    [warn] {r['ticker']} 產圖失敗：{str(e)[:50]}")
+        try:
+            ci.intro(r["ticker"])
+        except Exception as e:                          # noqa: BLE001
+            print(f"    [warn] {r['ticker']} 簡介失敗：{str(e)[:50]}")
         if i % 20 == 0:
             print(f"    …{i}/{len(todo)}")
     print(f"  圖表完成 {ok}/{len(todo)}")
