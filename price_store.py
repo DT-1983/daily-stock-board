@@ -40,6 +40,20 @@ META_PATH = os.path.join(STORE_DIR, "_meta.json")
 BATCH_SIZE = 200          # 一次送給 yf.download 的檔數（太多會逾時，太少失去批次好處）
 STALE_HOURS = 12          # 快取這麼久沒更新才重抓（同一天內重跑不重抓）
 
+# 2026-09-20：查6291（沛亨）查燈號查不到才發現的坑——之前debug時對這檔叫過一次
+# period="6mo"，快取寫進去129根K棒＋時間戳記。12小時內任何呼叫端（包括這次要的
+# period="3y"）只看「有沒有超過STALE_HOURS」，完全沒管快取的資料範圍夠不夠長，
+# 於是3年份的請求靜默拿到只有6個月的資料，SuperTrend/RS這些要長窗口的指標算不出來，
+# scan_one()整個回None，查股頁誤判成「代號查不到」。
+# 修法：只憑「多久沒更新」判斷新鮮度不夠，還要比對快取實際涵蓋的天數夠不夠這次
+# 要求的period，兩個條件都過才算真的新鮮，不然照樣排進重抓。
+_PERIOD_DAYS = {"1mo": 31, "3mo": 92, "6mo": 183, "1y": 365, "2y": 730,
+                "3y": 1095, "5y": 1825, "10y": 3650, "ytd": 366, "max": 3650}
+
+
+def _period_days(period):
+    return _PERIOD_DAYS.get(period, 1095)
+
 
 def _meta():
     try:
@@ -278,6 +292,13 @@ def get_ohlc(tickers, period="3y", refresh=True, force=False):
                 fresh = (now - dt.datetime.fromisoformat(ts)).total_seconds() < STALE_HOURS * 3600
             except Exception:
                 pass
+        # 時間新鮮還不夠——快取實際涵蓋的天數要撐得住這次要求的 period，
+        # 不然像 6291 那樣：之前被別的呼叫端用短 period 寫進快取，時間戳記
+        # 還在 STALE_HOURS 內，但資料範圍根本不到這次要的長度。
+        if fresh and len(df) > 1:
+            span_days = (df.index.max() - df.index.min()).days
+            if span_days < _period_days(period) * 0.85:
+                fresh = False
         out[tk] = df
         if not fresh and refresh:
             need.append(tk)        # 有舊的可用，但仍排進重抓（抓失敗就繼續用舊的）
