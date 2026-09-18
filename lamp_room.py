@@ -282,13 +282,18 @@ def _intro(r):
             + lookup_page.INTRO_JS)
 
 
-def _tgt_card(r, num):
-    """投顧目標價卡（2026-09-20，Leo：「戰情室還是沒有」）。
+def _tgt_card(r, num, lv=None):
+    """投顧目標價卡（2026-09-20，Leo：「戰情室還是沒有」→ 隔天再問「燈號判斷
+    改一起重算呢」，兩個反饋一起處理）。
 
     lookup_page.py 的 _summary() 9/19已經改成「多家投顧時顯示中位數＋異議」
     （對標老墨畫面），但戰情室這裡是完全獨立的一份卡片HTML，沒有共用那段
     邏輯，改了那邊這裡不會跟著動。這裡直接呼叫 lookup_page._advisor_consensus()
     同一份函式，兩邊算出來的答案才不會不一樣。
+
+    `lv`：現抓重算的結果（lamp_lookup.lookup()），detail_html() 改成一律
+    即時算之後，沒有多家投顧報告時的備用目標價（yfinance共識）要用這份
+    現抓的 target/price，不能再用 r 裡那份可能過期的快取數字。
     """
     from board_theme import esc
     try:
@@ -296,17 +301,23 @@ def _tgt_card(r, num):
         adv = lookup_page._advisor_consensus(r["tk"])
     except Exception:                                       # noqa: BLE001
         adv = None
+    px = (lv or {}).get("price") or r.get("px")
     if adv:
         median, n, dissent = adv
-        gap = ((median / r["px"] - 1) * 100) if (r.get("px") and median) else None
+        gap = ((median / px - 1) * 100) if (px and median) else None
         sub = f"中位數‧{n}家" + (f"　距現價{gap:+.1f}%" if gap is not None else "")
         if dissent:
             sub += f"<br>{dissent}"
         return (f'<div class="dc"><div class="k">投顧目標價</div>'
                 f'<div class="v">{num(median)}</div><div class="s">{sub}</div></div>')
+    tgt = (lv.get("target") if lv else None)
+    if tgt is None:
+        tgt, gap = r.get("tgt"), r.get("gap")
+    else:
+        gap = ((tgt / px - 1) * 100) if (px and tgt) else None
     return (f'<div class="dc"><div class="k">分析師共識目標價</div>'
-            f'<div class="v">{num(r["tgt"])}</div>'
-            f'<div class="s">{"" if r["gap"] is None else f"距現價 {r['gap']:+.1f}%"}</div></div>')
+            f'<div class="v">{num(tgt)}</div>'
+            f'<div class="s">{"" if gap is None else f"距現價 {gap:+.1f}%"}</div></div>')
 
 
 def detail_html(ticker):
@@ -323,22 +334,23 @@ def detail_html(ticker):
     d = _load(RESULT, {}) or {}
     raw = next((x for x in (d.get("rows") or [])
                 if str(x.get("ticker")).upper() == r["tk"].upper()), {})
-    _row_asof = raw.get("asof") or _asof
 
-    # 「今日現算」：用**下面那張圖的同一份資料**（現抓到最新交易日）重跑同一套燈號，
-    # 直接擺在快取燈數旁邊。資料日一樣就不顯示（沒有差異就沒有必要多一行）。
-    _lv = live_lamps(r["tk"])
-    _live_line = ""
-    if _lv and _lv.get("asof") and _lv["asof"] != _row_asof:
-        _off = [k for k, v in (_lv.get("lamps") or {}).items() if not v]
-        _diff = _lv["lit"] - r["lit"]
-        _cls = "up" if _diff > 0 else ("dn" if _diff < 0 else "")
-        _live_line = (
-            f'<div class="livelit"><b class="{_cls}">{_lv["lit"]} / 4</b>'
-            f'<span class="tag">今日現算</span>'
-            f'<span class="asof">{esc(_lv["asof"])}　收 {_lv["price"]:,.2f}</span>'
-            + (f'<div class="offs">熄：{esc("、".join(_off))}</div>' if _off else "")
-            + "</div>")
+    # 2026-09-20 Leo：「燈號判斷改一起重算呢？」——原本卡片用今天07:00掃描
+    # 快取的數字，圖是現抓的，兩者偶爾對不上（掃描那天剛好某些股票yfinance
+    # 抓價失敗、靜默退回舊快取時，落差可以到兩三天，見同一輪對話查MSFT/
+    # 聯發科那次）。改成卡片也一律用現抓的重算（跟下面的技術圖同一份資料、
+    # 同一套 lamp_lookup.lookup() 邏輯），不再有「快取版」這個分支——也就
+    # 不再需要「今日現算」對照行、也不再需要「⚠️兩者會不一樣」的警告，
+    # 因為畫面上永遠只有一個數字。查不到才退回舊的cached r/raw，不要讓
+    # 整頁掛掉（跟lookup_page.render()的容錯同一個精神）。
+    import lamp_lookup
+    lv = None
+    try:
+        lv = lamp_lookup.lookup(r["tk"], live=True)
+    except Exception:                                       # noqa: BLE001
+        pass
+    live_ok = bool(lv)
+    _row_asof = (lv.get("asof") if live_ok else None) or raw.get("asof") or _asof
 
     def num(v, n=2, suf=""):
         return "—" if v is None else f"{v:,.{n}f}{suf}"
@@ -350,19 +362,32 @@ def detail_html(ticker):
             "improving": '<i class="lp half"></i>半亮　',
             "weakening": '<i class="lp"></i>滅　',
             "lagging": '<i class="lp"></i>滅　'}
-    lamps = raw.get("lamps") or {}
+    lamps = (lv.get("lamps") if live_ok else raw.get("lamps")) or {}
     lamp_rows = "".join(
         f'<div class="lrow"><i class="lp {"on" if v else ""}"></i>{esc(k)}</div>'
         for k, v in lamps.items())
-    st = ("🟢 空方" if not r["bull"] else "🔴 多方")
-    stl = raw.get("st_line")
+    lit = lv.get("lit") if live_ok else r["lit"]
+    bull = lv.get("bull") if live_ok else r["bull"]
+    px = lv.get("price") if live_ok else r["px"]
+    st = ("🟢 空方" if not bull else "🔴 多方")
+    stl = lv.get("st_line") if live_ok else raw.get("st_line")
     stsub = ("" if stl is None else
-             (f"停損參考線 {stl:,.2f}" if r["bull"] else f"站上 {stl:,.2f} 才翻多"))
+             (f"停損參考線 {stl:,.2f}" if bull else f"站上 {stl:,.2f} 才翻多"))
+    rr_v = lv.get("rr") if live_ok else r["rr"]
+    rs_v = lv.get("rs_short") if live_ok else raw.get("rs_short")
+    # lamp_lookup.lookup() 回的 quad 是 {"20":.., "60":.., "120":..} 巢狀字典（跟
+    # attach_sector() 原始輸出一樣）；rows() 那份快取已經在自己的迴圈裡拆成單一
+    # 60日字串了——兩邊資料形狀不一樣，這裡統一拆成同一種扁平值再往下用。
+    if live_ok:
+        _q = lv.get("quad") or {}
+        quad = _q.get("60") if isinstance(_q, dict) else _q
+    else:
+        quad = r["quad"]
 
     head = (
         f'<div class="dhead"><span class="tk">{esc(r["tk"])}</span>'
         f'<span class="nm">{esc(r["nm"])}</span>'
-        f'<span class="px">{num(r["px"])}</span>'
+        f'<span class="px">{num(px)}</span>'
         + ("" if r["chg"] is None else
            f'<span class="{"up" if r["chg"] >= 0 else "dn"}">{r["chg"]:+.2f}%</span>')
         # 🔴 2026-09-08 Leo 問「9/8 沒對齊」時查到：原本這裡用 rows() 回的全頁 _asof，
@@ -370,37 +395,31 @@ def detail_html(ticker):
         #    台股 9/7、美股 9/4（美股 9/7 是勞動節休市，兩個都對）。
         #    結果：點美股個股時標成 9/7，實際資料是 9/4，**標錯一天**。
         # ⭐ 日期要跟著「這一檔自己的資料」走，不能用別檔的日期代表它。
-        + f'<span class="dim">{esc(r["sec"])}　燈號資料 {esc(_row_asof)}</span></div>'
-        # 🔴 2026-09-07 查 Leo 的「9/3 沒日期」時發現的：上面這排卡是
-        # combo_result 的快取（每天 07:45 掃，內容是前一交易日收盤），
-        # 下面的圖是**現抓**的（到今天）。2454 當下卡片 4,415 / 圖 4,760，差 7.8%。
-        # 同一頁兩個現價卻沒有任何線索說明——兩邊的資料日都要標出來。
-        + '<div class="datewarn">⚠️ 上面的數字是<b>燈號掃描快取</b>（'
-        + esc(_asof) + '）；下面的圖是<b>現抓的</b>（到最新交易日）。'
-        '掃描之後又有交易日的話，兩者會不一樣。</div>')
+        + f'<span class="dim">{esc(r["sec"])}　資料 {esc(_row_asof)}'
+        + ("" if live_ok else "（現抓失敗，退回今天掃描快取）")
+        + f'</span></div>')
 
     intro = _intro(r)
 
     cards = "".join([
-        f'<div class="dc"><div class="k">燈數</div><div class="v">{r["lit"]} / 4'
+        f'<div class="dc"><div class="k">燈數</div><div class="v">{lit} / 4'
         f'<span class="asof">{esc(_row_asof)}</span></div>'
-        + _live_line +
         f'<div class="s">{lamp_rows}</div></div>',
         f'<div class="dc"><div class="k">SuperTrend</div><div class="v">{st}</div>'
         f'<div class="s">{esc(stsub)}</div></div>',
-        _tgt_card(r, num),
-        f'<div class="dc"><div class="k">風報比</div><div class="v">{num(r["rr"])}</div>'
-        f'<div class="s">{"⭐ 打點成立" if (r["lit"] >= 3 and (r["rr"] or 0) >= 1) else ""}</div></div>',
+        _tgt_card(r, num, lv if live_ok else None),
+        f'<div class="dc"><div class="k">風報比</div><div class="v">{num(rr_v)}</div>'
+        f'<div class="s">{"⭐ 打點成立" if (lit >= 3 and (rr_v or 0) >= 1) else ""}</div></div>',
         f'<div class="dc"><div class="k">RS60</div>'
-        f'<div class="v">{num(raw.get("rs_short"), 2, "%")}</div>'
-        f'<div class="s">{"高於自身 60 日均線" if (raw.get("rs_short") or 0) > 0 else "低於自身 60 日均線"}</div></div>',
+        f'<div class="v">{num(rs_v, 2, "%")}</div>'
+        f'<div class="s">{"高於自身 60 日均線" if (rs_v or 0) > 0 else "低於自身 60 日均線"}</div></div>',
         # H（Leo：「可以加上 RRG 的訊號嗎? 跟燈號一樣（在最上面的字卡）」）
         # 象限本來就有，但只是一行文字。改成跟四燈同一種「亮/滅」語彙：
         # 領先＝亮，改善＝半亮（在往上走），轉弱/落後＝滅。
         # ⚠️ 這**不是新指標**，就是同一份 RRG 象限換個畫法——不要讓人以為多了一個訊號。
         f'<div class="dc"><div class="k">RRG 輪動</div>'
-        f'<div class="v">{QL.get(r["quad"], "—")}</div>'
-        f'<div class="s">{QDOT.get(r["quad"], "")}{esc(r["src"])}</div></div>',
+        f'<div class="v">{QL.get(quad, "—")}</div>'
+        f'<div class="s">{QDOT.get(quad, "")}{esc(r["src"])}</div></div>',
     ])
 
     tech = ""
