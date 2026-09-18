@@ -3,52 +3,11 @@
 "flips_hold": [],
 "flips_watch": [
 {
-"code": "2368",
-"name": "金像電",
-"word": "🟢→🔴 翻空",
-"dir": -1
+"code": "6443",
+"name": "元晶",
+"word": "🔴→🟢 翻多",
+"dir": 1
 }
 ],
-"ai_alerts": [
-{
-"chain": "機器人",
-"market": "US",
-"sig": "🟢",
-"code": "IOT",
-"name": "Samsara Inc Ordinary Shares - Class A",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 電力/核能",
-"market": "US",
-"sig": "🔴",
-"code": "HUBB",
-"name": "Hubbell Inc",
-"reason": "觀望→賣出"
-},
-{
-"chain": "Bitcoin→AI 機房",
-"market": "US",
-"sig": "🔴",
-"code": "CRWV",
-"name": "CoreWeave Inc Ordinary Shares - Class A",
-"reason": "觀望→賣出"
-},
-{
-"chain": "AI 伺服器",
-"market": "TW",
-"sig": "🟢",
-"code": "2382",
-"name": "廣達",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 伺服器",
-"market": "TW",
-"sig": "🔴",
-"code": "2368",
-"name": "金像電",
-"reason": "觀望→賣出"
-}
-]
+"ai_alerts": []
 }
