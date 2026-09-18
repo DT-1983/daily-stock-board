@@ -380,6 +380,38 @@ def sec_setup(date, scope="public"):
     return lines
 
 
+def sec_movers(date, scope="public"):
+    """🔍 今天大漲但不在母體裡的候選（2026-09-20，Leo：「怎麼樣才不會漏掉
+    創意跟愛普」）。讀 market_movers.py 的輸出——那支用免費全市場官方行情
+    （TWSE+TPEx，不逐檔查yfinance）抓漲跌幅≥門檻的股票，跟 combo_scan 母體
+    比對，列出「表現強但沒被四燈系統看到」的候選。
+
+    只放公開版：跟持股無關，是母體覆蓋率的提醒，不是判斷。
+
+    ⚠️ 只抓得到「今天單日大漲」這種模式（像創意當天+32%），抓不到像愛普
+    那種靠幾週慢慢墊出漲幅、當天可能還小跌的情況——這是免費信號的邊界，
+    不是完整的缺口偵測，看到這段空的不代表母體真的沒有缺口。
+    """
+    if scope != "public":
+        return []
+    d = _load("state/market_movers.json", {}) or {}
+    try:
+        gap = (datetime.date.fromisoformat(date)
+               - datetime.date.fromisoformat(d.get("date", "1900-01-01"))).days
+    except Exception:                                       # noqa: BLE001
+        gap = 99
+    if gap > 3 or not d.get("outside_universe"):
+        return []
+    rows = d["outside_universe"][:8]
+    lines = [f"**🔍 大漲但不在母體裡**（今天 ≥{d.get('min_pct', 8):.0f}%，"
+             f"共 {len(d['outside_universe'])} 檔，只列前 {len(rows)}）"]
+    for r in rows:
+        lines.append(f"　{r['code']} {r['name']}　{r['pct']:+.1f}%")
+    lines.append("-# 只抓「今天單日大漲」，抓不到慢慢墊出漲幅的股票"
+                 "　想追蹤就 `/加自選 代號`")
+    return lines
+
+
 def sec_rrg_turn(date, scope="public"):
     """🔄 剛轉進 RRG 領先象限的類股（2026-09-05，Leo：「rrg 轉到領先（2-3天以上）」）。
 
@@ -897,6 +929,7 @@ def compose(date=None, scope="public", part="all"):
     else:
         research = [sec1_market(notes), sec2_signals(date, "public"),
                     sec_rrg_turn(date, "public"), sec_setup(date, "public"),
+                    sec_movers(date, "public"),
                     sec4_research(notes, "public", date), sec5_watch(date),
                     sec_reports_today(date), sec_thesis(date, "public")]
         chief = [sec3_chief(date, "public")]
