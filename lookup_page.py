@@ -320,17 +320,29 @@ def _summary(row):
                                  + (f"（還要 {abs(gap):.1f}%）" if gap is not None else ""))
 
     tgt, rr = row.get("target"), row.get("rr")
-    if tgt is None:
+    # 2026-09-20：多家投顧同時cover時，中位數＋異議標記比單一共識數字更有資訊量
+    # （見_advisor_consensus()）——這裡放在最上面的卡片區，跟老墨畫面同樣位置，
+    # 不用往下滑到券商報告區塊才看得到。
+    adv = _advisor_consensus(row.get("ticker"))
+    if adv:
+        median, n_adv, dissent = adv
+        tg_v = f"{median:,.0f}"
+        up = (median - row["price"]) / row["price"] * 100 if row.get("price") else None
+        tg_s = (f"中位數‧{n_adv}家" + (f"　距現價{up:+.1f}%" if up is not None else "")
+                + (f"<br>{dissent}" if dissent else ""))
+        tg_k = "投顧目標價"
+    elif tgt is None:
         # ⚠️ 這裡真的是查無才寫「查無」。2026-09-04 之前空方時 combo_scan 連
         # target 都不填，於是 75 檔明明有目標價卻被說成「查無」——
         # 把「我們刻意不算」講成「外面沒有資料」是兩件完全不同的事。
-        tg_v, tg_s = "—", "查無分析師共識目標價（ETF／ADR 常見）"
+        tg_v, tg_s, tg_k = "—", "查無分析師共識目標價（ETF／ADR 常見）", "分析師共識目標價"
     else:
         lo, hi = row.get("target_low"), row.get("target_high")
         rng = f"區間 {lo:,.0f}–{hi:,.0f}" if lo and hi else ""
         tg_v = f"{tgt:,.2f}"
         up = (tgt - row["price"]) / row["price"] * 100 if row.get("price") else None
         tg_s = (f"距現價 {up:+.1f}%　{rng}" if up is not None else rng)
+        tg_k = "分析師共識目標價"
 
     rr_v = f"{rr:.2f}" if rr is not None else "—"
     rr_s = ("⭐ 打點成立（≥3燈且風報比≥1）" if row.get("combo") and rr and rr >= 1
@@ -361,12 +373,50 @@ def _summary(row):
         + _card("SuperTrend", st_v, st_s, zh=True)
         + _card("四燈", f'<span class="lk-lamps">{lamp_str}</span>',
                 f"{lit}/4　{esc(lamp_names)}", zh=True)
-        + _card("分析師共識目標價", tg_v, tg_s)
+        + _card(tg_k, tg_v, tg_s, zh=bool(adv))
         + _card("風報比", rr_v, rr_s)
         + _card("RS60 乖離", rs_v, rs_s)
         + _card("類股象限（60日）", f"{qi} {ql}", q_s, zh=True)
         + "</div>")
 
+
+
+def _advisor_consensus(ticker):
+    """多家投顧報告的中位數目標價＋異議標記（2026-09-20，對標老墨畫面
+    「投顧目標價1,430 中位數‧3家 ⚠️異議：摩根士丹利Overweight‧首選1,666元
+    (+32%)」）。回 (median, n, dissent_html) 或 None（<2家有目標價時）。
+
+    Leo反饋：「聯發科不是有投顧資料嗎？怎麼沒像老墨的跑出一段文字」——
+    這段邏輯9/19已經寫好，但放在_broker()的券商報告區塊（頁面偏下方、
+    要往下滑才看得到），老墨的畫面是放在**代號/現價旁邊、第一眼就看到**
+    的位置。這裡抽成共用函式，_summary()跟_broker()都呼叫同一份，
+    _summary()放在最上面的卡片區，才是真的跟老墨對齊的位置。
+    """
+    try:
+        import advisor_reports
+        store = advisor_reports._load(advisor_reports.STORE, {}) or {}
+    except Exception:                                       # noqa: BLE001
+        return None
+    import re as _re
+    want = _re.sub(r"\.(TW|TWO)$", "", str(ticker).upper()).replace(".", "-")
+    rs = [r for r in store.values()
+          if str(r.get("ticker", "")).upper().replace(".", "-") == want
+          and not r.get("_notreport")]
+    tgs_full = [(r["target"], r.get("broker"), r.get("rating")) for r in rs if r.get("target")]
+    if len(tgs_full) < 2:
+        return None
+    tgs_sorted = sorted(t for t, _, _ in tgs_full)
+    n = len(tgs_sorted)
+    median = (tgs_sorted[n // 2] if n % 2
+              else (tgs_sorted[n // 2 - 1] + tgs_sorted[n // 2]) / 2)
+    outlier = max(tgs_full, key=lambda x: abs(x[0] - median))
+    out_t, out_b, out_r = outlier
+    out_pct = (out_t / median - 1) * 100 if median else 0
+    dissent = ""
+    if abs(out_pct) >= 10:
+        dissent = (f'⚠️異議：<b>{esc(out_b)}</b>{esc(out_r or "")}‧{out_t:,.0f}元'
+                   f'（比中位數{"偏多" if out_pct > 0 else "偏空"}{abs(out_pct):.0f}%）')
+    return median, n, dissent
 
 
 def _broker(row):
@@ -440,28 +490,21 @@ def _broker(row):
     # Overweight‧首選1,666元(+32%)」）：多家券商同時 cover 時，除了看「共識」，
     # 更有用的是「誰跟大家不一樣」——一堆都樂觀裡唯一被下修/唯一特別樂觀的那家，
     # 訊息量比一致樂觀更高（同 industry-note-intake skill 4b 的判讀邏輯）。
-    # 用中位數（不是均值，避免單一極端值把共識拉走）當基準，抓離中位數最遠的
-    # 那份報告點名出來；差距夠小（<10%）就不算「異議」，大家看法本來就接近。
+    # 中位數＋異議計算跟_summary()共用同一份_advisor_consensus()，避免兩處各算
+    # 一次結果對不上（2026-09-20 從這裡抽出去，_summary() 那邊放在畫面最上面，
+    # 這裡保留完整版：多一個目標價範圍跟「差異多半來自倍數/EPS」的解釋）。
     warn = ""
+    adv = _advisor_consensus(row.get("ticker"))
     tgs_full = [(r["target"], r.get("broker"), r.get("rating")) for r in rs if r.get("target")]
-    if len(rs) >= 2 and len(tgs_full) >= 2:
+    if adv:
+        median, n, dissent = adv
         tgs_sorted = sorted(t for t, _, _ in tgs_full)
-        n = len(tgs_sorted)
-        median = (tgs_sorted[n // 2] if n % 2
-                  else (tgs_sorted[n // 2 - 1] + tgs_sorted[n // 2]) / 2)
-        outlier = max(tgs_full, key=lambda x: abs(x[0] - median))
-        out_t, out_b, out_r = outlier
-        out_pct = (out_t / median - 1) * 100 if median else 0
-        dissent = ""
-        if abs(out_pct) >= 10:
-            dissent = (f'　<span class="bk-o">⚠️異議：<b>{esc(out_b)}</b>'
-                       f'{esc(out_r or "")}‧{out_t:,.0f}元'
-                       f'（比中位數{"偏多" if out_pct > 0 else "偏空"}{abs(out_pct):.0f}%）</span>')
+        dissent_html = f'　<span class="bk-o">{dissent}</span>' if dissent else ""
         rng = (f'（範圍 {min(tgs_sorted):,.0f}～{max(tgs_sorted):,.0f}）' if n >= 3 else "")
         note = ("——差異多半來自<b>倍數與用哪一年 EPS</b>，不是基本面。多家同時推代表這個看法已經擁擠。"
                 if n >= 3 else "")
         warn = (f'<div class="bk-w">📊 目標價中位數 <b>{median:,.0f}</b>元‧{n}家'
-                f'{rng}{dissent}{note}</div>')
+                f'{rng}{dissent_html}{note}</div>')
     # 券商目標價異動（2026-09-04，Leo：「那兩張圖的其他券商目標價不參考嗎？」）
     # ⚠️ 分清楚兩件事：**「不主動吵你」不等於「看不到」**。
     #   日報推播只推可信名單（Leo 指定只信高盛）——那是「要不要當訊號叫你」的判斷；
