@@ -115,12 +115,12 @@ def stocks_in(sectors_by_mkt):
     return out
 
 
-def lines(period="60", min_days=2, max_days=20, top_stocks=4, held=None):
-    """給日報用的行。held 給定時，個股後面標 💼。"""
+def lines(period="60", min_days=2, max_days=20):
+    """給日報用的行——只列類股本身轉進領先象限幾天，不展開母體內個股
+    （2026-09-19 Leo：「母體內拿掉，只要顯示產業變化」）。"""
     t = turns(period, min_days, max_days)
     if not any(t.values()):
         return []
-    st = stocks_in(t)
     out = []
     for m in ("tw", "us"):
         rows = t.get(m) or []
@@ -130,27 +130,6 @@ def lines(period="60", min_days=2, max_days=20, top_stocks=4, held=None):
         for r in rows:
             gw = f"　⚠️ 中間有 {r['gaps']} 天快照缺這個籃子" if r.get("gaps") else ""
             out.append(f"　🔵 **{r['name']}**　連續 {r['days']} 天（{r['since']} 轉進）{gw}")
-            ss = (st.get(m) or {}).get(r["sector"]) or []
-            if ss:
-                # 2026-09-09 Leo：「美股 科技服務 那段太擠了」。
-                # 原本 4 檔擠成一行、每檔還帶「（4燈・風報比 4.6）」括號全稱，
-                # 一行 70+ 寬 → 手機折成三行，而且折在括號中間。
-                # ⭐ 兩件事一起改才有效：**縮短每一項**（4燈 RR4.6）
-                #    ＋**一行只放兩檔**。只做其中一個都還是會折。
-                names = []
-                for x in ss[:top_stocks]:
-                    mark = "💼" if held and _norm(x.get("ticker")) in held else ""
-                    rr = f" RR{x['rr']:.1f}" if x.get("rr") else ""
-                    names.append(f"{mark}{x.get('ticker')} {x.get('lit')}燈{rr}")
-                more = f"…另 {len(ss)-top_stocks} 檔" if len(ss) > top_stocks else ""
-                # 標籤只放第一行——每行都寫「母體內：」會佔掉一半寬度，
-                # 但完全不寫就不知道那串代號是什麼（我第一版就漏了）。
-                for i in range(0, len(names), 2):
-                    lead = "　　母體內：" if i == 0 else "　　　　　　"
-                    tail = more if i + 2 >= len(names) else ""
-                    out.append(f"{lead}{'、'.join(names[i:i+2])}　{tail}".rstrip())
-            else:
-                out.append("　　母體內：沒有這一類的股票")
     return out
 
 
