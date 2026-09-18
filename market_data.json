@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-18 12:53",
+ "updated": "2026-09-18 15:40",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,16 +38,16 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "09/18",
-   "close": 46988.95,
-   "chg_pct": 1.51
+   "close": 47180.75,
+   "chg_pct": 1.93
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/18",
-   "close": 31.77,
-   "chg_pct": -0.27
+   "close": 31.82,
+   "chg_pct": -0.12
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "獲利「微笑曲線」浮現！美銀美林：中國AI從追技術到搶利潤  硬體+雲兩端吃肉、模型+機器人中間挨打",
+   "title": "突破記憶體牆瓶頸 AI晶片產業加速邁向「記憶體解耦」新架構",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6609924",
-   "ts": "09/18 12:50"
+   "url": "https://news.cnyes.com/news/id/6610040",
+   "ts": "09/18 15:40"
   },
   {
-   "title": "中國車便宜30%-40% 川普放話歡迎赴美設廠 現代汽車CEO警告：沒有防線恐重演歐洲局面",
+   "title": "部分條款難接受！李在明為3500億美元對美投資案「夜不能寐」",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6609978",
-   "ts": "09/18 12:43"
+   "url": "https://news.cnyes.com/news/id/6610055",
+   "ts": "09/18 15:20"
   },
   {
-   "title": "〈房產〉新北已非首購天堂  總價千萬內預售屋占比僅剩1.6% 主流總價帶上移",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6609965",
-   "ts": "09/18 12:40"
-  },
-  {
-   "title": "〈蘋果新機開賣〉遠傳5G用戶滲透率突破50% 搭iPhone 18 Pro熱賣拚滲透率再攀升",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6609963",
-   "ts": "09/18 12:37"
-  },
-  {
-   "title": "盤中速報 - 櫃買市場加權指數上漲10.68點至408.85點，漲幅2.68%",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6609976",
-   "ts": "09/18 12:34"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：技嘉(2376-TW)EPS預估上修至34.36元，預估目標價為495元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6609961",
-   "ts": "09/18 12:13"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：臻鼎-KY(4958-TW)EPS預估上修至13.93元，預估目標價為692.5元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6609960",
-   "ts": "09/18 12:13"
-  },
-  {
-   "title": "AI算力投資還沒到頂！摩根大通：半導體設備將成2027年「新瓶頸」",
+   "title": "摩根大通看好比特幣跑贏黃金！估ETF規模將達3倍",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6609793",
-   "ts": "09/18 12:10"
+   "url": "https://news.cnyes.com/news/id/6609587",
+   "ts": "09/18 15:10"
   },
   {
-   "title": "谷歌Gemini 4 Pro疑偷跑 四大跑分全面領先Astra、Fable",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6609933",
-   "ts": "09/18 12:00"
+   "title": "〈蘋果新機開賣〉iPhone 18 Pro系列開賣 電信三雄端不同資費策略搶客",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6610084",
+   "ts": "09/18 15:01"
   },
   {
-   "title": "日銀升息1碼、利率創31年新高！反對票曝內部雜音 日元應聲走軟",
+   "title": "光焱科技(7728)矽光子占比一年衝4倍！NightJar-H年底迎HVM驗證、新廠年產能上看250台",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6610098",
+   "ts": "09/18 15:00"
+  },
+  {
+   "title": "陸十部門釋政策利多力挺創新藥產業　A股相關族群大爆發瑞康醫藥強勢漲停",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6609896",
-   "ts": "09/18 11:45"
+   "url": "https://news.cnyes.com/news/id/6610041",
+   "ts": "09/18 15:00"
+  },
+  {
+   "title": "生醫與無人機大升級！台康生、聚陽、采鈺及愛國者綠能通過經部A+計畫",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6610082",
+   "ts": "09/18 14:59"
+  },
+  {
+   "title": "〈東京電玩展〉智寶《電鋸甜心2》估明年上半年上市 銷售可望逾百萬套",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6610013",
+   "ts": "09/18 14:42"
+  },
+  {
+   "title": "美歐裂痕加深 德國總理：跨大西洋無條件友誼恐成過去",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6610008",
+   "ts": "09/18 14:40"
+  },
+  {
+   "title": "不只賣系統！騰雲(6870)8月營收創新高、前8月年增45%！海外占比下一步拚過半",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6610078",
+   "ts": "09/18 14:30"
   }
  ],
  "inst": {
-  "date": "09/17",
-  "total_yi": 254.7,
-  "foreign_yi": 121.9,
-  "trust_yi": 117.0
+  "date": "09/18",
+  "total_yi": 1165.9,
+  "foreign_yi": 869.9,
+  "trust_yi": 52.9
  }
 }
