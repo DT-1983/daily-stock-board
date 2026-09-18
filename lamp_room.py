@@ -894,14 +894,25 @@ ROOM_JS = r"""
     room.classList.toggle("list", list);
     mList.classList.toggle("on", list);
     mStock.classList.toggle("on", !list);
-    // 切回個股要讓圖重算——它在 display:none 底下量到的寬度是 0
+    // 切回個股要讓圖重算——它在 display:none 底下量到的寬度是 0。
+    // 2026-09-19 Leo 反饋圖表還是空白（第二次回報同一症狀）：懷疑是預設列表
+    // 模式時 pick(first) 提前把圖建在隱藏的 #mid 裡，單純呼叫不帶參數的
+    // resize() 沒有穩定補回寬度（不同瀏覽器的 ResizeObserver 對「從沒有
+    // layout box 到有」這個轉場處理不一致）。改成：直接讀容器當下量到的
+    // 實際寬高帶進 resize(w, h)，不靠 Chart.js 自己重新量；且補兩次
+    // （30ms 一次、200ms 再一次），避免單次時機沒抓準。
     if (!list) {
-      setTimeout(function(){
-        document.querySelectorAll("#mid canvas").forEach(function(c){
-          var ch = (window.Chart && Chart.getChart) ? Chart.getChart(c) : null;
-          if (ch) ch.resize();
-        });
-      }, 30);
+      [30, 200].forEach(function(delay){
+        setTimeout(function(){
+          document.querySelectorAll("#mid canvas").forEach(function(c){
+            var ch = (window.Chart && Chart.getChart) ? Chart.getChart(c) : null;
+            if (!ch) return;
+            var box = c.parentElement;
+            if (box && box.clientWidth > 0) ch.resize(box.clientWidth, box.clientHeight);
+            else ch.resize();
+          });
+        }, delay);
+      });
     }
     try { localStorage.setItem("roomMode", list ? "list" : "stock"); } catch(e) {}
   }
