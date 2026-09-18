@@ -704,14 +704,24 @@ def _stale_days(asof):
 
 
 def render(ticker, live=False):
-    """回 (html, status)。ticker 空字串就只給搜尋框。live=True 跳過快取即時算。"""
+    """回 (html, status)。ticker 空字串就只給搜尋框。
+
+    2026-09-20 Leo：「燈號判斷改一起重算呢？」——原本命中今天07:00的掃描快取
+    就秒回，查不到才即時算，這樣快是快，但代價是「快取」跟「現抓」可能是
+    兩個不同數字（尤其掃描那天剛好某些股票yfinance抓價失敗、靜默退回舊快取
+    時，落差可以到兩三天，見同一輪對話查MSFT/聯發科那次）。查任意單一檔
+    本來就只要3-8秒（lamp_lookup.lookup()的docstring），不算慢，不值得為了
+    省這幾秒冒著顯示錯資料的風險——改成**一律即時算**，不再有「快取版」
+    這個分支，也就不會再有兩個數字對不上、要另外顯示警告解釋的情況。
+    `live` 參數保留但不再有意義上的差異（一律都是live），避免動到呼叫端。
+    """
     ticker = (ticker or "").strip()
     if not ticker:
         return _shell("查股", _form() + NOTE), 200
 
     import lamp_lookup
     try:
-        row = lamp_lookup.lookup(ticker, live=live)
+        row = lamp_lookup.lookup(ticker, live=True)
     except Exception as e:                                  # noqa: BLE001
         body = (_form(ticker)
                 + f'<div class="lk-err">查詢時出錯：{esc(str(e)[:200])}</div>')
@@ -723,7 +733,7 @@ def render(ticker, live=False):
         if len(cands) == 1:
             sym = cands[0][0]
             try:
-                row = lamp_lookup.lookup(sym)
+                row = lamp_lookup.lookup(sym, live=True)
             except Exception:                               # noqa: BLE001
                 row = None
             if row is not None:
@@ -752,14 +762,9 @@ def render(ticker, live=False):
                 f'{esc(str(e)[:160])}</div>')
 
     name = esc(row.get("name") or "")
-    if row.get("src") == "cache":
-        # 快取＝今天早上 07:00 掃的，內容是前一交易日收盤。給一個強制即時重算的入口，
-        # 否則使用者對照看盤軟體發現數字不一樣時，沒有辦法自己確認是不是資料舊了。
-        src = ('今日掃描快取（前一交易日收盤）　'
-               f'<a href="/lookup?ticker={_q(row["ticker"])}&amp;live=1" '
-               'style="color:#93C5FD">🔄 即時重算</a>')
-    else:
-        src = "即時計算"
+    # 2026-09-20：一律即時算了（見上面render()docstring），不再有快取分支，
+    # 這裡固定顯示「即時計算」就好，「🔄即時重算」那個入口也跟著沒必要了。
+    src = "即時計算"
     # 有做過名稱→代號的換算就一定要講，不能安靜地端出另一檔的數字
     rf = row.get("_resolved_from")
     rf_html = f'<div class="lk-rf">🔁 {esc(rf)}</div>' if rf else ""
