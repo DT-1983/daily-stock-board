@@ -282,6 +282,33 @@ def _intro(r):
             + lookup_page.INTRO_JS)
 
 
+def _tgt_card(r, num):
+    """投顧目標價卡（2026-09-20，Leo：「戰情室還是沒有」）。
+
+    lookup_page.py 的 _summary() 9/19已經改成「多家投顧時顯示中位數＋異議」
+    （對標老墨畫面），但戰情室這裡是完全獨立的一份卡片HTML，沒有共用那段
+    邏輯，改了那邊這裡不會跟著動。這裡直接呼叫 lookup_page._advisor_consensus()
+    同一份函式，兩邊算出來的答案才不會不一樣。
+    """
+    from board_theme import esc
+    try:
+        import lookup_page
+        adv = lookup_page._advisor_consensus(r["tk"])
+    except Exception:                                       # noqa: BLE001
+        adv = None
+    if adv:
+        median, n, dissent = adv
+        gap = ((median / r["px"] - 1) * 100) if (r.get("px") and median) else None
+        sub = f"中位數‧{n}家" + (f"　距現價{gap:+.1f}%" if gap is not None else "")
+        if dissent:
+            sub += f"<br>{dissent}"
+        return (f'<div class="dc"><div class="k">投顧目標價</div>'
+                f'<div class="v">{num(median)}</div><div class="s">{sub}</div></div>')
+    return (f'<div class="dc"><div class="k">分析師共識目標價</div>'
+            f'<div class="v">{num(r["tgt"])}</div>'
+            f'<div class="s">{"" if r["gap"] is None else f"距現價 {r['gap']:+.1f}%"}</div></div>')
+
+
 def detail_html(ticker):
     """中欄：關鍵數字 + 技術圖。**圖是現算的**（抓 2 年資料算指標，數秒）。
 
@@ -361,9 +388,7 @@ def detail_html(ticker):
         f'<div class="s">{lamp_rows}</div></div>',
         f'<div class="dc"><div class="k">SuperTrend</div><div class="v">{st}</div>'
         f'<div class="s">{esc(stsub)}</div></div>',
-        f'<div class="dc"><div class="k">分析師共識目標價</div>'
-        f'<div class="v">{num(r["tgt"])}</div>'
-        f'<div class="s">{"" if r["gap"] is None else f"距現價 {r['gap']:+.1f}%"}</div></div>',
+        _tgt_card(r, num),
         f'<div class="dc"><div class="k">風報比</div><div class="v">{num(r["rr"])}</div>'
         f'<div class="s">{"⭐ 打點成立" if (r["lit"] >= 3 and (r["rr"] or 0) >= 1) else ""}</div></div>',
         f'<div class="dc"><div class="k">RS60</div>'
