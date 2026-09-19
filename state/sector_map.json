@@ -2578,5 +2578,29 @@
     "industry": "Oil Refining/Marketing",
     "exchange": "NYSE",
     "asof": "2026-09-18"
+  },
+  "3443": {
+    "sector": "Electronic Technology",
+    "industry": "Semiconductors",
+    "exchange": "TWSE",
+    "asof": "2026-09-18"
+  },
+  "6531": {
+    "sector": "Electronic Technology",
+    "industry": "Semiconductors",
+    "exchange": "TWSE",
+    "asof": "2026-09-18"
+  },
+  "6291": {
+    "sector": "Electronic Technology",
+    "industry": "Electronic Components",
+    "exchange": "TPEX",
+    "asof": "2026-09-19"
+  },
+  "MPC": {
+    "sector": "Energy Minerals",
+    "industry": "Oil Refining/Marketing",
+    "exchange": "NYSE",
+    "asof": "2026-09-19"
   }
 }
