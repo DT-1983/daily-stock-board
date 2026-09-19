@@ -1364,8 +1364,8 @@ def nav_html():
         if k == "combo":
             out.append(f'<a class="nl cur" href="/room">{icon(ic, 13)}{esc(lab)}</a>')
             out.append(f'<a class="nl alt" href="{href}" '
-                       f'title="GitHub Pages 上的靜態版，本機沒開機時也看得到">'
-                       f'{esc("公開版")}</a>')
+                       f'title="GitHub Pages 上的靜態列表，本機沒開機時也看得到（沒有查股與軍師）">'
+                       f'{esc("離線備援版")}</a>')
         else:
             out.append(f'<a class="nl" href="{href}">{icon(ic, 13)}{esc(lab)}</a>')
     links = "".join(out)
