@@ -67,6 +67,12 @@ table.cb td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right
 .cbtop .lkbox .lkn{font-size:10px}
 .cbtop .lkbox .lkl{font-size:12px}
 @media(max-width:760px){.roomlink{flex:1 1 100%}}
+/* 2026-09-20：公開頁預設只有列表；探測到本機在線才把 .lkzone 攤開（display:contents 讓
+   裡面的查股框與戰情室鈕仍是 .cbtop 的 flex 子項，版面跟原本一樣）。 */
+.lkzone{display:none}
+.lkzone.on{display:contents}
+.lkoff{flex:1 1 100%;font-size:12px;color:var(--dim);padding:2px 0}
+.lkoff.up{color:#22C55E}
 table.cb td:nth-child(-n+4){text-align:left}
 table.cb tr:hover td{background:rgba(255,255,255,.03)}
 .lamp{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:3px}
@@ -469,6 +475,35 @@ def attach_charts(rows, limit=None):
 # 戰情室的網址（本機服務，走 tunnel）。⚠️ 寫在這裡而不是散在各頁，
 # 換網域只要改一處（同 board_theme.PAGES_URL 的作法）。
 ROOM_URL = "https://stock.talentxtrend.com/room"
+PING_URL = ROOM_URL.rsplit("/", 1)[0] + "/ping"
+
+# 探測本機服務有沒有開機（discord_bot.py 的 /ping，只回 {up:true}）。
+# 判定離線＝逾時 2.5 秒或 fetch 失敗（電腦關機時 tunnel 回 502，沒有 CORS 標頭，fetch 會 reject）。
+# ?go=room：Leo 自己書籤用——在線就直接轉進戰情室，離線就停在列表。
+# ⚠️ 刻意不做成「預設自動轉址」：這頁是公開的（家人也看得到），沒授權的裝置被自動送去
+#    「這台裝置還沒授權」那頁會像壞掉。轉址只給主動加了 ?go=room 的人。
+PING_JS = """<script>
+(function(){
+  var zone=document.getElementById("lkzone"), off=document.getElementById("lkoff");
+  if(!zone||!off) return;
+  var go=/[?&]go=room(&|$)/.test(location.search);
+  var ctl=("AbortController" in window)?new AbortController():null;
+  var t=setTimeout(function(){ if(ctl) ctl.abort(); },2500);
+  function down(){ clearTimeout(t);
+    off.textContent="⚪ 本機離線　·　目前只有列表（查股、軍師要本機開機）"; }
+  fetch("__PING__",{cache:"no-store",mode:"cors",signal:ctl?ctl.signal:undefined})
+   .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+   .then(function(j){
+      if(!j||!j.up) throw 0;
+      clearTimeout(t);
+      if(go){ location.replace("__ROOM__"); return; }
+      zone.classList.add("on");
+      off.textContent="🟢 本機在線　·　可查股、問軍師";
+      off.className="lkoff up";
+   })
+   .catch(down);
+})();
+</script>""".replace("__PING__", PING_URL).replace("__ROOM__", ROOM_URL)
 
 
 def body_html(d, in_room=False):
@@ -487,7 +522,7 @@ def body_html(d, in_room=False):
                 f'<div><b style="color:#22C55E">{len(hit)}</b><span>⭐ 打點成立（且風報比 ≥ 1）</span></div>'
                 f'<div><b style="color:#EF4444">{sum(1 for r in ok if (r.get("rr") or 0) < 0)}</b>'
                 '<span>現價已超過共識目標</span></div></div>'
-                + LOOKUP_BOX
+                + (LOOKUP_BOX if in_room else '')
                 # 2026-09-07 Leo：「從上面快捷按鍵進去是舊的」——從這頁沒有路
                 # 進戰情室，只能繞回 Sonia。放在查股框旁邊，因為**性質一樣**：
                 # 都是本機服務、都要 token、電腦沒開就進不去。
@@ -499,9 +534,16 @@ def body_html(d, in_room=False):
                 #    **人已經在戰情室，畫面上卻有一顆「前往戰情室」**。
                 # ⭐ 那正是最強的「你在公開頁」訊號，難怪兩頁分不出來。
                 #    共用產生器要能分辨自己被誰呼叫，不然「只給 A 頁的東西」會漏到 B 頁。
+                # 🔴 2026-09-20 Leo：「燈號跟進出燈號二邊跳來跳出有點錯亂」→「以戰情室為主，
+                #    本機沒開機時只顯示列表，開機時才有查、軍師對話」。
+                #    公開頁改成**漸進增強**：預設只有列表；JS 先探測本機 /ping，
+                #    在線才顯示查股框＋戰情室入口，離線就顯示一行說明（不放會連不上的死連結）。
+                #    戰情室裡（in_room）本來就在本機，查股框照舊直接放。
                 + ('' if in_room else
-                   '<a class="roomlink" href="' + ROOM_URL + '">'
-                   '🚦 燈號戰情室<span>需本機開機</span></a>')
+                   '<div class="lkzone" id="lkzone">' + LOOKUP_BOX
+                   + '<a class="roomlink" href="' + ROOM_URL + '">'
+                   '🚦 燈號戰情室<span>查股、問軍師</span></a></div>'
+                   '<div class="lkoff" id="lkoff">⚪ 檢查本機狀態…</div>')
                 + '</div>')
     body.append(filter_html())
     body.append(f'<div class="cbsec">⭐ 打點成立<small>亮 ≥{d["combo_min"]} 燈且風報比 ≥ 1，'
@@ -513,6 +555,8 @@ def body_html(d, in_room=False):
     body.append(f'<div class="cbsec">COMBO 成立但查無目標價<small>只能看距停損，'
                 f'共 {len(notgt)} 檔</small></div>' + _table(notgt))
     body.append(FILTER_JS)
+    if not in_room:
+        body.append(PING_JS)
     # 2026-09-01 Leo：說明移到最下面——一進頁面應該先看到訊號，
     #                 不是先讀一大段規則。
     body.append('<div class="cbsec" style="margin-top:34px">📖 這頁怎麼看</div>')
