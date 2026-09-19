@@ -306,6 +306,24 @@ async def _health(request):
                               status=200 if ready else 503)
 
 
+PING_ORIGIN = "https://dt-1983.github.io"
+
+
+async def _ping(request):
+    """公開靜態頁（GitHub Pages）用來偵測「Leo 的電腦有沒有開機」（2026-09-20）。
+
+    燈號整合：靜態頁永遠開得到；本機有開機才顯示查股／戰情室入口。
+    ⚠️ 不要求 token，因為靜態頁讀不到 cookie（SameSite=Lax 不隨跨站 fetch 送出）；
+    所以這裡**只回「活著」一個布林，不帶任何資訊**（不像 `/` 會露 bot 名稱）。
+    CORS 只放行 Pages 那個網域——別的網站讀不到回應，只能看到「連不連得上」。
+    tunnel 後端沒開時 Cloudflare 回 502（沒有 CORS 標頭）→ 瀏覽器端 fetch 失敗 → 靜態頁判定離線。
+    """
+    hdr = {"Cache-Control": "no-store", "Vary": "Origin"}
+    if request.headers.get("Origin") == PING_ORIGIN:
+        hdr["Access-Control-Allow-Origin"] = PING_ORIGIN
+    return web.json_response({"up": True}, headers=hdr)
+
+
 async def _lookup_page(request):
     """視覺化查股頁 `/lookup?ticker=2454`（2026-09-03）。
 
@@ -567,6 +585,7 @@ async def _room_ask(request):
 async def _run():
     app = web.Application()
     app.router.add_get("/", _health)
+    app.router.add_get("/ping", _ping)
     app.router.add_get("/lookup", _lookup_page)
     app.router.add_get("/lookup/intro", _lookup_intro)
     app.router.add_get("/room", _room_page)
