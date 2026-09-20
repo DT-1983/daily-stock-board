@@ -575,8 +575,74 @@ def _retry_missing(prices, tickers):
     return prices
 
 
+TRADES_PATH = os.environ.get("PORTFOLIO_TRADES", "state/paper_trades.json")
+
+
+def _trade(date, portfolio, action, tk, sh, price, fx, entry=None, reason="", src="live"):
+    """一筆交易紀錄。price/entry 都是原幣（台股台幣、美股美元）；金額與損益換算成美元。
+    action：buy 買進／half_sell 賣一半／full_exit 全出／trim 位子數調整減碼／join 調入／leave 調出。"""
+    pu = to_usd(tk, price, fx)
+    t = {"date": date, "portfolio": portfolio, "action": action, "ticker": tk,
+         "shares": round(sh, 4), "price": round(price, 4), "price_usd": round(pu, 4),
+         "amount_usd": round(sh * pu, 2), "reason": reason, "src": src}
+    if entry:
+        eu = to_usd(tk, entry, fx)
+        if eu:
+            t["entry_price"] = round(entry, 4)
+            t["pnl_usd"] = round(sh * (pu - eu), 2)
+            t["pnl_pct"] = round((pu / eu - 1) * 100, 2)
+    return t
+
+
+def _log_trades(trades):
+    """附加到 state/paper_trades.json（只增不改）。同一天同倉同動作同代號已存在就不重複寫，
+    所以同一次 workflow 重跑不會產生雙份紀錄。"""
+    if not trades:
+        return 0
+    cur = json.load(open(TRADES_PATH, encoding="utf-8")) if os.path.exists(TRADES_PATH) else []
+    seen = {(t["date"], t["portfolio"], t["action"], t["ticker"]) for t in cur}
+    add = [t for t in trades if (t["date"], t["portfolio"], t["action"], t["ticker"]) not in seen]
+    if not add:
+        return 0
+    os.makedirs(os.path.dirname(TRADES_PATH) or ".", exist_ok=True)
+    tmp = TRADES_PATH + ".tmp"
+    json.dump(cur + add, open(tmp, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
+    os.replace(tmp, TRADES_PATH)
+    return len(add)
+
+
+def _code(tk):
+    """上市 .TW 與上櫃 .TWO 後綴不同不算換股（9/6 修 .TWO 時金鑰改名過）。"""
+    return tk.split(".")[0] if is_tw(tk) else tk
+
+
+_BASKET_WHY = {
+    CHAIN_TREND: ("週線 SuperTrend 翻多（綠燈名單新增）", "週線 SuperTrend 翻空（掉出綠燈名單）"),
+    BUFFETT_NAME: ("現價 ≤ 俗價且品質過關（買進名單新增）", "現價 ≥ 貴價或資料缺（掉出名單）"),
+}
+
+
+def _basket_trades(name, old, new, prices, fx, date):
+    """等權重籃子倉（產業鏈全／趨勢／巴菲特／各鏈）：只記「調入／調出」，
+    每週等權重再平衡造成的加減碼不逐筆列（那不是決策，只是重配）。"""
+    oc, nc = {_code(t): t for t in old}, {_code(t): t for t in new}
+    j_why, l_why = _BASKET_WHY.get(name, ("守備清單重篩：新增", "守備清單重篩：移出"))
+    out = []
+    for c, tk in nc.items():
+        if c not in oc:
+            h = new[tk]
+            out.append(_trade(date, name, "join", tk, h["sh"], h["en"], fx,
+                              reason="起始建倉" if not old else j_why))
+    for c, tk in oc.items():
+        if c not in nc:
+            h = old[tk]
+            px = prices.get(tk) or h.get("cur") or h["en"]
+            out.append(_trade(date, name, "leave", tk, h["sh"], px, fx, entry=h["en"], reason=l_why))
+    return out
+
+
 def combo_apply(state, pf, combo_frac, buy, half_sell, full_exit,
-                prices, fx, date, slots=None):
+                prices, fx, date, slots=None, info=None):
     """三指標合流倉的實際下單：直接動股數，不走 _alloc_shares/rebalance() 的整籃子等權重重配
     ——「賣一半A」不該連動改變B的股數，這是跟其他倉本質不同的地方（單一部位獨立管理）。
     combo_frac：state裡的{ticker: 0.5或1.0}持倉比例追蹤，跟pf["holdings"]分開存。"""
@@ -594,11 +660,14 @@ def combo_apply(state, pf, combo_frac, buy, half_sell, full_exit,
         if tk in pf["holdings"] and not prices.get(tk):
             raise MissingPriceError(f"賣一半 {tk}：抓不到現價")
 
+    trades, info = [], (info or {})
     for tk in full_exit:
         h = pf["holdings"].pop(tk, None)
         combo_frac.pop(tk, None)
         if h:
             pf["cash"] = pf.get("cash", 0.0) + h["sh"] * to_usd(tk, prices[tk], fx)
+            trades.append(_trade(date, CHAIN_COMBO, "full_exit", tk, h["sh"], prices[tk], fx,
+                                 entry=h["en"], reason=info.get(("full_exit", tk), "")))
 
     for tk in half_sell:
         h = pf["holdings"].get(tk)
@@ -609,6 +678,8 @@ def combo_apply(state, pf, combo_frac, buy, half_sell, full_exit,
         h["sh"] = round(h["sh"] - sold_sh, 4)
         pf["cash"] = pf.get("cash", 0.0) + sold_sh * pu
         combo_frac[tk] = 0.5
+        trades.append(_trade(date, CHAIN_COMBO, "half_sell", tk, sold_sh, prices[tk], fx,
+                             entry=h["en"], reason=info.get(("half_sell", tk), "")))
 
     if buy:
         slots = slots or TREND_MIN_SLOTS
@@ -628,6 +699,8 @@ def combo_apply(state, pf, combo_frac, buy, half_sell, full_exit,
                                   "en": round(prices[tk], 2)}
             pf["cash"] -= size
             combo_frac[tk] = 1.0
+            trades.append(_trade(date, CHAIN_COMBO, "buy", tk, pf["holdings"][tk]["sh"], prices[tk], fx,
+                                 reason=info.get(("buy", tk), "")))
 
     _refresh_current(pf, prices, fx)
     v = _value(pf, prices, fx)
@@ -638,6 +711,7 @@ def combo_apply(state, pf, combo_frac, buy, half_sell, full_exit,
     if not pf["history"] or pf["history"][-1][0] != date:
         pf["history"].append([date, round(v, 2)])
     state["combo_frac"] = combo_frac
+    _log_trades(trades)          # 全部動作成功才寫（缺價中止時前面就丟例外了，不會有半套紀錄）
 
 
 def _btc_caps():
@@ -754,6 +828,7 @@ def _buffett_hold_until_expensive(pf, picks, prices):
 
 def rebalance(state, hmap, prices, fx, date, only=None):
     """only=None 全倉調；only={名稱,...} 只調指定倉（其餘不動）。"""
+    _trades = []
     for name, pf in state["portfolios"].items():
         if only and name not in only:
             continue
@@ -772,7 +847,9 @@ def rebalance(state, hmap, prices, fx, date, only=None):
         target, exp_map = list(hmap.get(name, list(pf["holdings"]))), {}
         if name == BUFFETT_NAME:
             target, exp_map = _buffett_hold_until_expensive(pf, target, prices)
+        _old_h = dict(pf["holdings"])
         pf["holdings"] = _alloc_shares(target, v, prices, fx, slots, caps)
+        _trades += _basket_trades(name, _old_h, pf["holdings"], prices, fx, date)
         for _tk, _h in pf["holdings"].items():
             if _tk in exp_map:
                 _h["exp"] = exp_map[_tk]            # 貴價（原幣），下次調倉判斷「到貴價才賣」用
@@ -787,6 +864,7 @@ def rebalance(state, hmap, prices, fx, date, only=None):
             pf["history"].append([date, round(v, 2)])
     state["updated"] = date
     state["fx"] = round(fx, 3)
+    _log_trades(_trades)
 
 
 def main():
@@ -912,9 +990,19 @@ def main():
                 prices = fetch_prices(allt)
                 _retry_missing(prices, set(buy) | set(half_sell) | set(full_exit))
                 before = set(pf["holdings"])
+                _by = {(r.get("symbol") or r.get("ticker")): r for r in res["rows"]}
+                _info = {}
+                for _tk in buy:
+                    _r = _by.get(_tk) or {}
+                    _info[("buy", _tk)] = f"打點：{_r.get('lit', '?')} 燈亮、風報比 {_r.get('rr')}"
+                for _tk in half_sell:
+                    _info[("half_sell", _tk)] = "SuperTrend 翻空 → 賣一半"
+                for _tk in full_exit:
+                    _r = _by.get(_tk) or {}
+                    _info[("full_exit", _tk)] = f"RS60 跌破自身 60MA（{_r.get('rs_short')}%）→ 全出"
                 try:
                     combo_apply(state, pf, combo_frac, buy, half_sell, full_exit,
-                                prices, fx, date, slots=LAMP_MIN_SLOTS)
+                                prices, fx, date, slots=LAMP_MIN_SLOTS, info=_info)
                 except MissingPriceError as e:
                     # 整次不動（還沒 save）。訊號是狀態式的，價格恢復後隔天自然補做。
                     _notify_tg(f"🔴 進出燈號倉 {date} 調倉中止：{e}\n"
@@ -963,6 +1051,7 @@ def main():
         # ② 修到 1/N：只賣多的，不加碼不足的
         #    ⚠️ 不足的不補——那會變成「用新錢攤平」，不是這次要做的事。
         freed = 0.0
+        _ls_trades = []
         for tk, h in list(pf["holdings"].items()):
             if not prices.get(tk):
                 print(f"🔴 lamp-slots 中止：持股 {tk} 抓不到現價（沒有寫入任何變動）")
@@ -974,6 +1063,8 @@ def main():
             sell_sh = (mv - slot) / pu
             h["sh"] = round(h["sh"] - sell_sh, 4)
             freed += sell_sh * pu
+            _ls_trades.append(_trade(date, CHAIN_COMBO, "trim", tk, sell_sh, prices[tk], fx, entry=h["en"],
+                                     reason=f"位子數調整為 {LAMP_MIN_SLOTS}：超出 1/{LAMP_MIN_SLOTS} 的部分賣出"))
             print(f"   修 {tk:10} 賣 {sell_sh:.4f} 股　釋出 {sell_sh * pu:,.0f}")
         pf["cash"] = pf.get("cash", 0.0) + freed
         print(f"釋出現金 {freed:,.0f}｜可用現金 {pf['cash']:,.0f}")
@@ -994,6 +1085,8 @@ def main():
                                   "en": round(prices[tk], 2)}
             pf["cash"] -= size
             (state.setdefault("combo_frac", {}))[tk] = 1.0
+            _ls_trades.append(_trade(date, CHAIN_COMBO, "buy", tk, pf["holdings"][tk]["sh"], prices[tk], fx,
+                                     reason=f"位子數調整為 {LAMP_MIN_SLOTS}：補位（依打點排序）"))
             bought.append(tk)
             need -= 1
             print(f"   買 {tk:10} {size:,.0f}")
@@ -1001,6 +1094,7 @@ def main():
         _refresh_current(pf, prices, fx)
         update_nav(state, prices, fx, date)
         save(state)
+        _log_trades(_ls_trades)
         print("── 調整後 ──")
         for tk, h in pf["holdings"].items():
             pu = to_usd(tk, prices.get(tk) or h["eu"], fx)
