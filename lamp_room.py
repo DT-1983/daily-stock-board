@@ -320,16 +320,98 @@ def _tgt_card(r, num, lv=None):
             f'<div class="s">{"" if gap is None else f"距現價 {gap:+.1f}%"}</div></div>')
 
 
+def _row_from_live(lv):
+    """即時查詢的結果 → 跟 rows() 同形狀的一列。給「不在掃描母體」的股票用。"""
+    t = str(lv.get("ticker") or "")
+    px, tgt = lv.get("price"), lv.get("target")
+    chg = None
+    try:
+        import price_store
+        import tw_symbol
+        s = tw_symbol.resolve(t) if t[:1].isdigit() else t.replace(".", "-")
+        ser = price_store.get_closes([s], period="3y", refresh=False).get(s)
+        if ser is not None:
+            ser = ser.dropna()
+            if len(ser) >= 2 and float(ser.iloc[-2]):
+                chg = (float(ser.iloc[-1]) / float(ser.iloc[-2]) - 1) * 100
+    except Exception:                                       # noqa: BLE001
+        pass
+    q = lv.get("quad")
+    return {
+        "tk": t, "nm": (lv.get("name") or "")[:12], "px": px, "chg": chg,
+        "lit": lv.get("lit") or 0, "rr": lv.get("rr"), "tgt": tgt,
+        "gap": ((tgt / px - 1) * 100) if (px and tgt) else None,
+        "bull": bool(lv.get("bull")),
+        "quad": q.get("60") if isinstance(q, dict) else q,
+        "sec": lv.get("sector_zh") or lv.get("sector") or "",
+        "mkt": "tw" if t[:1].isdigit() else "us",
+        "src": "即時查詢（不在掃描母體）",
+    }
+
+
+def _resolve_outside(query):
+    """輸入不在掃描母體 → (即時結果 lv, None) 或 (None, 要顯示的 html)。
+
+    2026-09-20 Leo：「輸入個股的地方如果沒有在清單裡，則即時重算」。
+    做法跟查股頁一致（lookup_page.resolve：代號直接查；公司名先解析並**顯示解析結果**，
+    多個候選讓人點，不安靜換一檔）。⚠️ 純代號形狀 resolve() 回空＝直接用它當代號。
+    """
+    from board_theme import esc
+    import lamp_lookup
+    import lookup_page
+    q = str(query or "").strip()
+    if not q:
+        return None, '<div class="empty">請輸入代號或名稱。</div>'
+    # 順序跟 lookup_page.render 一致：先當代號查，查不到才當公司名解析
+    # （反過來會把 KO 這種合法代號當成模糊名稱丟出一堆候選）。
+    tk, note = q, ""
+    try:
+        lv = lamp_lookup.lookup(tk, live=True)
+    except Exception as e:                                  # noqa: BLE001
+        return None, f'<div class="warn">{esc(tk)} 即時計算失敗：{esc(str(e)[:120])}</div>'
+    if lv is None:
+        cands = lookup_page.resolve(q)
+        if len(cands) > 1:
+            btns = "".join(
+                f'<button class="rpick" data-rpick="{esc(c)}">{esc(c)}　{esc(n)}</button>'
+                for c, n in cands[:8])
+            return None, ('<div class="empty">「' + esc(q) + '」有多個可能，選一個：</div>'
+                          '<div class="rpicks">' + btns + '</div>')
+        if len(cands) == 1:
+            tk = cands[0][0]
+            note = (f'<div class="dim" style="padding:2px 0 8px">'
+                    f'🔁 「{esc(q)}」→ {esc(tk)}　{esc(cands[0][1])}</div>')
+            try:
+                lv = lamp_lookup.lookup(tk, live=True)
+            except Exception as e:                          # noqa: BLE001
+                return None, f'<div class="warn">{esc(tk)} 即時計算失敗：{esc(str(e)[:120])}</div>'
+    if not lv:
+        return None, (f'<div class="empty">查無資料：{esc(q)}。可能是代號打錯，'
+                      '或這檔資料量不足（新掛牌／太冷門）、暫時抓不到。</div>')
+    lv["_note"] = note
+    return lv, None
+
+
 def detail_html(ticker):
     """中欄：關鍵數字 + 技術圖。**圖是現算的**（抓 2 年資料算指標，數秒）。
 
     ⚠️ 圖畫不出來不要讓整區掛掉——上面那排數字本身就有價值（同 lookup_page 的作法）。
+    不在掃描母體的股票（2026-09-20）：不再回「不在母體裡」，改即時重算，
+    版面跟母體內的完全一樣，只在標題標明「即時查詢」。
     """
     from board_theme import esc
     items, _asof = rows()
     r = next((x for x in items if x["tk"].upper() == str(ticker).upper()), None)
+    pre_lv, pre_note = None, ""
     if not r:
-        return f'<div class="empty">{esc(str(ticker))} 不在今天的掃描母體裡。</div>'
+        pre_lv, err = _resolve_outside(ticker)
+        if err:
+            return err
+        pre_note = pre_lv.get("_note", "")
+        r = _row_from_live(pre_lv)
+        hit = next((x for x in items if x["tk"].upper() == r["tk"].upper()), None)
+        if hit:                                   # 名稱解析後發現其實在母體裡
+            r, pre_lv = hit, None
 
     d = _load(RESULT, {}) or {}
     raw = next((x for x in (d.get("rows") or [])
@@ -344,11 +426,12 @@ def detail_html(ticker):
     # 因為畫面上永遠只有一個數字。查不到才退回舊的cached r/raw，不要讓
     # 整頁掛掉（跟lookup_page.render()的容錯同一個精神）。
     import lamp_lookup
-    lv = None
-    try:
-        lv = lamp_lookup.lookup(r["tk"], live=True)
-    except Exception:                                       # noqa: BLE001
-        pass
+    lv = pre_lv
+    if lv is None:
+        try:
+            lv = lamp_lookup.lookup(r["tk"], live=True)
+        except Exception:                                   # noqa: BLE001
+            pass
     live_ok = bool(lv)
     _row_asof = (lv.get("asof") if live_ok else None) or raw.get("asof") or _asof
 
@@ -434,7 +517,9 @@ def detail_html(ticker):
     except Exception as e:                                  # noqa: BLE001
         tech = (f'<div class="warn">技術圖產生失敗（上面的數字仍然有效）：'
                 f'{esc(str(e)[:140])}</div>')
-    return head + intro + '<div class="dcards">' + cards + "</div>" + tech
+    # data-resolved：前端靠它把「目前看著的標的」更新成解析後的代號（軍師欄的「這一檔」要對得上）
+    marker = f'<span data-resolved="{esc(r["tk"])}" hidden></span>'
+    return marker + pre_note + head + intro + '<div class="dcards">' + cards + "</div>" + tech
 
 
 # ── 右欄：軍師 ────────────────────────────────────────────────────────
@@ -647,6 +732,10 @@ body{margin:0}
               background:var(--accent,#22D3EE);padding:1px 5px;border-radius:2px}
 .livelit .offs{flex:1 0 100%;font-size:10px;color:var(--warn,#FFB627);margin-top:2px}
 .empty,.warn{padding:22px 16px;color:var(--dim);font-size:13px}
+.rpicks{display:flex;flex-wrap:wrap;gap:8px;padding:0 16px 16px}
+.rpick{padding:8px 12px;border:1px solid var(--line);background:var(--surface,transparent);
+ color:inherit;font:inherit;font-size:13px;cursor:pointer}
+.rpick:hover{border-color:var(--cy,#22D3EE)}
 .datewarn{padding:6px 14px;font-size:11px;color:var(--dim);
  border-bottom:1px solid var(--line)}
 .datewarn b{color:#FCD34D}
@@ -810,14 +899,26 @@ ROOM_JS = r"""
   var mid = document.getElementById("mid");
   function pick(el){
     items.forEach(function(o){ o.classList.toggle("sel", o === el); });
-    cur = el.dataset.tk;
+    loadDetail(el.dataset.tk);
+  }
+  // 2026-09-20：不在清單裡的股票也走這條（伺服端即時重算，回傳片段裡帶
+  // data-resolved＝解析後的代號；名稱輸入會被解析成代號，前端要跟著更新）。
+  function loadDetail(q){
+    cur = q;
     document.getElementById("rtk").textContent = "看著 " + cur;
     mid.innerHTML = '<div class="empty">正在算 ' + cur +
       ' 的指標與三年日線…（抓兩年資料，數秒）</div>';
-    fetch("/room/detail?ticker=" + encodeURIComponent(cur))
+    fetch("/room/detail?ticker=" + encodeURIComponent(q))
       .then(function(r){ return r.text(); })
       .then(function(h){
         mid.innerHTML = h;
+        var m = mid.querySelector("[data-resolved]");
+        if (m && m.dataset.resolved) {
+          cur = m.dataset.resolved;
+          document.getElementById("rtk").textContent = "看著 " + cur;
+          lastTk = cur;
+          items.forEach(function(o){ o.classList.toggle("sel", o.dataset.tk === cur); });
+        }
         // technical_indicators 產的是「畫圖的程式碼」不是圖片，
         // innerHTML 塞進去的 <script> 不會執行，要自己重建一次。
         mid.querySelectorAll("script").forEach(function(old){
@@ -974,8 +1075,11 @@ ROOM_JS = r"""
     if (!f) return;
     var inp = f.querySelector('input[name="ticker"]');
     if (!inp) return;
-    f.addEventListener("submit", function(e){
-      var q = (inp.value || "").trim();
+    // 2026-09-20 Leo：「輸入個股的地方如果沒有在清單裡，則即時重算」——
+    // 原本母體外＝放行表單、開新分頁到 /lookup（等於跳出戰情室）。現在一律攔下：
+    // 母體內直接選；母體外就在中欄即時重算（伺服端 detail_html 處理名稱解析／查無資料）。
+    window.roomSearch = function(q){
+      q = (q || "").trim();
       if (!q) return;
       var lo = q.toLowerCase();
       var hit = items.find(function(x){
@@ -983,12 +1087,28 @@ ROOM_JS = r"""
       }) || items.find(function(x){
         return (x.dataset.q || "").indexOf(lo) >= 0;
       });
-      if (!hit) return;                 // 母體外 → 照舊開查股頁
-      e.preventDefault();
       setMode(false);
-      pick(hit);
-      try { hit.scrollIntoView({block: "nearest"}); } catch(_e) {}
+      scope = "one"; applyScope();
+      if (hit) {
+        lastTk = hit.dataset.tk;
+        pick(hit);
+        loadHist(hit.dataset.tk);
+        try { hit.scrollIntoView({block: "nearest"}); } catch(_e) {}
+      } else {
+        lastTk = q;
+        loadDetail(q);
+        loadHist(q);
+      }
+    };
+    f.addEventListener("submit", function(e){
+      e.preventDefault();
+      window.roomSearch(inp.value);
       inp.blur();
+    });
+    // 名稱有多個候選時，候選鈕在中欄裡（事件委派，片段是後來才塞進去的）
+    document.getElementById("mid").addEventListener("click", function(e){
+      var b = e.target.closest && e.target.closest("[data-rpick]");
+      if (b) window.roomSearch(b.dataset.rpick);
     });
   })();
 
@@ -1326,7 +1446,12 @@ ROOM_JS = r"""
   // ⚠️ 要選**篩選後看得到的**第一檔，不是 items[0]。
   //    預設是台股+4燈，items[0] 卻是美股 MA → 中間顯示一檔左邊看不到的股票。
   const first = items.find(function(e){ return !e.hidden; });
-  if (first) { pick(first); }
+  // 從入口頁／首頁查股框帶 ?ticker= 進來 → 直接查那一檔（不先載預設那檔，
+  // 不然兩個請求誰後回來誰就蓋掉對方）。
+  var qp = "";
+  try { qp = new URLSearchParams(location.search).get("ticker") || ""; } catch(_e) {}
+  if (qp.trim()) { window.roomSearch(qp); }
+  else if (first) { pick(first); }
 })();
 </script>
 """
@@ -1362,10 +1487,8 @@ def nav_html():
     out = []
     for k, ic, lab, href in nav_abs():
         if k == "combo":
+            # 2026-09-20 Leo：本機離線就直接「無法使用」，不留備援列表 → 不再有第二顆連結。
             out.append(f'<a class="nl cur" href="/room">{icon(ic, 13)}{esc(lab)}</a>')
-            out.append(f'<a class="nl alt" href="{href}" '
-                       f'title="GitHub Pages 上的靜態列表，本機沒開機時也看得到（沒有查股與軍師）">'
-                       f'{esc("離線備援版")}</a>')
         else:
             out.append(f'<a class="nl" href="{href}">{icon(ic, 13)}{esc(lab)}</a>')
     links = "".join(out)
