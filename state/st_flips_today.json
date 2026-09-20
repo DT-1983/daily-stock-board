@@ -1,25 +1,6 @@
 {
-"date": "2026-09-19",
+"date": "2026-09-20",
 "flips_hold": [],
-"flips_watch": [
-{
-"code": "ISRG",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1
-},
-{
-"code": "MP",
-"name": "",
-"word": "🟢→🔴 翻空",
-"dir": -1
-},
-{
-"code": "RIOT",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1
-}
-],
+"flips_watch": [],
 "ai_alerts": []
 }
