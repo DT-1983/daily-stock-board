@@ -2,7 +2,7 @@
 
 2 主倉各投 $10,000 美金：
   ① 產業鏈全：7 鏈守備清單全買，等權重
-  ② 巴菲特價值：現價≤俗價折價最大前 30，等權重
+  ② 巴菲特價值：現價≤俗價折價最大前 30，等權重；已持有的到「現價 ≥ 貴價」才賣（掉出名單不賣）
 另含 7 鏈明細倉（各 $10,000）。
 
 真實模擬：起始把 $10,000 等分買進（可買零股），記下每股「股數/進場價」。
@@ -667,6 +667,43 @@ def update_nav(state, prices, fx, date):
     state["fx"] = round(fx, 3)
 
 
+def _buffett_hold_until_expensive(pf, picks, prices):
+    """巴菲特倉：已持有的股票「掉出買進名單」不等於要賣，**現價 ≥ 貴價才賣**。
+
+    2026-09-20 Leo 拍板：9/9 收緊篩選後，9/12 週六調倉把持有的 4 檔全賣（3 檔配息率不過、
+    1580 市值 48.5 億剛好掉到 Stage1 的 50 億門檻下），股價都還遠低於貴價——那是拿
+    「進場門檻」決定去留。方法論的出場是「等現價 ≥ 貴價（EPS×30）」，跟
+    trade_plan.EXIT_RULES 寫的一致，模擬倉現在照這條做。
+    · 買進名單 picks 照舊（現價 ≤ 俗價、品質過關、前 30）
+    · 持有中但不在 picks 的：貴價 = 最新掃描的 expensive（沒有就用進場時記下的 h["exp"]）；
+      現價 < 貴價 → 留下；現價 ≥ 貴價、抓不到現價、或根本沒有貴價可比 → 賣（保守，跟舊行為一致）
+    回 (最終持有清單, {代號: 貴價})。"""
+    wl = json.load(open(BUFFETT, encoding="utf-8")) if os.path.exists(BUFFETT) else {}
+    exp_map = {}
+    for tk in picks:
+        e = (wl.get(tk) or {}).get("expensive")
+        if e:
+            exp_map[tk] = e
+    target = list(picks)
+    kept, sold = [], []
+    for tk, h in pf["holdings"].items():
+        if tk in picks:
+            continue
+        exp = (wl.get(tk) or {}).get("expensive") or h.get("exp")
+        p = prices.get(tk)
+        if exp and p and p < exp:
+            target.append(tk)
+            exp_map[tk] = exp
+            kept.append(f"{tk}（現價 {p:g} < 貴價 {exp:g}）")
+        else:
+            sold.append(f"{tk}（現價 {p if p else '無'}／貴價 {exp if exp else '無'}）")
+    if kept:
+        print(f"  巴菲特倉：掉出買進名單但未到貴價，續抱 {len(kept)} 檔：{'、'.join(kept)}")
+    if sold:
+        print(f"  巴菲特倉：賣出 {len(sold)} 檔（到貴價或無資料）：{'、'.join(sold)}")
+    return sorted(set(target)), exp_map
+
+
 def rebalance(state, hmap, prices, fx, date, only=None):
     """only=None 全倉調；only={名稱,...} 只調指定倉（其餘不動）。"""
     for name, pf in state["portfolios"].items():
@@ -678,8 +715,13 @@ def rebalance(state, hmap, prices, fx, date, only=None):
                  TREND_MIN_SLOTS if name == CHAIN_TREND else 0)
         # Bitcoin 鏈限重：套用在所有「跨鏈」主倉（單一鏈明細倉不套，那本來就是純曝險）
         caps = _btc_caps() if name in (CHAIN_ALL, CHAIN_TREND, CHAIN_COMBO) else None
-        pf["holdings"] = _alloc_shares(hmap.get(name, list(pf["holdings"])), v, prices, fx,
-                                       slots, caps)
+        target, exp_map = list(hmap.get(name, list(pf["holdings"]))), {}
+        if name == BUFFETT_NAME:
+            target, exp_map = _buffett_hold_until_expensive(pf, target, prices)
+        pf["holdings"] = _alloc_shares(target, v, prices, fx, slots, caps)
+        for _tk, _h in pf["holdings"].items():
+            if _tk in exp_map:
+                _h["exp"] = exp_map[_tk]            # 貴價（原幣），下次調倉判斷「到貴價才賣」用
         invested = sum(h["sh"] * h["eu"] for h in pf["holdings"].values())
         pf["cash"] = round(max(0.0, v - invested), 2)
         _refresh_current(pf, prices, fx)
