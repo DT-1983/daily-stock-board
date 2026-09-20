@@ -541,20 +541,68 @@ def _alloc_shares(tickers, capital, prices, fx, min_slots=0, caps=None):
     return h
 
 
+class MissingPriceError(Exception):
+    """要動作的標的抓不到現價。整次調倉中止、不寫入任何變動（呼叫端在 save 之前就會離開）。"""
+
+
+def _notify_tg(text):
+    """推 Telegram（Actions 的 step 有 TELEGRAM_BOT_TOKEN／TELEGRAM_CHAT_ID 環境變數；本機沒有就只印）。"""
+    print(text)
+    tok, chat = os.environ.get("TELEGRAM_BOT_TOKEN"), os.environ.get("TELEGRAM_CHAT_ID")
+    if not (tok and chat):
+        return False
+    try:
+        import urllib.request
+        data = json.dumps({"chat_id": chat, "text": text}).encode("utf-8")
+        req = urllib.request.Request(f"https://api.telegram.org/bot{tok}/sendMessage", data=data,
+                                     headers={"Content-Type": "application/json"})
+        urllib.request.urlopen(req, timeout=20).read()
+        return True
+    except Exception as e:                                  # noqa: BLE001
+        print(f"（Telegram 通知失敗：{e}）")
+        return False
+
+
+def _retry_missing(prices, tickers):
+    """批次抓價常有個別檔漏掉（yfinance 批次的老毛病）：對缺價的逐檔單獨再抓一次，補進 prices。"""
+    for tk in sorted({t for t in tickers if not prices.get(t)}):
+        try:
+            got = fetch_prices([tk])
+        except Exception:                                   # noqa: BLE001
+            continue
+        if got.get(tk):
+            prices[tk] = got[tk]
+    return prices
+
+
 def combo_apply(state, pf, combo_frac, buy, half_sell, full_exit,
                 prices, fx, date, slots=None):
     """三指標合流倉的實際下單：直接動股數，不走 _alloc_shares/rebalance() 的整籃子等權重重配
     ——「賣一半A」不該連動改變B的股數，這是跟其他倉本質不同的地方（單一部位獨立管理）。
     combo_frac：state裡的{ticker: 0.5或1.0}持倉比例追蹤，跟pf["holdings"]分開存。"""
+    # 2026-09-20 Leo：「抓不到價格不跳過，並通知」。原本這裡三處都是靜默處理：
+    #   · 全出：持股先 pop 掉，抓不到價就**不入帳現金**——部位憑空消失
+    #   · 賣一半：抓不到價就 continue 跳過
+    #   · 買進：抓不到價就 continue 換下一檔——9/8 手動調 10 檔那次金居(8358.TWO)與 2313.TW 就這樣
+    #     被悄悄跳過，買進順序被改掉而沒人知道
+    # 現在一律丟 MissingPriceError，呼叫端在 save() 之前離開＝整次調倉不動，訊號是狀態式的
+    # （ST 空方、RS<0、打點候選每天重算），隔天會自然補做。
+    for tk in full_exit:
+        if tk in pf["holdings"] and not prices.get(tk):
+            raise MissingPriceError(f"全出 {tk}：抓不到現價")
+    for tk in half_sell:
+        if tk in pf["holdings"] and not prices.get(tk):
+            raise MissingPriceError(f"賣一半 {tk}：抓不到現價")
+
     for tk in full_exit:
         h = pf["holdings"].pop(tk, None)
         combo_frac.pop(tk, None)
-        if h and prices.get(tk):
+        if h:
             pf["cash"] = pf.get("cash", 0.0) + h["sh"] * to_usd(tk, prices[tk], fx)
 
     for tk in half_sell:
         h = pf["holdings"].get(tk)
-        if not h or not prices.get(tk):
+        if not h:
             continue
         pu = to_usd(tk, prices[tk], fx)
         sold_sh = h["sh"] * 0.5
@@ -568,14 +616,14 @@ def combo_apply(state, pf, combo_frac, buy, half_sell, full_exit,
         # 燈號倉走自己的 LAMP_MIN_SLOTS（10），趨勢倉維持 TREND_MIN_SLOTS（8）。
         slot = v / slots            # 「最少切N份」精神，避免單檔 all-in
         for tk in buy:
-            if not prices.get(tk):
-                continue
             size = min(pf.get("cash", 0.0), slot)
             if size <= 0:
-                continue
+                continue                      # 現金用完了，後面的候選不會被買到，缺價與否無關
+            if not prices.get(tk):
+                raise MissingPriceError(f"買進 {tk}：抓不到現價（依序輪到它時現金還有 ${size:,.0f}）")
             pu = to_usd(tk, prices[tk], fx)
             if not pu or pu <= 0:
-                continue
+                raise MissingPriceError(f"買進 {tk}：現價無效（{prices[tk]}）")
             pf["holdings"][tk] = {"sh": round(size / pu, 4), "eu": round(pu, 4),
                                   "en": round(prices[tk], 2)}
             pf["cash"] -= size
@@ -862,9 +910,18 @@ def main():
             else:
                 allt = _all_tickers(state) | set(buy) | set(half_sell) | set(full_exit)
                 prices = fetch_prices(allt)
+                _retry_missing(prices, set(buy) | set(half_sell) | set(full_exit))
                 before = set(pf["holdings"])
-                combo_apply(state, pf, combo_frac, buy, half_sell, full_exit,
-                            prices, fx, date, slots=LAMP_MIN_SLOTS)
+                try:
+                    combo_apply(state, pf, combo_frac, buy, half_sell, full_exit,
+                                prices, fx, date, slots=LAMP_MIN_SLOTS)
+                except MissingPriceError as e:
+                    # 整次不動（還沒 save）。訊號是狀態式的，價格恢復後隔天自然補做。
+                    _notify_tg(f"🔴 進出燈號倉 {date} 調倉中止：{e}\n"
+                               f"今天的買賣一筆都沒做（沒有跳過、沒有改順序）。"
+                               f"燈號日期 {res['date']}，待處理：買 {len(buy)} 檔候選／賣半 {half_sell or '無'}"
+                               f"／全出 {full_exit or '無'}。隔天執行時會重新計算並補做。")
+                    sys.exit(3)
                 bought = sorted(set(pf["holdings"]) - before)
                 for tk in full_exit:
                     exits[tk] = date
@@ -892,6 +949,7 @@ def main():
         buy_all, _hs, _fe = lamp_signal_events(rows, held_frac, exits, date)
         allt = _all_tickers(state) | set(buy_all)
         prices = fetch_prices(allt)
+        _retry_missing(prices, set(state["portfolios"][CHAIN_COMBO]["holdings"]) | set(buy_all[:LAMP_MIN_SLOTS + 5]))
         fx = get_fx()
 
         v = _value(pf, prices, fx)
@@ -906,9 +964,10 @@ def main():
         #    ⚠️ 不足的不補——那會變成「用新錢攤平」，不是這次要做的事。
         freed = 0.0
         for tk, h in list(pf["holdings"].items()):
-            pu = to_usd(tk, prices.get(tk) or h["eu"], fx)
-            if not pu:
-                continue
+            if not prices.get(tk):
+                print(f"🔴 lamp-slots 中止：持股 {tk} 抓不到現價（沒有寫入任何變動）")
+                sys.exit(3)
+            pu = to_usd(tk, prices[tk], fx)
             mv = h["sh"] * pu
             if mv <= slot:
                 continue
@@ -927,8 +986,9 @@ def main():
                 break
             pu = to_usd(tk, prices.get(tk) or 0, fx)
             if not pu or pu <= 0:
-                print(f"   跳過 {tk}（沒有價格）")
-                continue
+                # 2026-09-20 Leo：不跳過、要通知（9/8 就是這裡悄悄跳過了 8358.TWO 與 2313.TW）
+                print(f"🔴 lamp-slots 中止：買進 {tk} 抓不到現價（沒有寫入任何變動）")
+                sys.exit(3)
             size = min(pf["cash"], slot)
             pf["holdings"][tk] = {"sh": round(size / pu, 4), "eu": round(pu, 4),
                                   "en": round(prices[tk], 2)}
@@ -954,6 +1014,12 @@ def main():
 
     elif cmd == "nav":
         prices = fetch_prices(_all_tickers(state))
+        _retry_missing(prices, _all_tickers(state))
+        _gone = sorted(t for t in _all_tickers(state) if not prices.get(t))
+        if _gone:
+            # 淨值照舊用進場價暫代（視為持平，見 _value），但必須讓人知道，不能靜默
+            _notify_tg(f"⚠️ 模擬倉淨值更新：{len(_gone)} 檔抓不到現價，暫以進場價計：{'、'.join(_gone[:12])}"
+                       + ("…" if len(_gone) > 12 else ""))
         update_nav(state, prices, fx, date)
         save(state)
         rank = sorted(state["portfolios"].items(), key=lambda kv: -kv[1]["ret"])
