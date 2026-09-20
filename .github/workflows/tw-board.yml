@@ -59,10 +59,20 @@ jobs:
           # 報告超過 2 天沒更新 → 本機排程沒跑（電腦沒開機）。
           # 同理不能用 mtime 算年齡，改從檔名取日期。
           d=$(basename "$f" .md | sed 's/report_//')
-          age=$(( ($(date +%s) - $(date -d "$d" +%s)) / 86400 ))
+          # 2026-09-20 修誤報：原本用日曆天算，週日手動觸發（最新報告是週五）就算成 2 天而發警告。
+          # BoardAnalyzeDaily 只在週一～週五 06:00 跑（Task 的 DaysOfWeek=62），週六日沒有新報告是正常的，
+          # 所以只數「報告日之後、到今天（台北時間）為止的平日」＝這段期間應該產出卻沒產出的份數。
+          today=${TODAY_OVERRIDE:-$(TZ=Asia/Taipei date +%F)}
+          age=0; i=1
+          while [ "$i" -le 60 ]; do
+            cur=$(date -d "$d +${i} day" +%F)
+            if [[ "$cur" > "$today" ]]; then break; fi
+            if [ "$(date -d "$cur" +%u)" -le 5 ]; then age=$((age+1)); fi
+            i=$((i+1))
+          done
           if [ "$age" -ge 2 ]; then
-            msg="⚠️ <b>看板判讀已 ${age} 天未更新</b>%0A本機排程 BoardAnalyzeDaily（08:30）可能沒執行，電腦沒開機？%0A今天的看板用的是 $(basename "$f") 的舊判讀。"
-            echo "::warning::報告已 $age 天未更新，已推 Telegram"
+            msg="⚠️ <b>看板判讀已缺 ${age} 個平日的報告</b>%0A本機排程 BoardAnalyzeDaily（週一至週五 06:00）可能沒執行，電腦沒開機？%0A今天的看板用的是 $(basename "$f") 的舊判讀。"
+            echo "::warning::報告已缺 $age 個平日，已推 Telegram"
             curl -sS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
               -d chat_id="${TELEGRAM_CHAT_ID}" -d parse_mode=HTML -d text="$msg" >/dev/null || true
           fi
