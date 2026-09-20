@@ -709,6 +709,12 @@ def rebalance(state, hmap, prices, fx, date, only=None):
     for name, pf in state["portfolios"].items():
         if only and name not in only:
             continue
+        if name == CHAIN_COMBO and not only:
+            # 2026-09-20 Leo：進出燈號倉「前一週買了符合燈號的股票就持有，到訊號改變才動」——
+            # 賣一半後手上是現金、隔天有新買點才買，燈號沒變就一直抱著。它由每日的 rebalance-combo
+            # 依訊號事件調整，**不能被每週六的全倉等權重調倉重設**（9/12、9/19 兩次週六都被重設：
+            # 半倉補回全倉、進場價歸零、各檔損益清空）。淨值仍由每日 nav 更新。
+            continue
         v = _value(pf, prices, fx) if (pf["holdings"] or pf.get("cash")) else BASE
         # 趨勢倉/合流倉：訊號檔數常常很少，留現金避免硬集中在1-2檔（合流倉事件觸發更稀疏，同理套用）
         slots = (LAMP_MIN_SLOTS if name == CHAIN_COMBO else
