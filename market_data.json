@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-19 12:45",
+ "updated": "2026-09-20 23:24",
  "indices": [
   {
    "sym": "^GSPC",
@@ -37,17 +37,17 @@
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/18",
-   "close": 47180.75,
-   "chg_pct": 1.93
+   "date": "09/20",
+   "close": 47368.04,
+   "chg_pct": 0.4
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/18",
+   "date": "09/20",
    "close": 31.76,
-   "chg_pct": -0.3
+   "chg_pct": -0.28
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "巴菲特交棒後該賣波克夏？專家點名改買這5檔替代標的",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6610694",
-   "ts": "09/19 12:41"
-  },
-  {
-   "title": "葉門衝突升級以來頭一遭！沙國首都利雅德周六凌晨拉起空襲警報  胡塞空襲後油運怎麼繞？",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6610902",
-   "ts": "09/19 12:40"
-  },
-  {
-   "title": "OpenAI被曝五年現金缺口達2780億美元 算力支出驚人",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6610720",
-   "ts": "09/19 12:40"
-  },
-  {
-   "title": "AI伺服器推升用電需求北美電網擴建壓力越來越高",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6610906",
-   "ts": "09/19 12:30"
-  },
-  {
-   "title": "美股9月賣壓未歇！Citadel策略師示警月底仍有「下行風險」  AI股反彈可期？",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6610880",
-   "ts": "09/19 12:14"
-  },
-  {
-   "title": "美光勞資談判觸及三議題 10/22再舉行第二次會議",
+   "title": "〈台股風向球〉升息利空出盡站回4萬7 惟提防中秋連假前賣壓",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6610827",
-   "ts": "09/19 11:00"
+   "url": "https://news.cnyes.com/news/id/6611485",
+   "ts": "09/20 23:06"
   },
   {
-   "title": "財部出重拳！宣布對印印馬越4國陶瓷面磚展開反傾銷落日調查 最快明年5月定案",
+   "title": "集團作帳行情助攻 南亞、台塑化季底有望進行補漲",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6610182",
-   "ts": "09/19 10:59"
+   "url": "https://news.cnyes.com/news/id/6611387",
+   "ts": "09/20 23:02"
   },
   {
-   "title": "亞運看合庫！周天成、林昀儒、鄭怡靜等20菁英全力爭金 「加薪晉升」激勵爭光",
+   "title": "親子客首選 長榮航連11年獲評五星航空「家庭友善航空公司」拿世界第一",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6610854",
-   "ts": "09/19 10:58"
+   "url": "https://news.cnyes.com/news/id/6611347",
+   "ts": "09/20 23:00"
   },
   {
-   "title": "手把手教你AI+期貨！期交所首開「AI智能交易」實戰課9/22首發 即起報名開搶",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6610828",
-   "ts": "09/19 10:57"
+   "title": "俄羅斯首都莫斯科 遭遇有史以來最大規模襲擊",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6611476",
+   "ts": "09/20 22:25"
   },
   {
-   "title": "〈熱門股〉測試介面族群輪動 雍智科技周漲29%站回季線",
+   "title": "本週操盤筆記：全球PMI、歐亞非多國央行利率決議、川習二會登場",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6610786",
+   "ts": "09/20 21:50"
+  },
+  {
+   "title": "胡塞嗆沙國升級行動將遭更強反擊！利雅德急向多國求援  專家：中東油運波動率短期下不來",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6611388",
+   "ts": "09/20 21:30"
+  },
+  {
+   "title": "高盛喊年底「全資產上漲」行情！油價、美國期中選舉成最大變數",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6611294",
+   "ts": "09/20 21:20"
+  },
+  {
+   "title": "馬斯克看旺AI紅利 預言美國明年GDP成長翻倍至4％",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6611097",
+   "ts": "09/20 21:10"
+  },
+  {
+   "title": "台灣最大主動債ETF熱度不墜！00984D規模狂飆6.5倍 10/5第6次配息",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6610801",
-   "ts": "09/19 10:51"
+   "url": "https://news.cnyes.com/news/id/6611210",
+   "ts": "09/20 10:05"
+  },
+  {
+   "title": "成本推升及內需消費平淡 台系家電廠多軌迎戰下半年",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6610618",
+   "ts": "09/20 09:37"
   }
  ],
  "inst": {
