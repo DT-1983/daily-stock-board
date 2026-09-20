@@ -208,3 +208,6 @@ macro_fomc_note.py
 
 # 2026-09-19：同上，這支把統一投顧影音報告的個股評論直接寫死在程式碼裡。
 fiber_optic_note.py
+
+# 券商研究摘要（不具名，餵給產業鏈報告的研究 Agent 用；含投顧內容，不進公開 repo）
+chain_reports_src/broker_digest/

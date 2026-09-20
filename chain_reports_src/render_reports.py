@@ -3,12 +3,15 @@
 合併進 daily_stock_analysis/chain_reports.json（保留既有 AI 伺服器 bespoke 版）。
 用法：python render_reports.py
 """
-import json, os, glob, html
+import json, os, glob, html, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import brokers                                    # 券商名稱去識別化（Leo：只寫「券商」不點名）
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)                      # chain_reports_src 的上層 = repo 根
 DATADIR = os.path.join(HERE, "reports_data")     # 每鏈一個 *.json（含 _chain 鍵）
 OUT = os.path.join(REPO, "chain_reports.json")
+PINNED = os.path.join(HERE, "pinned")            # 手動補充、季更不覆寫的內容（每鏈一個 <slug>.json）
 
 
 def _unesc(x):
@@ -20,6 +23,45 @@ def _unesc(x):
     if isinstance(x, dict):
         return {k: _unesc(v) for k, v in x.items()}
     return x
+
+
+def merge_pinned(slug, d):
+    """把 pinned/<slug>.json 併進（AI 重新查證產生的）研究 JSON。
+
+    2026-09-20：季更是請 AI 整份重寫，手動補進去的段落（例如 9/16 的 DWDM 薄膜濾光片）會被洗掉。
+    手動內容改存 pinned/，渲染前併入；同一個 key（valuechain 用 seg、個股用 code）以 pinned 為準，
+    並在說明後標註補充日期，讓人知道那是某天補的、不是這次季更重查的。"""
+    fp = os.path.join(PINNED, slug + ".json")
+    if not os.path.exists(fp):
+        return d
+    p = json.load(open(fp, encoding="utf-8"))
+    d = dict(d)
+    for key, kf in (("valuechain", lambda x: x.get("seg")), ("stocks_tw", lambda x: x.get("code")),
+                    ("stocks_us", lambda x: x.get("code"))):
+        items = list(d.get(key) or [])
+        pos = {kf(x): i for i, x in enumerate(items)}
+        for it in p.get(key, []):
+            it = dict(it)
+            at = it.pop("_pinned_at", None)
+            if at and it.get("note"):
+                it["note"] = it["note"] + f"（手動補充，資料日 {at}）"
+            k = kf(it)
+            if k in pos:
+                items[pos[k]] = it
+            else:
+                items.append(it)
+        d[key] = items
+    for key in ("catalysts", "bull", "bear", "risks", "watch"):
+        items = list(d.get(key) or [])
+        for t in p.get(key, []):
+            if t not in items:
+                items.append(t)
+        if items:
+            d[key] = items
+    extra = p.get("sources_extra")
+    if extra and extra not in (d.get("sources") or ""):
+        d["sources"] = ((d.get("sources") or "") + "　" + extra).strip()
+    return d
 
 
 def _stocks_table(rows):
@@ -152,6 +194,10 @@ def main():
         chain = d.get("_chain")
         if not chain:
             print(f"  ! {fp} 缺 _chain，略過"); continue
+        d = merge_pinned(os.path.basename(fp)[:-5], d)
+        d, log = brokers.scrub_deep(d)
+        for path, name in log:
+            print(f"    去識別化 {chain}{path}：{name} → 券商")
         reports[chain] = render(chain, d)
         print(f"  ✓ {chain}（{len(reports[chain])} 字元、美{len(d.get('stocks_us',[]))} 台{len(d.get('stocks_tw',[]))}）")
     json.dump(reports, open(OUT, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
