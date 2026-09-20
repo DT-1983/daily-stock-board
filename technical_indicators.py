@@ -834,9 +834,11 @@ def build(ticker, disp_days=756, expanded=False, target=None):
   <div class="techwrap">{_row_price}{_row_vol}{_row_sq}{_row_rs}{_row_lamp}</div>
 <script>
 window.TI_DATA_{uid} = {json.dumps(chart_data, ensure_ascii=False)};
-let ti_drawn_{uid} = false;
-let ti_charts_{uid} = null;
-let ti_win_{uid} = 90;
+/* 2026-09-20：頂層宣告一律用 var，不能用 let。戰情室換股票是把這段 <script> 重新塞進頁面，
+   同一檔第二次載入時 let 會 SyntaxError「Identifier already declared」→ 整段腳本作廢、圖表空白。 */
+var ti_drawn_{uid} = false;
+var ti_charts_{uid} = null;
+var ti_win_{uid} = 90;
 function ti_toggle_{uid}(){{
   const box = document.getElementById('ti_charts_{uid}');
   const btn = document.getElementById('ti_btn_{uid}');

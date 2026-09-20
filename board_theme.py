@@ -54,13 +54,18 @@ ICONS = {
 # 放在 board_theme 而不是各頁自己寫：兩個頁面（首頁、進出燈號）都要用，
 # 複製兩份必然會漂移（見 investment_site_ui_standard 記憶的原則）。
 LOOKUP_URL = "https://stock.talentxtrend.com/lookup"
+# 入口頁＝docs/combo.html（跟下面 PAGES_URL 是同一個站；這裡先寫出來是因為 LOOKUP_BOX 要在
+# PAGES_URL 定義之前組字串）。
+GATEWAY_URL = "https://dt-1983.github.io/daily-stock-board/combo.html"
 LOOKUP_BOX = (
     # 2026-09-08 Leo：「查任意股票幫我拿掉，只要留查燈號（文字改查燈號）」。
     # ⚠️ 這顆框有**兩份**：這裡（首頁／燈號頁／戰情室共用）和 lookup_page._form()
     #    （查股頁自己那顆，因為要回填 value 與指回 /lookup）。
     #    9/8 我只改了 lookup_page 那份 → Leo 在戰情室看到沒變，以為沒改成功。
     #    ⭐ 同一顆元件有兩份實作時，改一份不算改完；動之前先 grep 字串找出所有份數。
-    '<form class="lkbox" method="get" action="' + LOOKUP_URL + '" target="_blank">'
+    # 2026-09-20：查股不再開新分頁到 /lookup，改送進「進出燈號」入口頁（同分頁）——
+    # 在線就轉進戰情室並直接查那一檔（?ticker=），離線寫「無法使用」。戰情室自己那顆框由前端攔截。
+    '<form class="lkbox" method="get" action="' + GATEWAY_URL + '">'
     '<input name="ticker" placeholder="代號或名稱：2454 / 台積電 / COST" '
     'autocomplete="off" autocapitalize="characters">'
     '<button type="submit">查燈號</button>'
@@ -106,6 +111,7 @@ NAV = [
 # daily_warroom / discord_guide / earnings_watch / portfolio_html_legacy），
 # 網域改一次就要改八個地方。新的地方一律 import 這個常數。
 PAGES_URL = "https://dt-1983.github.io/daily-stock-board"
+assert GATEWAY_URL == PAGES_URL + "/combo.html", "GATEWAY_URL 與 PAGES_URL 不同步"
 
 
 def nav_abs():
