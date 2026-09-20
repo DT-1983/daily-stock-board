@@ -6285,3 +6285,27 @@ AI 拿「目標價 ÷ 倍數」倒推出一個基數存進去，標籤誠實寫�
 **踩坑**：用 Python 腳本改 combo_html.py 時，寫入中途 UnicodeEncodeError 把檔案清成 0 位元組（`open(p,"w")` 先截斷）；
 從 git HEAD 還原才救回。⭐改檔一律用 Edit 工具或「先組好字串再寫」；工具會吃掉 heredoc 裡的雙反斜線，別在 Python 腳本裡寫 `\uXXXX`。
 另：`git stash pop` 在自動產生的 industry_rotation_history.json 衝突，採遠端較新版；stash 內其餘皆為遠端重生的看板/數據檔，已丟棄。
+
+## 2026-09-20（改版）：燈號整合——Leo 指正上一版方向不對
+
+上一版做成「公開頁有列表，在線才顯示查股」，Leo：「沒有改對」，要的是：
+1. **預設進去就是戰情室的列表**　2. **本機離線就直接寫「無法使用」**　3. **輸入個股不在清單裡 → 即時重算**。
+上一版的錯：我把「離線時仍要能看列表」當成隱含需求（Leo 原話是「離線時可以只顯示列表」→ 我理解成備援列表；
+他實際要的是離線就不能用，單一入口）。**教訓：他的第一句話有歧義時我該問，而不是選了會多做一整個公開列表的解讀。**
+**現在的結構**：
+- `docs/combo.html` ＝ 入口頁（`combo_html.gateway_html`）：探測 `/ping`，在線 → `location.replace(戰情室 + location.search)`
+  （保留 ?ticker=）；離線／逾時 2.5s → 「🔌 本機離線，無法使用」＋重新檢查鈕。**公開站不再有列表**。
+- 導覽列「進出燈號」仍指向 combo.html＝入口頁，所以每頁點過去都直進戰情室。
+- `combo_html` 完整列表（含圖）只寫 obis 的 `COMBO打點.html`（手機 Drive 看的獨立快照，不含連本機的東西）。新增 `--no-obis` 供測試。
+- 戰情室導覽拿掉「離線備援版」。
+- 首頁查股框（board_theme.LOOKUP_BOX）action 改成入口頁（`GATEWAY_URL`，並 assert 與 PAGES_URL 同步），不再 `target=_blank` 開 /lookup。
+- **戰情室搜尋**：一律攔下（原本母體外會放行表單開新分頁）。`lamp_room.detail_html` 母體外 → `_resolve_outside`：
+  先當代號 `lamp_lookup.lookup(live=True)`（順序同 lookup_page.render，避免 KO 這種合法代號被當模糊名稱），
+  查不到才 `lookup_page.resolve` 解析名稱（單一→標「🔁 X → Y」；多個→候選鈕；無→查無資料）。
+  結果版面與母體內完全相同，只標「即時查詢（不在掃描母體）」。`?ticker=` 進戰情室 → `roomSearch()`。
+**順手抓到的既有 bug**：`technical_indicators` 圖表腳本頂層用 `let ti_drawn_{uid}`，戰情室換股是重新塞 `<script>`，
+**同一檔第二次載入 → SyntaxError「already declared」→ 整段作廢、圖表空白**。很可能是 Leo 先前回報「戰情室圖表空白」的真因之一
+（我之前只修了 resize，沒修到這個）。改 `var`，ABBV 連載兩次驗證兩次都畫出 5 張圖、console 無錯。
+**驗證**（全部用真實環境）：不帶授權的臨時測試伺服器（port 8766）在瀏覽器實際操作——`?ticker=KO`、輸入 ABBV、名稱「coca cola」多候選並點選、查無資料 ZZZZ9、清單內 1101；
+真實 github.io 在線 → 轉進 `stock.talentxtrend.com/room?ticker=MSFT`；**真的停掉本機服務**（tunnel 回 502）→ 頁面顯示「本機離線，無法使用」＋重新檢查鈕；再重啟確認 `/ping` 回 200。
+**未做**：US 個股名稱在標題是空的（lookup 只有台股名）；中文美股名（如「可口可樂」）不在 US_ZH_NAMES 會查無資料（既有限制）。
