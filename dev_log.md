@@ -6409,3 +6409,19 @@ Leo 澄清進出燈號倉的實際設計：**前一週買了符合燈號的股�
 **觀察（未查）**：9/7 有 8 檔上櫃股從「產業鏈+趨勢」調出（3105、3491、4979、5483、6182、6274、8027、8358 .TWO），恰在 9/6 修 .TWO 金鑰的隔天，不確定是真翻空還是修復的副作用。
 
 **9/20 補**：交易紀錄的來源標籤改名「重播→重跑」「重建→推算」，並在表格上方加一段圖例（手機沒有滑鼠停留說明，原本只寫在表格最下面）。
+
+## 2026-09-20：產業鏈深度解讀——保留手動補充、吸收投顧資料（不具名）、券商名稱強制去識別化
+
+Leo 問：什麼時候重跑？會讀 obis 嗎？→ 排程 `RefreshChainReports` 每季 1 號（1/4/7/10 月）09:23，下一次 **2026-10-01**（這個排程還沒真正自動跑過：8/4、9/4 都是手動補跑，Last Run 顯示 1999 = 從未觸發）；
+**不讀 obis**——只用 WebSearch 與 `screen_result.json`（守備清單），obis 只是輸出位置。
+發現風險：季更請 AI 整份重寫 `reports_data/<slug>.json`，9/16 我手動補進「矽光子」的 DWDM 濾光片段落會被洗掉。
+Leo 決定：好；**只讀投顧資料**（不含 IG 公開筆記）；**不要寫是哪一家券商，只要寫「券商」**；問跑的時候要不要費用。
+**做了**：
+· `chain_reports_src/pinned/<slug>.json`：手動補充內容獨立存放；`render_reports.merge_pinned` 渲染前併入（valuechain 用 seg、個股用 code 為 key，pinned 優先並標「手動補充，資料日」）。已把 DWDM 段落＋4 檔個股（6426/6588/3234/3441）＋來源註記搬進 `pinned/silicon_photonics.json`。模擬「AI 整份重寫且沒有 DWDM」→ 渲染後 DWDM 仍在。
+· `chain_reports_src/brokers.py`：券商名稱去識別化（內建名單＋`advisor_reports.json` 實際出現過的券商；中文名用子字串、英文名用字界，避免誤傷「元大金」「capacity」）。`render_reports` 一律套用並印出每一處替換。**由程式擋，不靠 prompt。**
+· `chain_reports_src/broker_digest.py`：把 `state/advisor_reports.json`（本機、gitignore）整理成每鏈不具名摘要（家數、評等分布、目標價中位數/區間、論點、風險），寫到 `broker_digest/<slug>.md`（已 gitignore）。摘要檔自身也過一次去識別化，檢查全乾淨。
+· skill `refresh-chain-reports` 更新：步驟 1.5 產摘要、給 Agent 的改寫規則（自己的話、不點名、不逐字、目標價只用中位數/區間、與查證衝突以查證為準）、pinned 用法、費用說明。
+**實測發現**：投顧資料涵蓋度很低——11 條鏈裡只有 5 條有對應個股、合計約 6 檔（AI 伺服器 1、低軌衛星 1、AI 材料 1、AI 電源/散熱 1、矽光子 2），其餘 6 鏈沒有素材。要有效益得多丟投顧報告。
+**順帶**：現有已發布報告本來就有 8 處外資券商名（Goldman Sachs、Morgan Stanley、J.P. Morgan、BofA、高盛、花旗，來自公開新聞而非投顧資料），依 Leo「只寫券商」一併換成「券商」（AI 伺服器、關鍵金屬/原物料兩鏈）。
+**費用**：`claude -p` 走 Max 訂閱額度（User/Machine/Process 都沒有 ANTHROPIC_API_KEY），無額外現金支出；WebSearch 是 Claude Code 內建工具。消耗訂閱用量；9/4 那次跑約 18 分鐘。「零現金」是依設定推論——這台電腦看不到訂閱帳單。
+**沒做**：沒有現在重跑（下次 10/1）；沒有把 IG 等公開筆記餵進去（Leo 說只讀投顧）。
