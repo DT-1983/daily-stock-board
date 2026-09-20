@@ -451,8 +451,9 @@ async def _room_detail(request):
         return web.Response(text="", status=404)
     import lamp_room
     tk = request.query.get("ticker", "")
+    exact = request.query.get("exact") == "1"
     try:
-        html = await asyncio.to_thread(lamp_room.detail_html, tk)
+        html = await asyncio.to_thread(lamp_room.detail_html, tk, exact)
     except Exception as e:                                # noqa: BLE001
         traceback.print_exc()
         html = f'<div class="warn">{tk} 產生失敗：{str(e)[:160]}</div>'
