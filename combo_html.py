@@ -494,14 +494,18 @@ GATE_CSS = """
 GATE_JS = """<script>
 (function(){
   function offline(){
-    var go=function(){
-      var w=document.getElementById("cbwrap"); if(w) w.classList.remove("gatehide");
-      var b=document.getElementById("gatebar"); if(b) b.hidden=false;
-      var q=""; try{ q=new URLSearchParams(location.search).get("ticker")||""; }catch(e){}
-      var n=document.getElementById("gatetk");
-      if(n&&q) n.textContent="你要查的「"+q+"」要等本機開機後才能查。";
-    };
-    if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",go); else go();
+    // 不等 DOMContentLoaded：這頁 8MB，整份解析完要好幾秒。元素一出現（串流解析中）就先顯示。
+    var tries=0;
+    (function tick(){
+      var w=document.getElementById("cbwrap"), b=document.getElementById("gatebar"), n=document.getElementById("gatetk");
+      if(w&&b&&n){
+        w.classList.remove("gatehide"); b.hidden=false;
+        var q=""; try{ q=new URLSearchParams(location.search).get("ticker")||""; }catch(e){}
+        if(q) n.textContent="你要查的「"+q+"」要等本機開機後才能查。";
+        return;
+      }
+      if(++tries<600) setTimeout(tick,30);
+    })();
   }
   var ctl=("AbortController" in window)?new AbortController():null;
   var timer=setTimeout(function(){ if(ctl) ctl.abort(); },2500);
