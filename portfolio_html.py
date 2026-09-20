@@ -65,6 +65,134 @@ COLORS = ["#3B82F6", "#22C55E", "#F97316", "#A78BFA", "#EAB308",
          "#22D3EE", "#EF4444", "#94A3B8", "#60A5FA"]
 
 
+TRADES_PATH = "state/paper_trades.json"
+
+TRADES_CSS = """
+.trbar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:4px 0 8px}
+.trbar .lab{font-size:11.5px;color:var(--dim);margin-right:2px}
+.trsum{font-size:12.5px;color:var(--muted);margin:2px 0 8px}
+.trwrap{overflow-x:auto;border:1px solid var(--line)}
+table.trd{width:100%;border-collapse:collapse;font-size:12.5px;white-space:nowrap}
+table.trd th{text-align:right;padding:7px 8px;color:var(--dim);font-weight:600;font-size:11.5px;
+ border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--card,var(--surface))}
+table.trd td{padding:6px 8px;border-bottom:1px solid var(--line2,var(--line));text-align:right}
+table.trd th:nth-child(-n+4),table.trd td:nth-child(-n+4){text-align:left}
+table.trd td.why{text-align:left;color:var(--muted);white-space:normal;min-width:180px}
+table.trd .tag{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:5px;color:#fff}
+table.trd .t-buy,table.trd .t-join{background:#166534}
+table.trd .t-half_sell,table.trd .t-trim{background:#92400e}
+table.trd .t-full_exit,table.trd .t-leave{background:#991b1b}
+table.trd .src{font-size:10px;color:var(--dim);margin-left:4px;cursor:help}
+.trscroll{max-height:560px;overflow-y:auto}
+.trmore{display:block;width:100%;padding:9px;background:none;border:0;color:var(--cy,#22D3EE);
+ font:inherit;font-size:12.5px;cursor:pointer}
+.trnote{font-size:11.5px;color:var(--dim);line-height:1.7;margin-top:8px}
+"""
+
+
+def _tw_names():
+    try:
+        return json.load(open("state/chip_names.json", encoding="utf-8"))
+    except Exception:
+        return {}
+
+
+def trades_section(main, chains):
+    """模擬倉交易紀錄（2026-09-20 Leo：「幫我做模擬倉的交易紀錄」）。
+    資料來自 state/paper_trades.json：paper_portfolio.py 每次交易自動附加；
+    8/18–9/19 的歷史是補進去的（進出燈號 9/7 起用逐日重播、其餘由 git 快照差異重建）。
+    回 (區塊 html, 腳本)。"""
+    try:
+        trades = json.load(open(TRADES_PATH, encoding="utf-8"))
+    except Exception:
+        trades = []
+    names = _tw_names()
+    data = []
+    for t in sorted(trades, key=lambda x: (x["date"], x["portfolio"], x["ticker"]), reverse=True):
+        tk = t["ticker"]
+        code = tk.split(".")[0]
+        tw = tk.endswith((".TW", ".TWO"))
+        data.append({"d": t["date"], "p": t["portfolio"], "a": t["action"], "k": tk,
+                     "n": names.get(code, "") if tw else "", "s": t["shares"], "px": t["price"],
+                     "tw": 1 if tw else 0, "u": t["amount_usd"], "l": t.get("pnl_usd"),
+                     "lp": t.get("pnl_pct"), "r": t.get("reason", ""), "f": t.get("src", "live")})
+    # 進出燈號排第一＝預設顯示（它是唯一每筆都列的倉；其他是籃子倉的調入／調出）
+    ordered = sorted(main, key=lambda n: n != "進出燈號")
+    groups = [(n, [n]) for n in ordered] + [("各鏈明細", list(chains)), ("全部", None)]
+    chips = "".join(
+        f'<button class="sc" data-g="{i}" aria-pressed="{"true" if i == 0 else "false"}">{esc(lab)}</button>'
+        for i, (lab, _) in enumerate(groups))
+    sec = f"""<section class="sec"><div class="sechd"><h2>📒 模擬倉交易紀錄</h2>
+  <span class="cnt" id="trcnt">{len(data)} 筆</span></div>
+<div class="card">
+  <div class="trbar"><span class="lab">倉別</span>{chips}</div>
+  <div class="trbar"><span class="lab">動作</span>
+    <button class="sc" data-a="all" aria-pressed="true">全部</button>
+    <button class="sc" data-a="in" aria-pressed="false">買進／調入</button>
+    <button class="sc" data-a="out" aria-pressed="false">賣出／調出</button>
+    <label class="lab" style="margin-left:10px"><input type="checkbox" id="trinit"> 含起始建倉（8/18）</label></div>
+  <div class="trsum" id="trsum"></div>
+  <div class="trwrap trscroll"><table class="trd"><thead><tr>
+    <th>日期</th><th>倉別</th><th>動作</th><th>代號</th><th>股數</th><th>成交價</th><th>金額(US$)</th>
+    <th>損益</th><th style="text-align:left">原因</th></tr></thead><tbody id="trbody"></tbody></table>
+    <button class="trmore" id="trmore" hidden>顯示更多</button></div>
+  <div class="trnote">
+    · <b>進出燈號</b>：每筆買進／賣一半／全出都列。<b>其他倉是等權重籃子</b>，只列「調入／調出」，
+    每週等權重再平衡造成的加減碼不逐筆列（那不是決策）。<br>
+    · 損益＝賣出價相對<b>該倉上次建倉／調倉的進場價</b>；台股金額以匯率 32 換成美元，成交價顯示原幣。<br>
+    · <span class="src">重播</span>＝進出燈號 9/7–9/19 依每日燈號結果重播還原（週六重設 bug 修正後）；
+      <span class="src">重建</span>＝由 git 快照差異重建，賣出價取前一次快照現價，可能與實際差 1% 內。
+      2026-09-20 起的新交易由程式當下寫入，無標記。<br>
+    · 這是<b>模擬倉</b>紀錄；真實下單紀錄在戰情室旁的「交易紀錄」頁，兩者不混。</div>
+</div></section>"""
+    js = """<script>
+(function(){
+  var T=__DATA__, G=__GROUPS__, st={g:0,a:"all",init:false,n:120};
+  function esc(x){return String(x==null?"":x).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  var LBL={buy:"買進",half_sell:"賣一半",full_exit:"全出",trim:"減碼",join:"調入",leave:"調出"};
+  var SRC={"重播還原":"重播","git重建":"重建"};
+  function num(v,d){return v==null?"—":Number(v).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});}
+  function pass(t){
+    var g=G[st.g]; if(g.m && g.m.indexOf(t.p)<0) return false;
+    if(st.a==="in" && !(t.a==="buy"||t.a==="join")) return false;
+    if(st.a==="out" && (t.a==="buy"||t.a==="join")) return false;
+    if(!st.init && t.r==="起始建倉") return false;
+    return true;
+  }
+  function render(){
+    var rows=T.filter(pass), pn=0, pc=0;
+    rows.forEach(function(t){ if(t.l!=null){pn+=t.l;pc++;} });
+    document.getElementById("trcnt").textContent=rows.length+" 筆";
+    document.getElementById("trsum").innerHTML=
+      "共 "+rows.length+" 筆；已實現損益合計 <b class='"+(pn>0?"pos":(pn<0?"neg":"flat"))+"'>"+(pn>=0?"+":"-")+"$"+num(Math.abs(pn),0)+"</b>（"+pc+" 筆賣出／調出）";
+    var body=[];
+    rows.slice(0,st.n).forEach(function(t){
+      var pl=t.l==null?"":("<span class='"+(t.l>0?"pos":(t.l<0?"neg":"flat"))+"'>"+(t.l>=0?"+":"-")+"$"+num(Math.abs(t.l),0)+"（"+(t.lp>=0?"+":"")+num(t.lp,1)+"%）</span>");
+      var src=SRC[t.f]?"<span class='src' title='"+esc(t.f)+"'>"+SRC[t.f]+"</span>":"";
+      body.push("<tr><td>"+esc(t.d.slice(5))+"</td><td>"+esc(t.p)+"</td><td><span class='tag t-"+t.a+"'>"+(LBL[t.a]||t.a)+"</span></td>"+
+        "<td><b>"+esc(t.k)+"</b>"+(t.n?" <span style='color:var(--dim)'>"+esc(t.n)+"</span>":"")+src+"</td>"+
+        "<td>"+num(t.s,t.s<100?3:1)+"</td><td>"+(t.tw?"NT$":"$")+num(t.px,2)+"</td><td>"+num(t.u,0)+"</td><td>"+pl+"</td><td class='why'>"+esc(t.r)+"</td></tr>");
+    });
+    document.getElementById("trbody").innerHTML=body.join("")||"<tr><td colspan='9' style='text-align:center;color:var(--dim);padding:18px'>沒有符合的交易</td></tr>";
+    var more=document.getElementById("trmore"); more.hidden=rows.length<=st.n;
+    more.textContent="顯示更多（還有 "+(rows.length-st.n)+" 筆）";
+  }
+  document.querySelectorAll(".trbar [data-g]").forEach(function(b){b.onclick=function(){
+    document.querySelectorAll(".trbar [data-g]").forEach(function(x){x.setAttribute("aria-pressed",x===b);});
+    st.g=+b.dataset.g; st.n=120; render();};});
+  document.querySelectorAll(".trbar [data-a]").forEach(function(b){b.onclick=function(){
+    document.querySelectorAll(".trbar [data-a]").forEach(function(x){x.setAttribute("aria-pressed",x===b);});
+    st.a=b.dataset.a; st.n=120; render();};});
+  document.getElementById("trinit").onchange=function(){st.init=this.checked; st.n=120; render();};
+  document.getElementById("trmore").onclick=function(){st.n+=200; render();};
+  render();
+})();
+</script>"""
+    js = (js.replace("__DATA__", json.dumps(data, ensure_ascii=False, separators=(",", ":")))
+            .replace("__GROUPS__", json.dumps([{"m": g} for _, g in groups], ensure_ascii=False)))
+    return sec, js
+
+
 def build(state):
     pfs = state["portfolios"]
     base = state.get("base", 10000)
@@ -150,6 +278,7 @@ def build(state):
             f'{icon("chevron",15,"currentColor",2.5)}</button>'
             f'<div class="detail" data-for="c{i}">{detail}</div>')
 
+    trades_sec, trades_js = trades_section(list(main), [n for n, _ in chains])
     legend = "".join(
         f'<span><i style="width:9px;height:9px;border-radius:50%;display:inline-block;'
         f'background:{color_map[n]}"></i>{esc(n)}</span>' for n in order)
@@ -169,7 +298,7 @@ def build(state):
 <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
 <title>策略賽馬 · 模擬倉</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
-<style>{BASE_CSS}{DESKTOP_CSS}</style></head><body><div class="wrap">
+<style>{BASE_CSS}{DESKTOP_CSS}{TRADES_CSS}</style></head><body><div class="wrap">
 {header("portfolio", "策略賽馬模擬倉",
   f"起始 {esc(inception)}（第 {days} 天）· <b>資料日期 {esc(updated)}</b>"
   f" · 每倉 {usd(base)} · 匯率 1美元={fx}台幣"
@@ -196,6 +325,8 @@ def build(state):
   <div class="rows">{"".join(rows)}</div>
 </section>
 
+{trades_sec}
+
 <section class="sec explain"><div class="sechd"><h2>各倉選股與進出方式（總表）</h2></div>
 <div class="card">
 <table class="rules">
@@ -213,7 +344,7 @@ def build(state):
     <td>便宜才買、貴了就不在清單裡。<b>沒有停損</b>，靠估值本身進出</td>
     <td>每週六 08:00 重篩</td></tr>
 <tr><td><b>進出燈號</b></td>
-    <td>四燈掃描結果：<b>≥3 燈且風報比 ≥ 1</b>（打點成立），每檔 1/8 倉</td>
+    <td>四燈掃描結果：<b>≥3 燈且風報比 ≥ 1</b>（打點成立），每檔 1/10 倉</td>
     <td>① SuperTrend 翻空 → <b>賣一半</b>　② RS60 跌破自身均線 → <b>剩餘全出</b>，
         全出後 7 天內不再進場</td>
     <td>每日 09:00</td></tr>
@@ -265,7 +396,7 @@ Bitcoin→AI 機房該鏈合計限重 10%（回測 MDD −94%）。</span></p>
 <p>跟 <a href="combo.html" style="color:#6db3ff">進出燈號頁</a><b>讀同一份資料</b>——頁面看到什麼，倉就照什麼進出，兩邊不會漂移。<br>
 四燈＝① SuperTrend 多方　② 動能 &gt; 0　③ 雙重颱風不為綠　④ RS60 日乖離 &gt; +3%。<br>
 <b>進場</b>：亮 ≥3 燈<b>且風報比 ≥ 1</b>（燈號給勝率、風報比給賠率，只有一半沒有意義）。
-排序：亮燈數多的先、同燈數風報比高的先，每檔 1/8 倉直到現金用完。<br>
+排序：亮燈數多的先、同燈數風報比高的先，每檔 1/10 倉直到現金用完。<br>
 <b>出場（不對稱兩階段）</b>：SuperTrend 翻空先賣一半（趨勢轉弱但還沒確認轉空），
 RS60 跌破自身均線才剩餘全出（相對強度也丟了）；全出後 7 天內不重新進場，避免出了隔天又買回。</p>
 <p style="color:#F5B841;border-left:3px solid #F5B841;padding-left:10px">
@@ -296,7 +427,7 @@ $$('.row').forEach(r=>r.onclick=()=>{{const d=$(`.detail[data-for="${{r.dataset.
  open=r.getAttribute('aria-expanded')==='true';
  r.setAttribute('aria-expanded',!open);d.classList.toggle('on',!open);
  d.style.display=!open?'block':'none';}});
-</script></body></html>"""
+</script>{trades_js}</body></html>"""
 
 
 def main():
