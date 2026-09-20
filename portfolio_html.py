@@ -87,6 +87,8 @@ table.trd .src{font-size:10px;color:var(--dim);margin-left:4px;cursor:help}
 .trmore{display:block;width:100%;padding:9px;background:none;border:0;color:var(--cy,#22D3EE);
  font:inherit;font-size:12.5px;cursor:pointer}
 .trnote{font-size:11.5px;color:var(--dim);line-height:1.7;margin-top:8px}
+.trleg{font-size:11.5px;color:var(--dim);line-height:1.7;margin:0 0 8px}
+.trleg .src{font-size:10px;font-weight:700;color:var(--muted)}
 """
 
 
@@ -132,6 +134,9 @@ def trades_section(main, chains):
     <button class="sc" data-a="out" aria-pressed="false">賣出／調出</button>
     <label class="lab" style="margin-left:10px"><input type="checkbox" id="trinit"> 含起始建倉（8/18）</label></div>
   <div class="trsum" id="trsum"></div>
+  <div class="trleg">代號旁的小字是這筆紀錄的來源：<span class="src">重跑</span>＝依當天的燈號結果逐日重跑出來的
+    （買賣日期與理由精確，台股價約差 1%）；<span class="src">推算</span>＝由前後兩次存檔比對推回來的
+    （日期與代號準，賣出價約差 1%）；<b>沒有小字</b>＝程式交易當下直接記下的（最準）。</div>
   <div class="trwrap trscroll"><table class="trd"><thead><tr>
     <th>日期</th><th>倉別</th><th>動作</th><th>代號</th><th>股數</th><th>成交價</th><th>金額(US$)</th>
     <th>損益</th><th style="text-align:left">原因</th></tr></thead><tbody id="trbody"></tbody></table>
@@ -140,9 +145,10 @@ def trades_section(main, chains):
     · <b>進出燈號</b>：每筆買進／賣一半／全出都列。<b>其他倉是等權重籃子</b>，只列「調入／調出」，
     每週等權重再平衡造成的加減碼不逐筆列（那不是決策）。<br>
     · 損益＝賣出價相對<b>該倉上次建倉／調倉的進場價</b>；台股金額以匯率 32 換成美元，成交價顯示原幣。<br>
-    · <span class="src">重播</span>＝進出燈號 9/7–9/19 依每日燈號結果重播還原（週六重設 bug 修正後）；
-      <span class="src">重建</span>＝由 git 快照差異重建，賣出價取前一次快照現價，可能與實際差 1% 內。
-      2026-09-20 起的新交易由程式當下寫入，無標記。<br>
+    · <span class="src">重跑</span>＝進出燈號 9/7–9/19：那段期間每週六被重設過，存下來的紀錄不對，
+      所以用當天實際讀到的燈號結果讓程式從頭逐日重跑；
+      <span class="src">推算</span>＝其他倉與進出燈號 9/6 前：由每天的存檔前後比對推回，賣出價取前一次存檔的現價。
+      2026-09-20 起的新交易由程式當下寫入，沒有小字。<br>
     · 這是<b>模擬倉</b>紀錄；真實下單紀錄在戰情室旁的「交易紀錄」頁，兩者不混。</div>
 </div></section>"""
     js = """<script>
@@ -150,7 +156,7 @@ def trades_section(main, chains):
   var T=__DATA__, G=__GROUPS__, st={g:0,a:"all",init:false,n:120};
   function esc(x){return String(x==null?"":x).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
   var LBL={buy:"買進",half_sell:"賣一半",full_exit:"全出",trim:"減碼",join:"調入",leave:"調出"};
-  var SRC={"重播還原":"重播","git重建":"重建"};
+  var SRC={"重播還原":"重跑","git重建":"推算"};
   function num(v,d){return v==null?"—":Number(v).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});}
   function pass(t){
     var g=G[st.g]; if(g.m && g.m.indexOf(t.p)<0) return false;
