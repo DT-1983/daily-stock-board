@@ -349,7 +349,27 @@ def _row_from_live(lv):
     }
 
 
-def _resolve_outside(query):
+def _bars_note(tk):
+    """算不出燈號時，說明原因：上市太短（K 棒不夠）還是抓不到資料。"""
+    try:
+        import combo_scan as CS
+        import price_store
+        import tw_symbol
+        sym = tw_symbol.resolve(tk) if tk[:1].isdigit() else tk.replace(".", "-")
+        o = price_store.get_ohlc([sym], period="3y").get(sym)
+        n = 0 if o is None else len(o)
+        need = CS.RS_LONG + 20
+        if 0 < n < need:
+            return (f"這檔只有 {n} 個交易日的資料（上市不久），四燈用到 RS 一年期，"
+                    f"至少要 {need} 個交易日（約一年多）才算得出來，目前算不出燈號。")
+        if n == 0:
+            return "抓不到這檔的價格資料。"
+    except Exception:                                       # noqa: BLE001
+        pass
+    return ""
+
+
+def _resolve_outside(query, exact=False):
     """輸入不在掃描母體 → (即時結果 lv, None) 或 (None, 要顯示的 html)。
 
     2026-09-20 Leo：「輸入個股的地方如果沒有在清單裡，則即時重算」。
@@ -369,7 +389,7 @@ def _resolve_outside(query):
         lv = lamp_lookup.lookup(tk, live=True)
     except Exception as e:                                  # noqa: BLE001
         return None, f'<div class="warn">{esc(tk)} 即時計算失敗：{esc(str(e)[:120])}</div>'
-    if lv is None:
+    if lv is None and not exact:
         cands = lookup_page.resolve(q)
         if len(cands) > 1:
             btns = "".join(
@@ -386,13 +406,13 @@ def _resolve_outside(query):
             except Exception as e:                          # noqa: BLE001
                 return None, f'<div class="warn">{esc(tk)} 即時計算失敗：{esc(str(e)[:120])}</div>'
     if not lv:
-        return None, (f'<div class="empty">查無資料：{esc(q)}。可能是代號打錯，'
-                      '或這檔資料量不足（新掛牌／太冷門）、暫時抓不到。</div>')
+        note = _bars_note(tk) or "可能是代號打錯，或暫時抓不到資料。"
+        return None, f'<div class="empty">查無燈號：{esc(q)}。{esc(note)}</div>'
     lv["_note"] = note
     return lv, None
 
 
-def detail_html(ticker):
+def detail_html(ticker, exact=False):
     """中欄：關鍵數字 + 技術圖。**圖是現算的**（抓 2 年資料算指標，數秒）。
 
     ⚠️ 圖畫不出來不要讓整區掛掉——上面那排數字本身就有價值（同 lookup_page 的作法）。
@@ -404,7 +424,7 @@ def detail_html(ticker):
     r = next((x for x in items if x["tk"].upper() == str(ticker).upper()), None)
     pre_lv, pre_note = None, ""
     if not r:
-        pre_lv, err = _resolve_outside(ticker)
+        pre_lv, err = _resolve_outside(ticker, exact)
         if err:
             return err
         pre_note = pre_lv.get("_note", "")
@@ -732,6 +752,12 @@ body{margin:0}
               background:var(--accent,#22D3EE);padding:1px 5px;border-radius:2px}
 .livelit .offs{flex:1 0 100%;font-size:10px;color:var(--warn,#FFB627);margin-top:2px}
 .empty,.warn{padding:22px 16px;color:var(--dim);font-size:13px}
+.msearch{display:flex;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line);
+ position:sticky;top:0;z-index:5;background:var(--surface,#080E1A)}
+.msearch input{flex:1;min-width:0;padding:9px 11px;background:var(--bg,#04070E);border:1px solid var(--line);
+ color:var(--ink,#DCE7F5);font:inherit;font-size:16px}
+.msearch button{padding:0 16px;border:1px solid var(--cy,#22D3EE);background:var(--cy-dim,transparent);
+ color:var(--cy,#22D3EE);font:inherit;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap}
 .rpicks{display:flex;flex-wrap:wrap;gap:8px;padding:0 16px 16px}
 .rpick{padding:8px 12px;border:1px solid var(--line);background:var(--surface,transparent);
  color:inherit;font:inherit;font-size:13px;cursor:pointer}
@@ -903,18 +929,29 @@ ROOM_JS = r"""
   }
   // 2026-09-20：不在清單裡的股票也走這條（伺服端即時重算，回傳片段裡帶
   // data-resolved＝解析後的代號；名稱輸入會被解析成代號，前端要跟著更新）。
-  function loadDetail(q){
+  // 2026-09-21 Leo：「現在燈號個股沒有查的按鈕，要到列表才能查？」——查詢框原本只在列表模式。
+  // 個股模式的中欄頂端也放一顆（每次換內容都重放，因為 innerHTML 整塊會被換掉）。
+  function barHtml(v){
+    var e = String(v == null ? "" : v).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/"/g,"&quot;");
+    return '<form class="msearch" autocomplete="off"><input name="q" type="search" enterkeyhint="search" ' +
+      'placeholder="查任意股票：代號或名稱（2454／台積電／COST）" value="' + e + '">' +
+      '<button type="submit">查燈號</button></form>';
+  }
+  // exact＝使用者是從候選清單點的（已經是確定的代號）：伺服端不要再當名稱解析一次，
+  // 否則算不出燈號時會又跳回同一份候選清單，看起來就是「點了沒反應」（SPCX 那次）。
+  function loadDetail(q, exact){
     cur = q;
     document.getElementById("rtk").textContent = "看著 " + cur;
-    mid.innerHTML = '<div class="empty">正在算 ' + cur +
+    mid.innerHTML = barHtml(q) + '<div class="empty">正在算 ' + cur +
       ' 的指標與三年日線…（抓兩年資料，數秒）</div>';
-    fetch("/room/detail?ticker=" + encodeURIComponent(q))
+    fetch("/room/detail?ticker=" + encodeURIComponent(q) + (exact ? "&exact=1" : ""))
       .then(function(r){ return r.text(); })
       .then(function(h){
-        mid.innerHTML = h;
+        mid.innerHTML = barHtml(q) + h;
         var m = mid.querySelector("[data-resolved]");
         if (m && m.dataset.resolved) {
           cur = m.dataset.resolved;
+          var _qi = mid.querySelector(".msearch input"); if (_qi) _qi.value = cur;
           document.getElementById("rtk").textContent = "看著 " + cur;
           lastTk = cur;
           items.forEach(function(o){ o.classList.toggle("sel", o.dataset.tk === cur); });
@@ -928,7 +965,7 @@ ROOM_JS = r"""
         });
       })
       .catch(function(e){
-        mid.innerHTML = '<div class="warn">讀取失敗：' + e + '</div>';
+        mid.innerHTML = barHtml(q) + '<div class="warn">讀取失敗：' + e + '</div>';
       });
   }
   items.forEach(function(el){ el.addEventListener("click", function(){
@@ -1078,7 +1115,7 @@ ROOM_JS = r"""
     // 2026-09-20 Leo：「輸入個股的地方如果沒有在清單裡，則即時重算」——
     // 原本母體外＝放行表單、開新分頁到 /lookup（等於跳出戰情室）。現在一律攔下：
     // 母體內直接選；母體外就在中欄即時重算（伺服端 detail_html 處理名稱解析／查無資料）。
-    window.roomSearch = function(q){
+    window.roomSearch = function(q, exact){
       q = (q || "").trim();
       if (!q) return;
       var lo = q.toLowerCase();
@@ -1096,7 +1133,7 @@ ROOM_JS = r"""
         try { hit.scrollIntoView({block: "nearest"}); } catch(_e) {}
       } else {
         lastTk = q;
-        loadDetail(q);
+        loadDetail(q, exact);
         loadHist(q);
       }
     };
@@ -1108,7 +1145,17 @@ ROOM_JS = r"""
     // 名稱有多個候選時，候選鈕在中欄裡（事件委派，片段是後來才塞進去的）
     document.getElementById("mid").addEventListener("click", function(e){
       var b = e.target.closest && e.target.closest("[data-rpick]");
-      if (b) window.roomSearch(b.dataset.rpick);
+      if (b) window.roomSearch(b.dataset.rpick, true);
+    });
+    // 中欄頂端的查詢框（個股模式用）
+    document.getElementById("mid").addEventListener("submit", function(e){
+      var fm = e.target;
+      if (fm && fm.classList && fm.classList.contains("msearch")) {
+        e.preventDefault();
+        var qi = fm.querySelector("input");
+        window.roomSearch(qi ? qi.value : "");
+        if (qi) qi.blur();
+      }
     });
   })();
 
@@ -1437,9 +1484,9 @@ ROOM_JS = r"""
   })();
 
   (function(){
-    var saved = null;
-    try { saved = localStorage.getItem("roomMode"); } catch(e) {}
-    setMode(saved !== "stock");        // 預設列表
+    // 2026-09-21 Leo：「進出燈號一樣都先進列表」。原本記住上次的模式（roomMode），
+    // 上次停在個股，下次打開就直接是個股。改成一律列表；帶 ?ticker= 進來會由 roomSearch 切到個股。
+    setMode(true);
   })();
 
   apply();
