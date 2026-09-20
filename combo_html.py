@@ -471,64 +471,67 @@ def attach_charts(rows, limit=None):
 ROOM_URL = "https://stock.talentxtrend.com/room"
 PING_URL = ROOM_URL.rsplit("/", 1)[0] + "/ping"
 
-# 2026-09-20 Leo：「直接預設進去就是戰情室的列表；本機離線就直接寫無法使用」。
-# 公開站的「進出燈號」不再是一份列表，而是**入口頁**：探測本機 /ping（discord_bot.py，只回
-# {up:true}），在線就轉進戰情室（帶著原本的 query，例如首頁查股框的 ?ticker=），
-# 離線（逾時 2.5 秒或 fetch 失敗；電腦關機時 tunnel 回 502、沒有 CORS 標頭，fetch 會 reject）
-# 就寫「本機離線，無法使用」，不放備援列表。
+# 2026-09-20 Leo（兩次澄清後的定案）：「預設進去就是戰情室的列表；本機離線時，**需要本機的功能**
+# 不能使用（不是全部不能用）；列表備援還是需要」。
+# → docs/combo.html 仍是完整列表（備援），但最上面有一段偵測腳本：探測本機 /ping（discord_bot.py，
+#   只回 {up:true}），在線 → 立刻 location.replace 進戰情室（保留 ?ticker=）；
+#   離線（逾時 2.5 秒或 fetch 失敗；電腦關機時 tunnel 回 502、沒有 CORS 標頭，fetch 會 reject）
+#   → 顯示列表＋一條說明「哪些功能要本機開機」，查股框反灰。
+# 判定前列表先隱藏（.gatehide），避免在線的人先看到一閃而過的備援列表。
 # ⚠️ 家人也看得到這個網址：沒授權的裝置被轉進戰情室會看到「這台裝置還沒授權」頁，
 #    不會外流任何數字（門檻在伺服端，見 lookup_page.gate）。
-GATEWAY_CSS = """
-.gw{display:flex;justify-content:center;padding:56px 0 40px}
-.gwc{max-width:460px;width:100%;border:1px solid var(--line);background:var(--surface,transparent);
- padding:28px 24px;text-align:center}
-.gwt{font-size:17px;font-weight:700;color:var(--ink)}
-.gws{margin-top:10px;font-size:13px;line-height:1.7;color:var(--dim)}
-.gwb{margin-top:18px;padding:9px 18px;border:1px solid var(--cy,#22D3EE);background:var(--cy-dim,transparent);
- color:var(--cy,#22D3EE);font:inherit;font-size:13px;font-weight:700;cursor:pointer}
-.gwb[hidden]{display:none}
+GATE_CSS = """
+.gatehide{visibility:hidden}
+.gatebar{margin:12px 0 4px;padding:10px 14px;border:1px solid var(--line);
+ border-left:3px solid #EAB308;background:var(--card);font-size:13px;line-height:1.7;color:var(--muted)}
+.gatebar b{color:var(--ink)}
+.gatebar button{margin-left:8px;padding:2px 10px;border:1px solid var(--line);background:none;
+ color:var(--cy,#22D3EE);font:inherit;font-size:12px;cursor:pointer}
+.gatebar[hidden]{display:none}
+.lkoff{opacity:.5;pointer-events:none}
 """
 
-GATEWAY_JS = """<script>
+GATE_JS = """<script>
 (function(){
-  var t0=document.getElementById("gwt"), s0=document.getElementById("gws"), b0=document.getElementById("gwb");
-  function check(){
-    b0.hidden=true;
-    t0.textContent="正在連線本機戰情室…";
-    s0.textContent="";
-    var ctl=("AbortController" in window)?new AbortController():null;
-    var timer=setTimeout(function(){ if(ctl) ctl.abort(); },2500);
-    fetch("__PING__",{cache:"no-store",mode:"cors",signal:ctl?ctl.signal:undefined})
-      .then(function(r){ if(!r.ok) throw 0; return r.json(); })
-      .then(function(j){
-        clearTimeout(timer);
-        if(!j||!j.up) throw 0;
-        location.replace("__ROOM__"+location.search);
-      })
-      .catch(function(){
-        clearTimeout(timer);
-        t0.textContent="🔌 本機離線，無法使用";
-        s0.textContent="進出燈號（戰情室）、查股與軍師都跑在本機上。電腦開機後按「重新檢查」。";
-        b0.hidden=false;
-      });
+  function offline(){
+    var go=function(){
+      var w=document.getElementById("cbwrap"); if(w) w.classList.remove("gatehide");
+      var b=document.getElementById("gatebar"); if(b) b.hidden=false;
+      var q=""; try{ q=new URLSearchParams(location.search).get("ticker")||""; }catch(e){}
+      var n=document.getElementById("gatetk");
+      if(n&&q) n.textContent="你要查的「"+q+"」要等本機開機後才能查。";
+    };
+    if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",go); else go();
   }
-  b0.addEventListener("click", check);
-  check();
+  var ctl=("AbortController" in window)?new AbortController():null;
+  var timer=setTimeout(function(){ if(ctl) ctl.abort(); },2500);
+  fetch("__PING__",{cache:"no-store",mode:"cors",signal:ctl?ctl.signal:undefined})
+    .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    .then(function(j){
+      clearTimeout(timer);
+      if(!j||!j.up) throw 0;
+      location.replace("__ROOM__"+location.search);
+    })
+    .catch(function(){ clearTimeout(timer); offline(); });
 })();
-</script>""".replace("__PING__", PING_URL).replace("__ROOM__", ROOM_URL)
+</script><noscript><style>.gatehide{visibility:visible!important}</style></noscript>""".replace("__PING__", PING_URL).replace("__ROOM__", ROOM_URL)
+
+# 備援模式的查股框：外觀留著（讓人知道有這功能），但反灰不能用。
+LOOKUP_BOX_OFF = (
+    '<div class="lkbox lkoff"><input disabled placeholder="代號或名稱：2454 / 台積電 / COST">'
+    '<button disabled>查燈號</button>'
+    '<span class="lkn">需本機開機（離線備援模式）</span></div>')
 
 
-def gateway_html():
-    """docs/combo.html 的內容（入口頁）。"""
-    return (header("lamp", "進出燈號", "燈號戰情室入口", NAV, "combo")
-            + '<div class="gw"><div class="gwc">'
-              '<div class="gwt" id="gwt">正在連線本機戰情室…</div>'
-              '<div class="gws" id="gws"></div>'
-              '<button class="gwb" id="gwb" hidden>重新檢查</button>'
-              '</div></div>' + GATEWAY_JS)
+def gatebar_html(d):
+    return ('<div class="gatebar" id="gatebar" hidden>⚪ <b>本機離線</b>　·　'
+            '<b>查股、即時重算、個股即時圖表、軍師對話</b>無法使用。'
+            f'下面是今早批次的列表（資料日 {esc(d.get("date",""))}），'
+            '只有「打點成立」的個股有預先產好的圖。<span id="gatetk"></span>'
+            '<button onclick="location.reload()">重新檢查</button></div>')
 
 
-def body_html(d, in_room=False):
+def body_html(d, in_room=False, public=False):
     """頁面內容（不含表頭）。**戰情室的列表模式直接用這個**——
     統計卡／查股框／篩選籤／三個區塊／說明全部同一份，
     不會出現「公開頁跟戰情室長不一樣」。"""
@@ -537,14 +540,14 @@ def body_html(d, in_room=False):
     hit = [r for r in ok if r.get("rr") is not None and r["rr"] >= 1]
     weak = [r for r in ok if r.get("rr") is not None and r["rr"] < 1]
     notgt = [r for r in ok if r.get("rr") is None]
-    body = [f'<div class="cbwrap">']
+    body = ['<div class="cbwrap' + (' gatehide' if public else '') + '" id="cbwrap">']
     body.append('<div class="cbtop"><div class="cbstat">'
                 f'<div><b>{len(rows)}</b><span>掃描母體</span></div>'
                 f'<div><b>{len(ok)}</b><span>COMBO 成立（≥{d["combo_min"]} 燈）</span></div>'
                 f'<div><b style="color:#22C55E">{len(hit)}</b><span>⭐ 打點成立（且風報比 ≥ 1）</span></div>'
                 f'<div><b style="color:#EF4444">{sum(1 for r in ok if (r.get("rr") or 0) < 0)}</b>'
                 '<span>現價已超過共識目標</span></div></div>'
-                + (LOOKUP_BOX if in_room else '')
+                + (LOOKUP_BOX if in_room else (LOOKUP_BOX_OFF if public else ''))
                 # 2026-09-07 Leo：「從上面快捷按鍵進去是舊的」——從這頁沒有路
                 # 進戰情室，只能繞回 Sonia。放在查股框旁邊，因為**性質一樣**：
                 # 都是本機服務、都要 token、電腦沒開就進不去。
@@ -556,11 +559,11 @@ def body_html(d, in_room=False):
                 #    **人已經在戰情室，畫面上卻有一顆「前往戰情室」**。
                 # ⭐ 那正是最強的「你在公開頁」訊號，難怪兩頁分不出來。
                 #    共用產生器要能分辨自己被誰呼叫，不然「只給 A 頁的東西」會漏到 B 頁。
-                # 🔴 2026-09-20 Leo：「燈號跟進出燈號二邊跳來跳出有點錯亂」→
-                #    「直接預設進去就是戰情室的列表；本機離線就直接寫無法使用」。
-                #    所以**公開站不再有這份列表**：docs/combo.html 改成入口頁（gateway_html），
-                #    在線轉進戰情室、離線寫「無法使用」。這支 body_html 只剩兩個用途：
-                #    戰情室列表模式（in_room，含查股框）、obis 的獨立快照（不含任何連本機的東西）。
+                # 🔴 2026-09-20 Leo：「燈號跟進出燈號二邊跳來跳出有點錯亂」→ 三種呼叫方式：
+                #    · in_room：戰情室列表模式（查股框可用）
+                #    · public：docs/combo.html——偵測到本機在線會轉進戰情室，離線才看得到這份
+                #      備援列表，查股框反灰（LOOKUP_BOX_OFF）並顯示哪些功能要本機
+                #    · 都不是：obis 的獨立快照（不含任何連本機的東西）
                 + '</div>')
     body.append(filter_html())
     body.append(f'<div class="cbsec">⭐ 打點成立<small>亮 ≥{d["combo_min"]} 燈且風報比 ≥ 1，'
@@ -599,29 +602,19 @@ def body_html(d, in_room=False):
                 '⚠️ 出場仍依原規則（SuperTrend 翻空賣一半／RS 跌破 60MA 全出），'
                 '這頁只管進場時機，不是停利建議。</div>')
     body.append("</div>")
-    return NL.join(body)
+    return (gatebar_html(d) if public else '') + NL.join(body)
 
 
-def build(d):
+def build(d, public=False):
     return (header("lamp", "進出燈號",
                    f'四燈共振 × 風報比　·　資料日 {esc(d.get("date",""))}', NAV, "combo")
-            + body_html(d))
+            + body_html(d, public=public))
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("-o", "--output", default="docs/combo.html")
-    ap.add_argument("--no-charts", action="store_true", help="不產技術面圖表（快速預覽用）")
-    ap.add_argument("--chart-limit", type=int, default=None, help="最多產幾檔圖（測試用）")
-    ap.add_argument("--no-obis", action="store_true", help="不寫 obis 快照（測試用，避免覆蓋成無圖版）")
-    a = ap.parse_args()
-    if not os.path.exists(RESULT_PATH):
-        print(f"找不到 {RESULT_PATH}——先跑 python combo_scan.py")
-        return 1
-    d = json.load(io.open(RESULT_PATH, encoding="utf-8"))
-    if not a.no_charts:
-        attach_charts(d["rows"], limit=a.chart_limit)
-    html = ("<!doctype html><html lang=\"zh-Hant\"><head><meta charset=\"utf-8\">"
+def _page(d, public):
+    """完整頁面。public=True → docs/combo.html（偵測本機、離線退回備援列表）；
+    False → obis 的獨立快照（手機 Google Drive 看，不含任何連本機的東西）。"""
+    return ("<!doctype html><html lang=\"zh-Hant\"><head><meta charset=\"utf-8\">"
             "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
             "<title>進出燈號</title>"
             # 🔴 一定要載 Chart.js：technical_indicators 產的是「畫圖的程式碼」，
@@ -637,27 +630,41 @@ def main():
             "<script src=" + chr(34)
             + "https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.2.0/dist/chartjs-plugin-zoom.min.js"
             + chr(34) + "></script>"
-            "<style>" + BASE_CSS + CSS + LOOKUP_CSS + _ti_css() + "</style></head><body>"
+            "<style>" + BASE_CSS + CSS + LOOKUP_CSS + _ti_css() + (GATE_CSS if public else "")
+            + "</style></head><body>"
+            # 偵測腳本放在 body 最前面：在線時要在列表下載完之前就轉走
+            + (GATE_JS if public else "")
             # header 必須包在 .wrap 裡（首頁就是這樣做的），否則標題會貼齊視窗
             # 左緣、跟下面的內容對不齊——.wrap 才有 max-width:1100px + 置中。
-            "<div class=" + chr(34) + "wrap" + chr(34) + ">"
-            + build(d) + "</div></body></html>")
-    # 2026-09-20：公開站的 docs/combo.html 改成**入口頁**（在線轉戰情室、離線寫「無法使用」），
-    # 完整列表（含圖）只留在 obis 的獨立快照——那份是給手機 Google Drive 看的檔案，不連本機。
-    gate = ("<!doctype html><html lang=\"zh-Hant\"><head><meta charset=\"utf-8\">"
-            "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1\">"
-            "<title>進出燈號</title><style>" + BASE_CSS + GATEWAY_CSS + "</style></head><body>"
-            "<div class=" + chr(34) + "wrap" + chr(34) + ">" + gateway_html() + "</div></body></html>")
+            + "<div class=" + chr(34) + "wrap" + chr(34) + ">"
+            + build(d, public=public) + "</div></body></html>")
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("-o", "--output", default="docs/combo.html")
+    ap.add_argument("--no-charts", action="store_true", help="不產技術面圖表（快速預覽用）")
+    ap.add_argument("--chart-limit", type=int, default=None, help="最多產幾檔圖（測試用）")
+    ap.add_argument("--no-obis", action="store_true", help="不寫 obis 快照（測試用，避免覆蓋成無圖版）")
+    a = ap.parse_args()
+    if not os.path.exists(RESULT_PATH):
+        print(f"找不到 {RESULT_PATH}——先跑 python combo_scan.py")
+        return 1
+    d = json.load(io.open(RESULT_PATH, encoding="utf-8"))
+    if not a.no_charts:
+        attach_charts(d["rows"], limit=a.chart_limit)
+    html = _page(d, public=True)
     os.makedirs(os.path.dirname(a.output) or ".", exist_ok=True)
-    io.open(a.output, "w", encoding="utf-8", newline=NL).write(gate)
-    print(f"✅ 已存：{a.output}（入口頁，{len(gate):,} bytes）")
+    io.open(a.output, "w", encoding="utf-8", newline=NL).write(html)
+    print(f"✅ 已存：{a.output}（{len(html):,} bytes）")
     if a.no_obis:
         return 0
     try:
+        snap = _page(d, public=False)
         os.makedirs(OBIS, exist_ok=True)
         io.open(os.path.join(OBIS, "COMBO打點.html"), "w",
-                encoding="utf-8", newline=NL).write(html)
-        print(f"✅ 已存：{OBIS}（完整列表快照，{len(html):,} bytes）")
+                encoding="utf-8", newline=NL).write(snap)
+        print(f"✅ 已存：{OBIS}（獨立快照，{len(snap):,} bytes）")
     except Exception as e:                              # noqa: BLE001
         print(f"  [warn] obis 副本失敗：{str(e)[:70]}")
     return 0
