@@ -2602,5 +2602,47 @@
     "industry": "Oil Refining/Marketing",
     "exchange": "NYSE",
     "asof": "2026-09-19"
+  },
+  "2332": {
+    "sector": "Electronic Technology",
+    "industry": "Computer Peripherals",
+    "exchange": "TWSE",
+    "asof": "2026-09-20"
+  },
+  "2353": {
+    "sector": "Electronic Technology",
+    "industry": "Computer Processing Hardware",
+    "exchange": "TWSE",
+    "asof": "2026-09-20"
+  },
+  "4129": {
+    "sector": "Health Technology",
+    "industry": "Medical Specialties",
+    "exchange": "TPEX",
+    "asof": "2026-09-20"
+  },
+  "SSD": {
+    "sector": "Producer Manufacturing",
+    "industry": "Building Products",
+    "exchange": "NYSE",
+    "asof": "2026-09-20"
+  },
+  "2030": {
+    "sector": "Non-Energy Minerals",
+    "industry": "Steel",
+    "exchange": "TWSE",
+    "asof": "2026-09-20"
+  },
+  "6188": {
+    "sector": "Electronic Technology",
+    "industry": "Computer Peripherals",
+    "exchange": "TPEX",
+    "asof": "2026-09-21"
+  },
+  "ALNT": {
+    "sector": "Producer Manufacturing",
+    "industry": "Electrical Products",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-21"
   }
 }
