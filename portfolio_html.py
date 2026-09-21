@@ -148,6 +148,7 @@ def trades_section(main, chains):
     · <span class="src">重跑</span>＝進出燈號 9/7–9/19：那段期間每週六被重設過，存下來的紀錄不對，
       所以用當天實際讀到的燈號結果讓程式從頭逐日重跑；
       <span class="src">推算</span>＝其他倉與進出燈號 9/6 前：由每天的存檔前後比對推回，賣出價取前一次存檔的現價。
+      <span class="src">校正</span>＝產業鏈+趨勢：2026-09-22 修正「上櫃股沒被趨勢濾網檢查」後，依修正後的名單重算（股數為約略值）。
       2026-09-20 起的新交易由程式當下寫入，沒有小字。<br>
     · 這是<b>模擬倉</b>紀錄；真實下單紀錄在戰情室旁的「交易紀錄」頁，兩者不混。</div>
 </div></section>"""
@@ -156,7 +157,7 @@ def trades_section(main, chains):
   var T=__DATA__, G=__GROUPS__, st={g:0,a:"all",init:false,n:120};
   function esc(x){return String(x==null?"":x).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
   var LBL={buy:"買進",half_sell:"賣一半",full_exit:"全出",trim:"減碼",join:"調入",leave:"調出"};
-  var SRC={"重播還原":"重跑","git重建":"推算"};
+  var SRC={"重播還原":"重跑","git重建":"推算","校正重算":"校正"};
   function num(v,d){return v==null?"—":Number(v).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});}
   function pass(t){
     var g=G[st.g]; if(g.m && g.m.indexOf(t.p)<0) return false;
