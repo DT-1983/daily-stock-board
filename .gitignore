@@ -214,3 +214,5 @@ chain_reports_src/broker_digest/
 
 # 2026-09-21：同上，這支把統一投顧影音報告的個股評論（全新光電）寫死在程式碼裡。
 quanxin_2455_note.py
+
+state/paper_trades.*.before-*.json
