@@ -233,14 +233,25 @@ def trend_longs(tickers, weekly=None):
     period = "1y" if weekly else "3mo"   # 週線需要更長歷史才有足夠 K 棒
     data = yf.download(sorted(tickers), period=period, progress=False,
                        threads=False, auto_adjust=True, group_by="ticker")
-    longs = []
+    longs, unknown = [], []
     for tk in tickers:
         try:
             df = data[tk].dropna()
-            if _dir_of(df, weekly) == 1:
+            # 資料不足時 _dir_of 直接回 1（多頭）不丟例外——9/6 前那 8 檔就是走這條，
+            # 所以要在這裡先量資料夠不夠，不能只靠 except。
+            if len(_to_weekly(df) if weekly else df) < 12:
+                longs.append(tk)
+                unknown.append(tk)
+            elif _dir_of(df, weekly) == 1:
                 longs.append(tk)
         except Exception:
             longs.append(tk)
+            unknown.append(tk)
+    # 9/6 前 8 檔上櫃股被存成 .TW→抓不到→「保留」→ 3 週沒被趨勢濾網檢查過而沒人發現。
+    # 保留的行為不變，但要出聲。
+    if unknown:
+        _notify_tg(f"⚠️ 趨勢濾網：{len(unknown)} 檔抓不到週線，暫時當作多頭保留（沒被檢查過）："
+                   f"{'、'.join(unknown[:12])}" + ("…" if len(unknown) > 12 else ""))
     return sorted(longs)
 
 
