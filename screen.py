@@ -20,6 +20,9 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
 
 FINMIND = "https://api.finmindtrade.com/api/v4/data"
 TOPN = 8
+# 個別鏈的守備清單長度（預設 TOPN）。PCB/ABF 這條要同時涵蓋載板、板廠、設備廠，
+# 池子 11 檔，用預設 8 會把設備廠（大量、長廣）這種市值小的擠掉，而它們正是這條鏈的賣點。
+TOPN_BY_CHAIN = {"PCB/ABF 載板": 12}
 
 US_ETFS = {
     "AI 伺服器": ["SMH", "SOXX", "DTCR", "SKYY"],
@@ -44,6 +47,8 @@ US_MANUAL = {
     # MPWR（電源 IC）、NVTS（NVIDIA 800V 選用的 GaN/SiC）。
     "AI 材料/被動元件": ["MU"],
     "AI 電源/散熱": ["VRT", "ETN", "MPWR", "NVTS"],
+    # 第 12 條鏈（2026-09-22，Leo：「PCB 跟 ABF 一起做一條產業鏈」）。美股只有 TTM（美國最大 PCB 廠）。
+    "PCB/ABF 載板": ["TTMI"],
 }
 TW_POOL = {
     "AI 伺服器": ["2330", "2317", "2382", "6669", "3231", "3017", "3324", "2376",
@@ -69,6 +74,13 @@ TW_POOL = {
     # 台達電/光寶科（TrendForce 點名 HVDC 供應商）、貿聯（連接/線束）、健策（微流道蓋板）、
     # 奇鋐/雙鴻（液冷，也在 AI 伺服器鏈；鏈是題材分類，重疊是刻意的，見 screen.py 檔頭）。
     "AI 電源/散熱": ["2308", "2301", "3665", "3653", "3017", "3324"],
+    # 第 12 條鏈（2026-09-22）：PCB/ABF 載板——AI 讓板子層數與面積暴增（PCB 半導體化），
+    # 載板（ABF）跟著晶片變大升級，壓合／鑽孔／測試設備同步缺貨。來源：統一投顧《投其所展》公開影片
+    # 與 Leo 的指定。載板：欣興 3037、南電 8046、景碩 3189（都與 AI 伺服器／玻璃基板鏈重疊，鏈是題材分類，
+    # 重疊是刻意的）；板廠：臻鼎-KY 4958、金像電 2368、健鼎 3044、定穎投控 3715、華通 2313、騰輝-KY 6672
+    # （華通、騰輝-KY 兩檔是我補的同業，影片沒提到，可隨時增刪）；設備：大量 3167（鑽孔→光學檢測）、長廣 7795（載板壓模機）。
+    "PCB/ABF 載板": ["3037", "8046", "3189", "4958", "2368", "3044", "3715", "2313", "6672",
+                   "3167", "7795"],
 }
 NAME = {}  # code → name 快取
 
@@ -186,7 +198,7 @@ def screen(pool, metric_fn, label):
             result[chain] = []
             continue
         sc = composite(metrics)
-        top = sorted(sc, key=lambda k: sc[k], reverse=True)[:TOPN]
+        top = sorted(sc, key=lambda k: sc[k], reverse=True)[:TOPN_BY_CHAIN.get(chain, TOPN)]
         result[chain] = [{"code": c, "name": NAME.get(c, c), **metrics[c],
                           "score": round(sc[c], 2)} for c in top]
     return result
