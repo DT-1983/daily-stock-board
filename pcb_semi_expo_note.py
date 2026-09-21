@@ -68,6 +68,9 @@ CSS = """
   border-radius:10px;padding:14px 16px}
 .rpt-chart .cap{font-size:11.5px;color:var(--dim);margin-top:8px;line-height:1.6}
 .rpt-chart svg{width:100%;height:auto;display:block}
+/* 圖不要隨螢幕變大：寬螢幕上 640 寬的 viewBox 被撐到 1600px，字放大 2.5 倍、一張圖就佔滿一屏，看不到前後文 */
+.rpt-chart{max-width:640px}
+.rpt-sec p,.rpt-sec ul{max-width:900px}
 .rpt-chart .ttl{font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:6px}
 .svgwrap{overflow-x:auto}
 table.pe{width:100%;border-collapse:collapse;font-size:12.5px;margin:6px 0}
