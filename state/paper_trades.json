@@ -9658,5 +9658,56 @@
 "entry_price": 79.21,
 "pnl_usd": -2.94,
 "pnl_pct": -3.46
+},
+{
+"date": "2026-09-21",
+"portfolio": "產業鏈+趨勢",
+"action": "join",
+"ticker": "3055.TW",
+"shares": 28.7939,
+"price": 188.0,
+"price_usd": 5.875,
+"amount_usd": 169.16,
+"reason": "週線 SuperTrend 翻多（綠燈名單新增）",
+"src": "live"
+},
+{
+"date": "2026-09-21",
+"portfolio": "進出燈號",
+"action": "full_exit",
+"ticker": "BAYRY",
+"shares": 70.4462,
+"price": 13.76,
+"price_usd": 13.76,
+"amount_usd": 969.34,
+"reason": "RS60 跌破自身 60MA（-2.29%）→ 全出",
+"src": "live",
+"entry_price": 14.19,
+"pnl_usd": -30.29,
+"pnl_pct": -3.03
+},
+{
+"date": "2026-09-21",
+"portfolio": "進出燈號",
+"action": "buy",
+"ticker": "COP",
+"shares": 7.2441,
+"price": 131.83,
+"price_usd": 131.83,
+"amount_usd": 954.99,
+"reason": "打點：4 燈亮、風報比 5.02",
+"src": "live"
+},
+{
+"date": "2026-09-21",
+"portfolio": "進出燈號",
+"action": "buy",
+"ticker": "6531.TW",
+"shares": 0.4846,
+"price": 948.0,
+"price_usd": 29.625,
+"amount_usd": 14.36,
+"reason": "打點：4 燈亮、風報比 3.95",
+"src": "live"
 }
 ]
