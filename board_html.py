@@ -53,6 +53,7 @@ ICONS = {
     "關鍵金屬/原物料": '<path d="M6 3h12l4 6-10 12L2 9Z"/><path d="M11 3 8 9l4 12 4-12-3-6"/><path d="M2 9h20"/>',
     "AI 材料/被動元件": '<rect x="3" y="4" width="18" height="6" rx="1"/><rect x="3" y="14" width="18" height="6" rx="1"/><path d="M8 4v6M16 14v6"/>',
     "AI 電源/散熱": '<path d="M9 2v6M15 2v6M7 8h10v4a5 5 0 0 1-10 0z"/><path d="M12 17v5"/>',
+    "PCB/ABF 載板": '<path d="M12 3 3 8l9 5 9-5z"/><path d="m3 12 9 5 9-5"/><path d="m3 16 9 5 9-5"/>',
 }
 SIG = {"🟢": ("buy", "買進", "#22C55E"), "🔴": ("sell", "賣出", "#EF4444"),
        "🔵": ("hold", "持有", "#3B82F6"), "🟡": ("watch", "觀望", "#EAB308"),
