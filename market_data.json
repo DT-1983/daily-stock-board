@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-21 13:08",
+ "updated": "2026-09-21 15:40",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,16 +38,16 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "09/21",
-   "close": 47710.05,
-   "chg_pct": 1.12
+   "close": 47718.84,
+   "chg_pct": 1.14
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/18",
-   "close": 31.85,
-   "chg_pct": -0.03
+   "date": "09/21",
+   "close": 31.74,
+   "chg_pct": -0.34
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "三星HBM4大擴產 明年產量至少翻倍、產能增近四成",
+   "title": "全球油輪荒來了！ 全球超級油輪運力告急　日租金破百萬美元創史高　一桶油光運費就要26美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6611543",
-   "ts": "09/21 12:55"
+   "url": "https://news.cnyes.com/news/id/6611769",
+   "ts": "09/21 15:40"
   },
   {
-   "title": "廢鋼行情走揚刺激鋼筋看漲買氣 豐興調高鋼筋盤價",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6611835",
-   "ts": "09/21 12:50"
-  },
-  {
-   "title": "川習會前「稀土牌」再現 中國對美磁鐵出口銳減21%",
+   "title": "伊朗撂狠話：美若重啟攻擊 所有提供援助國都將遭報復",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6611729",
-   "ts": "09/21 12:44"
+   "url": "https://news.cnyes.com/news/id/6611946",
+   "ts": "09/21 15:40"
   },
   {
-   "title": "信紘科(6667)大單開始入帳！在手訂單230億元、8月營收創新高、訂單看到2028年，毛利率能守住嗎？",
+   "title": "聯光通(4903)不靠傳統光纜了！8月營收腰斬為何還噴？儲能扛大樑、AI光纖拚翻身",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6611842",
-   "ts": "09/21 12:30"
+   "url": "https://news.cnyes.com/news/id/6611958",
+   "ts": "09/21 15:30"
   },
   {
-   "title": "欣銓(3264)第三季成長門檻曝光！AI ASIC需求強，9月營收只要超過14億元，第三季可望達成雙位數季增",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6611841",
-   "ts": "09/21 12:30"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：仁寶(2324-TW)EPS預估上修至2.27元，預估目標價為40.65元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6611834",
-   "ts": "09/21 12:10"
-  },
-  {
-   "title": "〈焦點股〉富驊業務多點開花2027年營運看旺 跳空漲停",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6611811",
-   "ts": "09/21 11:58"
-  },
-  {
-   "title": "美軍要動手了？五角大廈「披薩指數」飆升",
+   "title": "還沒動工就惹官司 馬斯克Terafab遭要求停用名稱",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6611815",
-   "ts": "09/21 11:57"
+   "url": "https://news.cnyes.com/news/id/6611901",
+   "ts": "09/21 15:20"
   },
   {
-   "title": "首超GPU！小摩：2027年ASIC/XPU佔比54% 今年客製化AI ASIC規模約600-700億美元",
+   "title": "越南股市正式納入富時羅素新興市場指數 預計引領60億美元資金流入",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6611724",
-   "ts": "09/21 11:40"
+   "url": "https://news.cnyes.com/news/id/6611886",
+   "ts": "09/21 15:20"
   },
   {
-   "title": "官方統計：受戰爭影響 伊朗經濟萎縮10%",
+   "title": "中嘉寬頻導入全光網路及AI影像辨識服務 擴大智慧城市應用新價值",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6611913",
+   "ts": "09/21 15:18"
+  },
+  {
+   "title": "DRAM第三季最高漲30% 雲端巨頭提前接受明年Q1再漲價",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6611795",
-   "ts": "09/21 11:39"
+   "url": "https://news.cnyes.com/news/id/6611871",
+   "ts": "09/21 15:10"
+  },
+  {
+   "title": "台股衝三個月新高 外資加碼203億、三大法人聯手買超470.37億元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6611935",
+   "ts": "09/21 14:59"
+  },
+  {
+   "title": "〈台股盤後〉ASIC點火聯發科飆新天價 漲538點收47718點創近3個月高",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6611898",
+   "ts": "09/21 14:12"
+  },
+  {
+   "title": "群創(3481)車用占比衝近4成，FOPLP出貨暴增！為何獲利還得看面板臉色？",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6611896",
+   "ts": "09/21 14:01"
   }
  ],
  "inst": {
-  "date": "09/18",
-  "total_yi": 1194.5,
-  "foreign_yi": 869.9,
-  "trust_yi": 81.5
+  "date": "09/21",
+  "total_yi": 470.4,
+  "foreign_yi": 203.8,
+  "trust_yi": 39.3
  }
 }
