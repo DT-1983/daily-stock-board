@@ -389,9 +389,13 @@ def recent_flow(code, days=5):
     重跑一次的用法一致。
     """
     global _RECENT_FLOW_CACHE
-    if _RECENT_FLOW_CACHE is None:
-        _RECENT_FLOW_CACHE = (_load(HIST_PATH, {}), _load(HIST_TRUST_PATH, {}))
-    hist, hist_trust = _RECENT_FLOW_CACHE
+    code = str(code).split(".")[0]          # 歷史檔的鍵是純代號；1815.TWO 這種帶後綴的會查不到
+    # 2026-09-22：快取改用檔案修改時間當鍵。原本「同一個 process 只讀一次」對一次性腳本沒問題，
+    # 但戰情室（discord_bot 常駐）也會呼叫——bot 不重啟的話，每天更新的籌碼歷史檔永遠讀不到新的。
+    mt = tuple(os.path.getmtime(p) if os.path.exists(p) else 0 for p in (HIST_PATH, HIST_TRUST_PATH))
+    if _RECENT_FLOW_CACHE is None or _RECENT_FLOW_CACHE[0] != mt:
+        _RECENT_FLOW_CACHE = (mt, _load(HIST_PATH, {}), _load(HIST_TRUST_PATH, {}))
+    _, hist, hist_trust = _RECENT_FLOW_CACHE
     all_days = sorted(set(hist) | set(hist_trust))
     have_data = [d for d in all_days if hist.get(d) or hist_trust.get(d)]
     out = []

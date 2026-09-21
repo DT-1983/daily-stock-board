@@ -537,9 +537,51 @@ def detail_html(ticker, exact=False):
     except Exception as e:                                  # noqa: BLE001
         tech = (f'<div class="warn">技術圖產生失敗（上面的數字仍然有效）：'
                 f'{esc(str(e)[:140])}</div>')
+    tech = _with_chip_tab(r["tk"], tech)
     # data-resolved：前端靠它把「目前看著的標的」更新成解析後的代號（軍師欄的「這一檔」要對得上）
     marker = f'<span data-resolved="{esc(r["tk"])}" hidden></span>'
     return marker + pre_note + head + intro + '<div class="dcards">' + cards + "</div>" + tech
+
+
+def _with_chip_tab(tk, tech):
+    """技術面下方加「技術分析／籌碼面」切換（2026-09-22 Leo：「個股的籌碼面…可以做在燈號頁裡?」）。
+
+    籌碼圖本來就有（chip_scan.chart_html，進出燈號舊表格的展開列用過），戰情室個股頁沒接。
+    只有台股且歷史檔查得到資料才加分頁——美股/查無資料就原樣回技術面，不放永遠空的分頁。
+    籌碼圖預設隱藏，要**第一次顯示時才畫**（display:none 建圖會量到 0 寬），
+    且每次載入都把 chip_drawn 旗標清掉：同一檔重開時 canvas 是新的，旗標若殘留會不畫而空白。
+    """
+    if not tk[:1].isdigit() or not tech:
+        return tech
+    code = tk.split(".")[0]
+    uid = "rm_" + "".join(c if c.isalnum() else "_" for c in code)
+    try:
+        import chip_scan
+        chip = chip_scan.chart_html(code, uid=uid)
+    except Exception:                                       # noqa: BLE001
+        chip = ""
+    if not chip:
+        return tech
+    Q = chr(34)
+    return (
+        f'<div class="tvtabs" id="{uid}_box"><div class="seg" role="group" aria-label="切換視角">'
+        '<button data-tv="tech" aria-pressed="true">技術分析</button>'
+        '<button data-tv="chip" aria-pressed="false">籌碼面</button></div></div>'
+        f'<div id="{uid}_tech">{tech}</div>'
+        f'<div id="{uid}_chip" style="display:none">{chip}</div>'
+        '<script>(function(){'
+        f'window.chip_drawn_{uid}=false;'
+        f'var box=document.getElementById({Q}{uid}_box{Q}),'
+        f'tech=document.getElementById({Q}{uid}_tech{Q}),'
+        f'chip=document.getElementById({Q}{uid}_chip{Q});'
+        'box.querySelectorAll("button[data-tv]").forEach(function(b){'
+        'b.addEventListener("click",function(){'
+        'box.querySelectorAll("button[data-tv]").forEach(function(x){'
+        'x.setAttribute("aria-pressed",x===b?"true":"false");});'
+        'var c=b.dataset.tv==="chip";'
+        'tech.style.display=c?"none":"";chip.style.display=c?"":"none";'
+        f'if(c&&window.chip_draw_{uid}){{window.chip_draw_{uid}();}}'
+        '});});})();</script>')
 
 
 # ── 右欄：軍師 ────────────────────────────────────────────────────────
