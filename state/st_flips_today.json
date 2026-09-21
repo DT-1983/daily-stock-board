@@ -1,6 +1,70 @@
 {
-"date": "2026-09-20",
+"date": "2026-09-21",
 "flips_hold": [],
-"flips_watch": [],
-"ai_alerts": []
+"flips_watch": [
+{
+"code": "6664",
+"name": "群翊",
+"word": "🔴→🟢 翻多",
+"dir": 1
+}
+],
+"ai_alerts": [
+{
+"chain": "矽光子/光通訊",
+"market": "US",
+"sig": "🟢",
+"code": "SWKS",
+"name": "Skyworks Solutions Inc",
+"reason": "觀望→買進"
+},
+{
+"chain": "太陽能",
+"market": "US",
+"sig": "🔴",
+"code": "ENPH",
+"name": "Enphase Energy Inc",
+"reason": "觀望→賣出"
+},
+{
+"chain": "低軌衛星",
+"market": "US",
+"sig": "🔴",
+"code": "ASTS",
+"name": "AST SpaceMobile Inc Ordinary Shares - Class A",
+"reason": "觀望→賣出"
+},
+{
+"chain": "機器人",
+"market": "US",
+"sig": "🔴",
+"code": "MP",
+"name": "MP Materials Corp Ordinary Shares - Class A",
+"reason": "觀望→賣出"
+},
+{
+"chain": "AI 電力/核能",
+"market": "US",
+"sig": "🔴",
+"code": "CEG",
+"name": "Constellation Energy Corp",
+"reason": "觀望→賣出"
+},
+{
+"chain": "太陽能",
+"market": "TW",
+"sig": "🟢",
+"code": "5483",
+"name": "中美晶",
+"reason": "觀望→買進"
+},
+{
+"chain": "太陽能",
+"market": "TW",
+"sig": "🟢",
+"code": "6182",
+"name": "合晶",
+"reason": "觀望→買進"
+}
+]
 }

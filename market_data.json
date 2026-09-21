@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-20 23:24",
+ "updated": "2026-09-21 08:46",
  "indices": [
   {
    "sym": "^GSPC",
@@ -45,9 +45,9 @@
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/20",
-   "close": 31.76,
-   "chg_pct": -0.28
+   "date": "09/21",
+   "close": 31.82,
+   "chg_pct": -0.1
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "〈台股風向球〉升息利空出盡站回4萬7 惟提防中秋連假前賣壓",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6611485",
-   "ts": "09/20 23:06"
-  },
-  {
-   "title": "集團作帳行情助攻 南亞、台塑化季底有望進行補漲",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6611387",
-   "ts": "09/20 23:02"
-  },
-  {
-   "title": "親子客首選 長榮航連11年獲評五星航空「家庭友善航空公司」拿世界第一",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6611347",
-   "ts": "09/20 23:00"
-  },
-  {
-   "title": "俄羅斯首都莫斯科 遭遇有史以來最大規模襲擊",
+   "title": "卡達：美國希望與伊朗達成協議",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6611476",
-   "ts": "09/20 22:25"
+   "url": "https://news.cnyes.com/news/id/6611617",
+   "ts": "09/21 08:46"
   },
   {
-   "title": "本週操盤筆記：全球PMI、歐亞非多國央行利率決議、川習二會登場",
+   "title": "IBS最新預測：Token日耗數千兆、DRAM衝破上兆美元 半導體陷製程「先進缺、成熟剩」的超級短缺",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6610786",
-   "ts": "09/20 21:50"
+   "url": "https://news.cnyes.com/news/id/6611447",
+   "ts": "09/21 08:40"
   },
   {
-   "title": "胡塞嗆沙國升級行動將遭更強反擊！利雅德急向多國求援  專家：中東油運波動率短期下不來",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6611388",
-   "ts": "09/20 21:30"
-  },
-  {
-   "title": "高盛喊年底「全資產上漲」行情！油價、美國期中選舉成最大變數",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6611294",
-   "ts": "09/20 21:20"
-  },
-  {
-   "title": "馬斯克看旺AI紅利 預言美國明年GDP成長翻倍至4％",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6611097",
-   "ts": "09/20 21:10"
-  },
-  {
-   "title": "台灣最大主動債ETF熱度不墜！00984D規模狂飆6.5倍 10/5第6次配息",
+   "title": "中秋連假將到 台積電、聯發科、台達電、鴻海、廣達、緯創要先賣一趟?",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6611210",
-   "ts": "09/20 10:05"
+   "url": "https://news.cnyes.com/news/id/6611636",
+   "ts": "09/21 08:38"
   },
   {
-   "title": "成本推升及內需消費平淡 台系家電廠多軌迎戰下半年",
+   "title": "印度「SEMICON India 2026」峰會揭幕，官方宣布半導體2.0計畫擴大投資至104億美元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6611633",
+   "ts": "09/21 08:30"
+  },
+  {
+   "title": "中國DRAM追趕腳步加快長鑫科技G5平台量產、單片晶圓Die數增逾50%",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6611632",
+   "ts": "09/21 08:30"
+  },
+  {
+   "title": "多重利空打擊！？真金不怕火煉，不要錯賣！這個『低基期AI產業』即將發動！",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6610618",
-   "ts": "09/20 09:37"
+   "url": "https://news.cnyes.com/news/id/6610070",
+   "ts": "09/21 08:30"
+  },
+  {
+   "title": "沙國首都敏感目標遭襲 胡塞同意不與美國交戰",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6611542",
+   "ts": "09/21 08:21"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：瑞昱(2379-TW)EPS預估上修至31.91元，預估目標價為750元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6611575",
+   "ts": "09/21 08:11"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：世芯-KY(3661-TW)EPS預估上修至139.83元，預估目標價為6000元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6611574",
+   "ts": "09/21 08:11"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：義隆(2458-TW)目標價調降至160元，幅度約8.05%",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6611573",
+   "ts": "09/21 08:10"
   }
  ],
  "inst": {
