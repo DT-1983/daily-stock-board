@@ -2644,5 +2644,23 @@
     "industry": "Electrical Products",
     "exchange": "NASDAQ",
     "asof": "2026-09-21"
+  },
+  "3167": {
+    "sector": "Producer Manufacturing",
+    "industry": "Industrial Machinery",
+    "exchange": "TWSE",
+    "asof": "2026-09-22"
+  },
+  "4958": {
+    "sector": "Electronic Technology",
+    "industry": "Electronic Components",
+    "exchange": "TWSE",
+    "asof": "2026-09-22"
+  },
+  "7795": {
+    "sector": "Producer Manufacturing",
+    "industry": "Industrial Machinery",
+    "exchange": "TWSE",
+    "asof": "2026-09-22"
   }
 }
