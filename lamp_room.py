@@ -558,8 +558,7 @@ def right_html():
     """
     from board_theme import esc
     btns = "".join(
-        f'<button class="rb{" on" if i == 0 else ""}" data-r="{esc(k)}">'
-        f'{esc(k)}<span>{esc(v)}</span></button>'
+        f'<button class="rb{" on" if i == 0 else ""}" data-r="{esc(k)}">{esc(k)}</button>'
         for i, (k, v) in enumerate(ROLES))
     return (
         '<aside class="pane right" id="right" hidden>'
@@ -568,10 +567,13 @@ def right_html():
         '<button class="x" id="rclose">✕</button></div>'
         # 範圍：這一檔 / 全部持股。⚠️ 兩個範圍的對話是**分開記**的，
         # 不然「全部持股的風險」會接到「某一檔的風險」那條線上。
-        '<div class="scope"><button class="sb on" id="sc-one">這一檔</button>'
-        '<button class="sb" id="sc-all">全部持股</button>'
-        '<span class="scn" id="scnote"></span></div>'
-        f'<div class="roles">{btns}</div>'
+        # 2026-09-21 Leo：「軍師這欄太擠了，把軍議那一排跟這一檔排成一排」——
+        # 範圍鈕與五位軍師合成同一排（角色副標「四位依序／找材料…」拿掉，那是佔高度的主因）；
+        # 說明字 scnote 移到下一行，沒內容時不佔位。
+        '<div class="rrow"><div class="scope"><button class="sb on" id="sc-one">這一檔</button>'
+        '<button class="sb" id="sc-all" title="全部持股">全部</button></div>'
+        f'<div class="roles">{btns}</div></div>'
+        '<div class="scn" id="scnote"></div>'
         # 全本的範例問題（學 阿福 的提示）。要給**具體問句**，
         # 使用者才知道這裡問得到什麼；不是寫「可以問全部」然後讓他自己想。
         '<div class="quick" id="quick" hidden>'
@@ -765,12 +767,13 @@ body{margin:0}
 .datewarn{padding:6px 14px;font-size:11px;color:var(--dim);
  border-bottom:1px solid var(--line)}
 .datewarn b{color:#FCD34D}
-.roles{display:flex;flex-wrap:wrap;gap:5px;padding:9px 12px;
- border-bottom:1px solid var(--line)}
-.rb{font:inherit;font-size:11.5px;padding:4px 9px;border-radius:0;cursor:pointer;
+.roles{display:flex;flex-wrap:wrap;gap:4px;padding:0}
+.rb{font:inherit;font-size:11.5px;padding:4px 6px;border-radius:0;cursor:pointer;
  border:1px solid var(--hud,#16304A);background:transparent;color:var(--dim);
- display:flex;flex-direction:column;align-items:center;line-height:1.35}
-.rb span{font-size:9.5px;opacity:.75}
+ white-space:nowrap;line-height:1.35}
+/* 範圍鈕＋五位軍師同一排（窄到放不下才換行） */
+.rrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;padding:9px 12px;
+ border-bottom:1px solid var(--line)}
 .rb.on{background:var(--cy-dim,rgba(34,211,238,.10));border-color:var(--cy,#22D3EE);
  color:var(--cy,#22D3EE)}
 .msgs{flex:1;overflow:auto;padding:10px 12px;display:flex;flex-direction:column;gap:8px}
@@ -813,13 +816,14 @@ body{margin:0}
 .mb.on{background:var(--cy-dim,rgba(34,211,238,.10));color:var(--cy,#22D3EE)}
 @media(max-width:900px){.tablepane{padding:0 8px 14px}}
 /* 範圍切換（2026-09-07）：這一檔 / 全部持股 */
-.scope{display:flex;gap:5px;align-items:center;padding:8px 12px 0}
-.sb{font:inherit;font-size:11.5px;padding:3px 11px;border-radius:0;cursor:pointer;
+.scope{display:flex;gap:4px;align-items:center;padding:0}
+.sb{font:inherit;font-size:11.5px;line-height:1.35;padding:4px 7px;border-radius:0;cursor:pointer;white-space:nowrap;
  border:1px solid var(--hud,#16304A);background:transparent;color:var(--dim);
  letter-spacing:.03em}
 .sb.on{background:var(--cy-dim,rgba(34,211,238,.10));border-color:var(--cy,#22D3EE);
  color:var(--cy,#22D3EE);font-weight:600}
-.scn{font-size:10.5px;color:var(--dim);margin-left:auto;text-align:right}
+.scn{font-size:10.5px;color:var(--dim);padding:5px 12px 0;text-align:left}
+.scn:empty{display:none}
 .rb[disabled]{opacity:.35;cursor:not-allowed}
 .quick{display:flex;flex-wrap:wrap;gap:5px;padding:8px 12px 0}
 .qk{font:inherit;font-size:11px;padding:3px 9px;border-radius:0;cursor:pointer;
