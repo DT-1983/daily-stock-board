@@ -111,13 +111,24 @@ def is_tw(tk):
 
 
 def get_fx():
-    """USD/TWD（1 美元 = X 台幣），抓不到用備援。"""
+    """USD/TWD（1 美元 = X 台幣），抓不到用備援（並推 TG，不能靜默）。
+
+    2026-09-22 查出：GitHub Actions 上這個函式從 8/18 起每天都回備援 32.0（本機才有真實匯率）。
+    真因不是 Yahoo 擋 IP，是 pandas 3 對「單一元素的 Series 轉 float」直接丟 TypeError——
+    yfinance 1.x 即使只抓一檔也回 (Price, Ticker) 兩層欄位，`d["Close"]` 是 DataFrame，
+    `.iloc[-1]` 是 Series，本機 pandas 2.x 只警告、Actions 裝到 pandas 3 就掛，
+    被下面的 except 吞掉、回 32.0，五週沒人發現。改用 Ticker.history()（單層欄位、回純數值）。
+    """
     try:
-        d = yf.download("TWD=X", period="5d", progress=False, threads=False)
-        v = float(d["Close"].dropna().iloc[-1])
-        return v if 25 < v < 40 else FX_FALLBACK
-    except Exception:
-        return FX_FALLBACK
+        c = yf.Ticker("TWD=X").history(period="5d")["Close"].dropna()
+        v = float(c.iloc[-1])
+        if 25 < v < 40:
+            return v
+        why = f"讀到不合理的值 {v}"
+    except Exception as e:                                  # noqa: BLE001
+        why = f"{type(e).__name__}: {str(e)[:80]}"
+    _notify_tg(f"⚠️ 模擬倉抓不到匯率（{why}），暫用備援 {FX_FALLBACK}——台股部位的美元淨值會偏離真實。")
+    return FX_FALLBACK
 
 
 def to_usd(tk, native, fx):
@@ -784,7 +795,50 @@ def _all_tickers(state):
     return s
 
 
+def _recent_split(tk, days=30):
+    """近 days 天內該股的分割比率（2:1 → 2.0）；沒有或查不到回 None。"""
+    try:
+        import pandas as _pd
+        sp = yf.Ticker(tk).splits
+        if not len(sp):
+            return None
+        sp = sp[sp.index >= _pd.Timestamp.now(tz=sp.index.tz) - _pd.Timedelta(days=days)]
+        sp = sp[sp != 0]
+        return float(sp.iloc[-1]) if len(sp) else None
+    except Exception:                                       # noqa: BLE001
+        return None
+
+
+def _apply_splits(state, prices):
+    """股票分割／反分割：股數按比率調整、進場價反向調整（總市值不變）。
+
+    2026-09-22 查出：APH 9/3 二比一分割，模擬倉股數沒動、現價腰斬，持有它的倉一夜少了一半的部位
+    （機器人倉 1/16 → 淨值少 3%），而且看起來只像「跌很多」（同 [[otc_suffix_coverage_gap]] 的偽裝）。
+    偵測：現價／上次記的現價 < 0.62 或 > 1.6 才去查分割（一般不會有這種單日變動，查的次數極少），
+    查到且比率吻合才動；查不到（真的崩盤）就照舊不動。"""
+    seen = {}
+    for name, pf in state["portfolios"].items():
+        for tk, h in pf["holdings"].items():
+            p, cur = prices.get(tk), h.get("cur")
+            if not (p and cur):
+                continue
+            ratio = p / cur
+            if 0.62 < ratio < 1.6:
+                continue
+            if tk not in seen:
+                seen[tk] = _recent_split(tk)
+            r = seen[tk]
+            if not r or abs(r * ratio - 1) > 0.15:
+                continue
+            h["sh"] = round(h["sh"] * r, 4)
+            for k in ("en", "eu", "exp"):
+                if h.get(k):
+                    h[k] = round(h[k] / r, 4)
+            _notify_tg(f"🔧 {tk} 分割 {r:g} 比 1（現價 {cur:g}→{p:g}）：{name} 倉股數 ×{r:g}、進場價 ÷{r:g}，市值不變。")
+
+
 def update_nav(state, prices, fx, date):
+    _apply_splits(state, prices)
     for name, pf in state["portfolios"].items():
         _check_basis(pf, name, fx)          # 幣別一致性，只警告不自動改
         _refresh_current(pf, prices, fx)
@@ -840,6 +894,7 @@ def _buffett_hold_until_expensive(pf, picks, prices):
 def rebalance(state, hmap, prices, fx, date, only=None):
     """only=None 全倉調；only={名稱,...} 只調指定倉（其餘不動）。"""
     _trades = []
+    _apply_splits(state, prices)
     for name, pf in state["portfolios"].items():
         if only and name not in only:
             continue
