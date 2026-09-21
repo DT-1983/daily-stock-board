@@ -1,37 +1,37 @@
 {
- "updated": "2026-09-21 15:40",
+ "updated": "2026-09-21 21:58",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "09/18",
-   "close": 7650.5,
-   "chg_pct": 0.17
+   "date": "09/21",
+   "close": 7705.53,
+   "chg_pct": 0.72
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "09/18",
-   "close": 26522.54,
-   "chg_pct": 0.39
+   "date": "09/21",
+   "close": 26845.63,
+   "chg_pct": 1.22
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "09/18",
-   "close": 51682.64,
-   "chg_pct": -0.18
+   "date": "09/21",
+   "close": 51794.93,
+   "chg_pct": 0.22
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "09/18",
-   "close": 11921.69,
-   "chg_pct": 2.78
+   "date": "09/21",
+   "close": 12199.98,
+   "chg_pct": 2.33
   },
   {
    "sym": "^TWII",
@@ -46,85 +46,85 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/21",
-   "close": 31.74,
-   "chg_pct": -0.34
+   "close": 31.72,
+   "chg_pct": -0.41
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "09/18",
-   "close": 5.0,
+   "date": "09/21",
+   "close": 4.97,
    "fmt": "yield",
-   "chg_bp": 5.1
+   "chg_bp": -3.1
   }
  ],
  "news": [
   {
-   "title": "全球油輪荒來了！ 全球超級油輪運力告急　日租金破百萬美元創史高　一桶油光運費就要26美元",
+   "title": "盤中速報 - 費城半導體大漲2%，報12159.98點",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6611769",
-   "ts": "09/21 15:40"
+   "url": "https://news.cnyes.com/news/id/6612376",
+   "ts": "09/21 21:54"
   },
   {
-   "title": "伊朗撂狠話：美若重啟攻擊 所有提供援助國都將遭報復",
+   "title": "盤中速報 - Meta平台(META-US)大漲5.04%，報698.72美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6611946",
-   "ts": "09/21 15:40"
+   "url": "https://news.cnyes.com/news/id/6612374",
+   "ts": "09/21 21:47"
   },
   {
-   "title": "聯光通(4903)不靠傳統光纜了！8月營收腰斬為何還噴？儲能扛大樑、AI光纖拚翻身",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6611958",
-   "ts": "09/21 15:30"
-  },
-  {
-   "title": "還沒動工就惹官司 馬斯克Terafab遭要求停用名稱",
+   "title": "盤中速報 - 莫德納(MRNA-US)大漲5.72%，報162.85美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6611901",
-   "ts": "09/21 15:20"
+   "url": "https://news.cnyes.com/news/id/6612373",
+   "ts": "09/21 21:47"
   },
   {
-   "title": "越南股市正式納入富時羅素新興市場指數 預計引領60億美元資金流入",
+   "title": "盤中速報 - 埃森哲(ACN-US)大漲5.35%，報191美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6611886",
-   "ts": "09/21 15:20"
+   "url": "https://news.cnyes.com/news/id/6612372",
+   "ts": "09/21 21:47"
   },
   {
-   "title": "中嘉寬頻導入全光網路及AI影像辨識服務 擴大智慧城市應用新價值",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6611913",
-   "ts": "09/21 15:18"
-  },
-  {
-   "title": "DRAM第三季最高漲30% 雲端巨頭提前接受明年Q1再漲價",
+   "title": "盤中速報 - 超微電腦(SMCI-US)大漲5.07%，報41.07美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6611871",
-   "ts": "09/21 15:10"
+   "url": "https://news.cnyes.com/news/id/6612371",
+   "ts": "09/21 21:47"
   },
   {
-   "title": "台股衝三個月新高 外資加碼203億、三大法人聯手買超470.37億元",
+   "title": "台燿科技(6274)納入FTSE富時全球指數，市值突破4,100億元新台幣",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6611935",
-   "ts": "09/21 14:59"
+   "url": "https://news.cnyes.com/news/id/6612351",
+   "ts": "09/21 21:30"
   },
   {
-   "title": "〈台股盤後〉ASIC點火聯發科飆新天價 漲538點收47718點創近3個月高",
+   "title": "鋼鐵輸歐配額「黑箱」？ 經濟部：8成業者沿用舊制 自由配額維持20%",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6611898",
-   "ts": "09/21 14:12"
+   "url": "https://news.cnyes.com/news/id/6612316",
+   "ts": "09/21 20:54"
   },
   {
-   "title": "群創(3481)車用占比衝近4成，FOPLP出貨暴增！為何獲利還得看面板臉色？",
+   "title": "鉅亨速報 - Factset 最新調查：緯穎(6669-TW)EPS預估上修至121.02元，預估目標價為2739.04元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6611896",
-   "ts": "09/21 14:01"
+   "url": "https://news.cnyes.com/news/id/6612278",
+   "ts": "09/21 20:11"
+  },
+  {
+   "title": "台股挑戰4萬8 外資續買203億元狂掃友達逾23萬張",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6612256",
+   "ts": "09/21 19:49"
+  },
+  {
+   "title": "抗關稅加碼海外參展補助規模飆3倍！經部助攻3400家業者搶國外訂單 這3大產業最受惠",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6612202",
+   "ts": "09/21 19:27"
   }
  ],
  "inst": {
   "date": "09/21",
-  "total_yi": 470.4,
-  "foreign_yi": 203.8,
-  "trust_yi": 39.3
+  "total_yi": 478.0,
+  "foreign_yi": 204.8,
+  "trust_yi": 46.0
  }
 }
