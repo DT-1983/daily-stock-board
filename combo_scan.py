@@ -640,7 +640,11 @@ def _check_staleness(rows, max_stale_frac=0.15):
     asofs = [r.get("asof") for r in rows if r.get("asof")]
     if len(asofs) < 20:          # 樣本太少判斷不出「大範圍」，不強行下結論
         return False
-    latest = max(asofs)
+    # 週末日期不可當基準（2026-09-21：台股快取曾混進 Yahoo 的假週日列，max 變成週日，
+    # 把資料正常的美股全判成過期）。price_store 已擋，這裡再防一層。
+    import datetime as _dt
+    wd = [a for a in asofs if _dt.date.fromisoformat(a).weekday() < 5]
+    latest = max(wd) if wd else max(asofs)
     stale = [r for r in rows if r.get("asof") and r["asof"] != latest]
     frac = len(stale) / len(rows) if rows else 0
     if frac < max_stale_frac:
