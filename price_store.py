@@ -73,6 +73,23 @@ def _path(ticker):
     return os.path.join(STORE_DIR, f"{safe}.pkl")
 
 
+def _drop_weekend(df, ticker):
+    """台股沒有週末交易，把週六日的列拿掉。
+
+    2026-09-21：Yahoo 在週末查台股（.TW/.TWO/^TWII）會多回一列「週日」的假 K 棒（內容＝週五收盤）。
+    它被寫進快取後：① 台股資料日變成週日，combo_scan 的新鮮度檢查把 142 檔美股誤判成過期、
+    BoardAnalyzeDaily 失敗（rc=1）② 台股指標多算了一根不存在的平盤 K 棒。
+    只處理台股：美股本來就不會有週末列；台股補班日交易所不開盤，所以沒有例外。"""
+    t = str(ticker).upper()
+    if not (t.endswith((".TW", ".TWO")) or t.startswith("^TW") or t.isdigit()):
+        return df
+    try:
+        keep = df.index.dayofweek < 5
+        return df if keep.all() else df[keep]
+    except Exception:                                       # noqa: BLE001
+        return df
+
+
 def _read_cached(ticker):
     p = _path(ticker)
     if not os.path.exists(p):
@@ -88,7 +105,7 @@ def _read_cached(ticker):
         # 才會消失，而 STALE_HOURS 內不會重抓。見 _download 那邊的說明。
         if "Close" in df.columns:
             df = df.dropna(subset=["Close"])
-        return df
+        return _drop_weekend(df, ticker)
     except Exception:
         return None
 
@@ -107,6 +124,7 @@ def _write_cached(ticker, df):
         if df.index.tz is not None:
             df = df.copy()
             df.index = df.index.tz_localize(None)
+        df = _drop_weekend(df, ticker)
         old = _read_cached(ticker)
         if old is not None and len(old) > len(df):
             merged = pd.concat([df, old]).sort_index()
@@ -306,7 +324,7 @@ def get_ohlc(tickers, period="3y", refresh=True, force=False):
     if need and refresh:
         print(f"  [price_store] 快取命中 {len(tickers)-len([t for t in need if t not in out])}"
               f"/{len(tickers)}，需更新 {len(need)} 檔…")
-        got = _download(need, period)
+        got = {k: _drop_weekend(v, k) for k, v in _download(need, period).items()}
         stamp = now.isoformat(timespec="seconds")
         for tk, df in got.items():
             if _write_cached(tk, df):
