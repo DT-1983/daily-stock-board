@@ -557,9 +557,13 @@ def right_html():
        講出來的話必須是同一套，兩份實作遲早會分岔。
     """
     from board_theme import esc
-    btns = "".join(
-        f'<button class="rb{" on" if i == 0 else ""}" data-r="{esc(k)}">{esc(k)}</button>'
-        for i, (k, v) in enumerate(ROLES))
+    # 2026-09-21 Leo：「只留孔明做窗口，後面還是可以跑其它的」——孔明是唯一常駐的窗口（預設選中），
+    # 其他四位（軍議／龐統／仲達／陳壽）收進「更多」，要用隨時展開。孔明的材料已附上龐統那份新聞。
+    names = [k for k, _ in ROLES]
+    others = [k for k in names if k != "孔明"]
+    btns = ('<button class="rb on" data-r="孔明">孔明</button>'
+            '<button class="rmore" id="rmore" title="展開其他軍師">更多▾</button>'
+            + "".join(f'<button class="rb more" data-r="{esc(k)}">{esc(k)}</button>' for k in others))
     return (
         '<aside class="pane right" id="right" hidden>'
         '<div class="phead">軍師<span class="dim" id="rtk">未選標的</span>'
@@ -581,7 +585,8 @@ def right_html():
         '<button class="qk">現在整體最大的風險是什麼</button>'
         '<button class="qk">最近的判斷準不準</button></div>'
         '<div class="msgs" id="msgs">'
-        '<div class="hint">選一檔股票，再挑一位軍師。<br>'
+        '<div class="hint">選一檔股票（或在上方輸入代號），直接問孔明。<br>'
+        '其他軍師（軍議／龐統／仲達／陳壽）在「更多」裡。<br>'
         '走本機 claude（Max plan 訂閱額度，<b>不另外計費</b>），'
         '一位大約 40-60 秒，軍議四位約 3-4 分鐘。</div></div>'
         # 提示要給**具體的問題**（學老墨的 阿福）。原本寫「想問什麼？」等於沒說，
@@ -768,6 +773,10 @@ body{margin:0}
  border-bottom:1px solid var(--line)}
 .datewarn b{color:#FCD34D}
 .roles{display:flex;flex-wrap:wrap;gap:4px;padding:0}
+.roles:not(.open) .rb.more{display:none}
+.rmore{font:inherit;font-size:11px;padding:4px 6px;border-radius:0;cursor:pointer;white-space:nowrap;
+ line-height:1.35;border:1px dashed var(--hud,#16304A);background:transparent;color:var(--dim)}
+.rmore:hover{border-color:var(--cy,#22D3EE);color:var(--cy,#22D3EE)}
 .rb{font:inherit;font-size:11.5px;padding:4px 6px;border-radius:0;cursor:pointer;
  border:1px solid var(--hud,#16304A);background:transparent;color:var(--dim);
  white-space:nowrap;line-height:1.35}
@@ -1213,10 +1222,17 @@ ROOM_JS = r"""
   //    不如在介面上就講清楚為什麼不能選。
   var scope = "one";
   var ONLY_ONE = {"孔明": "孔明一次只判一檔，要先選股票"};
+  var autoSwitched = false;      // 因為「全部」範圍被自動從孔明切到軍議 → 切回「這一檔」時要自動回到孔明
   function applyScope(){
     document.getElementById("sc-one").classList.toggle("on", scope === "one");
     document.getElementById("sc-all").classList.toggle("on", scope === "all");
     document.getElementById("quick").hidden = (scope !== "all");
+    // 「全部」範圍孔明不能用（一次只判一檔）→ 自動展開「更多」，讓被切過去的軍議看得到
+    if (scope === "all") {
+      var _rs = document.querySelector(".roles"), _rm = document.getElementById("rmore");
+      if (_rs) _rs.classList.add("open");
+      if (_rm) _rm.textContent = "收起▴";
+    }
     var note = document.getElementById("scnote");
     if (note) note.textContent = (scope === "all")
       ? "仲達／陳壽的材料本來就是全本"
@@ -1228,9 +1244,18 @@ ROOM_JS = r"""
       if (why && b.classList.contains("on")) {
         // 目前選的軍師在這個範圍不能用 → 退回軍議，不要留一個按不動的選擇
         var g = document.querySelector('.rb[data-r="軍議"]');
-        if (g) { g.click(); }
+        if (g) { g.click(); autoSwitched = true; }
       }
     });
+    // 切回「這一檔」：如果剛剛是被自動切走的，窗口回到孔明並收起「更多」
+    if (scope === "one" && autoSwitched) {
+      var k = document.querySelector('.rb[data-r="孔明"]');
+      if (k) { k.click(); }
+      autoSwitched = false;
+      var _rs2 = document.querySelector(".roles"), _rm2 = document.getElementById("rmore");
+      if (_rs2) _rs2.classList.remove("open");
+      if (_rm2) _rm2.textContent = "更多▾";
+    }
     var rtk = document.getElementById("rtk");
     if (rtk) rtk.textContent = (scope === "all") ? "看著 全部持股"
       : (cur ? "看著 " + cur : "未選標的");
@@ -1248,12 +1273,22 @@ ROOM_JS = r"""
     });
   });
 
-  var role = "軍議";
+  var role = "孔明";
   // 2026-09-07：不再需要「換股票就重開」——續談的 key 綁標的（war_room_chat._key），
   // 換股票本來就是另一條線。留著 freshNext 反而會把那一檔存好的對話洗掉，
   // 跟「跨天要能翻回去續談」直接衝突。fresh 只剩「重開這一條」按鈕會用到。
   var freshNext = false;
   var lastTk = null;
+  // 「更多」：展開／收起其他四位軍師
+  (function(){
+    var rm = document.getElementById("rmore");
+    if (!rm) return;
+    rm.addEventListener("click", function(){
+      var rs = document.querySelector(".roles");
+      var open = rs.classList.toggle("open");
+      rm.textContent = open ? "收起▴" : "更多▾";
+    });
+  })();
   document.querySelectorAll(".rb").forEach(function(b){
     b.addEventListener("click", function(){
       role = b.dataset.r;
