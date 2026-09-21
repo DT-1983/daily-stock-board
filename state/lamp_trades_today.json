@@ -1,9 +1,14 @@
 {
- "date": "2026-09-19",
- "lamp_date": "2026-09-18",
- "buy": [],
+ "date": "2026-09-21",
+ "lamp_date": "2026-09-21",
+ "buy": [
+  "6531.TW",
+  "COP"
+ ],
  "half_sell": [],
- "full_exit": [],
+ "full_exit": [
+  "BAYRY"
+ ],
  "held": 13,
  "cash": 0.0
 }
