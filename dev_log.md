@@ -6537,3 +6537,18 @@ Leo 親自問的都是「X 是什麼公司」「其它投顧目標價」「市�
 - **AI 消息面查證（WebSearch，4 條）**：Meta Muse「5 天 73 萬下載」✅ 精準對上；Nvidia Vera Rubin「Q4 量產」✅ 對上官方時程；Google TPU v8「Q4 量產」✅ 方向對但應是兩顆晶片 8t／8i（8i 由聯發科設計，原文沒提）；「OpenAI 發布 ChatGPT-6 Extra」⚠️ 應為 GPT-6 Astra、暫停的是既有 200 美元 Pro 方案不是新方案；「Google Gemini 4 已開放測試」⚠️ **查無實據**，Google 公開說法 9/22 當下仍在預訓練階段，可能是把「Gemini 3.5 Pro 測試中」記成了 Gemini 4。
 **軍師資料庫**：8 檔（上品＋7 檔點名個股）各記一筆，已重新匯出。
 **沒做**：沒掛進任何公開產業鏈報告（機密內容規則）；廖總語音沒有畫面圖表可重畫（純語音，不是簡報影片）。
+
+## 2026-09-22：孔明材料補三塊（Leo 貼「老墨的軍師」分析富喬 vs 愛普，問我方結構差異）
+**背景**：Leo 貼一段老墨（另一位投資教育者）幫他分析富喬(1815)/愛普(6531)的文字，結構明顯比我方孔明的材料豐富：EPS拆業外/核心、券商可信度排行（26家中排第X、達成率%）、稀釋揭露比較。逐項比對我方 `investment_chief.gather_material()`（孔明/軍議共用）後：
+- **已有但沒接的**：`fundamentals_reality.py` 早就有「業外大於本業」警示邏輯（財報卡在用），但從沒被 `gather_material()` 呼叫過——孔明的材料裡完全沒有 EPS 品質這塊。
+- **schema 缺欄位**：`advisor_reports.py` 解析投顧報告時沒有稀釋（GDR/可轉債）欄位，抽不出「哪家券商算了稀釋、哪家沒算」這種差異。
+- **完全沒有**：券商目標價達成率排行——`broker_credibility.py` 檔頭自己承認「中信的報告不附調整史，無法回溯它過去準不準」，`target_changes.py` 每天存的異動表也沒人拿去反推命中率。
+
+**做了什麼**：
+1. `investment_chief.gather_material()` 新增 EPS 品質區塊：呼叫 `fundamentals_reality._tw_quarterly/_us_quarterly`，最新一季業外若主導本業就強警示，沒主導也照樣拆給業外/本業各占多少——實測富喬「EPS 1.45元，本業0.83、業外+0.62」跟老墨講的「核心0.83、業外占42.7%」分毫不差；愛普也對上（本業3.63、業外0.55，25Q2 EPS -3.36 那次業外虧損 -9.56億也在我們資料裡）。
+2. `advisor_reports.py` SCHEMA_HINT 加 `dilution_pct`/`dilution_note`（GDR/可轉債稀釋揭露），`gather_material` 顯示每份報告是否揭露、以及「同一檔有的券商揭露稀釋、有的沒揭露」的差異警示。
+3. Leo 給連結 mofiinvestment.com/AI-RESEARCH/broker-report.html——新建 `mofi_broker_scorecard.py`：靜態頁面內嵌 `<script id="data" type="application/json">`，抓 19,919 份報告回測出的 26 家主力券商計分卡（可信度分數/達成率/等待天數/套牢深度/期望值），存 `state/mofi_broker_scorecard.json`（gitignore，這是老墨的分析成果不是公開原始資料）。`note_for()`/`line_for()` 做別名比對（「中信投顧」↔他的「中國信託綜合證券」這類），接進 `gather_material` 每份券商報告下方一行。
+   - 🔴 踩坑：第一版用 `requests.get().text`，頁面沒宣告 charset，requests 退回猜 ISO-8859-1，中文券商名全部亂碼、比對永遠 miss——改用 `r.content.decode("utf-8")`。
+   - **重要發現**：統一投顧（我們目前唯一持續在餵的報告來源）在他 26 家排名裡第 19（中段班），可信度分數 46、達成率 48.2%、期望值只 +6%；相對地中信投顧排第 2（可信度 72、達成率 73%）。這會影響之後要不要多找中信的報告來源。
+**實測**：真的問孔明「1815 富喬現在能不能追高，還有沒有空間」，答案裡直接引用了「老墨計分卡顯示該分析師中段班（26家第19）、可信度46分、期望值僅+6%」，判斷「180目標價可信度普通，不是共識價」——材料真的被讀到、用上了。
+**沒做**：沒去反推老墨「可信度分數」的確切公式（原始 JSON 裡另外藏了一份 `scorecard`，欄位已經是算好的結果，不需要重算）；沒把 broker_credibility.py（stock_brief/report_zh 在用的舊版 3 家手刻註記）改成呼叫新模組，兩邊消費者不同、不衝突，先各自獨立。
