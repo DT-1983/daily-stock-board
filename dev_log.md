@@ -6552,3 +6552,11 @@ Leo 親自問的都是「X 是什麼公司」「其它投顧目標價」「市�
    - **重要發現**：統一投顧（我們目前唯一持續在餵的報告來源）在他 26 家排名裡第 19（中段班），可信度分數 46、達成率 48.2%、期望值只 +6%；相對地中信投顧排第 2（可信度 72、達成率 73%）。這會影響之後要不要多找中信的報告來源。
 **實測**：真的問孔明「1815 富喬現在能不能追高，還有沒有空間」，答案裡直接引用了「老墨計分卡顯示該分析師中段班（26家第19）、可信度46分、期望值僅+6%」，判斷「180目標價可信度普通，不是共識價」——材料真的被讀到、用上了。
 **沒做**：沒去反推老墨「可信度分數」的確切公式（原始 JSON 裡另外藏了一份 `scorecard`，欄位已經是算好的結果，不需要重算）；沒把 broker_credibility.py（stock_brief/report_zh 在用的舊版 3 家手刻註記）改成呼叫新模組，兩邊消費者不同、不衝突，先各自獨立。
+
+## 2026-09-22：查我方 6 支美股/台股回測有沒有踩老墨報告講的兩個資料陷阱
+**背景**：老墨的美股量化策略研究提到兩個坑——①反分割沒還原會製造假暴漲（他的動能策略第一版因此虛報一倍報酬）②趨勢指標算在被篩選過、有缺口的序列上，導致「12個月前」實際是14、15個月前。Leo 問「回測」，要我檢查自己這 6 支：`backtest_combined_signal.py`／`backtest_mofi_entry.py`／`backtest_mofi_rrg.py`／`backtest_position_sim.py`／`backtest_trend_2026.py`／`ef_backtest.py`。
+**查法**：不是憑印象判斷，實測 yfinance 1.2.0 的 `Ticker.history()`／`yf.download()` 原始碼（`utils.auto_adjust`），確認兩者預設就是 `auto_adjust=True`；用真的踩過分割的 APH（9/3 二比一）測 `.history()` 不帶參數，確認分割前後價格銜接平滑（沒有自己讀原始碼＋單靠印象猜對錯）。
+**結論**：
+- **陷阱①（反分割）**：6 支全部安全。4 支已經寫明 `auto_adjust=True`；另外 2 支（`backtest_combined_signal.py`、`backtest_position_sim.py`）原本沒寫，靠的是 yfinance 1.2.0 的預設值剛好也是 True——這次順手把它們也改成明寫，不是因為現在有問題，是不想以後 yfinance 版本換了或程式碼被複製走時悄悄失效。共用價格快取 `price_store.py` 本來就明寫 True。
+- **陷阱②（缺口序列算趨勢）**：不適用——這個坑的前提是「先做月度橫斷面選股、liquidity 篩選會讓某些股票某些月被拿掉，再對這個有缺口的表格做 `shift(12)` 之類的位置位移」。我方 6 支回測沒有一支是這種月度橫斷面選股結構：`backtest_trend_2026.py`／`backtest_mofi_entry.py`／`backtest_combined_signal.py`／`backtest_position_sim.py` 是對單一連續價格序列算指標（沒有中途篩掉月份）；`ef_backtest.py` 用日期字串對齊不用位置位移，天生免疫。
+**沒做**：沒有去查 `chain_technicals.py`、`industry_rotation.py` 這些不是「backtest_*.py」但同樣算趨勢/RS 的正式排程程式——Leo 只問了「回測」，這批之後有需要再查。
