@@ -1,5 +1,5 @@
 {
- "date": "2026-09-21",
+ "date": "2026-09-22",
  "period": 60,
  "mode": "daily",
  "chains": {
@@ -189,11 +189,11 @@
    "rrg_from": null,
    "supertrend": "多頭",
    "squeeze": {
-    "on": true,
-    "level": "微壓",
+    "on": false,
+    "level": null,
     "momentum_up": false
    },
-   "summary": "領先象限(RS 101.66/動能 100.49)｜SuperTrend多頭｜微壓蓄力中，動能偏空"
+   "summary": "領先象限(RS 101.66/動能 100.49)｜SuperTrend多頭｜未擠壓"
   },
   "tw:機器人": {
    "members_used": 8,
