@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-22 15:40",
+ "updated": "2026-09-22 20:33",
  "indices": [
   {
    "sym": "^GSPC",
@@ -46,8 +46,8 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/22",
-   "close": 31.69,
-   "chg_pct": -0.36
+   "close": 31.65,
+   "chg_pct": -0.5
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "老屋增 智生活推社區財務管理系統從管理費代收延伸至社區數位治理",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6613029",
-   "ts": "09/22 15:34"
-  },
-  {
-   "title": "日盛台駿國際融資租賃獲銀行團人民幣12億元聯貸 超額認購240%",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6613024",
-   "ts": "09/22 15:32"
-  },
-  {
-   "title": "材料-KY(4763)砸117億元收購全球前三大同業Cerdia！版圖一次跨四洲，併購效益先看3項變數",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6613038",
-   "ts": "09/22 15:30"
-  },
-  {
-   "title": "警訊浮現！標普500強勢攻高 為什麼近6成成分股悄悄進入熊市？",
+   "title": "AI基建商Accelevation赴美IPO估值最高達53.7億美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6612614",
-   "ts": "09/22 15:30"
+   "url": "https://news.cnyes.com/news/id/6613355",
+   "ts": "09/22 20:30"
   },
   {
-   "title": "158萬人都在做！勞退自提6%真的划算嗎？",
+   "title": "DeepSeek赴聯合國安理會談AI風險！OpenAI、Anthropic罕見同場",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6613316",
+   "ts": "09/22 20:30"
+  },
+  {
+   "title": "美股外強中乾？「這一幕」本世紀首見 上次發生在網路泡沫前",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6612964",
+   "ts": "09/22 20:30"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：Abivax - ADR(ABVX-US)EPS預估下修至-3.92元，預估目標價為161.77元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6613349",
+   "ts": "09/22 20:15"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：Affirm控股(AFRM-US)EPS預估上修至1.95元，預估目標價為100.00元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6613348",
+   "ts": "09/22 20:15"
+  },
+  {
+   "title": "台股頻爆鉅額違約交割 金管會祭出「再犯者預收款券拉長至30天」",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6613014",
-   "ts": "09/22 15:16"
+   "url": "https://news.cnyes.com/news/id/6613314",
+   "ts": "09/22 20:08"
   },
   {
-   "title": "馬斯克聯手輝達押注軌道AI！100萬顆衛星上限已申請  太空機房要比星鏈大百倍",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6612696",
-   "ts": "09/22 15:15"
-  },
-  {
-   "title": "比爾蓋茲警告：AI就像人造外星人 不能再當普通科技看待",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6612882",
-   "ts": "09/22 15:10"
-  },
-  {
-   "title": "地緣政治緊張推升原油期貨 Meta AI熱潮助攻亞洲股市",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6613001",
-   "ts": "09/22 15:08"
-  },
-  {
-   "title": "隱形冠軍又少一個？台灣扣件市占穩居全球前三 「斷崖式」人力缺口年增24%成隱憂",
+   "title": "台達電董座鄭平拜會印度總理莫迪 持續擴充在地產能聚焦三大領域",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6612984",
-   "ts": "09/22 14:43"
+   "url": "https://news.cnyes.com/news/id/6613308",
+   "ts": "09/22 19:45"
   },
   {
-   "title": "AI先進封裝需求延續至2028年產能增速高於雲端Capex、供需缺口成觀察重點",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6612994",
-   "ts": "09/22 14:30"
+   "title": "機車族小確幸！上駕訓班考照投保強制險可領200元禮券 明年起試辦",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6613297",
+   "ts": "09/22 19:44"
+  },
+  {
+   "title": "國統奪屏東新園工業用地及新園產業園區委託開發案金額達38.77億元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6613255",
+   "ts": "09/22 19:24"
+  },
+  {
+   "title": "首檔聚焦中小股本主動ETF 台新00416A鎖定隱形冠軍長線爆發力",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6613243",
+   "ts": "09/22 19:23"
   }
  ],
  "inst": {
   "date": "09/22",
-  "total_yi": 608.2,
-  "foreign_yi": 447.3,
-  "trust_yi": 2.4
+  "total_yi": 608.1,
+  "foreign_yi": 453.2,
+  "trust_yi": -3.7
  }
 }
