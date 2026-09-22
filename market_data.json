@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-22 13:09",
+ "updated": "2026-09-22 15:40",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,16 +38,16 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "09/22",
-   "close": 47942.56,
-   "chg_pct": 0.47
+   "close": 47800.17,
+   "chg_pct": 0.17
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/22",
-   "close": 31.67,
-   "chg_pct": -0.43
+   "close": 31.69,
+   "chg_pct": -0.36
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "把健康「變現」！健康幣10/1上路 健檢打疫苗癌篩有獎+周周抽200元 年終再抽Apple Watch",
+   "title": "老屋增 智生活推社區財務管理系統從管理費代收延伸至社區數位治理",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6612925",
-   "ts": "09/22 13:07"
+   "url": "https://news.cnyes.com/news/id/6613029",
+   "ts": "09/22 15:34"
   },
   {
-   "title": "印尼61%國土面積雨季延後至11月市場關注2027年農產品供應風險",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6612939",
-   "ts": "09/22 13:00"
-  },
-  {
-   "title": "美國不出手、盟友援助存變數 沙國石油命脈陷「至暗時刻」",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6612752",
-   "ts": "09/22 13:00"
-  },
-  {
-   "title": "美國制裁再升級！9/23起所有伊朗航空業者面臨「全球停擺」",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6612908",
-   "ts": "09/22 12:58"
-  },
-  {
-   "title": "〈焦點股〉雙鴻AI伺服器水冷散熱需求不墜 衝1630元再創天價",
+   "title": "日盛台駿國際融資租賃獲銀行團人民幣12億元聯貸 超額認購240%",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6612926",
-   "ts": "09/22 12:54"
+   "url": "https://news.cnyes.com/news/id/6613024",
+   "ts": "09/22 15:32"
   },
   {
-   "title": "聯發科推個人運算新平台 首款3奈米旗艦晶片導入Googlebook",
+   "title": "材料-KY(4763)砸117億元收購全球前三大同業Cerdia！版圖一次跨四洲，併購效益先看3項變數",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6612922",
-   "ts": "09/22 12:51"
+   "url": "https://news.cnyes.com/news/id/6613038",
+   "ts": "09/22 15:30"
   },
   {
-   "title": "漢測掛牌上櫃噴漲1.2倍直逼5000元  抽中一張現賺一張",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6612911",
-   "ts": "09/22 12:49"
-  },
-  {
-   "title": "最強國產AI晶片！阿里巴巴提前揭露「真武900」  2032年資料中心容量目標升至20GW",
+   "title": "警訊浮現！標普500強勢攻高 為什麼近6成成分股悄悄進入熊市？",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6612883",
-   "ts": "09/22 12:40"
+   "url": "https://news.cnyes.com/news/id/6612614",
+   "ts": "09/22 15:30"
   },
   {
-   "title": "〈房產〉雙北購屋主力總價帶全面上移 新北1000-2000萬元撐起近半市場",
+   "title": "158萬人都在做！勞退自提6%真的划算嗎？",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6612901",
-   "ts": "09/22 12:24"
+   "url": "https://news.cnyes.com/news/id/6613014",
+   "ts": "09/22 15:16"
   },
   {
-   "title": "美光成長速度將放緩 對股價反而是好消息？",
+   "title": "馬斯克聯手輝達押注軌道AI！100萬顆衛星上限已申請  太空機房要比星鏈大百倍",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6612567",
-   "ts": "09/22 12:10"
+   "url": "https://news.cnyes.com/news/id/6612696",
+   "ts": "09/22 15:15"
+  },
+  {
+   "title": "比爾蓋茲警告：AI就像人造外星人 不能再當普通科技看待",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6612882",
+   "ts": "09/22 15:10"
+  },
+  {
+   "title": "地緣政治緊張推升原油期貨 Meta AI熱潮助攻亞洲股市",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6613001",
+   "ts": "09/22 15:08"
+  },
+  {
+   "title": "隱形冠軍又少一個？台灣扣件市占穩居全球前三 「斷崖式」人力缺口年增24%成隱憂",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6612984",
+   "ts": "09/22 14:43"
+  },
+  {
+   "title": "AI先進封裝需求延續至2028年產能增速高於雲端Capex、供需缺口成觀察重點",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6612994",
+   "ts": "09/22 14:30"
   }
  ],
  "inst": {
-  "date": "09/21",
-  "total_yi": 478.0,
-  "foreign_yi": 204.8,
-  "trust_yi": 46.0
+  "date": "09/22",
+  "total_yi": 608.2,
+  "foreign_yi": 447.3,
+  "trust_yi": 2.4
  }
 }
