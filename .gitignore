@@ -215,7 +215,9 @@ chain_reports_src/broker_digest/
 # 2026-09-21：同上，這支把統一投顧影音報告的個股評論（全新光電）寫死在程式碼裡。
 quanxin_2455_note.py
 
-# 2026-09-22：同上，這支把統一投顧兩支影音報告的內容（個股＋會員盤勢評論）寫死在程式碼裡。
-market_pulse_0922_note.py
+# 2026-09-22：同上，這兩支把統一投顧兩支影音報告的內容（4770上品個股評論、
+# 會員盤勢語音點名個股評論）分別寫死在程式碼裡（原本合併一份，Leo 要求拆開）。
+shangpin_4770_note.py
+liao_market_pulse_0922_note.py
 
 state/paper_trades.*.before-*.json
