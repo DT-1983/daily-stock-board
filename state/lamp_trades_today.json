@@ -1,14 +1,18 @@
 {
- "date": "2026-09-21",
- "lamp_date": "2026-09-21",
+ "date": "2026-09-22",
+ "lamp_date": "2026-09-22",
  "buy": [
-  "6531.TW",
+  "CVX",
+  "IREN",
+  "SHEL"
+ ],
+ "half_sell": [
   "COP"
  ],
- "half_sell": [],
  "full_exit": [
-  "BAYRY"
+  "MA",
+  "V"
  ],
- "held": 13,
+ "held": 14,
  "cash": 0.0
 }
