@@ -1,31 +1,103 @@
 {
-"date": "2026-09-21",
+"date": "2026-09-22",
 "flips_hold": [],
-"flips_watch": [
+"flips_watch": [],
+"ai_alerts": [
 {
-"code": "2308",
-"name": "台達電",
-"word": "🔴→🟢 翻多",
-"dir": 1
+"chain": "AI 伺服器",
+"market": "US",
+"sig": "🟢",
+"code": "GOOGL",
+"name": "Alphabet Inc Class A",
+"reason": "觀望→買進"
 },
 {
-"code": "3576",
-"name": "聯合再生",
-"word": "🔴→🟢 翻多",
-"dir": 1
+"chain": "太陽能",
+"market": "US",
+"sig": "🟢",
+"code": "BE",
+"name": "Bloom Energy Corp Class A",
+"reason": "觀望→買進"
 },
 {
-"code": "3665",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1
+"chain": "機器人",
+"market": "US",
+"sig": "🟢",
+"code": "ISRG",
+"name": "Intuitive Surgical Inc",
+"reason": "觀望→買進"
 },
 {
-"code": "6664",
-"name": "群翊",
-"word": "🟢→🔴 翻空",
-"dir": -1
+"chain": "AI 伺服器",
+"market": "US",
+"sig": "🟢",
+"code": "ADI",
+"name": "Analog Devices Inc",
+"reason": "觀望→買進"
+},
+{
+"chain": "矽光子/光通訊",
+"market": "US",
+"sig": "🟢",
+"code": "SLAB",
+"name": "Silicon Laboratories Inc",
+"reason": "觀望→買進"
+},
+{
+"chain": "低軌衛星",
+"market": "US",
+"sig": "🟢",
+"code": "GOOG",
+"name": "Alphabet Inc Class C",
+"reason": "觀望→買進"
+},
+{
+"chain": "低軌衛星",
+"market": "US",
+"sig": "🟢",
+"code": "DE",
+"name": "Deere & Co",
+"reason": "觀望→買進"
+},
+{
+"chain": "低軌衛星",
+"market": "US",
+"sig": "🔴",
+"code": "RTX",
+"name": "RTX Corp",
+"reason": "觀望→賣出"
+},
+{
+"chain": "低軌衛星",
+"market": "TW",
+"sig": "🟢",
+"code": "2454",
+"name": "聯發科",
+"reason": "觀望→買進"
+},
+{
+"chain": "低軌衛星",
+"market": "TW",
+"sig": "🟢",
+"code": "6271",
+"name": "同欣電",
+"reason": "觀望→買進"
+},
+{
+"chain": "玻璃基板/TGV",
+"market": "TW",
+"sig": "🟢",
+"code": "2409",
+"name": "AUO CORPORATION",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 材料/被動元件",
+"market": "TW",
+"sig": "🔴",
+"code": "2344",
+"name": "WINBOND ELECTRONIC CORP",
+"reason": "觀望→賣出"
 }
-],
-"ai_alerts": []
+]
 }

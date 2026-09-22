@@ -1,124 +1,124 @@
 {
- "updated": "2026-09-21 21:58",
+ "updated": "2026-09-22 08:46",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
    "date": "09/21",
-   "close": 7705.53,
-   "chg_pct": 0.72
+   "close": 7764.7,
+   "chg_pct": 1.49
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
    "date": "09/21",
-   "close": 26845.63,
-   "chg_pct": 1.22
+   "close": 27122.09,
+   "chg_pct": 2.26
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
    "date": "09/21",
-   "close": 51794.93,
-   "chg_pct": 0.22
+   "close": 52048.83,
+   "chg_pct": 0.71
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
    "date": "09/21",
-   "close": 12199.98,
-   "chg_pct": 2.33
+   "close": 12433.17,
+   "chg_pct": 4.29
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/21",
-   "close": 47718.84,
-   "chg_pct": 1.14
+   "date": "09/18",
+   "close": 47180.75,
+   "chg_pct": 1.93
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/21",
-   "close": 31.72,
-   "chg_pct": -0.41
+   "date": "09/22",
+   "close": 31.73,
+   "chg_pct": -0.24
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
    "date": "09/21",
-   "close": 4.97,
+   "close": 4.96,
    "fmt": "yield",
-   "chg_bp": -3.1
+   "chg_bp": -3.5
   }
  ],
  "news": [
   {
-   "title": "盤中速報 - 費城半導體大漲2%，報12159.98點",
+   "title": "Meta股價單月大漲近三成 AI助理Muse登上美國App Store榜首",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6612376",
-   "ts": "09/21 21:54"
+   "url": "https://news.cnyes.com/news/id/6612612",
+   "ts": "09/22 08:40"
   },
   {
-   "title": "盤中速報 - Meta平台(META-US)大漲5.04%，報698.72美元",
+   "title": "歐盟通過延長對俄制裁方案 期限長達三年",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6612374",
-   "ts": "09/21 21:47"
+   "url": "https://news.cnyes.com/news/id/6612622",
+   "ts": "09/22 08:35"
   },
   {
-   "title": "盤中速報 - 莫德納(MRNA-US)大漲5.72%，報162.85美元",
+   "title": "『聰明錢』提前卡位中秋後行情？！Q4美股轉強前最後買點，竟是這產業！",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6611914",
+   "ts": "09/22 08:30"
+  },
+  {
+   "title": "Harmonic搶攻Edge AI商機 利用既有寬頻機房部署GPU、降低AI推論延遲",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6612373",
-   "ts": "09/21 21:47"
+   "url": "https://news.cnyes.com/news/id/6612674",
+   "ts": "09/22 08:30"
   },
   {
-   "title": "盤中速報 - 埃森哲(ACN-US)大漲5.35%，報191美元",
+   "title": "美股重點新聞摘要2026年9月22日",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6612372",
-   "ts": "09/21 21:47"
+   "url": "https://news.cnyes.com/news/id/6612189",
+   "ts": "09/22 08:22"
   },
   {
-   "title": "盤中速報 - 超微電腦(SMCI-US)大漲5.07%，報41.07美元",
+   "title": "材料-KY擬斥117億元收購同業瑞商Cerdia 營運版圖延伸至四大洲",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6612330",
+   "ts": "09/22 08:21"
+  },
+  {
+   "title": "第3檔！南山人壽成功發行3.33億美元海外次順位債 超額認購逾4倍",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6612649",
+   "ts": "09/22 08:18"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：廣達(2382-TW)EPS預估上修至27.06元，預估目標價為430元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6612648",
+   "ts": "09/22 08:10"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：奇鋐(3017-TW)EPS預估上修至104.82元，預估目標價為4000元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6612647",
+   "ts": "09/22 08:10"
+  },
+  {
+   "title": "OpenAI、Anthropic遇新威脅 AI初創掀自建模型潮",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6612371",
-   "ts": "09/21 21:47"
-  },
-  {
-   "title": "台燿科技(6274)納入FTSE富時全球指數，市值突破4,100億元新台幣",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6612351",
-   "ts": "09/21 21:30"
-  },
-  {
-   "title": "鋼鐵輸歐配額「黑箱」？ 經濟部：8成業者沿用舊制 自由配額維持20%",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6612316",
-   "ts": "09/21 20:54"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：緯穎(6669-TW)EPS預估上修至121.02元，預估目標價為2739.04元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6612278",
-   "ts": "09/21 20:11"
-  },
-  {
-   "title": "台股挑戰4萬8 外資續買203億元狂掃友達逾23萬張",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6612256",
-   "ts": "09/21 19:49"
-  },
-  {
-   "title": "抗關稅加碼海外參展補助規模飆3倍！經部助攻3400家業者搶國外訂單 這3大產業最受惠",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6612202",
-   "ts": "09/21 19:27"
+   "url": "https://news.cnyes.com/news/id/6612617",
+   "ts": "09/22 08:10"
   }
  ],
  "inst": {
