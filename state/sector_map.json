@@ -2662,5 +2662,35 @@
     "industry": "Industrial Machinery",
     "exchange": "TWSE",
     "asof": "2026-09-22"
+  },
+  "4770": {
+    "sector": "Process Industries",
+    "industry": "Chemicals: Specialty",
+    "exchange": "TWSE",
+    "asof": "2026-09-22"
+  },
+  "3661": {
+    "sector": "Electronic Technology",
+    "industry": "Semiconductors",
+    "exchange": "TWSE",
+    "asof": "2026-09-22"
+  },
+  "5274": {
+    "sector": "Electronic Technology",
+    "industry": "Semiconductors",
+    "exchange": "TPEX",
+    "asof": "2026-09-22"
+  },
+  "3711": {
+    "sector": "Electronic Technology",
+    "industry": "Semiconductors",
+    "exchange": "TWSE",
+    "asof": "2026-09-22"
+  },
+  "6278": {
+    "sector": "Electronic Technology",
+    "industry": "Semiconductors",
+    "exchange": "TWSE",
+    "asof": "2026-09-22"
   }
 }
