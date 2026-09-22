@@ -25,11 +25,11 @@ def _signals_for(ticker, window_days, eval_days):
     """回這檔股票在偵測窗內每個SuperTrend翻燈點的(型態, 純ST報酬, 合流條件是否成立)。"""
     try:
         t = yf.Ticker(ticker)
-        hist = t.history(period="1y")
+        hist = t.history(period="1y", auto_adjust=True)
         if hist.empty or len(hist) < 210:
             return []
         highs, lows, closes = hist["High"].tolist(), hist["Low"].tolist(), hist["Close"].tolist()
-        bench = yf.Ticker(_benchmark(ticker)).history(period="1y")
+        bench = yf.Ticker(_benchmark(ticker)).history(period="1y", auto_adjust=True)
         bench_closes = bench["Close"].tolist() if not bench.empty else []
     except Exception:
         return []
