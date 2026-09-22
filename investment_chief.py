@@ -602,6 +602,31 @@ def gather_material(ticker, notes):
     except Exception as e:
         value_material += f"\n（預估前提檢查查詢失敗：{e}）"
 
+    # 2026-09-22：EPS 品質（業外 vs 本業）。`fundamentals_reality.py` 早就算了這個
+    # （財報卡頁面在用），但從沒接進孔明的材料——查富喬(1815)/愛普(6531)這兩檔時
+    # 對照「老墨的軍師」才發現：他的分析開頭就拆「EPS 1.45 元裡業外占 42.7%、
+    # 核心只有 0.83 元」，我們的材料完全沒有這一層，孔明看不到就不會提。
+    # 只給最新一季；業外正/負都講（負的業外一樣會扭曲 EPS，不是只有正的才算「灌水」）。
+    try:
+        import fundamentals_reality as _fr
+        _qs = (_fr._tw_quarterly(ticker.split(".")[0])
+               if _fr._is_tw(ticker) else _fr._us_quarterly(ticker))
+        if _qs and _qs[-1].get("eps") is not None and _qs[-1].get("op_income") is not None:
+            _lq = _qs[-1]
+            _op_eps = None
+            if _lq.get("non_op") is not None and (_lq["op_income"] + _lq["non_op"]):
+                _op_eps = _lq["eps"] * _lq["op_income"] / (_lq["op_income"] + _lq["non_op"])
+            if _lq.get("non_op_dominant"):
+                value_material += (f"\nEPS 品質（{_lq['period']}，FinMind/yfinance）：⚠️ 業外收益大於本業營業利益，"
+                                   f"EPS {_lq['eps']:.2f} 元裡本業約只占 {_op_eps:.2f} 元"
+                                   "——成長性判斷要扣掉業外看本業趨勢。")
+            elif _op_eps is not None and _lq["eps"]:
+                value_material += (f"\nEPS 品質（{_lq['period']}）：EPS {_lq['eps']:.2f} 元，"
+                                   f"本業約 {_op_eps:.2f} 元、業外約 {_lq['eps']-_op_eps:+.2f} 元"
+                                   "（業外未主導，僅供參考）。")
+    except Exception as e:                                  # noqa: BLE001
+        value_material += f"\n（EPS品質查詢失敗：{e}）"
+
     # 券商研究報告（2026-09-03，路線圖第 5 項）。**這一層是我們自己算不出來的**：
     # 系統本來只有 yfinance 的「市場共識目標價」（一個平均數），沒有「券商憑什麼
     # 給這個數字」的推導過程。報告裡寫的是「2027 年底 PBR 1.1 倍」「30 倍 2026 EPS」
@@ -621,6 +646,17 @@ def gather_material(ticker, notes):
                 _tg = f"目標價{_r['target']}" if _r.get("target") else "無目標價（Note類）"
                 value_material += (f"\n  {_r.get('date')} {_r.get('broker')}"
                                    f"｜{_r.get('rating') or '無評等'}｜{_tg}")
+                # 2026-09-22：這家券商過去的目標價達成率（老墨自建的計分卡，見
+                # mofi_broker_scorecard.py 檔頭）——一份報告的目標價可不可信，跟出
+                # 這份報告的券商過去準不準是兩件事，前者是這份報告的推導，後者是
+                # 這家券商的底子。查不到就跳過（不是每家都在他的 26 家主榜裡）。
+                try:
+                    import mofi_broker_scorecard as _mbs
+                    _bl = _mbs.line_for(_r.get("broker"))
+                    if _bl:
+                        value_material += f"\n    {_bl}"
+                except Exception:                           # noqa: BLE001
+                    pass
                 # 目標價調升/調降本身是訊息：同一家改了看法，方向與幅度都要講
                 if _r.get("target") and _r.get("target_prev"):
                     _d = (_r["target"] / _r["target_prev"] - 1) * 100
@@ -646,6 +682,9 @@ def gather_material(ticker, notes):
                     value_material += f"\n    報告論點：{_r['thesis'][:110]}"
                 if _r.get("risks"):
                     value_material += f"\n    報告自列風險：{'、'.join(_r['risks'][:3])}"
+                if _r.get("dilution_pct"):
+                    value_material += (f"\n    ⚠️ 報告揭露潛在稀釋：{_r['dilution_pct']:.2f}%"
+                                       + (f"（{_r['dilution_note']}）" if _r.get("dilution_note") else ""))
             _tg = [r["target"] for r in _rs if r.get("target")]
             if len(_rs) >= 3 and len(_tg) >= 2:
                 value_material += (f"\n  ⚠️ 同一檔有 {len(_rs)} 家券商同時出報告，"
@@ -653,6 +692,14 @@ def gather_material(ticker, notes):
                                    f"（差 {(max(_tg) / min(_tg) - 1) * 100:.0f}%）"
                                    f"——差異多半來自倍數與用哪一年 EPS，不是基本面；"
                                    f"多家同時推代表這個看法已經擁擠。")
+                # 2026-09-22：稀釋揭露不一致本身是訊號——有的券商把未來稀釋算進估值、
+                # 有的沒算，同樣的目標價含金量不同，不能直接放在同一個天平上比。
+                _dis = [r for r in _rs[:4] if r.get("dilution_pct")]
+                _nodis = [r for r in _rs[:4] if r.get("target") and not r.get("dilution_pct")]
+                if _dis and _nodis:
+                    value_material += (f"\n  ⚠️ 只有 {'、'.join(r.get('broker', '?') for r in _dis)} "
+                                       f"揭露了潛在稀釋，{'、'.join(r.get('broker', '?') for r in _nodis)} "
+                                       "的目標價沒算進這層——不是同一個基準在比。")
     except Exception as e:                                  # noqa: BLE001
         value_material += f"\n（券商研究報告查詢失敗：{e}）"
 
