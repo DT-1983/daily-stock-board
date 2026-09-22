@@ -27,7 +27,7 @@ def simulate(ticker, start_date, atr="wilder"):
         # 改成依 start_date 往前多抓一年暖機（指標要 210 根以上才算得出來）。
         _need = (datetime.now().date() - start_date).days + 400
         _per = "2y" if _need <= 730 else ("5y" if _need <= 1825 else "10y")
-        hist = yf.Ticker(ticker).history(period=_per)
+        hist = yf.Ticker(ticker).history(period=_per, auto_adjust=True)
         if hist.empty or len(hist) < 210:
             return None
         # 2026-09-16：台股常常最後一根是 NaN（今天這根還沒真的收，yfinance 照樣給一列）
@@ -40,7 +40,7 @@ def simulate(ticker, start_date, atr="wilder"):
         if len(hist) < 210:
             return None
         highs, lows, closes = hist["High"].tolist(), hist["Low"].tolist(), hist["Close"].tolist()
-        bench = yf.Ticker(_benchmark(ticker)).history(period="1y")
+        bench = yf.Ticker(_benchmark(ticker)).history(period="1y", auto_adjust=True)
         bench_closes = bench["Close"].tolist() if not bench.empty else []
     except Exception:
         return None
