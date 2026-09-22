@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-22 08:46",
+ "updated": "2026-09-22 13:09",
  "indices": [
   {
    "sym": "^GSPC",
@@ -37,17 +37,17 @@
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/18",
-   "close": 47180.75,
-   "chg_pct": 1.93
+   "date": "09/22",
+   "close": 47942.56,
+   "chg_pct": 0.47
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/22",
-   "close": 31.73,
-   "chg_pct": -0.24
+   "close": 31.67,
+   "chg_pct": -0.43
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "Meta股價單月大漲近三成 AI助理Muse登上美國App Store榜首",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6612612",
-   "ts": "09/22 08:40"
-  },
-  {
-   "title": "歐盟通過延長對俄制裁方案 期限長達三年",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6612622",
-   "ts": "09/22 08:35"
-  },
-  {
-   "title": "『聰明錢』提前卡位中秋後行情？！Q4美股轉強前最後買點，竟是這產業！",
+   "title": "把健康「變現」！健康幣10/1上路 健檢打疫苗癌篩有獎+周周抽200元 年終再抽Apple Watch",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6611914",
-   "ts": "09/22 08:30"
+   "url": "https://news.cnyes.com/news/id/6612925",
+   "ts": "09/22 13:07"
   },
   {
-   "title": "Harmonic搶攻Edge AI商機 利用既有寬頻機房部署GPU、降低AI推論延遲",
+   "title": "印尼61%國土面積雨季延後至11月市場關注2027年農產品供應風險",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6612674",
-   "ts": "09/22 08:30"
+   "url": "https://news.cnyes.com/news/id/6612939",
+   "ts": "09/22 13:00"
   },
   {
-   "title": "美股重點新聞摘要2026年9月22日",
+   "title": "美國不出手、盟友援助存變數 沙國石油命脈陷「至暗時刻」",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6612189",
-   "ts": "09/22 08:22"
+   "url": "https://news.cnyes.com/news/id/6612752",
+   "ts": "09/22 13:00"
   },
   {
-   "title": "材料-KY擬斥117億元收購同業瑞商Cerdia 營運版圖延伸至四大洲",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6612330",
-   "ts": "09/22 08:21"
-  },
-  {
-   "title": "第3檔！南山人壽成功發行3.33億美元海外次順位債 超額認購逾4倍",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6612649",
-   "ts": "09/22 08:18"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：廣達(2382-TW)EPS預估上修至27.06元，預估目標價為430元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6612648",
-   "ts": "09/22 08:10"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：奇鋐(3017-TW)EPS預估上修至104.82元，預估目標價為4000元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6612647",
-   "ts": "09/22 08:10"
-  },
-  {
-   "title": "OpenAI、Anthropic遇新威脅 AI初創掀自建模型潮",
+   "title": "美國制裁再升級！9/23起所有伊朗航空業者面臨「全球停擺」",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6612617",
-   "ts": "09/22 08:10"
+   "url": "https://news.cnyes.com/news/id/6612908",
+   "ts": "09/22 12:58"
+  },
+  {
+   "title": "〈焦點股〉雙鴻AI伺服器水冷散熱需求不墜 衝1630元再創天價",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6612926",
+   "ts": "09/22 12:54"
+  },
+  {
+   "title": "聯發科推個人運算新平台 首款3奈米旗艦晶片導入Googlebook",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6612922",
+   "ts": "09/22 12:51"
+  },
+  {
+   "title": "漢測掛牌上櫃噴漲1.2倍直逼5000元  抽中一張現賺一張",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6612911",
+   "ts": "09/22 12:49"
+  },
+  {
+   "title": "最強國產AI晶片！阿里巴巴提前揭露「真武900」  2032年資料中心容量目標升至20GW",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6612883",
+   "ts": "09/22 12:40"
+  },
+  {
+   "title": "〈房產〉雙北購屋主力總價帶全面上移 新北1000-2000萬元撐起近半市場",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6612901",
+   "ts": "09/22 12:24"
+  },
+  {
+   "title": "美光成長速度將放緩 對股價反而是好消息？",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6612567",
+   "ts": "09/22 12:10"
   }
  ],
  "inst": {
