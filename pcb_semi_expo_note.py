@@ -64,6 +64,9 @@ CSS = """
 .stk-grid .k{font-size:10.5px;color:var(--dim)}
 .stk-grid .v{font-size:14px;font-weight:700;color:var(--ink);margin-top:2px;
   font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+/* 跟戰情室燈號同一組語彙：綠＝多方/正面、紅＝空方/負面、黃＝觀望；要比 .stk-grid .v 晚定義才蓋得過 */
+.stk-grid .v.up{color:var(--up)}.stk-grid .v.dn{color:var(--down)}.stk-grid .v.warn{color:var(--warn)}
+.stk-grid .v .sub{font-size:11px;font-weight:600;color:var(--dim);margin-left:2px}
 .rpt-chart{margin:14px 0 18px;background:var(--surface);border:1px solid var(--line);
   border-radius:10px;padding:14px 16px}
 .rpt-chart .cap{font-size:11.5px;color:var(--dim);margin-top:8px;line-height:1.6}
@@ -491,7 +494,8 @@ def svg_tech(code, name, sym):
 # ───────────────────────── 主體 ─────────────────────────
 
 def _quad_txt(q):
-    m = {"leading": "領先", "weakening": "轉弱", "lagging": "落後", "improving": "改善"}
+    """跟戰情室個股頁同一套 RRG 語彙：🟢領先／🔵改善／🟡轉弱／🔴落後。"""
+    m = {"leading": "🟢領先", "improving": "🔵改善", "weakening": "🟡轉弱", "lagging": "🔴落後"}
     if not q:
         return "—"
     return "／".join(f"{k}日{m.get(v, v)}" for k, v in q.items())
@@ -597,15 +601,19 @@ def build():
                 '<div class="stk-grid">'
                 + cell("最新月營收", f'{a["revenue"]/1e8:.2f}億（{a["period"][5:]}月）')
                 + cell("月營收年增", f'{a["yoy"]:+.1f}%' if a["yoy"] is not None else "—",
-                       "up" if (a["yoy"] or 0) >= 20 else "")
-                + cell("上一個月", f'{b["revenue"]/1e8:.2f}億　{b["yoy"]:+.1f}%' if b["yoy"] is not None else "—")
+                       "up" if (a["yoy"] or 0) >= 0 else "dn")
+                + cell("上一個月", f'{b["revenue"]/1e8:.2f}億　{b["yoy"]:+.1f}%' if b["yoy"] is not None else "—",
+                       "up" if (b["yoy"] or 0) >= 0 else "dn")
                 + cell("最新季毛利率", f'{q[-1]["gross_margin"]:.1f}%（{q[-1]["period"][2:]}）')
                 + cell("近四季 EPS", f"{eps:.2f} 元" if eps is not None else "—")
                 + cell("現價／本益比", f'{px:,.1f}／{pe}' if px else "—")
-                + cell("市場共識目標價", f"{tgt:,.0f} 元（{(tgt/px-1)*100:+.0f}%）" if (tgt and px) else "查無（Yahoo 無分析師）")
-                + cell("四燈／週線", f'{lv.get("lit","—")}／4　週線{"多方" if tinfo.get("wk")==1 else "空方"}')
+                + cell("市場共識目標價", f"{tgt:,.0f} 元（{(tgt/px-1)*100:+.0f}%）" if (tgt and px) else "查無（Yahoo 無分析師）",
+                       ("up" if tgt > px else "dn") if (tgt and px) else "")
+                + cell("四燈／週線", f'{lv.get("lit","—")}／4　週線{"多方" if tinfo.get("wk")==1 else "空方"}',
+                       "up" if tinfo.get("wk") == 1 else "dn")
                 + '</div>'
-                f'<div class="d">RS60 {lv.get("rs_short", 0):+.1f}%（相對大盤）；產業輪動象限：{_quad_txt(lv.get("quad"))}'
+                f'<div class="d">RS60 <span class="{"up" if (lv.get("rs_short") or 0) >= 0 else "dn"}" style="font-weight:700">'
+                f'{lv.get("rs_short", 0):+.1f}%</span>（相對大盤）；產業輪動象限：{_quad_txt(lv.get("quad"))}'
                 f'（類股：{esc(str(lv.get("industry") or "—"))}）。</div></div>')
         body.append(card)
         body.append(d["tech"])
@@ -702,6 +710,13 @@ def build():
         '<li><b>設備採購週期 1～2 年</b>：可用來判斷設備廠訂單能見度與營收認列節奏（大量、長廣的合約負債／存貨可追）。</li>'
         '<li><b>10 月 TPCA 電路板展</b>：影片預告頻道會出更深入的 PCB 解析，值得回來補這頁。</li></ul></div>')
 
+    body.append(
+        '<div class="rpt-note">⚠️ 3037 欣興、8046 南電、3189 景碩同時在「玻璃基板/TGV」鏈的個股報告出現——'
+        '那份講的是 Intel 玻璃基板／TGV（矽穿孔）題材，這份講的是主流 ABF 載板＋板廠擴產＋設備商。'
+        '兩份角度不同、內容沒有互相照抄，個股同時在兩條鏈是刻意的（同一家公司本來就同時做兩種業務），'
+        '不是重複產出。矽光子/光通訊鏈提到的光模塊個股（聯亞、聯鈞、華星光等）不在這份的守備清單裡，'
+        '沒有重疊。</div>'
+    )
     body.append(
         '<div class="rpt-note">來源：評論改寫自 ' + esc(SOURCE_COMMENT) + f'（<a href="{SOURCE_URL}" style="color:var(--accent)">連結</a>），'
         '逐字稿為本機語音辨識，可能有錯字；數字未經第三方查證，僅供內部參考，不代表任何投資建議；'
