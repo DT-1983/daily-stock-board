@@ -9829,5 +9829,47 @@
 "amount_usd": 27.22,
 "reason": "打點：4 燈亮、風報比 4.01",
 "src": "live"
+},
+{
+"date": "2026-09-23",
+"portfolio": "進出燈號",
+"action": "full_exit",
+"ticker": "3231.TW",
+"shares": 148.6756,
+"price": 180.0,
+"price_usd": 5.675,
+"amount_usd": 843.74,
+"reason": "RS60 跌破自身 60MA（-1.93%）→ 全出",
+"src": "live",
+"entry_price": 183.0,
+"pnl_usd": -14.06,
+"pnl_pct": -1.64
+},
+{
+"date": "2026-09-23",
+"portfolio": "進出燈號",
+"action": "full_exit",
+"ticker": "6531.TW",
+"shares": 0.483,
+"price": 984.0,
+"price_usd": 31.0234,
+"amount_usd": 14.98,
+"reason": "RS60 跌破自身 60MA（-0.11%）→ 全出",
+"src": "live",
+"entry_price": 948.0,
+"pnl_usd": 0.55,
+"pnl_pct": 3.8
+},
+{
+"date": "2026-09-23",
+"portfolio": "進出燈號",
+"action": "buy",
+"ticker": "TSM",
+"shares": 1.9291,
+"price": 445.14,
+"price_usd": 445.14,
+"amount_usd": 858.72,
+"reason": "打點：4 燈亮、風報比 2.87",
+"src": "live"
 }
 ]
