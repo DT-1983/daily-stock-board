@@ -556,17 +556,33 @@ def material_kongming(question=""):
     # 2026-09-21 Leo：「只留孔明做窗口，後面還是可以跑其它的」。Leo 實際問的多是
     # 「X 市場怎麼看、我們怎麼看」——「市場怎麼看」要新聞，而孔明沒有上網工具
     # （只有龐統能自己查，這是 9/7 定案的邊界：下判斷的人只能用我們自己的管線，數字才回得了頭）。
-    # 所以不給孔明上網，改成把龐統那份**系統搜尋的新聞**（鉅亨網關鍵字，免 key）附進孔明的材料：
-    # 來源仍可回頭對帳，孔明一個窗口就答得完。公司簡介孔明自己已有，只取新聞那一段。
+    # 這條邊界**沒有動**：孔明本身還是不叫 WebSearch，他只讀材料。
+    #
+    # 🔴 2026-09-23 改（Leo 問 SHEL 跟油價/美伊戰爭的關係查不到，問「可以讓軍師也會這個嗎」）：
+    # 原本這裡只塞龐統那支**靜態函式**（`material_pangtong`，單純打鉅亨網關鍵字，
+    # 不會真的上網）——鉅亨網用「SHEL」當關鍵字，搜不到不提這個代號的地緣政治新聞
+    # （荷姆茲海峽/美伊戰爭），孔明因此答不出「這跟油價的關係」。
+    # 改叫 `ask("龐統", question)`——這是**真的**龐統（完整 AI 對話輪，帶
+    # WebSearch/WebFetch 工具），不是只跑他材料函式那個子集。龐統自己的鐵律裡本來就寫
+    # 「材料不夠時可以自己上網查」，這裡讓孔明借用他這個能力，而不是繞過去自己查——
+    # 孔明看到的仍然是**龐統整理好、標好來源日期**的成品，跟以前一樣可以回頭對帳，
+    # 只是這次龐統真的花力氣去查了，不是只交一份關鍵字命中的裸清單。
+    # ⚠️ 代價：這個呼叫是完整 AI 輪、可能觸發 WebSearch，比原本的純 HTTP 請求慢很多
+    # （本機 Max plan 不扣款，代價是等待時間不是錢）。失敗就退回原本的靜態版本，
+    # 不要讓孔明因為龐統這輪掛了就整份材料開天窗。
     news = ""
     try:
-        ns = material_pangtong(question)
-        i = ns.find("【鉅亨網新聞搜尋】")
-        news = ns[i:] if i >= 0 else ""
-    except Exception:                                       # noqa: BLE001
-        news = ""
+        news = ask("龐統", question)
+    except Exception as e:                                   # noqa: BLE001
+        print(f"  [war_room] 龐統完整查詢失敗，退回靜態鉅亨網搜尋：{str(e)[:100]}")
+        try:
+            ns = material_pangtong(question)
+            i = ns.find("【鉅亨網新聞搜尋】")
+            news = ns[i:] if i >= 0 else ""
+        except Exception:                                    # noqa: BLE001
+            news = ""
     if news:
-        mat = f"{mat}\n\n【市場新聞（系統用鉅亨網關鍵字搜尋，不是孔明自己查的）】\n{news}"
+        mat = f"{mat}\n\n【市場新聞（龐統查的，含他自己上網找到的資料，來源與日期見內文標註）】\n{news}"
     # 公司在做什麼也要給——investment_chief 的材料全是數字，沒有業務描述，
     # 少了它 AI 會自己補（見 _one_stock_block 的註解）。
     return f"【判斷標的：{nm}（{code}）】\n{_profile(code)}\n\n{mat}"

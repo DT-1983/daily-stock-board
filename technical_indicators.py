@@ -1048,7 +1048,7 @@ function ti_draw_{uid}(){{
       {{type:'line',label:'20日均量',data:d.vol_ma20.map((v,i)=>({{x:i,y:v}})),borderColor:'#22d3ee',
         borderWidth:1.3,pointRadius:0,tension:.2,order:1}}]}},
     options:{{responsive:true,maintainAspectRatio:false,plugins:{{legend:{{display:false}}, zoom:ZOOM_OPT}},
-      scales:{{x:xAxisHidden, y:{{afterFit:yFit,ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
+      scales:{{x:xAxis, y:{{afterFit:yFit,ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
   // 動能柱：多頭轉強亮綠/轉弱暗綠，空頭轉強亮紅/轉弱暗紅（TTM Squeeze 慣例）；
   // sq_on 點陣列（擠壓中金色、已釋放依動能方向上色）疊在 y=0 當擠壓/釋放標記
   const momColor = d.mom.map((v, i) => {{
@@ -1074,7 +1074,7 @@ function ti_draw_{uid}(){{
         showLine:false,pointStyle:'star',pointRadius:6.5,pointBorderColor:'#ffffff',pointBorderWidth:0.8,
         pointBackgroundColor:d.mom.map(m=>m==null?'#9aa0a6':(m>=0?'#4ade80':'#ff8a8a')),order:0}}]}},
     options:{{responsive:true,maintainAspectRatio:false,plugins:{{legend:{{display:false}}, zoom:ZOOM_OPT}},
-      scales:{{x:xAxisHidden, y:{{afterFit:yFit,ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
+      scales:{{x:xAxis, y:{{afterFit:yFit,ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
   const c3 = new Chart(document.getElementById('ti_c3_{uid}'), {{type:'bar',
     data:{{datasets:[
       {{label:'基準線(0%)',type:'line',data:d.mom.map((_,i)=>({{x:i,y:0}})),borderColor:'#EF4444',borderWidth:2,
@@ -1113,7 +1113,7 @@ function ti_draw_{uid}(){{
         zoom:ZOOM_OPT,
         tooltip:{{callbacks:{{label:(c)=>c.dataset.label+' 亮',
           title:(items)=>d.dates[items[0].parsed.x] || ''}}}}}},
-      scales:{{x:xAxisHidden,
+      scales:{{x:xAxis,
         y:{{min:0.4, max:4.6, afterFit:yFit, ticks:{{stepSize:1, color:'#6b7280', font:{{size:9}},
           callback:(v)=>LP_NAME[4-v] || ''}}, grid:{{color:'#1a1d23'}}}}}}}}}});
   ti_charts_{uid} = [c1, cv, c2, c3, c4];
