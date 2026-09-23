@@ -167,6 +167,23 @@ def left_html(items, asof):
         '<ul class="list" id="list">' + "".join(lis) + "</ul></aside>")
 
 
+def _theme_badge(ticker):
+    """個股卡片用的迷你 AI 主題籤（2026-09-23，Leo：「做在呈現supertrend的地方」——
+    掛在 SuperTrend 卡片的副標行，跟老墨個股畫面上那顆「代理AI基建」小籤同位置。
+    查不到鏈對照就不顯示（不亂標「內需與循環」，同 lookup_page._theme_tag() 的原則）。"""
+    import ai_theme
+    chain = ai_theme._chain_ticker_map().get(ai_theme._tw_bare(ticker))
+    if not chain:
+        return ""
+    theme = ai_theme.CHAIN_THEME.get(chain, "內需與循環")
+    col = {"代理AI基建": "#3987e5", "記憶體外溢": "#a855f7",
+           "實體AI": "#2fbf71", "內需與循環": "#eda100"}.get(theme, "#888")
+    icon = ai_theme.THEME_ICON.get(theme, "")
+    return (f'<br><span style="display:inline-block;margin-top:3px;padding:1px 7px;'
+            f'border-radius:5px;border-left:2px solid {col};background:var(--panel,#080E1A);'
+            f'color:var(--ink)">{icon} {theme}</span>')
+
+
 def _theme_chips_html(items):
     """AI 主題篩選籤（2026-09-23，對標老墨戰情室頂端那排；Leo 指出實際在用的是
     這個三欄戰情室、不是公開站進出燈號頁，所以左欄清單也要有這排，不能只加在
@@ -531,7 +548,7 @@ def detail_html(ticker, exact=False):
         f'<span class="asof">{esc(_row_asof)}</span></div>'
         f'<div class="s">{lamp_rows}</div></div>',
         f'<div class="dc"><div class="k">SuperTrend</div><div class="v">{st}</div>'
-        f'<div class="s">{esc(stsub)}</div></div>',
+        f'<div class="s">{esc(stsub)}{_theme_badge(r["tk"])}</div></div>',
         _tgt_card(r, num, lv if live_ok else None),
         f'<div class="dc"><div class="k">風報比</div><div class="v">{num(rr_v)}</div>'
         f'<div class="s">{"⭐ 打點成立" if (lit >= 3 and (rr_v or 0) >= 1) else ""}</div></div>',
