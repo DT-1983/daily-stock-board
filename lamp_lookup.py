@@ -98,7 +98,13 @@ def lookup(raw_ticker, live=False):
         row["name"] = CS._tw_names().get(ticker)
     row["src_list"] = []   # 不在守備清單/持股/自訂清單裡——這是即時查詢，不進每日掃描母體
     tgt = CS.price_targets([ticker])
-    CS.add_rr(row, tgt.get(ticker))
+    # 2026-09-23：即時查詢原本沒把投顧原文目標價帶進來，只有每日批次掃描
+    # （combo_scan.scan_all()）才會傳 advisor 參數——同一份 add_rr() 兩個呼叫點
+    # 只顧到一邊，母體外的個股（例如剛處理完投顧報告但還沒進每日掃描的新標的）
+    # 即時查永遠只看得到 yfinance 共識價，看不到投顧報告已經有的原文目標價。
+    from investment_chief import norm_ticker
+    advisor = CS._advisor_targets().get(norm_ticker(ticker))
+    CS.add_rr(row, tgt.get(ticker), advisor)
     CS.attach_sector([row])
     row["src"] = "live"
     return row

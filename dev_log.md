@@ -6635,3 +6635,26 @@ UI 元素（SuperTrend 卡片）比我猜的（頂端篩選列）更精確，早
 維持同一套 `ROOM_JS` 篩選邏輯直接接得上，不用另外寫一套點擊處理。`mid.innerHTML=` 三處改成 `midBody.innerHTML=`，
 其餘 `#mid canvas` 查詢／事件代理不用動（維持在 `#mid` 上，`#mid-body` 是它的子節點）。實測點「實體AI」，
 左欄清單即時篩到 0/241（台股+4燈條件下）——功能跟改位置前一致，只是換了容器。
+
+## 2026-09-23：7788 松川精密沒走標準個股報告管線＋順帶抓到 lamp_lookup 一個真bug
+
+Leo 貼截圖（`04_AI Report/Investment/個股整合報告/` 資料夾，每檔都有「XXXX_名稱_券商投顧報告_中文重點」
+＋「XXXX_名稱_整合報告」兩份檔案）問「不是應該個股要寫成個股整合資料嗎? 這就是統一的版本」——查了才發現
+`advisor_reports.py` 本來就支援 `.txt` 逐字稿（`PDF_DIR` 正是 `video_transcript.py` 存 7788 逐字稿的同一個
+資料夾 `Documents\Investment\投顧報告\`，`TEXT_EXTS=(".txt",)` 有專門處理影音逐字稿的 prompt），我卻沒有走
+這條既有管線，只手動寫進 `industry_notes.json`（軍師資料庫），漏了 `report_zh.py`／`stock_brief.py` 這兩支
+產「中文重點」／「整合報告」的標準產生器都吃 `state/advisor_reports.json`，7788 根本不在那份資料庫裡。
+**教訓**：有現成管線可以吃的輸入（.txt 逐字稿），不要手動繞過去自己客製一份摘要，先查有沒有現成路徑能處理。
+
+補做：`python advisor_reports.py`（`only="松川精密"`）解析逐字稿進 `state/advisor_reports.json`（統一投顧、
+目標價500、26/27年EPS 14.34/20），再跑 `report_zh.py 7788`＋`stock_brief.py 7788` 產出跟其他個股同一種格式的
+兩份 HTML，已存到 obis `個股整合報告/` 資料夾，跟 Leo 截圖裡其他標的同一個命名規則。
+
+**順帶抓到的真bug**：驗證「查燈號查7788現在會不會顯示統一500元目標價」時發現 `combo_scan.add_rr()` 有
+`advisor` 參數可以優先套投顧原文目標價，但**只有** `combo_scan.scan_all()`（每日批次掃描）呼叫時有傳這個
+參數，`lamp_lookup.py`（查燈號/戰情室的**即時單檔查詢**，母體外的股票一定走這條）呼叫 `add_rr()` 時漏了傳，
+永遠只看得到 yfinance 市場共識、看不到投顧報告已經有的原文目標價——這是**兩邊各自呼叫同一支函式但只顧到
+一邊**的坑（跟 lamp_room.py 左欄改完忘記接列表頁是同一種模式）。已補上（`CS._advisor_targets()` 查一次），
+實測 `lamp_lookup.lookup('7788', live=True)` 現在正確回 `target=500, target_source=advisor,
+target_broker=統一投顧`。已重啟服務並用 `curl /room/detail?ticker=7788` 直接驗證線上端點。
+**這個修法對所有「剛處理完投顧報告但還沒排進每日掃描母體」的個股都有效，不只 7788。**
