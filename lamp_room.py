@@ -161,9 +161,7 @@ def left_html(items, asof):
         '<button class="ch" data-l="">全部燈數</button>'
         '<button class="ch on" data-l="4">4燈</button>'
         '<button class="ch" data-l="3">≥3燈</button>'
-        '</div>'
-        + _theme_chips_html(items) +
-        '</div>'
+        '</div></div>'
         '<ul class="list" id="list">' + "".join(lis) + "</ul></aside>")
 
 
@@ -184,21 +182,23 @@ def _theme_badge(ticker):
             f'color:var(--ink)">{icon} {theme}</span>')
 
 
-def _theme_chips_html(items):
-    """AI 主題篩選籤（2026-09-23，對標老墨戰情室頂端那排；Leo 指出實際在用的是
-    這個三欄戰情室、不是公開站進出燈號頁，所以左欄清單也要有這排，不能只加在
-    `combo_html.py` 產的表格頁——那個表格頁在這裡只是「列表」分頁裡的其中一個
-    次要視圖，Leo 平常盯的是這個永遠可見的左欄）。"""
+def _mid_theme_nav(items):
+    """AI 主題導覽列（2026-09-23）。原本放左欄，Leo：「放在左邊有點太擠了」→
+    移到中欄查燈號框上面（版面較寬，籤可以帶全稱＋檔數，不用只留圖示）。
+
+    ⚠️ 沿用左欄清單的 `class="ch" data-t="..."` 寫法（不是 combo_html.py 表格
+    那套 `data-f`/`data-v`）——兩套篩選系統各自獨立，這排籤要能控制左欄清單，
+    就得用左欄的 ROOM_JS 認得的屬性名，不能直接搬 combo_html 的籤過來貼。"""
     from board_theme import esc
     import ai_theme
     from collections import Counter
     cnt = Counter(r["theme"] for r in items)
-    chips = ['<button class="ch on" data-t="">全部 <b>' + str(len(items)) + "</b></button>"]
+    chips = ['<button class="ch mtc on" data-t="">全部 <b>' + str(len(items)) + "</b></button>"]
     for t in ai_theme.THEME_ORDER:
         n = cnt.get(t, 0)
-        chips.append(f'<button class="ch" data-t="{esc(t)}" title="{esc(t)}">'
-                     f'{ai_theme.THEME_ICON.get(t,"")} <b>{n}</b></button>')
-    return '<div class="chips"><span class="cl">主題</span>' + "".join(chips) + "</div>"
+        chips.append(f'<button class="ch mtc" data-t="{esc(t)}">'
+                     f'{ai_theme.THEME_ICON.get(t,"")} {esc(t)} <b>{n}</b></button>')
+    return "".join(chips)
 
 
 def _combo_css():
@@ -761,6 +761,15 @@ body{margin:0}
 .phead .dim{margin-left:auto;font-weight:400;font-size:11px;color:var(--dim)}
 .phead .x{margin-left:6px;background:none;border:0;color:var(--dim);cursor:pointer;
  font-size:14px}
+/* 2026-09-23：主題導覽列（原本在左欄，Leo：「放在左邊有點太擠了」→ 移到中欄
+   查燈號框上面，版面較寬留全稱）。#mid-body 之外的靜態區，換股票不會被沖掉。 */
+.midtheme{display:flex;gap:6px;flex-wrap:wrap;padding:10px 12px;
+ border-bottom:1px solid var(--hud,#16304A)}
+.mtc{font:inherit;font-size:11.5px;font-weight:600;padding:5px 10px;border-radius:6px;
+ border:1px solid var(--hud,#16304A);background:var(--card,#0C1524);color:var(--ink);
+ cursor:pointer;white-space:nowrap}
+.mtc b{font-variant-numeric:tabular-nums}
+.mtc.on{background:var(--hud-lit,#1F4E6E);border-color:var(--cy,#22D3EE);color:var(--cy,#22D3EE)}
 /* 🔴 2026-09-07 Leo：「選燈號不會跑／選風報比也不會跑」。
    實測不是邏輯壞掉（4燈→98 檔、風報比排序正確），是**看不出來**：
      · 篩選列會跟著清單一起捲走（捲到 600px 時它在 -498px，根本點不到）
@@ -1019,6 +1028,9 @@ ROOM_JS = r"""
 
   // ── 選股票 → 中欄 ──
   var mid = document.getElementById("mid");
+  // 2026-09-23：主題導覽列移到 #mid 裡但在 #mid-body 外面（Leo：「放在左邊
+  // 有點太擠了」）——它是靜態的，換股票時只換 #mid-body，不要跟著被沖掉。
+  var midBody = document.getElementById("mid-body");
   function pick(el){
     items.forEach(function(o){ o.classList.toggle("sel", o === el); });
     loadDetail(el.dataset.tk);
@@ -1038,30 +1050,30 @@ ROOM_JS = r"""
   function loadDetail(q, exact){
     cur = q;
     document.getElementById("rtk").textContent = "看著 " + cur;
-    mid.innerHTML = barHtml(q) + '<div class="empty">正在算 ' + cur +
+    midBody.innerHTML = barHtml(q) + '<div class="empty">正在算 ' + cur +
       ' 的指標與三年日線…（抓兩年資料，數秒）</div>';
     fetch("/room/detail?ticker=" + encodeURIComponent(q) + (exact ? "&exact=1" : ""))
       .then(function(r){ return r.text(); })
       .then(function(h){
-        mid.innerHTML = barHtml(q) + h;
-        var m = mid.querySelector("[data-resolved]");
+        midBody.innerHTML = barHtml(q) + h;
+        var m = midBody.querySelector("[data-resolved]");
         if (m && m.dataset.resolved) {
           cur = m.dataset.resolved;
-          var _qi = mid.querySelector(".msearch input"); if (_qi) _qi.value = cur;
+          var _qi = midBody.querySelector(".msearch input"); if (_qi) _qi.value = cur;
           document.getElementById("rtk").textContent = "看著 " + cur;
           lastTk = cur;
           items.forEach(function(o){ o.classList.toggle("sel", o.dataset.tk === cur); });
         }
         // technical_indicators 產的是「畫圖的程式碼」不是圖片，
         // innerHTML 塞進去的 <script> 不會執行，要自己重建一次。
-        mid.querySelectorAll("script").forEach(function(old){
+        midBody.querySelectorAll("script").forEach(function(old){
           var s = document.createElement("script");
           if (old.src) { s.src = old.src; } else { s.textContent = old.textContent; }
           old.parentNode.replaceChild(s, old);
         });
       })
       .catch(function(e){
-        mid.innerHTML = barHtml(q) + '<div class="warn">讀取失敗：' + e + '</div>';
+        midBody.innerHTML = barHtml(q) + '<div class="warn">讀取失敗：' + e + '</div>';
       });
   }
   items.forEach(function(el){ el.addEventListener("click", function(){
@@ -1702,7 +1714,9 @@ def page_html():
             + nav_html()
             + '<div class="room">'
             + left_html(items, asof)
-            + '<main class="pane" id="mid"><div class="empty">左邊選一檔。</div></main>'
+            + '<main class="pane" id="mid">'
+            + f'<div class="midtheme">{_mid_theme_nav(items)}</div>'
+            + '<div id="mid-body"><div class="empty">左邊選一檔。</div></div></main>'
             + f'<div class="pane tablepane" id="tablepane">{table_html()}</div>'
             + right_html()
             + "</div>"
