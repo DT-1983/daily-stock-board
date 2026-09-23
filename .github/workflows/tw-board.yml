@@ -82,6 +82,12 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           DISCORD_WH_DAILY: ${{ secrets.DISCORD_WH_DAILY }}   # 2026-08-28 Discord雙發（隆中對）
+          # 2026-09-23：持股優先警示（st_alert.py 的 RS60/SuperTrend 翻面）發到
+          # #持股密報，需要這兩個——沒設的話 alert_telegram.py 裡的
+          # _send_priority_alert() 會印警告後跳過，不會讓整個 workflow 失敗，
+          # 但持股警示也就真的發不出去（見 dev_log 2026-09-23 CEG 那次）。
+          DISCORD_WH_PRIVATE: ${{ secrets.DISCORD_WH_PRIVATE }}
+          DISCORD_LEO_USER_ID: ${{ secrets.DISCORD_LEO_USER_ID }}
         run: |
           mkdir -p docs
           f=$(ls reports/report_*.md | sort | tail -1)

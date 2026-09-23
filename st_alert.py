@@ -42,7 +42,30 @@ RS60_STATE = "state/rs60_state.json"
 
 
 def _live_holdings():
-    """Leo 自己操作帳戶（Firstrade+IBKR）的即時持股代號集合——不是快照檔。"""
+    """Leo 的持股代號集合。
+
+    🔴 2026-09-23：這支是被 `alert_telegram.py` 從 **GitHub Actions（ubuntu-latest
+    雲端）** 呼叫的，不是本機——`trade_plan.py`（讀 `C:\\Users\\...\\holdings.json`
+    這種本機絕對路徑）在雲端環境**沒有這個檔案、甚至這支程式本身被 gitignore，
+    import 就會直接失敗**。第一版改讀 `trade_plan.load_holdings()` 在本機測試
+    通過，但沒意識到正式排程根本不在本機跑——等於重蹈原本那份 2026-09-03 靜態
+    `holdings.json` 的同一種「跟真實環境脫節」錯誤，只是換了一種脫節方式。
+
+    改讀 `state/held_universe.json`——這是 repo 追蹤檔（不是 gitignore），
+    由本機排程 `researcher_holdings.py`（06:00，board_analyze_daily.cmd）算好
+    `investment_chief.held_universe()` 之後存下、commit、push；GitHub Actions
+    08:19 跑這支的時候該檔已經在 checkout 出來的 repo 裡，跟 `combo_result.json`／
+    `screen_result.json` 走的是同一個「本機算、雲端讀」模式。
+    本機測試（trade_plan.py 讀得到）時如果這份 repo 檔還沒 commit，退回直接
+    呼叫 `trade_plan.load_holdings()`，維持本機可測試性。
+    """
+    try:
+        d = json.load(open("state/held_universe.json", encoding="utf-8"))
+        tickers = d.get("tickers") or []
+        if tickers:
+            return set(tickers)
+    except Exception:
+        pass
     try:
         import trade_plan
         active, _legacy = trade_plan.load_holdings("Leo")

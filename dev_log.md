@@ -6693,3 +6693,40 @@ TEST）實際發送一則到#持股密報驗證訊息格式與@mention語法正�
 **沒做**：沒有把RS60偵測也擴大到守備清單（Leo沒要求，而且守備清單進場邏輯本來就用燈四RS60乖離>+3%，
 是另一套邏輯，沒有RS60跌破警示的需求）；沒有回頭幫9/14那次CEG補發歷史警示（那天的狀態已經過去，且
 `st_state.json`/`rs60_state.json`都已經是「現在的狀態」，硬要模擬歷史補推會跟現在的真實狀態對不上）。
+
+## 2026-09-23：Leo問「還有漏掉的嗎」查出上面那次修法本身在正式環境會失效，重修
+
+**背景**：上一則修完 `st_alert.py`／`alert_telegram.py` 後，Leo 問還有沒有漏掉的，沒有直接說「沒有了」，
+而是重新查整條管線的**實際執行環境**才發現：**上一版的修法在真正會用到的地方（GitHub Actions雲端）
+根本跑不動**——同一個bug形狀換了個位置又發生一次。
+
+**查出的問題**：`alert_telegram.py`（含裡面 import 的 `st_alert.py`）是 `.github/workflows/tw-board.yml`
+排程跑的，`runs-on: ubuntu-latest`——**雲端**，不是本機。而：
+1. 上一版 `_live_holdings()` 改呼叫 `trade_plan.load_holdings()`，但 `trade_plan.py` 本身
+   **被 gitignore**，雲端checkout根本拿不到這支檔案，import就直接失敗（回空集合，等於又回到
+   「持股清單抓不到」的同一個症狀，只是原因從「檔案沒更新」換成「檔案沒被雲端看到」）。
+2. 而且發現這其實是**第二次**犯同一種錯：`investment_chief.py` 的 `held_universe()` 檔頭紀錄
+   **2026-09-15 Leo 已經抓過一次一模一樣的坑**（那時是靠 `holdings.json` 手動清單判斷持股，
+   Leo賣掉HPE後那份清單沒人更新，Discord還在推「持股密報」推HPE）——`held_universe()`當時已經修好
+   了正確定義（三個活來源聯集），但這次我加 `st_alert.py` 沒有去找這個既有的正確答案，自己另外接了
+   一條會在雲端斷掉的路。
+3. 新的 `_send_priority_alert()` 發去 #持股密報 用的 `DISCORD_WH_PRIVATE`，workflow 的 env 區塊裡
+   **從來沒有把這個 secret 傳進去**（只有 `DISCORD_WH_DAILY`）——就算前兩個問題都修好，這則警示在
+   雲端一樣會印警告後悄悄跳過，Leo什麼都收不到。
+
+**做了什麼**：
+1. `researcher_holdings.py`（本機06:00排程 `board_analyze_daily.cmd` 跑的其中一步）改成算完
+   `investment_chief.held_universe()`後，多存一份到 `state/held_universe.json`（repo追蹤檔，不是
+   gitignore）——跟 `state/combo_result.json`／`screen_result.json` 同一個「本機算好、commit、
+   雲端讀」的既有模式，不是新發明。
+2. `st_alert.py` `_live_holdings()` 改讀這份 `state/held_universe.json`；讀不到才退回本機
+   `trade_plan.load_holdings()`（維持本機可測試性，雲端會走前面那條）。
+3. `board_analyze_daily.cmd` 的 `git add` 那行補上 `state/held_universe.json`（`git add -u state`
+   只會更新已追蹤檔案，新檔案第一次要明講）。
+4. `.github/workflows/tw-board.yml` 的「產HTML看板+推反轉警示」那個step補上
+   `DISCORD_WH_PRIVATE`／`DISCORD_LEO_USER_ID` 兩個env（引用對應的repo secrets）。
+**已驗證**：本機重新測 `_live_holdings()`／`_rs60_flips()` 都正常（77檔含CEG，比上一版trade_plan.py
+單一來源的65檔更完整，因為`held_universe()`是三來源聯集）；YAML語法用python yaml.safe_load()驗過。
+**還沒做、需要Leo決定**：GitHub repo secrets 目前**沒有** `DISCORD_WH_PRIVATE`／`DISCORD_LEO_USER_ID`
+這兩筆（`gh secret list`查證過），workflow改了讀取但secret本身沒設等於白改——這兩個值我本機`.env`
+裡都有，可以用`gh secret set`直接補上去，但這是改GitHub repo設定，先問過Leo再做。
