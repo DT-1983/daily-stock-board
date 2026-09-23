@@ -1,124 +1,124 @@
 {
- "updated": "2026-09-22 20:33",
+ "updated": "2026-09-23 08:46",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "09/21",
-   "close": 7764.7,
-   "chg_pct": 1.49
+   "date": "09/22",
+   "close": 7764.64,
+   "chg_pct": -0.0
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "09/21",
-   "close": 27122.09,
-   "chg_pct": 2.26
+   "date": "09/22",
+   "close": 27244.28,
+   "chg_pct": 0.45
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "09/21",
-   "close": 52048.83,
-   "chg_pct": 0.71
+   "date": "09/22",
+   "close": 51863.69,
+   "chg_pct": -0.36
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "09/21",
-   "close": 12433.17,
-   "chg_pct": 4.29
+   "date": "09/22",
+   "close": 12689.82,
+   "chg_pct": 2.06
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/22",
-   "close": 47800.17,
-   "chg_pct": 0.17
+   "date": "09/21",
+   "close": 47718.84,
+   "chg_pct": 1.14
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/22",
-   "close": 31.65,
-   "chg_pct": -0.5
+   "date": "09/23",
+   "close": 31.67,
+   "chg_pct": -0.2
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "09/21",
-   "close": 4.96,
+   "date": "09/22",
+   "close": 4.97,
    "fmt": "yield",
-   "chg_bp": -3.5
+   "chg_bp": 0.5
   }
  ],
  "news": [
   {
-   "title": "AI基建商Accelevation赴美IPO估值最高達53.7億美元",
+   "title": "敏感時機引關注！川普7月買進最多5萬美元Space X股票 隨後逢高減碼",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6613355",
-   "ts": "09/22 20:30"
+   "url": "https://news.cnyes.com/news/id/6613632",
+   "ts": "09/23 08:40"
   },
   {
-   "title": "DeepSeek赴聯合國安理會談AI風險！OpenAI、Anthropic罕見同場",
+   "title": "胡塞警告土耳其、巴基斯坦 勿介入衝突",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6613316",
-   "ts": "09/22 20:30"
+   "url": "https://news.cnyes.com/news/id/6613478",
+   "ts": "09/23 08:37"
   },
   {
-   "title": "美股外強中乾？「這一幕」本世紀首見 上次發生在網路泡沫前",
+   "title": "全球資金『棄債轉股』！台股創新高後，相對低位階的是這產業！？",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6612957",
+   "ts": "09/23 08:30"
+  },
+  {
+   "title": "川習二會美中代表團對比鮮明！美CEO陣容豪華、中方傳企業高層缺席 兩國商業成果預期偏低",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6612964",
-   "ts": "09/22 20:30"
+   "url": "https://news.cnyes.com/news/id/6613622",
+   "ts": "09/23 08:10"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：Abivax - ADR(ABVX-US)EPS預估下修至-3.92元，預估目標價為161.77元",
+   "title": "AI晶片股領漲 那斯達克再創收盤新高油價逼近100美元、美股漲跌互見",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6613349",
-   "ts": "09/22 20:15"
+   "url": "https://news.cnyes.com/news/id/6613653",
+   "ts": "09/23 08:00"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：Affirm控股(AFRM-US)EPS預估上修至1.95元，預估目標價為100.00元",
+   "title": "美股重點新聞摘要2026年9月23日",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6613348",
-   "ts": "09/22 20:15"
+   "url": "https://news.cnyes.com/news/id/6613310",
+   "ts": "09/23 08:00"
   },
   {
-   "title": "台股頻爆鉅額違約交割 金管會祭出「再犯者預收款券拉長至30天」",
+   "title": "〈台泥拓展東歐市場〉擬以212億元企業價值 併購烏克蘭第二大水泥公司",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6613314",
-   "ts": "09/22 20:08"
+   "url": "https://news.cnyes.com/news/id/6613621",
+   "ts": "09/23 07:15"
   },
   {
-   "title": "台達電董座鄭平拜會印度總理莫迪 持續擴充在地產能聚焦三大領域",
+   "title": "〈台股盤前要聞〉外銷訂單連19紅首度突破千億美元、台股闖4萬8創高",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6613308",
-   "ts": "09/22 19:45"
+   "url": "https://news.cnyes.com/news/id/6613451",
+   "ts": "09/23 05:10"
   },
   {
-   "title": "機車族小確幸！上駕訓班考照投保強制險可領200元禮券 明年起試辦",
+   "title": "川習會台灣成焦點！中國力阻140億美元軍售 川普態度受矚",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6613297",
-   "ts": "09/22 19:44"
+   "url": "https://news.cnyes.com/news/id/6613512",
+   "ts": "09/23 03:30"
   },
   {
-   "title": "國統奪屏東新園工業用地及新園產業園區委託開發案金額達38.77億元",
+   "title": "鉅亨速報 - Factset 最新調查：全新(2455-TW)目標價調升至622.5元，幅度約21.46%",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6613255",
-   "ts": "09/22 19:24"
-  },
-  {
-   "title": "首檔聚焦中小股本主動ETF 台新00416A鎖定隱形冠軍長線爆發力",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6613243",
-   "ts": "09/22 19:23"
+   "url": "https://news.cnyes.com/news/id/6613436",
+   "ts": "09/22 22:10"
   }
  ],
  "inst": {
