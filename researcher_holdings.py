@@ -229,6 +229,19 @@ def run():
         if k not in by_norm or "." in tk:
             by_norm[k] = tk
     tickers = sorted(by_norm.values())
+
+    # 2026-09-23：把即時持股清單存成 repo 追蹤檔（不是 gitignore），讓
+    # `st_alert.py`（跑在 GitHub Actions 雲端、碰不到本機的 trade_plan.py／
+    # C:\ 路徑）能讀到同一份「誰是持股」的定義，不用自己另外維護一份、
+    # 也不會變成第二個「9/3之後沒人更新」的手動清單。跟 combo_result.json／
+    # screen_result.json 同一個模式：本機算好、commit、雲端排程讀。
+    try:
+        json.dump({"date": time.strftime("%Y-%m-%d"), "tickers": tickers},
+                  open("state/held_universe.json", "w", encoding="utf-8"),
+                  ensure_ascii=False, indent=0)
+    except Exception as e:                                   # noqa: BLE001
+        print(f"  [警告] state/held_universe.json 寫入失敗（不影響新聞監控）：{str(e)[:80]}")
+
     if not tickers:
         print("held_universe() 是空的，跳過")
         return None
