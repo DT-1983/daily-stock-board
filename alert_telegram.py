@@ -73,7 +73,6 @@ def _send_priority_alert(flips_hold):
             lines.append(f"　{SIG_LABEL.get(f.get('sig',''), '')}：{esc(f['word'])}")
         if dual:
             lines.append("　⚠️ 兩個訊號同時觸發，比單一訊號嚴重")
-    lines.append("-# 完整彙總稍後在每日戰情室（08:45）還會再列一次，這則是先讓你現在就看到。")
     msg = "\n".join(lines)
     ok = send_discord("private", msg, persona="仲達")
     print(f"[priority_alert] 持股警示 {len(by_code)} 檔　發送{'成功' if ok else '失敗'}")
