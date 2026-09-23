@@ -718,8 +718,11 @@ def build(ticker, disp_days=756, expanded=False, target=None):
         ("擠壓等級", (sq_level or "擠壓中") if sq_on else "無"),
     ])
     panel_rs = _rows("RS STRONGER 相對強弱", [
-        (f"短線 RS（{20} 日）", f"{rs_s:+.2f}%" if rs_s is not None else None),
-        (f"長線 RS（{250} 日）", f"{rs_l:+.2f}%" if rs_l is not None else None),
+        # 🔴 2026-09-23：原本寫死「20 日」是 2026-09-11 短線窗口 20→60（一季）改掉之後
+        # 沒跟著更新的殘留字串——數值本來就是用 60 日窗口算的（見下面 rs_s_series 那行），
+        # 標籤卻還在講 20 日，值跟標籤對不起來。Leo 拿老墨畫面比對才發現。
+        ("短線 RS（60 日）", f"{rs_s:+.2f}%" if rs_s is not None else None),
+        ("長線 RS（250 日）", f"{rs_l:+.2f}%" if rs_l is not None else None),
         ("加值訊號", rs_sub or None),
     ])
 
@@ -1076,11 +1079,11 @@ function ti_draw_{uid}(){{
     data:{{datasets:[
       {{label:'基準線(0%)',type:'line',data:d.mom.map((_,i)=>({{x:i,y:0}})),borderColor:'#EF4444',borderWidth:2,
         pointRadius:0,order:3}},
-      {{label:'短線一季',data:d.rs_s.map((v,i)=>({{x:i,y:v}})),
-        backgroundColor:d.rs_s.map(v=>(v>=0?'rgba(74,222,128,.55)':'rgba(255,138,138,.55)')),
-        borderWidth:0,barPercentage:1,categoryPercentage:1,order:2}},
-      {{label:'長線1年',type:'line',data:d.rs_l.map((v,i)=>({{x:i,y:v}})),borderColor:'#4a9eff',borderWidth:1.6,
+      {{label:'短線一季',type:'line',data:d.rs_s.map((v,i)=>({{x:i,y:v}})),borderColor:'#4a9eff',borderWidth:1.6,
         pointRadius:0,tension:.15,order:1}},
+      {{label:'長線1年',data:d.rs_l.map((v,i)=>({{x:i,y:v}})),
+        backgroundColor:d.rs_l.map(v=>(v>=0?'rgba(74,222,128,.55)':'rgba(255,138,138,.55)')),
+        borderWidth:0,barPercentage:1,categoryPercentage:1,order:2}},
       {{label:'🟡翻正',type:'line',data:d.rs_turn.map((v,i)=>({{x:i,y:v}})),showLine:false,pointRadius:4,
         pointBackgroundColor:'#FACC15',pointBorderColor:'#1a1d23',pointBorderWidth:1,order:0}},
       {{label:'🔵創新高',type:'line',data:d.rs_newh.map((v,i)=>({{x:i,y:v}})),showLine:false,pointRadius:4,
