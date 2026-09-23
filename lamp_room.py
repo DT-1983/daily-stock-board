@@ -196,8 +196,8 @@ def _theme_chips_html(items):
     chips = ['<button class="ch on" data-t="">全部 <b>' + str(len(items)) + "</b></button>"]
     for t in ai_theme.THEME_ORDER:
         n = cnt.get(t, 0)
-        chips.append(f'<button class="ch" data-t="{esc(t)}">'
-                     f'{ai_theme.THEME_ICON.get(t,"")} {esc(t)} <b>{n}</b></button>')
+        chips.append(f'<button class="ch" data-t="{esc(t)}" title="{esc(t)}">'
+                     f'{ai_theme.THEME_ICON.get(t,"")} <b>{n}</b></button>')
     return '<div class="chips"><span class="cl">主題</span>' + "".join(chips) + "</div>"
 
 
