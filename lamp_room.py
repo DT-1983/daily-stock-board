@@ -647,22 +647,21 @@ def right_html():
             + "".join(f'<button class="rb more" data-r="{esc(k)}">{esc(k)}</button>' for k in others))
     return (
         '<aside class="pane right" id="right" hidden>'
-        '<div class="phead">軍師<span class="dim" id="rtk">未選標的</span>'
-        '<span class="dim" id="rstate"></span>'
-        '<button class="x" id="rclose">✕</button></div>'
+        # 2026-09-23 Leo：「軍師跟這一檔、全部合成一排」——標題列（軍師／看著誰／關閉鈕）
+        # 跟範圍/角色鈕原本是兩排，合併成一排（.phead 沿用它的置頂／背景樣式，
+        # 加 .rrow 的 flex-wrap 讓裝不下時才換行，不是固定兩排）。
         # 範圍：這一檔 / 全部持股。⚠️ 兩個範圍的對話是**分開記**的，
         # 不然「全部持股的風險」會接到「某一檔的風險」那條線上。
-        # 2026-09-21 Leo：「軍師這欄太擠了，把軍議那一排跟這一檔排成一排」——
-        # 範圍鈕與五位軍師合成同一排（角色副標「四位依序／找材料…」拿掉，那是佔高度的主因）；
-        # 說明字 scnote 移到下一行，沒內容時不佔位。
-        '<div class="rrow"><div class="scope"><button class="sb on" id="sc-one">這一檔</button>'
+        '<div class="phead rrow">軍師'
+        '<div class="scope"><button class="sb on" id="sc-one">這一檔</button>'
         '<button class="sb" id="sc-all" title="全部持股">全部</button></div>'
-        f'<div class="roles">{btns}</div></div>'
+        f'<div class="roles">{btns}</div>'
+        '<span class="dim" id="rtk">未選標的</span>'
+        '<span class="dim" id="rstate"></span>'
+        '<button class="x" id="rclose">✕</button></div>'
         '<div class="scn" id="scnote"></div>'
-        # 全本的範例問題（學 阿福 的提示）。要給**具體問句**，
-        # 使用者才知道這裡問得到什麼；不是寫「可以問全部」然後讓他自己想。
+        # 2026-09-23 Leo：「所有個股有什麼重要的事 這排拿掉」。
         '<div class="quick" id="quick" hidden>'
-        '<button class="qk">所有個股有什麼重要的事？條列給我</button>'
         '<button class="qk">現在整體最大的風險是什麼</button>'
         '<button class="qk">最近的判斷準不準</button></div>'
         '<div class="msgs" id="msgs">'
