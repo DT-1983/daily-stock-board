@@ -42,6 +42,43 @@ def esc(s):
     return _html.escape(str(s or ""))
 
 
+SIG_LABEL = {"st": "SuperTrend", "rs60": "RS60"}
+
+
+def _send_priority_alert(flips_hold):
+    """持股翻面/RS60跌破 → 立刻另發一則獨立、高辨識度的Discord警示（見main()裡的說明）。
+    沒有DISCORD_LEO_USER_ID就不@mention，訊息照發（缺這個env不該讓警示整個發不出去）。"""
+    if not flips_hold:
+        return
+    try:
+        from notify_discord import send_discord
+    except Exception as e:                                   # noqa: BLE001
+        print(f"[priority_alert] 讀不到 notify_discord（跳過）：{str(e)[:80]}")
+        return
+
+    # 同一檔今天兩個訊號都觸發（像CEG那次SuperTrend+RS60同天）→ 這檔升級成雙訊號警示。
+    by_code = {}
+    for f in flips_hold:
+        by_code.setdefault(f["code"], []).append(f)
+
+    uid = os.environ.get("DISCORD_LEO_USER_ID", "")
+    mention = f"<@{uid}> " if uid else ""
+    lines = [f"{mention}🚨 **持股訊號觸發**"]
+    for code, fs in by_code.items():
+        name = fs[0].get("name") or ""
+        dual = len(fs) > 1
+        head = "🚨🚨" if dual else "🚨"
+        lines.append(f"{head} **{esc(code)}**{(' ' + esc(name)) if name else ''}")
+        for f in fs:
+            lines.append(f"　{SIG_LABEL.get(f.get('sig',''), '')}：{esc(f['word'])}")
+        if dual:
+            lines.append("　⚠️ 兩個訊號同時觸發，比單一訊號嚴重")
+    lines.append("-# 完整彙總稍後在每日戰情室（08:45）還會再列一次，這則是先讓你現在就看到。")
+    msg = "\n".join(lines)
+    ok = send_discord("private", msg, persona="仲達")
+    print(f"[priority_alert] 持股警示 {len(by_code)} 檔　發送{'成功' if ok else '失敗'}")
+
+
 def send_text(text):
     r = requests.post(f"https://api.telegram.org/bot{TOKEN}/sendMessage",
                       json={"chat_id": CHAT, "text": text, "parse_mode": "HTML",
@@ -108,6 +145,16 @@ def main():
     except Exception as e:
         print("SuperTrend 偵測失敗:", e)
         flips_hold, flips_watch = [], []
+
+    # 🔴 2026-09-23（Leo：「discord提醒不夠明顯」——查CEG案例發現持股訊號被埋在
+    # 每天一則的大合併日報裡，沒有@提及、也要等08:45排程才發）：持股任何一個訊號
+    # 觸發（SuperTrend翻空／RS60跌破），**立刻**另發一則獨立訊息到#持股密報，
+    # 用🚨標記＋@Leo（觸發手機推播）。跟 daily_warroom 08:45 那則大合併日報是
+    # 兩件事——這則是「現在就要看」的警示，daily_warroom 那則才是完整彙總，
+    # 內容不衝突（08:27原本決定Discord只在daily_warroom發，是為了避免持股訊號
+    # 重複出現；這裡不是重複同一段文字，是把「持股觸發」單獨拉出來提早發、
+    # 加重要性標記，daily_warroom照舊會再完整列一次給沒看到這則的人）。
+    _send_priority_alert(flips_hold)
 
     date = datetime.now().strftime("%Y-%m-%d")
     lines = [f"📊 <b>投資晨報 {date}</b>",
