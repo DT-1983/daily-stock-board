@@ -2692,5 +2692,11 @@
     "industry": "Semiconductors",
     "exchange": "TWSE",
     "asof": "2026-09-22"
+  },
+  "7788": {
+    "sector": "Producer Manufacturing",
+    "industry": "Electrical Products",
+    "exchange": "TWSE",
+    "asof": "2026-09-23"
   }
 }
