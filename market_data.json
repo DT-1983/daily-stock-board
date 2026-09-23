@@ -1,37 +1,37 @@
 {
- "updated": "2026-09-23 20:43",
+ "updated": "2026-09-23 23:15",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "09/21",
-   "close": 7764.7,
-   "chg_pct": 1.49
+   "date": "09/23",
+   "close": 7727.18,
+   "chg_pct": -0.48
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "09/21",
-   "close": 27122.09,
-   "chg_pct": 2.26
+   "date": "09/23",
+   "close": 27011.53,
+   "chg_pct": -0.41
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "09/21",
-   "close": 52048.83,
-   "chg_pct": 0.71
+   "date": "09/23",
+   "close": 51687.94,
+   "chg_pct": -0.69
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "09/21",
-   "close": 12433.17,
-   "chg_pct": 4.29
+   "date": "09/23",
+   "close": 12527.43,
+   "chg_pct": 0.76
   },
   {
    "sym": "^TWII",
@@ -46,55 +46,61 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/23",
-   "close": 31.7,
-   "chg_pct": -0.13
+   "close": 31.75,
+   "chg_pct": 0.02
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
    "date": "09/23",
-   "close": 4.99,
+   "close": 5.06,
    "fmt": "yield",
-   "chg_bp": 2.3
+   "chg_bp": 9.7
   }
  ],
  "news": [
   {
-   "title": "關稅戰打了八年！美國真的贏了嗎？中國零組件換條路照樣進美國",
+   "title": "SpaceX上市後首次！總裁擬減持34萬股 套現5,200萬美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614127",
-   "ts": "09/23 20:30"
+   "url": "https://news.cnyes.com/news/id/6614473",
+   "ts": "09/23 23:03"
+  },
+  {
+   "title": "貿聯9億美元併購案完成Interplex Datacom今起併表、AI資料中心營收規模再擴大",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6614476",
+   "ts": "09/23 23:00"
+  },
+  {
+   "title": "川普才喊「徹底摧毀」！伊朗總統聯合國強硬反擊：我們才是恐怖主義受害者",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6614469",
+   "ts": "09/23 22:53"
+  },
+  {
+   "title": "盤中速報 - 泰瑞達(TER-US)大跌5.11%，報378.31美元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6614472",
+   "ts": "09/23 22:41"
+  },
+  {
+   "title": "短期爆紅還是Meta的「ChatGPT時刻」？ 小摩：Muse有望成ChatGPT後最廣泛使用AI應用程式",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6613947",
+   "ts": "09/23 22:40"
+  },
+  {
+   "title": "麥當勞將砸85億美元挺加盟商2030年拚升獲利、搶雞肉市場",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6614465",
+   "ts": "09/23 22:30"
   },
   {
    "title": "貿聯完成收購新加坡Interplex Datacom業務 強化資料中心基礎設施布局",
    "mkt": "TW",
    "url": "https://news.cnyes.com/news/id/6614333",
    "ts": "09/23 20:23"
-  },
-  {
-   "title": "如果你根據這一歷史軌跡選股 將會在年初選中今年狂飆695%的Sandisk",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614197",
-   "ts": "09/23 20:20"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：Companhia de Saneamento Basico do Estado de Sao Paulo. - ADR(SBS-US)EPS預估下修至0.32元，預估目標價為5.97元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614356",
-   "ts": "09/23 20:16"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：Cipher Mining Inc(CIFR-US)EPS預估上修至-1.3元，預估目標價為28.00元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614355",
-   "ts": "09/23 20:16"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：伍德賽德能源集團(WDS-US)EPS預估上修至1.87元，預估目標價為24.12元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614354",
-   "ts": "09/23 20:16"
   },
   {
    "title": "燁輝斥8.04億元認購燁聯私募股13.4萬張 持股比提升至35.46%",
@@ -113,12 +119,6 @@
    "mkt": "TW",
    "url": "https://news.cnyes.com/news/id/6614311",
    "ts": "09/23 19:58"
-  },
-  {
-   "title": "台股總市值5.3兆美元超車印度躍全球第4 神山單日貢獻逾1兆元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6614281",
-   "ts": "09/23 19:57"
   }
  ],
  "inst": {
