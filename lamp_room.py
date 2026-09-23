@@ -83,6 +83,8 @@ def rows():
     except Exception as e:                                  # noqa: BLE001
         print(f"  [room] 漲跌算不出來（那一欄會留空）：{str(e)[:70]}")
 
+    import ai_theme
+
     out = []
     for r in rs:
         t = str(r["ticker"])
@@ -102,6 +104,7 @@ def rows():
             "sec": r.get("sector_zh") or r.get("sector") or "",
             "mkt": "tw" if t[:1].isdigit() else "us",
             "src": "／".join(r.get("src") or []),
+            "theme": ai_theme.classify(t),
         })
     return out, (rs[0].get("asof") if rs else "—")
 
@@ -125,7 +128,7 @@ def left_html(items, asof):
                   f'{r["gap"]:+.1f}%</span>'))
         lis.append(
             f'<li class="it" data-tk="{esc(r["tk"])}" data-mkt="{r["mkt"]}"'
-            f' data-lit="{r["lit"]}"'
+            f' data-lit="{r["lit"]}" data-theme="{esc(r["theme"])}"'
             f' data-q="{esc((r["tk"] + " " + r["nm"] + " " + r["sec"]).lower())}"'
             f' data-sort-lit="{r["lit"]}"'
             f' data-sort-gap="{r["gap"] if r["gap"] is not None else -999}"'
@@ -158,8 +161,27 @@ def left_html(items, asof):
         '<button class="ch" data-l="">全部燈數</button>'
         '<button class="ch on" data-l="4">4燈</button>'
         '<button class="ch" data-l="3">≥3燈</button>'
-        '</div></div>'
+        '</div>'
+        + _theme_chips_html(items) +
+        '</div>'
         '<ul class="list" id="list">' + "".join(lis) + "</ul></aside>")
+
+
+def _theme_chips_html(items):
+    """AI 主題篩選籤（2026-09-23，對標老墨戰情室頂端那排；Leo 指出實際在用的是
+    這個三欄戰情室、不是公開站進出燈號頁，所以左欄清單也要有這排，不能只加在
+    `combo_html.py` 產的表格頁——那個表格頁在這裡只是「列表」分頁裡的其中一個
+    次要視圖，Leo 平常盯的是這個永遠可見的左欄）。"""
+    from board_theme import esc
+    import ai_theme
+    from collections import Counter
+    cnt = Counter(r["theme"] for r in items)
+    chips = ['<button class="ch on" data-t="">全部 <b>' + str(len(items)) + "</b></button>"]
+    for t in ai_theme.THEME_ORDER:
+        n = cnt.get(t, 0)
+        chips.append(f'<button class="ch" data-t="{esc(t)}">'
+                     f'{ai_theme.THEME_ICON.get(t,"")} {esc(t)} <b>{n}</b></button>')
+    return '<div class="chips"><span class="cl">主題</span>' + "".join(chips) + "</div>"
 
 
 def _combo_css():
@@ -936,7 +958,7 @@ ROOM_JS = r"""
 (function(){
   // I（Leo：「預設選台股、四燈」）。⚠️ 初值要跟上面 class="ch on" 的那兩顆一致，
   // 兩邊分開寫就是遲早會對不上——畫面標亮但實際沒套用，最難查的那種。
-  var F = {q:"", mkt:"tw", lit:"4", sort:"lit"};
+  var F = {q:"", mkt:"tw", lit:"4", sort:"lit", theme:""};
   var list = document.getElementById("list");
   var items = Array.prototype.slice.call(list.querySelectorAll(".it"));
   var cur = null;
@@ -946,6 +968,7 @@ ROOM_JS = r"""
       var d = el.dataset;
       return (!F.mkt || d.mkt === F.mkt)
           && (!F.lit || (+d.lit) >= (+F.lit))
+          && (!F.theme || d.theme === F.theme)
           && (!F.q || (d.q || "").indexOf(F.q) >= 0);
     });
     items.forEach(function(el){ el.hidden = vis.indexOf(el) < 0; });
@@ -966,8 +989,9 @@ ROOM_JS = r"""
   });
   document.querySelectorAll(".ch").forEach(function(b){
     b.addEventListener("click", function(){
-      var g = b.dataset.s !== undefined ? "s" : (b.dataset.m !== undefined ? "m" : "l");
-      var f = {s:"sort", m:"mkt", l:"lit"}[g];
+      var g = b.dataset.s !== undefined ? "s" : (b.dataset.m !== undefined ? "m" :
+              (b.dataset.l !== undefined ? "l" : "t"));
+      var f = {s:"sort", m:"mkt", l:"lit", t:"theme"}[g];
       F[f] = b.dataset[g];
       document.querySelectorAll(".ch[data-" + g + "]").forEach(function(o){
         o.classList.toggle("on", o === b);
