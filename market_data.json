@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-23 12:54",
+ "updated": "2026-09-23 15:40",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,93 +38,93 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "09/23",
-   "close": 48094.82,
-   "chg_pct": 0.79
+   "close": 48157.29,
+   "chg_pct": 0.92
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/23",
-   "close": 31.71,
-   "chg_pct": -0.1
+   "close": 31.72,
+   "chg_pct": -0.07
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "09/22",
-   "close": 4.97,
+   "date": "09/21",
+   "close": 4.96,
    "fmt": "yield",
-   "chg_bp": 0.5
+   "chg_bp": -3.5
   }
  ],
  "news": [
   {
-   "title": "〈焦點股〉健策獲日系外資上修EPS預估  漲停飆天價6410元超車大立光",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6613908",
-   "ts": "09/23 12:50"
-  },
-  {
-   "title": "AI助理Muse爆紅 會是Meta的「ChatGPT」時刻嗎？",
+   "title": "長江存儲3D NAND專利戰在德國獲勝 美光遭禁售",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6613596",
-   "ts": "09/23 12:40"
+   "url": "https://news.cnyes.com/news/id/6613953",
+   "ts": "09/23 15:20"
   },
   {
-   "title": "馬斯克：20年後可能有1,000億台人形機器人",
+   "title": "暴漲160%！川普喊千億投資委內瑞拉  但面臨運費、碼頭、債務、重油同時擋路",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6613888",
-   "ts": "09/23 12:21"
+   "url": "https://news.cnyes.com/news/id/6613952",
+   "ts": "09/23 15:00"
   },
   {
-   "title": "AI與機器人續主導！《財富》中國40歲以下商界菁英榜出爐：宇樹王興興再入選　張雪、姚順雨首入榜",
+   "title": "vivo V80 Lite 10/1 在台開賣 搭載聯發科技天璣 7300e處理器主打超大電池容量",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6613964",
+   "ts": "09/23 14:26"
+  },
+  {
+   "title": "〈台股盤後〉台積電、鴻海領漲成功站上4萬8 漲357點收48157點",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6613958",
+   "ts": "09/23 14:25"
+  },
+  {
+   "title": "2027年全美大學排名出爐！ 指標迎歷史級重塑首納「就業回報」　普林斯頓15年神話破滅、MIT登頂",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6613824",
-   "ts": "09/23 12:20"
+   "url": "https://news.cnyes.com/news/id/6613957",
+   "ts": "09/23 14:20"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：旺宏(2337-TW)EPS預估上修至19.28元，預估目標價為178元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6613885",
-   "ts": "09/23 12:10"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：中砂(1560-TW)EPS預估下修至14.68元，預估目標價為870元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6613884",
-   "ts": "09/23 12:10"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：景碩(3189-TW)EPS預估上修至10.57元，預估目標價為1010元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6613883",
-   "ts": "09/23 12:10"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：來億-KY(6890-TW)EPS預估上修至11.29元，預估目標價為214元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6613882",
-   "ts": "09/23 12:10"
-  },
-  {
-   "title": "蘋果即將加入輝達5兆美元俱樂部？分析師這樣看",
+   "title": "高市早苗與川普紐約會晤 川習會前夕鞏固日美同盟",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6613585",
-   "ts": "09/23 12:10"
+   "url": "https://news.cnyes.com/news/id/6613945",
+   "ts": "09/23 14:20"
   },
   {
-   "title": "Meta Muse爆紅顛覆消費習慣？AI代理人幫管錢與訂房 華爾街急拋金融旅遊股",
+   "title": "鉅亨速報 - Factset 最新調查：臻鼎-KY(4958-TW)目標價調降至671.5元，幅度約3.03%",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6613967",
+   "ts": "09/23 14:10"
+  },
+  {
+   "title": "台泥(1101)瞄準5,880億美元重建商機！擬砸最高7.5億歐元收購烏克蘭第二大水泥廠，划算與否先看這個數字",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6613960",
+   "ts": "09/23 14:00"
+  },
+  {
+   "title": "川普支持禁止出口柴油對抗通膨 專家擔憂恐反重傷全球能源市場",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6613600",
-   "ts": "09/23 12:00"
+   "url": "https://news.cnyes.com/news/id/6613926",
+   "ts": "09/23 13:38"
+  },
+  {
+   "title": "中砂(1560)毛利率衝15季新高！先進製程市占飆8成，到底「訂單排到 2030」的背後關鍵為何？",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6613940",
+   "ts": "09/23 13:30"
   }
  ],
  "inst": {
-  "date": "09/22",
-  "total_yi": 608.1,
-  "foreign_yi": 453.2,
-  "trust_yi": -3.7
+  "date": "09/23",
+  "total_yi": 389.2,
+  "foreign_yi": 373.1,
+  "trust_yi": -42.2
  }
 }
