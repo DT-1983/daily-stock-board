@@ -3,10 +3,25 @@
 "flips_hold": [],
 "flips_watch": [
 {
-"code": "3363",
-"name": "上詮",
-"word": "🟢→🔴 翻空",
-"dir": -1
+"code": "KLIC",
+"name": "",
+"word": "🔴→🟢 翻多",
+"dir": 1,
+"sig": "st"
+},
+{
+"code": "MPWR",
+"name": "",
+"word": "🔴→🟢 翻多",
+"dir": 1,
+"sig": "st"
+},
+{
+"code": "RKLB",
+"name": "",
+"word": "🔴→🟢 翻多",
+"dir": 1,
+"sig": "st"
 }
 ],
 "ai_alerts": []
