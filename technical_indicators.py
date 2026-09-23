@@ -1093,7 +1093,7 @@ function ti_draw_{uid}(){{
     options:{{responsive:true,maintainAspectRatio:false,
       plugins:{{legend:{{labels:{{color:'#9aa0a6',boxWidth:14,font:{{size:10}},
         filter:item=>item.text!=='基準線(0%)'}}}}, zoom:ZOOM_OPT}},
-      scales:{{x:xAxisHidden, y:{{afterFit:yFit,ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
+      scales:{{x:xAxis, y:{{afterFit:yFit,ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
   // 四燈歷史：四條 y 高度（L1 在上、L4 在下），亮的那天畫一個黃點。
   // 用散點而不是柱狀，因為要的是「哪幾天亮」不是量值；同一個 x 軸與縮放群組，
   // 所以跟上面四張圖一起縮放平移。
