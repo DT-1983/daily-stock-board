@@ -6658,3 +6658,38 @@ Leo 貼截圖（`04_AI Report/Investment/個股整合報告/` 資料夾，每檔
 實測 `lamp_lookup.lookup('7788', live=True)` 現在正確回 `target=500, target_source=advisor,
 target_broker=統一投顧`。已重啟服務並用 `curl /room/detail?ticker=7788` 直接驗證線上端點。
 **這個修法對所有「剛處理完投顧報告但還沒排進每日掃描母體」的個股都有效，不只 7788。**
+
+## 2026-09-23：Leo 問 CEG 案例牽出持股警示管線兩個真坑，加持股緊急警示
+
+**背景**：延續 7788 那則查完，Leo 貼自己的 IBKR 交易紀錄問 CEG（9/3進場）「SuperTrend是什麼時候轉空？
+discord有通知嗎？」——查出 9/14 轉空、且 discord 沒推（IBKR同步 9/19 才建好，比翻空晚5天，系統那天根本
+不知道CEG是持股）。接著問「RS60破了嗎/什麼時候破的」——查出 RS60 也是**同一天(9/14)**跌破自身60日均線，
+兩個訊號同天觸發。最後 Leo 回饋「discord提醒不夠明顯」，確認三個問題都有：①訊息埋在大合併日報裡沒發現
+②手機沒收到推播通知③累積到每日排程才發不夠即時。
+
+**查出兩個比UX更根本的真坑**：
+1. `st_alert.py` 判斷「這是持股」讀的 `holdings.json` 是**2026-09-03建立後從沒被任何程式更新過的固定清單**
+   （跟Leo買CEG同一天，純屬巧合），完全沒連到IBKR/Firstrade即時持股，CEG從沒在裡面過——不只9/14那次沒
+   偵測到，**現在**再翻一次面也一樣偵測不到（清單是死的）。
+2. `detect_flips()`只偵測SuperTrend翻面，完全沒有RS60跌破偵測——就算持股清單是對的，CEG那次RS60的部分
+   本來就不會被抓到，這不是資料沒到位，是邏輯從來沒寫過。
+
+**做了什麼**：
+1. `st_alert.py`：`holdings`改讀`trade_plan.load_holdings("Leo")[0]`（跟9/23早些時候修的lamp_lookup即時
+   查詢是同一份即時IBKR/Firstrade資料，不是另外維護一份快照——同一份持股資料要在多處保持一致）；新增
+   `_rs60_flips()`偵測持股RS60正負號翻轉，讀`state/combo_result.json`的`rs_short`（**不重算**，跟燈號頁/
+   風報比同一份數字來源，避免兩邊各算一次遲早漂移），新狀態檔`state/rs60_state.json`。
+2. `alert_telegram.py`新增`_send_priority_alert()`：持股任一訊號（SuperTrend翻空/RS60跌破）觸發，**立刻**
+   另外發一則獨立Discord訊息到#持股密報，不等每日彙總；用🚨標記，同一檔兩個訊號同天觸發升級成🚨🚨並加
+   警語；`<@Leo的Discord使用者ID>`開頭觸發手機推播。跟原本8/27「Discord只在daily_warroom發、避免重複」的
+   決定不衝突——這則是「現在就要看」的即時警示，daily_warroom那則08:45照舊會完整彙總一次，兩者用途不同
+   不是同一段內容重複兩次。
+3. Leo的Discord使用者ID：原本請他去開發者模式手動複製，他找不到設定位置——改用bot token直接查
+   `guild/members/search`API拿到（`318013083350204419`），不用麻煩他，存進`.env`的`DISCORD_LEO_USER_ID`
+   （gitignore）。
+**已驗證**：`st_alert._live_holdings()`實測65檔含CEG（原本stale清單60檔不含）；`_rs60_flips()`跑起來
+CEG記到-1（負值，跟查到的RS60現況一致），首次執行正確不誤報翻轉；`_send_priority_alert()`用假資料（代號
+TEST）實際發送一則到#持股密報驗證訊息格式與@mention語法正確，Discord回200成功。
+**沒做**：沒有把RS60偵測也擴大到守備清單（Leo沒要求，而且守備清單進場邏輯本來就用燈四RS60乖離>+3%，
+是另一套邏輯，沒有RS60跌破警示的需求）；沒有回頭幫9/14那次CEG補發歷史警示（那天的狀態已經過去，且
+`st_state.json`/`rs60_state.json`都已經是「現在的狀態」，硬要模擬歷史補推會跟現在的真實狀態對不上）。
