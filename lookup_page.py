@@ -139,6 +139,11 @@ PAGE_CSS = """
  font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;letter-spacing:-.5px}
 .lk-nm{font-size:15px;color:var(--muted)}
 .lk-src{font-size:11.5px;color:var(--dim);margin-left:auto}
+/* 2026-09-23：AI 主題標籤（對標老墨戰情室個股卡片上那排「代理AI基建」籤）。
+   顏色跟 combo_html.py 的 THEME_COL 同一組，兩頁看到同一個主題要同色。 */
+.lk-theme{display:inline-block;font-size:11.5px;font-weight:700;padding:3px 9px;
+ border-radius:6px;margin:2px 6px 6px 0;background:var(--card);border:1px solid var(--line);
+ border-left:3px solid var(--thcol,#888);color:var(--ink)}
 .lk-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:12px 0 4px}
 .lk-c{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
 .lk-k{font-size:10.5px;color:var(--dim);font-weight:600;letter-spacing:.3px}
@@ -703,6 +708,26 @@ def _stale_days(asof):
         return None
 
 
+def _theme_tag(row):
+    """AI 主題籤（2026-09-23）。查不到分類（ai_theme 讀不到 combo_result.json，
+    或算不出 chain 對照）就不顯示，不要硬塞一個「內需與循環」誤導人——這檔可能
+    根本沒進過任何一條產業鏈，只是剛好被 ai_theme.classify() 的 catch-all 接住。"""
+    try:
+        import ai_theme
+        tk = row.get("ticker")
+        chain = ai_theme._chain_ticker_map().get(ai_theme._tw_bare(tk))
+        if not chain:
+            return ""   # 沒對到任何鏈，不亂標「內需與循環」
+        theme = ai_theme.CHAIN_THEME.get(chain, "內需與循環")
+        col = {"代理AI基建": "#3987e5", "記憶體外溢": "#a855f7",
+               "實體AI": "#2fbf71", "內需與循環": "#eda100"}.get(theme, "#888")
+        icon = ai_theme.THEME_ICON.get(theme, "")
+        return (f'<div><span class="lk-theme" style="--thcol:{col}">{icon} {esc(theme)}</span>'
+                f'<span class="lk-theme" style="--thcol:#555">{esc(chain)}</span></div>')
+    except Exception:                                       # noqa: BLE001
+        return ""
+
+
 def render(ticker, live=False):
     """回 (html, status)。ticker 空字串就只給搜尋框。
 
@@ -770,7 +795,7 @@ def render(ticker, live=False):
     rf_html = f'<div class="lk-rf">🔁 {esc(rf)}</div>' if rf else ""
     head = (f'<div class="lk-head"><span class="lk-tk">{esc(row["ticker"])}</span>'
             f'<span class="lk-nm">{name}</span>'
-            f'<span class="lk-src">{src}</span></div>' + rf_html)
+            f'<span class="lk-src">{src}</span></div>' + rf_html + _theme_tag(row))
     # 搜尋框擺在標的名稱**之前**：這頁的第一動作是查下一檔，
     # 跟進出燈號頁「工具列在上、內容在下」的節奏一致。
     body = (_form(ticker) + head + _intro(row) + _summary(row)

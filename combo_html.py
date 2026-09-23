@@ -39,6 +39,18 @@ CSS = """
 .cbstat b{display:block;font-size:15px;line-height:1.15}
 .cbstat span{font-size:10px;color:var(--dim)}
 .flab2{margin-left:14px}
+/* 2026-09-23：AI 主題導覽列（對標老墨戰情室頂端那排籤）。每顆籤左緣用 --thcol
+   當識別色（跟燈色系分開，避免跟 3/4 燈的綠色系混淆），選中時整顆填色。 */
+.thnav{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 10px}
+.thchip{--thcol:#888;display:flex;align-items:center;gap:5px;padding:8px 13px;
+ border-radius:9px;border:1px solid var(--line);border-left:3px solid var(--thcol);
+ background:var(--card);color:var(--ink);font-size:13px;font-weight:600;cursor:pointer;
+ font-family:inherit;white-space:nowrap;transition:background .15s,border-color .15s}
+.thchip b{font-variant-numeric:tabular-nums}
+.thchip:hover{background:var(--surface)}
+.thchip[aria-pressed="true"]{background:var(--thcol);border-color:var(--thcol);color:#0B1220}
+.thchip[aria-pressed="true"] .thbright{color:#0B1220;opacity:.75}
+.thbright{font-size:11px;color:var(--dim)}
 .cbnote{background:var(--card);border:1px solid var(--line);border-left:3px solid #EAB308;
   border-radius:8px;padding:11px 14px;margin:12px 0;font-size:13px;line-height:1.75;color:var(--dim)}
 .cbsec{margin:26px 0 8px;font-size:15px;font-weight:700}
@@ -127,6 +139,11 @@ except Exception:                                       # noqa: BLE001
     QLAB = {"leading": "領先", "improving": "改善", "lagging": "落後", "weakening": "弱化"}
 QORDER = ["leading", "improving", "weakening", "lagging"]
 
+# AI 主題分類（2026-09-23，ai_theme.py；對照老墨戰情室頂端那排導覽列）
+import ai_theme  # noqa: E402
+THEME_COL = {"代理AI基建": "#3987e5", "記憶體外溢": "#a855f7",
+             "實體AI": "#2fbf71", "內需與循環": "#eda100"}
+
 
 def _sc(f, v, label, dot=None, pressed=False):
     """站內標準圓角籤（board_theme .sc）：可帶色點，<b class="fn"> 由 JS 填「選它會剩幾檔」。"""
@@ -135,9 +152,29 @@ def _sc(f, v, label, dot=None, pressed=False):
             f'{d}{esc(label)} <b class="fn"></b></button>')
 
 
+def theme_nav_html():
+    """老墨戰情室風格的 AI 主題導覽列——每個籤標檔數／亮燈數，點了套用 theme 篩選。
+    數字來自 ai_theme.theme_summary()（combo_result.json 母體，跟這頁表格同一份資料，
+    不會有「導覽列說的檔數」跟「篩完表格剩的檔數」對不起來的問題）。"""
+    s = ai_theme.theme_summary()
+    chips = ['<button class="thchip" data-f="theme" data-v="all" aria-pressed="true">'
+             f'全部 <b>{sum(v["count"] for v in s.values())}</b>檔</button>']
+    for t in ai_theme.THEME_ORDER:
+        v = s[t]
+        col = THEME_COL.get(t, "#888")
+        bright = f'<span class="thbright">{v["lit_bright"]}檔亮{ai_theme.LIT_BRIGHT}燈+</span>' if v["count"] else ""
+        chips.append(
+            f'<button class="thchip" data-f="theme" data-v="{esc(t)}" aria-pressed="false" '
+            f'style="--thcol:{col}">'
+            f'{ai_theme.THEME_ICON.get(t,"")} {esc(t)} <b>{v["count"]}</b>檔 {bright}</button>')
+    return '<div class="thnav" role="group" aria-label="AI 主題篩選">' + "".join(chips) + '</div>'
+
+
 def filter_html():
     quad = "".join(_sc("quad", q, QLAB[q], QCOL[q]) for q in QORDER)
     # 2026-09-03 Leo：篩選列做成兩排——第一排 市場+燈號、第二排 象限+來源。
+    # 2026-09-23：主題導覽列另外用 theme_nav_html() 放在篩選列上方（老墨那排的視覺對標），
+    # 但篩選邏輯共用同一套 data-f/data-v 機制，FILTER_JS 的 match() 直接認得 f==="theme"。
     return ('<div class="ctrl cbctrl">'
             '<div class="frow"><span class="flab">市場</span>'
             '<div class="seg" role="group" aria-label="切換市場">'
@@ -160,13 +197,14 @@ FILTER_JS = """<script>
 // 四組篩選（市場／燈號／象限／來源）互相 AND。展開的圖表列跟著它的主列一起顯示或隱藏，
 // 否則篩掉主列後圖表會孤零零留在畫面上。
 // 每顆籤上的計數＝「在其他三組目前選擇下，改選這顆會剩幾檔」——跟看板頁的計數同一種語意。
-var F = {mkt:"all", lit:"all", quad:"all", src:"all"};
+var F = {mkt:"all", lit:"all", quad:"all", src:"all", theme:"all"};
 var ROWS = Array.prototype.slice.call(document.querySelectorAll("table.cb tr[data-tid]"));
 function match(tr, f, v){
   if (v === "all") return true;
   if (f === "mkt")  return tr.dataset.mkt === v;
   if (f === "quad") return (tr.dataset.quad || "none") === v;
   if (f === "src")  return (tr.dataset.src || "").split("|").indexOf(v) >= 0;
+  if (f === "theme") return tr.dataset.theme === v;
   if (f === "lit"){
     var lit = parseInt(tr.dataset.lit, 10);
     if (v === "3") return lit >= 3;
@@ -323,8 +361,9 @@ def _row_html(r):
         tpcth = "—"
     else:
         tpcth = f'<span class="{"pos" if tpct >= 0 else "neg"}">{tpct:+.1f}%</span>'
+    theme = ai_theme.classify(r["ticker"])
     return (f'<tr data-mkt="{mkt}" data-lit="{r["lit"]}" data-rr="{rrok}" data-quad="{qv}" '
-            f'data-tk="{esc(r["ticker"])}" '
+            f'data-tk="{esc(r["ticker"])}" data-theme="{esc(theme)}" '
             f'data-src="{esc(srcs)}" data-tid="{tid}">'
             f'<td>{btn}<b>{esc(r["ticker"])}</b></td>'
             f'<td>{esc((r.get("name") or "")[:16])}</td>'
@@ -569,6 +608,7 @@ def body_html(d, in_room=False, public=False):
                 #      備援列表，查股框反灰（LOOKUP_BOX_OFF）並顯示哪些功能要本機
                 #    · 都不是：obis 的獨立快照（不含任何連本機的東西）
                 + '</div>')
+    body.append(theme_nav_html())
     body.append(filter_html())
     body.append(f'<div class="cbsec">⭐ 打點成立<small>亮 ≥{d["combo_min"]} 燈且風報比 ≥ 1，'
                 f'共 {len(hit)} 檔</small></div>' + _table(hit))
