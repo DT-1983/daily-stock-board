@@ -1,53 +1,53 @@
 {
- "updated": "2026-09-23 08:46",
+ "updated": "2026-09-23 12:54",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "09/22",
-   "close": 7764.64,
-   "chg_pct": -0.0
+   "date": "09/21",
+   "close": 7764.7,
+   "chg_pct": 1.49
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "09/22",
-   "close": 27244.28,
-   "chg_pct": 0.45
+   "date": "09/21",
+   "close": 27122.09,
+   "chg_pct": 2.26
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "09/22",
-   "close": 51863.69,
-   "chg_pct": -0.36
+   "date": "09/21",
+   "close": 52048.83,
+   "chg_pct": 0.71
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "09/22",
-   "close": 12689.82,
-   "chg_pct": 2.06
+   "date": "09/21",
+   "close": 12433.17,
+   "chg_pct": 4.29
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/21",
-   "close": 47718.84,
-   "chg_pct": 1.14
+   "date": "09/23",
+   "close": 48094.82,
+   "chg_pct": 0.79
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/23",
-   "close": 31.67,
-   "chg_pct": -0.2
+   "close": 31.71,
+   "chg_pct": -0.1
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "敏感時機引關注！川普7月買進最多5萬美元Space X股票 隨後逢高減碼",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6613632",
-   "ts": "09/23 08:40"
-  },
-  {
-   "title": "胡塞警告土耳其、巴基斯坦 勿介入衝突",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6613478",
-   "ts": "09/23 08:37"
-  },
-  {
-   "title": "全球資金『棄債轉股』！台股創新高後，相對低位階的是這產業！？",
+   "title": "〈焦點股〉健策獲日系外資上修EPS預估  漲停飆天價6410元超車大立光",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6612957",
-   "ts": "09/23 08:30"
+   "url": "https://news.cnyes.com/news/id/6613908",
+   "ts": "09/23 12:50"
   },
   {
-   "title": "川習二會美中代表團對比鮮明！美CEO陣容豪華、中方傳企業高層缺席 兩國商業成果預期偏低",
+   "title": "AI助理Muse爆紅 會是Meta的「ChatGPT」時刻嗎？",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6613622",
-   "ts": "09/23 08:10"
+   "url": "https://news.cnyes.com/news/id/6613596",
+   "ts": "09/23 12:40"
   },
   {
-   "title": "AI晶片股領漲 那斯達克再創收盤新高油價逼近100美元、美股漲跌互見",
+   "title": "馬斯克：20年後可能有1,000億台人形機器人",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6613653",
-   "ts": "09/23 08:00"
+   "url": "https://news.cnyes.com/news/id/6613888",
+   "ts": "09/23 12:21"
   },
   {
-   "title": "美股重點新聞摘要2026年9月23日",
+   "title": "AI與機器人續主導！《財富》中國40歲以下商界菁英榜出爐：宇樹王興興再入選　張雪、姚順雨首入榜",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6613310",
-   "ts": "09/23 08:00"
+   "url": "https://news.cnyes.com/news/id/6613824",
+   "ts": "09/23 12:20"
   },
   {
-   "title": "〈台泥拓展東歐市場〉擬以212億元企業價值 併購烏克蘭第二大水泥公司",
+   "title": "鉅亨速報 - Factset 最新調查：旺宏(2337-TW)EPS預估上修至19.28元，預估目標價為178元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6613621",
-   "ts": "09/23 07:15"
+   "url": "https://news.cnyes.com/news/id/6613885",
+   "ts": "09/23 12:10"
   },
   {
-   "title": "〈台股盤前要聞〉外銷訂單連19紅首度突破千億美元、台股闖4萬8創高",
+   "title": "鉅亨速報 - Factset 最新調查：中砂(1560-TW)EPS預估下修至14.68元，預估目標價為870元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6613451",
-   "ts": "09/23 05:10"
+   "url": "https://news.cnyes.com/news/id/6613884",
+   "ts": "09/23 12:10"
   },
   {
-   "title": "川習會台灣成焦點！中國力阻140億美元軍售 川普態度受矚",
+   "title": "鉅亨速報 - Factset 最新調查：景碩(3189-TW)EPS預估上修至10.57元，預估目標價為1010元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6613512",
-   "ts": "09/23 03:30"
+   "url": "https://news.cnyes.com/news/id/6613883",
+   "ts": "09/23 12:10"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：全新(2455-TW)目標價調升至622.5元，幅度約21.46%",
+   "title": "鉅亨速報 - Factset 最新調查：來億-KY(6890-TW)EPS預估上修至11.29元，預估目標價為214元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6613436",
-   "ts": "09/22 22:10"
+   "url": "https://news.cnyes.com/news/id/6613882",
+   "ts": "09/23 12:10"
+  },
+  {
+   "title": "蘋果即將加入輝達5兆美元俱樂部？分析師這樣看",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6613585",
+   "ts": "09/23 12:10"
+  },
+  {
+   "title": "Meta Muse爆紅顛覆消費習慣？AI代理人幫管錢與訂房 華爾街急拋金融旅遊股",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6613600",
+   "ts": "09/23 12:00"
   }
  ],
  "inst": {
