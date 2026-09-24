@@ -9871,5 +9871,59 @@
 "amount_usd": 858.72,
 "reason": "打點：4 燈亮、風報比 2.87",
 "src": "live"
+},
+{
+"date": "2026-09-24",
+"portfolio": "進出燈號",
+"action": "full_exit",
+"ticker": "3363.TWO",
+"shares": 45.0697,
+"price": 652.0,
+"price_usd": 20.498,
+"amount_usd": 923.84,
+"reason": "RS60 跌破自身 60MA（-2.03%）→ 全出",
+"src": "live",
+"entry_price": 684.0,
+"pnl_usd": -45.34,
+"pnl_pct": -4.68
+},
+{
+"date": "2026-09-24",
+"portfolio": "進出燈號",
+"action": "full_exit",
+"ticker": "PAAS",
+"shares": 9.7037,
+"price": 48.11,
+"price_usd": 48.11,
+"amount_usd": 466.85,
+"reason": "RS60 跌破自身 60MA（-0.12%）→ 全出",
+"src": "live",
+"entry_price": 51.34,
+"pnl_usd": -31.34,
+"pnl_pct": -6.29
+},
+{
+"date": "2026-09-24",
+"portfolio": "進出燈號",
+"action": "buy",
+"ticker": "3264.TWO",
+"shares": 123.2607,
+"price": 246.0,
+"price_usd": 7.7339,
+"amount_usd": 953.29,
+"reason": "打點：4 燈亮、風報比 4.16",
+"src": "live"
+},
+{
+"date": "2026-09-24",
+"portfolio": "進出燈號",
+"action": "buy",
+"ticker": "MU",
+"shares": 0.4081,
+"price": 1071.88,
+"price_usd": 1071.88,
+"amount_usd": 437.43,
+"reason": "打點：4 燈亮、風報比 3.71",
+"src": "live"
 }
 ]
