@@ -1,28 +1,180 @@
 {
-"date": "2026-09-23",
-"flips_hold": [],
+"date": "2026-09-24",
+"flips_hold": [
+{
+"code": "API",
+"name": "",
+"word": "🟢→🔴 翻空",
+"dir": -1,
+"sig": "st"
+},
+{
+"code": "BAYRY",
+"name": "",
+"word": "RS60站回多方",
+"dir": 1,
+"sig": "rs60"
+},
+{
+"code": "ARKX",
+"name": "",
+"word": "RS60跌破自身均線",
+"dir": -1,
+"sig": "rs60"
+}
+],
 "flips_watch": [
 {
 "code": "KLIC",
 "name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1,
+"word": "🟢→🔴 翻空",
+"dir": -1,
 "sig": "st"
 },
 {
 "code": "MPWR",
 "name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1,
-"sig": "st"
-},
-{
-"code": "RKLB",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1,
+"word": "🟢→🔴 翻空",
+"dir": -1,
 "sig": "st"
 }
 ],
-"ai_alerts": []
+"ai_alerts": [
+{
+"chain": "AI 伺服器",
+"market": "US",
+"sig": "🟢",
+"code": "MU",
+"name": "Micron Technology Inc",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 伺服器",
+"market": "US",
+"sig": "🟢",
+"code": "AMD",
+"name": "Advanced Micro Devices Inc",
+"reason": "觀望→買進"
+},
+{
+"chain": "Bitcoin→AI 機房",
+"market": "US",
+"sig": "🟢",
+"code": "RIOT",
+"name": "Riot Platforms Inc",
+"reason": "觀望→買進"
+},
+{
+"chain": "Bitcoin→AI 機房",
+"market": "US",
+"sig": "🟢",
+"code": "IREN",
+"name": "IREN Ltd",
+"reason": "觀望→買進"
+},
+{
+"chain": "Bitcoin→AI 機房",
+"market": "US",
+"sig": "🟢",
+"code": "NBIS",
+"name": "Nebius Group NV Shs Class-A-",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 伺服器",
+"market": "US",
+"sig": "🟢",
+"code": "INTC",
+"name": "Intel Corp",
+"reason": "觀望→買進"
+},
+{
+"chain": "低軌衛星",
+"market": "US",
+"sig": "🟢",
+"code": "RKLB",
+"name": "Rocket Lab Corp",
+"reason": "觀望→買進"
+},
+{
+"chain": "Bitcoin→AI 機房",
+"market": "US",
+"sig": "🟢",
+"code": "MARA",
+"name": "MARA Holdings Inc",
+"reason": "觀望→買進"
+},
+{
+"chain": "玻璃基板/TGV",
+"market": "US",
+"sig": "🟢",
+"code": "GLW",
+"name": "Corning Incorporated",
+"reason": "觀望→買進"
+},
+{
+"chain": "Bitcoin→AI 機房",
+"market": "US",
+"sig": "🟢",
+"code": "APLD",
+"name": "Applied Digital Corp",
+"reason": "觀望→買進"
+},
+{
+"chain": "機器人",
+"market": "US",
+"sig": "🔴",
+"code": "CGNX",
+"name": "Cognex Corp",
+"reason": "觀望→賣出"
+},
+{
+"chain": "關鍵金屬/原物料",
+"market": "US",
+"sig": "🔴",
+"code": "CCJ",
+"name": "Cameco Corporation",
+"reason": "觀望→賣出"
+},
+{
+"chain": "太陽能",
+"market": "US",
+"sig": "🔴",
+"code": "HASI",
+"name": "HA Sustainable Infrastructure Capital Inc",
+"reason": "觀望→賣出"
+},
+{
+"chain": "AI 伺服器",
+"market": "TW",
+"sig": "🟢",
+"code": "2382",
+"name": "廣達",
+"reason": "觀望→買進"
+},
+{
+"chain": "機器人",
+"market": "TW",
+"sig": "🔴",
+"code": "2049",
+"name": "上銀",
+"reason": "觀望→賣出"
+},
+{
+"chain": "玻璃基板/TGV",
+"market": "TW",
+"sig": "🟢",
+"code": "3055",
+"name": "蔚華科",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 材料/被動元件",
+"market": "TW",
+"sig": "🟢",
+"code": "2327",
+"name": "YAGEO CORP",
+"reason": "觀望→買進"
+}
+]
 }

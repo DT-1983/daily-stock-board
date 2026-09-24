@@ -1,100 +1,112 @@
 {
- "updated": "2026-09-23 23:15",
+ "updated": "2026-09-24 08:46",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
    "date": "09/23",
-   "close": 7727.18,
-   "chg_pct": -0.48
+   "close": 7706.03,
+   "chg_pct": -0.76
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
    "date": "09/23",
-   "close": 27011.53,
-   "chg_pct": -0.41
+   "close": 26936.04,
+   "chg_pct": -0.69
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
    "date": "09/23",
-   "close": 51687.94,
-   "chg_pct": -0.69
+   "close": 51511.59,
+   "chg_pct": -1.03
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
    "date": "09/23",
-   "close": 12527.43,
-   "chg_pct": 0.76
+   "close": 12534.27,
+   "chg_pct": 0.81
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/23",
-   "close": 48157.29,
-   "chg_pct": 0.92
+   "date": "09/21",
+   "close": 47718.84,
+   "chg_pct": 1.14
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/23",
-   "close": 31.75,
-   "chg_pct": 0.02
+   "close": 31.68,
+   "chg_pct": -0.19
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
    "date": "09/23",
-   "close": 5.06,
+   "close": 5.11,
    "fmt": "yield",
-   "chg_bp": 9.7
+   "chg_bp": 15.1
   }
  ],
  "news": [
   {
-   "title": "SpaceX上市後首次！總裁擬減持34萬股 套現5,200萬美元",
+   "title": "習近平飛抵華府 環球時報：美方務必慎之又慎處理台灣問題",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6614542",
+   "ts": "09/24 08:43"
+  },
+  {
+   "title": "習近平飛抵華府 環球時報：美方務必慎之又慎處理台灣問題",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614473",
-   "ts": "09/23 23:03"
+   "url": "https://news.cnyes.com/news/id/6614542",
+   "ts": "09/24 08:43"
+  },
+  {
+   "title": "重建商機｜烏克蘭7,700億美元需求待釋放 台泥7.5億歐元提前卡位",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6614699",
+   "ts": "09/24 08:30"
+  },
+  {
+   "title": "最強AI大學誕生！黃仁勳、奧特曼、納德拉當講師 瞄準矽谷頂尖人才",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6614606",
+   "ts": "09/24 08:30"
+  },
+  {
+   "title": "Meta智慧眼鏡陣容大擴充！無相機版登場、三代支援Muse AI與助聽功能",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6614647",
+   "ts": "09/24 08:10"
+  },
+  {
+   "title": "油價、美債殖利率齊揚 美股三大指數收黑、科技股承壓",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6614657",
+   "ts": "09/24 08:03"
+  },
+  {
+   "title": "〈台股盤前要聞〉台泥拓展東歐市場、台股總市值達5.3兆美元躍居全球第四",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6614446",
+   "ts": "09/24 05:10"
   },
   {
    "title": "貿聯9億美元併購案完成Interplex Datacom今起併表、AI資料中心營收規模再擴大",
    "mkt": "TW",
    "url": "https://news.cnyes.com/news/id/6614476",
    "ts": "09/23 23:00"
-  },
-  {
-   "title": "川普才喊「徹底摧毀」！伊朗總統聯合國強硬反擊：我們才是恐怖主義受害者",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614469",
-   "ts": "09/23 22:53"
-  },
-  {
-   "title": "盤中速報 - 泰瑞達(TER-US)大跌5.11%，報378.31美元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614472",
-   "ts": "09/23 22:41"
-  },
-  {
-   "title": "短期爆紅還是Meta的「ChatGPT時刻」？ 小摩：Muse有望成ChatGPT後最廣泛使用AI應用程式",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6613947",
-   "ts": "09/23 22:40"
-  },
-  {
-   "title": "麥當勞將砸85億美元挺加盟商2030年拚升獲利、搶雞肉市場",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614465",
-   "ts": "09/23 22:30"
   },
   {
    "title": "貿聯完成收購新加坡Interplex Datacom業務 強化資料中心基礎設施布局",
@@ -107,18 +119,6 @@
    "mkt": "TW",
    "url": "https://news.cnyes.com/news/id/6614321",
    "ts": "09/23 20:04"
-  },
-  {
-   "title": "研華北美市場BB值逾2 產能供不應求爆滿到明年下半年",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6614314",
-   "ts": "09/23 20:04"
-  },
-  {
-   "title": "散戶大軍回神！8月證券劃撥存款餘額飆破4.5兆元 創歷史新高",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6614311",
-   "ts": "09/23 19:58"
   }
  ],
  "inst": {
