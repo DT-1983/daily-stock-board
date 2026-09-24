@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-24 13:03",
+ "updated": "2026-09-24 15:40",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,8 +38,8 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "09/24",
-   "close": 47907.18,
-   "chg_pct": -0.52
+   "close": 48024.6,
+   "chg_pct": -0.28
   },
   {
    "sym": "TWD=X",
@@ -47,7 +47,7 @@
    "grp": "FX",
    "date": "09/24",
    "close": 31.81,
-   "chg_pct": 0.4
+   "chg_pct": 0.41
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "2奈米晶片+雙2億像素！小米18 Pro發布 硬體級防窺螢幕與AI背景螢幕成最大變化 盧偉冰：AI手機時代從這開始",
+   "title": "美光AI熱潮陷多空拉鋸！瑞銀力挺基本面強勁 估12月重啟庫藏股",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614700",
-   "ts": "09/24 12:31"
+   "url": "https://news.cnyes.com/news/id/6614632",
+   "ts": "09/24 15:40"
   },
   {
-   "title": "〈房產〉婚育家庭額度增 青安3.0平均每戶金額創新高平均達930.9萬元",
+   "title": "上品(4770)在手訂單翻倍破75億，為何法人只敢估兩成成長？",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6614940",
-   "ts": "09/24 12:30"
+   "url": "https://news.cnyes.com/news/id/6615082",
+   "ts": "09/24 15:30"
   },
   {
-   "title": "美國期中選舉倒數一個多月 科技股可能面臨麻煩？",
+   "title": "力旺(3529)權利金占比破六成！3奈米拉高IP身價，帳上卻藏著一個煞車",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6615081",
+   "ts": "09/24 15:30"
+  },
+  {
+   "title": "美國PMI意外衝62個月新高市場下一關緊盯9月30日PCE、GDP",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614601",
-   "ts": "09/24 12:18"
+   "url": "https://news.cnyes.com/news/id/6615080",
+   "ts": "09/24 15:30"
   },
   {
-   "title": "新制上路 凱基證推新功能優化處置股和全額交割股交易",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6614915",
-   "ts": "09/24 12:16"
-  },
-  {
-   "title": "〈焦點股〉全福眼科新藥進入價值轉換收割期 走揚拚站穩5日線",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6614934",
-   "ts": "09/24 12:12"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：藥華藥(6446-TW)EPS預估上修至26.63元，預估目標價為1586元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6614938",
-   "ts": "09/24 12:10"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：億豐(8464-TW)EPS預估下修至24.1元，預估目標價為456元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6614937",
-   "ts": "09/24 12:10"
-  },
-  {
-   "title": "AI光通訊｜CPO/NPO外置光源ELSFP邁向量產光創聯2027Q1量產、聯鈞進入小量生產",
+   "title": "美國聯邦法官裁定：白宮須暫時恢復CNN等三家媒體採訪權",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614930",
-   "ts": "09/24 12:00"
+   "url": "https://news.cnyes.com/news/id/6615045",
+   "ts": "09/24 15:26"
   },
   {
-   "title": "煙草業迎監管轉向！川普政府擬放寬審查 加速電子煙審批 尼古丁袋也受惠",
+   "title": "全面突破！三星3D DRAM變「晶圓級樂高」專家：水平電容＋GAA＋PoC 目標是低壓低密度的全新DRAM單元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614892",
-   "ts": "09/24 11:50"
+   "url": "https://news.cnyes.com/news/id/6615007",
+   "ts": "09/24 15:20"
   },
   {
-   "title": "川普親自接機 中國學者：習近平訪美能夠為川普加分",
+   "title": "特斯拉第三代Optimus意外曝光 外型大改、更適合進工廠",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614856",
-   "ts": "09/24 11:30"
+   "url": "https://news.cnyes.com/news/id/6614979",
+   "ts": "09/24 15:10"
+  },
+  {
+   "title": "〈國壽健康年報〉外溢保單折保費沒感覺？改發「小樹點」打造更有感健康生態圈",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6614933",
+   "ts": "09/24 15:05"
+  },
+  {
+   "title": "南亞(1303)高階CCL真的放量了嗎？M9認證時程與日東紡玻纖布放量時間曝光！",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6615038",
+   "ts": "09/24 15:00"
+  },
+  {
+   "title": "〈房產〉AI供應鏈擴廠熱絡 商仲：全年商用不動產交易向上挑戰3000億元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6615008",
+   "ts": "09/24 14:41"
   }
  ],
  "inst": {
-  "date": "09/23",
-  "total_yi": 383.8,
-  "foreign_yi": 373.1,
-  "trust_yi": -47.6
+  "date": "09/24",
+  "total_yi": -438.7,
+  "foreign_yi": -338.0,
+  "trust_yi": -114.1
  }
 }
