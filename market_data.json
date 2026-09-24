@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-24 08:46",
+ "updated": "2026-09-24 13:03",
  "indices": [
   {
    "sym": "^GSPC",
@@ -30,24 +30,24 @@
    "name": "費城半導體",
    "grp": "US",
    "date": "09/23",
-   "close": 12534.27,
+   "close": 12534.28,
    "chg_pct": 0.81
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/21",
-   "close": 47718.84,
-   "chg_pct": 1.14
+   "date": "09/24",
+   "close": 47907.18,
+   "chg_pct": -0.52
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/23",
-   "close": 31.68,
-   "chg_pct": -0.19
+   "date": "09/24",
+   "close": 31.81,
+   "chg_pct": 0.4
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "習近平飛抵華府 環球時報：美方務必慎之又慎處理台灣問題",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6614542",
-   "ts": "09/24 08:43"
-  },
-  {
-   "title": "習近平飛抵華府 環球時報：美方務必慎之又慎處理台灣問題",
+   "title": "2奈米晶片+雙2億像素！小米18 Pro發布 硬體級防窺螢幕與AI背景螢幕成最大變化 盧偉冰：AI手機時代從這開始",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614542",
-   "ts": "09/24 08:43"
+   "url": "https://news.cnyes.com/news/id/6614700",
+   "ts": "09/24 12:31"
   },
   {
-   "title": "重建商機｜烏克蘭7,700億美元需求待釋放 台泥7.5億歐元提前卡位",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614699",
-   "ts": "09/24 08:30"
-  },
-  {
-   "title": "最強AI大學誕生！黃仁勳、奧特曼、納德拉當講師 瞄準矽谷頂尖人才",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614606",
-   "ts": "09/24 08:30"
-  },
-  {
-   "title": "Meta智慧眼鏡陣容大擴充！無相機版登場、三代支援Muse AI與助聽功能",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614647",
-   "ts": "09/24 08:10"
-  },
-  {
-   "title": "油價、美債殖利率齊揚 美股三大指數收黑、科技股承壓",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614657",
-   "ts": "09/24 08:03"
-  },
-  {
-   "title": "〈台股盤前要聞〉台泥拓展東歐市場、台股總市值達5.3兆美元躍居全球第四",
+   "title": "〈房產〉婚育家庭額度增 青安3.0平均每戶金額創新高平均達930.9萬元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6614446",
-   "ts": "09/24 05:10"
+   "url": "https://news.cnyes.com/news/id/6614940",
+   "ts": "09/24 12:30"
   },
   {
-   "title": "貿聯9億美元併購案完成Interplex Datacom今起併表、AI資料中心營收規模再擴大",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6614476",
-   "ts": "09/23 23:00"
+   "title": "美國期中選舉倒數一個多月 科技股可能面臨麻煩？",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6614601",
+   "ts": "09/24 12:18"
   },
   {
-   "title": "貿聯完成收購新加坡Interplex Datacom業務 強化資料中心基礎設施布局",
+   "title": "新制上路 凱基證推新功能優化處置股和全額交割股交易",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6614333",
-   "ts": "09/23 20:23"
+   "url": "https://news.cnyes.com/news/id/6614915",
+   "ts": "09/24 12:16"
   },
   {
-   "title": "燁輝斥8.04億元認購燁聯私募股13.4萬張 持股比提升至35.46%",
+   "title": "〈焦點股〉全福眼科新藥進入價值轉換收割期 走揚拚站穩5日線",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6614321",
-   "ts": "09/23 20:04"
+   "url": "https://news.cnyes.com/news/id/6614934",
+   "ts": "09/24 12:12"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：藥華藥(6446-TW)EPS預估上修至26.63元，預估目標價為1586元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6614938",
+   "ts": "09/24 12:10"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：億豐(8464-TW)EPS預估下修至24.1元，預估目標價為456元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6614937",
+   "ts": "09/24 12:10"
+  },
+  {
+   "title": "AI光通訊｜CPO/NPO外置光源ELSFP邁向量產光創聯2027Q1量產、聯鈞進入小量生產",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6614930",
+   "ts": "09/24 12:00"
+  },
+  {
+   "title": "煙草業迎監管轉向！川普政府擬放寬審查 加速電子煙審批 尼古丁袋也受惠",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6614892",
+   "ts": "09/24 11:50"
+  },
+  {
+   "title": "川普親自接機 中國學者：習近平訪美能夠為川普加分",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6614856",
+   "ts": "09/24 11:30"
   }
  ],
  "inst": {
