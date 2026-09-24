@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-24 08:46",
+ "updated": "2026-09-24 20:41",
  "indices": [
   {
    "sym": "^GSPC",
@@ -30,101 +30,101 @@
    "name": "費城半導體",
    "grp": "US",
    "date": "09/23",
-   "close": 12534.27,
+   "close": 12534.28,
    "chg_pct": 0.81
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/21",
-   "close": 47718.84,
-   "chg_pct": 1.14
+   "date": "09/24",
+   "close": 48024.6,
+   "chg_pct": -0.28
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/23",
-   "close": 31.68,
-   "chg_pct": -0.19
+   "date": "09/24",
+   "close": 31.78,
+   "chg_pct": 0.32
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "09/23",
-   "close": 5.11,
+   "date": "09/24",
+   "close": 5.12,
    "fmt": "yield",
-   "chg_bp": 15.1
+   "chg_bp": 0.2
   }
  ],
  "news": [
   {
-   "title": "習近平飛抵華府 環球時報：美方務必慎之又慎處理台灣問題",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6614542",
-   "ts": "09/24 08:43"
-  },
-  {
-   "title": "習近平飛抵華府 環球時報：美方務必慎之又慎處理台灣問題",
+   "title": "封測最好的時候，可能也是分化開始的時候！2027 年反而更難選？真正的關鍵在這裡",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614542",
-   "ts": "09/24 08:43"
+   "url": "https://news.cnyes.com/news/id/6615397",
+   "ts": "09/24 20:30"
   },
   {
-   "title": "重建商機｜烏克蘭7,700億美元需求待釋放 台泥7.5億歐元提前卡位",
+   "title": "鉅亨速報 - Factset 最新調查：Logitech International S.A.(LOGI-US)EPS預估下修至5.61元，預估目標價為112.15元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614699",
-   "ts": "09/24 08:30"
+   "url": "https://news.cnyes.com/news/id/6615393",
+   "ts": "09/24 20:15"
   },
   {
-   "title": "最強AI大學誕生！黃仁勳、奧特曼、納德拉當講師 瞄準矽谷頂尖人才",
+   "title": "鉅亨速報 - Factset 最新調查：CubeSmart(CUBE-US)EPS預估上修至1.58元，預估目標價為43.00元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614606",
-   "ts": "09/24 08:30"
+   "url": "https://news.cnyes.com/news/id/6615392",
+   "ts": "09/24 20:15"
   },
   {
-   "title": "Meta智慧眼鏡陣容大擴充！無相機版登場、三代支援Muse AI與助聽功能",
+   "title": "鉅亨速報 - Factset 最新調查：金羅斯黃金(KGC-US)EPS預估下修至2.62元，預估目標價為35.00元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614647",
-   "ts": "09/24 08:10"
+   "url": "https://news.cnyes.com/news/id/6615391",
+   "ts": "09/24 20:15"
   },
   {
-   "title": "油價、美債殖利率齊揚 美股三大指數收黑、科技股承壓",
+   "title": "鉅亨速報 - Factset 最新調查：美高梅度假村國際(MGM-US)EPS預估上修至1.82元，預估目標價為50.00元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614657",
-   "ts": "09/24 08:03"
+   "url": "https://news.cnyes.com/news/id/6615390",
+   "ts": "09/24 20:15"
   },
   {
-   "title": "〈台股盤前要聞〉台泥拓展東歐市場、台股總市值達5.3兆美元躍居全球第四",
+   "title": "國喬：轉型調整營運策略 鏈結AWI工業氣體布局半導體供應鏈",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6614446",
-   "ts": "09/24 05:10"
+   "url": "https://news.cnyes.com/news/id/6615363",
+   "ts": "09/24 20:08"
   },
   {
-   "title": "貿聯9億美元併購案完成Interplex Datacom今起併表、AI資料中心營收規模再擴大",
+   "title": "鴻海擬出清美國金融科技公司Figure Technology Solutions持股 實現投資利益",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6614476",
-   "ts": "09/23 23:00"
+   "url": "https://news.cnyes.com/news/id/6615358",
+   "ts": "09/24 20:05"
   },
   {
-   "title": "貿聯完成收購新加坡Interplex Datacom業務 強化資料中心基礎設施布局",
+   "title": "玉山金首波注資三商壽160億元將到位 現增基準日敲定9/29",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6614333",
-   "ts": "09/23 20:23"
+   "url": "https://news.cnyes.com/news/id/6615361",
+   "ts": "09/24 19:48"
   },
   {
-   "title": "燁輝斥8.04億元認購燁聯私募股13.4萬張 持股比提升至35.46%",
+   "title": "台塑化：向台朔重工斥資3.06億添購生產機械 以因應業務需求",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6614321",
-   "ts": "09/23 20:04"
+   "url": "https://news.cnyes.com/news/id/6615357",
+   "ts": "09/24 19:48"
+  },
+  {
+   "title": "〈工資審議〉GDP狂飆薪水卻跟不上？勞長曝關鍵：AI成長紅利並非人人都吃得到",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6607786",
+   "ts": "09/24 19:47"
   }
  ],
  "inst": {
-  "date": "09/23",
-  "total_yi": 383.8,
-  "foreign_yi": 373.1,
-  "trust_yi": -47.6
+  "date": "09/24",
+  "total_yi": -444.5,
+  "foreign_yi": -329.6,
+  "trust_yi": -128.2
  }
 }
