@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-24 15:40",
+ "updated": "2026-09-24 20:41",
  "indices": [
   {
    "sym": "^GSPC",
@@ -46,85 +46,85 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/24",
-   "close": 31.81,
-   "chg_pct": 0.41
+   "close": 31.78,
+   "chg_pct": 0.32
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "09/23",
-   "close": 5.11,
+   "date": "09/24",
+   "close": 5.12,
    "fmt": "yield",
-   "chg_bp": 15.1
+   "chg_bp": 0.2
   }
  ],
  "news": [
   {
-   "title": "美光AI熱潮陷多空拉鋸！瑞銀力挺基本面強勁 估12月重啟庫藏股",
+   "title": "封測最好的時候，可能也是分化開始的時候！2027 年反而更難選？真正的關鍵在這裡",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614632",
-   "ts": "09/24 15:40"
+   "url": "https://news.cnyes.com/news/id/6615397",
+   "ts": "09/24 20:30"
   },
   {
-   "title": "上品(4770)在手訂單翻倍破75億，為何法人只敢估兩成成長？",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6615082",
-   "ts": "09/24 15:30"
-  },
-  {
-   "title": "力旺(3529)權利金占比破六成！3奈米拉高IP身價，帳上卻藏著一個煞車",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6615081",
-   "ts": "09/24 15:30"
-  },
-  {
-   "title": "美國PMI意外衝62個月新高市場下一關緊盯9月30日PCE、GDP",
+   "title": "鉅亨速報 - Factset 最新調查：Logitech International S.A.(LOGI-US)EPS預估下修至5.61元，預估目標價為112.15元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6615080",
-   "ts": "09/24 15:30"
+   "url": "https://news.cnyes.com/news/id/6615393",
+   "ts": "09/24 20:15"
   },
   {
-   "title": "美國聯邦法官裁定：白宮須暫時恢復CNN等三家媒體採訪權",
+   "title": "鉅亨速報 - Factset 最新調查：CubeSmart(CUBE-US)EPS預估上修至1.58元，預估目標價為43.00元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6615045",
-   "ts": "09/24 15:26"
+   "url": "https://news.cnyes.com/news/id/6615392",
+   "ts": "09/24 20:15"
   },
   {
-   "title": "全面突破！三星3D DRAM變「晶圓級樂高」專家：水平電容＋GAA＋PoC 目標是低壓低密度的全新DRAM單元",
+   "title": "鉅亨速報 - Factset 最新調查：金羅斯黃金(KGC-US)EPS預估下修至2.62元，預估目標價為35.00元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6615007",
-   "ts": "09/24 15:20"
+   "url": "https://news.cnyes.com/news/id/6615391",
+   "ts": "09/24 20:15"
   },
   {
-   "title": "特斯拉第三代Optimus意外曝光 外型大改、更適合進工廠",
+   "title": "鉅亨速報 - Factset 最新調查：美高梅度假村國際(MGM-US)EPS預估上修至1.82元，預估目標價為50.00元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614979",
-   "ts": "09/24 15:10"
+   "url": "https://news.cnyes.com/news/id/6615390",
+   "ts": "09/24 20:15"
   },
   {
-   "title": "〈國壽健康年報〉外溢保單折保費沒感覺？改發「小樹點」打造更有感健康生態圈",
+   "title": "國喬：轉型調整營運策略 鏈結AWI工業氣體布局半導體供應鏈",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6614933",
-   "ts": "09/24 15:05"
+   "url": "https://news.cnyes.com/news/id/6615363",
+   "ts": "09/24 20:08"
   },
   {
-   "title": "南亞(1303)高階CCL真的放量了嗎？M9認證時程與日東紡玻纖布放量時間曝光！",
+   "title": "鴻海擬出清美國金融科技公司Figure Technology Solutions持股 實現投資利益",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6615038",
-   "ts": "09/24 15:00"
+   "url": "https://news.cnyes.com/news/id/6615358",
+   "ts": "09/24 20:05"
   },
   {
-   "title": "〈房產〉AI供應鏈擴廠熱絡 商仲：全年商用不動產交易向上挑戰3000億元",
+   "title": "玉山金首波注資三商壽160億元將到位 現增基準日敲定9/29",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6615008",
-   "ts": "09/24 14:41"
+   "url": "https://news.cnyes.com/news/id/6615361",
+   "ts": "09/24 19:48"
+  },
+  {
+   "title": "台塑化：向台朔重工斥資3.06億添購生產機械 以因應業務需求",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6615357",
+   "ts": "09/24 19:48"
+  },
+  {
+   "title": "〈工資審議〉GDP狂飆薪水卻跟不上？勞長曝關鍵：AI成長紅利並非人人都吃得到",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6607786",
+   "ts": "09/24 19:47"
   }
  ],
  "inst": {
   "date": "09/24",
-  "total_yi": -438.7,
-  "foreign_yi": -338.0,
-  "trust_yi": -114.1
+  "total_yi": -444.5,
+  "foreign_yi": -329.6,
+  "trust_yi": -128.2
  }
 }
