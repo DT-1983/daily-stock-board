@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-25 15:40",
+ "updated": "2026-09-25 20:43",
  "indices": [
   {
    "sym": "^GSPC",
@@ -46,49 +46,49 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/25",
-   "close": 31.76,
-   "chg_pct": -0.08
+   "close": 31.77,
+   "chg_pct": -0.06
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "09/24",
-   "close": 5.16,
+   "date": "09/25",
+   "close": 5.18,
    "fmt": "yield",
-   "chg_bp": 4.8
+   "chg_bp": 1.3
   }
  ],
  "news": [
   {
-   "title": "Google衛星 下周去太空",
+   "title": "鉅亨速報 - Factset 最新調查：LATAM Airlines Group SA Sponsored ADR(LTM-US)EPS預估上修至5.03元，預估目標價為72.45元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6615791",
-   "ts": "09/25 15:37"
+   "url": "https://news.cnyes.com/news/id/6616025",
+   "ts": "09/25 20:15"
   },
   {
-   "title": "Akamai拿下Anthropic七年116億美元雲端大單AI算力需求再推基礎設施擴產",
+   "title": "鉅亨速報 - Factset 最新調查：查爾斯河實驗室國際CRL-US的目標價調升至314元，幅度約3.8%",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6615881",
-   "ts": "09/25 15:30"
+   "url": "https://news.cnyes.com/news/id/6616024",
+   "ts": "09/25 20:15"
   },
   {
-   "title": "美債殖利率衝19年高點亞洲股市震盪、日股逆勢漲1.3%",
+   "title": "鉅亨速報 - Factset 最新調查：愛立信(ERIC-US)EPS預估下修至0.54元，預估目標價為10.49元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6615880",
-   "ts": "09/25 15:30"
+   "url": "https://news.cnyes.com/news/id/6616023",
+   "ts": "09/25 20:15"
   },
   {
-   "title": "挑戰「60法則」！標普新兵Everpure長期目標獲華爾街買單 躍升大盤最強股",
+   "title": "鉅亨速報 - Factset 最新調查：Oklo Inc. Class AOKLO-US的目標價調降至73元，幅度約3.95%",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6615643",
-   "ts": "09/25 15:30"
+   "url": "https://news.cnyes.com/news/id/6616022",
+   "ts": "09/25 20:15"
   },
   {
-   "title": "美中AI共振推升企業級SSD！2027年需求估增52.9%、NAND供需缺口擴大",
+   "title": "鉅亨速報 - Factset 最新調查：車美仕KMX-US的目標價調升至59.5元，幅度約11.21%",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6615795",
-   "ts": "09/25 15:10"
+   "url": "https://news.cnyes.com/news/id/6616021",
+   "ts": "09/25 20:15"
   },
   {
    "title": "輸歐鋼品配額管理措施調整 鋼鐵公會：全力配合並協助爭取更多配額",
