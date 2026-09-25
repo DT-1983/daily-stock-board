@@ -2,6 +2,20 @@
 "date": "2026-09-25",
 "flips_hold": [
 {
+"code": "IX",
+"name": "",
+"word": "🟢→🔴 翻空",
+"dir": -1,
+"sig": "st"
+},
+{
+"code": "TM",
+"name": "",
+"word": "🟢→🔴 翻空",
+"dir": -1,
+"sig": "st"
+},
+{
 "code": "UNM",
 "name": "",
 "word": "RS60跌破自身均線",
@@ -38,94 +52,5 @@
 }
 ],
 "flips_watch": [],
-"ai_alerts": [
-{
-"chain": "玻璃基板/TGV",
-"market": "US",
-"sig": "🟢",
-"code": "KLIC",
-"name": "Kulicke and Soffa Industries, I",
-"reason": "觀望→買進"
-},
-{
-"chain": "Bitcoin→AI 機房",
-"market": "US",
-"sig": "🟢",
-"code": "HUT",
-"name": "Hut 8 Corp",
-"reason": "觀望→買進"
-},
-{
-"chain": "矽光子/光通訊",
-"market": "US",
-"sig": "🟢",
-"code": "PI",
-"name": "Impinj Inc",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 伺服器",
-"market": "US",
-"sig": "🟢",
-"code": "GOOGL",
-"name": "Alphabet Inc Class A",
-"reason": "觀望→買進"
-},
-{
-"chain": "關鍵金屬/原物料",
-"market": "US",
-"sig": "🔴",
-"code": "PAAS",
-"name": "Pan American Silver Corp.",
-"reason": "觀望→賣出"
-},
-{
-"chain": "太陽能",
-"market": "US",
-"sig": "🔴",
-"code": "CWEN",
-"name": "Clearway Energy Inc Class C",
-"reason": "觀望→賣出"
-},
-{
-"chain": "太陽能",
-"market": "US",
-"sig": "🔴",
-"code": "FSLR",
-"name": "First Solar Inc",
-"reason": "觀望→賣出"
-},
-{
-"chain": "AI 電力/核能",
-"market": "TW",
-"sig": "🔴",
-"code": "1605",
-"name": "華新",
-"reason": "觀望→賣出"
-},
-{
-"chain": "AI 電力/核能",
-"market": "TW",
-"sig": "🟢",
-"code": "1513",
-"name": "中興電",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 材料/被動元件",
-"market": "TW",
-"sig": "🟢",
-"code": "6213",
-"name": "ITEQ CORP",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 電源/散熱",
-"market": "TW",
-"sig": "🟢",
-"code": "3017",
-"name": "奇鋐",
-"reason": "觀望→買進"
-}
-]
+"ai_alerts": []
 }
