@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-25 08:47",
+ "updated": "2026-09-25 13:06",
  "indices": [
   {
    "sym": "^GSPC",
@@ -37,17 +37,17 @@
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/23",
-   "close": 48157.29,
-   "chg_pct": 0.92
+   "date": "09/24",
+   "close": 48024.6,
+   "chg_pct": -0.28
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/25",
-   "close": 31.81,
-   "chg_pct": 0.07
+   "close": 31.8,
+   "chg_pct": 0.03
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "AI還沒漲完！缺貨潮才剛開始 下一波看這裡",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6615142",
-   "ts": "09/25 08:40"
-  },
-  {
-   "title": "美股重點新聞摘要2026年9月25日",
+   "title": "習近平出席歡迎國宴 稱這次訪美又達成很多新共識",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6615348",
-   "ts": "09/25 08:30"
+   "url": "https://news.cnyes.com/news/id/6615790",
+   "ts": "09/25 12:54"
   },
   {
-   "title": "〈熱門股〉車用放量疊加AI伺服器雙引擎發威 雷笛克光學周漲13%連7紅",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6615473",
-   "ts": "09/25 08:12"
-  },
-  {
-   "title": "〈熱門股〉達發AI業務聚「光」 周漲22%創新高",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6615405",
-   "ts": "09/25 08:10"
-  },
-  {
-   "title": "Meta搶先OpenAI進軍AI硬體「Muse Charm」鑰匙圈最快12月上市",
+   "title": "Muse爆紅甩陰霾！Meta本月狂飆36% 距離2兆美元市值大關僅一步之遙",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6615611",
-   "ts": "09/25 07:40"
+   "url": "https://news.cnyes.com/news/id/6615641",
+   "ts": "09/25 12:40"
   },
   {
-   "title": "習近平會川普：望美方堅持反台獨 慎重處理台灣問題",
+   "title": "伊朗否認與美就「分階段」重開海峽進行談判！威脅將戰事擴大至印度洋地區、油市震盪",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6615633",
-   "ts": "09/25 07:30"
+   "url": "https://news.cnyes.com/news/id/6615780",
+   "ts": "09/25 12:20"
   },
   {
-   "title": "戴爾高層狂賣股 AI漲勢加速下套現3200萬美元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6615614",
-   "ts": "09/25 07:00"
-  },
-  {
-   "title": "貝佐斯砸錢25年320億美元仍不夠？藍色起源首度引入外部資金100億美元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6615609",
-   "ts": "09/25 06:40"
-  },
-  {
-   "title": "廣積推單板電腦整合CPU、GPU與NPU 鎖定新世代邊緣AI應用",
+   "title": "鉅亨速報 - Factset 最新調查：長榮航(2618-TW)EPS預估下修至4.29元，預估目標價為48元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6615373",
-   "ts": "09/24 21:00"
+   "url": "https://news.cnyes.com/news/id/6615804",
+   "ts": "09/25 12:10"
   },
   {
-   "title": "台鐵攜新光三越打造寶可夢列車 明起至12/13投入西部幹線營運",
+   "title": "美光還能再漲50%？瑞銀看好記憶體需求續強",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6615615",
+   "ts": "09/25 12:10"
+  },
+  {
+   "title": "伊朗總統：是否結束戰爭由美國決定 「我們不希望繼續」",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6615692",
+   "ts": "09/25 12:00"
+  },
+  {
+   "title": "「搶配額」大戰落幕！經部落槌：輸歐鋼品總額分3次開放、自由配額減半",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6615375",
-   "ts": "09/24 20:59"
+   "url": "https://news.cnyes.com/news/id/6615768",
+   "ts": "09/25 11:29"
+  },
+  {
+   "title": "〈熱門股〉PCB擺脫鬼故事！台日供應鏈點火 009828周漲逾7%重返發行價",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6615515",
+   "ts": "09/25 11:27"
+  },
+  {
+   "title": "〈熱門股〉ABF載板供需缺口續擴大 欣興滾量重返千金周漲20%",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6615639",
+   "ts": "09/25 11:26"
+  },
+  {
+   "title": "〈熱門股〉Gogolook搭資安議題 周漲25%股價創掛牌上市以來新高",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6615501",
+   "ts": "09/25 11:26"
   }
  ],
  "inst": {
