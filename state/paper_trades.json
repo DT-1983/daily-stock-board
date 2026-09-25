@@ -9925,5 +9925,47 @@
 "amount_usd": 437.43,
 "reason": "打點：4 燈亮、風報比 3.71",
 "src": "live"
+},
+{
+"date": "2026-09-25",
+"portfolio": "產業鏈+趨勢",
+"action": "leave",
+"ticker": "RTX",
+"shares": 0.8658,
+"price": 188.61,
+"price_usd": 188.61,
+"amount_usd": 163.3,
+"reason": "週線 SuperTrend 翻空（掉出綠燈名單）",
+"src": "live",
+"entry_price": 194.34,
+"pnl_usd": -4.96,
+"pnl_pct": -2.95
+},
+{
+"date": "2026-09-25",
+"portfolio": "進出燈號",
+"action": "full_exit",
+"ticker": "TM",
+"shares": 5.0549,
+"price": 186.72,
+"price_usd": 186.72,
+"amount_usd": 943.85,
+"reason": "RS60 跌破自身 60MA（-1.6%）→ 全出",
+"src": "live",
+"entry_price": 197.11,
+"pnl_usd": -52.52,
+"pnl_pct": -5.27
+},
+{
+"date": "2026-09-25",
+"portfolio": "進出燈號",
+"action": "buy",
+"ticker": "6257.TW",
+"shares": 123.4464,
+"price": 243.0,
+"price_usd": 7.6458,
+"amount_usd": 943.85,
+"reason": "打點：4 燈亮、風報比 3.88",
+"src": "live"
 }
 ]

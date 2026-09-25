@@ -1,14 +1,12 @@
 {
- "date": "2026-09-24",
- "lamp_date": "2026-09-24",
+ "date": "2026-09-25",
+ "lamp_date": "2026-09-25",
  "buy": [
-  "3264.TWO",
-  "MU"
+  "6257.TW"
  ],
  "half_sell": [],
  "full_exit": [
-  "3363.TWO",
-  "PAAS"
+  "TM"
  ],
  "held": 13,
  "cash": 0.0
