@@ -1,124 +1,124 @@
 {
- "updated": "2026-09-24 20:41",
+ "updated": "2026-09-25 08:47",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "09/23",
-   "close": 7706.03,
-   "chg_pct": -0.76
+   "date": "09/24",
+   "close": 7704.13,
+   "chg_pct": -0.02
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "09/23",
-   "close": 26936.04,
-   "chg_pct": -0.69
+   "date": "09/24",
+   "close": 26939.37,
+   "chg_pct": 0.01
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "09/23",
-   "close": 51511.59,
-   "chg_pct": -1.03
+   "date": "09/24",
+   "close": 51349.98,
+   "chg_pct": -0.31
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "09/23",
-   "close": 12534.28,
-   "chg_pct": 0.81
+   "date": "09/24",
+   "close": 12492.54,
+   "chg_pct": -0.33
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/24",
-   "close": 48024.6,
-   "chg_pct": -0.28
+   "date": "09/23",
+   "close": 48157.29,
+   "chg_pct": 0.92
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/24",
-   "close": 31.78,
-   "chg_pct": 0.32
+   "date": "09/25",
+   "close": 31.81,
+   "chg_pct": 0.07
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
    "date": "09/24",
-   "close": 5.12,
+   "close": 5.16,
    "fmt": "yield",
-   "chg_bp": 0.2
+   "chg_bp": 4.8
   }
  ],
  "news": [
   {
-   "title": "封測最好的時候，可能也是分化開始的時候！2027 年反而更難選？真正的關鍵在這裡",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6615397",
-   "ts": "09/24 20:30"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：Logitech International S.A.(LOGI-US)EPS預估下修至5.61元，預估目標價為112.15元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6615393",
-   "ts": "09/24 20:15"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：CubeSmart(CUBE-US)EPS預估上修至1.58元，預估目標價為43.00元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6615392",
-   "ts": "09/24 20:15"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：金羅斯黃金(KGC-US)EPS預估下修至2.62元，預估目標價為35.00元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6615391",
-   "ts": "09/24 20:15"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：美高梅度假村國際(MGM-US)EPS預估上修至1.82元，預估目標價為50.00元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6615390",
-   "ts": "09/24 20:15"
-  },
-  {
-   "title": "國喬：轉型調整營運策略 鏈結AWI工業氣體布局半導體供應鏈",
+   "title": "AI還沒漲完！缺貨潮才剛開始 下一波看這裡",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6615363",
-   "ts": "09/24 20:08"
+   "url": "https://news.cnyes.com/news/id/6615142",
+   "ts": "09/25 08:40"
   },
   {
-   "title": "鴻海擬出清美國金融科技公司Figure Technology Solutions持股 實現投資利益",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6615358",
-   "ts": "09/24 20:05"
+   "title": "美股重點新聞摘要2026年9月25日",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6615348",
+   "ts": "09/25 08:30"
   },
   {
-   "title": "玉山金首波注資三商壽160億元將到位 現增基準日敲定9/29",
+   "title": "〈熱門股〉車用放量疊加AI伺服器雙引擎發威 雷笛克光學周漲13%連7紅",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6615361",
-   "ts": "09/24 19:48"
+   "url": "https://news.cnyes.com/news/id/6615473",
+   "ts": "09/25 08:12"
   },
   {
-   "title": "台塑化：向台朔重工斥資3.06億添購生產機械 以因應業務需求",
+   "title": "〈熱門股〉達發AI業務聚「光」 周漲22%創新高",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6615357",
-   "ts": "09/24 19:48"
+   "url": "https://news.cnyes.com/news/id/6615405",
+   "ts": "09/25 08:10"
   },
   {
-   "title": "〈工資審議〉GDP狂飆薪水卻跟不上？勞長曝關鍵：AI成長紅利並非人人都吃得到",
+   "title": "Meta搶先OpenAI進軍AI硬體「Muse Charm」鑰匙圈最快12月上市",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6615611",
+   "ts": "09/25 07:40"
+  },
+  {
+   "title": "習近平會川普：望美方堅持反台獨 慎重處理台灣問題",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6615633",
+   "ts": "09/25 07:30"
+  },
+  {
+   "title": "戴爾高層狂賣股 AI漲勢加速下套現3200萬美元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6615614",
+   "ts": "09/25 07:00"
+  },
+  {
+   "title": "貝佐斯砸錢25年320億美元仍不夠？藍色起源首度引入外部資金100億美元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6615609",
+   "ts": "09/25 06:40"
+  },
+  {
+   "title": "廣積推單板電腦整合CPU、GPU與NPU 鎖定新世代邊緣AI應用",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6607786",
-   "ts": "09/24 19:47"
+   "url": "https://news.cnyes.com/news/id/6615373",
+   "ts": "09/24 21:00"
+  },
+  {
+   "title": "台鐵攜新光三越打造寶可夢列車 明起至12/13投入西部幹線營運",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6615375",
+   "ts": "09/24 20:59"
   }
  ],
  "inst": {
