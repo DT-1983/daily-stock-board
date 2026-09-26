@@ -1,18 +1,18 @@
 {
-"date": "2026-09-25",
+"date": "2026-09-26",
 "flips_hold": [
 {
-"code": "IX",
+"code": "AER",
 "name": "",
-"word": "🟢→🔴 翻空",
-"dir": -1,
+"word": "🔴→🟢 翻多",
+"dir": 1,
 "sig": "st"
 },
 {
-"code": "TM",
+"code": "ARKQ",
 "name": "",
-"word": "🟢→🔴 翻空",
-"dir": -1,
+"word": "🔴→🟢 翻多",
+"dir": 1,
 "sig": "st"
 },
 {
@@ -51,6 +51,35 @@
 "sig": "rs60"
 }
 ],
-"flips_watch": [],
+"flips_watch": [
+{
+"code": "CAMT",
+"name": "",
+"word": "🔴→🟢 翻多",
+"dir": 1,
+"sig": "st"
+},
+{
+"code": "EMR",
+"name": "",
+"word": "🔴→🟢 翻多",
+"dir": 1,
+"sig": "st"
+},
+{
+"code": "JCI",
+"name": "",
+"word": "🔴→🟢 翻多",
+"dir": 1,
+"sig": "st"
+},
+{
+"code": "NVT",
+"name": "",
+"word": "🔴→🟢 翻多",
+"dir": 1,
+"sig": "st"
+}
+],
 "ai_alerts": []
 }
