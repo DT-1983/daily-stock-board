@@ -1,5 +1,5 @@
 {
- "date": "2026-09-24",
+ "date": "2026-09-25",
  "period": 60,
  "mode": "daily",
  "chains": {
@@ -45,11 +45,11 @@
    "rrg_from": null,
    "supertrend": "空頭",
    "squeeze": {
-    "on": true,
-    "level": "中壓",
+    "on": false,
+    "level": null,
     "momentum_up": true
    },
-   "summary": "落後象限(RS 98.85/動能 98.65)｜SuperTrend空頭｜中壓蓄力中，動能偏多"
+   "summary": "落後象限(RS 98.85/動能 98.65)｜SuperTrend空頭｜未擠壓"
   },
   "us:太陽能": {
    "members_used": 8,
@@ -111,9 +111,9 @@
    "squeeze": {
     "on": true,
     "level": "極壓",
-    "momentum_up": false
+    "momentum_up": true
    },
-   "summary": "落後象限(RS 99.8/動能 98.98)｜SuperTrend多頭｜極壓蓄力中，動能偏空"
+   "summary": "落後象限(RS 99.8/動能 98.98)｜SuperTrend多頭｜極壓蓄力中，動能偏多"
   },
   "us:玻璃基板/TGV": {
    "members_used": 6,
@@ -174,10 +174,10 @@
    "supertrend": "多頭",
    "squeeze": {
     "on": true,
-    "level": "中壓",
+    "level": "微壓",
     "momentum_up": true
    },
-   "summary": "弱化象限(RS 101.54/動能 99.65)｜SuperTrend多頭｜中壓蓄力中，動能偏多"
+   "summary": "弱化象限(RS 101.54/動能 99.65)｜SuperTrend多頭｜微壓蓄力中，動能偏多"
   },
   "tw:矽光子/光通訊": {
    "members_used": 8,
@@ -253,11 +253,11 @@
    "rrg_from": null,
    "supertrend": "多頭",
    "squeeze": {
-    "on": false,
-    "level": null,
+    "on": true,
+    "level": "微壓",
     "momentum_up": false
    },
-   "summary": "領先象限(RS 101.01/動能 101.76)｜SuperTrend多頭｜未擠壓"
+   "summary": "領先象限(RS 101.01/動能 101.76)｜SuperTrend多頭｜微壓蓄力中，動能偏空"
   },
   "tw:玻璃基板/TGV": {
    "members_used": 8,
@@ -301,11 +301,11 @@
    "rrg_from": null,
    "supertrend": "多頭",
    "squeeze": {
-    "on": true,
-    "level": "中壓",
+    "on": false,
+    "level": null,
     "momentum_up": true
    },
-   "summary": "領先象限(RS 102.53/動能 102.0)｜SuperTrend多頭｜中壓蓄力中，動能偏多"
+   "summary": "領先象限(RS 102.53/動能 102.0)｜SuperTrend多頭｜未擠壓"
   }
  }
 }
