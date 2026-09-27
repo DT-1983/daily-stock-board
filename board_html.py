@@ -28,7 +28,7 @@ from board_html_legacy import (parse_report, oneliner, CHAIN_ORDER, CHAIN_MAP,
                         CHAIN_THEMES, CHAIN_REPORTS, ma_series, supertrend,
                         fetch_us_charts, esc_tw, TW_JSON, OBIS, chain_phase,
                         CHAIN_ICON, TW_NAME, tw_name, _align_rs)  # alert_telegram.py 從本模組 import，要 re-export
-from technical_indicators import squeeze_momentum, mansfield_rs_series, rs_signal_series
+from technical_indicators import squeeze_momentum, mansfield_rs_series, rs_signal_series, rs_ratio_line, rs_accel_series
 from board_theme import NAV, HUD_CSS, header as theme_header
 # 滾輪縮放改成「點圖才啟用」（2026-09-07）。這頁自己畫圖、沒走 ti.build_html，
 # 所以要自己把那段 JS 與樣式帶進來。
@@ -295,7 +295,7 @@ function drawChart(id){const c=CHARTS[id];if(!c)return;
  if(c.supertrend){const dir=c.supertrend.dir;
   ds.push({type:'line',label:'SuperTrend',data:c.supertrend.st.map((v,i)=>({x:i,y:v})),borderWidth:1.6,pointRadius:0,
    segment:{borderColor:ctx=>{const i=ctx.p1DataIndex;
-    return dir[i]===1?'#facc15':(dir[i]===-1?'#c084fc':'#94A3B8');}}});}
+    return dir[i]===1?'#c084fc':(dir[i]===-1?'#facc15':'#94A3B8');}}});}  /* 紫多黃空＝老墨 PRO MAX */
  const main=new Chart(el,{type:hasCandle?'candlestick':'line',data:{datasets:ds},
   options:{responsive:true,maintainAspectRatio:false,interaction:{intersect:false,mode:'index'},
    plugins:{legend:{labels:{color:'#94A3B8',boxWidth:11,font:{size:10}}},zoom:zoomOpt(id,c)},
@@ -325,16 +325,16 @@ function drawExtra(id,c){
  const elSq=document.getElementById('cvsq'+id),elRs=document.getElementById('cvrs'+id);
  if(elSq&&c.mom&&c.mom.length){
   const momColor=c.mom.map((v,i)=>{if(v==null)return'#2a2e35';const prev=i>0?c.mom[i-1]:v;
-   if(v>=0)return v>=prev?'#4ade80':'#1e7a45';return v<=prev?'#ff8a8a':'#8a2e2e';});
+   if(v>=0)return v>=prev?'#ff8a8a':'#8a2e2e';return v<=prev?'#4ade80':'#1e7a45';});  /* 紅多綠空＝老墨 EXCEED CHARGE */
   const dotColor=(c.sq_on||[]).map((on,i)=>{if(on)return'#EAB308';const m=c.mom[i];
-   return m==null?'#6b7280':(m>=0?'#4ade80':'#ff8a8a');});
+   return m==null?'#6b7280':(m>=0?'#ff8a8a':'#4ade80');});
   const sq=new Chart(elSq,{type:'bar',data:{datasets:[
     {label:'動能',data:c.mom.map((v,i)=>({x:i,y:v})),backgroundColor:momColor,order:2},
     {label:'擠壓/釋放',type:'line',data:c.mom.map((_,i)=>({x:i,y:0})),showLine:false,
      pointRadius:2.6,pointBackgroundColor:dotColor,pointBorderWidth:0,order:1},
     {label:'釋放★',type:'line',data:(c.sq_on||[]).map((on,i)=>({x:i,y:(i>0&&c.sq_on[i-1]&&!on)?0:null})),showLine:false,
      pointStyle:'star',pointRadius:6.5,pointBorderColor:'#ffffff',pointBorderWidth:0.8,
-     pointBackgroundColor:c.mom.map(m=>m==null?'#9aa0a6':(m>=0?'#4ade80':'#ff8a8a')),order:0}]},
+     pointBackgroundColor:c.mom.map(m=>m==null?'#9aa0a6':(m>=0?'#ff8a8a':'#4ade80')),order:0}]},
    options:{responsive:true,maintainAspectRatio:false,
     plugins:{legend:{display:false},zoom:zoomOpt(id,c)},
     scales:{x:{type:'linear',min:0,max:c.dates.length-1,offset:true,
@@ -344,11 +344,15 @@ function drawExtra(id,c){
  if(elRs&&((c.rs_s&&c.rs_s.length)||(c.rs_l&&c.rs_l.length))){
   const base=(c.rs_s&&c.rs_s.length?c.rs_s:c.rs_l).map((_,i)=>({x:i,y:0}));
   const rsds=[{label:'基準線(0%)',data:base,borderColor:'#EF4444',borderWidth:2,pointRadius:0,order:3}];
-  if(c.rs_s&&c.rs_s.length)rsds.push({label:'短線20日',data:c.rs_s.map((v,i)=>({x:i,y:v})),borderColor:'#EAB308',borderWidth:1.4,pointRadius:0,tension:.15,order:1});
-  if(c.rs_l&&c.rs_l.length)rsds.push({label:'長線1年',data:c.rs_l.map((v,i)=>({x:i,y:v})),borderColor:'#4a9eff',borderWidth:1.4,pointRadius:0,tension:.15,order:2});
+  /* 2026-09-27 對齊老墨：短線一季＝線、長線240日＝柱（紅正綠負），跟財報卡同一種畫法 */
+  if(c.rs_s&&c.rs_s.length)rsds.push({label:'短線一季',data:c.rs_s.map((v,i)=>({x:i,y:v})),borderColor:'#4a9eff',borderWidth:1.6,pointRadius:0,tension:.15,order:1});
+  if(c.rs_l&&c.rs_l.length)rsds.push({type:'bar',label:'長線240日',data:c.rs_l.map((v,i)=>({x:i,y:v})),
+   backgroundColor:c.rs_l.map(v=>(v!=null&&v>=0?'rgba(255,138,138,.55)':'rgba(74,222,128,.55)')),
+   borderWidth:0,barPercentage:1,categoryPercentage:1,order:2});
   if(c.rs_turn&&c.rs_turn.length)rsds.push({label:'🟡翻正',data:c.rs_turn.map((v,i)=>({x:i,y:v})),showLine:false,pointRadius:4,pointBackgroundColor:'#FACC15',pointBorderColor:'#1a1d23',pointBorderWidth:1,order:0});
   if(c.rs_newh&&c.rs_newh.length)rsds.push({label:'🔵創新高',data:c.rs_newh.map((v,i)=>({x:i,y:v})),showLine:false,pointRadius:4,pointBackgroundColor:'#38BDF8',pointBorderColor:'#1a1d23',pointBorderWidth:1,order:0});
   if(c.rs_lead&&c.rs_lead.length)rsds.push({label:'🩷資金領先',data:c.rs_lead.map((v,i)=>({x:i,y:v})),showLine:false,pointRadius:4.5,pointBackgroundColor:'#F472B6',pointBorderColor:'#1a1d23',pointBorderWidth:1,order:0});
+  if(c.rs_accel&&c.rs_accel.length)rsds.push({label:'▲動能加速',data:c.rs_accel.map((v,i)=>({x:i,y:v})),showLine:false,pointStyle:'triangle',pointRadius:4.5,pointBackgroundColor:'#F8FAFC',pointBorderColor:'#1a1d23',pointBorderWidth:1,order:0});
   const rsc=new Chart(elRs,{type:'line',data:{datasets:rsds},
    options:{responsive:true,maintainAspectRatio:false,
     plugins:{legend:{labels:{color:'#9aa0a6',boxWidth:11,font:{size:10},
@@ -483,11 +487,16 @@ def main():
             st = _st_sma(highs, lows, cl) if highs else None
             ty = typhoon_state_series(cl, None, st["dir"]) if st else None
             sq = squeeze_momentum(highs, lows, cl) if highs and lows else None
-            rs_s = mansfield_rs_series(cl, tw_bench_closes, 20) if tw_bench_closes else None
-            rs_l = mansfield_rs_series(cl, tw_bench_closes, 250) if tw_bench_closes else None  # 2026-09-03 補長線RS(黃點需要)
+            # 2026-09-27 對齊老墨 RS STRONGER：短 60／長 240（原本 20／250，是財報卡 9/11 改 60 時漏改的這份）
+            rs_s = mansfield_rs_series(cl, tw_bench_closes, 60) if tw_bench_closes else None
+            rs_l = mansfield_rs_series(cl, tw_bench_closes, 240) if tw_bench_closes else None  # 2026-09-03 補長線RS(黃點需要)
             _rss = _align_rs(rs_s, len(cl)) if rs_s is not None else []
             _rsl = _align_rs(rs_l, len(cl)) if rs_l is not None else []
-            _rst, _rsn, _rsd = rs_signal_series(_rss, _rsl, cl)  # 老墨黃/藍/粉紅點,跟財報卡同一套邏輯
+            # RS 新高改在原始比值線上判斷（老墨定義）；比值不能 round 到 2 位，會把新高判斷抹平
+            _rl = rs_ratio_line(cl, tw_bench_closes) if tw_bench_closes else None
+            _rl = ([None] * (len(cl) - len(_rl)) + list(_rl)) if _rl is not None else None
+            _rst, _rsn, _rsd = rs_signal_series(_rss, _rsl, cl, rs_line=_rl)  # 老墨黃/藍/粉紅點,跟財報卡同一套邏輯
+            _rsa = rs_accel_series(_rss, _rsl)
             charts[r["code"]] = {
                 "dates": r.get("dates", []), "close": cl,
                 "open": opens, "high": highs, "low": lows, "ty": ty,
@@ -496,7 +505,7 @@ def main():
                 "mom": [None if (v is None or v != v) else round(float(v), 2) for v in sq["momentum"]] if sq else [],
                 "sq_on": [None if (isinstance(v, float) and v != v) else bool(v) for v in sq["squeeze_on"]] if sq else [],
                 "rs_s": _rss, "rs_l": _rsl,
-                "rs_turn": _rst, "rs_newh": _rsn, "rs_lead": _rsd}
+                "rs_turn": _rst, "rs_newh": _rsn, "rs_lead": _rsd, "rs_accel": _rsa}
 
     import markdown as md
     mdc = md.Markdown(extensions=["tables", "sane_lists", "nl2br"])

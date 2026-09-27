@@ -231,7 +231,7 @@ def mansfield_rs_series(closes, bench_closes, win):
     return out
 
 
-def mansfield_rs(closes, bench_closes, short=60, long=250):  # 2026-09-11 短線 20→60（一季）：Leo 貼出老墨畫面截圖，下拉選單本來就寫「短:一季 長:一年」，比 9/3 那次用數值湊的準(顯示層;燈四的 RS 在 combo_scan 是 60,不受此影響)
+def mansfield_rs(closes, bench_closes, short=60, long=240):  # 2026-09-27 長線 250→240：老墨 RS STRONGER README 長週期預設 240（combo_scan 早就是 240）。 2026-09-11 短線 20→60（一季）：Leo 貼出老墨畫面截圖，下拉選單本來就寫「短:一季 長:一年」，比 9/3 那次用數值湊的準(顯示層;燈四的 RS 在 combo_scan 是 60,不受此影響)
     """只要最新一值的版本。**數學式不自己寫一份**——直接取序列版的最後一根。
 
     2026-09-06 之前這裡自己算，結果跟序列版差一格窗口（見上面）。
@@ -349,13 +349,28 @@ def momentum_label(mom):
 
 # ── RS 加值層：新高偵測 + RS領先股價背離 + 短長線交叉 ────────────────────
 
-def rs_signals(rs_s_series, rs_l_series, closes, newhigh_lookback=120):
+def rs_ratio_line(closes, bench_closes):
+    """RS 原始比值線＝個股收盤 / 大盤收盤（尾端對齊，長度 min(len)）。
+    老墨 RS STRONGER 的「RS 創新高」判斷在**這條線**上，不是在乖離%（Mansfield）上。"""
+    if not closes or not bench_closes:
+        return None
+    n = min(len(closes), len(bench_closes))
+    c = np.array(closes[-n:], dtype=float)
+    b = np.array(bench_closes[-n:], dtype=float)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        return np.where(b > 0, c / b, np.nan)
+
+
+def rs_signals(rs_s_series, rs_l_series, closes, newhigh_lookback=120, *, rs_line=None):
     """老墨版真正拿來判斷的三個訊號：
       accel     短線RS 上穿長線RS＝相對動能在加速
       turn_up   長線RS 上穿零軸＝Weinstein突破確認、轉強
-      new_high  短線RS 創 N 日新高
+      new_high  RS 創 N 日新高
       lead      RS創新高但股價沒創同期新高＝「資金比股價先動」（老墨自己說最有價值的訊號）
     只判斷「最新一根」是不是剛發生，不回溯整段歷史（tile 用途，夠了）。
+
+    rs_line（2026-09-27）：有給就用 RS 原始比值線判斷新高（＝老墨 README 定義）；
+    沒給維持舊行為（在短線乖離% 上判斷）——回測腳本沒傳，數字才不會跟著漂。
     """
     def _valid(a):
         return a is not None and len(a) >= 2 and not np.isnan(a[-1]) and not np.isnan(a[-2])
@@ -367,25 +382,31 @@ def rs_signals(rs_s_series, rs_l_series, closes, newhigh_lookback=120):
         out["accel"] = bool(s0 <= l0 and s1 > l1)
         out["turn_up"] = bool(l0 <= 0 and l1 > 0)
 
-    if rs_s_series is not None and len(rs_s_series) >= newhigh_lookback:
-        window = rs_s_series[-newhigh_lookback:]
+    nh_src = rs_line if rs_line is not None else rs_s_series
+    if nh_src is not None and len(nh_src) >= newhigh_lookback:
+        window = nh_src[-newhigh_lookback:]
         valid_w = [x for x in window if not np.isnan(x)]
-        if len(valid_w) >= newhigh_lookback // 2 and not np.isnan(rs_s_series[-1]):
-            out["new_high"] = bool(rs_s_series[-1] >= max(valid_w))
+        if len(valid_w) >= newhigh_lookback // 2 and not np.isnan(nh_src[-1]):
+            out["new_high"] = bool(nh_src[-1] >= max(valid_w))
             if out["new_high"] and closes is not None and len(closes) >= newhigh_lookback:
                 price_window = closes[-newhigh_lookback:]
                 out["lead"] = bool(closes[-1] < max(price_window))  # RS新高、股價還沒破前高
     return out
 
 
-def rs_signal_series(rs_s_series, rs_l_series, closes, newhigh_lookback=120):
+def rs_signal_series(rs_s_series, rs_l_series, closes, newhigh_lookback=120, *, rs_line=None):
     """把 rs_signals 的三個訊號算成「整段時間序列」供圖上標點（老墨的黃/藍/粉紅點）。
     回傳 (turn, newh, lead)，各為與 rs_s_series 等長的陣列；有訊號的位置放該點 y 值，否則 None。
       turn 🟡＝長線RS 由 ≤0 上穿 >0（Weinstein 轉強，畫在長線上）
       newh 🔵＝短線RS 創 N 日新高（畫在短線上，只標「上升緣」避免連續新高整片點）
       lead 🩷＝新高但股價未創同期新高＝資金比股價先動（老墨稱最有價值；與 newh 互斥）
-    訊號定義完全沿用 rs_signals()，只是改成算整段而非只算最新一根。"""
+    訊號定義完全沿用 rs_signals()，只是改成算整段而非只算最新一根。
+    rs_line：同 rs_signals()——有給就在 RS 原始比值線上判斷新高（點仍畫在短線上，
+    因為圖上沒畫比值線）；長度要跟 rs_s_series 一樣（尾端對齊）。"""
     n = len(rs_s_series) if rs_s_series is not None else 0
+    nh_src = rs_s_series
+    if rs_line is not None and len(rs_line) == n:
+        nh_src = rs_line
     turn = [None] * n
     newh = [None] * n
     lead = [None] * n
@@ -401,10 +422,10 @@ def rs_signal_series(rs_s_series, rs_l_series, closes, newhigh_lookback=120):
         if _num(rs_l_series, i) and _num(rs_l_series, i - 1) and rs_l_series[i - 1] <= 0 < rs_l_series[i]:
             turn[i] = rs_l_series[i]
         cur_nh = False
-        if i >= newhigh_lookback and _num(rs_s_series, i):
-            window = [x for x in rs_s_series[i - newhigh_lookback:i + 1]
+        if i >= newhigh_lookback and _num(nh_src, i) and _num(rs_s_series, i):
+            window = [x for x in nh_src[i - newhigh_lookback:i + 1]
                       if x is not None and not (isinstance(x, float) and np.isnan(x))]
-            if len(window) >= newhigh_lookback // 2 and rs_s_series[i] >= max(window):
+            if len(window) >= newhigh_lookback // 2 and nh_src[i] >= max(window):
                 cur_nh = True
         if cur_nh and not prev_nh:   # 只標上升緣
             is_lead = False
@@ -420,7 +441,37 @@ def rs_signal_series(rs_s_series, rs_l_series, closes, newhigh_lookback=120):
     return turn, newh, lead
 
 
+def rs_accel_series(rs_s_series, rs_l_series):
+    """動能加速（老墨 RS STRONGER 四訊號之一）：短線RS 由下往上穿過長線RS 的那一根。
+    跟 rs_signal_series 分開一支，是為了不改那支的回傳形狀（回測腳本在解包 3 個值）。
+    點畫在短線上。"""
+    n = len(rs_s_series) if rs_s_series is not None else 0
+    out = [None] * n
+    if n == 0 or rs_l_series is None or len(rs_l_series) != n:
+        return out
+
+    def _ok(v):
+        return v is not None and not (isinstance(v, float) and np.isnan(v))
+
+    for i in range(1, n):
+        s0, s1, l0, l1 = rs_s_series[i - 1], rs_s_series[i], rs_l_series[i - 1], rs_l_series[i]
+        if _ok(s0) and _ok(s1) and _ok(l0) and _ok(l1) and s0 <= l0 and s1 > l1:
+            out[i] = s1
+    return out
+
+
 # ── 綜合：抓資料＋算四指標＋渲染 ──────────────────────────────────────
+
+def _sma_nan(a, win):
+    """簡單移動平均；窗口內有 NaN 就給 NaN（不硬湊），長度與輸入相同。"""
+    x = np.array(a, dtype=float)
+    out = np.full(len(x), np.nan)
+    for i in range(win - 1, len(x)):
+        w = x[i - win + 1:i + 1]
+        if not np.isnan(w).any():
+            out[i] = w.mean()
+    return out
+
 
 def _flip_bars(dr):
     """SuperTrend/雙重颱風目前方向已經走了幾根 K。"""
@@ -595,7 +646,10 @@ def build(ticker, disp_days=756, expanded=False, target=None):
     try:
         hist10 = yf.Ticker(ticker).history(period="10y")
         if len(hist10) >= 250:
-            st10 = supertrend(hist10["High"].tolist(), hist10["Low"].tolist(), hist10["Close"].tolist())
+            # 2026-09-27：統計改用跟畫出來那條同一個算法（SMA 版＝double_typhoon）。
+            # 原本用 Wilder 版算統計，等於「線是 A、統計是 B」——老墨 README 的數值欄
+            # 就是那條線自己的歷史，兩者必須同一條。
+            st10 = double_typhoon(hist10["High"].tolist(), hist10["Low"].tolist(), hist10["Close"].tolist())
             if st10:
                 st_stats = supertrend_stats(st10["dir"])
     except Exception as e:
@@ -605,7 +659,7 @@ def build(ticker, disp_days=756, expanded=False, target=None):
         if dir_ is None:
             return _tile(name, "—", "無資料")
         label = "多頭" if dir_ == 1 else "空頭"
-        col = "#4ade80" if dir_ == 1 else "#ff8a8a"
+        col = "#ff8a8a" if dir_ == 1 else "#4ade80"   # 台股慣例：紅多綠空
         sub = f"第 {bars} 根"
         if stats:
             key = "up" if dir_ == 1 else "down"
@@ -623,19 +677,21 @@ def build(ticker, disp_days=756, expanded=False, target=None):
     sq_level, _ = squeeze_intensity(sq) if sq is not None else (None, None)
     sq_mlabel = momentum_label(sq["momentum"]) if sq is not None else None
     sq_label = (sq_level or "擠壓中") if sq_on else "無擠壓"
-    sq_col = "#EAB308" if sq_on else ("#4ade80" if (sq_mom or 0) > 0 else "#ff8a8a")
+    sq_col = "#EAB308" if sq_on else ("#ff8a8a" if (sq_mom or 0) > 0 else "#4ade80")  # 紅多綠空
 
     rs_s = rs.get("short")
     rs_l = rs.get("long")
-    rs_html = (f'短線 <b class="num" style="color:{"#4ade80" if (rs_s or 0)>0 else "#ff8a8a"}">'
+    rs_html = (f'短線 <b class="num" style="color:{"#ff8a8a" if (rs_s or 0)>0 else "#4ade80"}">'
                f'{f"{rs_s:+.1f}%" if rs_s is not None else "—"}</b>　'
-               f'長線 <b class="num" style="color:{"#4ade80" if (rs_l or 0)>0 else "#ff8a8a"}">'
+               f'長線 <b class="num" style="color:{"#ff8a8a" if (rs_l or 0)>0 else "#4ade80"}">'
                f'{f"{rs_l:+.1f}%" if rs_l is not None else "—"}</b>')
 
     # RS 加值訊號：需要完整序列（不只最新一值），搬到這裡先算，圖表資料那段直接複用同一份
     rs_s_series = mansfield_rs_series(closes, bench_closes, 60) if bench_closes else None
-    rs_l_series = mansfield_rs_series(closes, bench_closes, 250) if bench_closes else None
-    rs_sig = rs_signals(rs_s_series, rs_l_series, closes) if rs_s_series is not None else None
+    rs_l_series = mansfield_rs_series(closes, bench_closes, 240) if bench_closes else None  # 老墨長週期 240
+    rs_line = rs_ratio_line(closes, bench_closes) if bench_closes else None
+    rs_sig = (rs_signals(rs_s_series, rs_l_series, closes, rs_line=rs_line)
+              if rs_s_series is not None else None)
     rs_sub = ""
     if rs_sig:
         badges = []
@@ -722,7 +778,7 @@ def build(ticker, disp_days=756, expanded=False, target=None):
         # 沒跟著更新的殘留字串——數值本來就是用 60 日窗口算的（見下面 rs_s_series 那行），
         # 標籤卻還在講 20 日，值跟標籤對不起來。Leo 拿老墨畫面比對才發現。
         ("短線 RS（60 日）", f"{rs_s:+.2f}%" if rs_s is not None else None),
-        ("長線 RS（250 日）", f"{rs_l:+.2f}%" if rs_l is not None else None),
+        ("長線 RS（240 日）", f"{rs_l:+.2f}%" if rs_l is not None else None),
         ("加值訊號", rs_sub or None),
     ])
 
@@ -759,13 +815,17 @@ def build(ticker, disp_days=756, expanded=False, target=None):
         "dt": (_clean(dt["st"]) if dt else [])[cut:],
         "dt_dir": [int(x) if x is not None else None for x in (dt["dir"] if dt else [])][cut:],
         "mom": (_clean(sq["momentum"]) if sq is not None else [])[cut:],
+        # 2026-09-27 老墨 EXCEED CHARGE：動能 20 日均線（白虛線），看動能本身是在墊高還是走弱
+        "mom_ma": (_clean(_sma_nan(sq["momentum"], 20)) if sq is not None else [])[cut:],
         "sq_on": [(None if (isinstance(v, float) and np.isnan(v)) else bool(v))
                   for v in (sq["squeeze_on"] if sq is not None else [])][cut:],
         "rs_s": (_clean(rs_s_series) if rs_s_series is not None else [])[cut:],
         "rs_l": (_clean(rs_l_series) if rs_l_series is not None else [])[cut:],
-        # 老墨 RS 三訊號標點（黃=長線翻正／藍=短線創新高／粉紅=資金比股價先動），整段算好再切窗
+        # 老墨 RS 訊號標點（黃=長線翻正／藍=RS創新高／粉紅=資金比股價先動），整段算好再切窗
+        # 2026-09-27：新高改在 RS 原始比值線上判斷（老墨定義），另加「動能加速」點
         **(lambda tr, nh, ld: {"rs_turn": tr[cut:], "rs_newh": nh[cut:], "rs_lead": ld[cut:]})(
-            *rs_signal_series(rs_s_series, rs_l_series, closes)),
+            *rs_signal_series(rs_s_series, rs_l_series, closes, rs_line=rs_line)),
+        "rs_accel": rs_accel_series(rs_s_series, rs_l_series)[cut:],
         # 2026-09-01 Leo：補上老墨圖上有、我們沒有的兩層——
         #   ma20＝20 日平均成本（主圖那條橘虛線），vol/vol_ma20＝成交量與 20 日均量。
         #   兩者只要 OHLCV，零額外資料源。
@@ -804,7 +864,7 @@ def build(ticker, disp_days=756, expanded=False, target=None):
         '<div class="tclabel">四燈歷史（由上到下 L1→L4；亮＝黃點。'
         '⚠️ L4 前 60 根是暖機期，一律不亮）</div>', f"ti_c4_{uid}", "tcbox tcbox-xs")
     _row_rs = _techrow(panel_rs,
-        '<div class="tclabel">RS 相對強弱（短線一季／長線1年，紅線＝基準；🟡長線翻正 🔵短線創新高 🩷資金比股價先動）</div>', f"ti_c3_{uid}", "tcbox tcbox-sm")
+        '<div class="tclabel">RS 相對強弱（短線一季＝線／長線240日＝柱，紅正綠負；🟡長線翻正 🔵RS創新高 🩷資金比股價先動 ▲動能加速）</div>', f"ti_c3_{uid}", "tcbox tcbox-sm")
     _toggle_btn = ("" if expanded else
                    f'<button class="techtoggle" onclick="ti_toggle_{uid}()" '
                    f'id="ti_btn_{uid}">展開圖表 ▾</button>')
@@ -895,7 +955,7 @@ function ti_draw_{uid}(){{
       onZoom: ({{chart}}) => ti_sync_{uid}(chart), onZoomComplete: ({{chart}}) => ti_sync_{uid}(chart)}},
     limits: {{x: {{min: 0, max: d.dates.length - 1, minRange: 5}}}}
   }};
-  // 2026-09-02 Leo：SuperTrend 改黃(多方支撐)/紫(空方壓力)——原本紅/綠跟雙重颱風K線的
+  // 2026-09-02 Leo：SuperTrend 改黃/紫（9/27 再對齊老墨：紫＝多方支撐、黃＝空方壓力）——原本紅/綠跟雙重颱風K線的
   // 紅偏多/綠偏空撞色，兩條線意義完全不同（一個是支撐壓力，一個是三態偏向），撞色會誤讀。
   const segColor = (dir, up, down, none) => ctx => {{
     const v = dir[ctx.p1DataIndex];
@@ -955,13 +1015,13 @@ function ti_draw_{uid}(){{
         if (v == null || v < ymin || v > ymax) return;
         let col = ds.borderColor;
         if (typeof col !== 'string') {{
-          // SuperTrend 是分段上色（多方黃/空方紫），borderColor 拿不到 →
+          // SuperTrend 是分段上色（多方紫/空方黃，2026-09-27 對齊老墨 PRO MAX），borderColor 拿不到 →
           // 用 segment 的當下方向決定，不要退回一個假的顏色。
           // 方向也要看**可視範圍的最後一根**：平移到多方那一段，
-          // 標籤卻用最新的空方紫，顏色就對不回線。
+          // 標籤卻用最新的空方黃，顏色就對不回線。
           const di = Math.min(vx1, (d.st_dir || []).length - 1);
           col = (ds.label === 'SuperTrend')
-            ? (d.st_dir && d.st_dir[di] === 1 ? '#facc15' : '#c084fc')
+            ? (d.st_dir && d.st_dir[di] === 1 ? '#c084fc' : '#facc15')
             : '#94a3b8';
         }}
         put.push({{y: scales.y.getPixelForValue(v), v, col, label: ds.label}});
@@ -1012,7 +1072,8 @@ function ti_draw_{uid}(){{
             ? 'rgba(0,0,0,0)' : tyColorFn(ctx);}},
         borderColors:tyColorFn, borderWidth:1.3}},
       {{type:'line',label:'SuperTrend',data:d.st.map((v,i)=>({{x:i,y:v}})),borderWidth:1.6,pointRadius:0,
-        segment:{{borderColor:segColor(d.st_dir,'#facc15','#c084fc','#6b7280')}}}},
+        // 2026-09-27 對齊老墨 SUPER TREND PRO MAX：淡紫＝多方支撐、黃＝空方壓力（原本相反）
+        segment:{{borderColor:segColor(d.st_dir,'#c084fc','#facc15','#6b7280')}}}},
       // 20 日平均成本＝量加權(VWAP) 不是 SMA——實測對上老墨的 135.95
       {{type:'line',label:'20日平均成本',data:d.ma20.map((v,i)=>({{x:i,y:v}})),borderColor:'#F59E0B',
         borderWidth:1.2,pointRadius:0,borderDash:[2,2],tension:.15}},
@@ -1020,7 +1081,7 @@ function ti_draw_{uid}(){{
       {{type:'line',label:'停損4倍',data:d.st4.map((v,i)=>({{x:i,y:v}})),borderWidth:1.5,
         pointRadius:0,borderDash:[6,4],
         // 2026-09-07 Leo：「停損4倍顏色不清楚」。原本 #7AD1A0/#B49BE0 是
-        // SuperTrend 黃紫的淡化版——同色系又更淡，等於兩條線長得像同一條。
+        // SuperTrend 紫黃的淡化版——同色系又更淡，等於兩條線長得像同一條。
         // 改成獨立色系（橘紅），而且**只有一個顏色不分多空**：
         // 這條線的意義是「更外圈的停損」，方向已經由 SuperTrend 那條表達了。
         borderColor:'#FB7185'}},
@@ -1049,7 +1110,8 @@ function ti_draw_{uid}(){{
         borderWidth:1.3,pointRadius:0,tension:.2,order:1}}]}},
     options:{{responsive:true,maintainAspectRatio:false,plugins:{{legend:{{display:false}}, zoom:ZOOM_OPT}},
       scales:{{x:xAxis, y:{{afterFit:yFit,ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
-  // 動能柱：多頭轉強亮綠/轉弱暗綠，空頭轉強亮紅/轉弱暗紅（TTM Squeeze 慣例）；
+  // 動能柱（2026-09-27 改台股慣例＝老墨 EXCEED CHARGE）：多頭轉強亮紅/轉弱暗紅，
+  // 空頭轉強亮綠/轉弱暗綠（原本照 TTM Squeeze 美股慣例是綠多紅空）；
   // sq_on 點陣列（擠壓中金色、已釋放依動能方向上色）疊在 y=0 當擠壓/釋放標記
   const momColor = d.mom.map((v, i) => {{
     if (v == null) return '#2a2e35';
@@ -1057,22 +1119,24 @@ function ti_draw_{uid}(){{
     // 2026-09-07 Leo：「EXCEED CHARGE 為什麼都是綠色?」——實測不是 bug
     // （MA 當下就畫了 30 根負柱、y 軸到 -20），是那一檔可見區間動能全為正。
     // 但亮綠(#4ade80)/暗綠(#1e7a45) 對比太弱，「轉強/轉弱」看不出來 → 拉開。
-    if (v >= 0) return v >= prev ? '#22FF88' : '#116B3A';
-    return v <= prev ? '#FF5C5C' : '#7A1F1F';
+    if (v >= 0) return v >= prev ? '#FF5C5C' : '#7A1F1F';
+    return v <= prev ? '#22FF88' : '#116B3A';
   }});
   const dotColor = d.sq_on.map((on, i) => {{
     if (on) return '#EAB308';
     const m = d.mom[i];
-    return m == null ? '#6b7280' : (m >= 0 ? '#4ade80' : '#ff8a8a');
+    return m == null ? '#6b7280' : (m >= 0 ? '#ff8a8a' : '#4ade80');
   }});
   const c2 = new Chart(document.getElementById('ti_c2_{uid}'), {{type:'bar',
     data:{{datasets:[
       {{label:'動能',data:d.mom.map((v,i)=>({{x:i,y:v}})),backgroundColor:momColor,order:2}},
+      {{label:'動能均線(20)',type:'line',data:(d.mom_ma||[]).map((v,i)=>({{x:i,y:v}})),borderColor:'#e5e7eb',
+        borderWidth:1.2,borderDash:[4,3],pointRadius:0,tension:.15,order:1}},
       {{label:'擠壓/釋放',type:'line',data:d.mom.map((_,i)=>({{x:i,y:0}})),showLine:false,
         pointRadius:2.6,pointBackgroundColor:dotColor,pointBorderWidth:0,order:1}},
       {{label:'釋放★',type:'line',data:d.sq_on.map((on,i)=>({{x:i,y:(i>0&&d.sq_on[i-1]&&!on)?0:null}})),
         showLine:false,pointStyle:'star',pointRadius:6.5,pointBorderColor:'#ffffff',pointBorderWidth:0.8,
-        pointBackgroundColor:d.mom.map(m=>m==null?'#9aa0a6':(m>=0?'#4ade80':'#ff8a8a')),order:0}}]}},
+        pointBackgroundColor:d.mom.map(m=>m==null?'#9aa0a6':(m>=0?'#ff8a8a':'#4ade80')),order:0}}]}},
     options:{{responsive:true,maintainAspectRatio:false,plugins:{{legend:{{display:false}}, zoom:ZOOM_OPT}},
       scales:{{x:xAxis, y:{{afterFit:yFit,ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
   const c3 = new Chart(document.getElementById('ti_c3_{uid}'), {{type:'bar',
@@ -1081,15 +1145,20 @@ function ti_draw_{uid}(){{
         pointRadius:0,order:3}},
       {{label:'短線一季',type:'line',data:d.rs_s.map((v,i)=>({{x:i,y:v}})),borderColor:'#4a9eff',borderWidth:1.6,
         pointRadius:0,tension:.15,order:1}},
-      {{label:'長線1年',data:d.rs_l.map((v,i)=>({{x:i,y:v}})),
-        backgroundColor:d.rs_l.map(v=>(v>=0?'rgba(74,222,128,.55)':'rgba(255,138,138,.55)')),
+      {{label:'長線240日',data:d.rs_l.map((v,i)=>({{x:i,y:v}})),
+        // 2026-09-27 老墨 RS STRONGER：長線柱正值紅、負值綠（台股慣例）
+        backgroundColor:d.rs_l.map(v=>(v>=0?'rgba(255,138,138,.55)':'rgba(74,222,128,.55)')),
         borderWidth:0,barPercentage:1,categoryPercentage:1,order:2}},
       {{label:'🟡翻正',type:'line',data:d.rs_turn.map((v,i)=>({{x:i,y:v}})),showLine:false,pointRadius:4,
         pointBackgroundColor:'#FACC15',pointBorderColor:'#1a1d23',pointBorderWidth:1,order:0}},
       {{label:'🔵創新高',type:'line',data:d.rs_newh.map((v,i)=>({{x:i,y:v}})),showLine:false,pointRadius:4,
         pointBackgroundColor:'#38BDF8',pointBorderColor:'#1a1d23',pointBorderWidth:1,order:0}},
       {{label:'🩷資金領先',type:'line',data:d.rs_lead.map((v,i)=>({{x:i,y:v}})),showLine:false,pointRadius:4.5,
-        pointBackgroundColor:'#F472B6',pointBorderColor:'#1a1d23',pointBorderWidth:1,order:0}}]}},
+        pointBackgroundColor:'#F472B6',pointBorderColor:'#1a1d23',pointBorderWidth:1,order:0}},
+      // 2026-09-27 老墨四訊號之一：短線RS 上穿長線RS＝動能加速（白色三角）
+      {{label:'▲動能加速',type:'line',data:(d.rs_accel||[]).map((v,i)=>({{x:i,y:v}})),showLine:false,
+        pointStyle:'triangle',pointRadius:4.5,pointBackgroundColor:'#F8FAFC',pointBorderColor:'#1a1d23',
+        pointBorderWidth:1,order:0}}]}},
     options:{{responsive:true,maintainAspectRatio:false,
       plugins:{{legend:{{labels:{{color:'#9aa0a6',boxWidth:14,font:{{size:10}},
         filter:item=>item.text!=='基準線(0%)'}}}}, zoom:ZOOM_OPT}},
@@ -1099,7 +1168,7 @@ function ti_draw_{uid}(){{
   // 所以跟上面四張圖一起縮放平移。
   // E（2026-09-07 Leo：「右邊下面燈號都用黃燈就可以了 (現在顏色太多)」）
   // 四盞同色，靠 y 高度分辨是哪一盞。整張圖的顏色語彙已經被
-  // K 棒三態、SuperTrend 黃紫、動能四色佔滿了，這裡再加四色只會互相干擾。
+  // K 棒三態、SuperTrend 紫黃、動能四色佔滿了，這裡再加四色只會互相干擾。
   const LP_COL = ['#FACC15', '#FACC15', '#FACC15', '#FACC15'];
   const LP_NAME = ['L1 ST多方', 'L2 動能>0', 'L3 颱風不綠', 'L4 RS60>3%'];
   const c4 = new Chart(document.getElementById('ti_c4_{uid}'), {{type:'scatter',
