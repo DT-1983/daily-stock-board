@@ -996,16 +996,21 @@ def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdi
         '<div class="rrgnote">'
         '<div class="rrgnotehd">📖 名詞與方法論說明</div>'
         f'<div class="rrgnoteitem">{quad_note}</div>'
-        '<div class="rrgnoteitem"><b>個股 RS 排名、廣度、接力訊號（2026-09-27 新增，參考老墨「技術面選股組合」）</b><br>'
-        f'<b>RS 百分位</b>：每檔成分股的 Mansfield RS（個股÷大盤這條線，比它自己 {RS_RANK_WIN} 日平均高多少），'
-        '在同一市場、同一分類的全部籃子成分股裡排名；100＝最強。老墨提供三種排名方式，我們用他列出的 Mansfield，'
-        '「多週期加權」他沒公開權重，沒做。排名範圍是籃子成分股（台股約 130、美股約 150 檔），不是全市場。<br>'
-        f'<b>廣度</b>：這個產業籃子裡，RS 百分位 ≥{RS_STRONG_PCT}（全體前 {100-RS_STRONG_PCT}%）的有幾檔、出現接力的有幾檔。'
-        '產業進入「改善／領先」、同時廣度上升，比只看象限可信；只有一兩檔拉抬的產業，要小心。<br>'
-        f'<b>⚡接力</b>：最近 {RELAY_WIN} 個交易日內，EC 動能由負翻正、且 RS（個股÷大盤原始比值線）創 {RS_NEWHIGH_LOOKBACK} 日新高，'
-        f'EC 動能現在仍為正，而且大盤收盤站在 {MKT_MA} 日均線之上。參數照老墨預設；'
-        '他的腳本加密讀不到原始碼，「EC 翻正」的判斷方式是從他結果欄「EC 幾日前翻正」推得的解讀。'
-        '大盤沒站上均線時，兩個事件都有也不算接力，標成「差大盤」。</div>'
+        '<div class="rrgnoteitem"><b>看產業裡哪幾檔特別強（2026-09-27 新增，參考老墨「技術面選股組合」）</b><br>'
+        '每個產業是用 6～8 檔代表股組成的。上面的圖只告訴你「哪個產業在轉強」，'
+        '下面這三樣東西告訴你「那個產業裡是哪幾檔在帶頭」：<br>'
+        '<b>① RS 百分位（展開產業後每檔股票旁邊的數字）</b>：把所有代表股依「最近半年比大盤強多少」排名次，'
+        f'100＝最強、50＝普通、0＝最弱。<b>{RS_STRONG_PCT} 分以上（綠色）算強勢股</b>。<br>'
+        '<b>② 強勢股（排行榜那一欄）</b>：例如「3／6 檔強」＝這個產業 6 檔代表股裡，有 3 檔是強勢股。'
+        '越接近全部，代表整個產業一起在漲；只有 1、2 檔，代表只是少數個股在撐，要小心。<br>'
+        f'<b>③ ⚡接力</b>：一檔股票最近 {RELAY_WIN} 天內<b>同時</b>出現兩個轉強訊號——'
+        '動能由弱轉強（EC 翻正）、而且跟大盤比的強度創半年新高（RS 新高）——'
+        f'同時大盤本身也在上升趨勢（站在 {MKT_MA} 日均線之上）。'
+        '這是老墨用來抓「剛開始發動」股票的條件，很嚴格，常常整個市場只有 0～幾檔，沒有也很正常。'
+        '大盤不在上升趨勢時，就算兩個訊號都出現也不算，會標「差大盤」。<br>'
+        '<span class="rrgnotedim">技術細節：RS 用 Mansfield 算法（個股÷大盤，跟自己 120 日平均比）；排名範圍是全部產業的代表股'
+        '（台股約 130、美股約 150 檔），不是全市場。老墨的腳本加密讀不到原始碼，參數照他的預設，'
+        '「EC 翻正」的判斷方式是我們從他的說明推得的解讀。</span></div>'
         '<div class="rrgnoteitem">資料源：台美股都沒有現成的類股指數可直接抓，'
         f'改成 TradingView 產業分類下市值前 {SECTOR_BASKET_SIZE} 大成分股等權聚合'
         '（2026-08-26起美股也改用這個方法，原本是抓SPDR類股ETF——ETF本身查不到歷史股數，'
@@ -1106,7 +1111,8 @@ def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdi
         # 不然「未勾選」時這排空空的會很奇怪。
         '<div class="rrgselbar"><span id="selInfo"></span>'
         '<button type="button" id="selClear" style="display:none;">清除選取，顯示全部</button></div>'
-        '<div class="rrghint">點列表可複選只看某幾個產業，圖表跟播放都只顯示勾選的幾檔</div>'
+        '<div class="rrghintrow"><div class="rrghint">點列表可複選只看某幾個產業，圖表跟播放都只顯示勾選的幾檔</div>'
+        '<button type="button" id="jumpStrong" class="jumpbtn">⭐ 一鍵看「領先產業」裡的強勢股 ↓</button></div>'
         # 2026-08-25：RS-Ratio／RS-Momentum 合併一欄擠成兩行（用戶反饋「標題位置太擠」）
         # ——拆成兩個獨立欄位，各自欄寬夠放一行，不用再靠斜線塞在一起。
         # 「強弱位置」欄加 title 提示（hover 看得到白話說明，用戶反饋「這是什麼意思」）。
@@ -1118,7 +1124,7 @@ def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdi
         '<span>RS-Ratio</span><span>RS-Momentum</span>'
         '<span title="這條尾巴平均每天往右上角（又變強、動能又加速）推進多少；往左下走是負的，箭頭是實際移動方向">朝右上速度</span>'
         '<span title="頭尾直線距離÷實際走過的路徑長。1＝一路直衝，越小＝原地繞圈。速度快又直線度高才是真的在衝；速度快但直線度低多半只是震盪">直線度</span>'
-        '<span title="籃子成分股裡：RS 百分位前20%的有幾檔（強）、出現 RS＋EC 接力的有幾檔（⚡）／成分股數">廣度</span>'
+        '<span title="這個產業的代表股裡，有幾檔是強勢股（跟大盤比排名前 20%）。⚡＝其中有幾檔剛出現接力訊號">強勢股</span>'
         '<span>資金規模</span>'
         '<span title="由左至右＝短線(20日)/波段(60日)/中期(120日)/長期(240日)，'
         '顏色是該週期的象限——短中長期顏色一致代表趨勢一致，不一致代表正在轉折">多週期</span>'
@@ -1782,9 +1788,10 @@ function breadthHTML(key) {
   if (!n) return '<span class="rsna">--</span>';
   var strong = list.filter(function(h){ return (h.rs_pct||0) >= RS_STRONG_PCT_JS; }).length;
   var relay = list.filter(function(h){ return h.relay; }).length;
-  return '<span class="brstr'+(strong/n>=0.5?' hi':'')+'">強'+strong+'</span>'+
-    (relay ? '<span class="brrelay">⚡'+relay+'</span>' : '')+'<span class="brn">/'+n+'</span>';
+  return '<span class="brstr'+(strong/n>=0.5?' hi':'')+'">'+strong+'／'+n+' 檔強</span>'+
+    (relay ? '<span class="brrelay" title="其中 '+relay+' 檔剛出現接力訊號">⚡'+relay+'</span>' : '');
 }
+var relayMode = 'lead';   // 強勢股篩選面板目前選哪一個
 function renderRelayPanel() {
   var el = document.getElementById('rrgRelay');
   if (!el) return;
@@ -1799,10 +1806,30 @@ function renderRelayPanel() {
     });
   });
   var mk = (window.RRG_MKT || {})[curM];
-  var mkLine = mk ? ('大盤濾網：' + (curM === 'tw' ? '加權指數' : 'S&P 500') + ' ' + mk.close.toLocaleString() +
-      (mk.ok ? ' 站在 ' : ' 跌破 ') + MKT_MA_JS + ' 日均線 ' + mk.ma.toLocaleString() + (mk.ok ? ' ✅' : ' ❌（這段期間不會出現接力）') +
-      '<span class="sigdim">（' + mk.date + '）</span>') : '大盤濾網：無資料';
-  var qOrder = {improving: 0, leading: 1, weakening: 2, lagging: 3};
+  var mkLine = mk ? ('大盤：' + (curM === 'tw' ? '加權指數' : 'S&P 500') + ' ' + mk.close.toLocaleString() +
+      (mk.ok ? ' 站在 ' : ' 跌破 ') + MKT_MA_JS + ' 日均線（' + mk.ma.toLocaleString() + '）之上' +
+      (mk.ok ? ' ✅ 上升趨勢，接力訊號有效' : ' ❌ 不在上升趨勢，這段期間不會出現接力') +
+      '<span class="sigdim">（' + mk.date + '）</span>') : '大盤：無資料';
+  var byRs = function(a, b){ return b.h.rs_pct - a.h.rs_pct; };
+  var qOrder = {leading: 0, improving: 1, weakening: 2, lagging: 3};
+  var strong = function(o){ return o.h.rs_pct >= RS_STRONG_PCT_JS; };
+  var lists = {
+    lead: all.filter(function(o){ return qOf[o.key] === 'leading' && strong(o); }).sort(byRs),
+    improve: all.filter(function(o){ return qOf[o.key] === 'improving' && strong(o); }).sort(byRs),
+    relay: all.filter(function(o){ return o.h.relay || o.h.relay_nomkt; })
+              .sort(function(a,b){   // ⚠️ 領先的序號是 0，不能用 ||9（0 會被當成沒值排到最後）
+                var qa = qOf[a.key] in qOrder ? qOrder[qOf[a.key]] : 9, qb = qOf[b.key] in qOrder ? qOrder[qOf[b.key]] : 9;
+                return qa - qb || byRs(a,b); }),
+    top: all.slice().sort(byRs).slice(0, 10)
+  };
+  var MODES = [
+    ['lead', '領先產業的強勢股', '產業正處於「領先」象限（比大盤強、而且還在變強），挑出其中跟大盤比排名前 20% 的個股。產業強＋個股也強，是最直接的一份名單。'],
+    ['improve', '改善產業的強勢股', '產業處於「改善」象限（還沒贏大盤、但正在變強，通常是輪動的起點），挑出其中已經先轉強的個股——可能是帶頭的那幾檔。'],
+    ['relay', '⚡ 接力訊號', '最近 10 天同時出現「動能轉強」和「跟大盤比創半年新高」兩個訊號、而且大盤在上升趨勢的個股（老墨抓剛發動股票的條件）。很嚴格，沒有也很正常。'],
+    ['top', 'RS 排名前 10', '不分產業，全部代表股裡跟大盤比最強的 10 檔。']
+  ];
+  var cur = lists[relayMode] || [];
+  var desc = (MODES.filter(function(m){ return m[0] === relayMode; })[0] || MODES[0])[2];
   function row(o) {
     var q = qOf[o.key];
     return '<tr><td class="tk">'+_escHtml(o.h.ticker)+'</td><td>'+_escHtml(o.h.name)+'</td>'+
@@ -1810,19 +1837,26 @@ function renderRelayPanel() {
       '<td>'+(q ? '<span class="qtag" style="color:'+QCOLOR[q]+'">'+QLABEL[q]+'</span>' : '--')+'</td>'+
       '<td class="r">'+rsPctHTML(o.h)+'</td><td>'+sigHTML(o.h)+'</td></tr>';
   }
-  var relay = all.filter(function(o){ return o.h.relay || o.h.relay_nomkt; })
-    .sort(function(a,b){ return (qOrder[qOf[a.key]]||9)-(qOrder[qOf[b.key]]||9) || b.h.rs_pct-a.h.rs_pct; });
-  var top = all.slice().sort(function(a,b){ return b.h.rs_pct-a.h.rs_pct; }).slice(0, 10);
   var thead = '<tr><th>代號</th><th>名稱</th><th>所屬產業</th><th>產業象限</th><th class="r">RS 百分位</th><th>訊號</th></tr>';
+  var btns = MODES.map(function(m) {
+    return '<button type="button" class="rmbtn'+(m[0]===relayMode?' on':'')+'" data-mode="'+m[0]+'">'+m[1]+
+      ' <span class="rmcnt">'+lists[m[0]].length+'</span></button>';
+  }).join('');
+  var empty = {
+    lead: '目前「領先」象限的產業裡沒有排名前 20% 的個股（或目前沒有產業在領先象限）。',
+    improve: '目前「改善」象限的產業裡沒有排名前 20% 的個股（或目前沒有產業在改善象限）。',
+    relay: '目前沒有個股同時出現兩個轉強訊號——這個條件本來就很嚴格，常常整個市場只有 0～幾檔。',
+    top: '無資料'
+  }[relayMode];
   el.innerHTML =
-    '<div class="rrgnotehd">⚡ 個股接力訊號與 RS 排名（老墨 RS＋EC 合體選股）</div>' +
+    '<div class="rrgnotehd">⭐ 強勢股篩選：產業裡哪幾檔在帶頭（參考老墨技術面選股組合）</div>' +
     '<div class="relaymk">' + mkLine + '</div>' +
-    '<div class="relaysub">接力訊號（' + relay.length + ' 檔，依所屬產業「改善→領先→弱化→落後」排序；產業也在改善／領先的是雙重確認）</div>' +
-    (relay.length ? '<div class="tscroll"><table class="relaytb">' + thead + relay.map(row).join('') + '</table></div>'
-                  : '<div class="rrgexpempty">目前沒有成分股同時出現兩個事件——這個條件本來就嚴格，常常整個市場只有零到幾檔。</div>') +
-    '<div class="relaysub">RS 排名前 10（全部籃子成分股）</div>' +
-    '<div class="tscroll"><table class="relaytb">' + thead + top.map(row).join('') + '</table></div>' +
-    '<div class="rrgnotedim">「產業象限」跟著上方選的計算週期與基準變；個股 RS 排名與接力固定用 120 日、大盤基準。僅供研究參考，不構成投資建議。</div>';
+    '<div class="rmbtns">' + btns + '</div>' +
+    '<div class="rmdesc">' + desc + '</div>' +
+    (cur.length ? '<div class="tscroll"><table class="relaytb">' + thead + cur.map(row).join('') + '</table></div>'
+                : '<div class="rrgexpempty">' + empty + '</div>') +
+    '<div class="rrgnotedim">產業屬於哪個象限，會跟著上方選的「計算週期」和「基準」變；個股排名固定用最近半年、跟大盤比。'
+    + '名單只是研究起點，不構成投資建議。</div>';
 }
 
 function toggleExpand(key) {
@@ -2042,6 +2076,17 @@ document.getElementById('rrgRank').addEventListener('click', function(e) {
   if (row && row.dataset.key) toggleSelect(row.dataset.key);
 });
 document.getElementById('selClear').addEventListener('click', clearSelection);
+document.getElementById('rrgRelay').addEventListener('click', function(e) {
+  var b = e.target.closest('.rmbtn');
+  if (!b) return;
+  relayMode = b.dataset.mode;
+  renderRelayPanel();
+});
+document.getElementById('jumpStrong').addEventListener('click', function() {
+  relayMode = 'lead';
+  renderRelayPanel();
+  document.getElementById('rrgRelay').scrollIntoView({behavior: 'smooth', block: 'start'});
+});
 draw();
 </script>""")
     return "\n".join(lines)
@@ -2084,7 +2129,7 @@ CSS_EXTRA = """
  每個籃子一張卡，欄位改上下堆疊＋文字標籤（用 ::before 加標籤，不用另外寫HTML），
  不用橫向捲動就能看完整資訊。表頭列(.rrgrankhd)手機版直接隱藏——卡片自己帶標籤，
  不需要對齊的表頭了。 */
-.rrgrankhd{display:grid;grid-template-columns:minmax(130px,1fr) 52px 64px 86px 84px 58px 78px 72px 70px minmax(90px,140px);gap:18px;
+.rrgrankhd{display:grid;grid-template-columns:minmax(130px,1fr) 52px 64px 86px 84px 58px 96px 72px 70px minmax(90px,140px);gap:18px;
  grid-template-areas:"name qv ratio mom spd str br size mp pos";
  padding:2px 4px 8px;border-bottom:1px solid #2a3550;font-size:10.5px;color:#5f80a6}
 .rrgrankhd span:nth-child(2){text-align:center}
@@ -2094,7 +2139,7 @@ CSS_EXTRA = """
 .rrgrankhd span:nth-child(5){grid-area:spd}.rrgrankhd span:nth-child(6){grid-area:str}
 .rrgrankhd span:nth-child(7){grid-area:br}.rrgrankhd span:nth-child(8){grid-area:size}
 .rrgrankhd span:nth-child(9){grid-area:mp}.rrgrankhd span:nth-child(10){grid-area:pos}
-.rrgrow{display:grid;grid-template-columns:minmax(130px,1fr) 52px 64px 86px 84px 58px 78px 72px 70px minmax(90px,140px);gap:18px;align-items:center;
+.rrgrow{display:grid;grid-template-columns:minmax(130px,1fr) 52px 64px 86px 84px 58px 96px 72px 70px minmax(90px,140px);gap:18px;align-items:center;
  grid-template-areas:"name qv ratio mom spd str br size mp pos";
  padding:7px 4px;border-bottom:1px solid #131c30;font-size:12.5px;cursor:pointer;transition:background .15s}
 .rrgrow .nm{grid-area:name}.rrgrow .qv{grid-area:qv}.rrgrow .ratioval{grid-area:ratio}
@@ -2115,7 +2160,7 @@ CSS_EXTRA = """
   .rrgexprow .expbar{display:none}   /* 手機版寬度不夠放權重條，數字本身已經夠用 */
   .rrgexprow .expsig{grid-column:2 / -1}
   .rrgexphd{display:none}
-  .rrgrow .brval::before{content:"廣度";font-size:9.5px;color:#5f80a6;margin-right:4px}
+  .rrgrow .brval::before{content:"強勢股";font-size:9.5px;color:#5f80a6;margin-right:4px}
 }
 .rrgrow:hover{background:#101b30}
 /* 2026-08-26：勾選狀態——左邊一條實色邊線＋淡底色，跟純 hover 的灰底區分開來。 */
@@ -2158,6 +2203,19 @@ CSS_EXTRA = """
 .relaytb td{padding:6px 8px;border-bottom:1px solid #131c30;color:#cfe6ff}
 .relaytb td.tk{font-family:var(--mono,monospace);font-weight:600}.relaytb .r{text-align:center}
 .qtag{font-weight:700;font-size:11.5px}
+.rrghintrow{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.rrghintrow .rrghint{margin-bottom:0}
+.jumpbtn{background:#1f2a12;border:1px solid #ffb020;color:#ffb020;font-size:12px;font-weight:700;
+ padding:6px 12px;border-radius:8px;cursor:pointer;font-family:inherit}
+.jumpbtn:hover{background:#ffb020;color:#04070f}
+.rmbtns{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 10px}
+.rmbtn{background:#0e1830;border:1px solid #2a3550;color:#8fb0d6;font-size:12.5px;padding:7px 12px;border-radius:8px;
+ cursor:pointer;font-family:inherit}
+.rmbtn:hover{border-color:#25e6ff;color:#cfe6ff}
+.rmbtn.on{background:#25e6ff;border-color:#25e6ff;color:#04070f;font-weight:700}
+.rmcnt{display:inline-block;min-width:18px;margin-left:4px;padding:0 5px;border-radius:9px;background:#04070f33;font-size:11px}
+.rmbtn:not(.on) .rmcnt{background:#1a2640;color:#cfe6ff}
+.rmdesc{font-size:12px;color:#8fb0d6;line-height:1.7;margin-bottom:10px}
 .exptk{color:#cfe6ff;font-family:var(--mono,monospace);font-weight:600}
 .expnm{color:#8fb0d6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .expwt{color:#5f80a6;text-align:right;font-variant-numeric:tabular-nums}
