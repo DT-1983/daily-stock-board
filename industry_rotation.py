@@ -45,6 +45,7 @@ import sys
 import time
 
 import numpy as np
+import pandas as pd
 import yfinance as yf
 
 if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
@@ -427,6 +428,97 @@ def _tw_chinese_names():
     return out
 
 
+# ── 個股層：老墨 RS 排名＋RS＋EC 接力（2026-09-27 Leo：「整合進產業輪動，全做」）──
+# 老墨「技術面選股組合」README／參數截圖的預設值（腳本 .xsb 加密讀不到原始碼）：
+#   RS 排名  排名方式三選一，我們用 Mansfield RS（他列出的選項之一；「多週期加權」權重他沒公開，不猜），
+#            回看 120 日（他截圖的預設）；排名範圍＝同一市場、同一分類粒度的全部籃子成分股（不是全市場）。
+#   接力     EC 動能計算 20 期、接力窗口 10 日、RS 創新高回看 120 日、大盤濾網 60 日均線。
+#            「EC 翻正」解讀為動能由 ≤0 轉 >0（他結果欄叫「EC 幾日前翻正」）；
+#            「RS 創新高」＝RS 原始比值線（個股÷大盤）創 120 日新高（跟 technical_indicators.rs_signals 同定義）。
+#            兩個事件都在最近 10 個交易日內發生、且 EC 動能現在仍 >0、大盤收盤在 60 日均線之上，才算接力。
+RS_RANK_WIN = 120
+RELAY_WIN = 10
+RS_NEWHIGH_LOOKBACK = 120
+MKT_MA = 60
+RS_STRONG_PCT = 80      # 排名前 20% 算「強勢」，產業廣度用
+MKT_STATUS = {}         # {market: 大盤濾網狀態}，由 _fetch_baskets 填，_rrg_script 輸出成 window.RRG_MKT
+
+
+def _market_filter(bench_close):
+    """大盤是否站上 60 日均線。回 {"ok", "close", "ma"}；資料不足回 None。"""
+    s = bench_close.dropna()
+    if len(s) < MKT_MA:
+        return None
+    ma = float(s.iloc[-MKT_MA:].mean())
+    return {"ok": bool(float(s.iloc[-1]) > ma), "close": round(float(s.iloc[-1]), 2), "ma": round(ma, 2),
+            "date": str(s.index[-1].date())}
+
+
+def _stock_signals(h, bench_close):
+    """單一成分股：Mansfield RS(120)、EC 翻正幾日前、RS 新高幾日前。h 是含 High/Low/Close 的 DataFrame。"""
+    import technical_indicators as ti
+    df = pd.concat([h["High"], h["Low"], h["Close"], bench_close], axis=1, join="inner").dropna()
+    df.columns = ["H", "L", "C", "B"]
+    if len(df) < max(RS_RANK_WIN, RS_NEWHIGH_LOOKBACK) + RELAY_WIN + 5:
+        return None
+    C, B = df["C"].tolist(), df["B"].tolist()
+    rs = ti.mansfield_rs_series(C, B, RS_RANK_WIN)
+    rs_now = float(rs[-1]) if len(rs) and rs[-1] == rs[-1] else None
+    line = ti.rs_ratio_line(C, B)
+    n = len(line)
+    rs_hi_ago = None
+    for k in range(RELAY_WIN):
+        i = n - 1 - k
+        w = line[i - RS_NEWHIGH_LOOKBACK + 1:i + 1]
+        if line[i] >= np.nanmax(w):
+            rs_hi_ago = k
+            break
+    sq = ti.squeeze_momentum(df["H"].tolist(), df["L"].tolist(), C)
+    ec_up_ago = None
+    if sq is not None:
+        m = sq["momentum"]
+        if m[-1] == m[-1] and m[-1] > 0:
+            for k in range(RELAY_WIN):
+                i = len(m) - 1 - k
+                if m[i - 1] == m[i - 1] and m[i - 1] <= 0 < m[i]:
+                    ec_up_ago = k
+                    break
+    return {"rs": None if rs_now is None else round(rs_now, 2), "rs_hi_ago": rs_hi_ago, "ec_up_ago": ec_up_ago}
+
+
+def _attach_signals(members, cached, bench_close, yf_fn):
+    """把 RS 排名／接力訊號掛到每個籃子的 holdings 上（原地修改），並回大盤濾網狀態。
+    holdings 跟 members 同一批、同樣依市值排序（_sector_members 的 top.head()），用位置對應。"""
+    mkt = _market_filter(bench_close)
+    sig = {}
+    for sector, info in members.items():
+        for tk, _ in info["members"]:
+            t = yf_fn(tk)
+            if t in sig:
+                continue
+            h = cached.get(t)
+            if h is None or h.empty or not {"High", "Low", "Close"} <= set(h.columns):
+                continue
+            try:
+                sig[t] = _stock_signals(h, bench_close)
+            except Exception:
+                sig[t] = None
+    vals = sorted(v["rs"] for v in sig.values() if v and v["rs"] is not None)
+    nv = len(vals)
+    for sector, info in members.items():
+        for hd, (tk, _) in zip(info["holdings"], info["members"]):
+            s = sig.get(yf_fn(tk))
+            if not s or s["rs"] is None:
+                continue
+            pct = round(100.0 * sum(1 for v in vals if v <= s["rs"]) / nv) if nv else None
+            relay = bool(s["ec_up_ago"] is not None and s["rs_hi_ago"] is not None and mkt and mkt["ok"])
+            hd.update({"rs": s["rs"], "rs_pct": pct, "ec_up_ago": s["ec_up_ago"], "rs_hi_ago": s["rs_hi_ago"],
+                       "relay": relay,
+                       # 大盤沒站上 60MA 時，兩個事件都有也不算接力，但要讓頁面看得到「差大盤這一關」
+                       "relay_nomkt": bool(s["ec_up_ago"] is not None and s["rs_hi_ago"] is not None and not relay)})
+    return mkt
+
+
 def _fetch_baskets(market, group_by="sector"):
     """只做網路抓取（貴的部分），回 (baskets, index_bench, holdings)。
     baskets = [(key, name, closes_series, size_series), ...]；
@@ -489,6 +581,15 @@ def _fetch_baskets(market, group_by="sector"):
         _label = (INDUSTRY_TW_LABEL if group_by == "industry" else SECTOR_TW_LABEL)
         baskets.append((sector, _label.get(sector, sector), b, size_series))
         holdings[sector] = info["holdings"]
+    # 2026-09-27：個股層 RS 排名＋接力訊號掛到 holdings 上（失敗不影響 RRG 本身）
+    try:
+        mkt = _attach_signals(members, cached, index_bench, _yf)
+    except Exception as e:
+        print(f"  [industry_rotation] {market} 個股 RS／接力計算失敗（不影響 RRG）：{e}")
+        mkt = None
+    # ⚠️ 大盤濾網狀態不能塞進 holdings——investment_chief／researcher_industry 會把
+    # RRG_HOLDINGS 每個 value 當成股票清單迭代，多一個 dict 會讓它們丟例外、被 except 吞掉。
+    MKT_STATUS[market] = mkt
     return baskets, index_bench, holdings
 
 
@@ -895,6 +996,16 @@ def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdi
         '<div class="rrgnote">'
         '<div class="rrgnotehd">📖 名詞與方法論說明</div>'
         f'<div class="rrgnoteitem">{quad_note}</div>'
+        '<div class="rrgnoteitem"><b>個股 RS 排名、廣度、接力訊號（2026-09-27 新增，參考老墨「技術面選股組合」）</b><br>'
+        f'<b>RS 百分位</b>：每檔成分股的 Mansfield RS（個股÷大盤這條線，比它自己 {RS_RANK_WIN} 日平均高多少），'
+        '在同一市場、同一分類的全部籃子成分股裡排名；100＝最強。老墨提供三種排名方式，我們用他列出的 Mansfield，'
+        '「多週期加權」他沒公開權重，沒做。排名範圍是籃子成分股（台股約 130、美股約 150 檔），不是全市場。<br>'
+        f'<b>廣度</b>：這個產業籃子裡，RS 百分位 ≥{RS_STRONG_PCT}（全體前 {100-RS_STRONG_PCT}%）的有幾檔、出現接力的有幾檔。'
+        '產業進入「改善／領先」、同時廣度上升，比只看象限可信；只有一兩檔拉抬的產業，要小心。<br>'
+        f'<b>⚡接力</b>：最近 {RELAY_WIN} 個交易日內，EC 動能由負翻正、且 RS（個股÷大盤原始比值線）創 {RS_NEWHIGH_LOOKBACK} 日新高，'
+        f'EC 動能現在仍為正，而且大盤收盤站在 {MKT_MA} 日均線之上。參數照老墨預設；'
+        '他的腳本加密讀不到原始碼，「EC 翻正」的判斷方式是從他結果欄「EC 幾日前翻正」推得的解讀。'
+        '大盤沒站上均線時，兩個事件都有也不算接力，標成「差大盤」。</div>'
         '<div class="rrgnoteitem">資料源：台美股都沒有現成的類股指數可直接抓，'
         f'改成 TradingView 產業分類下市值前 {SECTOR_BASKET_SIZE} 大成分股等權聚合'
         '（2026-08-26起美股也改用這個方法，原本是抓SPDR類股ETF——ETF本身查不到歷史股數，'
@@ -1007,12 +1118,14 @@ def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdi
         '<span>RS-Ratio</span><span>RS-Momentum</span>'
         '<span title="這條尾巴平均每天往右上角（又變強、動能又加速）推進多少；往左下走是負的，箭頭是實際移動方向">朝右上速度</span>'
         '<span title="頭尾直線距離÷實際走過的路徑長。1＝一路直衝，越小＝原地繞圈。速度快又直線度高才是真的在衝；速度快但直線度低多半只是震盪">直線度</span>'
+        '<span title="籃子成分股裡：RS 百分位前20%的有幾檔（強）、出現 RS＋EC 接力的有幾檔（⚡）／成分股數">廣度</span>'
         '<span>資金規模</span>'
         '<span title="由左至右＝短線(20日)/波段(60日)/中期(120日)/長期(240日)，'
         '顏色是該週期的象限——短中長期顏色一致代表趨勢一致，不一致代表正在轉折">多週期</span>'
         '<span title="RS-Ratio(相對強弱)在座標軸範圍內的位置，越右邊代表比大盤越強">強弱位置</span></div>'
         '<div class="rrgrank" id="rrgRank"></div>'
         '</div>'
+        '<div class="rrgnote rrgrelay" id="rrgRelay"></div>'
     )
     layout_html = '<div class="rrglayout">' + ctrl_html + chart_html + '</div>' + rank_html
     disc_html = (
@@ -1133,6 +1246,8 @@ def _rrg_script(payload, holdings, payload_ind=None, holdings_ind=None):
     # 一個籃子的成分股不會因為
     # 你切了計算週期就變了。
     lines.append("window.RRG_HOLDINGS = " + _json.dumps(holdings, ensure_ascii=False) + ";")
+    lines.append("window.RRG_MKT = " + _json.dumps(MKT_STATUS, ensure_ascii=False) + ";")
+    lines.append("var RELAY_WIN_JS = %d, RS_STRONG_PCT_JS = %d, MKT_MA_JS = %d;" % (RELAY_WIN, RS_STRONG_PCT, MKT_MA))
     # 2026-08-29 細分類（TradingView industry，台98/美128類）。整包另存一份，
     # 切換時直接換資料來源，不用重算——兩份格式完全一樣，前端邏輯不用改。
     lines.append("window.RRG_DATA_IND = " + (_json.dumps(_compact_frames(payload_ind), ensure_ascii=False)
@@ -1616,6 +1731,7 @@ function renderRankList() {
       '<span class="num momval">'+p.momentum.toFixed(1)+'</span>'+
       '<span class="num spdval">' + (function(){var m=trailMetrics(p.key);return m===null?'--':(m.speed>=0?'+':'')+m.speed.toFixed(3)+' '+m.arrow;})() + '</span>'+
       '<span class="num strval">' + (function(){var m=trailMetrics(p.key);return (m===null||m.straight===null)?'--':m.straight.toFixed(2);})() + '</span>'+
+      '<span class="brval">' + breadthHTML(p.key) + '</span>'+
       '<span class="sz">'+fmtSize(p.size)+'</span>'+
       '<span class="mp">'+mpDots(p.key)+'</span>'+
       '<span class="posbar"><span class="posbartrack">'+
@@ -1623,6 +1739,7 @@ function renderRankList() {
       '</span></span></div>';
     return row + (isExp ? holdingsHTML(p.key) : '');
   }).join('') || '<div class="rrgrow">（本次無資料）</div>';
+  renderRelayPanel();
 }
 
 // 展開一個籃子＝看它前幾大成分股（台美股都是市值排序的前幾大——
@@ -1637,9 +1754,75 @@ function holdingsHTML(key) {
     return '<div class="rrgexprow"><span class="exptk">'+_escHtml(h.ticker)+'</span>'+
       '<span class="expnm">'+_escHtml(h.name)+'</span>'+
       '<span class="expwt">'+h.weight_pct.toFixed(1)+'%</span>'+
-      '<span class="expbar"><span class="expbarfill" style="width:'+w.toFixed(0)+'%"></span></span></div>';
+      '<span class="expbar"><span class="expbarfill" style="width:'+w.toFixed(0)+'%"></span></span>'+
+      '<span class="exprs">'+rsPctHTML(h)+'</span>'+
+      '<span class="expsig">'+sigHTML(h)+'</span></div>';
   }).join('');
-  return '<div class="rrgexpand">'+rows+'</div>';
+  return '<div class="rrgexpand"><div class="rrgexphd"><span>代號</span><span>名稱</span><span>權重</span><span></span>'+
+    '<span title="Mansfield RS 在全部籃子成分股裡的百分位，100＝最強">RS 百分位</span><span>訊號</span></div>'+rows+'</div>';
+}
+
+// ── 2026-09-27：個股 RS 排名／廣度／接力（老墨技術面選股組合）──
+function rsPctHTML(h) {
+  if (h.rs_pct === undefined || h.rs_pct === null) return '<span class="rsna">--</span>';
+  var cls = h.rs_pct >= RS_STRONG_PCT_JS ? 'rshi' : (h.rs_pct < 30 ? 'rslo' : 'rsmid');
+  return '<span class="rspill '+cls+'" title="Mansfield RS '+(h.rs>=0?'+':'')+h.rs+'%">'+h.rs_pct+'</span>';
+}
+function sigHTML(h) {
+  if (h.relay) return '<span class="sigrelay">⚡接力</span><span class="sigdim">EC '+h.ec_up_ago+'日前翻正・RS '+h.rs_hi_ago+'日前新高</span>';
+  var out = [];
+  if (h.relay_nomkt) out.push('<span class="signomkt">差大盤</span>');
+  if (h.ec_up_ago !== null && h.ec_up_ago !== undefined) out.push('<span class="sigdim">EC '+h.ec_up_ago+'日前翻正</span>');
+  if (h.rs_hi_ago !== null && h.rs_hi_ago !== undefined) out.push('<span class="sigdim">RS '+h.rs_hi_ago+'日前新高</span>');
+  return out.join('');
+}
+function breadthHTML(key) {
+  var list = ((RRGH() || {})[curM] || {})[key] || [];
+  var n = list.filter(function(h){ return h.rs_pct !== undefined && h.rs_pct !== null; }).length;
+  if (!n) return '<span class="rsna">--</span>';
+  var strong = list.filter(function(h){ return (h.rs_pct||0) >= RS_STRONG_PCT_JS; }).length;
+  var relay = list.filter(function(h){ return h.relay; }).length;
+  return '<span class="brstr'+(strong/n>=0.5?' hi':'')+'">強'+strong+'</span>'+
+    (relay ? '<span class="brrelay">⚡'+relay+'</span>' : '')+'<span class="brn">/'+n+'</span>';
+}
+function renderRelayPanel() {
+  var el = document.getElementById('rrgRelay');
+  if (!el) return;
+  var H = (RRGH() || {})[curM] || {};
+  var qOf = {}, nmOf = {};
+  (_lastAllPts || []).forEach(function(p){ qOf[p.key] = p.quadrant; nmOf[p.key] = p.name; });
+  var all = [];
+  Object.keys(H).forEach(function(k) {
+    (H[k] || []).forEach(function(h) {
+      if (h.rs_pct === undefined || h.rs_pct === null) return;
+      all.push({h: h, key: k});
+    });
+  });
+  var mk = (window.RRG_MKT || {})[curM];
+  var mkLine = mk ? ('大盤濾網：' + (curM === 'tw' ? '加權指數' : 'S&P 500') + ' ' + mk.close.toLocaleString() +
+      (mk.ok ? ' 站在 ' : ' 跌破 ') + MKT_MA_JS + ' 日均線 ' + mk.ma.toLocaleString() + (mk.ok ? ' ✅' : ' ❌（這段期間不會出現接力）') +
+      '<span class="sigdim">（' + mk.date + '）</span>') : '大盤濾網：無資料';
+  var qOrder = {improving: 0, leading: 1, weakening: 2, lagging: 3};
+  function row(o) {
+    var q = qOf[o.key];
+    return '<tr><td class="tk">'+_escHtml(o.h.ticker)+'</td><td>'+_escHtml(o.h.name)+'</td>'+
+      '<td>'+_escHtml(nmOf[o.key] || o.key)+'</td>'+
+      '<td>'+(q ? '<span class="qtag" style="color:'+QCOLOR[q]+'">'+QLABEL[q]+'</span>' : '--')+'</td>'+
+      '<td class="r">'+rsPctHTML(o.h)+'</td><td>'+sigHTML(o.h)+'</td></tr>';
+  }
+  var relay = all.filter(function(o){ return o.h.relay || o.h.relay_nomkt; })
+    .sort(function(a,b){ return (qOrder[qOf[a.key]]||9)-(qOrder[qOf[b.key]]||9) || b.h.rs_pct-a.h.rs_pct; });
+  var top = all.slice().sort(function(a,b){ return b.h.rs_pct-a.h.rs_pct; }).slice(0, 10);
+  var thead = '<tr><th>代號</th><th>名稱</th><th>所屬產業</th><th>產業象限</th><th class="r">RS 百分位</th><th>訊號</th></tr>';
+  el.innerHTML =
+    '<div class="rrgnotehd">⚡ 個股接力訊號與 RS 排名（老墨 RS＋EC 合體選股）</div>' +
+    '<div class="relaymk">' + mkLine + '</div>' +
+    '<div class="relaysub">接力訊號（' + relay.length + ' 檔，依所屬產業「改善→領先→弱化→落後」排序；產業也在改善／領先的是雙重確認）</div>' +
+    (relay.length ? '<div class="tscroll"><table class="relaytb">' + thead + relay.map(row).join('') + '</table></div>'
+                  : '<div class="rrgexpempty">目前沒有成分股同時出現兩個事件——這個條件本來就嚴格，常常整個市場只有零到幾檔。</div>') +
+    '<div class="relaysub">RS 排名前 10（全部籃子成分股）</div>' +
+    '<div class="tscroll"><table class="relaytb">' + thead + top.map(row).join('') + '</table></div>' +
+    '<div class="rrgnotedim">「產業象限」跟著上方選的計算週期與基準變；個股 RS 排名與接力固定用 120 日、大盤基準。僅供研究參考，不構成投資建議。</div>';
 }
 
 function toggleExpand(key) {
@@ -1901,33 +2084,38 @@ CSS_EXTRA = """
  每個籃子一張卡，欄位改上下堆疊＋文字標籤（用 ::before 加標籤，不用另外寫HTML），
  不用橫向捲動就能看完整資訊。表頭列(.rrgrankhd)手機版直接隱藏——卡片自己帶標籤，
  不需要對齊的表頭了。 */
-.rrgrankhd{display:grid;grid-template-columns:1fr 52px 64px 86px 84px 58px 72px 130px 180px;gap:18px;
- grid-template-areas:"name qv ratio mom size mp pos";
+.rrgrankhd{display:grid;grid-template-columns:minmax(130px,1fr) 52px 64px 86px 84px 58px 78px 72px 70px minmax(90px,140px);gap:18px;
+ grid-template-areas:"name qv ratio mom spd str br size mp pos";
  padding:2px 4px 8px;border-bottom:1px solid #2a3550;font-size:10.5px;color:#5f80a6}
 .rrgrankhd span:nth-child(2){text-align:center}
 .rrgrankhd span:nth-child(3),.rrgrankhd span:nth-child(4){text-align:right}
 .rrgrankhd span:nth-child(1){grid-area:name}.rrgrankhd span:nth-child(2){grid-area:qv}
 .rrgrankhd span:nth-child(3){grid-area:ratio}.rrgrankhd span:nth-child(4){grid-area:mom}
-.rrgrankhd span:nth-child(5){grid-area:size}.rrgrankhd span:nth-child(6){grid-area:mp}
-.rrgrankhd span:nth-child(7){grid-area:pos}
-.rrgrow{display:grid;grid-template-columns:1fr 52px 64px 86px 84px 58px 72px 130px 180px;gap:18px;align-items:center;
- grid-template-areas:"name qv ratio mom size mp pos";
+.rrgrankhd span:nth-child(5){grid-area:spd}.rrgrankhd span:nth-child(6){grid-area:str}
+.rrgrankhd span:nth-child(7){grid-area:br}.rrgrankhd span:nth-child(8){grid-area:size}
+.rrgrankhd span:nth-child(9){grid-area:mp}.rrgrankhd span:nth-child(10){grid-area:pos}
+.rrgrow{display:grid;grid-template-columns:minmax(130px,1fr) 52px 64px 86px 84px 58px 78px 72px 70px minmax(90px,140px);gap:18px;align-items:center;
+ grid-template-areas:"name qv ratio mom spd str br size mp pos";
  padding:7px 4px;border-bottom:1px solid #131c30;font-size:12.5px;cursor:pointer;transition:background .15s}
 .rrgrow .nm{grid-area:name}.rrgrow .qv{grid-area:qv}.rrgrow .ratioval{grid-area:ratio}
 .rrgrow .momval{grid-area:mom}.rrgrow .sz{grid-area:size}.rrgrow .mp{grid-area:mp}
 .rrgrow .posbar{grid-area:pos}
+.rrgrow .spdval{grid-area:spd}.rrgrow .strval{grid-area:str}.rrgrow .brval{grid-area:br}
 @media (max-width:700px){
   .rrgrankhd{display:none}
   .rrgrow{grid-template-columns:1fr auto;row-gap:7px;column-gap:12px;padding:13px 10px;
-   grid-template-areas:"name qv" "ratio mom" "size mp" "pos pos"}
+   grid-template-areas:"name qv" "ratio mom" "spd str" "size mp" "br br" "pos pos"}
   .rrgrow .qv{grid-area:qv;font-size:12px;font-weight:600;align-self:start}
   .rrgrow .ratioval,.rrgrow .momval,.rrgrow .sz{text-align:left;display:flex;flex-direction:column;gap:2px}
   .rrgrow .ratioval::before{content:"RS-Ratio";font-size:9.5px;color:#5f80a6;font-weight:400}
   .rrgrow .momval::before{content:"RS-Momentum";font-size:9.5px;color:#5f80a6;font-weight:400}
   .rrgrow .sz::before{content:"資金規模";font-size:9.5px;color:#5f80a6;font-weight:400}
   .rrgrow .mp{grid-area:mp;align-self:end;justify-self:end}
-  .rrgexprow{grid-template-columns:56px 1fr 40px;column-gap:8px}
+  .rrgexprow{grid-template-columns:56px 1fr 40px 40px;column-gap:8px}
   .rrgexprow .expbar{display:none}   /* 手機版寬度不夠放權重條，數字本身已經夠用 */
+  .rrgexprow .expsig{grid-column:2 / -1}
+  .rrgexphd{display:none}
+  .rrgrow .brval::before{content:"廣度";font-size:9.5px;color:#5f80a6;margin-right:4px}
 }
 .rrgrow:hover{background:#101b30}
 /* 2026-08-26：勾選狀態——左邊一條實色邊線＋淡底色，跟純 hover 的灰底區分開來。 */
@@ -1948,8 +2136,28 @@ CSS_EXTRA = """
  縮排一點跟上層列區分開來。 */
 .rrgexpand{padding:8px 4px 10px 34px;background:#080d18;border-bottom:1px solid #131c30}
 .rrgexpempty{font-size:11.5px;color:#5f80a6}
-.rrgexprow{display:grid;grid-template-columns:70px 1fr 48px 120px;gap:10px;align-items:center;
+.rrgexprow,.rrgexphd{display:grid;grid-template-columns:70px 1fr 48px 120px 64px minmax(150px,1.2fr);gap:10px;align-items:center;
  padding:4px 0;font-size:11.5px}
+.rrgexphd{font-size:10px;color:#5f80a6;padding:0 0 4px;border-bottom:1px solid #131c30}
+.exprs{text-align:center}
+.rspill{display:inline-block;min-width:30px;text-align:center;padding:1px 6px;border-radius:9px;font-size:11px;
+ font-weight:700;font-variant-numeric:tabular-nums}
+.rspill.rshi{background:#0f3b2e;color:#4ade80}.rspill.rsmid{background:#132038;color:#8fb0d6}
+.rspill.rslo{background:#1a1420;color:#6b7280}.rsna{color:#3d4f6b}
+.expsig{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}
+.sigrelay{background:#ffb020;color:#04070f;font-weight:800;font-size:10.5px;padding:1px 7px;border-radius:4px}
+.signomkt{border:1px solid #5f80a6;color:#8fb0d6;font-size:10px;padding:0 5px;border-radius:4px}
+.sigdim{color:#5f80a6;font-size:10.5px;margin-left:4px}
+.brval{display:flex;gap:4px;align-items:baseline;font-size:11.5px;font-variant-numeric:tabular-nums}
+.brstr{color:#8fb0d6}.brstr.hi{color:#4ade80;font-weight:700}.brrelay{color:#ffb020;font-weight:700}.brn{color:#3d4f6b}
+.relaymk{font-size:12.5px;color:#cfe6ff;margin:4px 0 12px}
+.relaysub{font-size:12px;color:#8fb0d6;font-weight:700;margin:14px 0 6px}
+.tscroll{overflow-x:auto}
+.relaytb{width:100%;border-collapse:collapse;font-size:12px;min-width:620px}
+.relaytb th{text-align:left;color:#5f80a6;font-weight:600;padding:5px 8px;border-bottom:1px solid #2a3550;font-size:10.5px}
+.relaytb td{padding:6px 8px;border-bottom:1px solid #131c30;color:#cfe6ff}
+.relaytb td.tk{font-family:var(--mono,monospace);font-weight:600}.relaytb .r{text-align:center}
+.qtag{font-weight:700;font-size:11.5px}
 .exptk{color:#cfe6ff;font-family:var(--mono,monospace);font-weight:600}
 .expnm{color:#8fb0d6;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .expwt{color:#5f80a6;text-align:right;font-variant-numeric:tabular-nums}
