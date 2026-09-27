@@ -224,3 +224,7 @@ shangpin_4770_note.py
 liao_market_pulse_0922_note.py
 
 state/paper_trades.*.before-*.json
+
+# 特定投資人論壇發言的爬蟲與分析報告產生器：內含對個人的評論與其論壇內容摘錄，只在本機跑
+hong_forum_crawl.py
+hong_forum_report.py
