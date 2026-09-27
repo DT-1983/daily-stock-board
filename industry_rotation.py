@@ -442,6 +442,11 @@ RS_NEWHIGH_LOOKBACK = 120
 MKT_MA = 60
 RS_STRONG_PCT = 80      # 排名前 20% 算「強勢」，產業廣度用
 _LAST_PAYLOAD_IND = None
+_IND_CACHE = {}         # 網站版完整回放幀暫存，main() 寫外掛檔用
+# 2026-09-27 Leo：「不用預設回放一年，預設一個月就好」。網站版首次只內嵌最近 N 個交易日的回放幀
+# （1 個月 20 日＋預設尾巴 10 日），選 3 個月以上或尾巴拉超過 10 日才下載完整歷史。
+INLINE_FRAMES = 30
+DEFAULT_TAIL = 10
 MKT_STATUS = {}         # {market: 大盤濾網狀態}，由 _fetch_baskets 填，_rrg_script 輸出成 window.RRG_MKT
 
 
@@ -889,7 +894,8 @@ PERIOD_LABEL = {20: "短線", 60: "波段", 120: "中期", 240: "長期"}
 RANGE_DAYS = [("1m", "1個月", 20), ("3m", "3個月", 60), ("6m", "半年", 120), ("1y", "一年", 250)]
 
 
-def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdings_ind=None, ind_url=None):
+def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdings_ind=None, ind_url=None,
+                frames_url=None):
     """snaps: {"us": {"index": current_snapshot, "equal": current_snapshot}, "tw": {...}}
     hist:  {"us": {"index": [rows...], "equal": [rows...]}, "tw": {...}}
     snaps_ind/hist_ind/holdings_ind: 同結構但用 TradingView 的 industry 細分類
@@ -1146,7 +1152,8 @@ def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdi
 
     script_html = _rrg_script(payload, holdings or {"us": {}, "tw": {}},
                               payload_ind=payload_ind,
-                              holdings_ind=holdings_ind or {"us": {}, "tw": {}}, ind_url=ind_url)
+                              holdings_ind=holdings_ind or {"us": {}, "tw": {}}, ind_url=ind_url,
+                              frames_url=frames_url)
     return head_html + hdr + layout_html + note_html + disc_html + script_html + "</body></html>"
 
 
@@ -1245,12 +1252,32 @@ rrgExpand(window.RRG_DATA); rrgExpand(window.RRG_DATA_IND);
 """
 
 
-def _rrg_script(payload, holdings, payload_ind=None, holdings_ind=None, ind_url=None):
+def _rrg_script(payload, holdings, payload_ind=None, holdings_ind=None, ind_url=None, frames_url=None):
     import json as _json
     lines = []
     lines.append('<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>')
     lines.append("<script>")
-    lines.append("window.RRG_DATA = " + _json.dumps(_compact_frames(payload), ensure_ascii=False) + ";")
+    if frames_url:
+        # 網站版：回放幀只留最近 INLINE_FRAMES 個，完整版另存（main() 寫成外掛檔）
+        full = _compact_frames(payload)
+        _IND_CACHE["frames_full"] = {k: v for k, v in full.items() if k.startswith("frames_")}
+        total = 0
+        trimmed = {}
+        for k, v in payload.items():
+            if not k.startswith("frames_"):
+                trimmed[k] = v
+                continue
+            trimmed[k] = {b: {p: fr[-INLINE_FRAMES:] for p, fr in byp.items()} for b, byp in v.items()}
+            for byp in v.values():
+                for fr in byp.values():
+                    total = max(total, len(fr))
+        lines.append("window.RRG_DATA = " + _json.dumps(_compact_frames(trimmed), ensure_ascii=False) + ";")
+        lines.append("var RRG_FRAMES_URL = " + _json.dumps(frames_url) + ", RRG_FRAMES_FULL = false, "
+                     "RRG_FRAMES_TOTAL = %d, DEFAULT_TAIL_JS = %d;" % (total, DEFAULT_TAIL))
+    else:
+        lines.append("window.RRG_DATA = " + _json.dumps(_compact_frames(payload), ensure_ascii=False) + ";")
+        lines.append("var RRG_FRAMES_URL = null, RRG_FRAMES_FULL = true, RRG_FRAMES_TOTAL = 0, "
+                     "DEFAULT_TAIL_JS = %d;" % DEFAULT_TAIL)
     # 2026-08-26：展開排行榜某產業看前5大成分股用（台美股都是市值排序的前5大，
     # 見 _sector_members）。靜態資料，不像 RRG_DATA 要按市場/基準/週期分層——
     # 一個籃子的成分股不會因為
@@ -1946,7 +1973,9 @@ function draw() {
     var rangeW = RANGE_DAYS[curRange] || fullFrames.length;
     var n = Math.min(rangeW, fullFrames.length);
     btn.disabled = false;
-    hint.textContent = '（回放 ' + n + ' 個交易日，共累積 ' + fullFrames.length + ' 個交易日歷史）';
+    var totalN = (!RRG_FRAMES_FULL && curGran !== 'industry' && RRG_FRAMES_TOTAL) ? RRG_FRAMES_TOTAL : fullFrames.length;
+    hint.textContent = '（回放 ' + n + ' 個交易日，共累積 ' + totalN + ' 個交易日歷史' +
+      (totalN > fullFrames.length ? '；選更長的回放範圍時才下載' : '') + '）';
   }
 }
 
@@ -2078,15 +2107,41 @@ document.getElementById('perSeg').addEventListener('click', function(e) {
   document.querySelectorAll('#perSeg button').forEach(function(x){x.setAttribute('aria-pressed', x===b);});
   curP = b.dataset.p; draw();
 });
+// 2026-09-27：網站版首次只有最近一個月的回放幀；選更長範圍或尾巴拉長時才下載完整歷史（只下載一次）。
+function needFullFrames() {
+  return !RRG_FRAMES_FULL && RRG_FRAMES_URL && curGran !== 'industry' &&
+         (curRange !== '1m' || tailDays > DEFAULT_TAIL_JS);
+}
+var _framesLoading = false;
+function ensureFullFrames(cb) {
+  if (!needFullFrames()) { cb(); return; }
+  if (_framesLoading) return;
+  _framesLoading = true;
+  var hint = document.getElementById('playHint');
+  if (hint) hint.textContent = '（下載完整回放資料中…）';
+  fetch(RRG_FRAMES_URL).then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function(j) {
+      Object.keys(j).forEach(function(k){ window.RRG_DATA[k] = j[k]; });
+      rrgExpand(window.RRG_DATA);
+      RRG_FRAMES_FULL = true; _framesLoading = false;
+      cb();
+    })
+    .catch(function(err) {
+      _framesLoading = false;
+      if (hint) hint.textContent = '（完整回放資料下載失敗，先顯示最近一個月：' + err + '）';
+      cb();
+    });
+}
 document.getElementById('rangeSeg').addEventListener('click', function(e) {
   var b = e.target.closest('button'); if (!b) return;
   document.querySelectorAll('#rangeSeg button').forEach(function(x){x.setAttribute('aria-pressed', x===b);});
-  curRange = b.dataset.r; draw();
+  curRange = b.dataset.r; ensureFullFrames(draw);
 });
 document.getElementById('tailSlider').addEventListener('input', function(e) {
   tailDays = parseInt(e.target.value, 10);
   document.getElementById('tailVal').textContent = tailDays + ' 日';
-  if (!isPlaying) draw();   // 播放中先不重畫，跨週邊界會自然套用新尾巴長度
+  // 播放中先不重畫，跨週邊界會自然套用新尾巴長度
+  ensureFullFrames(function(){ if (!isPlaying) draw(); });
 });
 // 排行榜某一列 hover 也能高亮該籃子的軌跡（跟直接 hover 泡泡同一套邏輯），
 // 事件委派在容器上，因為每次 draw() 都會整個重畫 #rrgRank 的 innerHTML。
@@ -2367,8 +2422,17 @@ def main():
 
     # 網站版：細分類拆成 rotation_industry.json 延遲載入；obis 版：全部內嵌（手機開本機檔抓不到第二個檔）
     ind_name = "rotation_industry.json"
+    frames_name = "rotation_frames.json"
     html = render_html(snaps, hist, holdings, snaps_ind=snaps_ind, hist_ind=hist_ind,
-                       holdings_ind=holdings_ind, ind_url=ind_name if snaps_ind else None)
+                       holdings_ind=holdings_ind, ind_url=ind_name if snaps_ind else None,
+                       frames_url=frames_name)
+    try:
+        fr_path = os.path.join(os.path.dirname(args.output) or ".", frames_name)
+        with open(fr_path, "w", encoding="utf-8") as f:
+            json.dump(_IND_CACHE["frames_full"], f, ensure_ascii=False, separators=(",", ":"))
+        print(f"已存：{fr_path}")
+    except Exception as e:
+        print(f"警告 完整回放外掛檔寫入失敗：{e}")
     html_obis = render_html(snaps, hist, holdings,
                             snaps_ind=snaps_ind, hist_ind=hist_ind, holdings_ind=holdings_ind)
     if snaps_ind:
