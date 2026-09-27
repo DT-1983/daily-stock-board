@@ -458,7 +458,8 @@ def svg_tech(code, name, sym):
     for i in range(N):
         x = pl + step * i + step / 2
         up_ = C[i] >= o_[i]
-        col = "var(--up)" if up_ else "var(--down)"
+        # 台股慣例紅漲綠跌（2026-09-27 對齊老墨）；主題的 --up 是「好」的綠，這裡要反過來用
+        col = "var(--down)" if up_ else "var(--up)"
         o.append(f'<line x1="{x:.1f}" y1="{Y(H[i]):.1f}" x2="{x:.1f}" y2="{Y(L[i]):.1f}" stroke="{col}" stroke-width="1"/>')
         top, bot = Y(max(o_[i], C[i])), Y(min(o_[i], C[i]))
         o.append(f'<rect x="{x-step*0.32:.1f}" y="{top:.1f}" width="{step*0.64:.1f}" height="{max(bot-top,1):.1f}" fill="{col}"/>')
@@ -476,7 +477,7 @@ def svg_tech(code, name, sym):
     for d_, pts in seg:
         if len(pts) > 1:
             o.append('<path d="M' + " L".join(f"{x:.1f},{y:.1f}" for x, y in pts) +
-                     f'" fill="none" stroke="{"#facc15" if d_ == 1 else "#c084fc"}" stroke-width="1.8" opacity="0.95"/>')
+                     f'" fill="none" stroke="{"#c084fc" if d_ == 1 else "#facc15"}" stroke-width="1.8" opacity="0.95"/>')
     mpts = [(pl + step * i + step / 2, Y(v)) for i, v in enumerate(mm) if v]
     if len(mpts) > 1:
         o.append('<path d="M' + " L".join(f"{x:.1f},{y:.1f}" for x, y in mpts) +
@@ -485,7 +486,7 @@ def svg_tech(code, name, sym):
         o.append(T(pl + step * i + step / 2, h - 8, dates[i], 9.5, "var(--dim)", "middle"))
     last = C[-1]
     o.append(T(w - pr, pt + 10, f"收 {last:,.1f}", 11, "var(--ink)", "end", 700))
-    cap = (f"日 K 蠟燭（漲綠跌紅）＋SuperTrend（黃＝多方支撐、紫＝空方壓力，站內統一配色與算法，跟燈號同一條）＋60 日均線（橘虛線）。"
+    cap = (f"日 K 蠟燭（紅漲綠跌）＋SuperTrend（紫＝多方支撐、黃＝空方壓力，站內統一配色與算法，跟燈號同一條）＋60 日均線（橘虛線）。"
            f"最新方向：{'多方' if dr[-1] == 1 else '空方'}，SuperTrend 線 {ln[-1]:,.1f}；"
            f"<b>週線</b>方向（模擬倉趨勢倉用的 Wilder 版，算法與日線這條不同）：{'多方' if wk == 1 else '空方'}。資料到 {df.index[-1].strftime('%Y-%m-%d')}。")
     return _fix_h(chart(f"{code} {name}：技術圖", "".join(o), cap), h), {"dir_d": dr[-1], "st": ln[-1], "wk": wk, "last": last}
