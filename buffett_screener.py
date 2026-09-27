@@ -628,9 +628,14 @@ def fetch_fundamentals(ticker: str) -> dict:
                     # 這個舊公式才是 2026-08-27 Leo 親自拿官方盈再表逆推、
                     # 5/5 檔對官方「預期常利」欄精確吻合 <0.1% 驗證過的版本——
                     # ⭐ 實測數字比對 > 逐字稿文字描述，優先度更高。
+                    # 2026-09-27：論壇全發言找到出處——這就是他 2024-10-22 在論壇定案的官方公式
+                    # （#8331，Word 講稿的 percentile 法是舊版），而且**還有一條例外分支我們漏了**：
+                    # 近 2 年平均 > 2 倍 5 年中位數（常利暴增，他點名 NVDA、榮航 #8398）改用 0.9／0.1。
+                    # 補上前試算：當時清單 22 檔無一觸發；NVDA 預期常利 +12%、MU +18%。
                     vals = ([ttm_ni] + ann)[:5] if ttm_ni is not None else ann[:5]
                     if len(vals) >= 3:   # 至少要3期才算得出有意義的中位數，太少不硬算
-                        changli = float(np.mean(vals[:2]) * 0.7 + np.median(vals) * 0.3)
+                        _m2, _md = float(np.mean(vals[:2])), float(np.median(vals))
+                        changli = _m2 * 0.9 + _md * 0.1 if (_md > 0 and _m2 > 2 * _md) else _m2 * 0.7 + _md * 0.3
                         if changli > 0:
                             changli_amt = changli
                             changli_eps = round(changli / float(shares), 4)
