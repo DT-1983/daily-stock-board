@@ -441,6 +441,7 @@ RELAY_WIN = 10
 RS_NEWHIGH_LOOKBACK = 120
 MKT_MA = 60
 RS_STRONG_PCT = 80      # 排名前 20% 算「強勢」，產業廣度用
+_LAST_PAYLOAD_IND = None
 MKT_STATUS = {}         # {market: 大盤濾網狀態}，由 _fetch_baskets 填，_rrg_script 輸出成 window.RRG_MKT
 
 
@@ -888,7 +889,7 @@ PERIOD_LABEL = {20: "短線", 60: "波段", 120: "中期", 240: "長期"}
 RANGE_DAYS = [("1m", "1個月", 20), ("3m", "3個月", 60), ("6m", "半年", 120), ("1y", "一年", 250)]
 
 
-def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdings_ind=None):
+def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdings_ind=None, ind_url=None):
     """snaps: {"us": {"index": current_snapshot, "equal": current_snapshot}, "tw": {...}}
     hist:  {"us": {"index": [rows...], "equal": [rows...]}, "tw": {...}}
     snaps_ind/hist_ind/holdings_ind: 同結構但用 TradingView 的 industry 細分類
@@ -945,8 +946,10 @@ def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdi
                     sz += [b.get("size", 0.0) for b in row.get("snapshot", {}).values()]
             return sz
         radius_ind = {m: _size_scale(_sizes_ind(m)) for m in ("us", "tw")}
+        global _LAST_PAYLOAD_IND
         payload_ind = _build_payload(snaps_ind, hist_ind or {}, radius_ind,
                                      frame_periods=[60])
+        _LAST_PAYLOAD_IND = payload_ind     # main() 寫外掛檔用，不重算
 
     snap_tw_index = snaps["tw"]["index"]
     snap_us_index = snaps["us"]["index"]
@@ -1102,6 +1105,7 @@ def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdi
     # 一個獨立的滿版寬區塊，寬度＝篩選欄+圖表欄相加的整個版面寬度。
     chart_html = (
         '<div class="rrgwrap"><div class="rrgbox"><canvas id="rrgChart"></canvas>'
+        '<div class="rrgloading" id="rrgLoading">資料載入中…<br><span>網路較慢時要等幾秒，載完圖表會自動出現</span></div>'
         '<div class="rrgframe" id="rrgFrameLabel"></div></div></div>'
     )
     rank_html = (
@@ -1129,7 +1133,7 @@ def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdi
         '<span title="由左至右＝短線(20日)/波段(60日)/中期(120日)/長期(240日)，'
         '顏色是該週期的象限——短中長期顏色一致代表趨勢一致，不一致代表正在轉折">多週期</span>'
         '<span title="RS-Ratio(相對強弱)在座標軸範圍內的位置，越右邊代表比大盤越強">強弱位置</span></div>'
-        '<div class="rrgrank" id="rrgRank"></div>'
+        '<div class="rrgrank" id="rrgRank"><div class="rrgexpempty" style="padding:10px 4px">資料載入中…</div></div>'
         '</div>'
         '<div class="rrgnote rrgrelay" id="rrgRelay"></div>'
     )
@@ -1142,7 +1146,7 @@ def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdi
 
     script_html = _rrg_script(payload, holdings or {"us": {}, "tw": {}},
                               payload_ind=payload_ind,
-                              holdings_ind=holdings_ind or {"us": {}, "tw": {}})
+                              holdings_ind=holdings_ind or {"us": {}, "tw": {}}, ind_url=ind_url)
     return head_html + hdr + layout_html + note_html + disc_html + script_html + "</body></html>"
 
 
@@ -1241,7 +1245,7 @@ rrgExpand(window.RRG_DATA); rrgExpand(window.RRG_DATA_IND);
 """
 
 
-def _rrg_script(payload, holdings, payload_ind=None, holdings_ind=None):
+def _rrg_script(payload, holdings, payload_ind=None, holdings_ind=None, ind_url=None):
     import json as _json
     lines = []
     lines.append('<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>')
@@ -1256,9 +1260,17 @@ def _rrg_script(payload, holdings, payload_ind=None, holdings_ind=None):
     lines.append("var RELAY_WIN_JS = %d, RS_STRONG_PCT_JS = %d, MKT_MA_JS = %d;" % (RELAY_WIN, RS_STRONG_PCT, MKT_MA))
     # 2026-08-29 細分類（TradingView industry，台98/美128類）。整包另存一份，
     # 切換時直接換資料來源，不用重算——兩份格式完全一樣，前端邏輯不用改。
-    lines.append("window.RRG_DATA_IND = " + (_json.dumps(_compact_frames(payload_ind), ensure_ascii=False)
-                                            if payload_ind else "null") + ";")
-    lines.append("window.RRG_HOLDINGS_IND = " + _json.dumps(holdings_ind or {}, ensure_ascii=False) + ";")
+    # 2026-09-27：細分類資料佔整頁 56%（3.7MB／6.5MB），Leo 手機上第一次打開要等 30 秒以上、
+    # 看起來像「美股跑不出來」。網站版改成外掛檔，切到細分類才下載；obis 版（Google Drive 手機
+    # 開本機檔，抓不到第二個檔）維持內嵌。
+    if payload_ind and ind_url:
+        lines.append("window.RRG_DATA_IND = null; window.RRG_HOLDINGS_IND = {};")
+        lines.append("var RRG_IND_URL = " + _json.dumps(ind_url) + ";")
+    else:
+        lines.append("window.RRG_DATA_IND = " + (_json.dumps(_compact_frames(payload_ind), ensure_ascii=False)
+                                                if payload_ind else "null") + ";")
+        lines.append("window.RRG_HOLDINGS_IND = " + _json.dumps(holdings_ind or {}, ensure_ascii=False) + ";")
+        lines.append("var RRG_IND_URL = null;")
     lines.append(_EXPAND_JS)   # 一定要在 RRGD()/任何讀幀的程式之前跑
     lines.append("var curGran = 'sector';")   # sector=粗分類 / industry=細分類
     lines.append("function RRGD(){return (curGran==='industry'&&window.RRG_DATA_IND)?window.RRG_DATA_IND:window.RRG_DATA;}")
@@ -2031,6 +2043,24 @@ document.getElementById('mktSeg').addEventListener('click', function(e) {
 var granEl = document.getElementById('granSeg');
 if (granEl) granEl.addEventListener('click', function(e) {
   var b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.g === 'industry' && !window.RRG_DATA_IND && RRG_IND_URL) {
+    if (b.dataset.loading) return;
+    b.dataset.loading = '1';
+    var old = b.innerHTML;
+    b.innerHTML = '細分類載入中…';
+    fetch(RRG_IND_URL).then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function(j) {
+        window.RRG_DATA_IND = j.data; window.RRG_HOLDINGS_IND = j.holdings || {};
+        rrgExpand(window.RRG_DATA_IND);
+        b.innerHTML = old; delete b.dataset.loading;
+        b.click();
+      })
+      .catch(function(err) {
+        b.innerHTML = old; delete b.dataset.loading;
+        alert('細分類資料載入失敗，請稍後再試（' + err + '）');
+      });
+    return;
+  }
   document.querySelectorAll('#granSeg button').forEach(function(x){x.setAttribute('aria-pressed', x===b);});
   curGran = b.dataset.g;
   selectedKeys.clear();
@@ -2087,6 +2117,7 @@ document.getElementById('jumpStrong').addEventListener('click', function() {
   renderRelayPanel();
   document.getElementById('rrgRelay').scrollIntoView({behavior: 'smooth', block: 'start'});
 });
+var _ld = document.getElementById('rrgLoading'); if (_ld) _ld.remove();
 draw();
 </script>""")
     return "\n".join(lines)
@@ -2101,6 +2132,8 @@ CSS_EXTRA = """
 /* 排行榜搬到圖表下面而不是旁邊（用戶反饋），改直排堆疊。 */
 .rrgwrap{display:flex;flex-direction:column;gap:14px}
 .rrgbox{height:520px;background:#0a1222;border:1px solid #0E1B2B;border-radius:12px;padding:10px;position:relative}
+.rrgloading{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#25e6ff;font-size:15px;font-weight:700;text-align:center}
+.rrgloading span{color:#5f80a6;font-size:11.5px;font-weight:400}
 /* 排行榜寬度改跟圖表一樣寬（原本限制 640px，右側留一大塊空白）。
  多出來的空間補兩欄新資訊：資金規模數字化、RS-Ratio 在座標軸上的相對位置迷你條——
  用戶反饋「太空了，請建議要放什麼」，這兩欄都是現成算好的資料，不用另外抓。 */
@@ -2332,18 +2365,31 @@ def main():
         except Exception as e:
             print(f"警告 細分類計算失敗（不影響粗分類）：{e}")
 
-    html = render_html(snaps, hist, holdings,
-                       snaps_ind=snaps_ind, hist_ind=hist_ind, holdings_ind=holdings_ind)
+    # 網站版：細分類拆成 rotation_industry.json 延遲載入；obis 版：全部內嵌（手機開本機檔抓不到第二個檔）
+    ind_name = "rotation_industry.json"
+    html = render_html(snaps, hist, holdings, snaps_ind=snaps_ind, hist_ind=hist_ind,
+                       holdings_ind=holdings_ind, ind_url=ind_name if snaps_ind else None)
+    html_obis = render_html(snaps, hist, holdings,
+                            snaps_ind=snaps_ind, hist_ind=hist_ind, holdings_ind=holdings_ind)
+    if snaps_ind:
+        try:
+            ind_json = {"data": _compact_frames(_LAST_PAYLOAD_IND), "holdings": holdings_ind or {}}
+            ind_path = os.path.join(os.path.dirname(args.output) or ".", ind_name)
+            with open(ind_path, "w", encoding="utf-8") as f:
+                json.dump(ind_json, f, ensure_ascii=False, separators=(",", ":"))
+            print(f"已存：{ind_path}")
+        except Exception as e:
+            print(f"警告 細分類外掛檔寫入失敗：{e}")
     # obis 一律嘗試寫，不用額外參數——跟 buffett_html.py/portfolio_html.py 同款寫法
     # （本機成功；GitHub Actions 上這個路徑不存在，try/except 吞掉不影響其他輸出）。
     # 先前這裡要求 --obis 才寫，跟其他頁面不一致、容易忘記加，已改掉。
     from obis_paths import DAILY as OBIS
-    outs = [args.output, os.path.join(OBIS, "產業輪動雷達.html")]
-    for out in outs:
+    outs = [(args.output, html), (os.path.join(OBIS, "產業輪動雷達.html"), html_obis)]
+    for out, content in outs:
         try:
             os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
             with open(out, "w", encoding="utf-8") as f:
-                f.write(html)
+                f.write(content)
             print(f"已存：{out}")
         except Exception as e:
             print(f"警告 寫入 {out} 失敗（不影響其他輸出）：{e}")
