@@ -1,32 +1,18 @@
 {
-"date": "2026-09-26",
+"date": "2026-09-28",
 "flips_hold": [
 {
-"code": "AER",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1,
-"sig": "st"
-},
-{
-"code": "ARKQ",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1,
-"sig": "st"
-},
-{
-"code": "UNM",
+"code": "API",
 "name": "",
 "word": "RS60跌破自身均線",
 "dir": -1,
 "sig": "rs60"
 },
 {
-"code": "KR",
+"code": "UNM",
 "name": "",
-"word": "RS60站回多方",
-"dir": 1,
+"word": "RS60跌破自身均線",
+"dir": -1,
 "sig": "rs60"
 },
 {
@@ -37,10 +23,17 @@
 "sig": "rs60"
 },
 {
-"code": "PAA",
+"code": "BAYRY",
 "name": "",
 "word": "RS60站回多方",
 "dir": 1,
+"sig": "rs60"
+},
+{
+"code": "ARKX",
+"name": "",
+"word": "RS60跌破自身均線",
+"dir": -1,
 "sig": "rs60"
 },
 {
@@ -51,35 +44,6 @@
 "sig": "rs60"
 }
 ],
-"flips_watch": [
-{
-"code": "CAMT",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1,
-"sig": "st"
-},
-{
-"code": "EMR",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1,
-"sig": "st"
-},
-{
-"code": "JCI",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1,
-"sig": "st"
-},
-{
-"code": "NVT",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1,
-"sig": "st"
-}
-],
+"flips_watch": [],
 "ai_alerts": []
 }
