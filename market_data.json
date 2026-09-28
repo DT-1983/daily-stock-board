@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-26 13:09",
+ "updated": "2026-09-28 08:47",
  "indices": [
   {
    "sym": "^GSPC",
@@ -45,9 +45,9 @@
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/25",
-   "close": 31.69,
-   "chg_pct": -0.3
+   "date": "09/28",
+   "close": 31.77,
+   "chg_pct": -0.11
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "微軟股價創去年11月來新高！分析：AI布局不綁單一模型商成優勢",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6616382",
-   "ts": "09/26 12:41"
-  },
-  {
-   "title": "長抱個股失靈？研究：僅23.2%標普成分股十年跑贏大盤",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6615154",
-   "ts": "09/26 12:40"
-  },
-  {
-   "title": "關鍵礦產爭奪轉向南美！美70億貸款綁阿根廷鐵路、管道、港口、電網　穩定西半球礦能基建",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6614986",
-   "ts": "09/26 12:30"
-  },
-  {
-   "title": "外資回頭掃貨！主動式ETF規模前五強全勝大盤 00981A周漲近1成",
+   "title": "別再只看散熱！下一個翻倍產業 已經浮出水面",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6614874",
-   "ts": "09/26 12:27"
+   "url": "https://news.cnyes.com/news/id/6615145",
+   "ts": "09/28 08:40"
   },
   {
-   "title": "新漢前進美國台灣形象展 展出六大關鍵場域AIoT落地應用",
+   "title": "鉅亨速報 - Factset 最新調查：華碩(2357-TW)EPS預估上修至75.9元，預估目標價為1080元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6616313",
-   "ts": "09/26 12:26"
+   "url": "https://news.cnyes.com/news/id/6616985",
+   "ts": "09/28 08:10"
   },
   {
-   "title": "美光財報前夕 美銀重申買進、看好再漲45%",
+   "title": "美國拒絕伊朗停戰方案仍願繼續談判！川普：預計本週進行",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6615727",
-   "ts": "09/26 12:10"
+   "url": "https://news.cnyes.com/news/id/6616927",
+   "ts": "09/28 08:10"
   },
   {
-   "title": "AI資料中心帶動變壓器需求美國供給吃緊，亞洲廠商接連拿下大單",
+   "title": "AI=電力基礎設施！韓副總理：政府正大力投入　力求實現全民免費覆蓋",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6616391",
-   "ts": "09/26 12:00"
+   "url": "https://news.cnyes.com/news/id/6616791",
+   "ts": "09/28 08:10"
   },
   {
-   "title": "AI國家隊出擊！國發會率團密訪微軟、史丹佛 聚焦算力部署、新創鏈結與人才轉型",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6616297",
-   "ts": "09/26 09:55"
+   "title": "川習會談台灣軍售！美駐中大使：美國對台立場未改變",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6616923",
+   "ts": "09/28 07:10"
   },
   {
-   "title": "精華生醫擬10/15上櫃掛牌 膳食補充劑市場商機放大中",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6615735",
-   "ts": "09/26 09:54"
+   "title": "Fed升息錯了嗎？知名避險基金大亨警告：AI改寫通膨邏輯、緊縮貨幣政策恐適得其反",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6616462",
+   "ts": "09/28 06:10"
   },
   {
-   "title": "北台灣新地標在林口 東森與晶華打團體戰讓桃園成全新大本營",
+   "title": "美國AI供應鏈管制再擴大 光收發模組納入國會限制範圍",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6616912",
+   "ts": "09/27 23:00"
+  },
+  {
+   "title": "台積電又有漲價題材！「含積量」成焦點 00881包下AI四大電子族群",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6615513",
-   "ts": "09/26 09:52"
+   "url": "https://news.cnyes.com/news/id/6615805",
+   "ts": "09/27 11:25"
+  },
+  {
+   "title": "雄獅創兩個新里程碑 帶進國旅新客源、拓高端主題版圖",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6616683",
+   "ts": "09/27 11:20"
+  },
+  {
+   "title": "AI散熱需求催油門 12吋SiC發展加速 單晶、多晶、鍵合三路競逐",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6615934",
+   "ts": "09/27 10:41"
   }
  ],
  "inst": {
