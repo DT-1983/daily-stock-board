@@ -94,6 +94,23 @@ TOP_HOLDINGS_N = 10  # 排行榜「展開看前N大成分股」＋投資長「�
                      # 七鏈以外的類股沒有守備清單在追，前5太淺會漏掉不少中大型股。
 
 
+def dedupe_company(df):
+    """同一家公司只留一檔（2026-09-28 Leo：「科技服務」籃子 GOOGM／GOOGN／GOOGL 同一家算三次）。
+    用 TradingView 的 logoid 認公司（同公司不同股票類別共用），**logoid 空字串的不能合併**
+    ——實測一大批公司 logoid 都是空的，當成同一家會把不相干的公司併掉。
+    同一家留哪檔：普通股優先（排除存託憑證／特別股說明），再比成交量。df 需含 name/description/logoid/volume。"""
+    if df is None or df.empty or "logoid" not in df.columns:
+        return df
+    d = df.copy()
+    lid = d["logoid"].fillna("").astype(str)
+    d["_key"] = lid.where(lid != "", "__" + d["name"].astype(str))
+    desc = d.get("description", "").fillna("").astype(str) if "description" in d.columns else ""
+    d["_plain"] = ~desc.str.contains("Depositary|Preferred|Convertible", case=False, regex=True)
+    d["_vol"] = d["volume"].fillna(0) if "volume" in d.columns else 0
+    d = d.sort_values(["_key", "_plain", "_vol"], ascending=[True, False, False]).drop_duplicates("_key")
+    return d.drop(columns=["_key", "_plain", "_vol"]).sort_values("market_cap_basic", ascending=False)
+
+
 def _sector_members(market, min_market_cap=3e9, group_by="sector"):
     """某市場（"taiwan" 或 "america"）各 sector 市值前 SECTOR_BASKET_SIZE 大成分股。
     用 TradingView 一次性快照，不逐檔查——這一步快（幾秒），真正貴的是後面逐檔抓歷史價格。
@@ -132,7 +149,7 @@ def _sector_members(market, min_market_cap=3e9, group_by="sector"):
     # industry 更細但**取代不了七鏈**：實測矽光子那條鏈的成分股散在 Semiconductors/
     # Industrial Machinery/Electrical Products 三個 industry 裡。
     cols = ["name", "description", "sector", "industry", "market_cap_basic",
-            "total_shares_outstanding", "close", "exchange"]
+            "total_shares_outstanding", "close", "exchange", "logoid", "volume"]
     wheres = [col("market_cap_basic") >= min_market_cap, col("close") >= 5.0]
     if market == "taiwan":
         wheres.append(col("exchange").isin(["TWSE", "TPEX"]))
@@ -147,6 +164,7 @@ def _sector_members(market, min_market_cap=3e9, group_by="sector"):
     else:
         df["ticker"] = df["name"].astype(str)   # 美股代號本身就是 yfinance 可用格式
         df = df[~df["ticker"].str.contains("/", regex=False)]   # 排除特別股（同一家公司重複計算）
+    df = dedupe_company(df)   # 2026-09-28：同公司多檔（GOOG／GOOGL／GOOGM／GOOGN、BRK.A／B）只留一檔
     tw_names = _tw_chinese_names() if market == "taiwan" else {}
     out = {}
     for sector, grp in df.groupby(group_by):
@@ -435,7 +453,9 @@ def _tw_chinese_names():
 #   接力     EC 動能計算 20 期、接力窗口 10 日、RS 創新高回看 120 日、大盤濾網 60 日均線。
 #            「EC 翻正」解讀為動能由 ≤0 轉 >0（他結果欄叫「EC 幾日前翻正」）；
 #            「RS 創新高」＝RS 原始比值線（個股÷大盤）創 120 日新高（跟 technical_indicators.rs_signals 同定義）。
-#            兩個事件都在最近 10 個交易日內發生、且 EC 動能現在仍 >0、大盤收盤在 60 日均線之上，才算接力。
+#            2026-09-28 Leo 定案用「嚴格版」（較貼近原文結果欄「RS 創幾日新高、EC 幾日前翻正」）：
+#            **今天** RS 在 120 日新高、EC 在最近 10 個交易日內由負翻正且現在仍 >0、大盤收盤在 60 日均線之上。
+#            （9/27 版是「兩個事件都在最近 10 日內」即可，9/28 全市場實測：台 11→6、美 78→13。）
 RS_RANK_WIN = 120
 RELAY_WIN = 10
 RS_NEWHIGH_LOOKBACK = 120
@@ -517,11 +537,12 @@ def _attach_signals(members, cached, bench_close, yf_fn):
             if not s or s["rs"] is None:
                 continue
             pct = round(100.0 * sum(1 for v in vals if v <= s["rs"]) / nv) if nv else None
-            relay = bool(s["ec_up_ago"] is not None and s["rs_hi_ago"] is not None and mkt and mkt["ok"])
+            both = s["ec_up_ago"] is not None and s["rs_hi_ago"] == 0     # 嚴格版：今天 RS 在新高
+            relay = bool(both and mkt and mkt["ok"])
             hd.update({"rs": s["rs"], "rs_pct": pct, "ec_up_ago": s["ec_up_ago"], "rs_hi_ago": s["rs_hi_ago"],
                        "relay": relay,
                        # 大盤沒站上 60MA 時，兩個事件都有也不算接力，但要讓頁面看得到「差大盤這一關」
-                       "relay_nomkt": bool(s["ec_up_ago"] is not None and s["rs_hi_ago"] is not None and not relay)})
+                       "relay_nomkt": bool(both and not relay)})
     return mkt
 
 
@@ -1012,8 +1033,8 @@ def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdi
         f'100＝最強、50＝普通、0＝最弱。<b>{RS_STRONG_PCT} 分以上（綠色）算強勢股</b>。<br>'
         '<b>② 強勢股（排行榜那一欄）</b>：例如「3／6 檔強」＝這個產業 6 檔代表股裡，有 3 檔是強勢股。'
         '越接近全部，代表整個產業一起在漲；只有 1、2 檔，代表只是少數個股在撐，要小心。<br>'
-        f'<b>③ ⚡接力</b>：一檔股票最近 {RELAY_WIN} 天內<b>同時</b>出現兩個轉強訊號——'
-        '動能由弱轉強（EC 翻正）、而且跟大盤比的強度創半年新高（RS 新高）——'
+        '<b>③ ⚡接力</b>：一檔股票<b>今天</b>跟大盤比的強度創半年新高（RS 新高），'
+        f'而且最近 {RELAY_WIN} 天內動能才剛由弱轉強（EC 翻正）——'
         f'同時大盤本身也在上升趨勢（站在 {MKT_MA} 日均線之上）。'
         '這是老墨用來抓「剛開始發動」股票的條件，很嚴格，常常整個市場只有 0～幾檔，沒有也很正常。'
         '大盤不在上升趨勢時，就算兩個訊號都出現也不算，會標「差大盤」。<br>'
@@ -1284,6 +1305,16 @@ def _rrg_script(payload, holdings, payload_ind=None, holdings_ind=None, ind_url=
     # 你切了計算週期就變了。
     lines.append("window.RRG_HOLDINGS = " + _json.dumps(holdings, ensure_ascii=False) + ";")
     lines.append("window.RRG_MKT = " + _json.dumps(MKT_STATUS, ensure_ascii=False) + ";")
+    # 2026-09-28：全市場 RS 排名＋接力（market_relay_scan.py，每天 07:00 在產業輪動之前跑）
+    _mr = None
+    try:
+        _mr_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "docs", "market_relay.json")
+        if os.path.exists(_mr_path):
+            _mr = _json.load(open(_mr_path, encoding="utf-8"))
+    except Exception:
+        _mr = None
+    lines.append("window.RRG_MARKET = " + _json.dumps(_mr, ensure_ascii=False, separators=(",", ":")) + ";")
+    lines.append("var SECTOR_ZH = " + _json.dumps(SECTOR_TW_LABEL, ensure_ascii=False) + ";")
     lines.append("var RELAY_WIN_JS = %d, RS_STRONG_PCT_JS = %d, MKT_MA_JS = %d;" % (RELAY_WIN, RS_STRONG_PCT, MKT_MA))
     # 2026-08-29 細分類（TradingView industry，台98/美128類）。整包另存一份，
     # 切換時直接換資料來源，不用重算——兩份格式完全一樣，前端邏輯不用改。
@@ -1814,7 +1845,7 @@ function rsPctHTML(h) {
   return '<span class="rspill '+cls+'" title="Mansfield RS '+(h.rs>=0?'+':'')+h.rs+'%">'+h.rs_pct+'</span>';
 }
 function sigHTML(h) {
-  if (h.relay) return '<span class="sigrelay">⚡接力</span><span class="sigdim">EC '+h.ec_up_ago+'日前翻正・RS '+h.rs_hi_ago+'日前新高</span>';
+  if (h.relay) return '<span class="sigrelay">⚡接力</span><span class="sigdim">RS 今天新高・EC '+(h.ec_up_ago===0?'今天':h.ec_up_ago+'日前')+'翻正</span>';
   var out = [];
   if (h.relay_nomkt) out.push('<span class="signomkt">差大盤</span>');
   if (h.ec_up_ago !== null && h.ec_up_ago !== undefined) out.push('<span class="sigdim">EC '+h.ec_up_ago+'日前翻正</span>');
@@ -1831,6 +1862,11 @@ function breadthHTML(key) {
     (relay ? '<span class="brrelay" title="其中 '+relay+' 檔剛出現接力訊號">⚡'+relay+'</span>' : '');
 }
 var relayMode = 'lead';   // 強勢股篩選面板目前選哪一個
+function mrScope() {
+  var M = window.RRG_MARKET, m = M && M.markets && M.markets[curM];
+  if (!m) return '資料尚未產生';
+  return (curM === 'tw' ? '台股上市櫃全部 ' : '美股市值 5 億美元以上 ') + m.scanned.toLocaleString() + ' 檔，更新 ' + M.date;
+}
 function renderRelayPanel() {
   var el = document.getElementById('rrgRelay');
   if (!el) return;
@@ -1861,18 +1897,27 @@ function renderRelayPanel() {
                 return qa - qb || byRs(a,b); }),
     top: all.slice().sort(byRs).slice(0, 10)
   };
+  // 全市場（market_relay_scan.py）：排名範圍是整個市場，不是產業代表股
+  var MR = ((window.RRG_MARKET || {}).markets || {})[curM];
+  var mrow = function(r){ return {h: r, key: r.sector, full: true}; };
+  lists.mrelay = MR ? MR.relay.map(mrow).sort(function(a,b){
+      var qa = qOf[a.key] in qOrder ? qOrder[qOf[a.key]] : 9, qb = qOf[b.key] in qOrder ? qOrder[qOf[b.key]] : 9;
+      return qa - qb || b.h.rs_pct - a.h.rs_pct; }) : [];
+  lists.mtop = MR ? MR.top.slice(0, 50).map(mrow) : [];
   var MODES = [
     ['lead', '領先產業的強勢股', '產業正處於「領先」象限（比大盤強、而且還在變強），挑出其中跟大盤比排名前 20% 的個股。產業強＋個股也強，是最直接的一份名單。'],
     ['improve', '改善產業的強勢股', '產業處於「改善」象限（還沒贏大盤、但正在變強，通常是輪動的起點），挑出其中已經先轉強的個股——可能是帶頭的那幾檔。'],
-    ['relay', '⚡ 接力訊號', '最近 10 天同時出現「動能轉強」和「跟大盤比創半年新高」兩個訊號、而且大盤在上升趨勢的個股（老墨抓剛發動股票的條件）。很嚴格，沒有也很正常。'],
-    ['top', 'RS 排名前 10', '不分產業，全部代表股裡跟大盤比最強的 10 檔。']
+    ['relay', '⚡ 接力訊號', '今天跟大盤比的強度創半年新高、而且最近 10 天動能才剛由弱轉強、大盤也在上升趨勢的個股（老墨抓剛發動股票的條件）。很嚴格，沒有也很正常。'],
+    ['top', 'RS 排名前 10', '不分產業，全部代表股裡跟大盤比最強的 10 檔。'],
+    ['mrelay', '🌐 全市場接力', '同樣的接力條件，但範圍是整個市場：' + mrScope() + '。RS 百分位也是跟全市場比。'],
+    ['mtop', '🌐 全市場 RS 前 50', '整個市場裡，最近半年比大盤強最多的 50 檔（' + mrScope() + '）。']
   ];
   var cur = lists[relayMode] || [];
   var desc = (MODES.filter(function(m){ return m[0] === relayMode; })[0] || MODES[0])[2];
   function row(o) {
     var q = qOf[o.key];
     return '<tr><td class="tk">'+_escHtml(o.h.ticker)+'</td><td>'+_escHtml(o.h.name)+'</td>'+
-      '<td>'+_escHtml(nmOf[o.key] || o.key)+'</td>'+
+      '<td>'+_escHtml(nmOf[o.key] || SECTOR_ZH[o.key] || o.key || '--')+'</td>'+
       '<td>'+(q ? '<span class="qtag" style="color:'+QCOLOR[q]+'">'+QLABEL[q]+'</span>' : '--')+'</td>'+
       '<td class="r">'+rsPctHTML(o.h)+'</td><td>'+sigHTML(o.h)+'</td></tr>';
   }
@@ -1885,7 +1930,9 @@ function renderRelayPanel() {
     lead: '目前「領先」象限的產業裡沒有排名前 20% 的個股（或目前沒有產業在領先象限）。',
     improve: '目前「改善」象限的產業裡沒有排名前 20% 的個股（或目前沒有產業在改善象限）。',
     relay: '目前沒有個股同時出現兩個轉強訊號——這個條件本來就很嚴格，常常整個市場只有 0～幾檔。',
-    top: '無資料'
+    top: '無資料',
+    mrelay: MR ? '今天全市場沒有個股同時出現兩個轉強訊號。' : '全市場掃描資料還沒產生（每天 07:00 更新）。',
+    mtop: '全市場掃描資料還沒產生（每天 07:00 更新）。'
   }[relayMode];
   el.innerHTML =
     '<div class="rrgnotehd">⭐ 強勢股篩選：產業裡哪幾檔在帶頭（參考老墨技術面選股組合）</div>' +

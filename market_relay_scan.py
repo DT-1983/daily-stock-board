@@ -3,7 +3,7 @@
 
 Leo：「RS＋EC 可以做全台美股市場嗎？」→「做 1」。
 範圍：台股上市＋上櫃全部普通股、美股 NYSE＋NASDAQ 市值 ≥ 5 億美元（小型股資料缺漏多、假訊號多）。
-訊號定義跟產業輪動頁完全一樣（共用 industry_rotation._stock_signals／_market_filter），
+訊號定義跟產業輪動頁完全一樣（9/28 起接力用嚴格版）（共用 industry_rotation._stock_signals／_market_filter），
 差別只在排名範圍：這裡是全市場排名，產業輪動頁是各產業代表股之間排名。
 
 輸出：docs/market_relay.json（只放接力清單＋各市場 RS 前 100，給產業輪動頁「全市場」按鈕讀）。
@@ -36,8 +36,10 @@ def universe(market):
     if market == "us":
         w.append(col("market_cap_basic") >= US_MIN_CAP)
     _, df = (Query().set_markets(tv)
-             .select("name", "description", "sector", "industry", "market_cap_basic", "close", "exchange")
+             .select("name", "description", "sector", "industry", "market_cap_basic", "close", "exchange",
+                     "logoid", "volume")
              .where(*w).order_by("market_cap_basic", ascending=False).limit(8000).get_scanner_data())
+    df = ir.dedupe_company(df)   # 同公司多檔只留一檔
     names = ir._tw_chinese_names() if market == "tw" else {}
     out = []
     for _, r in df.iterrows():
@@ -84,14 +86,15 @@ def scan(market, limit=None):
     import bisect
     for r in rows:
         r["rs_pct"] = round(100.0 * bisect.bisect_right(vals, r["rs"]) / n) if n else None
-        both = r["ec_up_ago"] is not None and r["rs_hi_ago"] is not None
+        # 2026-09-28 Leo 定案用嚴格版：今天 RS 在新高、EC 10 日內翻正、大盤站上 60MA（跟產業輪動頁同定義）
+        both = r["ec_up_ago"] is not None and r["rs_hi_ago"] == 0
         r["relay"] = bool(both and mkt and mkt["ok"])
         r["relay_nomkt"] = bool(both and not r["relay"])
-        # 較貼近原文的嚴格版（今天 RS 在新高、EC 10 日內翻正），先一起算，頁面之後可切換
-        r["relay_strict"] = bool(r["relay"] and r["rs_hi_ago"] == 0)
+        # 舊的寬鬆版（兩事件都在 10 日內）留著對照
+        r["relay_loose"] = bool(r["ec_up_ago"] is not None and r["rs_hi_ago"] is not None and mkt and mkt["ok"])
     print(f"  {market}: 範圍 {len(uni)} 檔，算出 {n} 檔（缺資料 {miss}），"
           f"抓價 {t1-t0:.0f} 秒、計算 {t2-t1:.0f} 秒；接力 {sum(r['relay'] for r in rows)}、"
-          f"嚴格版 {sum(r['relay_strict'] for r in rows)}、大盤濾網 {'✅' if mkt and mkt['ok'] else '❌'}")
+          f"寬鬆版 {sum(r['relay_loose'] for r in rows)}、大盤濾網 {'✅' if mkt and mkt['ok'] else '❌'}")
     return rows, mkt, len(uni), miss
 
 
@@ -104,13 +107,13 @@ def main():
     for m in ("tw", "us"):
         rows, mkt, n_uni, miss = scan(m, a.limit)
         keep = lambda r: {k: r[k] for k in ("ticker", "name", "sector", "cap", "close", "asof", "rs", "rs_pct",
-                                              "ec_up_ago", "rs_hi_ago", "relay", "relay_nomkt", "relay_strict")}
+                                              "ec_up_ago", "rs_hi_ago", "relay", "relay_nomkt", "relay_loose")}
         relay = sorted([r for r in rows if r["relay"] or r["relay_nomkt"]], key=lambda r: -r["rs_pct"])
         top = sorted(rows, key=lambda r: -r["rs"])[:TOP_N]
         res["markets"][m] = {"mkt": mkt, "universe": n_uni, "scanned": len(rows), "missing": miss,
                              "relay": [keep(r) for r in relay], "top": [keep(r) for r in top],
                              "counts": {"relay": sum(r["relay"] for r in rows),
-                                        "relay_strict": sum(r["relay_strict"] for r in rows),
+                                        "relay_loose": sum(r["relay_loose"] for r in rows),
                                         "ec_up": sum(r["ec_up_ago"] is not None for r in rows),
                                         "rs_high": sum(r["rs_hi_ago"] is not None for r in rows)}}
     os.makedirs(os.path.dirname(a.output) or ".", exist_ok=True)
