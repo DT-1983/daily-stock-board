@@ -17,7 +17,7 @@
      "win": 43.0,
      "exc_mean": 1.49,
      "exc_median": -3.9,
-     "beat": 40.5,
+     "beat": 40.4,
      "exc_per20d": 1.5
     },
     "固定60日": {
@@ -88,9 +88,21 @@
      "ret_median": -6.81,
      "win": 33.4,
      "exc_mean": 1.24,
-     "exc_median": -7.32,
+     "exc_median": -7.31,
      "beat": 31.4,
      "exc_per20d": 0.85
+    },
+    "ST賣半+RS百分位<60全出": {
+     "n": 1392,
+     "open": 122,
+     "days_mean": 67.3,
+     "ret_mean": 3.19,
+     "ret_median": -8.24,
+     "win": 33.8,
+     "exc_mean": 0.87,
+     "exc_median": -9.32,
+     "beat": 30.6,
+     "exc_per20d": 0.26
     }
    }
   },
@@ -184,6 +196,18 @@
      "exc_median": -4.38,
      "beat": 32.8,
      "exc_per20d": 0.74
+    },
+    "ST賣半+RS百分位<60全出": {
+     "n": 3628,
+     "open": 430,
+     "days_mean": 55.8,
+     "ret_mean": 6.1,
+     "ret_median": -1.91,
+     "win": 43.2,
+     "exc_mean": 1.26,
+     "exc_median": -4.87,
+     "beat": 32.8,
+     "exc_per20d": 0.45
     }
    }
   }
