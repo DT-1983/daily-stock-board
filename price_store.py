@@ -152,7 +152,7 @@ def _yf_symbol(tk):
     return t.replace(".", "-")
 
 
-def _download(tickers, period):
+def _download(tickers, period, fill_gaps=True):
     """批次下載。回 {ticker: DataFrame}。失敗的不在回傳裡（呼叫端自己判斷缺誰）。"""
     import yfinance as yf
     out = {}
@@ -197,7 +197,8 @@ def _download(tickers, period):
                 pass
         if len(tickers) > BATCH_SIZE:
             time.sleep(0.5)        # 對 yfinance 客氣一點
-    _fill_tw_gaps(out)
+    if fill_gaps:
+        _fill_tw_gaps(out)
     return out
 
 
@@ -284,7 +285,7 @@ def _fill_tw_gaps(frames, window_days=GAP_WINDOW_DAYS):
               f"{'、'.join(touched[:8])}" + ("…" if len(touched) > 8 else ""))
 
 
-def get_ohlc(tickers, period="3y", refresh=True, force=False):
+def get_ohlc(tickers, period="3y", refresh=True, force=False, fill_gaps=True):
     """回 {ticker: DataFrame(OHLCV)}。用快取，過期才重抓。
 
     refresh=False 純吃快取不連網——API 掛掉時的降級模式（有舊資料總比沒有好）。
@@ -324,7 +325,9 @@ def get_ohlc(tickers, period="3y", refresh=True, force=False):
     if need and refresh:
         print(f"  [price_store] 快取命中 {len(tickers)-len([t for t in need if t not in out])}"
               f"/{len(tickers)}，需更新 {len(need)} 檔…")
-        got = {k: _drop_weekend(v, k) for k, v in _download(need, period).items()}
+        # 2026-09-28：fill_gaps=False 給全市場掃描用——補洞每檔台股打一次 FinMind，
+        # 2,300 檔一次就把免費額度用光（實測回 402），害同一天其他排程抓不到籌碼／財報。
+        got = {k: _drop_weekend(v, k) for k, v in _download(need, period, fill_gaps=fill_gaps).items()}
         stamp = now.isoformat(timespec="seconds")
         for tk, df in got.items():
             if _write_cached(tk, df):
