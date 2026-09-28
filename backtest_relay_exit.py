@@ -28,7 +28,11 @@ import technical_indicators as ti               # noqa: E402
 from board_html_legacy import supertrend        # noqa: E402
 
 MAX_HOLD = 250
-RULES = ["固定20日", "固定60日", "EC翻負", "ST翻空", "RS60跌破", "跌破60日成本", "燈號倉(ST賣半+RS全出)"]
+RULES = ["固定20日", "固定60日", "EC翻負", "ST翻空", "RS60跌破", "跌破60日成本", "燈號倉(ST賣半+RS全出)",
+         "ST賣半+RS百分位<60全出"]
+# 2026-09-28 Leo：「supertrend 翻空賣一半，rs<60 全賣呢?」——「RS60 跌破」就是上面的燈號倉；
+# 另一種解讀「RS 百分位 < 60」（產業輪動頁／接力清單顯示的全市場排名，Mansfield RS(120)）也一起測。
+RS_PCT_EXIT = 60
 
 
 def _series(h, bclose):
@@ -94,6 +98,12 @@ def _trade(s, t, n):
     a = sell_open(ja) if ja is not None else (C[last] / O[e] - 1, last, last == n - 1)
     b = sell_open(jr) if jr is not None else (C[last] / O[e] - 1, last, last == n - 1)
     out["燈號倉(ST賣半+RS全出)"] = (0.5 * a[0] + 0.5 * b[0], max(a[1], b[1]), a[2] or b[2])
+    # ST 翻空賣一半；RS 百分位掉到 60 以下全出（先到的話兩半一起賣）
+    jp = _first(s["rspct"] < RS_PCT_EXIT, e, last + 1)
+    ja2 = min([j for j in (js, jp) if j is not None], default=None)
+    a2 = sell_open(ja2) if ja2 is not None else (C[last] / O[e] - 1, last, last == n - 1)
+    b2 = sell_open(jp) if jp is not None else (C[last] / O[e] - 1, last, last == n - 1)
+    out["ST賣半+RS百分位<60全出"] = (0.5 * a2[0] + 0.5 * b2[0], max(a2[1], b2[1]), a2[2] or b2[2])
     return out
 
 
@@ -107,6 +117,18 @@ def run(market):
     dr = closes.pct_change(fill_method=None)
     dr = dr.where(dr.abs() <= 0.5)
     mkt = (1 + dr.mean(axis=1).fillna(0)).cumprod().to_numpy()
+    # 每天全市場 RS 百分位（Mansfield RS 120，跟產業輪動頁／market_relay_scan 同定義）
+    rsm = np.full((len(tks), n), np.nan)
+    for i, tk in enumerate(tks):
+        C = cols[tk]["Close"]
+        vi = np.where(C.notna().to_numpy())[0]
+        if len(vi) > 130:
+            rs = ti.mansfield_rs_series(C.iloc[vi].tolist(), bclose.iloc[vi].tolist(), 120)
+            if rs is not None:
+                rsm[i, vi] = np.array([np.nan if x is None else x for x in rs], dtype=float)
+    rspct = pd.DataFrame(rsm).rank(axis=0, pct=True).to_numpy() * 100
+    rspct = np.where(np.isnan(rsm), np.nan, rspct)
+    tk_i = {tk: i for i, tk in enumerate(tks)}
     rows = []
     for tk in tks:
         h = cols[tk]
@@ -123,6 +145,7 @@ def run(market):
         if not len(ev):
             continue
         s = _series(h, bclose)
+        s["rspct"] = rspct[tk_i[tk]]
         for t in ev:
             tr = _trade(s, t, n)
             if not tr:
