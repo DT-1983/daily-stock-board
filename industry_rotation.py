@@ -1859,11 +1859,11 @@ function d60Dist() {
 function d60HTML(h) {
   var v = h.d60;
   if (v === undefined || v === null) return '<span class="rsna">--</span>';
-  var dist = d60Dist(), cls = 'd60ok', tip = '正常範圍';
+  var dist = d60Dist(), cls = 'd60ok', tip = '一般範圍';
   if (dist) {
     var r = Math.floor((dist.length - 1) / 100) || 1;
-    if (v >= dist[99 * r]) { cls = 'd60hot'; tip = '過熱：全市場最偏離的前 1%（≥ ' + dist[99 * r].toFixed(1) + '%）'; }
-    else if (v >= dist[95 * r]) { cls = 'd60warm'; tip = '偏熱：全市場前 1～5%（≥ ' + dist[95 * r].toFixed(1) + '%）'; }
+    if (v >= dist[99 * r]) { cls = 'd60hot'; tip = '偏離最大：全市場前 1%（≥ ' + dist[99 * r].toFixed(1) + '%）'; }
+    else if (v >= dist[95 * r]) { cls = 'd60warm'; tip = '偏離大：全市場前 1～5%（≥ ' + dist[95 * r].toFixed(1) + '%）'; }
   }
   return '<span class="d60 ' + cls + '" title="收盤離 60 日平均成本多遠｜' + tip + '">' + (v >= 0 ? '+' : '') + v.toFixed(1) + '%</span>';
 }
