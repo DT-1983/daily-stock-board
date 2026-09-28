@@ -93,6 +93,8 @@ def lookup(raw_ticker, live=False):
     row = CS.scan_one(ticker, sym, df, b.dropna().tolist())
     if row is None:
         return None
+    import avwap
+    row["d60"] = avwap.dist_from_df(df, 60)     # 2026-09-28 距 60 日平均成本（AVWAP），/查 顯示用
     row["name"] = None
     if is_tw:
         row["name"] = CS._tw_names().get(ticker)
@@ -108,6 +110,32 @@ def lookup(raw_ticker, live=False):
     CS.attach_sector([row])
     row["src"] = "live"
     return row
+
+
+def _avwap_line(row):
+    """距 60 日平均成本（AVWAP 錨定均價，2026-09-28 Leo「1 改」：串進 /查）。
+    快取那條路（combo_result）沒帶價格資料，就從本機價格快取現算；算不出來就不顯示這行。
+    顏色門檻跟燈號戰情室同一份全市場分布：🔴 最偏離前 1%／🟡 前 1～5%／🟢 其他（只是追高提醒）。"""
+    try:
+        import avwap
+        d60 = row.get("d60")
+        if d60 is None:
+            import price_store
+            import tw_symbol
+            tk = row["ticker"]
+            sym = tw_symbol.resolve(tk) if CS._is_tw(tk) else tk
+            d60 = avwap.dist_from_df(price_store.get_ohlc([sym], period="1y").get(sym), 60)
+        if d60 is None:
+            return ""
+        mk = avwap.market_of(row["ticker"])
+        dist = avwap.load_dist(mk)
+        t = avwap.tier(d60, dist)
+        pr = avwap.pct_rank(d60, dist)
+        icon = {"hot": "🔴", "warm": "🟡", "ok": "🟢"}.get(t, "")
+        note = "" if pr is None else f"（贏過全{'台' if mk == 'tw' else '美'}股 {pr:.1f}%）"   # 小數一位：.0f 會把 99.6 顯示成 100，像第一名
+        return f"距 60 日成本 {icon}{d60:+.1f}%{note}\n"
+    except Exception:                                        # noqa: BLE001
+        return ""
 
 
 def format_discord(row):
@@ -151,6 +179,7 @@ def format_discord(row):
         f"四燈 {lamp_line}（{row.get('lit')}/4）\n"
         f"{rr_line}\n"
         f"RS60 {row.get('rs_short')}%\n"
+        f"{_avwap_line(row)}"
         f"{quad_line}\n"
         f"{chip_line}"
         f"{src_note}\n"
