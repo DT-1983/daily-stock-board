@@ -107,8 +107,48 @@ def _trade(s, t, n):
     return out
 
 
-def run(market):
-    uni, bclose, cols = br._panel(market)
+def _panel_lamp(market):
+    """燈號母體（state/combo_result.json 今天的 242 檔）——只讀價格快取、不連網。"""
+    import avwap
+    import industry_rotation as ir
+    import price_store
+    rows = json.load(open("state/combo_result.json", encoding="utf-8"))["rows"]
+    rows = [r for r in rows if avwap.market_of(r["ticker"]) == market and r.get("symbol")]
+    bench_tk = ir._MARKET_BENCH[market]
+    px = price_store.get_ohlc([r["symbol"] for r in rows] + [bench_tk], period="3y", refresh=False)
+    b = px[bench_tk]
+    cols = {}
+    for r in rows:
+        h = px.get(r["symbol"])
+        if h is not None and not h.empty and {"Open", "High", "Low", "Close", "Volume"} <= set(h.columns):
+            cols[r["ticker"]] = h.reindex(b.index)
+    return rows, b["Close"], cols
+
+
+def _lamp_events(h, bclose):
+    """四燈亮到 ≥3 盞的第一天（前一天 <3）。跟燈號頁同一支 _lamp_series。
+    ⚠️ 燈號倉進場還要「風報比 ≥1」，但歷史每天的分析師目標價沒存 → 重建不出來，這裡只用燈數。"""
+    C, H, L, V = h["Close"], h["High"], h["Low"], h["Volume"]
+    ok = (C.notna() & H.notna() & L.notna()).to_numpy()
+    vi = np.where(ok)[0]
+    n = len(C)
+    lit3 = np.zeros(n, dtype=bool)
+    if len(vi) < 150:
+        return lit3
+    Cl, Hl, Ll, Vl = C.iloc[vi].tolist(), H.iloc[vi].tolist(), L.iloc[vi].tolist(), V.iloc[vi].fillna(0).tolist()
+    st = ti.double_typhoon(Hl, Ll, Cl)
+    sq = ti.squeeze_momentum(Hl, Ll, Cl)
+    lp = ti._lamp_series(Cl, Hl, Ll, Vl, bclose.iloc[vi].tolist(), st, sq, st)
+    lit = np.sum(np.array(lp, dtype=float), axis=0)
+    lit3[vi] = lit >= 3
+    return lit3
+
+
+def run(market, entry="relay"):
+    if entry == "lamp":
+        uni, bclose, cols = _panel_lamp(market)
+    else:
+        uni, bclose, cols = br._panel(market)
     tks = list(cols)
     dates = bclose.index
     n = len(dates)
@@ -133,7 +173,7 @@ def run(market):
     for tk in tks:
         h = cols[tk]
         try:
-            relay, _ = br._signals(h, bclose)
+            relay = _lamp_events(h, bclose) if entry == "lamp" else br._signals(h, bclose)[0]
         except Exception:                                    # noqa: BLE001
             continue
         if not relay.any():
@@ -171,27 +211,42 @@ def run(market):
                      "beat": round(float((g["exc"] > 0).mean()) * 100, 1),
                      # 每持有 20 個交易日（約一個月）平均超額：抱越久本來就越容易賺越多，要換算成同樣時間長度才公平
                      "exc_per20d": round(float(g["exc"].sum() / g["days"].sum() * 20) * 100, 2)}
-    return {"market": market, "period": [str(dates[0].date()), str(dates[-1].date())], "results": res}
+    # 配對檢定：同一筆進場，每種賣法的超額 − 燈號倉規則的超額。同日進場先平均成一個數，再對「日」算 t。
+    # ⚠️ 不同日的持有期會重疊（彼此相關），t 會略偏高；比 7 組要從嚴看（|t|>2.7 才算，約 Bonferroni 5%）。
+    base_rule = "燈號倉(ST賣半+RS全出)"
+    pv = df.pivot_table(index=["tk", "t"], columns="rule", values="exc")
+    for rule in RULES:
+        if rule == base_rule or rule not in pv or base_rule not in pv or rule not in res:
+            continue
+        d = (pv[rule] - pv[base_rule]).dropna()
+        by_day = d.groupby(level="t").mean()
+        se = by_day.std(ddof=1) / np.sqrt(len(by_day)) if len(by_day) > 1 else np.nan
+        res[rule]["vs_lamp"] = round(float(by_day.mean()) * 100, 2)
+        res[rule]["vs_lamp_t"] = round(float(by_day.mean() / se), 2) if se == se and se > 0 else None
+    return {"market": market, "entry": entry, "events": int(df[df["rule"] == base_rule].shape[0]),
+            "period": [str(dates[0].date()), str(dates[-1].date())], "results": res}
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--market", default="all")
+    ap.add_argument("--entry", default="relay", choices=["relay", "lamp"])
     a = ap.parse_args()
     ms = ["tw", "us"] if a.market == "all" else [a.market]
-    allres = {"date": dt.date.today().isoformat(), "markets": {}}
+    allres = {"date": dt.date.today().isoformat(), "entry": a.entry, "markets": {}}
     for m in ms:
-        r = run(m)
+        r = run(m, a.entry)
         allres["markets"][m] = r
-        print(f"\n[{m}] {r['period'][0]}～{r['period'][1]}　（超額＝這筆報酬 − 同期全市場等權）")
+        print(f"\n[{m}/{a.entry}] {r['period'][0]}～{r['period'][1]}　進場 {r['events']} 筆"
+              f"　（超額＝這筆報酬 − 同期全市場等權；vs燈號倉＝同一筆進場的超額差，t）")
         for rule, x in r["results"].items():
-            print(f"  {rule:<18} 筆數{x['n']:>5}（未結束{x['open']:>3}）　平均抱{x['days_mean']:>6.1f}日　"
-                  f"報酬 平均{x['ret_mean']:+6.2f}% 中位{x['ret_median']:+6.2f}% 賺錢{x['win']:>5.1f}%　"
-                  f"超額 平均{x['exc_mean']:+6.2f}% 中位{x['exc_median']:+6.2f}% 贏市場{x['beat']:>5.1f}%　"
-                  f"每月超額{x['exc_per20d']:+5.2f}%")
-    with open("state/backtest_relay_exit.json", "w", encoding="utf-8") as f:
+            vs = (f"　vs燈號倉 {x['vs_lamp']:+6.2f}%（t={x['vs_lamp_t']}）" if "vs_lamp" in x else "　（基準）")
+            print(f"  {rule:<18} 平均抱{x['days_mean']:>6.1f}日　賺錢{x['win']:>5.1f}%　"
+                  f"超額 平均{x['exc_mean']:+6.2f}% 中位{x['exc_median']:+6.2f}%　每月超額{x['exc_per20d']:+5.2f}%{vs}")
+    out = "state/backtest_relay_exit.json" if a.entry == "relay" else "state/backtest_lamp_exit.json"
+    with open(out, "w", encoding="utf-8") as f:
         json.dump(allres, f, ensure_ascii=False, indent=1)
-    print("\n已存 state/backtest_relay_exit.json")
+    print(f"\n已存 {out}")
 
 
 if __name__ == "__main__":
