@@ -19,6 +19,7 @@ import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+import avwap                                        # noqa: E402
 import industry_rotation as ir                      # noqa: E402
 import price_store                                  # noqa: E402
 from tradingview_screener import Query, col         # noqa: E402
@@ -81,12 +82,16 @@ def scan(market, limit=None):
             miss += 1
             continue
         rows.append({**{k: u[k] for k in ("ticker", "name", "sector", "cap")},
-                     "close": round(float(h["Close"].iloc[-1]), 2), "asof": str(h.index[-1].date()), **s})
+                     "close": round(float(h["Close"].iloc[-1]), 2), "asof": str(h.index[-1].date()),
+                     # 2026-09-28 AVWAP：收盤距 60 日錨定均價 %（全市場分布＝紅黃綠門檻的來源）
+                     "d60": avwap.dist_from_df(h, 60), **s})
     t2 = time.time()
     vals = sorted(r["rs"] for r in rows)
     n = len(vals)
     import bisect
+    dq = avwap.quantiles([r["d60"] for r in rows])
     for r in rows:
+        r["d60_pct"] = avwap.pct_rank(r["d60"], dq)
         r["rs_pct"] = round(100.0 * bisect.bisect_right(vals, r["rs"]) / n) if n else None
         # 2026-09-28 Leo 定案用嚴格版：今天 RS 在新高、EC 10 日內翻正、大盤站上 60MA（跟產業輪動頁同定義）
         both = r["ec_up_ago"] is not None and r["rs_hi_ago"] == 0
@@ -97,7 +102,10 @@ def scan(market, limit=None):
     print(f"  {market}: 範圍 {len(uni)} 檔，算出 {n} 檔（缺資料 {miss}），"
           f"抓價 {t1-t0:.0f} 秒、計算 {t2-t1:.0f} 秒；接力 {sum(r['relay'] for r in rows)}、"
           f"寬鬆版 {sum(r['relay_loose'] for r in rows)}、大盤濾網 {'✅' if mkt and mkt['ok'] else '❌'}")
-    return rows, mkt, len(uni), miss
+    if dq:
+        r_ = avwap.RES
+        print(f"  {market}: 距 60 日成本 中位數 {dq[50*r_]:+.1f}%、前 5% 門檻 {dq[95*r_]:+.1f}%、前 1% 門檻 {dq[99*r_]:+.1f}%")
+    return rows, mkt, len(uni), miss, dq
 
 
 def main():
@@ -107,13 +115,16 @@ def main():
     a = ap.parse_args()
     res = {"date": dt.datetime.now().strftime("%Y-%m-%d %H:%M"), "us_min_cap": US_MIN_CAP, "markets": {}}
     for m in ("tw", "us"):
-        rows, mkt, n_uni, miss = scan(m, a.limit)
+        rows, mkt, n_uni, miss, dq = scan(m, a.limit)
         keep = lambda r: {k: r[k] for k in ("ticker", "name", "sector", "cap", "close", "asof", "rs", "rs_pct",
-                                              "ec_up_ago", "rs_hi_ago", "relay", "relay_nomkt", "relay_loose")}
+                                              "ec_up_ago", "rs_hi_ago", "relay", "relay_nomkt", "relay_loose",
+                                              "d60", "d60_pct")}
         relay = sorted([r for r in rows if r["relay"] or r["relay_nomkt"]], key=lambda r: -r["rs_pct"])
         top = sorted(rows, key=lambda r: -r["rs"])[:TOP_N]
         res["markets"][m] = {"mkt": mkt, "universe": n_uni, "scanned": len(rows), "missing": miss,
                              "relay": [keep(r) for r in relay], "top": [keep(r) for r in top],
+                             # 距 60 日成本的全市場分布（0～100 分位點）；avwap.tier()/pct_rank() 讀這個
+                             "d60_dist": dq,
                              "counts": {"relay": sum(r["relay"] for r in rows),
                                         "relay_loose": sum(r["relay_loose"] for r in rows),
                                         "ec_up": sum(r["ec_up_ago"] is not None for r in rows),

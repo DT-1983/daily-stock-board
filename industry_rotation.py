@@ -527,6 +527,9 @@ def _attach_signals(members, cached, bench_close, yf_fn):
                 continue
             try:
                 sig[t] = _stock_signals(h, bench_close)
+                if sig[t] is not None:
+                    import avwap
+                    sig[t]["d60"] = avwap.dist_from_df(h, 60)   # 2026-09-28 距 60 日成本（只顯示）
             except Exception:
                 sig[t] = None
     vals = sorted(v["rs"] for v in sig.values() if v and v["rs"] is not None)
@@ -540,6 +543,7 @@ def _attach_signals(members, cached, bench_close, yf_fn):
             both = s["ec_up_ago"] is not None and s["rs_hi_ago"] == 0     # 嚴格版：今天 RS 在新高
             relay = bool(both and mkt and mkt["ok"])
             hd.update({"rs": s["rs"], "rs_pct": pct, "ec_up_ago": s["ec_up_ago"], "rs_hi_ago": s["rs_hi_ago"],
+                       "d60": s.get("d60"),
                        "relay": relay,
                        # 大盤沒站上 60MA 時，兩個事件都有也不算接力，但要讓頁面看得到「差大盤這一關」
                        "relay_nomkt": bool(both and not relay)})
@@ -1832,10 +1836,12 @@ function holdingsHTML(key) {
       '<span class="expwt">'+h.weight_pct.toFixed(1)+'%</span>'+
       '<span class="expbar"><span class="expbarfill" style="width:'+w.toFixed(0)+'%"></span></span>'+
       '<span class="exprs">'+rsPctHTML(h)+'</span>'+
+      '<span class="expd60">'+d60HTML(h)+'</span>'+
       '<span class="expsig">'+sigHTML(h)+'</span></div>';
   }).join('');
   return '<div class="rrgexpand"><div class="rrgexphd"><span>代號</span><span>名稱</span><span>權重</span><span></span>'+
-    '<span title="Mansfield RS 在全部籃子成分股裡的百分位，100＝最強">RS 百分位</span><span>訊號</span></div>'+rows+'</div>';
+    '<span title="Mansfield RS 在全部籃子成分股裡的百分位，100＝最強">RS 百分位</span>'+
+    '<span title="收盤離 60 日平均成本多遠；🔴 全市場前 1%／🟡 前 1～5%">距 60 日成本</span><span>訊號</span></div>'+rows+'</div>';
 }
 
 // ── 2026-09-27：個股 RS 排名／廣度／接力（老墨技術面選股組合）──
@@ -1843,6 +1849,23 @@ function rsPctHTML(h) {
   if (h.rs_pct === undefined || h.rs_pct === null) return '<span class="rsna">--</span>';
   var cls = h.rs_pct >= RS_STRONG_PCT_JS ? 'rshi' : (h.rs_pct < 30 ? 'rslo' : 'rsmid');
   return '<span class="rspill '+cls+'" title="Mansfield RS '+(h.rs>=0?'+':'')+h.rs+'%">'+h.rs_pct+'</span>';
+}
+// 2026-09-28 距 60 日成本（AVWAP 錨定均價）：🔴 全市場最偏離前 1%／🟡 前 1～5%／🟢 其他。
+// 門檻是 market_relay_scan.py 當天算的全市場分布（d60_dist，每 0.1 百分位一點），不寫死；只顯示，不影響排序。
+function d60Dist() {
+  var m = ((window.RRG_MARKET || {}).markets || {})[curM];
+  return m && m.d60_dist ? m.d60_dist : null;
+}
+function d60HTML(h) {
+  var v = h.d60;
+  if (v === undefined || v === null) return '<span class="rsna">--</span>';
+  var dist = d60Dist(), cls = 'd60ok', tip = '正常範圍';
+  if (dist) {
+    var r = Math.floor((dist.length - 1) / 100) || 1;
+    if (v >= dist[99 * r]) { cls = 'd60hot'; tip = '過熱：全市場最偏離的前 1%（≥ ' + dist[99 * r].toFixed(1) + '%）'; }
+    else if (v >= dist[95 * r]) { cls = 'd60warm'; tip = '偏熱：全市場前 1～5%（≥ ' + dist[95 * r].toFixed(1) + '%）'; }
+  }
+  return '<span class="d60 ' + cls + '" title="收盤離 60 日平均成本多遠｜' + tip + '">' + (v >= 0 ? '+' : '') + v.toFixed(1) + '%</span>';
 }
 function sigHTML(h) {
   if (h.relay) return '<span class="sigrelay">⚡接力</span><span class="sigdim">RS 今天新高・EC '+(h.ec_up_ago===0?'今天':h.ec_up_ago+'日前')+'翻正</span>';
@@ -1919,9 +1942,9 @@ function renderRelayPanel() {
     return '<tr><td class="tk">'+_escHtml(o.h.ticker)+'</td><td>'+_escHtml(o.h.name)+'</td>'+
       '<td>'+_escHtml(nmOf[o.key] || SECTOR_ZH[o.key] || o.key || '--')+'</td>'+
       '<td>'+(q ? '<span class="qtag" style="color:'+QCOLOR[q]+'">'+QLABEL[q]+'</span>' : '--')+'</td>'+
-      '<td class="r">'+rsPctHTML(o.h)+'</td><td>'+sigHTML(o.h)+'</td></tr>';
+      '<td class="r">'+rsPctHTML(o.h)+'</td><td class="r">'+d60HTML(o.h)+'</td><td>'+sigHTML(o.h)+'</td></tr>';
   }
-  var thead = '<tr><th>代號</th><th>名稱</th><th>所屬產業</th><th>產業象限</th><th class="r">RS 百分位</th><th>訊號</th></tr>';
+  var thead = '<tr><th>代號</th><th>名稱</th><th>所屬產業</th><th>產業象限</th><th class="r">RS 百分位</th><th class="r" title="收盤離 60 日平均成本多遠；🔴 全市場前 1%／🟡 前 1～5%">距 60 日成本</th><th>訊號</th></tr>';
   var btns = MODES.map(function(m) {
     return '<button type="button" class="rmbtn'+(m[0]===relayMode?' on':'')+'" data-mode="'+m[0]+'">'+m[1]+
       ' <span class="rmcnt">'+lists[m[0]].length+'</span></button>';
@@ -2291,7 +2314,7 @@ CSS_EXTRA = """
   .rrgrow .momval::before{content:"RS-Momentum";font-size:9.5px;color:#5f80a6;font-weight:400}
   .rrgrow .sz::before{content:"資金規模";font-size:9.5px;color:#5f80a6;font-weight:400}
   .rrgrow .mp{grid-area:mp;align-self:end;justify-self:end}
-  .rrgexprow{grid-template-columns:56px 1fr 40px 40px;column-gap:8px}
+  .rrgexprow{grid-template-columns:56px 1fr 40px 40px 56px;column-gap:8px}
   .rrgexprow .expbar{display:none}   /* 手機版寬度不夠放權重條，數字本身已經夠用 */
   .rrgexprow .expsig{grid-column:2 / -1}
   .rrgexphd{display:none}
@@ -2316,10 +2339,21 @@ CSS_EXTRA = """
  縮排一點跟上層列區分開來。 */
 .rrgexpand{padding:8px 4px 10px 34px;background:#080d18;border-bottom:1px solid #131c30}
 .rrgexpempty{font-size:11.5px;color:#5f80a6}
-.rrgexprow,.rrgexphd{display:grid;grid-template-columns:70px 1fr 48px 120px 64px minmax(150px,1.2fr);gap:10px;align-items:center;
+.rrgexprow,.rrgexphd{display:grid;grid-template-columns:70px minmax(60px,1fr) 48px minmax(0,120px) 64px 76px minmax(120px,1.2fr);gap:10px;align-items:center;
  padding:4px 0;font-size:11.5px}
 .rrgexphd{font-size:10px;color:#5f80a6;padding:0 0 4px;border-bottom:1px solid #131c30}
 .exprs{text-align:center}
+.expd60{text-align:center}
+.d60{font-weight:700;font-size:11px;font-variant-numeric:tabular-nums}
+.d60ok{color:#4ade80}.d60warm{color:#facc15}.d60hot{color:#f87171}
+/* 🔴 2026-09-28：上面 @media(max-width:700px) 裡的展開列手機版規則寫在這段桌機規則「之前」，
+   同樣權重後寫的贏 → 手機版從來沒生效（577px 寬時名稱欄被擠成 0）。手機版改放在這裡（後面）。 */
+@media (max-width:700px){
+  .rrgexprow{grid-template-columns:56px 1fr 40px 40px 56px;column-gap:8px}
+  .rrgexprow .expbar{display:none}
+  .rrgexprow .expsig{grid-column:2 / -1}
+  .rrgexphd{display:none}
+}
 .rspill{display:inline-block;min-width:30px;text-align:center;padding:1px 6px;border-radius:9px;font-size:11px;
  font-weight:700;font-variant-numeric:tabular-nums}
 .rspill.rshi{background:#0f3b2e;color:#4ade80}.rspill.rsmid{background:#132038;color:#8fb0d6}

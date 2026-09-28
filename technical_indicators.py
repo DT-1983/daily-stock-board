@@ -41,6 +41,7 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
     sys.stdout.reconfigure(encoding="utf-8")
 
 from board_html_legacy import supertrend  # 復用既有 SuperTrend，不重造
+import avwap  # 2026-09-28 錨定均價（老墨 AVWAP 模式一），四處共用同一支
 
 
 def _is_tw(ticker):
@@ -830,6 +831,9 @@ def build(ticker, disp_days=756, expanded=False, target=None):
         #   ma20＝20 日平均成本（主圖那條橘虛線），vol/vol_ma20＝成交量與 20 日均量。
         #   兩者只要 OHLCV，零額外資料源。
         "ma20": _clean(_vwap(closes, vols, 20))[cut:],
+        # 2026-09-28 AVWAP 錨定均價（Leo 看模擬圖 v4 定案）：過去 20/60/120/240 根起算，
+        # 典型價 (H+L+C)/3 × 量一路累加；從起點那根才開始有線。按鈕切換，預設只開 60 日。
+        **{f"av{n}": _clean(avwap.avwap_n(highs, lows, closes, vols, n))[cut:] for n in avwap.PERIODS},
         # 雙重颱風三態：2026-09-02 起用來畫真的 K 線（蠟燭紅/綠/黃），不再是收盤線分段上色
         "ty": (typhoon_state_series(closes, vols, dt["dir"]) if dt else [])[cut:],   # 量加權，不是 SMA
         "opens": _clean(opens)[cut:], "highs": _clean(highs)[cut:], "lows": _clean(lows)[cut:],
@@ -846,8 +850,19 @@ def build(ticker, disp_days=756, expanded=False, target=None):
             _lamp_series(closes, highs, lows, vols, bench_closes, st, sq, dt)),
     }
 
+    # 給燈號戰情室「關鍵數字」卡用（同一份資料，不重抓）：收盤距各期錨定均價 %
+    _clx = closes[-1] if closes else None
+    LAST_AV[uid] = {f"d{k}": (round((_clx / chart_data[f"av{k}"][-1] - 1) * 100, 1)
+                              if _clx and chart_data[f"av{k}"] and chart_data[f"av{k}"][-1] else None)
+                    for k in avwap.PERIODS}
     _row_price = _techrow(panel_price,
-        '<div class="tclabel">價格（線色＝雙重颱風三態：🔴偏多 🟢偏空 🟡不明）+ SuperTrend</div>', f"ti_c1_{uid}")
+        '<div class="tclabel">價格（線色＝雙重颱風三態：🔴偏多 🟢偏空 🟡不明）+ SuperTrend</div>'
+        # 2026-09-28 平均成本（AVWAP）按鈕：點了才畫，預設只開 60 日；📍＝自己點一根 K 棒當起算日
+        f'<div class="avchips" id="ti_avc_{uid}"><span class="avk">平均成本：</span>'
+        + "".join(f'<button data-av="{n}" style="--c:{c}">{n}日</button>'
+                  for n, c in ((20, "#F59E0B"), (60, "#22D3EE"), (120, "#A78BFA"), (240, "#94A3B8")))
+        + '<button data-av="anc" style="--c:#F8FAFC">📍 自訂起算</button>'
+        f'<span class="avhint" id="ti_avh_{uid}"></span></div>', f"ti_c1_{uid}")
     _row_vol = _techrow(panel_vol,
         '<div class="tclabel">成交量（青線＝20 日均量）</div>', f"ti_cv_{uid}", "tcbox tcbox-sm")
     _row_sq = _techrow(panel_sq,
@@ -902,6 +917,82 @@ window.TI_DATA_{uid} = {json.dumps(chart_data, ensure_ascii=False)};
 var ti_drawn_{uid} = false;
 var ti_charts_{uid} = null;
 var ti_win_{uid} = 90;
+/* 平均成本按鈕狀態：預設只開 60 日。anc＝自訂起算在「完整序列」裡的位置（不是切片後的位置，
+   切 90天/1年 時才不會跑掉）；pick＝正在等使用者點一根 K 棒。 */
+var ti_av_{uid} = {{20:false, 60:true, 120:false, 240:false, anc:false}};
+var ti_anc_{uid} = null;
+var ti_pick_{uid} = false;
+var TI_AVC_{uid} = {{20:'#F59E0B', 60:'#22D3EE', 120:'#A78BFA', 240:'#94A3B8', anc:'#F8FAFC'}};
+function ti_avfrom_{uid}(full, start){{
+  /* 跟 avwap.py 的 avwap_from 同一個算法：從 start 那根開始，典型價×量累加 */
+  var out = new Array(full.closes.length).fill(null), pv = 0, vv = 0;
+  for (var i = Math.max(0, start); i < full.closes.length; i++) {{
+    var h = full.highs[i], l = full.lows[i], c = full.closes[i], v = full.vol[i];
+    if (h != null && l != null && c != null && v != null && v > 0) {{ pv += (h + l + c) / 3 * v; vv += v; }}
+    out[i] = vv > 0 ? Math.round(pv / vv * 100) / 100 : null;
+  }}
+  return out;
+}}
+function ti_ancdate_{uid}(){{
+  var full = window.TI_DATA_{uid};
+  var t = ti_anc_{uid} == null ? '' : (full.dates[ti_anc_{uid}] || '');
+  return t.replace(/^0/, '').replace('/0', '/');
+}}
+function ti_avui_{uid}(){{
+  /* 按鈕外觀＋提示字＋關鍵數字卡的附加行（卡片在燈號戰情室，id=ti_avx_{uid}；別的頁面沒有就略過） */
+  var box = document.getElementById('ti_avc_{uid}');
+  if (box) Array.prototype.forEach.call(box.querySelectorAll('button'), function(b){{
+    var k = b.dataset.av;
+    b.setAttribute('aria-pressed', !!ti_av_{uid}[k] || (k === 'anc' && ti_pick_{uid}));
+    if (k === 'anc') b.textContent = ti_pick_{uid} ? '📍 點一根 K 棒…（再按取消）'
+      : (ti_av_{uid}.anc ? '📍 已設起算日 ' + ti_ancdate_{uid}() + ' ✕' : '📍 自訂起算');
+  }});
+  var hint = document.getElementById('ti_avh_{uid}');
+  if (hint) hint.textContent = ti_pick_{uid} ? '在下面的價格圖點你要起算的那一天' : '';
+  var cv = document.getElementById('ti_c1_{uid}');
+  if (cv) cv.style.cursor = ti_pick_{uid} ? 'crosshair' : '';
+  var x = document.getElementById('ti_avx_{uid}');
+  if (!x) return;
+  var full = window.TI_DATA_{uid}, n = full.closes.length, cl = full.closes[n - 1], rows = [];
+  var pct = function(av){{ return (av && cl != null) ? ((cl / av - 1) * 100) : null; }};
+  var fmt = function(v){{ return v == null ? '—' : (v >= 0 ? '+' : '') + v.toFixed(1) + '%'; }};
+  [20, 120, 240].forEach(function(k){{
+    if (ti_av_{uid}[k]) rows.push('距 ' + k + ' 日成本 ' + fmt(pct((full['av' + k] || [])[n - 1])));
+  }});
+  if (ti_av_{uid}.anc && ti_anc_{uid} != null)
+    rows.push('距 ' + ti_ancdate_{uid}() + ' 起算 ' + fmt(pct(ti_avfrom_{uid}(full, ti_anc_{uid})[n - 1])));
+  x.innerHTML = rows.map(function(t){{ return '<div>' + t + '</div>'; }}).join('');
+}}
+function ti_avapply_{uid}(){{
+  /* 只切線的顯示，不重畫整張圖（重畫會把使用者縮放到一半的畫面洗掉） */
+  var c1 = (ti_charts_{uid} || [])[0];
+  if (c1) {{
+    c1.data.datasets.forEach(function(ds){{
+      if (ds.avkey == null) return;
+      ds.hidden = !ti_av_{uid}[ds.avkey];
+      if (ds.avkey === 'anc') {{
+        var full = window.TI_DATA_{uid}, cut = full.closes.length - c1.$tiLen;
+        ds.data = ti_anc_{uid} == null ? [] :
+          ti_avfrom_{uid}(full, ti_anc_{uid}).slice(cut).map(function(v, i){{ return {{x:i, y:v}}; }});
+        ds.label = ti_ancdate_{uid}() + '起算';
+      }}
+    }});
+    c1.update('none');
+  }}
+  ti_avui_{uid}();
+}}
+document.getElementById('ti_avc_{uid}').addEventListener('click', function(e){{
+  var b = e.target.closest('button');
+  if (!b) return;
+  e.stopPropagation();          /* 不要讓這一下被「點圖啟用縮放」吃到 */
+  var k = b.dataset.av;
+  if (k === 'anc') {{
+    if (ti_pick_{uid}) ti_pick_{uid} = false;                                    /* 等點選中 → 取消 */
+    else if (ti_av_{uid}.anc) {{ ti_av_{uid}.anc = false; ti_anc_{uid} = null; }} /* 已設 → ✕ 清掉 */
+    else ti_pick_{uid} = true;                                                  /* 開始等點選 */
+  }} else ti_av_{uid}[k] = !ti_av_{uid}[k];
+  ti_avapply_{uid}();
+}});
 function ti_toggle_{uid}(){{
   const box = document.getElementById('ti_charts_{uid}');
   const btn = document.getElementById('ti_btn_{uid}');
@@ -1003,8 +1094,9 @@ function ti_draw_{uid}(){{
       const vx0 = Math.ceil(scales.x.min), vx1 = Math.floor(scales.x.max);
       const ymin = scales.y.min, ymax = scales.y.max;
       const put = [];
-      chart.data.datasets.forEach(ds => {{
+      chart.data.datasets.forEach((ds, di0) => {{
         if (!ds.label || ds.label.indexOf('K線') === 0) return;
+        if (!chart.isDatasetVisible(di0)) return;      // 平均成本按鈕關掉的線，標籤也不列
         let v = null;
         for (let i = Math.min(vx1, ds.data.length - 1); i >= Math.max(0, vx0); i--) {{
           const p = ds.data[i];
@@ -1074,9 +1166,13 @@ function ti_draw_{uid}(){{
       {{type:'line',label:'SuperTrend',data:d.st.map((v,i)=>({{x:i,y:v}})),borderWidth:1.6,pointRadius:0,
         // 2026-09-27 對齊老墨 SUPER TREND PRO MAX：淡紫＝多方支撐、黃＝空方壓力（原本相反）
         segment:{{borderColor:segColor(d.st_dir,'#c084fc','#facc15','#6b7280')}}}},
-      // 20 日平均成本＝量加權(VWAP) 不是 SMA——實測對上老墨的 135.95
-      {{type:'line',label:'20日平均成本',data:d.ma20.map((v,i)=>({{x:i,y:v}})),borderColor:'#F59E0B',
-        borderWidth:1.2,pointRadius:0,borderDash:[2,2],tension:.15}},
+      // 2026-09-28 平均成本改成 AVWAP 錨定均價、按鈕控制（原本常駐的「20日平均成本」滾動線拿掉；
+      // 說明卡上的 20 日平均成本數字不變，那是老墨雙重颱風的另一個指標，已對過 135.95）
+      ...[20, 60, 120, 240].map(k => ({{type:'line', label:k+'日成本', avkey:k, hidden:!ti_av_{uid}[k],
+        data:(d['av'+k]||[]).map((v,i)=>({{x:i,y:v}})), borderColor:TI_AVC_{uid}[k],
+        borderWidth:k===60?2.4:1.6, pointRadius:0, borderDash:k===20?[4,3]:[]}})),
+      {{type:'line', label:'自訂起算', avkey:'anc', hidden:!ti_av_{uid}.anc, data:[],
+        borderColor:TI_AVC_{uid}.anc, borderWidth:2, pointRadius:0, borderDash:[2,3]}},
       // F：停損 4 倍（3 倍那條就是上面的 SuperTrend，老墨畫面上兩個數字相同）
       {{type:'line',label:'停損4倍',data:d.st4.map((v,i)=>({{x:i,y:v}})),borderWidth:1.5,
         pointRadius:0,borderDash:[6,4],
@@ -1090,7 +1186,16 @@ function ti_draw_{uid}(){{
         data:(d.target==null?[]:d.dates.map((_,i)=>({{x:i,y:d.target}}))),
         borderColor:'#FDE047',borderWidth:1.4,pointRadius:0,borderDash:[8,4]}}]}},
     options:{{responsive:true,maintainAspectRatio:false,interaction:{{mode:'index',intersect:false}},
-      plugins:{{legend:{{labels:{{color:'#9aa0a6',boxWidth:14,font:{{size:10}}}}}}, zoom:ZOOM_OPT,
+      onClick:(evt, els, chart) => {{
+        if (!ti_pick_{uid}) return;       // 平常點圖＝啟用縮放（ZOOM_CLICK_JS），只有按了 📍 才是選起算日
+        const i = Math.round(chart.scales.x.getValueForPixel(evt.x));
+        const n = window.TI_DATA_{uid}.closes.length;
+        ti_anc_{uid} = n - chart.$tiLen + Math.max(0, Math.min(chart.$tiLen - 1, i));
+        ti_av_{uid}.anc = true; ti_pick_{uid} = false;
+        ti_avapply_{uid}();
+      }},
+      plugins:{{legend:{{labels:{{color:'#9aa0a6',boxWidth:14,font:{{size:10}},
+        filter:item=>!/成本|起算/.test(item.text)}}}}, zoom:ZOOM_OPT,
         /* 2026-09-10 Leo:「手機版會被擋住圖」——這個 tooltip 一次疊 OHLC+
            SuperTrend+20日平均成本+停損4倍+目標價共 6-7 行，沒指定字級時
            Chart.js 用預設(標題14px/內容12px)，這張圖其他文字(圖例/座標)
@@ -1186,6 +1291,8 @@ function ti_draw_{uid}(){{
         y:{{min:0.4, max:4.6, afterFit:yFit, ticks:{{stepSize:1, color:'#6b7280', font:{{size:9}},
           callback:(v)=>LP_NAME[4-v] || ''}}, grid:{{color:'#1a1d23'}}}}}}}}}});
   ti_charts_{uid} = [c1, cv, c2, c3, c4];
+  c1.$tiLen = d.dates.length;       // 切片長度：自訂起算日換算回完整序列位置用
+  ti_avapply_{uid}();
 }}
 function ti_reset_{uid}(){{ (ti_charts_{uid} || []).forEach(c => c.resetZoom()); }}
 function ti_side_{uid}(){{
@@ -1260,6 +1367,8 @@ ZOOM_CLICK_JS = """<script>
   document.addEventListener("click", function(e){
     wrapAll();
     var w = e.target.closest ? e.target.closest(".zoomwrap") : null;
+    // 2026-09-28：按了「📍 自訂起算」正在選 K 棒時，這一下是選日期，不是啟用縮放
+    if (w) { var cv0 = w.querySelector("canvas"); if (cv0 && cv0.style.cursor === "crosshair") return; }
     // 點圖外面就全部關掉——不然離開之後滾輪還是被那張圖吃著
     document.querySelectorAll(".zoomwrap.zon").forEach(function(o){
       if (o !== w) setZoom(o, false);
@@ -1274,6 +1383,14 @@ ZOOM_CLICK_JS = """<script>
   setTimeout(wrapAll, 2000);
 })();
 </script>"""
+
+
+LAST_AV = {}   # uid → {"d20","d60","d120","d240"}：build() 算完順手存，戰情室卡片讀
+
+
+def uid_of(ticker):
+    """跟 build() 裡 uid 同一個規則（卡片要找到同一張圖的元素 id）。"""
+    return re.sub(r"[^A-Za-z0-9]", "_", str(ticker).upper())
 
 
 def build_html(ticker, expanded=False, target=None):
@@ -1363,6 +1480,14 @@ CSS = ZOOM_CSS + """
  font-size:11px;font-weight:600;padding:6px 12px;cursor:pointer;font-family:inherit}
 .tcreset:hover{border-color:var(--accent,#3B82F6);color:#93C5FD}
 .tchint{font-size:10.5px;color:var(--dim,#64748B)}
+/* 2026-09-28 平均成本（AVWAP）按鈕：打開＝用線的顏色框起來＋前面一個點 */
+.avchips{display:flex;flex-wrap:wrap;gap:5px;align-items:center;margin:2px 0 6px;font-size:11px}
+.avk{color:var(--muted,#94A3B8);font-weight:600}
+.avchips button{font:inherit;font-size:11px;font-weight:600;padding:3px 9px;border-radius:999px;cursor:pointer;
+ background:transparent;border:1px solid var(--line,#16304A);color:var(--muted,#94A3B8)}
+.avchips button[aria-pressed=true]{border-color:var(--c);color:var(--c);background:color-mix(in srgb,var(--c) 14%,transparent)}
+.avchips button[aria-pressed=true]::before{content:"● "}
+.avhint{color:#F8FAFC;font-size:11px}
 
 """
 
