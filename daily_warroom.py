@@ -387,7 +387,7 @@ def sec_relay(date, scope="public"):
 
     讀 docs/market_relay.json（market_relay_scan.py 每天 07:00 在本機跑，比 08:45 日報早）。
     定義＝嚴格版：今天 RS 在 120 日新高、EC 10 日內翻正且仍 >0、大盤站上 60MA（9/24 對老墨 XQ 6/6 一致）。
-    每檔附「距 60 日成本」（AVWAP）：🔴 全市場最偏離前 1%／🟡 前 1～5%／🟢 其他——**只提醒追高風險，
+    每檔附「距 60 日成本」（AVWAP）：🔴 全市場最偏離前 1%／🟡 前 1～5%／🟢 其他——**只顯示偏離程度（9/28 回測：偏離大的沒有比較差，不是追高警告），
     不是接力條件的一部分，也不改排序**。
 
     scope 分流同其他段：公開版列非持股、密報列「持股剛好在接力清單裡」的。
@@ -434,7 +434,7 @@ def sec_relay(date, scope="public"):
         from board_theme import PAGES_URL as _P
     except Exception:                                       # noqa: BLE001
         _P = "https://dt-1983.github.io/daily-stock-board"
-    return [head] + lines + [f"-# 數字＝距 60 日平均成本：🔴 全市場最偏離前 1%　🟡 前 1～5%（追高風險提醒，不影響訊號）"
+    return [head] + lines + [f"-# 數字＝距 60 日平均成本：🔴 全市場最偏離前 1%　🟡 前 1～5%（偏離程度，只顯示、不影響訊號）"
                              f"　🔗 [完整清單]({_P}/rotation.html)"]
 
 
