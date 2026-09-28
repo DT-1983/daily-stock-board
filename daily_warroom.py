@@ -380,36 +380,60 @@ def sec_setup(date, scope="public"):
     return lines
 
 
-def sec_movers(date, scope="public"):
-    """🔍 今天大漲但不在母體裡的候選（2026-09-20，Leo：「怎麼樣才不會漏掉
-    創意跟愛普」）。讀 market_movers.py 的輸出——那支用免費全市場官方行情
-    （TWSE+TPEx，不逐檔查yfinance）抓漲跌幅≥門檻的股票，跟 combo_scan 母體
-    比對，列出「表現強但沒被四燈系統看到」的候選。
+def sec_relay(date, scope="public"):
+    """⚡ 全市場 RS＋EC 接力（2026-09-28，Leo：「1 改」——取代已停擺的 sec_movers 位置）。
 
-    只放公開版：跟持股無關，是母體覆蓋率的提醒，不是判斷。
+    讀 docs/market_relay.json（market_relay_scan.py 每天 07:00 在本機跑，比 08:45 日報早）。
+    定義＝嚴格版：今天 RS 在 120 日新高、EC 10 日內翻正且仍 >0、大盤站上 60MA（9/24 對老墨 XQ 6/6 一致）。
+    每檔附「距 60 日成本」（AVWAP）：🔴 全市場最偏離前 1%／🟡 前 1～5%／🟢 其他——**只提醒追高風險，
+    不是接力條件的一部分，也不改排序**。
 
-    ⚠️ 只抓得到「今天單日大漲」這種模式（像創意當天+32%），抓不到像愛普
-    那種靠幾週慢慢墊出漲幅、當天可能還小跌的情況——這是免費信號的邊界，
-    不是完整的缺口偵測，看到這段空的不代表母體真的沒有缺口。
+    scope 分流同其他段：公開版列非持股、密報列「持股剛好在接力清單裡」的。
     """
-    if scope != "public":
-        return []
-    d = _load("state/market_movers.json", {}) or {}
+    import avwap
+    d = _load("docs/market_relay.json", {}) or {}
     try:
-        gap = (datetime.date.fromisoformat(date)
-               - datetime.date.fromisoformat(d.get("date", "1900-01-01"))).days
+        age = (datetime.date.fromisoformat(date)
+               - datetime.date.fromisoformat(str(d.get("date", "1900-01-01"))[:10])).days
     except Exception:                                       # noqa: BLE001
-        gap = 99
-    if gap > 3 or not d.get("outside_universe"):
+        age = 99
+    if age > 3 or not d.get("markets"):
         return []
-    rows = d["outside_universe"][:8]
-    lines = [f"**🔍 大漲但不在母體裡**（今天 ≥{d.get('min_pct', 8):.0f}%，"
-             f"共 {len(d['outside_universe'])} 檔，只列前 {len(rows)}）"]
-    for r in rows:
-        lines.append(f"　{r['code']} {r['name']}　{r['pct']:+.1f}%")
-    lines.append("-# 只抓「今天單日大漲」，抓不到慢慢墊出漲幅的股票"
-                 "　想追蹤就 `/加自選 代號`")
-    return lines
+    try:
+        from investment_chief import held_universe, norm_ticker
+        held = {norm_ticker(t) for t in held_universe()}
+    except Exception:                                       # noqa: BLE001
+        norm_ticker, held = (lambda t: str(t).upper()), set()
+    priv = scope == "private"
+    icon = {"hot": "🔴", "warm": "🟡", "ok": "🟢"}
+    lines, total = [], 0
+    for m, flag in (("tw", "🇹🇼"), ("us", "🇺🇸")):
+        x = d["markets"].get(m) or {}
+        dist = x.get("d60_dist")
+        rows = [r for r in (x.get("relay") or []) if r.get("relay")
+                and ((norm_ticker(r["ticker"]) in held) == priv)]
+        if not rows:
+            continue
+        total += len(rows)
+        rows.sort(key=lambda r: -(r.get("rs_pct") or 0))
+        bits = []
+        for r in rows[:8]:
+            v = r.get("d60")
+            dv = "" if v is None else f" {icon.get(avwap.tier(v, dist), '')}{v:+.0f}%"
+            nm = tkname(r["ticker"]) if m == "tw" else r["ticker"]
+            bits.append(f"{nm}{dv}")
+        more = f"　…另有 {len(rows)-8} 檔" if len(rows) > 8 else ""
+        lines.append(f"{flag} " + "、".join(bits) + more)
+    if not lines:
+        return []
+    head = ("**⚡ 持股出現接力訊號**" if priv else
+            f"**⚡ 全市場接力**（今天 {total} 檔：RS 創新高＋EC 翻正）")
+    try:
+        from board_theme import PAGES_URL as _P
+    except Exception:                                       # noqa: BLE001
+        _P = "https://dt-1983.github.io/daily-stock-board"
+    return [head] + lines + [f"-# 數字＝距 60 日平均成本：🔴 全市場最偏離前 1%　🟡 前 1～5%（追高風險提醒，不影響訊號）"
+                             f"　🔗 [完整清單]({_P}/rotation.html)"]
 
 
 def sec_rrg_turn(date, scope="public"):
@@ -921,17 +945,22 @@ def compose(date=None, scope="public", part="all"):
     priv = scope == "private"
     title = f"# {'🔒 持股密報' if priv else '📋 每日戰情'} · {date}（{wd}）"
 
+    # 2026-09-28 Leo「1 改」：sec_movers（今日大漲但不在母體）的資料源 market_movers.py 9/19 起
+    #   沒排程、每天都是空的 → 同位置換成全市場接力 sec_relay（公開列非持股、密報列持股）。
+    # 2026-09-28 Leo「2 合併」：「今日報告更新」原本公開、密報兩則一字不差重複，而且公開版會出現
+    #   「🔻持股 AAPL」這種持股資訊（公開頻道的規則是不放持股）→ 只留在密報。
     if priv:
         research = [sec2_signals(date, "private"), sec_setup(date, "private"),
+                    sec_relay(date, "private"),
                     sec4_research(notes, "private"), sec_reports_today(date),
                     sec_thesis(date)]
         chief = [sec3_chief(date, "private")]
     else:
         research = [sec1_market(notes), sec2_signals(date, "public"),
                     sec_rrg_turn(date, "public"), sec_setup(date, "public"),
-                    sec_movers(date, "public"),
+                    sec_relay(date, "public"),
                     sec4_research(notes, "public", date), sec5_watch(date),
-                    sec_reports_today(date), sec_thesis(date, "public")]
+                    sec_thesis(date, "public")]
         chief = [sec3_chief(date, "public")]
 
     if part == "research":
@@ -940,6 +969,17 @@ def compose(date=None, scope="public", part="all"):
         secs, suffix = chief, "・判斷"
     else:
         secs, suffix = research[:2] + chief + research[2:], ""
+        # 2026-09-28 Leo「2 合併」：一個頻道一則。合併後「今日無新訊號」這類佔位段落整段不出
+        #   （拆兩則時靠「整則不發」處理空內容，合成一則就要逐段濾）。
+        # ⚠️ 例外：密報的③持股判斷空的時候留一行——9/1 Leo 要的「沒消息也要說一聲」
+        #   原本是另發一則心跳，現在併進同一則，不再多一則訊息。
+        keep = [s for s in secs if s and not _empty(s)]
+        if priv and _empty(chief[0] or ["x"]):
+            keep.insert(min(2, len(keep)),
+                        ["**③ 持股判斷**", "今日持股無新事件，投資長不出手（已檢查、無事，不是漏推）。"])
+        if not keep:
+            return None
+        secs = keep
 
     if part != "all" and all(_empty(s) for s in secs):
         return None
@@ -975,33 +1015,17 @@ def main():
         if ch == "private" and not CHANNELS.get("private") and not args.dry_run:
             print("⚠️ DISCORD_WH_PRIVATE 未設定，持股密報跳過（Telegram 照舊有）")
             continue
-        for part, persona in (("research", "龐統"), ("chief", "孔明")):
-            msg = compose(scope=scope, part=part)
-            if not msg:
-                # 2026-09-01 Leo：「投資長在持股密報可以推一個今日無消息的訊息嗎？」
-                # ——原本沒內容就整則不發，於是「今天持股真的沒事」跟「投資長掛了/
-                # 批次沒跑」在 Discord 上長得一模一樣（今天 08:45 就是這樣，Leo 以為壞了）。
-                # 跟 stocks_forum 的心跳同一個道理：**沒消息也要說一聲沒消息**。
-                # 只在持股密報的投資長那則補心跳——#每日戰情是公開頻道，
-                # 每天多一則「無事」是雜訊；而持股密報是 Leo 每天在等的那一則。
-                if ch == "private" and part == "chief":
-                    hb = (f"# 🧭 持股判斷 · {datetime.date.today():%Y-%m-%d}"
-                          + NL + "今日持股無新事件，投資長不出手。"
-                          + NL + "-# 沒有持股被觸發（產業翻象限／個股訊號／到俗價都沒發生）。"
-                            "這是「已檢查、無事」，不是漏推。")
-                    if args.dry_run:
-                        print(f"\n───── {ch} / {persona}（心跳）─────\n{hb}")
-                    else:
-                        print(f"[{ch}/{part}→{persona}] 心跳",
-                              _send(ch, hb, persona, f"{ch}/{part}/心跳"))
-                else:
-                    print(f"[{ch}/{part}] 今天沒有實質內容，不發")
-                continue
-            if args.dry_run:
-                print(f"\n───── {ch} / {persona} ─────\n{msg}")
-            else:
-                print(f"[{ch}/{part}→{persona}]",
-                      _send(ch, msg, persona, f"{ch}/{part}"))
+        # 2026-09-28 Leo「2 合併」：原本每個頻道拆兩則（龐統情報＋孔明判斷，平日共 4 則），
+        # 改成一個頻道一則，發文者用「戰情室」（內容裡③段仍標明是投資長的判斷）。
+        # 密報那則原本另發的「今日無消息」心跳，已併進 compose() 的③段，不再另發。
+        msg = compose(scope=scope, part="all")
+        if not msg:
+            print(f"[{ch}] 今天沒有實質內容，不發")
+            continue
+        if args.dry_run:
+            print(f"\n───── {ch} ─────\n{msg}")
+        else:
+            print(f"[{ch}→戰情室]", _send(ch, msg, "戰情室", f"{ch}/all"))
 
     # P3 預估前提檢查——**獨立一則**（Leo 2026-08-28：「多一則」），一週一次（週一）。
     # 持股→持股密報、非持股→#財報（不是#每日戰情：這是估值前提不是當日戰況，
