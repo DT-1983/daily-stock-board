@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-28 08:47",
+ "updated": "2026-09-28 13:35",
  "indices": [
   {
    "sym": "^GSPC",
@@ -46,8 +46,8 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/28",
-   "close": 31.77,
-   "chg_pct": -0.11
+   "close": 31.76,
+   "chg_pct": -0.16
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "別再只看散熱！下一個翻倍產業 已經浮出水面",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6615145",
-   "ts": "09/28 08:40"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：華碩(2357-TW)EPS預估上修至75.9元，預估目標價為1080元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6616985",
-   "ts": "09/28 08:10"
-  },
-  {
-   "title": "美國拒絕伊朗停戰方案仍願繼續談判！川普：預計本週進行",
+   "title": "OpenAI曝AI模型在網路上秘密植入「自我複製提示詞」！被迫叫停最強大模型訓練",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6616927",
-   "ts": "09/28 08:10"
+   "url": "https://news.cnyes.com/news/id/6616739",
+   "ts": "09/28 13:10"
   },
   {
-   "title": "AI=電力基礎設施！韓副總理：政府正大力投入　力求實現全民免費覆蓋",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6616791",
-   "ts": "09/28 08:10"
-  },
-  {
-   "title": "川習會談台灣軍售！美駐中大使：美國對台立場未改變",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6616923",
-   "ts": "09/28 07:10"
-  },
-  {
-   "title": "Fed升息錯了嗎？知名避險基金大亨警告：AI改寫通膨邏輯、緊縮貨幣政策恐適得其反",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6616462",
-   "ts": "09/28 06:10"
-  },
-  {
-   "title": "美國AI供應鏈管制再擴大 光收發模組納入國會限制範圍",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6616912",
-   "ts": "09/27 23:00"
-  },
-  {
-   "title": "台積電又有漲價題材！「含積量」成焦點 00881包下AI四大電子族群",
+   "title": "〈VSMC開幕〉VSMC建廠僅花20.5個月創新紀錄 第二期挑戰18個月",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6615805",
-   "ts": "09/27 11:25"
+   "url": "https://news.cnyes.com/news/id/6617066",
+   "ts": "09/28 12:24"
   },
   {
-   "title": "雄獅創兩個新里程碑 帶進國旅新客源、拓高端主題版圖",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6616683",
-   "ts": "09/27 11:20"
+   "title": "〈VSMC開幕〉VSMC建廠僅花20.5個月創新紀錄 第二期挑戰18個月",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6617066",
+   "ts": "09/28 12:24"
   },
   {
-   "title": "AI散熱需求催油門 12吋SiC發展加速 單晶、多晶、鍵合三路競逐",
+   "title": "債券拋售潮重現！川普拒伊朗方案：10年期殖利率逼近5.2%、油價漲破106美元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6617041",
+   "ts": "09/28 12:00"
+  },
+  {
+   "title": "防範AI失控！WSJ：部分Anthropic資深員工考慮在美偏遠地區買土地當避難所",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6616898",
+   "ts": "09/28 12:00"
+  },
+  {
+   "title": "〈VSMC開幕〉NXP：VSMC鎖定40至130奈米 將成Physical AI製造基地",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6615934",
-   "ts": "09/27 10:41"
+   "url": "https://news.cnyes.com/news/id/6617054",
+   "ts": "09/28 11:35"
+  },
+  {
+   "title": "〈VSMC開幕〉NXP：VSMC鎖定40至130奈米 將成Physical AI製造基地",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6617054",
+   "ts": "09/28 11:35"
+  },
+  {
+   "title": "〈VSMC開幕〉12吋廠正式啟用 方略感謝NXP、台積電 莊子壽現身典禮",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6617042",
+   "ts": "09/28 11:00"
+  },
+  {
+   "title": "台股高息ETF今年績效前五強出列！00929穩居冠 00878、00939後來居上",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6616596",
+   "ts": "09/28 10:35"
+  },
+  {
+   "title": "邊緣AI商機引爆 板卡廠小金雞東擎與技宸營運齊步登高",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6616105",
+   "ts": "09/28 10:31"
   }
  ],
  "inst": {
