@@ -543,6 +543,18 @@ def detail_html(ticker, exact=False):
 
     intro = _intro(r)
 
+    tech = ""
+    try:
+        import technical_indicators as ti
+        import tw_symbol
+        sym = (tw_symbol.resolve(r["tk"]) if r["tk"][:1].isdigit()
+               else r["tk"].replace(".", "-"))
+        # F：把分析師共識目標價傳給圖，主圖才畫得出那條黃色目標價線
+        #    （technical_indicators 自己不知道目標價，那是 combo_result 的欄位）
+        tech = ti.build_html(sym, expanded=True, target=r.get("tgt")) or ""
+    except Exception as e:                                  # noqa: BLE001
+        tech = (f'<div class="warn">技術圖產生失敗（上面的數字仍然有效）：'
+                f'{esc(str(e)[:140])}</div>')
     cards = "".join([
         f'<div class="dc"><div class="k">燈數</div><div class="v">{lit} / 4'
         f'<span class="asof">{esc(_row_asof)}</span></div>'
@@ -562,24 +574,44 @@ def detail_html(ticker, exact=False):
         f'<div class="dc"><div class="k">RRG 輪動</div>'
         f'<div class="v">{QL.get(quad, "—")}</div>'
         f'<div class="s">{QDOT.get(quad, "")}{esc(r["src"])}</div></div>',
+        _avwap_card(r["tk"], locals().get("sym")),
     ])
 
-    tech = ""
-    try:
-        import technical_indicators as ti
-        import tw_symbol
-        sym = (tw_symbol.resolve(r["tk"]) if r["tk"][:1].isdigit()
-               else r["tk"].replace(".", "-"))
-        # F：把分析師共識目標價傳給圖，主圖才畫得出那條黃色目標價線
-        #    （technical_indicators 自己不知道目標價，那是 combo_result 的欄位）
-        tech = ti.build_html(sym, expanded=True, target=r.get("tgt")) or ""
-    except Exception as e:                                  # noqa: BLE001
-        tech = (f'<div class="warn">技術圖產生失敗（上面的數字仍然有效）：'
-                f'{esc(str(e)[:140])}</div>')
     tech = _with_chip_tab(r["tk"], tech)
     # data-resolved：前端靠它把「目前看著的標的」更新成解析後的代號（軍師欄的「這一檔」要對得上）
     marker = f'<span data-resolved="{esc(r["tk"])}" hidden></span>'
     return marker + pre_note + head + intro + '<div class="dcards">' + cards + "</div>" + tech
+
+
+def _avwap_card(tk, sym):
+    """距 60 日成本（AVWAP 錨定均價，2026-09-28 Leo 看模擬圖 v4 定案）。
+
+    - 60 日這行固定、上色：🔴 全市場最偏離的前 1%／🟡 前 1～5%／🟢 其他，
+      門檻是 market_relay_scan.py 每天算的全市場分布，不寫死。
+    - 技術圖上多開 20/120/240 日或 📍 自訂起算，卡片底下就多一行那條線的距離（不上色），
+      由技術圖的前端程式寫進 id=ti_avx_{uid}。
+    - 只是描述現況（離這段期間大家的平均成本多遠），不影響燈號／接力／排序。
+    """
+    from board_theme import esc
+    import avwap
+    try:
+        import technical_indicators as ti
+        uid = ti.uid_of(sym or tk)
+        d60 = (ti.LAST_AV.get(uid) or {}).get("d60")
+    except Exception:                                       # noqa: BLE001
+        uid, d60 = "x", None
+    mk = avwap.market_of(tk)
+    dist = avwap.load_dist(mk)
+    t = avwap.tier(d60, dist)
+    pr = avwap.pct_rank(d60, dist)
+    col = avwap.TIER_COLOR.get(t, "var(--ink,#F8FAFC)")
+    v = "—" if d60 is None else f"{d60:+.1f}%"
+    sub = ("" if pr is None else f"贏過全{'台' if mk == 'tw' else '美'}股 {pr:.1f}%")
+    tip = avwap.TIER_TEXT.get(t, "")
+    return (f'<div class="dc"><div class="k">距 60 日成本</div>'
+            f'<div class="v" style="color:{col}" title="{esc(tip)}">{v}</div>'
+            f'<div class="s">{esc(sub)}{"　" + esc(tip) if t in ("hot", "warm") else ""}'
+            f'<div class="avx" id="ti_avx_{uid}"></div></div></div>')
 
 
 def _with_chip_tab(tk, tech):
