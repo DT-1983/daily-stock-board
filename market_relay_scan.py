@@ -58,7 +58,9 @@ def scan(market, limit=None):
         uni = uni[:limit]
     bench_tk = ir._MARKET_BENCH[market]
     t0 = time.time()
-    px = price_store.get_ohlc([u["yf"] for u in uni] + [bench_tk], period="2y")
+    # fill_gaps=False：不打 FinMind 補台股缺漏 K 棒（2,300 檔會用光免費額度，影響其他排程；
+    # 120 日 RS／EC 少一根影響極小）
+    px = price_store.get_ohlc([u["yf"] for u in uni] + [bench_tk], period="2y", fill_gaps=False)
     t1 = time.time()
     bench = px.get(bench_tk)
     if bench is None or bench.empty:
