@@ -1,37 +1,37 @@
 {
- "updated": "2026-09-28 13:35",
+ "updated": "2026-09-28 23:20",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "09/25",
-   "close": 7743.41,
-   "chg_pct": 0.51
+   "date": "09/28",
+   "close": 7678.81,
+   "chg_pct": -0.83
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "09/25",
-   "close": 27068.72,
-   "chg_pct": 0.48
+   "date": "09/28",
+   "close": 26793.57,
+   "chg_pct": -1.02
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "09/25",
-   "close": 51828.62,
-   "chg_pct": 0.93
+   "date": "09/28",
+   "close": 51464.47,
+   "chg_pct": -0.7
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "09/25",
-   "close": 12668.93,
-   "chg_pct": 1.41
+   "date": "09/28",
+   "close": 12300.36,
+   "chg_pct": -2.91
   },
   {
    "sym": "^TWII",
@@ -46,79 +46,79 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/28",
-   "close": 31.76,
-   "chg_pct": -0.16
+   "close": 31.8,
+   "chg_pct": -0.04
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "09/25",
-   "close": 5.18,
+   "date": "09/28",
+   "close": 5.26,
    "fmt": "yield",
-   "chg_bp": 2.2
+   "chg_bp": 7.9
   }
  ],
  "news": [
   {
-   "title": "OpenAI曝AI模型在網路上秘密植入「自我複製提示詞」！被迫叫停最強大模型訓練",
+   "title": "SpaceX商業化邁關鍵一步！星艦首次成功入軌 搭載26顆V3星鏈衛星開啟「賺錢」任務",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6616739",
-   "ts": "09/28 13:10"
+   "url": "https://news.cnyes.com/news/id/6617308",
+   "ts": "09/28 23:20"
+  },
+  {
+   "title": "盤中速報 - 費城半導體大跌3%，報12289.43點",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6617313",
+   "ts": "09/28 23:02"
+  },
+  {
+   "title": "盤中速報 - 邁威爾科技(MRVL-US)大跌5.02%，報248.78美元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6617312",
+   "ts": "09/28 23:02"
+  },
+  {
+   "title": "非農還沒公布先翻多！摩根大通交易員看好美股續攻、力挺AI行情",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6617289",
+   "ts": "09/28 23:00"
+  },
+  {
+   "title": "防「智能爆炸」！WSJ：OpenAI、Anthropic、Meta和微軟AI研究負責人聯名呼籲審查AI研究自動化",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6617301",
+   "ts": "09/28 22:45"
+  },
+  {
+   "title": "金屬中心董事長交棒 由台灣金屬熱處理學會理事長吳忠春接任",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6617162",
+   "ts": "09/28 17:57"
+  },
+  {
+   "title": "〈VSMC開幕〉VSMC一期全滿 方略：二期規劃加速 不排除導入28/22奈米",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6617143",
+   "ts": "09/28 16:28"
+  },
+  {
+   "title": "〈VSMC開幕〉方略：產能已經「徹底爆掉」 成熟製程缺貨恐延續多年",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6617135",
+   "ts": "09/28 16:10"
+  },
+  {
+   "title": "無懼單月調節！外資上櫃持股市值比攀24.61%新高 護國群山撐起5兆市值",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6605200",
+   "ts": "09/28 13:49"
   },
   {
    "title": "〈VSMC開幕〉VSMC建廠僅花20.5個月創新紀錄 第二期挑戰18個月",
    "mkt": "TW",
    "url": "https://news.cnyes.com/news/id/6617066",
    "ts": "09/28 12:24"
-  },
-  {
-   "title": "〈VSMC開幕〉VSMC建廠僅花20.5個月創新紀錄 第二期挑戰18個月",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6617066",
-   "ts": "09/28 12:24"
-  },
-  {
-   "title": "債券拋售潮重現！川普拒伊朗方案：10年期殖利率逼近5.2%、油價漲破106美元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6617041",
-   "ts": "09/28 12:00"
-  },
-  {
-   "title": "防範AI失控！WSJ：部分Anthropic資深員工考慮在美偏遠地區買土地當避難所",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6616898",
-   "ts": "09/28 12:00"
-  },
-  {
-   "title": "〈VSMC開幕〉NXP：VSMC鎖定40至130奈米 將成Physical AI製造基地",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6617054",
-   "ts": "09/28 11:35"
-  },
-  {
-   "title": "〈VSMC開幕〉NXP：VSMC鎖定40至130奈米 將成Physical AI製造基地",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6617054",
-   "ts": "09/28 11:35"
-  },
-  {
-   "title": "〈VSMC開幕〉12吋廠正式啟用 方略感謝NXP、台積電 莊子壽現身典禮",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6617042",
-   "ts": "09/28 11:00"
-  },
-  {
-   "title": "台股高息ETF今年績效前五強出列！00929穩居冠 00878、00939後來居上",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6616596",
-   "ts": "09/28 10:35"
-  },
-  {
-   "title": "邊緣AI商機引爆 板卡廠小金雞東擎與技宸營運齊步登高",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6616105",
-   "ts": "09/28 10:31"
   }
  ],
  "inst": {
