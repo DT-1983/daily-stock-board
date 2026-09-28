@@ -1,5 +1,5 @@
 {
- "date": "2026-09-25",
+ "date": "2026-09-28",
  "period": 60,
  "mode": "daily",
  "chains": {
@@ -43,13 +43,13 @@
     "quadrant": "落後"
    },
    "rrg_from": null,
-   "supertrend": "空頭",
+   "supertrend": "多頭",
    "squeeze": {
     "on": false,
     "level": null,
     "momentum_up": true
    },
-   "summary": "落後象限(RS 98.85/動能 98.65)｜SuperTrend空頭｜未擠壓"
+   "summary": "落後象限(RS 98.85/動能 98.65)｜SuperTrend多頭｜未擠壓"
   },
   "us:太陽能": {
    "members_used": 8,
@@ -63,9 +63,9 @@
    "squeeze": {
     "on": true,
     "level": "極壓",
-    "momentum_up": true
+    "momentum_up": false
    },
-   "summary": "落後象限(RS 98.9/動能 98.46)｜SuperTrend空頭｜極壓蓄力中，動能偏多"
+   "summary": "落後象限(RS 98.9/動能 98.46)｜SuperTrend空頭｜極壓蓄力中，動能偏空"
   },
   "us:Bitcoin→AI 機房": {
    "members_used": 8,
@@ -95,9 +95,9 @@
    "squeeze": {
     "on": true,
     "level": "極壓",
-    "momentum_up": false
+    "momentum_up": true
    },
-   "summary": "改善象限(RS 99.45/動能 101.05)｜SuperTrend空頭｜極壓蓄力中，動能偏空"
+   "summary": "改善象限(RS 99.45/動能 101.05)｜SuperTrend空頭｜極壓蓄力中，動能偏多"
   },
   "us:機器人": {
    "members_used": 8,
@@ -159,7 +159,7 @@
    "squeeze": {
     "on": false,
     "level": null,
-    "momentum_up": false
+    "momentum_up": true
    },
    "summary": "落後象限(RS 98.56/動能 98.62)｜SuperTrend空頭｜未擠壓"
   },
@@ -189,11 +189,11 @@
    "rrg_from": null,
    "supertrend": "多頭",
    "squeeze": {
-    "on": false,
-    "level": null,
+    "on": true,
+    "level": "微壓",
     "momentum_up": false
    },
-   "summary": "領先象限(RS 101.66/動能 100.49)｜SuperTrend多頭｜未擠壓"
+   "summary": "領先象限(RS 101.66/動能 100.49)｜SuperTrend多頭｜微壓蓄力中，動能偏空"
   },
   "tw:機器人": {
    "members_used": 8,
@@ -306,6 +306,21 @@
     "momentum_up": true
    },
    "summary": "領先象限(RS 102.53/動能 102.0)｜SuperTrend多頭｜未擠壓"
+  },
+  "tw:PCB/ABF 載板": {
+   "members_used": 11,
+   "rrg": {
+    "ratio": 101.03,
+    "momentum": 99.85,
+    "quadrant": "弱化"
+   },
+   "supertrend": "多頭",
+   "squeeze": {
+    "on": true,
+    "level": "極壓",
+    "momentum_up": true
+   },
+   "summary": "弱化象限(RS 101.03/動能 99.85)｜SuperTrend多頭｜極壓蓄力中，動能偏多"
   }
  }
 }

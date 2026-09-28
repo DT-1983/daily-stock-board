@@ -2752,5 +2752,23 @@
     "industry": "Electronic Components",
     "exchange": "NASDAQ",
     "asof": "2026-09-28"
+  },
+  "6515": {
+    "sector": "Distribution Services",
+    "industry": "Electronics Distributors",
+    "exchange": "TWSE",
+    "asof": "2026-09-28"
+  },
+  "NFLX": {
+    "sector": "Technology Services",
+    "industry": "Internet Software/Services",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-29"
+  },
+  "CRWD": {
+    "sector": "Technology Services",
+    "industry": "Packaged Software",
+    "exchange": "NASDAQ",
+    "asof": "2026-09-29"
   }
 }
