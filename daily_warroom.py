@@ -357,10 +357,12 @@ def sec_setup(date, scope="public"):
         #    1% 以下＝一天的正常震盪就會碰到，那才是真的該警告。
         if gap is None:
             warn = ""
+        # 2026-09-28 Leo 問「停損是什麼意思?」→ 改「距停損」：這是股價離 SuperTrend 支撐線還有多遠
+        #   （再跌這麼多就翻空出場），不是「已經虧了這麼多」。
         elif gap < 1:
-            warn = f"　⚠️停損僅 {gap:.1f}%"
+            warn = f"　⚠️距停損僅 {gap:.1f}%"
         else:
-            warn = f"　停損 {gap:.1f}%"
+            warn = f"　距停損 {gap:.1f}%"
         lines.append(f"**{tkname(r.get('ticker'))}**{mark}　風報比 {r.get('rr'):.1f}"
                      f"　{qs}{warn}")
     if len(hit) > 10:
