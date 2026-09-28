@@ -1,0 +1,248 @@
+{
+ "date": "2026-09-28",
+ "entry": "lamp",
+ "markets": {
+  "tw": {
+   "market": "tw",
+   "entry": "lamp",
+   "events": 1183,
+   "period": [
+    "2023-09-04",
+    "2026-09-24"
+   ],
+   "results": {
+    "固定20日": {
+     "n": 1185,
+     "open": 20,
+     "days_mean": 19.8,
+     "ret_mean": 3.23,
+     "ret_median": 0.86,
+     "win": 54.5,
+     "exc_mean": -0.93,
+     "exc_median": -3.08,
+     "beat": 37.4,
+     "exc_per20d": -0.94,
+     "vs_lamp": -1.3,
+     "vs_lamp_t": -1.95
+    },
+    "固定60日": {
+     "n": 1182,
+     "open": 106,
+     "days_mean": 57.5,
+     "ret_mean": 11.48,
+     "ret_median": 3.13,
+     "win": 57.7,
+     "exc_mean": -0.41,
+     "exc_median": -5.74,
+     "beat": 37.0,
+     "exc_per20d": -0.14,
+     "vs_lamp": -0.8,
+     "vs_lamp_t": -0.74
+    },
+    "EC翻負": {
+     "n": 1184,
+     "open": 36,
+     "days_mean": 22.5,
+     "ret_mean": 5.91,
+     "ret_median": -1.06,
+     "win": 43.8,
+     "exc_mean": 1.14,
+     "exc_median": -3.64,
+     "beat": 32.4,
+     "exc_per20d": 1.01,
+     "vs_lamp": 0.76,
+     "vs_lamp_t": 0.96
+    },
+    "ST翻空": {
+     "n": 1184,
+     "open": 71,
+     "days_mean": 30.6,
+     "ret_mean": 7.56,
+     "ret_median": -0.88,
+     "win": 43.9,
+     "exc_mean": 1.26,
+     "exc_median": -3.34,
+     "beat": 33.0,
+     "exc_per20d": 0.82,
+     "vs_lamp": 0.62,
+     "vs_lamp_t": 0.82
+    },
+    "RS60跌破": {
+     "n": 1183,
+     "open": 16,
+     "days_mean": 11.7,
+     "ret_mean": 2.64,
+     "ret_median": -0.5,
+     "win": 42.3,
+     "exc_mean": 0.09,
+     "exc_median": -1.75,
+     "beat": 29.3,
+     "exc_per20d": 0.15,
+     "vs_lamp": 0.38,
+     "vs_lamp_t": 1.24
+    },
+    "跌破60日成本": {
+     "n": 1183,
+     "open": 27,
+     "days_mean": 20.3,
+     "ret_mean": 5.74,
+     "ret_median": -0.91,
+     "win": 38.0,
+     "exc_mean": 1.02,
+     "exc_median": -2.35,
+     "beat": 30.8,
+     "exc_per20d": 1.0,
+     "vs_lamp": 1.34,
+     "vs_lamp_t": 1.27
+    },
+    "燈號倉(ST賣半+RS全出)": {
+     "n": 1183,
+     "open": 16,
+     "days_mean": 11.7,
+     "ret_mean": 2.43,
+     "ret_median": -0.46,
+     "win": 42.5,
+     "exc_mean": -0.13,
+     "exc_median": -1.7,
+     "beat": 29.5,
+     "exc_per20d": -0.22
+    },
+    "ST賣半+RS百分位<60全出": {
+     "n": 1182,
+     "open": 23,
+     "days_mean": 22.8,
+     "ret_mean": 5.26,
+     "ret_median": -0.28,
+     "win": 45.2,
+     "exc_mean": 0.2,
+     "exc_median": -1.8,
+     "beat": 30.2,
+     "exc_per20d": 0.18,
+     "vs_lamp": 0.81,
+     "vs_lamp_t": 0.82
+    }
+   }
+  },
+  "us": {
+   "market": "us",
+   "entry": "lamp",
+   "events": 1501,
+   "period": [
+    "2023-09-05",
+    "2026-09-25"
+   ],
+   "results": {
+    "固定20日": {
+     "n": 1502,
+     "open": 32,
+     "days_mean": 19.7,
+     "ret_mean": 3.58,
+     "ret_median": 2.0,
+     "win": 59.9,
+     "exc_mean": -0.11,
+     "exc_median": -1.79,
+     "beat": 42.3,
+     "exc_per20d": -0.11,
+     "vs_lamp": 0.53,
+     "vs_lamp_t": 0.91
+    },
+    "固定60日": {
+     "n": 1501,
+     "open": 127,
+     "days_mean": 57.6,
+     "ret_mean": 8.23,
+     "ret_median": 4.79,
+     "win": 62.8,
+     "exc_mean": -0.62,
+     "exc_median": -3.26,
+     "beat": 42.1,
+     "exc_per20d": -0.22,
+     "vs_lamp": 0.28,
+     "vs_lamp_t": 0.36
+    },
+    "EC翻負": {
+     "n": 1501,
+     "open": 39,
+     "days_mean": 25.5,
+     "ret_mean": 4.46,
+     "ret_median": -0.1,
+     "win": 49.4,
+     "exc_mean": -0.05,
+     "exc_median": -2.74,
+     "beat": 37.0,
+     "exc_per20d": -0.04,
+     "vs_lamp": 0.85,
+     "vs_lamp_t": 1.28
+    },
+    "ST翻空": {
+     "n": 1501,
+     "open": 48,
+     "days_mean": 30.7,
+     "ret_mean": 4.51,
+     "ret_median": -0.69,
+     "win": 45.7,
+     "exc_mean": -0.67,
+     "exc_median": -2.96,
+     "beat": 34.6,
+     "exc_per20d": -0.44,
+     "vs_lamp": 0.16,
+     "vs_lamp_t": 0.39
+    },
+    "RS60跌破": {
+     "n": 1501,
+     "open": 26,
+     "days_mean": 16.1,
+     "ret_mean": 2.9,
+     "ret_median": -0.26,
+     "win": 46.6,
+     "exc_mean": -0.36,
+     "exc_median": -1.6,
+     "beat": 31.7,
+     "exc_per20d": -0.45,
+     "vs_lamp": 0.18,
+     "vs_lamp_t": 1.57
+    },
+    "跌破60日成本": {
+     "n": 1501,
+     "open": 38,
+     "days_mean": 26.6,
+     "ret_mean": 3.46,
+     "ret_median": -1.09,
+     "win": 40.2,
+     "exc_mean": -0.9,
+     "exc_median": -2.45,
+     "beat": 32.5,
+     "exc_per20d": -0.68,
+     "vs_lamp": -0.51,
+     "vs_lamp_t": -0.96
+    },
+    "燈號倉(ST賣半+RS全出)": {
+     "n": 1501,
+     "open": 26,
+     "days_mean": 16.1,
+     "ret_mean": 2.69,
+     "ret_median": -0.26,
+     "win": 46.4,
+     "exc_mean": -0.58,
+     "exc_median": -1.58,
+     "beat": 31.8,
+     "exc_per20d": -0.72
+    },
+    "ST賣半+RS百分位<60全出": {
+     "n": 1502,
+     "open": 21,
+     "days_mean": 19.8,
+     "ret_mean": 2.61,
+     "ret_median": 0.03,
+     "win": 50.7,
+     "exc_mean": -1.16,
+     "exc_median": -1.2,
+     "beat": 35.5,
+     "exc_per20d": -1.17,
+     "vs_lamp": -0.32,
+     "vs_lamp_t": -0.56
+    }
+   }
+  }
+ }
+}
