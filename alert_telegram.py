@@ -163,14 +163,18 @@ def main():
     # 1) 持股動態（風險）— SuperTrend 翻面
     if flips_hold:
         has = True
-        lines.append("💼 <b>持股動態</b>（你的部位 · SuperTrend）")
+        lines.append("💼 <b>持股動態</b>（你的部位 · SuperTrend／RS60）")
         for f in flips_hold:
             nm = f" {f['name']}" if f['name'] else ""
             lines.append(f"　{f['word']}　<b>{esc(f['code'])}</b>{esc(nm)}")
         lines.append("")
 
     # 2) 守備清單 — AI 訊號（買賣/反轉）
-    if alerts:
+    # 2026-09-28 Leo：「最急的留 Telegram（當天 ST 轉向、RS 破 60、突破貴價）」→ Telegram 晨報只留急件，
+    #   AI 訊號不急、Discord 公開版②段本來就有（讀下面寫進 st_flips_today.json 的 ai_alerts），
+    #   所以這段不再推 Telegram。⚠️ 只關推播，alerts 照樣計算、照樣寫檔，Discord 靠它。
+    TG_AI_ALERTS = False
+    if alerts and TG_AI_ALERTS:
         has = True
         lines.append("🎯 <b>守備清單 — AI 訊號</b>")
         for c in CHAIN_ORDER + ["其他"]:
@@ -198,7 +202,8 @@ def main():
         lines.append("<i>💼 持股看風險（翻空/賣訊）｜🎯 守備清單看機會（買進/翻多）</i>")
         lines.append(f'📊 <a href="{PAGES_URL}">完整看板</a>')
     else:
-        lines = [f"✅ <b>投資晨報 {date}</b> 今日無訊號（持股趨勢無變化、守備清單無買賣/翻面）。",
+        lines = [f"✅ <b>投資晨報 {date}</b> 今日無急件（持股 SuperTrend／RS60 無變化、守備清單無 SuperTrend 翻面；"
+                 f"AI 訊號與完整日報在 Discord）。",
                  f'📊 <a href="{PAGES_URL}">完整看板</a>。']
     msg = "\n".join(lines)
     send_text(msg)
