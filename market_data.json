@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-29 13:53",
+ "updated": "2026-09-29 15:40",
  "indices": [
   {
    "sym": "^GSPC",
@@ -46,8 +46,8 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/29",
-   "close": 31.85,
-   "chg_pct": 0.23
+   "close": 31.87,
+   "chg_pct": 0.27
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "川普將與6大科技巨頭談AI監管！輝達、Meta、Anthropic、OpenAI等高層齊聚白宮",
+   "title": "AI網路下一個放量產品浮現：Lumentum OCS出貨翻倍、單季營收首破1億美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6617645",
-   "ts": "09/29 13:50"
+   "url": "https://news.cnyes.com/news/id/6617781",
+   "ts": "09/29 15:30"
   },
   {
-   "title": "美債殖利率飆升+油價高漲 亞股震盪 全球面臨高利率新常態",
+   "title": "AI掀轉職潮！麥肯錫：10年1100萬美國勞工恐換跑道 轉型速度堪比疫情時期",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6617710",
-   "ts": "09/29 13:40"
+   "url": "https://news.cnyes.com/news/id/6617453",
+   "ts": "09/29 15:20"
   },
   {
-   "title": "從史丹佛HAI到Instinct研發！李飛飛帶World Labs進超微　專家：世界模型成AI競爭新戰場",
+   "title": "海警又來！大陸宣布在台灣以東海域展開常態化執法巡查",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6617765",
+   "ts": "09/29 15:17"
+  },
+  {
+   "title": "「星際之門」AI資料中心遇供電瓶頸！電力供應、監管審批成問題  甲骨文發「不可抗力」通知",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6617622",
-   "ts": "09/29 13:40"
+   "url": "https://news.cnyes.com/news/id/6617580",
+   "ts": "09/29 15:10"
   },
   {
-   "title": "散熱雙雄丟單？輝達首批液冷認證沒有奇鋐(3017)、雙鴻(3324)該怎麼解讀？教你後續先看3項指標",
+   "title": "NVIDIA開始定義AI Factory怎麼蓋！DSX供應鏈浮現，台達電(2308)從中壓一路做到800V與液冷",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6617726",
-   "ts": "09/29 13:30"
+   "url": "https://news.cnyes.com/news/id/6617763",
+   "ts": "09/29 15:00"
   },
   {
-   "title": "別急！2,350億美元回購只是第一道菜 輝達後面還有近1兆美元現金流",
+   "title": "王品中秋連假4天業績逼近3.6億元 樂看9月營收淡季不淡",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6617743",
+   "ts": "09/29 14:42"
+  },
+  {
+   "title": "〈台股盤後〉節後補跌392點  油價、美債殖利率雙擊痛失4萬8及5日線",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6617697",
+   "ts": "09/29 14:41"
+  },
+  {
+   "title": "日本升息至31年新高但日元竟反貶 2.3兆美元套利交易成全球金融潛在火藥桶",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6617727",
-   "ts": "09/29 13:30"
+   "url": "https://news.cnyes.com/news/id/6617728",
+   "ts": "09/29 14:40"
   },
   {
-   "title": "歐元兌美元跌近1.14關卡 能源價格成歐元最大變數 ECB面臨通膨與成長兩難",
+   "title": "中華電信：台灣首顆自主衛星 預計2027年提供服務",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6617741",
+   "ts": "09/29 14:34"
+  },
+  {
+   "title": "瑞銀：Fed過去35年從未在選舉年前一個月升息  12月再升一碼較合理",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6617712",
-   "ts": "09/29 13:20"
-  },
-  {
-   "title": "〈焦點股〉研華再創新天價激勵IPC族群走揚 樺漢飆逾9%、泓格漲停",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6617709",
-   "ts": "09/29 13:13"
-  },
-  {
-   "title": "擷發科AI無人機報捷 獲美歐青睞擴大全球版圖",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6617694",
-   "ts": "09/29 13:07"
-  },
-  {
-   "title": "群聯(8299)不是輝達認證商，為何能攜Tesla Megapack搶進DSX AI工廠？第二成長曲線先看這3點",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6617691",
-   "ts": "09/29 12:30"
-  },
-  {
-   "title": "〈焦點股〉浩鼎新藥研發可望受惠政策利多 亮燈漲停",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6617679",
-   "ts": "09/29 12:22"
+   "url": "https://news.cnyes.com/news/id/6617701",
+   "ts": "09/29 14:30"
   }
  ],
  "inst": {
-  "date": "09/24",
-  "total_yi": -444.5,
-  "foreign_yi": -329.6,
-  "trust_yi": -128.2
+  "date": "09/29",
+  "total_yi": -781.9,
+  "foreign_yi": -632.0,
+  "trust_yi": 14.2
  }
 }
