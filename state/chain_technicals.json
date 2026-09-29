@@ -1,5 +1,5 @@
 {
- "date": "2026-09-28",
+ "date": "2026-09-29",
  "period": 60,
  "mode": "daily",
  "chains": {
@@ -94,10 +94,10 @@
    "supertrend": "空頭",
    "squeeze": {
     "on": true,
-    "level": "極壓",
+    "level": "中壓",
     "momentum_up": true
    },
-   "summary": "改善象限(RS 99.45/動能 101.05)｜SuperTrend空頭｜極壓蓄力中，動能偏多"
+   "summary": "改善象限(RS 99.45/動能 101.05)｜SuperTrend空頭｜中壓蓄力中，動能偏多"
   },
   "us:機器人": {
    "members_used": 8,
@@ -314,6 +314,7 @@
     "momentum": 99.85,
     "quadrant": "弱化"
    },
+   "rrg_from": null,
    "supertrend": "多頭",
    "squeeze": {
     "on": true,
