@@ -2,7 +2,21 @@
 "date": "2026-09-29",
 "flips_hold": [
 {
+"code": "MCK",
+"name": "",
+"word": "🟢→🔴 翻空",
+"dir": -1,
+"sig": "st"
+},
+{
 "code": "API",
+"name": "",
+"word": "RS60跌破自身均線",
+"dir": -1,
+"sig": "rs60"
+},
+{
+"code": "TSLA",
 "name": "",
 "word": "RS60跌破自身均線",
 "dir": -1,
@@ -16,14 +30,14 @@
 "sig": "rs60"
 },
 {
-"code": "ARKQ",
+"code": "AES",
 "name": "",
-"word": "RS60跌破自身均線",
-"dir": -1,
+"word": "RS60站回多方",
+"dir": 1,
 "sig": "rs60"
 },
 {
-"code": "XYLG",
+"code": "ARKQ",
 "name": "",
 "word": "RS60跌破自身均線",
 "dir": -1,
@@ -51,10 +65,24 @@
 "sig": "rs60"
 },
 {
+"code": "DNKEY",
+"name": "",
+"word": "RS60站回多方",
+"dir": 1,
+"sig": "rs60"
+},
+{
 "code": "MCK",
 "name": "",
 "word": "RS60跌破自身均線",
 "dir": -1,
+"sig": "rs60"
+},
+{
+"code": "PAA",
+"name": "",
+"word": "RS60站回多方",
+"dir": 1,
 "sig": "rs60"
 },
 {
@@ -65,6 +93,116 @@
 "sig": "rs60"
 }
 ],
-"flips_watch": [],
-"ai_alerts": []
+"flips_watch": [
+{
+"code": "NDSN",
+"name": "",
+"word": "🔴→🟢 翻多",
+"dir": 1,
+"sig": "st"
+},
+{
+"code": "1519",
+"name": "華城",
+"word": "🟢→🔴 翻空",
+"dir": -1,
+"sig": "st"
+},
+{
+"code": "3023",
+"name": "信邦",
+"word": "🟢→🔴 翻空",
+"dir": -1,
+"sig": "st"
+},
+{
+"code": "6664",
+"name": "群翊",
+"word": "🔴→🟢 翻多",
+"dir": 1,
+"sig": "st"
+}
+],
+"ai_alerts": [
+{
+"chain": "AI 伺服器",
+"market": "US",
+"sig": "🟢",
+"code": "NVDA",
+"name": "NVIDIA Corp",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 電力/核能",
+"market": "US",
+"sig": "🟢",
+"code": "HUBB",
+"name": "Hubbell Inc",
+"reason": "觀望→買進"
+},
+{
+"chain": "低軌衛星",
+"market": "US",
+"sig": "🟢",
+"code": "RKLB",
+"name": "Rocket Lab Corp",
+"reason": "觀望→買進"
+},
+{
+"chain": "機器人",
+"market": "US",
+"sig": "🟢",
+"code": "EMR",
+"name": "Emerson Electric Co",
+"reason": "觀望→買進"
+},
+{
+"chain": "太陽能",
+"market": "US",
+"sig": "🔴",
+"code": "RUN",
+"name": "Sunrun Inc",
+"reason": "觀望→賣出"
+},
+{
+"chain": "AI 伺服器",
+"market": "TW",
+"sig": "🟢",
+"code": "2330",
+"name": "台積電",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 伺服器",
+"market": "TW",
+"sig": "🟢",
+"code": "3324",
+"name": "雙鴻",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 電源/散熱",
+"market": "TW",
+"sig": "🟢",
+"code": "3324",
+"name": "雙鴻",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 電源/散熱",
+"market": "TW",
+"sig": "🟢",
+"code": "2308",
+"name": "台達電",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 電源/散熱",
+"market": "TW",
+"sig": "🟢",
+"code": "3665",
+"name": "BIZLINK HOLDING INC",
+"reason": "觀望→買進"
+}
+]
 }
