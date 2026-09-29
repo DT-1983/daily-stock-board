@@ -149,8 +149,10 @@ PROMPT = """你是投資長，讀研究員整理好的材料，給這檔股票�
 【中短期趨勢角度材料（SuperTrend+RS+產業輪動）】
 {trend_material}
 
-【今天研究員產出的新聞/事件】
+【今天研究員產出的新聞/事件，以及總經背景】
 {today_events}
+（總經背景是整個市場的環境，不是這檔專屬：可以用來說明事件風險或產業順逆風，
+但**不要只因為總經數字就翻轉任一角度的判斷**；引用時要帶資料日期。）
 
 任務（先趨勢、後價值）：
 1. trend_angle：根據趨勢+新聞材料判斷續抱/觀望/考慮出場，並補充5個強化維度：
@@ -782,10 +784,83 @@ def gather_material(ticker, notes):
         trend_material += f"（supertrend_invalidation查詢失敗：{e}）\n"
     trend_material = trend_material or "查無趨勢面資料"
 
+    # 🔴 2026-09-29：總經筆記的 scope 是 "global"，原本只收 `ticker in scope`，
+    # 於是 30 筆總經筆記一筆都沒進過個股判斷（設計上寫「研究員總經層餵投資長」，
+    # 程式上從來沒接到）。Leo 問「升息對銀行股好嗎，孔明沒看到嗎」才發現。
     today_events = "\n".join(f"- [{n['layer']}/{n['source']}] {n['summary'][:300]}" for n in notes
-                             if ticker in n.get("scope", "")) or "（今天沒有直接提到這檔的研究員筆記）"
+                             if ticker in n.get("scope", "") or n.get("scope") == "global"
+                             ) or "（今天沒有直接提到這檔的研究員筆記）"
+    today_events += "\n\n" + macro_context(is_tw)
 
     return sig_key, ai_sig, value_material, trend_material, today_events
+
+
+MACRO_STALE_DAYS = 10   # 每週一更新，超過 10 天沒更新就是那支壞了
+
+
+def macro_context(is_tw=True):
+    """總經背景（2026-09-29）——每週總體判讀＋利率＋電金比＋未來兩週排定事件，**零 AI 呼叫**。
+
+    為什麼放這裡：gather_material 是每日孔明、戰情室 /孔明、一次性報告共用的唯一入口，
+    放這裡三邊一次補齊（孔明「材料不重寫一份」的原則）。
+    ⚠️ 定位是**背景**不是訊號：多鏡頭獨立原則不變，總經不當門檻，不擋任何判斷。
+    ⚠️ 每個數字都帶資料日，過期就明講——舊總經被當成今天的比沒有更糟。
+    """
+    import datetime
+    lines = ["【總經背景（系統每週總體報告與行事曆；背景參考，不因單一總經數字翻轉判斷）】"]
+    try:
+        rows = [json.loads(l) for l in open("state/macro_stance_log.jsonl", encoding="utf-8") if l.strip()]
+        last = {}
+        for r in rows:
+            last[r.get("market")] = r
+        for mkt in (("tw", "us") if is_tw else ("us", "tw")):
+            r = last.get(mkt)
+            if not r:
+                continue
+            ang = "；".join(f"{a.get('name', '').split('（')[0]}{a.get('verdict', '')}" for a in r.get("angles", []))
+            lines.append(f"・{'台股' if mkt == 'tw' else '美股'}每週判讀（{r.get('week_of')}）："
+                         f"{r.get('stance')}——{r.get('headline', '')}（{ang}）")
+    except Exception as e:                                  # noqa: BLE001
+        lines.append(f"・每週總體判讀讀取失敗：{str(e)[:60]}")
+    try:
+        mw = _load_json("state/macro_weekly.json", {}) or {}
+        wk = max(mw) if mw else None
+        if wk:
+            d = mw[wk]
+            um = d.get("us_macro") or {}
+            nums = [f"{um[k]['label']} {um[k]['latest']}{um[k]['unit']}（{um[k]['date']}，{um[k]['delta_label']}{um[k]['delta']:+}）"
+                    for k in ("DGS10", "DGS2", "T10Y2Y", "CPIAUCSL") if um.get(k)]
+            if nums:
+                lines.append("・利率／通膨：" + "；".join(nums))
+            ef = (d.get("tw") or {}).get("ef_ratio")
+            if ef and is_tw:
+                lines.append(f"・電金比（電子類÷金融類指數）{ef['ratio']}，百日均線 {ef['ma100']}，"
+                             f"{'低於' if ef.get('below_ma') else '高於'}均線已連續 {ef.get('streak_days')} 天"
+                             f"（{ef.get('date')}；低於＝金融類比電子類強）")
+            try:
+                age = (datetime.date.today() - datetime.date.fromisoformat(wk)).days
+                if age > MACRO_STALE_DAYS:
+                    lines.append(f"⚠️ 每週總體報告最新一期是 {wk}，已 {age} 天沒更新，上面數字可能過時")
+            except Exception:                               # noqa: BLE001
+                pass
+    except Exception as e:                                  # noqa: BLE001
+        lines.append(f"・利率資料讀取失敗：{str(e)[:60]}")
+    try:
+        from macro_calendar import upcoming_events, FOMC_2026, TW_CBC_2026
+        ev = upcoming_events(days_before=0, days_after=14)
+        if ev:
+            lines.append("・未來兩週排定：" + "；".join(f"{e['date']} {e['event']}" for e in ev[:5]))
+        # 下一次利率會議不管多遠都列——問「會不會再升息」時這是最常缺的一塊
+        td = datetime.date.today().isoformat()
+        nf = next((s for s, _e in FOMC_2026 if s >= td), None)
+        nc = next((d for d in TW_CBC_2026 if d >= td), None)
+        lines.append(f"・下一次利率會議：聯準會 {nf or '（今年已開完，行事曆未更新）'}；"
+                     f"台灣央行 {nc or '（今年已開完，行事曆未更新）'}")
+    except Exception as e:                                  # noqa: BLE001
+        lines.append(f"・行事曆讀取失敗：{str(e)[:60]}")
+    if len(lines) == 1:
+        lines.append("・（查無總經資料）")
+    return "\n".join(lines)
 
 
 def ask_claude(ticker, name, ai_sig, value_material, trend_material, today_events, date,
