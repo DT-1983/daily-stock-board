@@ -145,6 +145,22 @@ def main():
         print("SuperTrend 偵測失敗:", e)
         flips_hold, flips_watch = [], []
 
+    # 2026-09-29：台股急件改在前一天 14:05 收盤後就推（tw_close_alert.py）。
+    # 那邊推過的（state/tw_close_alerts.json，近 4 天）這裡的 Telegram／🚨 不再推一次；
+    # 完整清單照樣寫進 st_flips_today.json，Discord 08:45 日報②段仍會列。
+    all_hold, all_watch = flips_hold, flips_watch
+    try:
+        _tc = json.load(open("state/tw_close_alerts.json", encoding="utf-8")).get("alerts", [])
+        _cut = (datetime.now().date().toordinal() - 4)
+        _sent = {(a["code"], a.get("sig", "st"), a["dir"]) for a in _tc
+                 if datetime.fromisoformat(a["date"]).date().toordinal() >= _cut}
+    except Exception:                                        # noqa: BLE001
+        _sent = set()
+    if _sent:
+        flips_hold = [f for f in all_hold if (f["code"], f.get("sig", "st"), f["dir"]) not in _sent]
+        flips_watch = [f for f in all_watch if (f["code"], f.get("sig", "st"), f["dir"]) not in _sent]
+        print(f"台股收盤急件已推過、晨報略過：{len(all_hold) - len(flips_hold) + len(all_watch) - len(flips_watch)} 則")
+
     # 🔴 2026-09-23（Leo：「discord提醒不夠明顯」——查CEG案例發現持股訊號被埋在
     # 每天一則的大合併日報裡，沒有@提及、也要等08:45排程才發）：持股任何一個訊號
     # 觸發（SuperTrend翻空／RS60跌破），**立刻**另發一則獨立訊息到#持股密報，
@@ -223,7 +239,7 @@ def main():
     os.makedirs("state", exist_ok=True)
     json.dump(cur, open(STATE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
     json.dump({"date": date,   # 2026-08-27 加：讓 daily_warroom 組報時能判斷資料是不是今天的
-               "flips_hold": flips_hold, "flips_watch": flips_watch,
+               "flips_hold": all_hold, "flips_watch": all_watch,  # 完整清單（含前一天台股收盤已推的），給 Discord 日報②段
                "ai_alerts": [{"chain": c, "market": m, "sig": s, "code": code, "name": name,
                               "reason": reason}
                               for c, m, s, code, name, ol, reason in alerts]},
