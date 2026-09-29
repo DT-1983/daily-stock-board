@@ -551,8 +551,15 @@ def material_kongming(question=""):
     except Exception as e:                                  # noqa: BLE001
         return f"（investment_chief.gather_material({code}) 失敗：{str(e)[:150]}）"
     if isinstance(mat, (list, tuple)):
-        keys = ("AI綜合訊號", "價值角度材料", "趨勢角度材料", "今日研究員筆記")
-        mat = "\n\n".join(f"【{k}】\n{v}" for k, v in zip(keys, mat))
+        # 🔴 2026-09-29 修：gather_material 回傳 5 項（第一項是 sig_key 如 "TW:2884"），
+        # 原本只配 4 個標題 → 全部錯位一格：「價值角度」底下其實是 AI 綜合訊號、
+        # 「趨勢角度」底下是估值、「今日研究員筆記」底下是趨勢，真正的研究員筆記被 zip 丟掉。
+        # 自 2026-09-04（4e3bcb6e）起戰情室的孔明一直在讀標題跟內容對不上的材料。
+        keys = ("訊號代號", "AI綜合訊號", "價值角度材料", "趨勢角度材料", "今日研究員筆記與總經背景")
+        if len(mat) != len(keys):
+            return (f"（材料格式對不上：gather_material 回傳 {len(mat)} 項、標題 {len(keys)} 個。"
+                    "請告訴使用者孔明的材料組裝壞了、這次不能判斷，不要用錯位的材料硬答。）")
+        mat ="\n\n".join(f"【{k}】\n{v}" for k, v in zip(keys[1:], mat[1:]))
     # 2026-09-21 Leo：「只留孔明做窗口，後面還是可以跑其它的」。Leo 實際問的多是
     # 「X 市場怎麼看、我們怎麼看」——「市場怎麼看」要新聞，而孔明沒有上網工具
     # （只有龐統能自己查，這是 9/7 定案的邊界：下判斷的人只能用我們自己的管線，數字才回得了頭）。
