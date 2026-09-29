@@ -2,407 +2,195 @@
  "date": "2026-09-29",
  "triggered": [
   [
-   "CTAS",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
+   "ADM",
+   "RS 跌破60MA｜RS(60日) 現值 -2.72（低於自身均線）　收盤 2026-09-28",
    false,
    "trend",
-   "rs_above"
+   "rs_below"
   ],
   [
-   "MCK",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
+   "PPG",
+   "RS 跌破60MA｜RS(60日) 現值 -5.70（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend",
+   "rs_below"
+  ],
+  [
+   "EPD",
+   "RS 跌破60MA｜RS(60日) 現值 -4.61（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend",
+   "rs_below"
+  ],
+  [
+   "KMI",
+   "RS 跌破60MA｜RS(60日) 現值 -4.02（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend",
+   "rs_below"
+  ],
+  [
+   "TSLA",
+   "RS 跌破60MA｜RS(60日) 現值 -0.50（低於自身均線）　收盤 2026-09-28",
    true,
    "trend",
-   "rs_above"
+   "rs_below"
   ],
   [
-   "PYPL",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "RUN",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "ASTS",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "ET",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "KTOS",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "LMT",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "MCD",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "PWR",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "RCL",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "SBUX",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "SLB",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "TFC",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
+   "COHR",
+   "RS 跌破60MA｜RS(60日) 現值 -6.23（低於自身均線）　收盤 2026-09-28",
    true,
    "trend",
-   "rs_above"
+   "rs_below"
   ],
   [
-   "TXN",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "WM",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "WMB",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "ACGL",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
+   "GOOG",
+   "RS 跌破60MA｜RS(60日) 現值 -2.31（低於自身均線）　收盤 2026-09-28",
    true,
    "trend",
-   "rs_above"
+   "rs_below"
   ],
   [
-   "AGO",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   true,
+   "GOOGL",
+   "RS 跌破60MA｜RS(60日) 現值 -1.93（低於自身均線）　收盤 2026-09-28",
+   false,
    "trend",
-   "rs_above"
+   "rs_below"
   ],
   [
-   "C",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   true,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "FNF",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   true,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "ON",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   true,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "PHIN",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   true,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "PHM",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   true,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "R",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   true,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "TM",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   true,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "CEG",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   true,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "LHX",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
+   "3231",
+   "RS 站回60MA｜RS(60日) 現值 +0.06（高於自身均線）　收盤 2026-09-24",
    false,
    "trend",
    "rs_above"
   ],
   [
-   "LLY",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
+   "AUR",
+   "SuperTrend 翻空｜SuperTrend 空方（線 6.88）　收盤 2026-09-28",
+   false,
+   "trend",
+   "supertrend_bear"
+  ],
+  [
+   "AUR",
+   "RS 跌破60MA｜RS(60日) 現值 -16.68（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend",
+   "rs_below"
+  ],
+  [
+   "HUT",
+   "RS 跌破60MA｜RS(60日) 現值 -2.90（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend",
+   "rs_below"
+  ],
+  [
+   "AEM",
+   "SuperTrend 翻空｜SuperTrend 空方（線 205.34）　收盤 2026-09-28",
+   false,
+   "trend",
+   "supertrend_bear"
+  ],
+  [
+   "NDSN",
+   "SuperTrend 翻多｜supertrend_bull　收盤 2026-09-28",
+   false,
+   "trend",
+   "supertrend_bull"
+  ],
+  [
+   "NEM",
+   "SuperTrend 翻空｜SuperTrend 空方（線 128.85）　收盤 2026-09-28",
+   false,
+   "trend",
+   "supertrend_bear"
+  ],
+  [
+   "3576",
+   "RS 站回60MA｜RS(60日) 現值 +0.63（高於自身均線）　收盤 2026-09-24",
    false,
    "trend",
    "rs_above"
   ],
   [
-   "NVS",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
+   "AMAT",
+   "RS 跌破60MA｜RS(60日) 現值 -4.13（低於自身均線）　收盤 2026-09-28",
    false,
    "trend",
-   "rs_above"
+   "rs_below"
   ],
   [
-   "AMZN",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
+   "APLD",
+   "RS 跌破60MA｜RS(60日) 現值 -12.96（低於自身均線）　收盤 2026-09-28",
    false,
    "trend",
-   "rs_above"
+   "rs_below"
   ],
   [
-   "GWW",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
+   "IOT",
+   "RS 跌破60MA｜RS(60日) 現值 -2.12（低於自身均線）　收盤 2026-09-28",
    false,
    "trend",
-   "rs_above"
+   "rs_below"
   ],
   [
-   "MO",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
+   "BSM",
+   "RS 跌破60MA｜RS(60日) 現值 -0.89（低於自身均線）　收盤 2026-09-28",
    false,
    "trend",
-   "rs_above"
+   "rs_below"
   ],
   [
-   "PEP",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
+   "ECHO",
+   "RS 跌破60MA｜RS(60日) 現值 -2.36（低於自身均線）　收盤 2026-09-28",
    false,
    "trend",
-   "rs_above"
+   "rs_below"
   ],
   [
-   "PG",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
+   "T",
+   "SuperTrend 翻空｜SuperTrend 空方（線 26.97）　收盤 2026-09-28",
    false,
    "trend",
-   "rs_above"
+   "supertrend_bear"
   ],
   [
-   "PM",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
+   "KLIC",
+   "RS 跌破60MA｜RS(60日) 現值 -0.93（低於自身均線）　收盤 2026-09-28",
    false,
    "trend",
-   "rs_above"
-  ],
-  [
-   "SEDG",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "SO",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "UL",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "USFD",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "MP",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "CWEN",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "CAT",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "CVS",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "GEV",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "LRCX",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "PH",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "TT",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "WMT",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "AMX",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "ENPH",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "TMUS",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "TPL",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "VNOM",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
-  ],
-  [
-   "VZ",
-   "RS 站回60MA｜RS(60日)　收盤 2026-09-28",
-   false,
-   "trend",
-   "rs_above"
+   "rs_below"
   ]
  ],
  "near": [
   [
-   "1503",
-   "距失效線 194.34 僅 0.9%（現價 196.00）",
+   "3265",
+   "距失效線 179.14 僅 0.5%（現價 180.00）",
    false,
    "value"
   ],
   [
-   "FAST",
-   "距失效線 51.19 僅 1.5%（現價 50.43）",
+   "1503",
+   "距失效線 194.34 僅 0.1%（現價 194.50）",
    false,
+   "value"
+  ],
+  [
+   "UNM",
+   "距失效線 89.51 僅 1.8%（現價 91.12）",
+   true,
    "trend"
   ],
   [
-   "2412",
-   "距失效線 147.42 僅 1.6%（現價 145.00）",
+   "XYLG",
+   "距失效線 29.08 僅 1.8%（現價 29.59）",
+   true,
+   "trend"
+  ],
+  [
+   "FAST",
+   "距失效線 51.19 僅 1.4%（現價 50.49）",
    false,
    "trend"
   ]
@@ -470,7 +258,7 @@
   ],
   [
    "AMD",
-   "單季營收季增達到或超過26%,驗證分析師共識預期兌現",
+   "下季營收季增達+26%以上，代表期待可被消化",
    true,
    "value"
   ],
@@ -548,7 +336,7 @@
   ],
   [
    "MCK",
-   "單季營收季增低於3%且本業EPS轉弱，代表獲利不如預期",
+   "單季營收季增低於+3%，代表全年共識達不到",
    true,
    "value"
   ],
@@ -739,6 +527,12 @@
    "value"
   ],
   [
+   "6691",
+   "單季EPS年增轉負或營收年增低於10%，成長論點失效",
+   false,
+   "value"
+  ],
+  [
    "6944",
    "洪瑞泰品質關由「未過」轉為「通過」（現況本業EPS占比約98%仍未過關）",
    false,
@@ -778,6 +572,18 @@
    "ALAB",
    "洪瑞泰品質關下次更新由未過轉為通過",
    false,
+   "value"
+  ],
+  [
+   "ARKQ",
+   "價格站穩並創近期新高，趨勢轉強",
+   true,
+   "trend"
+  ],
+  [
+   "ARKQ",
+   "補齊貴俗價與成分股估值資料後才可驗證",
+   true,
    "value"
   ],
   [
@@ -1100,7 +906,7 @@
   ],
   [
    "API",
-   "單季本業(核心)營業利益由負轉正（目前本業EPS約-0.01元，靠業外撐帳面EPS）",
+   "下次財報本業營業利益轉正（>0）",
    true,
    "value"
   ],
@@ -1112,13 +918,13 @@
   ],
   [
    "BAYRY",
-   "下次財報後品質關重新通過，且新算出的貴價門檻上修超過現價$14.13，代表原本失效的估值判斷基準有誤",
+   "下季營收季增低於 -1%，共識前提被打破",
    true,
    "value"
   ],
   [
    "BCS",
-   "Q3單季營收季增遠低於-10%(未達最低門檻)",
+   "下半年季營收季增低於-10%（低於共識所需季均7.5B）",
    true,
    "value"
   ],
@@ -1202,7 +1008,7 @@
   ],
   [
    "HSBC",
-   "剩餘兩季任一季營收低於18.8B（季均要求），代表全年營收共識75.7B恐落空，市場預期過度樂觀",
+   "下半年單季營收季增低於-1%，共識要求未達",
    true,
    "value"
   ],
@@ -1232,7 +1038,7 @@
   ],
   [
    "KR",
-   "任一季營收低於34.9B（未達支撐共識150.8B所需的季均水準），顯示預估將被下修",
+   "下季營收季增低於+1%共識隱含要求，預估被下修",
    true,
    "value"
   ],
@@ -1304,7 +1110,7 @@
   ],
   [
    "TM",
-   "單季營收低於13,478.7B，跌破最低成長門檻(季增0%)",
+   "下次財報季營收季增低於-5%，低於共識隱含的約0%",
    true,
    "value"
   ],
@@ -1322,7 +1128,7 @@
   ],
   [
    "UNM",
-   "H2兩季合計營收低於54億(未達共識隱含-18%季減下限)",
+   "單季營收年增轉負，或共識年營收低於12.2B",
    true,
    "value"
   ],
@@ -2429,31 +2235,191 @@
    "月營收連續兩個月止跌回升，脫離7月2.5億→8月1.5億的下滑趨勢",
    false,
    "value"
+  ],
+  [
+   "2645",
+   "下季EPS年增率高於20%且本業占比維持九成以上",
+   false,
+   "value"
   ]
  ],
  "healthy": {
-  "held": 146,
-  "watch": 610
+  "held": 154,
+  "watch": 608
  },
  "uncovered": [
   "00406A",
   "00981A",
   "AAOI",
-  "ARKQ",
   "BRK-B",
   "KNBWY",
   "MRVL",
   "TLT"
  ],
- "covered_count": 70,
+ "covered_count": 71,
  "exit_state": [
+  [
+   "AAOI",
+   true,
+   true
+  ],
+  [
+   "ACGL",
+   true,
+   true
+  ],
+  [
+   "AGO",
+   true,
+   true
+  ],
+  [
+   "ALL",
+   true,
+   true
+  ],
+  [
+   "ARKX",
+   true,
+   true
+  ],
+  [
+   "BA",
+   true,
+   true
+  ],
+  [
+   "BAC",
+   true,
+   true
+  ],
+  [
+   "BCS",
+   true,
+   true
+  ],
+  [
+   "BEN",
+   true,
+   true
+  ],
+  [
+   "BNY",
+   true,
+   true
+  ],
+  [
+   "BWA",
+   true,
+   true
+  ],
+  [
+   "C",
+   true,
+   true
+  ],
+  [
+   "CCL",
+   true,
+   true
+  ],
+  [
+   "CEG",
+   true,
+   true
+  ],
+  [
+   "CI",
+   true,
+   true
+  ],
+  [
+   "CVSA",
+   true,
+   true
+  ],
+  [
+   "FNF",
+   true,
+   true
+  ],
+  [
+   "GLW",
+   true,
+   true
+  ],
+  [
+   "GSK",
+   true,
+   true
+  ],
   [
    "HENKY",
    true,
    true
   ],
   [
+   "HIG",
+   true,
+   true
+  ],
+  [
+   "HSBC",
+   true,
+   true
+  ],
+  [
+   "IX",
+   true,
+   true
+  ],
+  [
+   "JPM",
+   true,
+   true
+  ],
+  [
    "KNBWY",
+   true,
+   true
+  ],
+  [
+   "LH",
+   true,
+   true
+  ],
+  [
+   "MCK",
+   true,
+   true
+  ],
+  [
+   "PHIN",
+   true,
+   true
+  ],
+  [
+   "PHM",
+   true,
+   true
+  ],
+  [
+   "R",
+   true,
+   true
+  ],
+  [
+   "TFC",
+   true,
+   true
+  ],
+  [
+   "TLT",
+   true,
+   true
+  ],
+  [
+   "TM",
    true,
    true
   ],
@@ -2473,84 +2439,34 @@
    true
   ],
   [
-   "AAOI",
-   true,
-   false
+   "AER",
+   false,
+   true
   ],
   [
-   "ACGL",
-   true,
-   false
+   "API",
+   false,
+   true
   ],
   [
-   "AGO",
-   true,
-   false
+   "ARKQ",
+   false,
+   true
   ],
   [
-   "ALL",
-   true,
-   false
+   "BRK-B",
+   false,
+   true
   ],
   [
-   "ARKX",
-   true,
-   false
+   "COHR",
+   false,
+   true
   ],
   [
-   "BA",
-   true,
-   false
-  ],
-  [
-   "BAC",
-   true,
-   false
-  ],
-  [
-   "BCS",
-   true,
-   false
-  ],
-  [
-   "BEN",
-   true,
-   false
-  ],
-  [
-   "BNY",
-   true,
-   false
-  ],
-  [
-   "BWA",
-   true,
-   false
-  ],
-  [
-   "C",
-   true,
-   false
-  ],
-  [
-   "CCL",
-   true,
-   false
-  ],
-  [
-   "CEG",
-   true,
-   false
-  ],
-  [
-   "CI",
-   true,
-   false
-  ],
-  [
-   "CVSA",
-   true,
-   false
+   "CPA",
+   false,
+   true
   ],
   [
    "DNKEY",
@@ -2558,67 +2474,17 @@
    false
   ],
   [
-   "FNF",
-   true,
-   false
+   "GOOG",
+   false,
+   true
   ],
   [
-   "GLW",
-   true,
-   false
-  ],
-  [
-   "GSK",
-   true,
-   false
-  ],
-  [
-   "HIG",
-   true,
-   false
-  ],
-  [
-   "HSBC",
-   true,
-   false
-  ],
-  [
-   "IX",
-   true,
-   false
-  ],
-  [
-   "JPM",
-   true,
-   false
-  ],
-  [
-   "LH",
-   true,
-   false
+   "ON",
+   false,
+   true
   ],
   [
    "PAA",
-   true,
-   false
-  ],
-  [
-   "PHIN",
-   true,
-   false
-  ],
-  [
-   "PHM",
-   true,
-   false
-  ],
-  [
-   "R",
-   true,
-   false
-  ],
-  [
-   "TFC",
    true,
    false
   ],
@@ -2628,14 +2494,14 @@
    false
   ],
   [
-   "TLT",
-   true,
-   false
+   "TSLA",
+   false,
+   true
   ],
   [
-   "TM",
-   true,
-   false
+   "UNM",
+   false,
+   true
   ],
   [
    "006208",
@@ -2678,22 +2544,12 @@
    false
   ],
   [
-   "AER",
-   false,
-   false
-  ],
-  [
    "AES",
    false,
    false
   ],
   [
    "AMD",
-   false,
-   false
-  ],
-  [
-   "API",
    false,
    false
   ],
@@ -2708,17 +2564,7 @@
    false
   ],
   [
-   "ARKQ",
-   false,
-   false
-  ],
-  [
    "BAYRY",
-   false,
-   false
-  ],
-  [
-   "BRK-B",
    false,
    false
   ],
@@ -2734,21 +2580,6 @@
   ],
   [
    "CNH",
-   false,
-   false
-  ],
-  [
-   "COHR",
-   false,
-   false
-  ],
-  [
-   "CPA",
-   false,
-   false
-  ],
-  [
-   "GOOG",
    false,
    false
   ],
@@ -2778,11 +2609,6 @@
    false
   ],
   [
-   "MCK",
-   false,
-   false
-  ],
-  [
    "MRVL",
    false,
    false
@@ -2803,11 +2629,6 @@
    false
   ],
   [
-   "ON",
-   false,
-   false
-  ],
-  [
    "PLTR",
    false,
    false
@@ -2823,22 +2644,12 @@
    false
   ],
   [
-   "TSLA",
-   false,
-   false
-  ],
-  [
    "TSM",
    false,
    false
   ],
   [
    "UHS",
-   false,
-   false
-  ],
-  [
-   "UNM",
    false,
    false
   ],
@@ -2850,110 +2661,278 @@
  ],
  "resolved": [
   [
-   "ADM",
-   "「RS 跌破60MA」條件已不成立｜RS(60日)　收盤 2026-09-28",
+   "CTAS",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -0.24（低於自身均線）　收盤 2026-09-28",
    false,
    "trend"
   ],
   [
-   "PPG",
-   "「RS 跌破60MA」條件已不成立｜RS(60日)　收盤 2026-09-28",
+   "PYPL",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -2.74（低於自身均線）　收盤 2026-09-28",
    false,
    "trend"
   ],
   [
-   "EPD",
-   "「RS 跌破60MA」條件已不成立｜RS(60日)　收盤 2026-09-28",
+   "RUN",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -22.87（低於自身均線）　收盤 2026-09-28",
    false,
    "trend"
   ],
   [
-   "KMI",
-   "「RS 跌破60MA」條件已不成立｜RS(60日)　收盤 2026-09-28",
+   "ASTS",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -5.32（低於自身均線）　收盤 2026-09-28",
    false,
    "trend"
   ],
   [
-   "API",
-   "「RS 跌破60MA」條件已不成立｜RS(60日)　收盤 2026-09-28",
+   "ET",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -3.06（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend"
+  ],
+  [
+   "KTOS",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -14.49（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend"
+  ],
+  [
+   "LMT",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -6.42（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend"
+  ],
+  [
+   "MCD",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -11.78（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend"
+  ],
+  [
+   "PWR",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -0.72（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend"
+  ],
+  [
+   "RCL",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -14.88（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend"
+  ],
+  [
+   "SBUX",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -8.42（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend"
+  ],
+  [
+   "SLB",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -1.04（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend"
+  ],
+  [
+   "TFC",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -7.91（低於自身均線）　收盤 2026-09-28",
    true,
    "trend"
   ],
   [
-   "COHR",
-   "「RS 跌破60MA」條件已不成立｜RS(60日)　收盤 2026-09-28",
+   "WM",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -8.52（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend"
+  ],
+  [
+   "WMB",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -5.60（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend"
+  ],
+  [
+   "ACGL",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -5.12（低於自身均線）　收盤 2026-09-28",
    true,
    "trend"
   ],
   [
-   "GOOG",
-   "「RS 跌破60MA」條件已不成立｜RS(60日)　收盤 2026-09-28",
+   "AGO",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -11.20（低於自身均線）　收盤 2026-09-28",
    true,
    "trend"
   ],
   [
-   "KR",
-   "「RS 跌破60MA」條件已不成立｜RS(60日)　收盤 2026-09-28",
+   "C",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -3.11（低於自身均線）　收盤 2026-09-28",
    true,
    "trend"
   ],
   [
-   "UNM",
-   "「RS 跌破60MA」條件已不成立｜RS(60日)　收盤 2026-09-28",
+   "FNF",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -13.89（低於自身均線）　收盤 2026-09-28",
    true,
    "trend"
   ],
   [
-   "GOOGL",
-   "「RS 跌破60MA」條件已不成立｜RS(60日)　收盤 2026-09-28",
+   "PHIN",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -16.10（低於自身均線）　收盤 2026-09-28",
+   true,
+   "trend"
+  ],
+  [
+   "PHM",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -5.86（低於自身均線）　收盤 2026-09-28",
+   true,
+   "trend"
+  ],
+  [
+   "R",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -8.75（低於自身均線）　收盤 2026-09-28",
+   true,
+   "trend"
+  ],
+  [
+   "CEG",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -3.73（低於自身均線）　收盤 2026-09-28",
+   true,
+   "trend"
+  ],
+  [
+   "LHX",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -13.25（低於自身均線）　收盤 2026-09-28",
    false,
    "trend"
   ],
   [
-   "AUR",
-   "「RS 跌破60MA」條件已不成立｜RS(60日)　收盤 2026-09-28",
+   "LLY",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -0.32（低於自身均線）　收盤 2026-09-28",
    false,
    "trend"
   ],
   [
-   "AMAT",
-   "「RS 跌破60MA」條件已不成立｜RS(60日)　收盤 2026-09-28",
+   "NVS",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -4.03（低於自身均線）　收盤 2026-09-28",
    false,
    "trend"
   ],
   [
-   "APLD",
-   "「RS 跌破60MA」條件已不成立｜RS(60日)　收盤 2026-09-28",
+   "AMZN",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -4.10（低於自身均線）　收盤 2026-09-28",
    false,
    "trend"
   ],
   [
-   "IOT",
-   "「RS 跌破60MA」條件已不成立｜RS(60日)　收盤 2026-09-28",
+   "GWW",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -5.70（低於自身均線）　收盤 2026-09-28",
    false,
    "trend"
   ],
   [
-   "BSM",
-   "「RS 跌破60MA」條件已不成立｜RS(60日)　收盤 2026-09-28",
+   "PEP",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -6.88（低於自身均線）　收盤 2026-09-28",
    false,
    "trend"
   ],
   [
-   "ECHO",
-   "「RS 跌破60MA」條件已不成立｜RS(60日)　收盤 2026-09-28",
+   "SEDG",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -19.79（低於自身均線）　收盤 2026-09-28",
    false,
    "trend"
   ],
   [
-   "SLAB",
-   "「RS 跌破60MA」條件已不成立｜RS(60日)　收盤 2026-09-28",
+   "SO",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -10.12（低於自身均線）　收盤 2026-09-28",
    false,
    "trend"
   ],
   [
-   "KLIC",
-   "「RS 跌破60MA」條件已不成立｜RS(60日)　收盤 2026-09-28",
+   "UL",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -1.10（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend"
+  ],
+  [
+   "USFD",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -8.22（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend"
+  ],
+  [
+   "MP",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -9.23（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend"
+  ],
+  [
+   "CWEN",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -9.29（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend"
+  ],
+  [
+   "CAT",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -3.74（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend"
+  ],
+  [
+   "CVS",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -11.10（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend"
+  ],
+  [
+   "GEV",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -4.66（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend"
+  ],
+  [
+   "PH",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -2.01（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend"
+  ],
+  [
+   "WMT",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -1.78（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend"
+  ],
+  [
+   "AMX",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -10.90（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend"
+  ],
+  [
+   "ENPH",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -20.39（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend"
+  ],
+  [
+   "TMUS",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -7.79（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend"
+  ],
+  [
+   "TPL",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -11.22（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend"
+  ],
+  [
+   "VNOM",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -6.60（低於自身均線）　收盤 2026-09-28",
+   false,
+   "trend"
+  ],
+  [
+   "VZ",
+   "「RS 站回60MA」條件已不成立｜RS(60日) 現值 -1.87（低於自身均線）　收盤 2026-09-28",
    false,
    "trend"
   ]
