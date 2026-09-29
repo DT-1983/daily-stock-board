@@ -156,10 +156,16 @@ def main():
                  if datetime.fromisoformat(a["date"]).date().toordinal() >= _cut}
     except Exception:                                        # noqa: BLE001
         _sent = set()
+    # 2026-09-29 Leo：「重覆推，怕沒看到」→ Telegram 晨報**照樣再推一次**，只在字尾標「昨天收盤已推過」；
+    # Discord 🚨（會 @Leo）不重推——08:45 Discord 日報本來就會完整再列一次。
+    tg_hold, tg_watch = all_hold, all_watch
     if _sent:
+        def _tag(fs):
+            return [dict(f, word=f["word"] + "（昨天收盤已推過）")
+                    if (f["code"], f.get("sig", "st"), f["dir"]) in _sent else f for f in fs]
+        tg_hold, tg_watch = _tag(all_hold), _tag(all_watch)
         flips_hold = [f for f in all_hold if (f["code"], f.get("sig", "st"), f["dir"]) not in _sent]
-        flips_watch = [f for f in all_watch if (f["code"], f.get("sig", "st"), f["dir"]) not in _sent]
-        print(f"台股收盤急件已推過、晨報略過：{len(all_hold) - len(flips_hold) + len(all_watch) - len(flips_watch)} 則")
+        print(f"台股收盤急件昨天已推：晨報重推並標記，🚨 略過 {len(all_hold) - len(flips_hold)} 則")
 
     # 🔴 2026-09-23（Leo：「discord提醒不夠明顯」——查CEG案例發現持股訊號被埋在
     # 每天一則的大合併日報裡，沒有@提及、也要等08:45排程才發）：持股任何一個訊號
@@ -177,10 +183,10 @@ def main():
     has = False
 
     # 1) 持股動態（風險）— SuperTrend 翻面
-    if flips_hold:
+    if tg_hold:
         has = True
         lines.append("💼 <b>持股動態</b>（你的部位 · SuperTrend／RS60）")
-        for f in flips_hold:
+        for f in tg_hold:
             nm = f" {f['name']}" if f['name'] else ""
             lines.append(f"　{f['word']}　<b>{esc(f['code'])}</b>{esc(nm)}")
         lines.append("")
@@ -206,10 +212,10 @@ def main():
         lines.append("")
 
     # 3) 守備清單 — SuperTrend 翻面
-    if flips_watch:
+    if tg_watch:
         has = True
         lines.append("📈 <b>守備清單 — SuperTrend 翻面</b>")
-        for f in flips_watch:
+        for f in tg_watch:
             nm = f" {f['name']}" if f['name'] else ""
             lines.append(f"　{f['word']}　<b>{esc(f['code'])}</b>{esc(nm)}")
         lines.append("")

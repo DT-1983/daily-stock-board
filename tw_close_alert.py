@@ -6,8 +6,8 @@
   - 用**當天收盤**偵測台股持股＋台股守備清單的 SuperTrend 翻轉、台股持股的 RS60 跌破／站回
     （st_alert.detect_tw_close，演算法跟晨報／燈號掃描同一套）
   - 有觸發 → Telegram 一則＋Discord 🚨 持股警示（持股才發）；沒觸發不發，不洗版
-  - 記進 state/tw_close_alerts.json 並推上 repo → 隔天 08:19（GitHub Actions）的晨報／🚨 不再重複推
-    （Discord 08:45 日報②段照樣會列，那是完整彙總）
+  - 記進 state/tw_close_alerts.json 並推上 repo → 隔天 08:19 晨報**照樣重推**並標「昨天收盤已推過」
+    （Leo：「重覆推，怕沒看到」）；Discord 🚨 不重推（08:45 日報②段會再列）
   - 拿不到當天 K 棒（台股休市或資料還沒到）就跳過，不發任何東西
 ⚠️ 這支**不更新** st_state.json／rs60_state.json——狀態仍由隔天 08:19 更新，兩邊比的都是同一份「上一次」。
 用法：python tw_close_alert.py [--dry-run]
