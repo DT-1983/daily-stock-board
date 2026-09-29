@@ -1,5 +1,5 @@
 {
-"date": "2026-09-28",
+"date": "2026-09-29",
 "flips_hold": [
 {
 "code": "API",
@@ -9,14 +9,28 @@
 "sig": "rs60"
 },
 {
-"code": "UNM",
+"code": "KR",
+"name": "",
+"word": "RS60站回多方",
+"dir": 1,
+"sig": "rs60"
+},
+{
+"code": "ARKQ",
 "name": "",
 "word": "RS60跌破自身均線",
 "dir": -1,
 "sig": "rs60"
 },
 {
-"code": "MCK",
+"code": "XYLG",
+"name": "",
+"word": "RS60跌破自身均線",
+"dir": -1,
+"sig": "rs60"
+},
+{
+"code": "UNM",
 "name": "",
 "word": "RS60跌破自身均線",
 "dir": -1,
@@ -31,6 +45,13 @@
 },
 {
 "code": "ARKX",
+"name": "",
+"word": "RS60跌破自身均線",
+"dir": -1,
+"sig": "rs60"
+},
+{
+"code": "MCK",
 "name": "",
 "word": "RS60跌破自身均線",
 "dir": -1,

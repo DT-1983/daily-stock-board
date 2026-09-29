@@ -1,37 +1,37 @@
 {
- "updated": "2026-09-28 23:20",
+ "updated": "2026-09-29 08:47",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
    "date": "09/28",
-   "close": 7678.81,
-   "chg_pct": -0.83
+   "close": 7683.69,
+   "chg_pct": -0.77
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
    "date": "09/28",
-   "close": 26793.57,
-   "chg_pct": -1.02
+   "close": 26820.38,
+   "chg_pct": -0.92
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
    "date": "09/28",
-   "close": 51464.47,
-   "chg_pct": -0.7
+   "close": 51481.51,
+   "chg_pct": -0.67
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
    "date": "09/28",
-   "close": 12300.36,
-   "chg_pct": -2.91
+   "close": 12465.24,
+   "chg_pct": -1.61
   },
   {
    "sym": "^TWII",
@@ -45,80 +45,80 @@
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/28",
-   "close": 31.8,
-   "chg_pct": -0.04
+   "date": "09/29",
+   "close": 31.77,
+   "chg_pct": -0.01
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
    "date": "09/28",
-   "close": 5.26,
+   "close": 5.24,
    "fmt": "yield",
-   "chg_bp": 7.9
+   "chg_bp": 5.6
   }
  ],
  "news": [
   {
-   "title": "SpaceX商業化邁關鍵一步！星艦首次成功入軌 搭載26顆V3星鏈衛星開啟「賺錢」任務",
+   "title": "美中互開300億降稅清單 川普否認向中國賣武器",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6617308",
-   "ts": "09/28 23:20"
+   "url": "https://news.cnyes.com/news/id/6617391",
+   "ts": "09/29 08:40"
   },
   {
-   "title": "盤中速報 - 費城半導體大跌3%，報12289.43點",
+   "title": "中秋連假過後，這個最重要的事情來了！新一輪漲聲響起，留意這個產業！",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6614906",
+   "ts": "09/29 08:30"
+  },
+  {
+   "title": "普丁簽總統令 俄軍擴編至244萬人",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6617313",
-   "ts": "09/28 23:02"
+   "url": "https://news.cnyes.com/news/id/6617478",
+   "ts": "09/29 08:20"
   },
   {
-   "title": "盤中速報 - 邁威爾科技(MRVL-US)大跌5.02%，報248.78美元",
+   "title": "Meta下跌4.8% 為何Muse AI漲勢已開始降溫？",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6617312",
-   "ts": "09/28 23:02"
+   "url": "https://news.cnyes.com/news/id/6617419",
+   "ts": "09/29 08:20"
   },
   {
-   "title": "非農還沒公布先翻多！摩根大通交易員看好美股續攻、力挺AI行情",
+   "title": "美伊衝突加劇 鴻海等老AI、國巨等被動、南亞科等記憶體 今天先跑先贏!?",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6617495",
+   "ts": "09/29 08:15"
+  },
+  {
+   "title": "川普否認願給制裁與資產讓步！伊朗悲觀：11月前難達協議 選後衝突恐升級",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6617289",
-   "ts": "09/28 23:00"
+   "url": "https://news.cnyes.com/news/id/6617468",
+   "ts": "09/29 08:10"
   },
   {
-   "title": "防「智能爆炸」！WSJ：OpenAI、Anthropic、Meta和微軟AI研究負責人聯名呼籲審查AI研究自動化",
+   "title": "Gemini 4不用等到年底 Google DeepMind負責人透露新進度",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6617301",
-   "ts": "09/28 22:45"
+   "url": "https://news.cnyes.com/news/id/6617330",
+   "ts": "09/29 08:10"
   },
   {
-   "title": "金屬中心董事長交棒 由台灣金屬熱處理學會理事長吳忠春接任",
+   "title": "【5萬點倒數？】台股連假後變盤！這三大族群最有機會噴",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6617162",
-   "ts": "09/28 17:57"
+   "url": "https://news.cnyes.com/news/id/6617469",
+   "ts": "09/29 07:47"
   },
   {
-   "title": "〈VSMC開幕〉VSMC一期全滿 方略：二期規劃加速 不排除導入28/22奈米",
+   "title": "AI放空潮擴大！放空者瞄準包括台股「兩家公司」、AI投資進入個股淘汰賽",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6617143",
-   "ts": "09/28 16:28"
+   "url": "https://news.cnyes.com/news/id/6616465",
+   "ts": "09/29 07:10"
   },
   {
-   "title": "〈VSMC開幕〉方略：產能已經「徹底爆掉」 成熟製程缺貨恐延續多年",
+   "title": "〈台股盤前要聞〉長假過後 4萬8攻防再起、世界先進曝8吋產能利用率「滿到爆」",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6617135",
-   "ts": "09/28 16:10"
-  },
-  {
-   "title": "無懼單月調節！外資上櫃持股市值比攀24.61%新高 護國群山撐起5兆市值",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6605200",
-   "ts": "09/28 13:49"
-  },
-  {
-   "title": "〈VSMC開幕〉VSMC建廠僅花20.5個月創新紀錄 第二期挑戰18個月",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6617066",
-   "ts": "09/28 12:24"
+   "url": "https://news.cnyes.com/news/id/6609525",
+   "ts": "09/29 05:10"
   }
  ],
  "inst": {
