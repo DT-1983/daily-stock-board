@@ -528,6 +528,95 @@ def summary_lines():
     return out
 
 
+def _tk_key(tk):
+    return re.sub(r"\.(TW|TWO)$", "", str(tk or "").upper())
+
+
+def _live_reports():
+    store = _load(STORE, {})
+    return [r for r in store.values()
+            if r.get("ticker") and not r.get("_notreport") and not r.get("_superseded_by")]
+
+
+def _target_text(r):
+    """目標價＋跟前次比＋報告日收盤到目標的空間。只用報告自己的數字，不另外抓價。"""
+    t, tp, c = r.get("target"), r.get("target_prev"), r.get("close_at_report")
+    s = f"目標價 {t if t is not None else '—'}"
+    try:
+        if tp and t and float(tp) != float(t):
+            s += f"（前次 {tp} {'▲' if float(t) > float(tp) else '▼'}）"
+        if c and t:
+            s += f"｜報告日收盤 {c}，空間 {(float(t) / float(c) - 1) * 100:+.0f}%"
+    except (TypeError, ValueError):
+        pass
+    return s
+
+
+def brief_lines(code, n=3):
+    """軍師材料用（2026-09-29 Leo：「未來在軍師之中，記得有出這些報告，會提及內容或目標價」）。
+    原本只給日期／券商／評等／目標價＋60 字估值依據，論點與風險都沒進材料 → 軍師講不出報告在說什麼。"""
+    reps = [r for r in _live_reports() if _tk_key(r.get("ticker")) == _tk_key(code)]
+    out = []
+    for r in sorted(reps, key=lambda x: str(x.get("date")), reverse=True)[:n]:
+        out.append(f"  📑 券商報告 {r.get('date')} {r.get('broker')}｜{r.get('rating') or '—'}"
+                   f"（前次 {r.get('rating_prev') or '—'}）｜{_target_text(r)}")
+        if r.get("valuation_basis"):
+            out.append(f"     估值依據：{str(r['valuation_basis'])[:120]}")
+        if r.get("thesis"):
+            out.append(f"     論點：{str(r['thesis'])[:160]}")
+        kps = r.get("key_points") or []
+        nc = [k.get("text") for k in kps if isinstance(k, dict) and k.get("type") == "nonconsensus"]
+        if nc:
+            out.append(f"     報告認為市場沒注意到的：{str(nc[0])[:140]}")
+        risks = [x if isinstance(x, str) else (x or {}).get("text", "") for x in (r.get("risks") or [])]
+        risks = [x for x in risks if x]
+        if risks:
+            out.append(f"     報告列的風險：{'；'.join(risks[:3])[:160]}")
+    return out
+
+
+def recent_lines(days=7, limit=10):
+    """最近 N 天新解析的報告清單——給軍師當背景（沒點名個股時也知道最近收到哪些）。"""
+    since = (dt.date.today() - dt.timedelta(days=days)).isoformat()
+    rows = [r for r in _live_reports() if str(r.get("_parsed") or "") >= since]
+    if not rows:
+        return []
+    rows.sort(key=lambda r: (str(r.get("_parsed")), str(r.get("date"))), reverse=True)
+    out = [f"【近 {days} 天新收到的投顧報告】{len(rows)} 份（依解析日新到舊；問到這些股票時要提報告的目標價與論點）"]
+    for r in rows[:limit]:
+        out.append(f"  · {r.get('name')}({r.get('ticker')}) {r.get('broker')} {r.get('date')}"
+                   f"｜{r.get('rating') or '—'}｜{_target_text(r)}"
+                   + (f"｜{str(r.get('thesis'))[:60]}" if r.get("thesis") else ""))
+    if len(rows) > limit:
+        out.append(f"  …另有 {len(rows) - limit} 份")
+    return out
+
+
+ANNOUNCED = "state/advisor_reports_announced.json"
+
+
+def _announced():
+    a = _load(ANNOUNCED, None)
+    if a is None:
+        # 第一次：把今天以前解析的當作已經報過，避免一次灌出全部舊報告
+        today = dt.date.today().isoformat()
+        a = sorted({r.get("_file") for r in _live_reports() if str(r.get("_parsed") or "") < today})
+        _save(ANNOUNCED, a)
+    return set(a)
+
+
+def pending_announce():
+    """還沒在 Discord 報過的新報告（2026-09-29：原本只列 `_parsed == 今天`，
+    08:45 之後才解析的報告——例如 Discord /上傳報告 當場解析的——隔天就變成「昨天」，永遠不會被報）。"""
+    seen = _announced()
+    return [r for r in _live_reports() if r.get("_file") and r["_file"] not in seen]
+
+
+def mark_announced(rows):
+    seen = _announced() | {r.get("_file") for r in rows if r.get("_file")}
+    _save(ANNOUNCED, sorted(x for x in seen if x))
+
+
 def new_today_lines(date=None):
     """今天新解析的投顧報告（2026-09-16 Leo：「目標價、報告html摘要推送到discord，
     只要摘要更新了什麼就好，要細目我上Google drive看就好」）。
@@ -539,20 +628,18 @@ def new_today_lines(date=None):
     但顯然是「今天更新了什麼」的一部分——不分券商信任層級，這裡只回報
     「有沒有」，不是「準不準」（可信度那把關留給 target_changes 自己的邏輯）。
     """
-    date = date or dt.date.today().isoformat()
-    store = _load(STORE, {})
-    fresh = [r for r in store.values()
-             if r.get("_parsed") == date and r.get("ticker")
-             and not r.get("_notreport") and not r.get("_superseded_by")]
+    # 2026-09-29 Leo：「discord 提醒更新了那些?」→ 改成「還沒報過的」（不再只看解析日＝今天，
+    # 08:45 之後才解析的也不會漏），一檔一行＋論點一句。發送成功後由 daily_warroom 呼叫 mark_announced()。
+    fresh = sorted(pending_announce(), key=lambda r: (str(r.get("ticker")), str(r.get("date"))))
     if not fresh:
         return []
-    out = ["・📑 今日新解析投顧報告："]
-    for r in fresh[:8]:
-        out.append(f"　· {r.get('name')}({r['ticker']}) {r.get('broker')}"
-                   f"｜{r.get('rating') or '—'}｜目標價 {r.get('target') or '—'}"
-                   f"（整合報告已更新）")
-    if len(fresh) > 8:
-        out.append(f"　...另有 {len(fresh) - 8} 檔，obis 個股整合報告資料夾可查")
+    out = [f"・📑 新收到的投顧報告（{len(fresh)} 份）："]
+    for r in fresh[:10]:
+        out.append(f"**{r.get('ticker')} {r.get('name')}**　{r.get('broker')}　{r.get('rating') or '—'}　{_target_text(r)}")
+        if r.get("thesis"):
+            out.append(f"-# 　{str(r['thesis'])[:70]}")
+    if len(fresh) > 10:
+        out.append(f"-# 　…另有 {len(fresh) - 10} 份，obis 個股整合報告資料夾可查")
     return out
 
 

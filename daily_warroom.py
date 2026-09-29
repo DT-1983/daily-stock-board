@@ -1028,7 +1028,15 @@ def main():
         if args.dry_run:
             print(f"\n───── {ch} ─────\n{msg}")
         else:
-            print(f"[{ch}→戰情室]", _send(ch, msg, "戰情室", f"{ch}/all"))
+            ok_ = _send(ch, msg, "戰情室", f"{ch}/all")
+            print(f"[{ch}→戰情室]", ok_)
+            # 新投顧報告在密報「今日報告更新」報過了才標記，發送失敗就隔天再報（不會漏）
+            if ok_ and ch == "private" and "新收到的投顧報告" in msg:
+                try:
+                    import advisor_reports
+                    advisor_reports.mark_announced(advisor_reports.pending_announce())
+                except Exception as e:                      # noqa: BLE001
+                    print(f"[warroom] 投顧報告已報標記失敗：{e}")
 
     # P3 預估前提檢查——**獨立一則**（Leo 2026-08-28：「多一則」），一週一次（週一）。
     # 持股→持股密報、非持股→#財報（不是#每日戰情：這是估值前提不是當日戰況，

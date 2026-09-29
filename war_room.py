@@ -225,16 +225,16 @@ def _one_stock_block(code, nm=""):
                      f"｜資料日 {row.get('asof')}")
     else:
         lines.append("  ⚠️ **不在每日燈號掃描母體**——我們沒有這檔的技術面資料。")
-    st = _load("state/advisor_reports.json", {}) or {}
-    reps = [r for r in st.values()
-            if not r.get("_notreport")
-            and _re.sub(r"\.(TW|TWO)$", "", str(r.get("ticker", "")).upper())
-            == _re.sub(r"\.(TW|TWO)$", "", str(code).upper())]
-    if reps:
-        for r in sorted(reps, key=lambda x: str(x.get("date")), reverse=True)[:3]:
-            lines.append(f"  券商報告：{r.get('date')} {r.get('broker')} "
-                         f"{r.get('rating')} 目標價 {r.get('target')}"
-                         f"｜依據 {(r.get('valuation_basis') or '')[:60]}")
+    # 2026-09-29 Leo：「未來在軍師之中，記得有出這些報告，會提及內容或目標價」——
+    # 原本只給日期／券商／評等／目標價＋60 字估值依據，論點、市場沒注意到的點、風險都沒進材料。
+    try:
+        import advisor_reports
+        rep_lines = advisor_reports.brief_lines(code, n=3)
+    except Exception as e:                                  # noqa: BLE001
+        rep_lines = [f"  券商研究報告：讀取失敗（{str(e)[:60]}）"]
+    if rep_lines:
+        lines.append("  （以下券商報告的論點是**券商的看法**，不是事實；引用時要說是哪家、哪天的報告）")
+        lines += rep_lines
     else:
         lines.append("  券商研究報告：無")
     reg = _load("state/thesis_conditions.json", {}) or {}
@@ -891,6 +891,16 @@ def ask_meta(role, question=None, limit=None, prior=None, resume=None,
         named = _unresolved_block(question)
     if named:
         mat = named + "\n\n" + mat
+    # 2026-09-29：近 7 天新收到的投顧報告——沒點名個股時軍師也知道最近有哪些報告（Leo 要求會提及）
+    try:
+        import advisor_reports
+        _rl = advisor_reports.recent_lines(days=7, limit=10)
+        if _rl:
+            # 放在點名個股之後、其他材料之前——材料太長會被截斷，放最後可能被切掉
+            _blk = "\n".join(_rl)
+            mat = (named + "\n\n" + _blk + "\n\n" + mat[len(named) + 2:]) if named else (_blk + "\n\n" + mat)
+    except Exception:                                       # noqa: BLE001
+        pass
     # 前面軍師講了什麼（2026-09-06 Leo 同意先只在仲達身上試）。
     # 目的：仲達不要重講一次現況，而是針對**孔明剛下的判斷**講風險。
     #
