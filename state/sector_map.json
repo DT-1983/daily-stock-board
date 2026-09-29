@@ -2770,5 +2770,185 @@
     "industry": "Packaged Software",
     "exchange": "NASDAQ",
     "asof": "2026-09-29"
+  },
+  "1210": {
+    "sector": "Process Industries",
+    "industry": "Agricultural Commodities/Milling",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "1215": {
+    "sector": "Process Industries",
+    "industry": "Agricultural Commodities/Milling",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "1216": {
+    "sector": "Retail Trade",
+    "industry": "Food Retail",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "1231": {
+    "sector": "Consumer Non-Durables",
+    "industry": "Food: Major Diversified",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "1304": {
+    "sector": "Process Industries",
+    "industry": "Industrial Specialties",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "1307": {
+    "sector": "Process Industries",
+    "industry": "Textiles",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "1707": {
+    "sector": "Health Technology",
+    "industry": "Pharmaceuticals: Other",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "2062": {
+    "sector": "Non-Energy Minerals",
+    "industry": "Other Metals/Minerals",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "2103": {
+    "sector": "Process Industries",
+    "industry": "Chemicals: Specialty",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "2108": {
+    "sector": "Process Industries",
+    "industry": "Chemicals: Specialty",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "2338": {
+    "sector": "Electronic Technology",
+    "industry": "Semiconductors",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "2357": {
+    "sector": "Electronic Technology",
+    "industry": "Computer Processing Hardware",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "2363": {
+    "sector": "Electronic Technology",
+    "industry": "Semiconductors",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "2388": {
+    "sector": "Electronic Technology",
+    "industry": "Semiconductors",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "2392": {
+    "sector": "Electronic Technology",
+    "industry": "Computer Communications",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "2527": {
+    "sector": "Consumer Durables",
+    "industry": "Homebuilding",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "2801": {
+    "sector": "Finance",
+    "industry": "Regional Banks",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "2838": {
+    "sector": "Finance",
+    "industry": "Regional Banks",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "2851": {
+    "sector": "Finance",
+    "industry": "Multi-Line Insurance",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "3015": {
+    "sector": "Electronic Technology",
+    "industry": "Electronic Production Equipment",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "4938": {
+    "sector": "Electronic Technology",
+    "industry": "Computer Processing Hardware",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "5608": {
+    "sector": "Transportation",
+    "industry": "Marine Shipping",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "5871": {
+    "sector": "Finance",
+    "industry": "Finance/Rental/Leasing",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "8422": {
+    "sector": "Industrial Services",
+    "industry": "Environmental Services",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "9105": {
+    "sector": "Electronic Technology",
+    "industry": "Computer Peripherals",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "9925": {
+    "sector": "Commercial Services",
+    "industry": "Miscellaneous Commercial Services",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "9940": {
+    "sector": "Finance",
+    "industry": "Real Estate Development",
+    "exchange": "TWSE",
+    "asof": "2026-09-29"
+  },
+  "1788": {
+    "sector": "Health Technology",
+    "industry": "Medical Specialties",
+    "exchange": "TPEX",
+    "asof": "2026-09-29"
+  },
+  "3211": {
+    "sector": "Producer Manufacturing",
+    "industry": "Electrical Products",
+    "exchange": "TPEX",
+    "asof": "2026-09-29"
+  },
+  "8437": {
+    "sector": "Consumer Services",
+    "industry": "Other Consumer Services",
+    "exchange": "TPEX",
+    "asof": "2026-09-29"
   }
 }
