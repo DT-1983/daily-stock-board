@@ -186,6 +186,23 @@ def stream_claude_meta(prompt, resume=None, tools=None,
     return txt.strip(), meta
 
 
+def cli_error_text(r):
+    """claude -p 失敗時的真正原因。
+
+    2026-09-29：Claude CLI 登入過期（"OAuth session expired and could not be refreshed"），
+    9/28、9/29 兩天所有 AI 判讀失敗，log 卻只有「claude 失敗 (exit 1): 」——
+    `--output-format json` 模式把錯誤寫在 stdout 的 result 欄位，stderr 是空的，
+    原本只印 stderr 所以原因整個看不見。先讀 JSON 的 result，再退回 stderr／stdout。
+    """
+    try:
+        d = json.loads((r.stdout or "").strip() or "{}")
+        if d.get("is_error") or d.get("result"):
+            return str(d.get("result") or d.get("terminal_reason") or "")[:300]
+    except ValueError:
+        pass
+    return ((r.stderr or "").strip() or (r.stdout or "").strip())[:300]
+
+
 def ask_claude_meta(prompt, resume=None, tools=None):
     """headless claude -p，回 (回答文字, meta)。
 
@@ -220,7 +237,7 @@ def ask_claude_meta(prompt, resume=None, tools=None):
     r = subprocess.run(cmd, input=prompt, capture_output=True, text=True,
                        encoding="utf-8", errors="replace", timeout=TIMEOUT)
     if r.returncode != 0:
-        raise RuntimeError(f"claude 失敗 (exit {r.returncode}): {(r.stderr or '')[:300]}")
+        raise RuntimeError(f"claude 失敗 (exit {r.returncode}): {cli_error_text(r)}")
     raw = (r.stdout or "").strip()
     if not raw:
         raise RuntimeError("claude 回空字串")

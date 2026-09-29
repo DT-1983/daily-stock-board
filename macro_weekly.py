@@ -606,7 +606,7 @@ def _ask_once(prompt):
         input=prompt, capture_output=True, text=True,
         encoding="utf-8", errors="replace", timeout=600)
     if r.returncode != 0:
-        raise RuntimeError(f"claude 失敗 (exit {r.returncode}): {(r.stderr or '')[:300]}")
+        raise RuntimeError(f"claude 失敗 (exit {r.returncode}): {__import__('llm_board').cli_error_text(r)}")
     out = json.loads(r.stdout)
     if out.get("is_error"):
         raise RuntimeError(f"claude 回錯誤：{str(out)[:300]}")
