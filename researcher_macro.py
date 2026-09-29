@@ -113,7 +113,7 @@ def _ask_claude(events, date, anomalies=None, kw_hits=None, headlines=None):
         encoding="utf-8", errors="replace", timeout=300,
     )
     if r.returncode != 0:
-        raise RuntimeError(f"claude 失敗 (exit {r.returncode}): {(r.stderr or '')[:300]}")
+        raise RuntimeError(f"claude 失敗 (exit {r.returncode}): {__import__('llm_board').cli_error_text(r)}")
     out = json.loads(r.stdout)
     if out.get("is_error"):
         raise RuntimeError(f"claude 回錯誤: {out}")
