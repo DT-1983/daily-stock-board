@@ -643,15 +643,26 @@ def _check_staleness(rows, max_stale_frac=0.15):
     # 週末日期不可當基準（2026-09-21：台股快取曾混進 Yahoo 的假週日列，max 變成週日，
     # 把資料正常的美股全判成過期）。price_store 已擋，這裡再防一層。
     import datetime as _dt
-    wd = [a for a in asofs if _dt.date.fromisoformat(a).weekday() < 5]
-    latest = max(wd) if wd else max(asofs)
-    stale = [r for r in rows if r.get("asof") and r["asof"] != latest]
+    # 🔴 2026-09-29：基準要**台股、美股各自算**。原本兩個市場共用一個 latest——
+    # 台美股最後交易日本來就常不同（時差、各自休市：9/25-9/28 台股沒有新資料、美股有），
+    # 只要兩邊不同步，其中一整個市場就被判成「過期」（9/28、9/29 都誤報，Leo 收到
+    # 「combo_scan failed」）。原本要抓的「同一市場裡大量抓價失敗」照樣抓得到。
+    def _mkt(r):
+        return "tw" if str(r.get("ticker", ""))[:1].isdigit() else "us"
+    latest_by = {}
+    for m in ("tw", "us"):
+        a = [r["asof"] for r in rows if r.get("asof") and _mkt(r) == m]
+        wd = [x for x in a if _dt.date.fromisoformat(x).weekday() < 5]
+        if a:
+            latest_by[m] = max(wd) if wd else max(a)
+    stale = [r for r in rows if r.get("asof") and r["asof"] != latest_by.get(_mkt(r))]
     frac = len(stale) / len(rows) if rows else 0
     if frac < max_stale_frac:
         return False
     by_date = Counter(r["asof"] for r in stale)
+    latest = "／".join(f"{'台股' if m == 'tw' else '美股'} {d}" for m, d in latest_by.items())
     print(f"\n🔴🔴 警告：{len(stale)}/{len(rows)}（{frac*100:.0f}%）檔的資料日"
-          f"沒對到這次掃描實際拿到的最新日期（{latest}）——"
+          f"沒對到同市場這次實際拿到的最新日期（{latest}）——"
           f"疑似這次排程抓價時大量靜默失敗、退回舊快取，不是這幾檔本來就"
           f"查不到資料。回傳碼不會反映這個問題，只有這段檢查抓得到。")
     for dt_, n in by_date.most_common(6):
