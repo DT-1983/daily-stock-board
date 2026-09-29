@@ -418,14 +418,15 @@ def sec_relay(date, scope="public"):
             continue
         total += len(rows)
         rows.sort(key=lambda r: -(r.get("rs_pct") or 0))
-        bits = []
+        # 2026-09-29 Leo：「排的很亂…像上面燈號一樣整理 一檔一條」→ 跟⭐⭐四燈段同格式
+        lines.append(f"{flag} {'台股' if m == 'tw' else '美股'}（{len(rows)} 檔）")
         for r in rows[:8]:
             v = r.get("d60")
-            dv = "" if v is None else f" {icon.get(avwap.tier(v, dist), '')}{v:+.0f}%"
+            dv = "" if v is None else f"　距60日成本 {icon.get(avwap.tier(v, dist), '')}{v:+.0f}%"
             nm = tkname(r["ticker"]) if m == "tw" else r["ticker"]
-            bits.append(f"{nm}{dv}")
-        more = f"　…另有 {len(rows)-8} 檔" if len(rows) > 8 else ""
-        lines.append(f"{flag} " + "、".join(bits) + more)
+            lines.append(f"**{nm}**　RS {r.get('rs_pct', '—')}{dv}")
+        if len(rows) > 8:
+            lines.append(f"-# 　…另有 {len(rows)-8} 檔")
     if not lines:
         return []
     head = ("**⚡ 持股出現接力訊號**" if priv else
@@ -434,7 +435,7 @@ def sec_relay(date, scope="public"):
         from board_theme import PAGES_URL as _P
     except Exception:                                       # noqa: BLE001
         _P = "https://dt-1983.github.io/daily-stock-board"
-    return [head] + lines + [f"-# 數字＝距 60 日平均成本：🔴 全市場最偏離前 1%　🟡 前 1～5%（偏離程度，只顯示、不影響訊號）"
+    return [head] + lines + [f"-# RS＝全市場百分位　🔴 距成本最偏離前 1%　🟡 前 1～5%（只顯示、不影響訊號）"
                              f"　🔗 [完整清單]({_P}/rotation.html)"]
 
 

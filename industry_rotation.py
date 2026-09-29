@@ -1957,8 +1957,15 @@ function renderRelayPanel() {
     mrelay: MR ? '今天全市場沒有個股同時出現兩個轉強訊號。' : '全市場掃描資料還沒產生（每天 07:00 更新）。',
     mtop: '全市場掃描資料還沒產生（每天 07:00 更新）。'
   }[relayMode];
+  // 2026-09-29 Leo：「這個幫我加 台股、美股按鍵」——面板裡直接切市場，不用捲回頁首。
+  // 按下去等於按頁首的市場切換（#mktSeg），兩邊永遠同步，圖和清單一起換。
+  var mkBtns = [['tw', '🇹🇼 台股'], ['us', '🇺🇸 美股']].map(function(x) {
+    return '<button type="button" class="rmbtn rmmk' + (curM === x[0] ? ' on' : '') +
+           '" onclick="relaySetMarket(\\'' + x[0] + '\\')">' + x[1] + '</button>';
+  }).join('');
   el.innerHTML =
-    '<div class="rrgnotehd">⭐ 強勢股篩選：產業裡哪幾檔在帶頭（參考老墨技術面選股組合）</div>' +
+    '<div class="rrgnotehd rmhd"><span>⭐ 強勢股篩選：產業裡哪幾檔在帶頭（參考老墨技術面選股組合）</span>' +
+    '<span class="rmmks">' + mkBtns + '</span></div>' +
     '<div class="relaymk">' + mkLine + '</div>' +
     '<div class="rmbtns">' + btns + '</div>' +
     '<div class="rmdesc">' + desc + '</div>' +
@@ -1966,6 +1973,11 @@ function renderRelayPanel() {
                 : '<div class="rrgexpempty">' + empty + '</div>') +
     '<div class="rrgnotedim">產業屬於哪個象限，會跟著上方選的「計算週期」和「基準」變；個股排名固定用最近半年、跟大盤比。'
     + '名單只是研究起點，不構成投資建議。</div>';
+}
+
+function relaySetMarket(m) {
+  var b = document.querySelector('#mktSeg button[data-m="' + m + '"]');
+  if (b && curM !== m) b.click();
 }
 
 function toggleExpand(key) {
@@ -2378,6 +2390,9 @@ CSS_EXTRA = """
  padding:6px 12px;border-radius:8px;cursor:pointer;font-family:inherit}
 .jumpbtn:hover{background:#ffb020;color:#04070f}
 .rmbtns{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 10px}
+.rmhd{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px}
+.rmmks{display:inline-flex;gap:6px}
+.rmmks .rmbtn{padding:4px 12px;font-size:12px}
 .rmbtn{background:#0e1830;border:1px solid #2a3550;color:#8fb0d6;font-size:12.5px;padding:7px 12px;border-radius:8px;
  cursor:pointer;font-family:inherit}
 .rmbtn:hover{border-color:#25e6ff;color:#cfe6ff}
