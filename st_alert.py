@@ -210,23 +210,36 @@ def _dirs_dated(yf_syms):
     return out
 
 
-def detect_tw_close(today):
-    """台股收盤後（14:05 本機排程）用**當天收盤**偵測台股的急件，**不寫任何狀態檔**
-    （狀態仍由隔天 08:19 的 detect_flips() 更新，兩邊比的是同一份「上一次」）。
-    2026-09-29 Leo：「台股 telegram 早點做」——原本台股 13:30 收盤要等到隔天 08:19 才推（約 19 小時）。
-    回 (flips_hold, flips_watch, fresh_ratio)；fresh_ratio＝拿到當天 K 棒的比例（休市或資料還沒到就很低）。"""
+def detect_close(market, today):
+    """收盤後用**最新收盤**偵測急件（本機排程：台股平日 14:05、美股週二～六 05:35），**不寫任何狀態檔**
+    （狀態仍由 08:19 的 detect_flips() 更新，兩邊比的是同一份「上一次」）。
+    2026-09-29 Leo：「台股 telegram 早點做」「美股也可以提早嗎? 同一個邏輯」。
+    - 台股：基準日＝今天（台灣日期）；美股：基準日＝這批資料最新的交易日（台灣清晨看到的是美國前一個交易日），
+      且不能早於 4 天前。
+    回 (flips_hold, flips_watch, fresh_ratio, bar_date)；fresh_ratio＝拿到基準日 K 棒的比例（休市或資料還沒到就很低）。"""
+    import datetime as _d
     holdings = _live_holdings()
-    tw_hold = sorted(t for t in holdings if str(t)[:1].isdigit())
-    scr = json.load(open("screen_result.json", encoding="utf-8")) if os.path.exists("screen_result.json") else {"tw": {}}
-    tw_watch = sorted({x["code"] for l in (scr.get("tw") or {}).values() for x in l})
-    got = dict(_dirs_dated(tw_hold))                                 # 持股：鍵含後綴（跟 st_state 一致）
-    got.update(tw_symbol.batch_with_otc(tw_watch, _dirs_dated))      # 守備：鍵是裸代號（跟 st_state 一致）
+    is_tw = market == "tw"
+    hold = sorted(t for t in holdings if str(t)[:1].isdigit() == is_tw)
+    scr = json.load(open("screen_result.json", encoding="utf-8")) if os.path.exists("screen_result.json") else {}
+    watch = sorted({x["code"] for l in (scr.get(market) or {}).values() for x in l})
+    got = dict(_dirs_dated(hold))                                    # 持股：鍵同 st_state（台股含後綴）
+    if is_tw:
+        got.update(tw_symbol.batch_with_otc(watch, _dirs_dated))     # 台股守備：裸代號（同 st_state）
+    else:
+        got.update(_dirs_dated([w for w in watch if w not in got]))
     if not got:
-        return [], [], 0.0
-    fresh = {k: v for k, v in got.items() if v[1] == today}
+        return [], [], 0.0, None
+    if is_tw:
+        bar_date = today
+    else:
+        bar_date = max(v[1] for v in got.values())
+        if bar_date < (_d.date.fromisoformat(today) - _d.timedelta(days=4)).isoformat():
+            return [], [], 0.0, bar_date
+    fresh = {k: v for k, v in got.items() if v[1] == bar_date}
     ratio = len(fresh) / len(got)
     prev = json.load(open(ST_STATE, encoding="utf-8")) if os.path.exists(ST_STATE) else {}
-    hold_set = set(tw_hold)
+    hold_set = set(hold)
     flips_hold, flips_watch = [], []
     for sym, (d, _dt) in fresh.items():
         old = prev.get(sym)
@@ -234,18 +247,19 @@ def detect_tw_close(today):
             item = {"code": sym, "name": TW_NAME.get(sym, "") or TW_NAME.get(str(sym).split(".")[0], ""),
                     "word": "🔴→🟢 翻多" if d == 1 else "🟢→🔴 翻空", "dir": d, "sig": "st"}
             (flips_hold if sym in hold_set else flips_watch).append(item)
-    # RS60：用跟燈號掃描同一支 scan_one 以當天收盤重算 rs_short，正負號跟 rs60_state（上一次）比
+    # RS60：用跟燈號掃描同一支 scan_one 以最新收盤重算 rs_short，正負號跟 rs60_state（上一次）比
+    bench = "^TWII" if is_tw else "^GSPC"
     try:
         import combo_scan as CS
         import price_store
-        px = price_store.get_ohlc(tw_hold + ["^TWII"], period="3y", force=True)
-        b = px.get("^TWII")
+        px = price_store.get_ohlc(hold + [bench], period="3y", force=True)
+        b = px.get(bench)
         prev_rs = json.load(open(RS60_STATE, encoding="utf-8")) if os.path.exists(RS60_STATE) else {}
-        for sym in tw_hold:
+        for sym in hold:
             df = px.get(sym)
-            if df is None or df.empty or b is None or str(df.index[-1].date()) != today:
+            if df is None or df.empty or b is None or str(df.index[-1].date()) != bar_date:
                 continue
-            row = CS.scan_one(sym.split(".")[0], sym, df, b["Close"].dropna().tolist())
+            row = CS.scan_one(sym.split(".")[0] if is_tw else sym, sym, df, b["Close"].dropna().tolist())
             rs = (row or {}).get("rs_short")
             old = prev_rs.get(sym)
             if rs is None or not old:
@@ -256,8 +270,8 @@ def detect_tw_close(today):
                                    "word": "RS60站回多方" if sign == 1 else "RS60跌破自身均線",
                                    "dir": sign, "sig": "rs60"})
     except Exception as e:                                   # noqa: BLE001
-        print(f"  [st_alert] 台股 RS60 收盤偵測失敗（SuperTrend 照常）：{str(e)[:100]}")
-    return flips_hold, flips_watch, ratio
+        print(f"  [st_alert] {market} RS60 收盤偵測失敗（SuperTrend 照常）：{str(e)[:100]}")
+    return flips_hold, flips_watch, ratio, bar_date
 
 
 if __name__ == "__main__":
