@@ -262,7 +262,7 @@ def _one_stock_block(code, nm=""):
                 row = live
         except Exception as e:                              # noqa: BLE001
             lines.append(f"  （即時計算失敗：{str(e)[:80]}）")
-    if not row and not reps and not hit:
+    if not row and not rep_lines and not hit:
         lines.append("  🔴 **這檔完全查不到**——連即時計算都算不出來（可能是新掛牌、"
                      "太冷門、或代號不對）。要回答只能說『查不到這檔』，"
                      "**絕對不可以拿材料裡別的代號來代替**。")
