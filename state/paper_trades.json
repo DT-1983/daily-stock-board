@@ -10951,5 +10951,47 @@
 "amount_usd": 833.33,
 "reason": "起始建倉",
 "src": "live"
+},
+{
+"date": "2026-09-29",
+"portfolio": "產業鏈+趨勢",
+"action": "leave",
+"ticker": "BTBT",
+"shares": 70.9323,
+"price": 1.68,
+"price_usd": 1.68,
+"amount_usd": 119.17,
+"reason": "週線 SuperTrend 翻空（掉出綠燈名單）",
+"src": "live",
+"entry_price": 1.76,
+"pnl_usd": -5.67,
+"pnl_pct": -4.55
+},
+{
+"date": "2026-09-29",
+"portfolio": "進出燈號",
+"action": "half_sell",
+"ticker": "T",
+"shares": 19.3998,
+"price": 24.9,
+"price_usd": 24.9,
+"amount_usd": 483.06,
+"reason": "SuperTrend 翻空 → 賣一半",
+"src": "live",
+"entry_price": 25.68,
+"pnl_usd": -15.13,
+"pnl_pct": -3.04
+},
+{
+"date": "2026-09-29",
+"portfolio": "進出燈號",
+"action": "buy",
+"ticker": "BTBT",
+"shares": 287.5328,
+"price": 1.68,
+"price_usd": 1.68,
+"amount_usd": 483.06,
+"reason": "打點：4 燈亮、風報比 9.18",
+"src": "live"
 }
 ]
