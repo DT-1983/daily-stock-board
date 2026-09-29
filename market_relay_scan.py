@@ -68,11 +68,17 @@ def scan(market, limit=None):
         raise RuntimeError(f"抓不到大盤 {bench_tk}")
     bench = bench["Close"]
     mkt = ir._market_filter(bench)
-    rows, miss = [], 0
+    rows, miss, glitch = [], 0, []
     for u in uni:
         h = px.get(u["yf"])
         if h is None or h.empty or not {"High", "Low", "Close"} <= set(h.columns):
             miss += 1
+            continue
+        # 2026-09-29：DCX 9/28 單日 0.13→16 美元（+12491%，反向分割沒調整）→ 假接力、距 60 日成本 +3247%
+        # 上了 Discord。近 130 根內單日 >+150% 或 <−75% 幾乎都是資料錯，整檔排除（不進排名、分布、清單）。
+        dr = h["Close"].iloc[-130:].pct_change()
+        if (dr > 1.5).any() or (dr < -0.75).any():
+            glitch.append(u["ticker"])
             continue
         try:
             s = ir._stock_signals(h.iloc[-CALC_BARS:], bench)
@@ -102,6 +108,8 @@ def scan(market, limit=None):
     print(f"  {market}: 範圍 {len(uni)} 檔，算出 {n} 檔（缺資料 {miss}），"
           f"抓價 {t1-t0:.0f} 秒、計算 {t2-t1:.0f} 秒；接力 {sum(r['relay'] for r in rows)}、"
           f"寬鬆版 {sum(r['relay_loose'] for r in rows)}、大盤濾網 {'✅' if mkt and mkt['ok'] else '❌'}")
+    if glitch:
+        print(f"  {market}: 價格資料異常排除 {len(glitch)} 檔（近半年單日 >+150% 或 <−75%）：{', '.join(glitch[:15])}")
     if dq:
         r_ = avwap.RES
         print(f"  {market}: 距 60 日成本 中位數 {dq[50*r_]:+.1f}%、前 5% 門檻 {dq[95*r_]:+.1f}%、前 1% 門檻 {dq[99*r_]:+.1f}%")
