@@ -1,37 +1,37 @@
 {
- "updated": "2026-09-29 15:40",
+ "updated": "2026-09-29 22:00",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "09/28",
-   "close": 7683.69,
-   "chg_pct": -0.77
+   "date": "09/29",
+   "close": 7678.61,
+   "chg_pct": -0.07
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "09/28",
-   "close": 26820.38,
-   "chg_pct": -0.92
+   "date": "09/29",
+   "close": 26810.91,
+   "chg_pct": -0.04
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "09/28",
-   "close": 51481.51,
-   "chg_pct": -0.67
+   "date": "09/29",
+   "close": 51373.73,
+   "chg_pct": -0.21
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "09/28",
-   "close": 12465.24,
-   "chg_pct": -1.61
+   "date": "09/29",
+   "close": 12711.77,
+   "chg_pct": 1.98
   },
   {
    "sym": "^TWII",
@@ -46,85 +46,85 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/29",
-   "close": 31.87,
-   "chg_pct": 0.27
+   "close": 31.8,
+   "chg_pct": 0.06
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "09/28",
-   "close": 5.24,
+   "date": "09/29",
+   "close": 5.27,
    "fmt": "yield",
-   "chg_bp": 5.6
+   "chg_bp": 2.6
   }
  ],
  "news": [
   {
-   "title": "AI網路下一個放量產品浮現：Lumentum OCS出貨翻倍、單季營收首破1億美元",
+   "title": "盤中速報 - 應用材料(AMAT-US)大漲5.04%，報511.28美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6617781",
-   "ts": "09/29 15:30"
+   "url": "https://news.cnyes.com/news/id/6618125",
+   "ts": "09/29 21:58"
   },
   {
-   "title": "AI掀轉職潮！麥肯錫：10年1100萬美國勞工恐換跑道 轉型速度堪比疫情時期",
+   "title": "盤中速報 - 莫德納(MRNA-US)大漲5.12%，報207.38美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6617453",
-   "ts": "09/29 15:20"
+   "url": "https://news.cnyes.com/news/id/6618123",
+   "ts": "09/29 21:56"
   },
   {
-   "title": "海警又來！大陸宣布在台灣以東海域展開常態化執法巡查",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6617765",
-   "ts": "09/29 15:17"
-  },
-  {
-   "title": "「星際之門」AI資料中心遇供電瓶頸！電力供應、監管審批成問題  甲骨文發「不可抗力」通知",
+   "title": "盤中速報 - 費城半導體大漲1.63%，報12668.7點",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6617580",
-   "ts": "09/29 15:10"
+   "url": "https://news.cnyes.com/news/id/6618120",
+   "ts": "09/29 21:45"
   },
   {
-   "title": "NVIDIA開始定義AI Factory怎麼蓋！DSX供應鏈浮現，台達電(2308)從中壓一路做到800V與液冷",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6617763",
-   "ts": "09/29 15:00"
-  },
-  {
-   "title": "王品中秋連假4天業績逼近3.6億元 樂看9月營收淡季不淡",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6617743",
-   "ts": "09/29 14:42"
-  },
-  {
-   "title": "〈台股盤後〉節後補跌392點  油價、美債殖利率雙擊痛失4萬8及5日線",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6617697",
-   "ts": "09/29 14:41"
-  },
-  {
-   "title": "日本升息至31年新高但日元竟反貶 2.3兆美元套利交易成全球金融潛在火藥桶",
+   "title": "〈美股早盤〉油價、美債殖利率終於降溫！標普、那指開高喘口氣",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6617728",
-   "ts": "09/29 14:40"
+   "url": "https://news.cnyes.com/news/id/6618005",
+   "ts": "09/29 21:39"
   },
   {
-   "title": "中華電信：台灣首顆自主衛星 預計2027年提供服務",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6617741",
-   "ts": "09/29 14:34"
-  },
-  {
-   "title": "瑞銀：Fed過去35年從未在選舉年前一個月升息  12月再升一碼較合理",
+   "title": "輝達獲利狂奔、估值卻掉隊！14.5倍本益比背後 華爾街在擔心什麼？",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6617701",
-   "ts": "09/29 14:30"
+   "url": "https://news.cnyes.com/news/id/6618061",
+   "ts": "09/29 21:20"
+  },
+  {
+   "title": "AI PCB資本合作升級！Amazon砸15.9億元入股金像電，79億元新廠CapEx同步啟動",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6618105",
+   "ts": "09/29 21:00"
+  },
+  {
+   "title": "H1科學園區營收年增29.27%創同期新高 國科會：受惠AI、雲端需求爆發性成長",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6618094",
+   "ts": "09/29 20:56"
+  },
+  {
+   "title": "北市府率12家台企訪「新加坡科技周」 展AI整合實力拓展東南亞商機",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6618071",
+   "ts": "09/29 20:17"
+  },
+  {
+   "title": "原料行情續揚惟下游需求仍偏弱 豐興鋼筋盤價止漲轉平",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6618072",
+   "ts": "09/29 20:14"
+  },
+  {
+   "title": "外資節後繼續砍股 賣超632億元 大砍元大台50、00406A雙雙超過6萬張最多",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6618065",
+   "ts": "09/29 20:14"
   }
  ],
  "inst": {
   "date": "09/29",
-  "total_yi": -781.9,
-  "foreign_yi": -632.0,
-  "trust_yi": 14.2
+  "total_yi": -784.1,
+  "foreign_yi": -625.8,
+  "trust_yi": 5.8
  }
 }
