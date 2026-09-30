@@ -1,18 +1,11 @@
 {
-"date": "2026-09-29",
+"date": "2026-09-30",
 "flips_hold": [
 {
-"code": "MCK",
+"code": "KR",
 "name": "",
-"word": "🟢→🔴 翻空",
-"dir": -1,
-"sig": "st"
-},
-{
-"code": "API",
-"name": "",
-"word": "RS60跌破自身均線",
-"dir": -1,
+"word": "RS60站回多方",
+"dir": 1,
 "sig": "rs60"
 },
 {
@@ -23,10 +16,10 @@
 "sig": "rs60"
 },
 {
-"code": "KR",
+"code": "API",
 "name": "",
-"word": "RS60站回多方",
-"dir": 1,
+"word": "RS60跌破自身均線",
+"dir": -1,
 "sig": "rs60"
 },
 {
@@ -44,14 +37,7 @@
 "sig": "rs60"
 },
 {
-"code": "UNM",
-"name": "",
-"word": "RS60跌破自身均線",
-"dir": -1,
-"sig": "rs60"
-},
-{
-"code": "BAYRY",
+"code": "GLW",
 "name": "",
 "word": "RS60站回多方",
 "dir": 1,
@@ -79,129 +65,92 @@
 "sig": "rs60"
 },
 {
-"code": "PAA",
+"code": "TM",
 "name": "",
-"word": "RS60站回多方",
-"dir": 1,
+"word": "RS60跌破自身均線",
+"dir": -1,
 "sig": "rs60"
 },
 {
-"code": "TM",
+"code": "UNM",
 "name": "",
 "word": "RS60跌破自身均線",
 "dir": -1,
 "sig": "rs60"
 }
 ],
-"flips_watch": [
-{
-"code": "NDSN",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1,
-"sig": "st"
-},
-{
-"code": "1519",
-"name": "華城",
-"word": "🟢→🔴 翻空",
-"dir": -1,
-"sig": "st"
-},
-{
-"code": "3023",
-"name": "信邦",
-"word": "🟢→🔴 翻空",
-"dir": -1,
-"sig": "st"
-},
-{
-"code": "6664",
-"name": "群翊",
-"word": "🔴→🟢 翻多",
-"dir": 1,
-"sig": "st"
-}
-],
+"flips_watch": [],
 "ai_alerts": [
+{
+"chain": "AI 電源/散熱",
+"market": "US",
+"sig": "🟢",
+"code": "MPWR",
+"name": "Monolithic Power Systems, Inc.",
+"reason": "觀望→買進"
+},
+{
+"chain": "玻璃基板/TGV",
+"market": "US",
+"sig": "🟢",
+"code": "CAMT",
+"name": "Camtek Ltd.",
+"reason": "觀望→買進"
+},
 {
 "chain": "AI 伺服器",
 "market": "US",
 "sig": "🟢",
-"code": "NVDA",
-"name": "NVIDIA Corp",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 電力/核能",
-"market": "US",
-"sig": "🟢",
-"code": "HUBB",
-"name": "Hubbell Inc",
-"reason": "觀望→買進"
-},
-{
-"chain": "低軌衛星",
-"market": "US",
-"sig": "🟢",
-"code": "RKLB",
-"name": "Rocket Lab Corp",
+"code": "MU",
+"name": "Micron Technology Inc",
 "reason": "觀望→買進"
 },
 {
 "chain": "機器人",
-"market": "US",
+"market": "TW",
 "sig": "🟢",
-"code": "EMR",
-"name": "Emerson Electric Co",
+"code": "4540",
+"name": "全球傳動",
 "reason": "觀望→買進"
 },
 {
-"chain": "太陽能",
-"market": "US",
-"sig": "🔴",
-"code": "RUN",
-"name": "Sunrun Inc",
-"reason": "觀望→賣出"
-},
-{
-"chain": "AI 伺服器",
+"chain": "低軌衛星",
 "market": "TW",
 "sig": "🟢",
-"code": "2330",
-"name": "台積電",
+"code": "6271",
+"name": "同欣電",
 "reason": "觀望→買進"
 },
 {
-"chain": "AI 伺服器",
+"chain": "玻璃基板/TGV",
 "market": "TW",
 "sig": "🟢",
-"code": "3324",
-"name": "雙鴻",
+"code": "8046",
+"name": "南電",
 "reason": "觀望→買進"
 },
 {
-"chain": "AI 電源/散熱",
+"chain": "玻璃基板/TGV",
 "market": "TW",
 "sig": "🟢",
-"code": "3324",
-"name": "雙鴻",
+"code": "3055",
+"name": "蔚華科",
 "reason": "觀望→買進"
 },
 {
-"chain": "AI 電源/散熱",
+"chain": "玻璃基板/TGV",
 "market": "TW",
 "sig": "🟢",
-"code": "2308",
-"name": "台達電",
+"code": "2409",
+"name": "AUO CORPORATION",
 "reason": "觀望→買進"
 },
 {
-"chain": "AI 電源/散熱",
+"chain": "PCB/ABF 載板",
 "market": "TW",
 "sig": "🟢",
-"code": "3665",
-"name": "BIZLINK HOLDING INC",
+"code": "8046",
+"name": "南電",
 "reason": "觀望→買進"
 }
 ]

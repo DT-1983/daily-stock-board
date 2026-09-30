@@ -1,124 +1,124 @@
 {
- "updated": "2026-09-29 22:00",
+ "updated": "2026-09-30 08:47",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
    "date": "09/29",
-   "close": 7678.61,
-   "chg_pct": -0.07
+   "close": 7670.84,
+   "chg_pct": -0.17
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
    "date": "09/29",
-   "close": 26810.91,
-   "chg_pct": -0.04
+   "close": 26797.54,
+   "chg_pct": -0.09
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
    "date": "09/29",
-   "close": 51373.73,
-   "chg_pct": -0.21
+   "close": 51349.92,
+   "chg_pct": -0.26
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
    "date": "09/29",
-   "close": 12711.77,
-   "chg_pct": 1.98
+   "close": 12629.16,
+   "chg_pct": 1.32
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/29",
-   "close": 47631.96,
-   "chg_pct": -0.82
+   "date": "09/24",
+   "close": 48024.6,
+   "chg_pct": -0.28
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/29",
-   "close": 31.8,
-   "chg_pct": 0.06
+   "date": "09/30",
+   "close": 31.84,
+   "chg_pct": 0.18
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
    "date": "09/29",
-   "close": 5.27,
+   "close": 5.26,
    "fmt": "yield",
-   "chg_bp": 2.6
+   "chg_bp": 1.5
   }
  ],
  "news": [
   {
-   "title": "盤中速報 - 應用材料(AMAT-US)大漲5.04%，報511.28美元",
+   "title": "從373.9到478.6兆！晶片榮景讓南韓稅收一年狂飆28%  刷新2022年紀錄",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6618125",
-   "ts": "09/29 21:58"
+   "url": "https://news.cnyes.com/news/id/6618343",
+   "ts": "09/30 08:40"
   },
   {
-   "title": "盤中速報 - 莫德納(MRNA-US)大漲5.12%，報207.38美元",
+   "title": "美伊核談判再陷僵局！川普稱伊朗「終究會放棄」、阿聯加速「零荷姆茲」戰略",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6618123",
-   "ts": "09/29 21:56"
+   "url": "https://news.cnyes.com/news/id/6618308",
+   "ts": "09/30 08:40"
   },
   {
-   "title": "盤中速報 - 費城半導體大漲1.63%，報12668.7點",
+   "title": "美國選前再壓油價 釋4,000萬桶儲備油 促歐洲跟進",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6618120",
-   "ts": "09/29 21:45"
+   "url": "https://news.cnyes.com/news/id/6618302",
+   "ts": "09/30 08:33"
   },
   {
-   "title": "〈美股早盤〉油價、美債殖利率終於降溫！標普、那指開高喘口氣",
+   "title": "世界先進新加坡12吋廠啟用 產能已被預訂、成熟製程續迎漲價循環",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6618353",
+   "ts": "09/30 08:30"
+  },
+  {
+   "title": "川普攜AI巨頭簽自願安全協議 資料中心擴張仍是主軸",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6618005",
-   "ts": "09/29 21:39"
+   "url": "https://news.cnyes.com/news/id/6618354",
+   "ts": "09/30 08:30"
   },
   {
-   "title": "輝達獲利狂奔、估值卻掉隊！14.5倍本益比背後 華爾街在擔心什麼？",
+   "title": "蘋果新任CEO不得不裁員？記憶體晶片成本飆升成壓力",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6618061",
-   "ts": "09/29 21:20"
+   "url": "https://news.cnyes.com/news/id/6618258",
+   "ts": "09/30 08:30"
   },
   {
-   "title": "AI PCB資本合作升級！Amazon砸15.9億元入股金像電，79億元新廠CapEx同步啟動",
+   "title": "【光輝十月行情】蓄勢待發？信驊、奇鋐、聯亞...誰是下一檔飆倍股？",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6618105",
-   "ts": "09/29 21:00"
+   "url": "https://news.cnyes.com/news/id/6618345",
+   "ts": "09/30 08:22"
   },
   {
-   "title": "H1科學園區營收年增29.27%創同期新高 國科會：受惠AI、雲端需求爆發性成長",
+   "title": "鉅亨速報 - Factset 最新調查：元太(8069-TW)EPS預估上修至11.5元，預估目標價為220元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6618094",
-   "ts": "09/29 20:56"
+   "url": "https://news.cnyes.com/news/id/6618330",
+   "ts": "09/30 08:10"
   },
   {
-   "title": "北市府率12家台企訪「新加坡科技周」 展AI整合實力拓展東南亞商機",
+   "title": "〈台股盤前要聞〉中秋後失守4萬8、亞馬遜參與金像電私募",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6618071",
-   "ts": "09/29 20:17"
+   "url": "https://news.cnyes.com/news/id/6618148",
+   "ts": "09/30 05:10"
   },
   {
-   "title": "原料行情續揚惟下游需求仍偏弱 豐興鋼筋盤價止漲轉平",
+   "title": "金管會揭上半年金檢四大缺失 房貸不當搭售壽險、人頭戶防詐漏洞成焦點",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6618072",
-   "ts": "09/29 20:14"
-  },
-  {
-   "title": "外資節後繼續砍股 賣超632億元 大砍元大台50、00406A雙雙超過6萬張最多",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6618065",
-   "ts": "09/29 20:14"
+   "url": "https://news.cnyes.com/news/id/6618144",
+   "ts": "09/29 22:29"
   }
  ],
  "inst": {
