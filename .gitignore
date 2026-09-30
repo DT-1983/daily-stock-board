@@ -233,3 +233,8 @@ hong_forum_report.py
 state/full_market_backfill_progress.json
 # 2026-09-29 投顧報告「已在 Discord 報過」的清單（本機 daily_warroom 用）
 state/advisor_reports_announced.json
+
+# 2026-09-30：開發日誌不進公開 repo（工作紀錄裡夾著對帳、成交、帳戶資訊，逐行清不乾淨）。
+# 檔案留在本機，並照舊同步到私人的筆記庫。
+dev_log.md
+devlog.md
