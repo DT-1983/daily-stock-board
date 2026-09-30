@@ -91,6 +91,15 @@ def gather():
         p["name"] = p["name"] or (r.get("name") or "")
         p["who"].add((r.get("owner") or "?", r.get("account") or "?"))
     total_mv = sum(p["mv"] for p in pos.values())
+    # 每個持有人自己的部位（30 秒看懂區一人一塊用）：{持有人: {代號: {sh, mv, cb}}}
+    own = collections.defaultdict(lambda: collections.defaultdict(
+        lambda: {"sh": 0.0, "mv": 0.0, "cb": 0.0}))
+    for r in rows_all:
+        o = own[r.get("owner") or "?"][ic.norm_ticker(r.get("ticker"))]
+        o["sh"] += r.get("shares") or 0
+        o["mv"] += r.get("market_value") or 0
+        o["cb"] += r.get("cost_basis") or 0
+    own = {k: dict(v) for k, v in own.items()}
     # 各帳戶自己的總市值（算「佔該帳戶多少」用）
     acct_mv = collections.defaultdict(float)
     for r in rows_all:
@@ -236,6 +245,9 @@ def gather():
                                and by[n2]["rs_short"] < 0)))
     return rows, {"asof": asof, "total_mv": total_mv, "n_pos": len(pos),
                   "st_only": st_only,
+                  # 「做完之後會變怎樣」要用：每一檔的市值（台幣，跨帳戶合計）
+                  # 🔴 按持有人分開——小孩的錢不跟 Leo 的加總（硬規則），30 秒區一人一塊。
+                  "own": own,
                   "acct_mv": dict(acct_mv), "filled": filled}
 
 
@@ -402,6 +414,280 @@ CSS = """
  .c3{text-align:left}
 }
 """
+
+
+CSS30 = """
+/* ── 30 秒看懂（2026-09-30 Leo：「出場檢視表可以套用另一個對話幫 mom 做的 skill 嗎」）──
+   版式照 stock-holdings-dashboard skill：三個大數字 → 影響最大的幾件事 → 做完前後 → 圖。
+   ⚠️ 只套**版面**：動作一律是「老墨規則說什麼」，沒有叫孔明逐檔判斷（這頁每天自動覆寫、
+      而且原則是不下建議）。class 一律 x3 前綴（見上面 9/7 撞 board_theme 共用樣式的教訓）。 */
+:root{--half:#F97316}
+.x3sec{background:var(--surface);border:1px solid var(--line);border-radius:4px;
+ padding:14px 16px;margin:12px 0}
+.x3sec h2{font-size:17px;margin:0 0 8px;color:var(--ink);font-weight:700}
+.x3sec h2 small{font-weight:400;color:var(--dim);font-size:12px;margin-left:6px}
+.x3tag{display:inline-block;background:var(--cy-dim);color:var(--accent);
+ border:1px solid var(--accent);border-radius:3px;padding:2px 10px;font-size:12.5px;margin-bottom:8px}
+.x3hero{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.x3hn{background:var(--card);border:1px solid var(--line2);border-radius:3px;padding:8px 12px}
+.x3hn .l{font-size:12.5px;color:var(--muted)}
+.x3hn .v{font-size:23px;font-weight:700;line-height:1.25;
+ font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.x3hn .s{font-size:11.5px;color:var(--dim);margin-top:1px}
+.x3g{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.x3c{display:flex;gap:10px;background:var(--card);border:1px solid var(--line2);
+ border-radius:3px;padding:8px 10px;align-items:flex-start}
+.x3n{flex:none;width:30px;height:30px;border-radius:3px;background:var(--accent);color:var(--bg);
+ font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center}
+.x3t{font-size:16px;font-weight:700;line-height:1.35}
+.x3t .x3nm{font-weight:400;color:var(--muted);font-size:12.5px;margin-left:6px}
+.x3act{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;
+ border-radius:3px;padding:1px 7px;margin-left:6px;color:var(--bg);white-space:nowrap}
+.x3s{font-size:12.5px;color:var(--muted);margin-top:2px}
+.x3w{font-size:12.5px;margin-top:3px;color:var(--muted)}
+.x3then{margin-top:10px;font-size:13.5px;line-height:1.75;background:var(--card);
+ border:1px solid var(--line2);border-left:3px solid var(--accent);border-radius:3px;padding:8px 12px}
+.x3bag{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.x3ba{background:var(--card);border:1px solid var(--line2);border-radius:3px;padding:6px 10px}
+.x3bal{font-size:13px;font-weight:700;margin-bottom:2px}
+.x3cols{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.x3sl{fill:var(--ink)}.x3sv{fill:var(--muted);font-family:'IBM Plex Mono',ui-monospace,monospace}
+.x3svb{fill:var(--ink);font-weight:700;font-family:'IBM Plex Mono',ui-monospace,monospace}
+.x3sm{fill:var(--dim)}
+.x3sin{fill:var(--bg);font-weight:700;font-family:'IBM Plex Mono',ui-monospace,monospace}
+.x3lgs{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:12.5px;color:var(--muted)}
+.x3lgs i{display:inline-flex;width:16px;height:16px;border-radius:2px;margin-right:5px;
+ vertical-align:-3px;align-items:center;justify-content:center;color:var(--bg);
+ font-size:10px;font-style:normal;font-weight:700}
+.x3why{margin:0;padding-left:20px}.x3why li{margin:4px 0;font-size:13.5px;line-height:1.6;color:var(--muted)}
+.x3why b{color:var(--ink)}
+.x3mb{display:none}
+.x3own{margin:14px 0 4px}
+.x3oh{font-size:16px;font-weight:700;color:#F5B841;padding:4px 2px;cursor:default}
+.x3oh small{font-weight:400;color:var(--dim);font-size:12.5px;margin-left:10px}
+details.x3own>summary.x3oh{cursor:pointer;border:1px solid var(--line);border-radius:4px;
+ padding:9px 12px;background:var(--surface)}
+@media (max-width:640px){
+ .x3hero{grid-template-columns:1fr 1fr}.x3hero .x3hn:first-child{grid-column:1/3}
+ .x3g,.x3cols,.x3bag{grid-template-columns:1fr}
+ .x3dk{display:none}.x3mb{display:block}
+ .x3t{font-size:17px}.x3s,.x3w{font-size:14px}.x3then,.x3why li{font-size:14.5px}
+}
+"""
+
+CIRC = "①②③④⑤⑥⑦⑧"
+
+
+def _svg_hbar(rows, width=560, bar_h=22, gap=8, label_w=92, val_w=170, fs=13):
+    """水平長條：rows=[(label, value, color, right_text)]。（同 stock-holdings-dashboard 的 svg_hbar）
+    ⚠️ 桌機寬度畫的 SVG 縮到手機字只剩 8–9px → 同一張圖畫兩份（width=360, fs=15），用 .x3dk/.x3mb 切換。"""
+    from board_theme import esc
+    maxv = max(r[1] for r in rows) or 1
+    plot = width - label_w - val_w
+    h = len(rows) * (bar_h + gap)
+    out = [f'<svg viewBox="0 0 {width} {h}" width="100%" role="img" preserveAspectRatio="xMinYMin meet">']
+    for i, (lab, v, col, txt) in enumerate(rows):
+        yy = i * (bar_h + gap)
+        bw = max(3, v / maxv * plot)
+        out.append(f'<text x="{label_w-8}" y="{yy+bar_h*0.72}" text-anchor="end" class="x3sl" '
+                   f'font-size="{fs}">{esc(lab)}</text>')
+        out.append(f'<rect x="{label_w}" y="{yy}" width="{bw:.1f}" height="{bar_h}" rx="2" '
+                   f'style="fill:{col}"><title>{esc(lab)}：{esc(txt)}</title></rect>')
+        out.append(f'<text x="{label_w+bw+6:.1f}" y="{yy+bar_h*0.72}" class="x3sv" '
+                   f'font-size="{fs-1}">{esc(txt)}</text>')
+    out.append("</svg>")
+    return "".join(out)
+
+
+def _svg_stack(segs, width=560, h=34, fs=13):
+    """一條 100% 堆疊：segs=[(label, value, color)]，片段間 2px 縫。"""
+    tot = sum(v for _l, v, _c in segs) or 1
+    x = 0
+    out = [f'<svg viewBox="0 0 {width} {h}" width="100%" role="img">']
+    for lab, v, col in segs:
+        w = v / tot * width
+        out.append(f'<rect x="{x+1:.1f}" y="0" width="{max(0, w-2):.1f}" height="{h}" rx="2" '
+                   f'style="fill:{col}"><title>{lab} {v/tot*100:.0f}%</title></rect>')
+        if w > 44:
+            out.append(f'<text x="{x+w/2:.1f}" y="{h*0.66}" text-anchor="middle" class="x3sin" '
+                       f'font-size="{fs}">{v/tot*100:.0f}%</text>')
+        x += w
+    out.append("</svg>")
+    return "".join(out)
+
+
+def _svg_ba(label, b, a, fmt, maxv, width=230):
+    """做完前後：兩條細長條（前＝灰、後＝青），數字在尾端。"""
+    from board_theme import esc
+    plot = width - 78
+    maxv = maxv or 1
+    wb, wa = b / maxv * (plot - 34), a / maxv * (plot - 34)
+    return (f'<div class="x3ba"><div class="x3bal">{esc(label)}</div>'
+            f'<svg viewBox="0 0 {width} 48" width="100%">'
+            f'<text x="0" y="15" class="x3sm" font-size="13">現在</text>'
+            f'<rect x="34" y="4" width="{wb:.1f}" height="14" rx="2" style="fill:var(--dim)"/>'
+            f'<text x="{34+wb+5:.1f}" y="15" class="x3sv" font-size="13">{fmt(b)}</text>'
+            f'<text x="0" y="40" class="x3sm" font-size="13">做完</text>'
+            f'<rect x="34" y="29" width="{wa:.1f}" height="14" rx="2" style="fill:var(--accent)"/>'
+            f'<text x="{34+wa+5:.1f}" y="41" class="x3svb" font-size="14">{fmt(a)}</text></svg></div>')
+
+
+def brief(rows, meta):
+    """最上面的「30 秒看懂」。回 html。動作只有兩種、都來自老墨規則：
+    ✖ 全出（ST＋RS 都到，或 RS 已跌破）／½ 賣一半（只有 ST 翻空）。
+
+    🔴 **一個持有人一塊**：小孩的錢不跟 Leo 的加總（硬規則）。首版把四個帳戶加成一個
+    大數字、金額最大的幾件事也被小孩的台股佔滿——版面做出來一看才發現。
+    市值最大的那位展開，其餘各自收合，收合列上就寫得出重點。"""
+    from board_theme import esc
+
+    own = meta.get("own") or {}
+    sig = {r["tk"]: r for r in rows}
+    owners = sorted(own, key=lambda o: -sum(p["mv"] for p in own[o].values()))
+    out = []
+    for i, o in enumerate(owners):
+        pos = {k: v for k, v in own[o].items() if (v["mv"] or 0) > 0}
+        tot = sum(v["mv"] for v in pos.values())
+        if not tot:
+            continue
+        hit = []
+        for n, p in pos.items():
+            r = sig.get(n)
+            if not r:
+                continue
+            fx = r.get("fx") or 1                 # 台幣／原幣（台股＝1）
+            hit.append({**r, "sh": p["sh"], "mv": p["mv"], "cb": p["cb"],
+                        "mv_n": p["mv"] / fx,
+                        "pnl": (p["mv"] - p["cb"]) if p["cb"] else None,
+                        "pnl_pct": (p["mv"] / p["cb"] - 1) * 100 if p["cb"] else None})
+        body, line = _brief_one(hit, tot, pos)
+        if i == 0:
+            out.append(f'<div class="x3own"><div class="x3oh">{esc(o)} 的持股'
+                       f'<small>{esc(line)}</small></div>{body}</div>')
+        else:
+            out.append(f'<details class="x3own"><summary class="x3oh">{esc(o)} 的持股'
+                       f'<small>{esc(line)}</small></summary>{body}</details>')
+    return "".join(out)
+
+
+def _brief_one(hit, tot, pos):
+    """單一持有人的 30 秒區。回 (html, 一行摘要)。hit＝這個人被規則點到的持股；
+    tot＝這個人的持股總市值（台幣）；pos＝這個人全部持股 {代號: {mv,...}}。"""
+    from board_theme import SIG_COLOR, esc
+
+    SELL, HALF, HOLD = SIG_COLOR["sell"], "var(--half)", SIG_COLOR["hold"]
+
+    def act(r):                                  # (圖示, 文字, 顏色, 賣出比例)
+        return ("½", "賣一半", HALF, 0.5) if r["kind"] == "st" else ("✖", "全出", SELL, 1.0)
+
+    def W(x):
+        return f"{x/10000:,.0f} 萬" if abs(x) >= 1e5 else f"{x/10000:,.1f} 萬"
+
+    def sg(x):
+        return ("+" if x >= 0 else "−") + W(abs(x))
+
+    why = {"both": "SuperTrend 翻空＋RS(60) 跌破",
+           "rs": "RS(60) 跌破，SuperTrend 還在多方（股價沒轉弱、只是跑輸大盤）",
+           "st": "SuperTrend 翻空，RS(60) 還沒跌破"}
+
+    for r in hit:
+        r["_sell"] = r["mv"] * act(r)[3]
+    sell_tot = sum(r["_sell"] for r in hit)
+    hit_mv = sum(r["mv"] for r in hit)
+    pnl_tot = sum(r["pnl"] or 0 for r in hit)
+    n_all = sum(1 for r in hit if r["kind"] != "st")
+    n_half = len(hit) - n_all
+    n_up = sum(1 for r in hit if (r["pnl"] or 0) >= 0)
+    line = (f'規則點到 {len(hit)} 檔（占 {hit_mv/tot*100:.1f}%）・照做賣出約 NT$ {W(sell_tot)}'
+            if hit else "沒有持股被規則點到")
+    if not hit:
+        return ('<div class="x3sec"><div class="x3then">✅ 目前沒有持股符合出場條件。</div></div>', line)
+
+    hero = (
+        '<div class="x3hero">'
+        f'<div class="x3hn"><div class="l">持股市值</div><div class="v">NT$ {W(tot)}</div>'
+        f'<div class="s">{len(pos)} 檔</div></div>'
+        f'<div class="x3hn"><div class="l">規則點到的</div><div class="v">{len(hit)} 檔'
+        f'<span style="font-size:14px;color:var(--muted)">　{hit_mv/tot*100:.1f}%</span></div>'
+        f'<div class="s">✖ 全出 {n_all} 檔・½ 賣一半 {n_half} 檔</div></div>'
+        f'<div class="x3hn"><div class="l">這些的帳上損益</div>'
+        f'<div class="v {"pos" if pnl_tot >= 0 else "neg"}">{sg(pnl_tot)}</div>'
+        f'<div class="s">賺的 {n_up} 檔・賠的 {len(hit)-n_up} 檔</div></div>'
+        '</div>')
+
+    # 影響最大的幾件事：按「照規則要賣掉的金額」排，不是按整檔市值（賣一半的只算一半）
+    top = sorted(hit, key=lambda r: -r["_sell"])[:6]
+    cards = []
+    for i, r in enumerate(top):
+        ic_, lab, col, frac = act(r)
+        sh = (r["sh"] or 0) * frac
+        twd = f'（約 NT$ {W(r["_sell"])}）' if r["cur"] != "NT$" else ""
+        over = (f'｜<b style="color:var(--warn)">已超過貴價 +{r["over"]:,.0f}%</b>' if (r.get("over") or 0) > 0
+                else (f'｜低於貴價 {abs(r["over"]):,.0f}%' if r.get("over") is not None else ""))
+        pnl = ("" if r["pnl_pct"] is None else
+               f'帳上 <span class="{"pos" if r["pnl_pct"] >= 0 else "neg"}">{r["pnl_pct"]:+,.0f}%</span>｜')
+        cards.append(
+            f'<div class="x3c"><div class="x3n">{CIRC[i]}</div><div>'
+            f'<div class="x3t">{esc(r["tk"])}<span class="x3nm">{esc(r["name"])}</span>'
+            f'<span class="x3act" style="background:{col}">{ic_} {lab}</span></div>'
+            f'<div class="x3s">賣 {sh:,.{0 if sh == int(sh) else 2}f} 股'
+            f' ≈ {r["cur"]} {r["mv_n"] * frac:,.0f}{twd}</div>'
+            f'<div class="x3w">{pnl}{why[r["kind"]]}{over}</div></div></div>')
+    rest = len(hit) - len(top)
+
+    # 做完之後（三組照規則全做）
+    after = {k: v["mv"] for k, v in pos.items()}
+    for r in hit:
+        after[r["tk"]] = after.get(r["tk"], 0) - r["_sell"]
+    a_tot = max(tot - sell_tot, 1)
+    top1_b = max(v["mv"] for v in pos.values()) / tot * 100
+    top1_a = max(after.values()) / a_tot * 100
+    cnt_b, cnt_a = len(pos), sum(1 for v in after.values() if v > 1)
+    ba = "".join([
+        _svg_ba("股票市值（台幣）", tot / 1e4, a_tot / 1e4, lambda v: f"{v:,.0f} 萬", tot / 1e4),
+        _svg_ba("持股檔數", cnt_b, cnt_a, lambda v: f"{v:.0f} 檔", cnt_b),
+        _svg_ba("最大單一持股占比", top1_b, top1_a, lambda v: f"{v:.1f}%", max(top1_b, top1_a)),
+    ])
+
+    # 圖 1：規則點到的前 10 大（顏色＝規則的動作）；圖 2：這個人的持股裡占多少
+    t10 = sorted(hit, key=lambda r: -r["mv"])[:10]
+    rows10 = [((r["tk"] if r["cur"] != "NT$" else (r["name"] or r["tk"])[:5]), r["mv"], act(r)[2],
+               f'{W(r["mv"])}・{act(r)[0]} {act(r)[1]}') for r in t10]
+    mv_all = sum(r["mv"] for r in hit if r["kind"] != "st")
+    mv_half = sum(r["mv"] for r in hit if r["kind"] == "st")
+    keep = max(tot - hit_mv, 0)
+    segs = [("全出", mv_all, SELL), ("賣一半", mv_half, HALF), ("沒有出場訊號", keep, HOLD)]
+    legend = (f'<span><i style="background:{SELL}">✖</i>全出 {mv_all/tot*100:.1f}%</span>'
+              f'<span><i style="background:{HALF}">½</i>賣一半 {mv_half/tot*100:.1f}%</span>'
+              f'<span><i style="background:{HOLD}">○</i>沒有出場訊號 {keep/tot*100:.1f}%</span>')
+
+    html = (
+        '<div class="x3sec"><span class="x3tag">⏱ 30 秒看懂</span>' + hero
+        + f'<h2>照規則，金額最大的 {len(top)} 件事'
+        + (f'<small>其餘 {rest} 檔在下面清單</small>' if rest > 0 else "") + '</h2>'
+        + '<div class="x3g">' + "".join(cards) + '</div>'
+        + f'<div class="x3then">💰 照規則全做：賣出約 <b>NT$ {W(sell_tot)}</b>'
+        f'（持股的 <b>{sell_tot/tot*100:.1f}%</b>）；這 {len(hit)} 檔現在帳上合計 '
+        f'<b class="{"pos" if pnl_tot >= 0 else "neg"}">{sg(pnl_tot)}</b>。<br>'
+        '⚠️ 這裡寫的是「<b>規則說什麼</b>」，不是「該不該賣」——理由在下面黃框。</div></div>'
+
+        '<div class="x3sec"><h2>做完之後，會變怎樣？<small>照規則全做</small></h2>'
+        f'<div class="x3bag">{ba}</div></div>'
+
+        '<div class="x3cols">'
+        '<div class="x3sec"><h2>規則點到哪幾檔？<small>前 10 大（台幣市值），顏色＝規則的動作</small></h2>'
+        f'<div class="x3dk">{_svg_hbar(rows10)}</div>'
+        f'<div class="x3mb">{_svg_hbar(rows10, width=360, label_w=70, val_w=150, fs=15)}</div></div>'
+        '<div class="x3sec"><h2>占持股多少？</h2>'
+        f'<div class="x3dk">{_svg_stack(segs)}</div>'
+        f'<div class="x3mb">{_svg_stack(segs, width=360, h=38, fs=15)}</div>'
+        f'<div class="x3lgs">{legend}</div>'
+        '<h2 style="margin-top:14px">🔔 什麼時候回頭看？</h2><ul class="x3why">'
+        '<li>這份名單<b>每個工作日 08:30 重算</b>：SuperTrend 翻回多方或 RS(60) 站回均線，那一檔會自動消失。</li>'
+        '<li>收盤當天新翻空／跌破的，會先推 Telegram（台股 14:05、美股 05:35），不用等這頁。</li>'
+        '<li>名單是<b>現在的狀態</b>，不是「今天剛觸發」——可能幾天前就成立了。</li>'
+        '</ul></div></div>')
+    return html, line
 
 
 FILTER_JS = r'''
@@ -641,6 +927,7 @@ def render(rows, meta):
     pnl_r = sum(r["pnl"] or 0 for r in rs_only)
 
     B = []
+    B.append(brief(rows, meta))
     B.append('<div class="warnbox">'
              '<b>這頁只擺數字，不建議買賣。</b><br>'
              '・老墨的規則：<b>SuperTrend 翻空 → 賣一半</b>；'
@@ -765,12 +1052,14 @@ def render(rows, meta):
              # 檔名不帶日期，所以「上次產出」要寫在頁內——沒有它就分不出
              # 「今天沒有新變化」跟「排程已經壞掉好幾天了」。
              f'🕗 本頁每個工作日 08:30 自動覆寫，上次產出 <b>{esc(gen)}</b>。'
-             f'<b>不會出現在投資站</b>（站上家人看得到）——只存在這台電腦與 Google Drive。'
+             # 2026-09-30 Leo：「出場檢查不用只存在本機了，反正登入要密碼」→ 資產中控台
+             # 的 /exit-review 開放經通道連（仍要帳密）。投資站照舊不放。
+             f'<b>不會出現在投資站</b>（站上家人看得到）——從資產中控台（要登入）或 Google Drive 開。'
              f'</div></div>')
 
     return ('<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            "<title>出場檢視表</title><style>" + BASE_CSS + CSS
+            "<title>出場檢視表</title><style>" + BASE_CSS + CSS + CSS30
             + '</style></head><body><div class="wrap">'
             # 🔴 2026-09-06 Leo：「上面還是有欸？」——指那排導覽按鈕。
             # 這頁**不上投資站**，nav_abs() 那些連結指向的是公開站的頁面，
