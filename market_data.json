@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-30 08:47",
+ "updated": "2026-09-30 13:43",
  "indices": [
   {
    "sym": "^GSPC",
@@ -37,17 +37,17 @@
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/24",
-   "close": 48024.6,
-   "chg_pct": -0.28
+   "date": "09/30",
+   "close": 48146.18,
+   "chg_pct": 1.08
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/30",
-   "close": 31.84,
-   "chg_pct": 0.18
+   "close": 31.87,
+   "chg_pct": 0.29
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "從373.9到478.6兆！晶片榮景讓南韓稅收一年狂飆28%  刷新2022年紀錄",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6618343",
-   "ts": "09/30 08:40"
-  },
-  {
-   "title": "美伊核談判再陷僵局！川普稱伊朗「終究會放棄」、阿聯加速「零荷姆茲」戰略",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6618308",
-   "ts": "09/30 08:40"
-  },
-  {
-   "title": "美國選前再壓油價 釋4,000萬桶儲備油 促歐洲跟進",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6618302",
-   "ts": "09/30 08:33"
-  },
-  {
-   "title": "世界先進新加坡12吋廠啟用 產能已被預訂、成熟製程續迎漲價循環",
+   "title": "金像電(2368) 亞馬遜入股、營收連創高，股價卻卡關？揭開三大評價瓶頸",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6618353",
-   "ts": "09/30 08:30"
+   "url": "https://news.cnyes.com/news/id/6618575",
+   "ts": "09/30 13:30"
   },
   {
-   "title": "川普攜AI巨頭簽自願安全協議 資料中心擴張仍是主軸",
+   "title": "〈焦點股〉受惠星鏈衛星題材、光通訊產品量產 穩懋衝上漲停",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6618560",
+   "ts": "09/30 13:27"
+  },
+  {
+   "title": "散熱股只有健策(3653)被大幅上修！2027年EPS衝208.86元、上修近今年3倍，法人看見了什麼獲利跳升關鍵？",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6618557",
+   "ts": "09/30 13:00"
+  },
+  {
+   "title": "今年首家石英元件廠籌資案完成 安碁科技完成3億元面額CB募集",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6618438",
+   "ts": "09/30 12:35"
+  },
+  {
+   "title": "封測股昨日重挫、今日全面反攻！京元電子(2449)、南茂(8150)、矽格(6257)誰的2027年成長最強？",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6618547",
+   "ts": "09/30 12:30"
+  },
+  {
+   "title": "幫你下單！Robinhood祭出AI交易代理 週末美股24小時交易明年登場",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6618354",
-   "ts": "09/30 08:30"
+   "url": "https://news.cnyes.com/news/id/6618512",
+   "ts": "09/30 12:20"
   },
   {
-   "title": "蘋果新任CEO不得不裁員？記憶體晶片成本飆升成壓力",
+   "title": "小摩轉「戰術性看多」美股！五大理由曝光：科技、半導體成核心布局",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6618258",
-   "ts": "09/30 08:30"
+   "url": "https://news.cnyes.com/news/id/6618350",
+   "ts": "09/30 12:00"
   },
   {
-   "title": "【光輝十月行情】蓄勢待發？信驊、奇鋐、聯亞...誰是下一檔飆倍股？",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6618345",
-   "ts": "09/30 08:22"
+   "title": "美光財報周三登場！ 若利多齊聚 歷史顯示股價能大漲",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6618360",
+   "ts": "09/30 12:00"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：元太(8069-TW)EPS預估上修至11.5元，預估目標價為220元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6618330",
-   "ts": "09/30 08:10"
+   "title": "期中選舉倒數5周！川普宣布啟動32天全美巡迴拉票行程   力保共和黨國會兩院多數",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6618480",
+   "ts": "09/30 11:50"
   },
   {
-   "title": "〈台股盤前要聞〉中秋後失守4萬8、亞馬遜參與金像電私募",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6618148",
-   "ts": "09/30 05:10"
-  },
-  {
-   "title": "金管會揭上半年金檢四大缺失 房貸不當搭售壽險、人頭戶防詐漏洞成焦點",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6618144",
-   "ts": "09/29 22:29"
+   "title": "AT&T執行長稱SpaceX手機連線策略「不可行」",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6618263",
+   "ts": "09/30 11:30"
   }
  ],
  "inst": {
