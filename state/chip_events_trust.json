@@ -1,110 +1,70 @@
 {
-"date": "2026-09-24",
-"generated_at": "2026-09-29T13:18:47",
+"date": "2026-09-29",
+"generated_at": "2026-09-30T08:48:02",
 "events": [
 {
-"code": "2884",
-"name": "玉山金",
-"event": "投信連買 36 天",
-"kind": "streak",
-"days": 36,
-"shares": 3052000
-},
-{
-"code": "4770",
-"name": "上品",
+"code": "6505",
+"name": "台塑化",
 "event": "投信異常大買",
 "kind": "anomaly",
-"shares": 730000,
-"vs_avg": 7300.0
+"shares": 8088000,
+"vs_avg": 6.9
 },
 {
-"code": "2542",
-"name": "興富發",
-"event": "投信連買 20 天",
-"kind": "streak",
-"days": 20,
-"shares": 1799000
-},
-{
-"code": "2404",
-"name": "漢唐",
-"event": "投信異常大買",
-"kind": "anomaly",
-"shares": 613000,
-"vs_avg": 7.3
-},
-{
-"code": "2404",
-"name": "漢唐",
+"code": "6505",
+"name": "台塑化",
 "event": "投信連買 5 天",
 "kind": "streak",
 "days": 5,
-"shares": 613000
+"shares": 8088000
 },
 {
-"code": "5876",
-"name": "上海商銀",
-"event": "投信連買 8 天",
+"code": "2344",
+"name": "華邦電",
+"event": "投信連賣 7 天",
 "kind": "streak",
-"days": 8,
-"shares": 757000
+"days": 7,
+"shares": -2002000
 },
 {
-"code": "6669",
-"name": "緯穎",
-"event": "投信連賣 6 天",
+"code": "2881",
+"name": "富邦金",
+"event": "投信連賣 7 天",
 "kind": "streak",
-"days": 6,
-"shares": -536001
+"days": 7,
+"shares": -1687000
 },
 {
-"code": "3706",
-"name": "神達",
-"event": "投信連賣 8 天",
+"code": "2408",
+"name": "南亞科",
+"event": "投信連賣 5 天",
 "kind": "streak",
-"days": 8,
-"shares": -927000
+"days": 5,
+"shares": -898000
 },
 {
 "code": "3042",
 "name": "晶技",
 "event": "投信異常大買",
 "kind": "anomaly",
-"shares": 1179000,
-"vs_avg": 18.2
+"shares": 1050000,
+"vs_avg": 8.5
 },
 {
-"code": "2382",
-"name": "廣達",
-"event": "投信連買 10 天",
+"code": "2345",
+"name": "智邦",
+"event": "投信連賣 8 天",
 "kind": "streak",
-"days": 10,
-"shares": 762000
+"days": 8,
+"shares": -736046
 },
 {
 "code": "2618",
 "name": "長榮航",
-"event": "投信連買 8 天",
+"event": "投信連買 9 天",
 "kind": "streak",
-"days": 8,
-"shares": 4165419
-},
-{
-"code": "2610",
-"name": "華航",
-"event": "投信連買 7 天",
-"kind": "streak",
-"days": 7,
-"shares": 5571000
-},
-{
-"code": "3264",
-"name": "欣銓",
-"event": "投信異常大賣",
-"kind": "anomaly",
-"shares": -7612000,
-"vs_avg": 8.1
+"days": 9,
+"shares": 924000
 }
 ]
 }
