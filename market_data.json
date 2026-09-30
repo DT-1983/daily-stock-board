@@ -1,37 +1,37 @@
 {
- "updated": "2026-09-30 15:40",
+ "updated": "2026-09-30 21:36",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "09/29",
-   "close": 7670.84,
-   "chg_pct": -0.17
+   "date": "09/30",
+   "close": 7693.68,
+   "chg_pct": 0.3
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "09/29",
-   "close": 26797.54,
-   "chg_pct": -0.09
+   "date": "09/30",
+   "close": 26920.38,
+   "chg_pct": 0.46
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "09/29",
-   "close": 51349.92,
-   "chg_pct": -0.26
+   "date": "09/30",
+   "close": 51414.48,
+   "chg_pct": 0.13
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "09/29",
-   "close": 12629.16,
-   "chg_pct": 1.32
+   "date": "09/30",
+   "close": 12674.76,
+   "chg_pct": 0.36
   },
   {
    "sym": "^TWII",
@@ -47,84 +47,84 @@
    "grp": "FX",
    "date": "09/30",
    "close": 31.85,
-   "chg_pct": 0.23
+   "chg_pct": 0.2
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "09/29",
-   "close": 5.26,
+   "date": "09/30",
+   "close": 5.24,
    "fmt": "yield",
-   "chg_bp": 1.5
+   "chg_bp": -1.9
   }
  ],
  "news": [
   {
-   "title": "金像電(2368) 漲不動？Amazon入股、營收破百億刷新高！為什麼股價卡關？",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6618655",
-   "ts": "09/30 15:30"
-  },
-  {
-   "title": "PJM重新檢視Data Center大型負載申請2027電力需求預測將提高「落地率」審查",
+   "title": "美中休兵延長、調查照走！中國兩項對美調查延至12月27日",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6618654",
-   "ts": "09/30 15:30"
+   "url": "https://news.cnyes.com/news/id/6619036",
+   "ts": "09/30 21:20"
   },
   {
-   "title": "期中選舉倒數34天！FT：川普與顧問就柴油出口禁令進行危機磋商 美政府已告知盟友供應恐受擾",
+   "title": "《大賣空》原型警告AI融資風險！離表融資重現、恐重蹈安隆覆轍",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6618574",
-   "ts": "09/30 15:30"
+   "url": "https://news.cnyes.com/news/id/6618317",
+   "ts": "09/30 21:10"
   },
   {
-   "title": "遠百看科技業暢旺「讓錢進來」 周年慶年增幅達3.5%",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6618649",
-   "ts": "09/30 15:24"
-  },
-  {
-   "title": "應材攜手鎧俠 共同推進新一代記憶體技術發展",
+   "title": "川普強迫勞動關稅遭控濫權 美國國際貿易法庭展開審查",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6618648",
-   "ts": "09/30 15:21"
+   "url": "https://news.cnyes.com/news/id/6618912",
+   "ts": "09/30 20:50"
   },
   {
-   "title": "英國第2季GDP優於預期 但經濟學家憂下半年表現",
+   "title": "〈台幣〉季底拋匯支持微升收31.852元 月、季線同步翻黑",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6619011",
+   "ts": "09/30 20:44"
+  },
+  {
+   "title": "通膨低於預期！美國8月核心PCE僅年增3% Fed下月升息押注跌破四成",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6618602",
-   "ts": "09/30 15:20"
+   "url": "https://news.cnyes.com/news/id/6618919",
+   "ts": "09/30 20:36"
   },
   {
-   "title": "AI伺服器需求續強 Q4 DRAM、NAND Flash再漲10-20%",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6618613",
-   "ts": "09/30 15:16"
-  },
-  {
-   "title": "是方攜手Google Cloud 推出多元跨國海纜服務",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6618587",
-   "ts": "09/30 15:12"
-  },
-  {
-   "title": "Anthropic IPO招股書揭財務風險！近半營收靠亞馬遜與Google、營運虧損逾80億美元",
+   "title": "Anthropic砸116億美元足以改變Akamai，股價為何漲不動？證明了市場開始重算AI大單的含金量",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6618490",
-   "ts": "09/30 15:10"
+   "url": "https://news.cnyes.com/news/id/6619029",
+   "ts": "09/30 20:30"
   },
   {
-   "title": "華孚(6235)營益掉63%，股價跌逾7成！7,000噸新機能帶來轉機嗎？先看這3個數字",
+   "title": "瑞儀庫藏股執行期間屆滿 買回均價106.78元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6618620",
-   "ts": "09/30 15:00"
+   "url": "https://news.cnyes.com/news/id/6619020",
+   "ts": "09/30 20:27"
+  },
+  {
+   "title": "法人看好台塑擴展電子級硫酸布局半導體市場 外資連3買推升股價創波段高",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6618984",
+   "ts": "09/30 20:21"
+  },
+  {
+   "title": "嘉泥旅宿事業結構轉變 擴大營收成長轉化為實質獲利",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6618976",
+   "ts": "09/30 20:19"
+  },
+  {
+   "title": "4檔飆股明起抓去關 這3檔近6個交易日漲逾40%  嘉晶、蔚華科處置至10/12",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6618944",
+   "ts": "09/30 19:42"
   }
  ],
  "inst": {
   "date": "09/30",
-  "total_yi": 386.6,
-  "foreign_yi": 296.4,
-  "trust_yi": 77.8
+  "total_yi": 403.9,
+  "foreign_yi": 308.6,
+  "trust_yi": 82.9
  }
 }
