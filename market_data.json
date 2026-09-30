@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-30 13:43",
+ "updated": "2026-09-30 15:40",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,16 +38,16 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "09/30",
-   "close": 48146.18,
-   "chg_pct": 1.08
+   "close": 47940.13,
+   "chg_pct": 0.65
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "09/30",
-   "close": 31.87,
-   "chg_pct": 0.29
+   "close": 31.85,
+   "chg_pct": 0.23
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "金像電(2368) 亞馬遜入股、營收連創高，股價卻卡關？揭開三大評價瓶頸",
+   "title": "金像電(2368) 漲不動？Amazon入股、營收破百億刷新高！為什麼股價卡關？",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6618575",
-   "ts": "09/30 13:30"
+   "url": "https://news.cnyes.com/news/id/6618655",
+   "ts": "09/30 15:30"
   },
   {
-   "title": "〈焦點股〉受惠星鏈衛星題材、光通訊產品量產 穩懋衝上漲停",
+   "title": "PJM重新檢視Data Center大型負載申請2027電力需求預測將提高「落地率」審查",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6618654",
+   "ts": "09/30 15:30"
+  },
+  {
+   "title": "期中選舉倒數34天！FT：川普與顧問就柴油出口禁令進行危機磋商 美政府已告知盟友供應恐受擾",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6618574",
+   "ts": "09/30 15:30"
+  },
+  {
+   "title": "遠百看科技業暢旺「讓錢進來」 周年慶年增幅達3.5%",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6618560",
-   "ts": "09/30 13:27"
+   "url": "https://news.cnyes.com/news/id/6618649",
+   "ts": "09/30 15:24"
   },
   {
-   "title": "散熱股只有健策(3653)被大幅上修！2027年EPS衝208.86元、上修近今年3倍，法人看見了什麼獲利跳升關鍵？",
+   "title": "應材攜手鎧俠 共同推進新一代記憶體技術發展",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6618648",
+   "ts": "09/30 15:21"
+  },
+  {
+   "title": "英國第2季GDP優於預期 但經濟學家憂下半年表現",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6618602",
+   "ts": "09/30 15:20"
+  },
+  {
+   "title": "AI伺服器需求續強 Q4 DRAM、NAND Flash再漲10-20%",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6618557",
-   "ts": "09/30 13:00"
+   "url": "https://news.cnyes.com/news/id/6618613",
+   "ts": "09/30 15:16"
   },
   {
-   "title": "今年首家石英元件廠籌資案完成 安碁科技完成3億元面額CB募集",
+   "title": "是方攜手Google Cloud 推出多元跨國海纜服務",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6618438",
-   "ts": "09/30 12:35"
+   "url": "https://news.cnyes.com/news/id/6618587",
+   "ts": "09/30 15:12"
   },
   {
-   "title": "封測股昨日重挫、今日全面反攻！京元電子(2449)、南茂(8150)、矽格(6257)誰的2027年成長最強？",
+   "title": "Anthropic IPO招股書揭財務風險！近半營收靠亞馬遜與Google、營運虧損逾80億美元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6618490",
+   "ts": "09/30 15:10"
+  },
+  {
+   "title": "華孚(6235)營益掉63%，股價跌逾7成！7,000噸新機能帶來轉機嗎？先看這3個數字",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6618547",
-   "ts": "09/30 12:30"
-  },
-  {
-   "title": "幫你下單！Robinhood祭出AI交易代理 週末美股24小時交易明年登場",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6618512",
-   "ts": "09/30 12:20"
-  },
-  {
-   "title": "小摩轉「戰術性看多」美股！五大理由曝光：科技、半導體成核心布局",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6618350",
-   "ts": "09/30 12:00"
-  },
-  {
-   "title": "美光財報周三登場！ 若利多齊聚 歷史顯示股價能大漲",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6618360",
-   "ts": "09/30 12:00"
-  },
-  {
-   "title": "期中選舉倒數5周！川普宣布啟動32天全美巡迴拉票行程   力保共和黨國會兩院多數",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6618480",
-   "ts": "09/30 11:50"
-  },
-  {
-   "title": "AT&T執行長稱SpaceX手機連線策略「不可行」",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6618263",
-   "ts": "09/30 11:30"
+   "url": "https://news.cnyes.com/news/id/6618620",
+   "ts": "09/30 15:00"
   }
  ],
  "inst": {
-  "date": "09/29",
-  "total_yi": -784.1,
-  "foreign_yi": -625.8,
-  "trust_yi": 5.8
+  "date": "09/30",
+  "total_yi": 386.6,
+  "foreign_yi": 296.4,
+  "trust_yi": 77.8
  }
 }
