@@ -97,9 +97,28 @@ def earnings(name):
     return os.path.join(ensure(EARNINGS), name)
 
 
-def archive(name):
-    """一次性報告：產出後不會再被任何程式覆寫。"""
-    return os.path.join(ensure(ARCHIVE), name)
+# 存檔的子資料夾（2026-09-30 Leo：「幫我整理存檔資料夾，現在有點亂」——原本 29 個檔全部平鋪）。
+# 分法是**這份東西是什麼**，不是日期；檔名本來就帶日期，同一夾內自然照時間排。
+ARCHIVE_SUBS = ("持股報告", "產業筆記", "個股筆記", "總經與盤勢", "研究與回測", "舊看板", "老墨三段時程")
+
+
+def archive(name, sub=None):
+    """一次性報告：產出後不會再被任何程式覆寫。
+
+    `sub` 給子資料夾名（見 ARCHIVE_SUBS），新報告請指定，不要再丟最上層。
+    沒給 `sub` 時：**同名檔已經在某個子資料夾裡就回那個位置**——十幾支一次性筆記腳本
+    都寫死 `op.archive("檔名")`，整理後如果有人重跑，會在最上層再生一份、跟子資料夾裡那份分家
+    （同一招 9/5 踩過：搬了檔案沒改程式，隔天排程把檔案寫回原處）。這樣不用逐支改。
+    """
+    root = ensure(ARCHIVE)
+    if sub:
+        return os.path.join(ensure(os.path.join(root, sub)), name)
+    if available():
+        for s in ARCHIVE_SUBS:
+            p = os.path.join(root, s, name)
+            if os.path.exists(p):
+                return p
+    return os.path.join(root, name)
 
 
 # 多數呼叫端是 `os.path.join(OBIS, "檔名.html")` 之後直接開檔寫入——它們不會
