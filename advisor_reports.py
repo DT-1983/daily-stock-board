@@ -344,7 +344,67 @@ def _archive(path):
         print(f"    ⚠️ 歸檔失敗（不影響解析結果）：{str(e)[:80]}")
 
 
-def parse(force=False, only=None):
+def _push_new_telegram(rows):
+    """報告一解析完就推一則 Telegram（2026-09-30 Leo：「推 telegram」）。
+
+    原本新報告只出現在隔天 08:45 的 Discord 私人日報——晚上丟進來的要等到隔天早上，
+    Leo 問「為什麼今天沒有推」才發現他以為會當場收到。這裡只回報「進來了什麼」
+    （代號、券商、評等、目標價、一句論點），Discord 日報那段照舊、兩邊不互相取代。
+    手機寬度：一份報告三行以內，不放長句。發送失敗只印警告，不影響解析結果。
+    ⚠️ 只在有 obis／本機環境時有 notify_tg（在上一層資料夾）；雲端排程匯入不到就安靜跳過。
+    """
+    import html as _html
+    try:
+        sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        import notify_tg
+    except Exception:                                       # noqa: BLE001
+        return
+    store = _load(STORE, {})
+
+    def target_line(r):
+        """目標價（千分位）＋同一家券商上一份的目標價。報告自己沒寫前次時，從登錄簿找。"""
+        t = r.get("target")
+        if t is None:
+            return "目標價 —"
+        try:
+            s = f"目標價 {float(t):,.10g}"
+        except (TypeError, ValueError):
+            return f"目標價 {t}"
+        prev = r.get("target_prev")
+        if not prev:
+            olds = [o for o in store.values()
+                    if _norm(o.get("ticker")) == _norm(r.get("ticker")) and o.get("broker") == r.get("broker")
+                    and o.get("target") and o.get("_file") != r.get("_file")
+                    and str(o.get("date") or "") < str(r.get("date") or "")]
+            prev = max(olds, key=lambda o: str(o.get("date")))["target"] if olds else None
+        try:
+            if prev and float(prev) != float(t):
+                s += f"（前次 {float(prev):,.10g} {'▲' if float(t) > float(prev) else '▼'}）"
+        except (TypeError, ValueError):
+            pass
+        return s
+
+    lines = [f"📑 <b>新收到的投顧報告</b>（{len(rows)} 份）"]
+    for r in sorted(rows, key=lambda x: str(x.get("ticker")))[:10]:
+        head = f"<b>{_html.escape(str(r.get('ticker')))} {_html.escape(str(r.get('name') or ''))}</b>"
+        tail = "　".join(x for x in (str(r.get("broker") or ""), str(r.get("rating") or "")) if x)
+        lines += ["", head + ("　" + _html.escape(tail) if tail else ""), _html.escape(target_line(r))]
+        if r.get("thesis"):
+            t = str(r["thesis"])
+            lines.append("<i>" + _html.escape(t[:60] + ("…" if len(t) > 60 else "")) + "</i>")
+    if len(rows) > 10:
+        lines += ["", f"…另有 {len(rows) - 10} 份"]
+    lines += ["", "<i>自動解析，季別與名詞可能有誤；細節看個股整合報告</i>"]
+    try:
+        rc = notify_tg.send("\n".join(lines))   # 回 0＝成功、1＝失敗（它自己吞例外，不會丟出來）
+    except Exception as e:                                  # noqa: BLE001
+        rc = str(e)[:80]
+    print(f"  📨 已推 Telegram：新報告 {len(rows)} 份" if rc == 0
+          else f"  ⚠️ Telegram 推送失敗（不影響解析）：{rc}")
+
+
+def parse(force=False, only=None, notify=True):
+    fresh = []                                   # 這一輪新解析成功的，結束時推 Telegram
     store = _load(STORE, {})
     files = sorted(
         glob.glob(os.path.join(PDF_DIR, "**", "*.pdf"), recursive=True)
@@ -421,10 +481,13 @@ def parse(force=False, only=None):
         _save(STORE, store)          # 逐份存，中途掛掉不會全丟
         _archive(f)
         done += 1
+        fresh.append(d)
         print(f"    ✅ {d.get('name')}({d['ticker']}) {d.get('broker')} "
               f"{d.get('date')}｜目標價 {d.get('target')}｜{len(d['conditions'])} 條失效條件")
     _mark_superseded(store)
     _save(STORE, store)
+    if fresh and notify:
+        _push_new_telegram(fresh)
     act = active(store)
     skip = sum(1 for r in store.values() if r.get("_notreport"))
     sup = sum(1 for r in store.values() if r.get("_superseded_by"))
