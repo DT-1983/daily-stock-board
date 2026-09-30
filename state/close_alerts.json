@@ -111,6 +111,30 @@
    "code": "ONTO",
    "sig": "st",
    "dir": 1
+  },
+  {
+   "sent": "2026-09-30",
+   "market": "tw",
+   "bar_date": "2026-09-30",
+   "code": "3481",
+   "sig": "st",
+   "dir": 1
+  },
+  {
+   "sent": "2026-09-30",
+   "market": "tw",
+   "bar_date": "2026-09-30",
+   "code": "5483",
+   "sig": "st",
+   "dir": 1
+  },
+  {
+   "sent": "2026-09-30",
+   "market": "tw",
+   "bar_date": "2026-09-30",
+   "code": "8046",
+   "sig": "st",
+   "dir": 1
   }
  ]
 }
