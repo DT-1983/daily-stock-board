@@ -327,9 +327,15 @@ def push(msg: str, discord_msg: str = None) -> bool:
 # 每日輕量跟催——**只檢查 state.upcoming 裡「已發過預告、財報日落在近 AFTER_DAYS 天內、
 # 還沒處理過」的那幾檔**（平常 0~3 檔），不是天天重掃全清單，不違背 8/3 的本意。
 
-def _next_q_consensus(tk):
+def _next_q_consensus(tk, report_date=None):
     """下季分析師共識（免費，yfinance）。財報公布後 0q 會滾動成「下一季」。
-    抓不到回 None——美股大多有、台股常缺，呼叫端要處理。"""
+    抓不到回 None——美股大多有、台股常缺，呼叫端要處理。
+
+    2026-10-01 修：`earnings_estimate` 的 avg 是「現在」的共識，財報公布後幾小時分析師
+    就照公司指引上修了。MU 實測：公布前 35.59、公布後 38.02，指引中值 38.15——
+    拿公布後的數字比指引，AI 寫成「略高於共識」，實際高出約 7%。
+    改用 eps_trend 的「7 天前」（公布超過 6 天用「30 天前」）當公布前共識；
+    營收沒有歷史欄位，只能給現在的數字並標明。"""
     try:
         t = yf.Ticker(tk)
         ee, re_ = t.earnings_estimate, t.revenue_estimate
@@ -338,7 +344,35 @@ def _next_q_consensus(tk):
         n = int(ee.loc["0q", "numberOfAnalysts"]) if eps is not None else 0
         if eps is None and rev is None:
             return None
-        return {"eps": eps, "revenue": rev, "analysts": n}
+        eps_pre = None
+        if report_date is not None:
+            try:
+                tr = t.eps_trend
+                days = (datetime.now(TW).date() - report_date).days
+                col = "7daysAgo" if days < 7 else "30daysAgo"
+                if tr is not None and "0q" in tr.index and col in tr.columns:
+                    eps_pre = float(tr.loc["0q", col])
+            except Exception:
+                eps_pre = None
+        return {"eps": eps, "eps_pre": eps_pre, "revenue": rev, "analysts": n}
+    except Exception:
+        return None
+
+
+def _after_hours_move(tk):
+    """盤後／隔日盤前實際股價（yfinance prepost），給 AI 當事實，不讓它從新聞猜。
+    MU 2026-10-01：AI 從新聞寫「小漲約 1.6%」，實際盤後 −0.7%～+0.4%、盤前 −0.4%。"""
+    try:
+        import pandas as pd
+        t = yf.Ticker(tk)
+        d = t.history(period="5d")["Close"].dropna()
+        h = t.history(period="5d", interval="1h", prepost=True)["Close"].dropna()
+        close = float(d.iloc[-1])
+        after = h[h.index > d.index[-1].tz_convert(h.index.tz) + pd.Timedelta(hours=16)]
+        if after.empty:
+            return None
+        return {"close": close, "close_date": d.index[-1].date().isoformat(),
+                "low": float(after.min()), "high": float(after.max()), "last": float(after.iloc[-1])}
     except Exception:
         return None
 
@@ -366,7 +400,18 @@ def _ai_flash(tk, nm, info, consensus):
         cons_txt = ""
         if consensus:
             rev_s = f"{consensus['revenue']/1e9:.1f}B" if consensus.get("revenue") else "—"
-            cons_txt = f"下季分析師共識：EPS {consensus['eps']}、營收 {rev_s}（{consensus['analysts']}位分析師）"
+            if consensus.get("eps_pre") is not None:
+                cons_txt = (f"下季EPS共識：財報公布前 {consensus['eps_pre']:.2f}、目前（分析師可能已照指引上修）"
+                            f" {consensus['eps']:.2f}；**指引要跟「公布前」的數字比**。"
+                            f"下季營收共識目前 {rev_s}（沒有公布前的數字，可能已上修，比較時要註明）。")
+            else:
+                cons_txt = f"下季分析師共識：EPS {consensus['eps']}、營收 {rev_s}（{consensus['analysts']}位分析師，可能已在公布後上修）"
+        mv = _after_hours_move(tk)
+        if mv:
+            cons_txt += (f"\n盤後／盤前實際股價（yfinance，以此為準，不要用新聞的漲跌幅）："
+                         f"{mv['close_date']} 收盤 {mv['close']:.2f}，之後區間 {mv['low']:.2f}～{mv['high']:.2f}"
+                         f"（{mv['low']/mv['close']-1:+.1%}～{mv['high']/mv['close']-1:+.1%}），"
+                         f"最新 {mv['last']:.2f}（{mv['last']/mv['close']-1:+.1%}）。")
         prompt = f"""你是財報快訊研究員。{tk}（{nm}）在 {info['last_date']} 公布財報。
 已知事實（yfinance結構化資料，不用重查）：實際EPS {info['last_eps']}，
 意外幅度 {info['surprise']:+.1f}%。{cons_txt}
@@ -606,10 +651,13 @@ def daily_followup(args):
         ic = "🟢" if (info["surprise"] or 0) >= 0 else "🔴"
         b = [f"{mk}<b>{tk}</b> {nm}　{info['last_date']} 已公布",
              f"　① EPS 實際 {eps}｜意外 {ic}{sp}"]
-        consensus = _next_q_consensus(tk)
+        consensus = _next_q_consensus(tk, info["last_date"])
         if consensus:
-            rev_t = f"營收 {consensus['revenue']/1e9:.1f}B" if consensus.get("revenue") else ""
-            eps_t = f"EPS {consensus['eps']:.2f}" if consensus.get("eps") is not None else ""
+            rev_t = f"營收 {consensus['revenue']/1e9:.1f}B（目前）" if consensus.get("revenue") else ""
+            if consensus.get("eps_pre") is not None and consensus.get("eps") is not None:
+                eps_t = f"EPS 公布前 {consensus['eps_pre']:.2f} → 目前 {consensus['eps']:.2f}"
+            else:
+                eps_t = f"EPS {consensus['eps']:.2f}" if consensus.get("eps") is not None else ""
             b.append(f"　② 下季共識：{'、'.join(x for x in (eps_t, rev_t) if x)}（{consensus['analysts']}位分析師）")
         dg_this = None
         if tk in (held | set(US_WATCH)) and made < args.max_infographics and not args.dry_run:
