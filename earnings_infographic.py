@@ -833,7 +833,7 @@ def main():
     print("完成")
     print("法說會逐字稿摘要（本機 claude 上網搜尋，較慢）…", end=" ", flush=True)
     try:
-        call_html, call_sum = EC.build(d["ticker"], d.get("name", ""), d["quarter"])
+        call_html, call_sum = EC.build(d["ticker"], d.get("name", ""), d["quarter"], d.get("period_end", ""))
     except Exception as e:
         print(f"失敗：{e}", end=" ")
         call_html, call_sum = "", ""
