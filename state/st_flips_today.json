@@ -1,15 +1,8 @@
 {
-"date": "2026-09-30",
+"date": "2026-10-01",
 "flips_hold": [
 {
-"code": "CCL",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1,
-"sig": "st"
-},
-{
-"code": "UNM",
+"code": "BAYRY",
 "name": "",
 "word": "🟢→🔴 翻空",
 "dir": -1,
@@ -20,20 +13,6 @@
 "name": "",
 "word": "RS60站回多方",
 "dir": 1,
-"sig": "rs60"
-},
-{
-"code": "TSLA",
-"name": "",
-"word": "RS60跌破自身均線",
-"dir": -1,
-"sig": "rs60"
-},
-{
-"code": "API",
-"name": "",
-"word": "RS60跌破自身均線",
-"dir": -1,
 "sig": "rs60"
 },
 {
@@ -51,10 +30,10 @@
 "sig": "rs60"
 },
 {
-"code": "GLW",
+"code": "TSLA",
 "name": "",
-"word": "RS60站回多方",
-"dir": 1,
+"word": "RS60跌破自身均線",
+"dir": -1,
 "sig": "rs60"
 },
 {
@@ -62,13 +41,6 @@
 "name": "",
 "word": "RS60跌破自身均線",
 "dir": -1,
-"sig": "rs60"
-},
-{
-"code": "DNKEY",
-"name": "",
-"word": "RS60站回多方",
-"dir": 1,
 "sig": "rs60"
 },
 {
@@ -93,35 +65,71 @@
 "sig": "rs60"
 }
 ],
-"flips_watch": [
+"flips_watch": [],
+"ai_alerts": [
 {
-"code": "ONTO",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1,
-"sig": "st"
+"chain": "AI 電力/核能",
+"market": "US",
+"sig": "🟢",
+"code": "PWR",
+"name": "Quanta Services Inc",
+"reason": "觀望→買進"
 },
 {
-"code": "3481",
-"name": "群創",
-"word": "🔴→🟢 翻多",
-"dir": 1,
-"sig": "st"
+"chain": "機器人",
+"market": "US",
+"sig": "🟢",
+"code": "NDSN",
+"name": "Nordson Corp",
+"reason": "觀望→買進"
 },
 {
-"code": "5483",
-"name": "中美晶",
-"word": "🔴→🟢 翻多",
-"dir": 1,
-"sig": "st"
+"chain": "AI 伺服器",
+"market": "US",
+"sig": "🟢",
+"code": "P",
+"name": "Everpure Inc Class A",
+"reason": "觀望→買進"
 },
 {
-"code": "8046",
-"name": "南電",
-"word": "🔴→🟢 翻多",
-"dir": 1,
-"sig": "st"
+"chain": "AI 電力/核能",
+"market": "US",
+"sig": "🟢",
+"code": "ETN",
+"name": "Eaton Corp PLC",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 伺服器",
+"market": "US",
+"sig": "🟢",
+"code": "INTC",
+"name": "Intel Corp",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 電力/核能",
+"market": "US",
+"sig": "🔴",
+"code": "BWXT",
+"name": "BWX Technologies Inc",
+"reason": "觀望→賣出"
+},
+{
+"chain": "AI 電力/核能",
+"market": "US",
+"sig": "🔴",
+"code": "CEG",
+"name": "Constellation Energy Corp",
+"reason": "觀望→賣出"
+},
+{
+"chain": "太陽能",
+"market": "TW",
+"sig": "🟢",
+"code": "3576",
+"name": "聯合再生",
+"reason": "觀望→買進"
 }
-],
-"ai_alerts": []
+]
 }

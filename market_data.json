@@ -1,124 +1,124 @@
 {
- "updated": "2026-09-30 21:36",
+ "updated": "2026-10-01 08:46",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
    "date": "09/30",
-   "close": 7693.68,
-   "chg_pct": 0.3
+   "close": 7651.54,
+   "chg_pct": -0.25
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
    "date": "09/30",
-   "close": 26920.38,
-   "chg_pct": 0.46
+   "close": 26861.06,
+   "chg_pct": 0.24
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
    "date": "09/30",
-   "close": 51414.48,
-   "chg_pct": 0.13
+   "close": 50906.05,
+   "chg_pct": -0.86
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
    "date": "09/30",
-   "close": 12674.76,
-   "chg_pct": 0.36
+   "close": 12628.62,
+   "chg_pct": -0.0
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/30",
-   "close": 47940.13,
-   "chg_pct": 0.65
+   "date": "09/29",
+   "close": 47631.96,
+   "chg_pct": -0.82
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/30",
-   "close": 31.85,
-   "chg_pct": 0.2
+   "date": "10/01",
+   "close": 31.89,
+   "chg_pct": 0.14
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
    "date": "09/30",
-   "close": 5.24,
+   "close": 5.29,
    "fmt": "yield",
-   "chg_bp": -1.9
+   "chg_bp": 3.8
   }
  ],
  "news": [
   {
-   "title": "美中休兵延長、調查照走！中國兩項對美調查延至12月27日",
+   "title": "空中驚魂！以色列防長：杜拜航空是一起「恐怖襲擊未遂事件」",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6619036",
-   "ts": "09/30 21:20"
+   "url": "https://news.cnyes.com/news/id/6619246",
+   "ts": "10/01 08:42"
   },
   {
-   "title": "《大賣空》原型警告AI融資風險！離表融資重現、恐重蹈安隆覆轍",
+   "title": "柴油價格飆史高！川普承認「每天」討論出口禁令　Fed調查：高價恐需至少1年才回落",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6618317",
-   "ts": "09/30 21:10"
+   "url": "https://news.cnyes.com/news/id/6619277",
+   "ts": "10/01 08:40"
   },
   {
-   "title": "川普強迫勞動關稅遭控濫權 美國國際貿易法庭展開審查",
+   "title": "美光加碼2027會計年度資本支出無塵室擴建瞄準2028年後供給",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6618912",
-   "ts": "09/30 20:50"
+   "url": "https://news.cnyes.com/news/id/6619287",
+   "ts": "10/01 08:30"
   },
   {
-   "title": "〈台幣〉季底拋匯支持微升收31.852元 月、季線同步翻黑",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6619011",
-   "ts": "09/30 20:44"
-  },
-  {
-   "title": "通膨低於預期！美國8月核心PCE僅年增3% Fed下月升息押注跌破四成",
+   "title": "只花22天！Muse在美超越ChatGPT成最快達成500萬次下載量AI應用程式",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6618919",
-   "ts": "09/30 20:36"
+   "url": "https://news.cnyes.com/news/id/6619250",
+   "ts": "10/01 08:30"
   },
   {
-   "title": "Anthropic砸116億美元足以改變Akamai，股價為何漲不動？證明了市場開始重算AI大單的含金量",
+   "title": "Fed總部翻修調查出爐！未發現違法 川普仍逼鮑爾辭理事",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6619029",
-   "ts": "09/30 20:30"
+   "url": "https://news.cnyes.com/news/id/6619180",
+   "ts": "10/01 08:30"
   },
   {
-   "title": "瑞儀庫藏股執行期間屆滿 買回均價106.78元",
+   "title": "智伸科(4551)下半年營運轉強 AI水冷、半導體雙引擎點火",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6619020",
-   "ts": "09/30 20:27"
+   "url": "https://news.cnyes.com/news/id/6619221",
+   "ts": "10/01 06:30"
   },
   {
-   "title": "法人看好台塑擴展電子級硫酸布局半導體市場 外資連3買推升股價創波段高",
+   "title": "〈台股盤前要聞〉台股力守五日線、鴻海分紅大成長、欣興砸百億標廠",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6618984",
-   "ts": "09/30 20:21"
+   "url": "https://news.cnyes.com/news/id/6619070",
+   "ts": "10/01 05:10"
   },
   {
-   "title": "嘉泥旅宿事業結構轉變 擴大營收成長轉化為實質獲利",
+   "title": "凱基金擬辦現金增資最多250億元 7成以上將挹注凱基證券",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6618976",
-   "ts": "09/30 20:19"
+   "url": "https://news.cnyes.com/news/id/6619098",
+   "ts": "09/30 23:09"
   },
   {
-   "title": "4檔飆股明起抓去關 這3檔近6個交易日漲逾40%  嘉晶、蔚華科處置至10/12",
+   "title": "華航釋空服職缺 10/5起報名 最快明年1月中旬報到",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6618944",
-   "ts": "09/30 19:42"
+   "url": "https://news.cnyes.com/news/id/6619089",
+   "ts": "09/30 23:01"
+  },
+  {
+   "title": "資服業新兵報到 藍新資訊以AI維運平台搶占高門檻利基市場",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6619085",
+   "ts": "09/30 23:00"
   }
  ],
  "inst": {

@@ -1,54 +1,54 @@
 {
- "updated": "2026-09-30 00:46",
+ "updated": "2026-10-01 00:46",
  "us": {
   "actual": [
    {
     "period": "2023-Q3",
-    "value": 4.69
+    "value": 4.53
    },
    {
     "period": "2023-Q4",
-    "value": 3.42
+    "value": 3.63
    },
    {
     "period": "2024-Q1",
-    "value": 0.84
+    "value": 1.44
    },
    {
     "period": "2024-Q2",
-    "value": 3.59
+    "value": 3.58
    },
    {
     "period": "2024-Q3",
-    "value": 3.34
+    "value": 3.15
    },
    {
     "period": "2024-Q4",
-    "value": 1.85
+    "value": 2.4
    },
    {
     "period": "2025-Q1",
-    "value": -0.65
+    "value": 0.14
    },
    {
     "period": "2025-Q2",
-    "value": 3.84
+    "value": 4.02
    },
    {
     "period": "2025-Q3",
-    "value": 4.38
+    "value": 3.88
    },
    {
     "period": "2025-Q4",
-    "value": 0.48
+    "value": 0.21
    },
    {
     "period": "2026-Q1",
-    "value": 2.09
+    "value": 2.49
    },
    {
     "period": "2026-Q2",
-    "value": 1.48
+    "value": 2.22
    }
   ],
   "forecast": [
@@ -144,7 +144,7 @@
  },
  "peak": {
   "us": {
-   "peak_period": "2025-Q3",
+   "peak_period": "2025-Q2",
    "status": "已過高點"
   },
   "tw": {
