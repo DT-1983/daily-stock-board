@@ -52,8 +52,17 @@ _SCHEMA_HINT = """只能回傳一個 JSON 陣列，不要包在其他物件裡�
 完全找不到逐字稿時回傳空陣列 []。"""
 
 
-def _prompt(ticker, company_name, quarter_label):
+def _prompt(ticker, company_name, quarter_label, period_end=""):
+    # 2026-10-01：季別一律以「財務期間結束日」對，不用日曆季標籤。卡片的 quarter 是期末日期所在的
+    # 日曆季；會計年度不是日曆年的公司（美光、輝達、博通、邁威爾…）兩者差一季——MU 期末 2026-05-31
+    # 標成「Q2 2026」，搜出來的是它自己的「財年第 2 季」（期末 2026-02）法說會，整張卡的管理層
+    # 重點是上一季的，還把上一季的下季財測拿去跟這季營收比，生出假風險。
+    pe = ("\n⚠️ 要的是**財務期間結束於 " + period_end + "** 的那一季。公司自己叫它「第幾季／財年幾」跟日曆季可能不同"
+          "（會計年度不是日曆年的公司很常見），**請用期末日期 " + period_end + " 對**，不要用「" + str(quarter_label) + "」字面去推。"
+          "打開逐字稿後，確認管理層說的「本季營收／本季」對應到期末 " + period_end + " 那一季，"
+          "對不上（例如是前一季或後一季的法說會）就換來源或回空陣列。\n") if period_end else ""
     return f"""你有 WebSearch 和 WebFetch 工具，請完成以下任務：
+{pe}
 
 1. 用 WebSearch 搜尋「{ticker} {company_name} {quarter_label} earnings call transcript site:fool.com」，
    優先找 The Motley Fool（fool.com）上的公開逐字稿。如果 fool.com 沒有，改搜
@@ -134,7 +143,7 @@ def guidance(ticker=None, contains=None):
     return out
 
 
-def build(ticker, company_name="", quarter_label=""):
+def build(ticker, company_name="", quarter_label="", period_end=""):
     """回 (html, summary_text)。抓不到逐字稿或解析失敗都回 ("", "")，不中斷主流程。"""
     try:
         # tries=1（2026-08-31）：繁體驗收預設重試 3 次，而 llm_board.TIMEOUT 是 600 秒，
@@ -142,7 +151,7 @@ def build(ticker, company_name="", quarter_label=""):
         # 這一段是**選配的加值資訊**（抓不到就回 ("","") 不中斷主流程），
         # 沒必要為它付三倍的等待。回來是簡體就整段不用，不重試。
         data = llm_board.ask_json_traditional(
-            _prompt(ticker, company_name, quarter_label), tries=1)
+            _prompt(ticker, company_name, quarter_label, period_end), tries=1)
     except Exception as e:
         print(f"  [earnings_call] {ticker} 逐字稿摘要失敗：{e}")
         return "", ""
