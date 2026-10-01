@@ -1,9 +1,15 @@
 {
- "date": "2026-09-30",
- "lamp_date": "2026-09-30",
- "buy": [],
+ "date": "2026-10-01",
+ "lamp_date": "2026-10-01",
+ "buy": [
+  "7822.TW"
+ ],
  "half_sell": [],
- "full_exit": [],
- "held": 14,
+ "full_exit": [
+  "COP",
+  "IREN",
+  "T"
+ ],
+ "held": 12,
  "cash": 0.0
 }
