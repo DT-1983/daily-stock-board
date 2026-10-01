@@ -230,6 +230,78 @@ def _unresolved_block(q):
             "  （2026-09-06 實際發生過：問 ONON，回答的是 ON。）")
 
 
+_STATUS_CACHE = {}
+_STATUS_LOCK = None
+
+
+def _status_block(code):
+    """程式算好的技術**狀態**（2026-10-02，Leo 同意「RS 是否跌破 60 日均線這類狀態由程式算好給孔明」）。
+
+    起因：孔明對同一檔緯穎，第一次說「RS(60日)已跌破自身 60 日均線」、重答說「未跌破」。
+    真因＝過午夜後 yfinance 多一根 Close 為 NaN 的當天 K 棒，RS60 算不出來（None），
+    而材料組裝把 None 寫成「未跌破」（investment_chief 那行已改成「無法判定」，trade_plan 也丟掉 NaN 棒）。
+    更根本的是：**是非狀態不該讓 AI 從一串數字自己讀**——它每次讀可能不一樣。這裡一次算好、
+    明寫「直接引用」。
+
+    來源只有一條：`lamp_lookup.lookup(live=True)`（價格、SuperTrend、動能、RS 乖離、四燈同一份資料同一天），
+    所以不會出現「同一個指標兩個數字」。RS 乖離 < 0 ＝ RS(60日) 跌破自身 60 日均線
+    （mansfield_rs 與 mansfield_rs_series 2026-09-06 已統一成同一個定義）。
+    即時重算要 3～8 秒，5 分鐘內同一檔沿用；yfinance 在多執行緒下會回錯格式
+    （'DataFrame' has no attribute 'tolist'），所以整段用鎖序列化。算不出來回空字串（呼叫端退回快取列並註明）。
+    """
+    import re as _re
+    import threading
+    import time as _t
+    global _STATUS_LOCK
+    if _STATUS_LOCK is None:
+        _STATUS_LOCK = threading.Lock()
+    k = _re.sub(r"\.(TW|TWO)$", "", str(code).upper())
+    hit = _STATUS_CACHE.get(k)
+    if hit and _t.time() - hit[0] < 300:
+        return hit[1]
+    with _STATUS_LOCK:
+        hit = _STATUS_CACHE.get(k)
+        if hit and _t.time() - hit[0] < 300:
+            return hit[1]
+        try:
+            import lamp_lookup as L
+            r = L.lookup(k, live=True)
+        except Exception:                                   # noqa: BLE001
+            r = None
+        if not r or not r.get("price"):
+            return ""
+        px, st_line, gap = r["price"], r.get("st_line"), r.get("gap_pct")
+        lm = r.get("lamps") or {}
+        rs_s, rs_l = r.get("rs_short"), r.get("rs_long")
+        out = ["  【程式算好的技術狀態——直接引用，不要自己從數字重新判斷】"]
+        if st_line:
+            side = "多方" if r.get("bull") else "空方"
+            rel = "高於" if (gap or 0) >= 0 else "低於"
+            out.append(f"  ・SuperTrend：{side}｜線 {st_line:,.2f}｜現價 {px:,.2f}｜{rel}線 {abs(gap or 0):.2f}%"
+                       + ("" if r.get("bull") else "（空方時這條線是壓力，不是停損）"))
+        if rs_s is not None:
+            out.append(f"  ・RS(60日)：{'已跌破自身 60 日均線' if rs_s < 0 else '站在自身 60 日均線之上'}"
+                       f"（RS 乖離 {rs_s:+.2f}%" + (f"；長期 {rs_l:+.2f}%" if rs_l is not None else "") + "）")
+        else:
+            out.append("  ・RS(60日)：無法判定（資料不足）——不要當成未跌破")
+        if lm:
+            out.append(f"  ・燈號 {r.get('lit')}/4：" + "｜".join(
+                f"{n.split(' ', 1)[0]} {'✓' if v else '✗'} {n.split(' ', 1)[1] if ' ' in n else ''}".strip()
+                for n, v in lm.items()))
+        tail = []
+        if r.get("rr") is not None:
+            tail.append(f"風報比 {r['rr']}")
+        elif st_line and not r.get("bull"):
+            tail.append("風報比：算不出（現價在 SuperTrend 線下，沒有停損可對照）")
+        if r.get("target"):
+            tail.append(f"市場共識目標價 {r['target']:,.2f}")
+        tail.append(f"資料日 {r.get('asof')}（即時重算）")
+        out.append("  ・" + "｜".join(tail))
+        txt = "\n".join(out)
+        _STATUS_CACHE[k] = (_t.time(), txt)
+        return txt
+
+
 def _one_stock_block(code, nm=""):
     """單檔的實際資料。**查不到就明說查不到**，不要回空字串讓人以為沒問過。"""
     import re as _re
@@ -242,16 +314,22 @@ def _one_stock_block(code, nm=""):
     lines.append("  " + _profile(code).replace("\n", "\n  "))
     held = _re.sub(r"\.(TW|TWO)$", "", str(code).upper()) in _held_set()
     lines.append(f"  是不是持股：{'是' if held else '否'}")
+    # 2026-10-02：技術狀態由程式即時算好給（見 _status_block），優先於每日掃描快取。
+    # 原本只給快取列：快取是 07:00 掃的、等於前一個交易日收盤，而且母體外的股票整段是
+    # 「沒有技術面資料」；孔明又自己從 RS 數字判斷「跌破／未跌破」，同一檔前後說法不一致。
+    _sb = _status_block(code)
     cr = _load("state/combo_result.json", {}) or {}
     row = next((r for r in (cr.get("rows") or [])
                 if _re.sub(r"\.(TW|TWO)$", "", str(r.get("ticker", "")).upper())
                 == _re.sub(r"\.(TW|TWO)$", "", str(code).upper())), None)
-    if row:
+    if _sb:
+        lines.append(_sb)
+    elif row:
         lines.append(f"  燈號：{row.get('lit')}/4"
                      f"｜SuperTrend {'多方' if row.get('bull') else '空方'}"
                      f"（線 {row.get('st_line')}）｜現價 {row.get('price')}"
                      f"｜風報比 {row.get('rr')}｜目標價 {row.get('target')}"
-                     f"｜資料日 {row.get('asof')}")
+                     f"｜資料日 {row.get('asof')}（即時重算失敗，這是每日掃描快取，可能比今天舊一天）")
     else:
         lines.append("  ⚠️ **不在每日燈號掃描母體**——我們沒有這檔的技術面資料。")
     # 2026-09-29 Leo：「未來在軍師之中，記得有出這些報告，會提及內容或目標價」——
