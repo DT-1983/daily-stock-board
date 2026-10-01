@@ -359,20 +359,102 @@ def _next_q_consensus(tk, report_date=None):
         return None
 
 
-def _after_hours_move(tk):
-    """盤後／隔日盤前實際股價（yfinance prepost），給 AI 當事實，不讓它從新聞猜。
-    MU 2026-10-01：AI 從新聞寫「小漲約 1.6%」，實際盤後 −0.7%～+0.4%、盤前 −0.4%。"""
+def _snapshot_consensus(st, tk, info, today):
+    """財報公布前 T-7～T-0 每天記一次「這一季」的 EPS／營收共識（yfinance 0q）。
+    公布後 0q 會滾成下一季、分析師也會上修，營收共識沒有歷史欄位——不先存，
+    事後就只剩已經被改過的數字（2026-10-01 MU 營收 vs 預期因此比不了）。
+    每天覆蓋同一個 key，最後留下的是公布前最後一次。"""
+    try:
+        t = yf.Ticker(tk)
+        ee, re_ = t.earnings_estimate, t.revenue_estimate
+        eps = float(ee.loc["0q", "avg"]) if ee is not None and "0q" in ee.index else None
+        rev = float(re_.loc["0q", "avg"]) if re_ is not None and "0q" in re_.index else None
+        if eps is None and rev is None:
+            return
+        st.setdefault("consensus_snap", {})[f'{tk}@{info["next_date"]}'] = {
+            "eps": eps, "revenue": rev, "taken": today.isoformat()}
+    except Exception:
+        pass
+
+
+def _find_snap(st, tk, ed):
+    """找 ed 當天（或前後 1 天）的公布前共識快照。"""
+    snaps = st.get("consensus_snap") or {}
+    for dd in (0, -1, 1):
+        k = f"{tk}@{(ed + timedelta(days=dd)).isoformat()}"
+        if k in snaps:
+            return snaps[k]
+    return None
+
+
+def _sec_takeaway(tk, nm, facts_text):
+    """一句白話總結（含對台股供應鏈的連動）。只給已驗證的數字，不連網、不讓它補數字。"""
+    try:
+        import sec_release as SR
+        schema = {"type": "object", "properties": {
+            "takeaway": {"type": "string", "maxLength": 150}}, "required": ["takeaway"]}
+        base = f"""你是財報快訊研究員。下面是 {tk}（{nm}）剛公布財報、已核對過原文的數字：
+{facts_text}
+
+寫**一句**繁體中文（台灣用語）白話總結：這次財報最重要的訊號是什麼，若跟台股供應鏈有關就點出連動意義。
+只能用上面出現的數字，**不要補任何沒給的數字、不要編股價反應、不要給買賣建議**。"""
+        for k in range(2):
+            out = SR._claude_json(base + ("" if k == 0 else "\n⚠️ 上一次出現簡體字，這次務必全部用繁體。"), schema)
+            tx = (out or {}).get("takeaway")
+            if tx and not _has_simplified(tx):
+                return tx
+        return None
+    except Exception as e:
+        print(f"  [{tk}] 白話總結失敗（不擋推播）：{e}")
+        return None
+
+
+def _after_hours_move(tk, ed=None):
+    """財報公布日（美東日期 ed）收盤後～下一個交易日開盤前的實際股價（yfinance prepost 1 小時線），
+    給 AI／快訊當事實，不讓它從新聞猜。ed 沒給就用最近一根日線。
+    MU 2026-10-01：AI 從新聞寫「小漲約 1.6%」，實際盤後 −0.7%～+0.4%、盤前 −0.4%。
+    ⚠️ 以公布日為準而不是「現在」——隔天盤中再算，區間就不是財報當晚的反應了。"""
     try:
         import pandas as pd
         t = yf.Ticker(tk)
-        d = t.history(period="5d")["Close"].dropna()
-        h = t.history(period="5d", interval="1h", prepost=True)["Close"].dropna()
+        d = t.history(period="10d")["Close"].dropna()
+        if ed is not None:
+            d = d[[i.date() <= ed for i in d.index]]
+        if d.empty:
+            return None
+        day = d.index[-1]
         close = float(d.iloc[-1])
-        after = h[h.index > d.index[-1].tz_convert(h.index.tz) + pd.Timedelta(hours=16)]
+        # 優先 1 分鐘線（近 7 天內有）、不行退 1 小時線；用 High／Low 欄位取極值，
+        # 不是收盤價——小時線的 Close 會漏掉區間內的高低點（9/30 實測少算 16:00 那根的 +0.9%）。
+        hh = None
+        for iv, per in (("1m", "5d"), ("1h", "10d")):
+            try:
+                hh = t.history(period=per, interval=iv, prepost=True).dropna(subset=["Close"])
+            except Exception:
+                hh = None
+            if hh is not None and not hh.empty and hh.index[0].date() <= day.date():
+                break
+        if hh is None or hh.empty:
+            return None
+        tz = hh.index.tz
+        start = pd.Timestamp(day.date().isoformat() + " 16:00").tz_localize(tz)
+        nd = [i for i in hh.index if i.date() > day.date()]
+        end = pd.Timestamp(nd[0].date().isoformat() + " 09:30").tz_localize(tz) if nd else None
+        after = hh[(hh.index >= start) & ((hh.index < end) if end is not None else True)]
         if after.empty:
             return None
-        return {"close": close, "close_date": d.index[-1].date().isoformat(),
-                "low": float(after.min()), "high": float(after.max()), "last": float(after.iloc[-1])}
+        # 只用 Close，不用 High／Low：盤後 1 分鐘線偶爾有成交量 0 的假成交價（MU 9/30 17:07 那根
+        # Low=769.8、−28%，是壞資料）。再用 5 根滾動中位數濾掉偏離 >3% 的點。
+        c = after["Close"]
+        med = c.rolling(5, center=True, min_periods=1).median()
+        c = c[((c / med) - 1).abs() <= 0.03]
+        if c.empty:
+            return None
+        tw = lambda ts: ts.tz_convert("Asia/Taipei").strftime("%m/%d %H:%M")
+        return {"close": close, "close_date": day.date().isoformat(),
+                "low": float(c.min()), "low_t": tw(c.idxmin()),
+                "high": float(c.max()), "high_t": tw(c.idxmax()),
+                "last": float(c.iloc[-1]), "last_t": tw(c.index[-1])}
     except Exception:
         return None
 
@@ -406,7 +488,7 @@ def _ai_flash(tk, nm, info, consensus):
                             f"下季營收共識目前 {rev_s}（沒有公布前的數字，可能已上修，比較時要註明）。")
             else:
                 cons_txt = f"下季分析師共識：EPS {consensus['eps']}、營收 {rev_s}（{consensus['analysts']}位分析師，可能已在公布後上修）"
-        mv = _after_hours_move(tk)
+        mv = _after_hours_move(tk, info.get('last_date'))
         if mv:
             cons_txt += (f"\n盤後／盤前實際股價（yfinance，以此為準，不要用新聞的漲跌幅）："
                          f"{mv['close_date']} 收盤 {mv['close']:.2f}，之後區間 {mv['low']:.2f}～{mv['high']:.2f}"
@@ -575,6 +657,8 @@ def daily_followup(args):
         d_ = info.get("days_to")
         if d_ is not None and 0 <= d_ <= AHEAD_DAYS:
             k = f'{tk}@{info["next_date"]}'
+            if tk in US_WATCH:
+                _snapshot_consensus(st, tk, info, today)       # 公布前共識，事後比營收／比指引要用
             if st.setdefault("upcoming", {}).get(k) != "sent":
                 scan_new[k] = (tk, info)
         ld = info.get("last_date")
@@ -582,6 +666,43 @@ def daily_followup(args):
             k = f"{tk}@{ld}"
             st.setdefault("upcoming", {}).setdefault(k, "sent")   # 補登錄，供下面取用
             # reported 的去重在下面的候選迴圈統一做，這裡只負責讓它「看得到」
+
+    # ── 2026-10-01：美股財報直接讀 SEC 8-K 新聞稿（公布當下就有，不等 yfinance／XBRL 隔天才跟上）
+    # Leo 拿 StockPulse 的 MU 貼文比：他們公布後幾分鐘就有營收 vs 預期、事業部、股利、指引，
+    # 我們要等隔天而且只有 EPS。新聞稿的數字由本機 claude 擷取、程式逐筆核對引句（sec_release.py），
+    # 驗不過的欄位直接丟掉。找不到新聞稿或解析失敗 → 照舊走下面 yfinance 那條路，不會比以前差。
+    sec_rel = {}
+    try:
+        import sec_release as SR
+        uni_now = set(build_universe(getattr(args, "universe", "holdings") or "holdings"))
+        for tk in sorted(uni_now & set(US_WATCH)):
+            rel = SR.latest_release(tk, AFTER_DAYS)
+            if not rel:
+                continue
+            k = f'{tk}@{rel["filed"]}'
+            done = st.setdefault("sec_release", {})
+            if done.get(k) == "sent":
+                continue
+            try:
+                filed_d = datetime.strptime(rel["filed"], "%Y-%m-%d").date()
+            except ValueError:
+                continue
+            # yfinance 那條路已經處理過同一次財報（key 可能差 1~3 天）→ 不重推
+            if any(k2.rsplit("@", 1)[0] == tk and st["reported"].get(k2) == "sent"
+                   and abs((datetime.strptime(k2.rsplit("@", 1)[1], "%Y-%m-%d").date() - filed_d).days) <= 3
+                   for k2 in st["reported"]):
+                done[k] = "sent"
+                continue
+            parsed = SR.parse_release(rel)
+            if parsed and parsed["facts"].get("revenue") and parsed["facts"].get("eps_nongaap", parsed["facts"].get("eps_gaap")):
+                sec_rel[k] = (tk, rel, parsed)
+                st.setdefault("upcoming", {}).setdefault(k, "sent")   # 變成候選
+                print(f"  {tk} SEC 新聞稿 {rel['filed']}：{len(parsed['facts'])} 個欄位通過核對、"
+                      f"{len(parsed['dropped'])} 個丟棄")
+            else:
+                print(f"  {tk} SEC 新聞稿解析失敗或關鍵欄位缺，改走 yfinance 路徑")
+    except Exception as e:                                       # noqa: BLE001
+        print(f"  SEC 新聞稿掃描失敗（不影響其他流程）：{e}")
 
     cands = []
     for key in st.get("upcoming", {}):
@@ -641,24 +762,55 @@ def daily_followup(args):
 
         info = earnings_info(tk)
         time.sleep(0.35)
-        if not info or not info.get("last_date") or info["last_date"] < ed:
+        sec = sec_rel.get(key)
+        yf_done = bool(info and info.get("last_date") and info["last_date"] >= ed)
+        if not sec and not yf_done:
             print(f"  {tk} 財報數字還沒出現在 yfinance（可能剛公布資料未更新），明天再試")
             continue                        # 不寫 state，明天重試
         nm = _holdings().get(tk, (tk,))[0] if tk in _holdings() else US_WATCH.get(tk, tk)
         mk = _mark(tk, personal, kids)
-        eps = f"{info['last_eps']:.2f}" if info["last_eps"] is not None else "—"
-        sp = f"{info['surprise']:+.1f}%" if info["surprise"] is not None else "—"
-        ic = "🟢" if (info["surprise"] or 0) >= 0 else "🔴"
-        b = [f"{mk}<b>{tk}</b> {nm}　{info['last_date']} 已公布",
-             f"　① EPS 實際 {eps}｜意外 {ic}{sp}"]
-        consensus = _next_q_consensus(tk, info["last_date"])
-        if consensus:
-            rev_t = f"營收 {consensus['revenue']/1e9:.1f}B（目前）" if consensus.get("revenue") else ""
-            if consensus.get("eps_pre") is not None and consensus.get("eps") is not None:
-                eps_t = f"EPS 公布前 {consensus['eps_pre']:.2f} → 目前 {consensus['eps']:.2f}"
-            else:
-                eps_t = f"EPS {consensus['eps']:.2f}" if consensus.get("eps") is not None else ""
-            b.append(f"　② 下季共識：{'、'.join(x for x in (eps_t, rev_t) if x)}（{consensus['analysts']}位分析師）")
+        sec_text = None
+        if sec:
+            _tk, rel, parsed = sec
+            consensus = _next_q_consensus(tk, ed) if yf_done else None
+            # 本季共識：優先用 yfinance 算好的意外幅度反推（它是公布前共識），沒有再用公布前快照
+            eps_cons = None
+            if yf_done and info.get("surprise") is not None and info.get("last_eps"):
+                eps_cons = info["last_eps"] / (1 + info["surprise"] / 100)
+            snap = _find_snap(st, tk, ed)
+            if eps_cons is None and snap and snap.get("eps"):
+                eps_cons = snap["eps"]
+            rev_cons = snap.get("revenue") if snap else None
+            lines = SR.format_facts(parsed, eps_cons=eps_cons, rev_cons=rev_cons,
+                                    next_eps_pre=(consensus or {}).get("eps_pre"))
+            b = [f"{mk}<b>{tk}</b> {nm}　{rel['filed']} 已公布（SEC 新聞稿）"] + lines
+            if yf_done and info.get("last_eps") and parsed["facts"].get("eps_nongaap"):
+                dv = parsed["facts"]["eps_nongaap"]["value"] / info["last_eps"] - 1
+                if abs(dv) > 0.03:
+                    b.append(f"　⚠️ 新聞稿非GAAP每股盈餘 {parsed['facts']['eps_nongaap']['value']:.2f} 跟 yfinance "
+                             f"{info['last_eps']:.2f} 差 {dv:+.1%}，可能口徑不同，請對原文")
+            mv = _after_hours_move(tk, ed)
+            if mv:
+                b.append(f"　⑥ 盤後實際股價（yfinance，盤後無成交量、精度有限；台灣時間）：{mv['close_date']} 收 {mv['close']:,.2f}"
+                         f"｜最高 {mv['high']:,.2f}（{mv['high']/mv['close']-1:+.1%}，{mv['high_t']}）"
+                         f"｜最低 {mv['low']:,.2f}（{mv['low']/mv['close']-1:+.1%}，{mv['low_t']}）"
+                         f"｜最新 {mv['last']:,.2f}（{mv['last']/mv['close']-1:+.1%}，{mv['last_t']}）")
+            b.append(f'　🔗 <a href="{rel["url"]}">SEC 新聞稿原文</a>')
+            sec_text = "\n".join(lines)
+        else:
+            eps = f"{info['last_eps']:.2f}" if info["last_eps"] is not None else "—"
+            sp = f"{info['surprise']:+.1f}%" if info["surprise"] is not None else "—"
+            ic = "🟢" if (info["surprise"] or 0) >= 0 else "🔴"
+            b = [f"{mk}<b>{tk}</b> {nm}　{info['last_date']} 已公布",
+                 f"　① EPS 實際 {eps}｜意外 {ic}{sp}"]
+            consensus = _next_q_consensus(tk, info["last_date"])
+            if consensus:
+                rev_t = f"營收 {consensus['revenue']/1e9:.1f}B（目前）" if consensus.get("revenue") else ""
+                if consensus.get("eps_pre") is not None and consensus.get("eps") is not None:
+                    eps_t = f"EPS 公布前 {consensus['eps_pre']:.2f} → 目前 {consensus['eps']:.2f}"
+                else:
+                    eps_t = f"EPS {consensus['eps']:.2f}" if consensus.get("eps") is not None else ""
+                b.append(f"　② 下季共識：{'、'.join(x for x in (eps_t, rev_t) if x)}（{consensus['analysts']}位分析師）")
         dg_this = None
         if tk in (held | set(US_WATCH)) and made < args.max_infographics and not args.dry_run:
             print(f"  產懶人包 {tk} …")
@@ -677,14 +829,29 @@ def daily_followup(args):
                 print(f"  {tk} 卡片產出但三表未跟上（仍是舊季別），排入補跑佇列")
                 b.append("　📄 財報懶人包：資料源三表尚未更新，補跑中（明天起會自動重試）")
                 st["infographic_pending"][key] = ed.isoformat()
-            flash = _ai_flash(tk, nm, info, consensus)
-            if flash:
-                b.append(f"　③ 指引vs共識：{flash['guidance_vs_consensus']}")
-                b.append(f"　④ 盤後反應：{flash['market_reaction']}")
-                b.append(f"　💡 {flash['takeaway']}")
+            if sec_text:
+                tkw = _sec_takeaway(tk, nm, sec_text)
+                if tkw:
+                    b.append(f"　💡 {tkw}")
+            else:
+                flash = _ai_flash(tk, nm, info, consensus)
+                if flash:
+                    b.append(f"　③ 指引vs共識：{flash['guidance_vs_consensus']}")
+                    b.append(f"　④ 盤後反應：{flash['market_reaction']}")
+                    b.append(f"　💡 {flash['takeaway']}")
         items.append((tk, "\n".join(b), dg_this))
         if not args.dry_run:
             st["reported"][key] = "sent"
+            if sec:
+                st.setdefault("sec_release", {})[key] = "sent"
+                # 同一檔前後 3 天內的其他 key 一併標已處理，免得 yfinance 那條路稍後又推一次
+                for k2 in list(st.get("upcoming", {})):
+                    t2, d2 = k2.rsplit("@", 1)
+                    try:
+                        if t2 == tk and abs((datetime.strptime(d2, "%Y-%m-%d").date() - ed).days) <= 3:
+                            st["reported"][k2] = "sent"
+                    except ValueError:
+                        pass
 
     # T-7 預告（來自上面的每日掃描）。獨立一段、每個財報日只發一次。
     # 2026-08-31 前預告只在季度重掃當天產生，等於一年只有 4 天有機會發預告。
