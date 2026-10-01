@@ -241,3 +241,6 @@ devlog.md
 
 # SEC 財報新聞稿解析快取（可重建，不需進版控）
 state/sec_releases/
+
+# 每日分析師共識快照（本機私人歷史資料，體積會一直長）
+state/consensus_history/
