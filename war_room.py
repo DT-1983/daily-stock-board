@@ -105,6 +105,53 @@ def _held_set():
     return _HELD_CACHE
 
 
+# 2026-10-01：問題文字「認股票」的共用邏輯（原本 resolve_in_question 與 _tickers_in_question 各寫一份，
+# 兩份都有同樣三個洞，material_kongming 用的是認出來的**第一檔**，認錯就整份材料是別家公司的）：
+#   ① 「數字」剛好是一家公司（5287）——「2330 的數字怎麼看」第一檔變成 5287
+#   ② 短名是長名的一部分——「聯發科」先認成 1459「聯發」，孔明拿到別家公司的材料
+#   ③ 中文名一律排在代號前面、又照名冊順序不照問題順序——「EPS 預估 聯發科」「RS」「EPS」也被當美股代號
+# 修法：停用詞、被更長命中名包含的不算、常見縮寫不當代號、一律照在問題裡第一次出現的位置排序。
+_GENERIC_NAMES = {"數字"}
+_NOT_TICKERS = {"EPS", "RS", "ROE", "ROA", "ETF", "YOY", "QOQ", "TTM", "PEG", "FCF", "OCF", "CAGR",
+                "FOMC", "PCE", "RSI", "MACD", "GDP", "CPI", "PMI", "IPO", "USD", "TWD", "CEO", "CFO"}
+
+
+def _collect_hits(q):
+    """問題文字裡認得出的股票 → [(代號, 名稱)]，依第一次出現的位置排序。
+    ⚠️ 代號 regex 不用詞邊界（跨工具寫檔時反斜線會被吃掉，見 resolve_in_question 的註解），用字元類自己界定。"""
+    q = (q or "").strip()
+    hits = []                                              # (位置, 代號, 名稱)
+    try:
+        import combo_scan
+        names = {c: str(n) for c, n in (combo_scan._tw_names() or {}).items()}
+        found = [(c, n) for c, n in names.items()
+                 if len(n) >= 2 and n in q and n not in _GENERIC_NAMES]
+        for c, n in found:
+            if any(n != o and n in o for _, o in found):   # 被更長的命中名包含（聯發 ⊂ 聯發科）
+                continue
+            hits.append((q.find(n), c, n))
+    except Exception:                                       # noqa: BLE001
+        pass
+    padded = " " + q + " "
+    for m in re.finditer(r"(?:^|[^0-9A-Za-z])([0-9]{4,6}[A-Z]?|[A-Z]{2,5})(?:[^0-9A-Za-z]|$)", padded):
+        tk = m.group(1)
+        if tk in _NOT_TICKERS:
+            continue
+        if tk.isdigit() or (tk.isalpha() and len(tk) >= 2):
+            hits.append((m.start(1) - 1, tk, ""))
+    hits.sort(key=lambda h: h[0])
+    seen, out = set(), []
+    for _, code, nm in hits:
+        if code in seen:
+            # 同一檔先以代號出現、後來又以名稱出現：補上名稱
+            if nm:
+                out = [(c, nm if (c == code and not n) else n) for c, n in out]
+            continue
+        seen.add(code)
+        out.append((code, nm))
+    return out
+
+
 def resolve_in_question(q):
     """從問題裡認出使用者在問哪一檔，並回一段「這檔的實際資料」加進材料。
 
@@ -126,29 +173,11 @@ def resolve_in_question(q):
     if not q:
         return ""
     import re as _re
-    cands = []
-    # 中文公司名
-    try:
-        import combo_scan
-        names = combo_scan._tw_names() or {}
-        for code, nm in names.items():
-            nm = str(nm)
-            if len(nm) >= 2 and nm in q:
-                cands.append((code, nm))
-    except Exception:                                       # noqa: BLE001
-        pass
-    # 直接寫代號
-    # ⚠️ 這個 regex **不要用 詞邊界**：跨工具寫檔時反斜線會被吃掉，變成真的
-    # 退格字元 0x08，regex 就成了「找退格字元包住的代號」——永遠匹配不到，
-    # 而且 grep/sed 顯示不出來，只有 repr() 看得見（2026-09-04 踩了第四次）。
-    # 改用字元類自己界定，不依賴反斜線。
+    # ①② 中文公司名＋直接寫的代號：共用 _collect_hits（停用詞／長名優先／依出現位置排序，見上方說明）。
     # ⚠️ 在**原文**找、不要先 .upper()：代號本來就是用大寫寫的（COST、NVDA），
     # 先轉大寫的話「Palo Alto Networks」會被切成 PALO/ALTO 當成代號，
     # 而且因為 cands 有東西了，下面的公司名解析（③）就再也不會執行。
-    for tk in _re.findall(r"(?:^|[^0-9A-Za-z])([0-9]{4,6}[A-Z]?|[A-Z]{2,5})"
-                          r"(?:[^0-9A-Za-z]|$)", " " + q + " "):
-        if tk.isdigit() or (tk.isalpha() and len(tk) >= 2):
-            cands.append((tk, ""))
+    cands = _collect_hits(q)
     # ③ 中英文公司名（lookup_page.resolve：中文查本地台股名冊、
     #    英文走 yfinance Search 並濾到 EQUITY/ETF）。
     #    只在①②都沒認出東西時才做——英文名要打網路查詢（約 1-2 秒）。
@@ -497,17 +526,7 @@ def _tickers_in_question(q):
     q = (q or "").strip()
     if not q:
         return []
-    out = []
-    try:
-        import combo_scan
-        for code, nm in (combo_scan._tw_names() or {}).items():
-            if len(str(nm)) >= 2 and str(nm) in q:
-                out.append((code, str(nm)))
-    except Exception:                                       # noqa: BLE001
-        pass
-    for tk in re.findall(r"(?:^|[^0-9A-Za-z])([0-9]{4,6}[A-Z]?|[A-Z]{2,5})"
-                         r"(?:[^0-9A-Za-z]|$)", " " + q + " "):
-        out.append((tk, ""))
+    out = _collect_hits(q)             # 共用：停用詞／長名優先／依出現位置排序
     if not out:
         try:
             import lookup_page
