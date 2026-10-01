@@ -694,10 +694,14 @@ def right_html():
         '<div class="scn" id="scnote"></div>'
         # 2026-09-23 Leo：「所有個股有什麼重要的事 這排拿掉」。
         '<div class="quick" id="quick" hidden>'
+        '<button class="qk">近兩週有哪些券商報告</button>'
+        '<button class="qk">哪些股票是 4 燈</button>'
+        '<button class="qk">統一投顧最近的報告</button>'
         '<button class="qk">現在整體最大的風險是什麼</button>'
         '<button class="qk">最近的判斷準不準</button></div>'
         '<div class="msgs" id="msgs">'
         '<div class="hint">選一檔股票（或在上方輸入代號），直接問孔明。<br>'
+        '像投資助理：可以問資料庫類問題——券商報告、目標價拆解、估值、哪些股票幾燈（切到「全部」不用選股票）。<br>'
         '其他軍師（軍議／龐統／仲達／陳壽）在「更多」裡。<br>'
         '走本機 claude（Max plan 訂閱額度，<b>不另外計費</b>），'
         '一位大約 40-60 秒，軍議四位約 3-4 分鐘。</div></div>'
@@ -1353,21 +1357,17 @@ ROOM_JS = r"""
   //    股票時會明寫「請使用者說要問哪一檔」。與其讓他回一句沒用的話，
   //    不如在介面上就講清楚為什麼不能選。
   var scope = "one";
-  var ONLY_ONE = {"孔明": "孔明一次只判一檔，要先選股票"};
+  // 2026-10-02 投資助理：孔明在「全部」也能用——問資料庫類問題（報告／燈號篩選／估值）不需要先選股票。
+  // 沒帶這類字眼又沒選股票時，孔明會自己回「要問哪一檔」並給範例問法。
+  var ONLY_ONE = {};
   var autoSwitched = false;      // 因為「全部」範圍被自動從孔明切到軍議 → 切回「這一檔」時要自動回到孔明
   function applyScope(){
     document.getElementById("sc-one").classList.toggle("on", scope === "one");
     document.getElementById("sc-all").classList.toggle("on", scope === "all");
     document.getElementById("quick").hidden = (scope !== "all");
-    // 「全部」範圍孔明不能用（一次只判一檔）→ 自動展開「更多」，讓被切過去的軍議看得到
-    if (scope === "all") {
-      var _rs = document.querySelector(".roles"), _rm = document.getElementById("rmore");
-      if (_rs) _rs.classList.add("open");
-      if (_rm) _rm.textContent = "收起▴";
-    }
     var note = document.getElementById("scnote");
     if (note) note.textContent = (scope === "all")
-      ? "仲達／陳壽的材料本來就是全本"
+      ? "孔明可直接問資料庫（例：統一近兩週的報告、哪些股票 4 燈）；仲達／陳壽看全本"
       : (cur ? "" : "還沒選股票");
     document.querySelectorAll(".rb").forEach(function(b){
       var why = (scope === "all") ? ONLY_ONE[b.dataset.r] : null;
