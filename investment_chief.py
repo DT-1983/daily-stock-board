@@ -777,8 +777,14 @@ def gather_material(ticker, notes):
             # 不標日期就會變成「同一個指標兩個數字」（2026-09-06 ONON 實際發生）。
             _as = f"，{sti['asof']} 收盤" if sti.get("asof") else ""
             _rs = (f"（RS 現值 {sti['rs60']}{_as}）" if sti.get("rs60") is not None else "")
-            trend_material += (f"SuperTrend：{'已翻空' if sti['st_bearish'] else '多頭'}{_lv}／"
-                               f"RS(60日)：{'已跌破' if sti['rs60_broken'] else '未跌破'}{_rs}／"
+            # 2026-10-02：None＝算不出來，**不能寫成「未跌破」**（原本 `'已跌破' if x else '未跌破'`
+            # 把 None 當 False，資料缺一塊就被說成「沒事」——孔明因此前後矛盾）。
+            _st_t = ("無法判定" if sti["st_bearish"] is None
+                     else "已翻空" if sti["st_bearish"] else "多頭")
+            _rs_t = ("無法判定（資料不足，不要當成未跌破）" if sti["rs60_broken"] is None
+                     else "已跌破" if sti["rs60_broken"] else "未跌破")
+            trend_material += (f"SuperTrend：{_st_t}{_lv}／"
+                               f"RS(60日)：{_rs_t}{_rs}／"
                                f"{sti['note']}\n")
     except Exception as e:
         trend_material += f"（supertrend_invalidation查詢失敗：{e}）\n"
