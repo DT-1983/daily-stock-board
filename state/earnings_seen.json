@@ -28,7 +28,8 @@
   "2881.TW@2026-08-28": "sent",
   "2882.TW@2026-08-27": "sent",
   "MRVL@2026-08-27": "sent",
-  "AVGO@2026-09-02": "sent"
+  "AVGO@2026-09-02": "sent",
+  "MU@2026-09-30": "sent"
  },
  "reported": {
   "AAPL@2026-07-30": "sent",
@@ -40,8 +41,14 @@
   "2881.TW@2026-08-28": "sent",
   "2882.TW@2026-08-27": "sent",
   "MRVL@2026-08-27": "sent",
-  "AVGO@2026-09-02": "sent"
+  "AVGO@2026-09-02": "sent",
+  "MU@2026-09-30": "sent"
  },
  "last_quarter_run": "2026-08",
- "infographic_pending": {}
+ "infographic_pending": {
+  "MU@2026-09-30": "2026-09-30"
+ },
+ "sec_release": {
+  "MU@2026-09-30": "sent"
+ }
 }

@@ -1,5 +1,5 @@
 {
- "date": "2026-09-30",
+ "date": "2026-10-01",
  "period": 60,
  "mode": "daily",
  "chains": {
@@ -286,10 +286,10 @@
    "supertrend": "多頭",
    "squeeze": {
     "on": true,
-    "level": "微壓",
+    "level": "極壓",
     "momentum_up": false
    },
-   "summary": "弱化象限(RS 100.94/動能 99.16)｜SuperTrend多頭｜微壓蓄力中，動能偏空"
+   "summary": "弱化象限(RS 100.94/動能 99.16)｜SuperTrend多頭｜極壓蓄力中，動能偏空"
   },
   "tw:AI 電源/散熱": {
    "members_used": 6,
@@ -318,10 +318,10 @@
    "supertrend": "多頭",
    "squeeze": {
     "on": true,
-    "level": "中壓",
+    "level": "微壓",
     "momentum_up": true
    },
-   "summary": "弱化象限(RS 101.03/動能 99.85)｜SuperTrend多頭｜中壓蓄力中，動能偏多"
+   "summary": "弱化象限(RS 101.03/動能 99.85)｜SuperTrend多頭｜微壓蓄力中，動能偏多"
   }
  }
 }
