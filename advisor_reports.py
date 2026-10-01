@@ -474,6 +474,7 @@ def parse(force=False, only=None, notify=True):
             print("    （抽不到代號，判定為非個股報告，記入略過名單）")
             _archive(f)
             continue
+        _verify_ticker(d)
         d["_file"] = key
         d["_parsed"] = dt.date.today().isoformat()
         d["conditions"] = conditions_for(d)
@@ -494,6 +495,38 @@ def parse(force=False, only=None, notify=True):
     print(f"\n完成 {done} 份；登錄簿 {len(store)} 筆＝"
           f"檢查中 {len(act)}／已被新版取代 {sup}／非個股報告 {skip}")
     return store
+
+
+def _verify_ticker(d):
+    """台股代號 vs 官方名稱核對（2026-10-02）。
+    統一影音逐字稿檔名只有公司名，代號是解析時 LLM 自己填的：沛亨（6291）被填成 6191（精成科），
+    整份報告掛在別家公司名下 → 失效條件、投資長判斷、整合報告全拿精成科的價格在比，
+    直到目標價拆解對現價（84 元 vs 目標 588）才被發現。
+    名稱對得上 → 不動；對不上 → 用名稱反查官方名冊，唯一就**改正並留下記錄**，
+    查不到或不唯一就留著但標 `_ticker_unverified`（下游看到會知道不可信）。"""
+    try:
+        import combo_scan
+        names = {str(c): str(n) for c, n in (combo_scan._tw_names() or {}).items()}
+    except Exception:                                       # noqa: BLE001
+        return
+    tk, nm = str(d.get("ticker") or "").strip(), str(d.get("name") or "").strip()
+    if not (tk.isdigit() and nm):
+        return                                              # 美股／沒名稱不核對
+    off = names.get(tk)
+
+    def same(a, b):
+        a, b = a.replace("-KY", ""), b.replace("-KY", "")
+        return bool(a) and bool(b) and (a in b or b in a)
+    if off and same(nm, off):
+        return
+    cands = [c for c, n in names.items() if n == nm] or [c for c, n in names.items() if same(nm, n) and len(n) >= 2]
+    if len(cands) == 1:
+        print(f"    ⚠️ 代號 {tk}（官方：{off or '查無'}）跟名稱「{nm}」對不上 → 依名稱改成 {cands[0]}")
+        d["_ticker_fix"] = f"解析代號 {tk}（{off or '查無'}）≠ 名稱「{nm}」，依官方名冊改為 {cands[0]}（{dt.date.today().isoformat()}）"
+        d["ticker"] = cands[0]
+    else:
+        print(f"    ⚠️ 代號 {tk}（官方：{off or '查無'}）跟名稱「{nm}」對不上，名冊反查 {len(cands)} 筆，保留原值並標記")
+        d["_ticker_unverified"] = f"代號 {tk}（官方：{off or '查無'}）與名稱「{nm}」對不上"
 
 
 def _norm(tk):
