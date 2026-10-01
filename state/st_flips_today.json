@@ -58,6 +58,14 @@
 "sig": "rs60"
 }
 ],
-"flips_watch": [],
+"flips_watch": [
+{
+"code": "RIOT",
+"name": "",
+"word": "🟢→🔴 翻空",
+"dir": -1,
+"sig": "st"
+}
+],
 "ai_alerts": []
 }
