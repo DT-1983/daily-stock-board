@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-01 08:46",
+ "updated": "2026-10-01 09:27",
  "indices": [
   {
    "sym": "^GSPC",
@@ -37,17 +37,17 @@
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/29",
-   "close": 47631.96,
-   "chg_pct": -0.82
+   "date": "10/01",
+   "close": 48028.21,
+   "chg_pct": 0.83
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "10/01",
-   "close": 31.89,
-   "chg_pct": 0.14
+   "close": 31.88,
+   "chg_pct": 0.1
   },
   {
    "sym": "^TNX",
@@ -61,34 +61,46 @@
  ],
  "news": [
   {
+   "title": "普丁：俄羅斯與一些國家不同 不會滿世界「乞討」",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6619242",
+   "ts": "10/01 09:13"
+  },
+  {
+   "title": "川普10萬美元H-1B費用連遭兩法官阻擋 科技業招才再陷法律戰",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6619301",
+   "ts": "10/01 09:10"
+  },
+  {
+   "title": "永笙臍帶血細胞製劑申請台灣藥證 擴大臍帶血臨床應用",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6619111",
+   "ts": "10/01 09:03"
+  },
+  {
+   "title": "AI支出續強勁 美銀點名美光、輝達、英特爾等「贏家」",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6619193",
+   "ts": "10/01 09:00"
+  },
+  {
+   "title": "台新00904、00947本季配息雙創新高 年化配息率衝20%",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6619295",
+   "ts": "10/01 08:51"
+  },
+  {
+   "title": "AI資料中心搶電！Bloom Energy今年暴漲219% 克雷默仍看好但喊「先別追」",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6619284",
+   "ts": "10/01 08:50"
+  },
+  {
    "title": "空中驚魂！以色列防長：杜拜航空是一起「恐怖襲擊未遂事件」",
    "mkt": "US",
    "url": "https://news.cnyes.com/news/id/6619246",
    "ts": "10/01 08:42"
-  },
-  {
-   "title": "柴油價格飆史高！川普承認「每天」討論出口禁令　Fed調查：高價恐需至少1年才回落",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6619277",
-   "ts": "10/01 08:40"
-  },
-  {
-   "title": "美光加碼2027會計年度資本支出無塵室擴建瞄準2028年後供給",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6619287",
-   "ts": "10/01 08:30"
-  },
-  {
-   "title": "只花22天！Muse在美超越ChatGPT成最快達成500萬次下載量AI應用程式",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6619250",
-   "ts": "10/01 08:30"
-  },
-  {
-   "title": "Fed總部翻修調查出爐！未發現違法 川普仍逼鮑爾辭理事",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6619180",
-   "ts": "10/01 08:30"
   },
   {
    "title": "智伸科(4551)下半年營運轉強 AI水冷、半導體雙引擎點火",
@@ -107,18 +119,6 @@
    "mkt": "TW",
    "url": "https://news.cnyes.com/news/id/6619098",
    "ts": "09/30 23:09"
-  },
-  {
-   "title": "華航釋空服職缺 10/5起報名 最快明年1月中旬報到",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6619089",
-   "ts": "09/30 23:01"
-  },
-  {
-   "title": "資服業新兵報到 藍新資訊以AI維運平台搶占高門檻利基市場",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6619085",
-   "ts": "09/30 23:00"
   }
  ],
  "inst": {
