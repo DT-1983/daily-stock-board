@@ -2,13 +2,6 @@
 "date": "2026-10-01",
 "flips_hold": [
 {
-"code": "BAYRY",
-"name": "",
-"word": "🟢→🔴 翻空",
-"dir": -1,
-"sig": "st"
-},
-{
 "code": "KR",
 "name": "",
 "word": "RS60站回多方",
@@ -66,70 +59,5 @@
 }
 ],
 "flips_watch": [],
-"ai_alerts": [
-{
-"chain": "AI 電力/核能",
-"market": "US",
-"sig": "🟢",
-"code": "PWR",
-"name": "Quanta Services Inc",
-"reason": "觀望→買進"
-},
-{
-"chain": "機器人",
-"market": "US",
-"sig": "🟢",
-"code": "NDSN",
-"name": "Nordson Corp",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 伺服器",
-"market": "US",
-"sig": "🟢",
-"code": "P",
-"name": "Everpure Inc Class A",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 電力/核能",
-"market": "US",
-"sig": "🟢",
-"code": "ETN",
-"name": "Eaton Corp PLC",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 伺服器",
-"market": "US",
-"sig": "🟢",
-"code": "INTC",
-"name": "Intel Corp",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 電力/核能",
-"market": "US",
-"sig": "🔴",
-"code": "BWXT",
-"name": "BWX Technologies Inc",
-"reason": "觀望→賣出"
-},
-{
-"chain": "AI 電力/核能",
-"market": "US",
-"sig": "🔴",
-"code": "CEG",
-"name": "Constellation Energy Corp",
-"reason": "觀望→賣出"
-},
-{
-"chain": "太陽能",
-"market": "TW",
-"sig": "🟢",
-"code": "3576",
-"name": "聯合再生",
-"reason": "觀望→買進"
-}
-]
+"ai_alerts": []
 }
