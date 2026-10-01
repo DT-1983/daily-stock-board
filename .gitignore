@@ -238,3 +238,6 @@ state/advisor_reports_announced.json
 # 檔案留在本機，並照舊同步到私人的筆記庫。
 dev_log.md
 devlog.md
+
+# SEC 財報新聞稿解析快取（可重建，不需進版控）
+state/sec_releases/
