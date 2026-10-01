@@ -636,10 +636,26 @@ def material_kongming(question=""):
     產出的判斷吃的是同一包東西，不可能出現「兩邊講法不一樣」。
     ⚠️ 一定要有標的——沒點名股票時明講「要指定一檔」，不要瞎給大盤評論。
     """
+    # 2026-10-02 投資助理模式（Leo：「像投資助理一樣，任何問題都可以問阿福，他會找資料庫，估算股票價值」）。
+    # 問題帶報告／估值／篩選類字眼 → 先由 assistant.run 規劃要查哪些資料、程式查好算好，材料放最前面；
+    # 沒指定股票也能答（原本只會叫人先選一檔）。單純「這檔怎麼看」維持原本孔明（快、固定格式）。
+    _assist = ""
+    try:
+        import assistant as _A
+        _A._tl.table, _A._tl.assist = "", False
+        if _A.wants_assistant(question):
+            _r = _A.run(question, on_stage=getattr(_A._tl, "stage", None))
+            _A._tl.table, _A._tl.assist = _r["table"], True
+            _assist = _r["material"]
+    except Exception as e:                                   # noqa: BLE001
+        print(f"  [war_room] 助理模式失敗，退回原本孔明：{str(e)[:120]}")
     picks = _tickers_in_question(question)
     if not picks:
+        if _assist:
+            return _assist
         return ("（沒有指定股票）孔明是個股判斷的角色，一次判一檔。"
                 "請告訴使用者：要問哪一檔？例如「孔明 2454」「孔明 輝達怎麼看」。"
+                "也可以直接問資料庫類的問題，例如「高盛近兩週的報告」「哪些股票是 4 燈」「奇鋐的估值」。"
                 "不要自己挑一檔來評論，也不要改成講大盤。")
     code, nm = picks[0]
     try:
@@ -676,7 +692,8 @@ def material_kongming(question=""):
     # 不要讓孔明因為龐統這輪掛了就整份材料開天窗。
     news = ""
     try:
-        news = ask("龐統", question)
+        # 助理模式（估值、報告、拆解…）不需要新聞，省掉一整輪 AI（約 30～60 秒）
+        news = "" if _assist else ask("龐統", question)
     except Exception as e:                                   # noqa: BLE001
         print(f"  [war_room] 龐統完整查詢失敗，退回靜態鉅亨網搜尋：{str(e)[:100]}")
         try:
@@ -689,7 +706,7 @@ def material_kongming(question=""):
         mat = f"{mat}\n\n【市場新聞（龐統查的，含他自己上網找到的資料，來源與日期見內文標註）】\n{news}"
     # 公司在做什麼也要給——investment_chief 的材料全是數字，沒有業務描述，
     # 少了它 AI 會自己補（見 _one_stock_block 的註解）。
-    return f"【判斷標的：{nm}（{code}）】\n{_profile(code)}\n\n{mat}"
+    return (_assist + "\n\n" if _assist else "") + f"【判斷標的：{nm}（{code}）】\n{_profile(code)}\n\n{mat}"
 
 
 # ── 龐統：查這一檔的新聞 ──────────────────────────────────────────
@@ -798,7 +815,17 @@ ROLES = {
             "是容錯空間的刻度，不是公司好壞的評價。\n"
             "6. 材料若有「市場新聞」：引用要標媒體與日期（`（鉅亨 09/21）`），舊聞不能當新聞；"
             "新聞只是背景，**不因為單則新聞改變兩個角度的判斷**；材料裡沒有的新聞不要憑印象補，"
-            "找不到就明說「材料裡沒有這方面的新聞」。"),
+            "找不到就明說「材料裡沒有這方面的新聞」。\n"
+            "7. **助理模式**：材料開頭若是「【助理查詢結果】」，你就是 Leo 的投資助理，不只判一檔。"
+            "①先直接回答問題（第一句就是結論）。"
+            "②程式已把查到的表格放在你的回答**前面**，**不要重印表格**，只講表格看不出來的。"
+            "③要對照的項目逐項標 ✅一致／⚠️有落差／❌衝突／❔比不了。"
+            "④估值只給「幾個角度的參考」，每個數字標來源與資料日；**不給單一合理價、不自己訂倍數門檻**；"
+            "角度之間有衝突就照實並陳。"
+            "⑤材料標「沒有」「查不到」「⚠️」的，原樣講出來——**資料庫沒有的不要憑印象補**"
+            "（報告、目標價、EPS 都一樣）。"
+            "⑥最後若有值得提醒的，寫「要提醒的地方」最多三點，每點一句。"
+            "⑦這種問答**不強制**兩個角度與失效條件；但若在評論單一檔的判斷，仍要講「什麼情況代表我錯了」。"),
     },
     "龐統": {
         "name": "龐統（研究員）",
@@ -960,6 +987,15 @@ def council_roles(question=""):
     #    是這個問題形狀他答不了。
     ORDER = ["龐統", "孔明", "仲達", "陳壽"]
     named = bool(_tickers_in_question(question))
+    # 2026-10-02 投資助理：沒指定股票、但問的是資料庫類問題（報告／估值／篩選）→ 只叫孔明（助理模式），
+    # 不叫龐統（找新聞）／仲達／陳壽（他們答不了這種問題，叫了只會講跟問題無關的全局）。
+    if not named:
+        try:
+            import assistant as _A
+            if _A.wants_assistant(question):
+                return ["孔明"]
+        except Exception:                                   # noqa: BLE001
+            pass
     return [r for r in ORDER if not (r == "孔明" and not named)]
 
 
@@ -985,8 +1021,22 @@ def ask_meta(role, question=None, limit=None, prior=None, resume=None,
     q = (question or "").strip() or DEFAULT_Q[role]
     # 孔明/龐統要看問題才知道查哪一檔；仲達/陳壽的材料跟問題無關（是當日全貌）
     _st(MATERIAL_STAGE.get(role, f"{r['name']} 正在準備材料"))
+    # 助理模式（assistant.py）：材料函式要能回報進度（「正在翻投顧報告」），且會留下「程式算好的表格」，
+    # 回答時放在 AI 的文字前面——表格的數字由程式出，不經過 AI 轉述。
+    try:
+        import assistant as _A
+        _A._tl.stage, _A._tl.table, _A._tl.assist = _st, "", False
+    except Exception:                                       # noqa: BLE001
+        _A = None
     mat = (r["material"](question) if r.get("needs_question")
            else r["material"]())
+    _assist_on = bool(_A and role == "孔明" and getattr(_A._tl, "assist", False))
+    _table = (getattr(_A._tl, "table", "") if _assist_on else "")
+    if _assist_on:
+        limit = max(limit, 1600)
+
+    def _fin(t):
+        return (f"📑 **程式查到的資料**（數字由程式算好）\n{_table}\n\n" + t) if _table else t
     # 問題裡點名的個股，把它的**真實資料**加在材料最前面（見 resolve_in_question
     # 的註解：2026-09-04 答錯股票那次）。放最前面是因為材料會被截斷。
     _st("正在確認你問的是哪一檔")
@@ -1072,7 +1122,7 @@ def ask_meta(role, question=None, limit=None, prior=None, resume=None,
             # ⚠️ 只重寫一次；第二次還是超長就砍在最後一個完整段落，
             #    寧可少一段，不要留半句。
             if len(txt) <= limit:
-                return txt, meta
+                return _fin(txt), meta
             if "太長" not in fix:
                 fix = (f"\n\n⚠️ 你上一次太長了，寫了 {len(txt)} 字，"
                        f"上限是 {limit} 字。整份重寫，壓到 {limit} 字以內。"
@@ -1081,11 +1131,11 @@ def ask_meta(role, question=None, limit=None, prior=None, resume=None,
                 continue
             cut = txt[:limit]
             nl = cut.rfind("\n")
-            return (cut[:nl] if nl > limit // 2 else cut), meta
+            return _fin(cut[:nl] if nl > limit // 2 else cut), meta
         fix = ("\n\n⚠️ 你上一次的回答用了簡體字（" + "".join(bad[:10])
                + "）。整份重寫，全部用繁體中文（台灣用語），一個簡體字都不能有。")
-    return (txt + "\n\n⚠️ 重寫 3 次後仍偵測到簡體字："
-            + "".join(bad[:8]))[:limit], meta
+    return _fin((txt + "\n\n⚠️ 重寫 3 次後仍偵測到簡體字："
+                 + "".join(bad[:8]))[:limit]), meta
 
 
 def ask(role, question=None, limit=None, prior=None, resume=None):
