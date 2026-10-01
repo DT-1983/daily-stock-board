@@ -1,37 +1,37 @@
 {
- "updated": "2026-10-01 15:40",
+ "updated": "2026-10-01 22:25",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "09/30",
-   "close": 7651.54,
+   "date": "10/01",
+   "close": 7632.7,
    "chg_pct": -0.25
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "09/30",
-   "close": 26861.06,
-   "chg_pct": 0.24
+   "date": "10/01",
+   "close": 26814.96,
+   "chg_pct": -0.17
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "09/30",
-   "close": 50906.05,
-   "chg_pct": -0.86
+   "date": "10/01",
+   "close": 50690.95,
+   "chg_pct": -0.42
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "09/30",
-   "close": 12628.62,
-   "chg_pct": -0.0
+   "date": "10/01",
+   "close": 12613.67,
+   "chg_pct": -0.12
   },
   {
    "sym": "^TWII",
@@ -46,85 +46,85 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "10/01",
-   "close": 31.96,
-   "chg_pct": 0.35
+   "close": 31.91,
+   "chg_pct": 0.18
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "09/30",
-   "close": 5.29,
+   "date": "10/01",
+   "close": 5.32,
    "fmt": "yield",
-   "chg_bp": 3.8
+   "chg_bp": 2.6
   }
  ],
  "news": [
   {
-   "title": "166萬人小確幸！0056季配1.72元創新高 預估年化配息率12%",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6619565",
-   "ts": "10/01 15:39"
-  },
-  {
-   "title": "牧德(3563)法說釋出強訊號，訂單排到明年下半年！產能一口氣擴至100億元，2027年毛利率拚回60%以上",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6619570",
-   "ts": "10/01 15:30"
-  },
-  {
-   "title": "和碩鄭光志：AI像空氣無所不在 分享內部AI落地四關鍵",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6619562",
-   "ts": "10/01 15:29"
-  },
-  {
-   "title": "債市大利多！債券及ETF免徵證交稅再延10年 主動式ETF也納入",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6619543",
-   "ts": "10/01 15:28"
-  },
-  {
-   "title": "〈房產〉台北車站區商四土地釋出 預計11/16開標",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6619538",
-   "ts": "10/01 15:26"
-  },
-  {
-   "title": "配息基金推薦前必看的6大風險! 月配息基金有哪些風險？",
+   "title": "盤中速報 - 連貫(COHR-US)大漲5.1%，報302.5美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6619547",
-   "ts": "10/01 15:22"
+   "url": "https://news.cnyes.com/news/id/6619893",
+   "ts": "10/01 22:24"
   },
   {
-   "title": "擔心意外拉抬汽油價格 川普對美國柴油出口禁令態度轉趨審慎",
+   "title": "鉅亨速報 - Factset 最新調查：DraftKings公司(DKNG-US)EPS預估下修至0.09元，預估目標價為33.00元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6619536",
-   "ts": "10/01 15:10"
+   "url": "https://news.cnyes.com/news/id/6619889",
+   "ts": "10/01 22:15"
   },
   {
-   "title": "川普挺AI自我監管 《巴隆》評析：輝達Q3漲17%後再迎長期利多",
+   "title": "鉅亨速報 - Factset 最新調查：Brookfield Renewable Partners LP - Unit(BEP-US)EPS預估下修至-1.43元，預估目標價為37.00元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6619185",
-   "ts": "10/01 15:00"
+   "url": "https://news.cnyes.com/news/id/6619888",
+   "ts": "10/01 22:15"
   },
   {
-   "title": "Anthropic認證！中國最強模型智譜GLM-5.3：開源網安能力只差美國先進模型4個月",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6619511",
-   "ts": "10/01 14:30"
+   "title": "鉅亨速報 - Factset 最新調查：緯穎(6669-TW)EPS預估上修至121.69元，預估目標價為2715.57元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6619886",
+   "ts": "10/01 22:11"
   },
   {
-   "title": "AI需求猛！韓國9月半導體出口飆增262.8% 首破600億美元",
+   "title": "別被高殖利率騙了！策略師示警美債可能還沒跌夠",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6619471",
-   "ts": "10/01 14:28"
+   "url": "https://news.cnyes.com/news/id/6619859",
+   "ts": "10/01 22:00"
+  },
+  {
+   "title": "盤中速報 - 星座能源(CEG-US)大漲5.11%，報266.99美元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6619879",
+   "ts": "10/01 21:52"
+  },
+  {
+   "title": "權益大戰再升級！國泰世華結盟inline首創「專屬訂位」 熱門餐廳獨家訂到",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6619851",
+   "ts": "10/01 20:44"
+  },
+  {
+   "title": "國科會通過13件園區投資案共512億元 南亞科確定入駐屏科",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6619817",
+   "ts": "10/01 20:23"
+  },
+  {
+   "title": "3大破兆預算新會期上陣！政院揭10大重點議案聚焦民生經濟 社福津貼回溯7/1加碼",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6619810",
+   "ts": "10/01 20:18"
+  },
+  {
+   "title": "買一張只要1萬5！00830擬「1拆5」分割 11/19召開受益人會議",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6619819",
+   "ts": "10/01 20:15"
   }
  ],
  "inst": {
   "date": "10/01",
-  "total_yi": 292.5,
+  "total_yi": 294.6,
   "foreign_yi": 219.4,
-  "trust_yi": 56.6
+  "trust_yi": 58.7
  }
 }
