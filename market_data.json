@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-01 14:09",
+ "updated": "2026-10-01 15:40",
  "indices": [
   {
    "sym": "^GSPC",
@@ -45,9 +45,9 @@
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "09/30",
-   "close": 31.85,
-   "chg_pct": 0.21
+   "date": "10/01",
+   "close": 31.96,
+   "chg_pct": 0.35
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "國巨(2327)今日漲停、被動元件噴出！AI大單提前鎖定2027年產能，被動元件新一輪漲價潮要來了？",
+   "title": "166萬人小確幸！0056季配1.72元創新高 預估年化配息率12%",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6619519",
-   "ts": "10/01 14:00"
+   "url": "https://news.cnyes.com/news/id/6619565",
+   "ts": "10/01 15:39"
   },
   {
-   "title": "油價破百與升息雙殺！債券、郵輪、貴金屬淪Q3最大輸家 贏家竟有比特幣和科技股",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6619176",
-   "ts": "10/01 14:00"
-  },
-  {
-   "title": "凱基證券全面轉型 陪伴年輕投資人從選擇開始累積",
+   "title": "牧德(3563)法說釋出強訊號，訂單排到明年下半年！產能一口氣擴至100億元，2027年毛利率拚回60%以上",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6619515",
-   "ts": "10/01 13:52"
+   "url": "https://news.cnyes.com/news/id/6619570",
+   "ts": "10/01 15:30"
   },
   {
-   "title": "《價值型投資 最新產業研究報告》國巨 (2327-TW) 高階電容需求續強，漲價與轉單接力",
+   "title": "和碩鄭光志：AI像空氣無所不在 分享內部AI落地四關鍵",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6619512",
-   "ts": "10/01 13:52"
+   "url": "https://news.cnyes.com/news/id/6619562",
+   "ts": "10/01 15:29"
   },
   {
-   "title": "AI太會吃記憶體 三星、美光示警：DRAM明年供應更緊",
+   "title": "債市大利多！債券及ETF免徵證交稅再延10年 主動式ETF也納入",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6619470",
-   "ts": "10/01 13:41"
+   "url": "https://news.cnyes.com/news/id/6619543",
+   "ts": "10/01 15:28"
   },
   {
-   "title": "AI太會吃記憶體 三星、美光示警：DRAM明年供應更緊",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6619470",
-   "ts": "10/01 13:41"
-  },
-  {
-   "title": "輝達、英特爾聯手重金押注！AI光互連新創CScale獲1.45億美元C輪融資",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6619479",
-   "ts": "10/01 13:40"
-  },
-  {
-   "title": "〈美光加碼台灣〉今後數年營建支出拚全球前五 美光點名亞翔、帆宣等跟著出海",
+   "title": "〈房產〉台北車站區商四土地釋出 預計11/16開標",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6619490",
-   "ts": "10/01 13:39"
+   "url": "https://news.cnyes.com/news/id/6619538",
+   "ts": "10/01 15:26"
   },
   {
-   "title": "〈美光加碼台灣〉今後數年營建支出拚全球前五 美光點名亞翔、帆宣等跟著出海",
+   "title": "配息基金推薦前必看的6大風險! 月配息基金有哪些風險？",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6619490",
-   "ts": "10/01 13:39"
+   "url": "https://news.cnyes.com/news/id/6619547",
+   "ts": "10/01 15:22"
   },
   {
-   "title": "莫德納股價重挫 花旗稱今年暴漲500%後是時候賣出",
+   "title": "擔心意外拉抬汽油價格 川普對美國柴油出口禁令態度轉趨審慎",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6619194",
-   "ts": "10/01 13:30"
+   "url": "https://news.cnyes.com/news/id/6619536",
+   "ts": "10/01 15:10"
+  },
+  {
+   "title": "川普挺AI自我監管 《巴隆》評析：輝達Q3漲17%後再迎長期利多",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6619185",
+   "ts": "10/01 15:00"
+  },
+  {
+   "title": "Anthropic認證！中國最強模型智譜GLM-5.3：開源網安能力只差美國先進模型4個月",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6619511",
+   "ts": "10/01 14:30"
+  },
+  {
+   "title": "AI需求猛！韓國9月半導體出口飆增262.8% 首破600億美元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6619471",
+   "ts": "10/01 14:28"
   }
  ],
  "inst": {
-  "date": "09/30",
-  "total_yi": 403.9,
-  "foreign_yi": 308.6,
-  "trust_yi": 82.9
+  "date": "10/01",
+  "total_yi": 292.5,
+  "foreign_yi": 219.4,
+  "trust_yi": 56.6
  }
 }
