@@ -913,6 +913,11 @@ body{margin:0}
 .msg.me{background:var(--cy-dim,rgba(34,211,238,.10));border-color:rgba(34,211,238,.35)}
 .msg .who{font-weight:700;font-size:11px;color:var(--lamp,#FFB627);letter-spacing:.04em;display:block;margin-bottom:3px}
 .msg.err{border-color:rgba(248,113,113,.5);color:var(--down,#f87171)}
+.msg .cmp{padding:5px 9px;margin:4px 0;border-radius:2px;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+.msg .cmp.ok{background:rgba(34,197,94,.16);color:#86efac}
+.msg .cmp.warn{background:rgba(255,182,39,.16);color:#fcd34d}
+.msg .cmp.bad{background:rgba(239,68,68,.17);color:#fca5a5}
+.msg .cmp.na{background:rgba(157,176,200,.10);color:var(--muted,#9DB0C8)}
 .ask{border-top:1px solid var(--line);padding:9px 12px;display:flex;gap:7px}
 .ask textarea{flex:1;font:inherit;font-size:12px;padding:7px 9px;border-radius:0;
  border:1px solid var(--hud,#16304A);background:transparent;color:var(--ink);resize:vertical}
@@ -1204,6 +1209,7 @@ ROOM_JS = r"""
         //    （2026-09-07 手機實測看到）。看不懂的東西就當沒有，不要往畫面上倒。
         if (h && h.indexOf('<div class="hist"') === 0) {
           box.insertAdjacentHTML("afterbegin", h);
+          box.querySelectorAll(".hist .msg").forEach(repaint);
         }
       })
       .catch(function(){});
@@ -1427,12 +1433,50 @@ ROOM_JS = r"""
   var msgs = document.getElementById("msgs");
   var send = document.getElementById("send");
   var qbox = document.getElementById("qbox");
+  // 2026-10-02 Leo：「一致可以用綠色標記？」→ 軍師「對照」那幾行（開頭是 ✅⚠️❌❔）整行上底色。
+  // 只認行首的符號；其他文字原樣（pre-wrap 保留換行）。內容一律 textContent，不經 innerHTML。
+  // ⚠️ 串流中的逐字片段不上色（行可能還沒寫完），串流結束／載入歷史時才整份重畫。
+  function paint(el, text){
+    var KIND = {"✅": "ok", "⚠": "warn", "❌": "bad", "❔": "na"};
+    var buf = [];
+    function flush(){
+      if (buf.length){ el.appendChild(document.createTextNode(buf.join("\n") + "\n")); buf = []; }
+    }
+    String(text || "").split("\n").forEach(function(ln){
+      var m = /^\s*(?:[・\-*]\s*)?(✅|⚠|❌|❔)/.exec(ln);
+      if (m){
+        flush();
+        var c = document.createElement("div");
+        c.className = "cmp " + KIND[m[1]];
+        c.textContent = ln.replace(/^\s+/, "");
+        el.appendChild(c);
+      } else buf.push(ln);
+    });
+    if (buf.length){
+      var last = buf.join("\n");
+      if (last !== "") el.appendChild(document.createTextNode(last));
+    }
+  }
+  // 歷史對話是伺服器組好的 HTML：把每則的文字取出來重畫一次（保留「誰說的」那個標籤）。
+  function repaint(el){
+    if (el.getAttribute("data-painted")) return;
+    var who = el.querySelector(".who");
+    var t = "";
+    Array.prototype.forEach.call(el.childNodes, function(n){
+      if (n !== who && n.nodeType === 3) t += n.nodeValue;
+      else if (n !== who && n.nodeType === 1) t += n.textContent;
+    });
+    el.textContent = "";
+    if (who) el.appendChild(who);
+    paint(el, t);
+    el.setAttribute("data-painted", "1");
+  }
   function add(cls, who, text){
     var d = document.createElement("div");
     d.className = "msg " + cls;
     if (who){ var w = document.createElement("b"); w.className = "who";
               w.textContent = who; d.appendChild(w); }
-    d.appendChild(document.createTextNode(text));
+    paint(d, text);
     msgs.appendChild(d); msgs.scrollTop = msgs.scrollHeight;
     return d;
   }
@@ -1514,7 +1558,7 @@ ROOM_JS = r"""
       w.textContent = d.name + (d.resumed ? "　續談" : "")
         + (d.refreshed ? "　材料已換成今天" : "");
       b.appendChild(w);
-      b.appendChild(document.createTextNode(d.text));
+      paint(b, d.text);
       b.classList.remove("live");
       accCost = d.cost || accCost;
       accTurns += 1;
