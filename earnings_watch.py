@@ -561,8 +561,11 @@ def daily_followup(args):
             del st["infographic_pending"][key]
             continue
         cands.append((tk, ed, key, "pending"))
-    if not cands:
-        print("每日跟催：沒有「已預告、近日公布、還沒處理」的財報")
+    # 2026-10-01 修：原本 `if not cands: return`，T-7 預告（scan_new）在下面才發——
+    # 沒有剛公布的財報那天，預告就跟著被跳過、state 也沒存。9/7 起 state 沒再寫過，
+    # MU 9/30 財報的 T-7 預告整週都沒發。
+    if not cands and not scan_new:
+        print("每日跟催：沒有「已預告、近日公布、還沒處理」的財報，也沒有新的 T-7 預告")
         return
 
     print(f"每日跟催：{len(cands)} 檔候選 {[c[0] for c in cands]}")
