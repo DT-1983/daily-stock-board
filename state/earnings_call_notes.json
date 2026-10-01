@@ -1772,91 +1772,79 @@
  },
  "MU": {
   "Q2 2026": {
-   "fetched": "2026-09-08",
+   "fetched": "2026-10-02",
    "items": [
     {
      "type": "metric",
-     "label": "Cloud Memory Business Unit (CMBU) 營收創紀錄",
-     "value": "77億美元，季增47%",
+     "label": "第三財季（期末 2026-05-28）總營收",
+     "value": "415 億美元，季增 74%、年增 346%；DRAM 313 億美元（占 76%，年增 343%），NAND 99 億美元（占 24%，年增 361%）",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "Mobile and Client Business Unit (MCBU) 營收創紀錄",
-     "value": "77億美元，季增81%",
+     "label": "本季合併毛利率",
+     "value": "84.9%，較上季提高 10 個百分點",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "Automotive and Embedded Business Unit (AEBU) 營收創紀錄",
-     "value": "27億美元，季增57%",
+     "label": "各事業部營收與毛利率",
+     "value": "CMBU 138 億美元（占 33%，季增 78%，毛利率 83%）；CDBU 115 億美元（占 28%，季增 103%，毛利率 87%）；MCBU 115 億美元（占 28%，季增 49%，毛利率 87%）；AEBU 46 億美元（占 11%，季增 71%，毛利率 79%）",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "Core Data Center Business Unit (CDBU) 營收創紀錄",
-     "value": "57億美元",
+     "label": "HBM4 出貨進度",
+     "value": "HBM4 營收已出貨超過 10 億美元；HBM4 12-High 的量產爬坡速度是 HBM3E 12-High 的兩倍",
      "speaker": ""
     },
     {
      "type": "metric",
-     "label": "部分關鍵客戶目前需求滿足率",
-     "value": "中期而言，部分主要客戶的需求僅能滿足50%至三分之二",
-     "speaker": "Sanjay Mehrotra (CEO)"
+     "label": "策略客戶協議（SCA）簽署數",
+     "value": "已簽 16 份 SCA；涵蓋約 20% 的 DRAM 出貨量與約 33% 的 NAND 出貨量；現金存款與承諾共 220 億美元（180 億美元現金、40 億美元信用狀）",
+     "speaker": ""
     },
     {
-     "type": "guidance",
-     "label": "下季（FY2026 Q3）營收展望",
-     "value": "預計335億美元，正負7.5億美元，將創歷史新高",
-     "speaker": "Mark Murphy (CFO)"
-    },
-    {
-     "type": "guidance",
-     "label": "下季（FY2026 Q3）毛利率展望",
-     "value": "預計約81%",
-     "speaker": "Mark Murphy (CFO)"
-    },
-    {
-     "type": "guidance",
-     "label": "下季（FY2026 Q3）EPS展望",
-     "value": "以11.5億股計算，預計每股盈餘19.15美元，正負0.40美元，創歷史新高",
-     "speaker": "Mark Murphy (CFO)"
-    },
-    {
-     "type": "guidance",
-     "label": "FY2026全年資本支出上修",
-     "value": "上修至250億美元以上",
-     "speaker": "Mark Murphy (CFO)"
-    },
-    {
-     "type": "guidance",
-     "label": "FY2027資本支出計畫",
-     "value": "為支應HBM與DRAM相關投資將大幅墊高，建廠相關資本支出將較FY2026年增逾100億美元",
-     "speaker": "Mark Murphy (CFO)"
-    },
-    {
-     "type": "guidance",
-     "label": "先進製程爬坡時程",
-     "value": "1γ DRAM與G9 NAND製程預計於2026年年中成為主力生產占比，其中1γ DRAM是公司史上最快的量產爬坡速度",
+     "type": "metric",
+     "label": "剩餘履約義務（RPO）",
+     "value": "以保底價計算約 1,000 億美元（16 份協議中的 14 份）",
      "speaker": ""
     },
     {
      "type": "guidance",
-     "label": "HBM4量產與良率展望",
-     "value": "HBM4 36GB 12層堆疊已於2026年開始量產出貨，專為NVIDIA Vera Rubin平台設計，預期良率成熟速度將快於HBM3E",
+     "label": "下一季（第四財季）財測",
+     "value": "營收 500 億美元 ±10 億美元；毛利率約 86%；營業費用約 16.5 億美元；非 GAAP 每股盈餘 31 美元 ±1 美元",
      "speaker": ""
     },
     {
      "type": "guidance",
-     "label": "資料中心記憶體位元中長期產業展望",
-     "value": "AI需求正推動DRAM與NAND資料中心位元的TAM，於2026年曆年首度超過整體產業TAM的50%",
-     "speaker": "Sanjay Mehrotra (CEO)"
+     "label": "資本支出計畫",
+     "value": "2026 財年資本支出約 270 億美元（已扣除政府補助）；第四財季約 100 億美元；2027 財年每季資本支出高於第四財季水準，其中逾 50% 用於廠房建設",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "新廠與產能爬坡時程",
+     "value": "愛達荷 ID.1 預計 2027 年中產出首批晶圓；ID.2 預計 2028 年底；紐約廠已於 2026 年 1 月動工；台灣新竹 2027 年中開始量產出貨（比先前預期提早約一季）",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "HBM 封裝產能與市占目標",
+     "value": "新加坡封裝廠 2027 年上半年開始對 HBM 產能有實質貢獻；目標讓 HBM 市占率接近整體 DRAM 市占率",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "製程節點展望",
+     "value": "1-gamma DRAM 與 G9 NAND 預計成為公司史上量產規模最大的節點；下一代節點預計 2027 年下半年量產",
+     "speaker": ""
     },
     {
      "type": "quote",
-     "label": "本季基調代表發言",
-     "value": "記憶體讓AI更聰明、更有能力，能支援更長的上下文視窗、更深的推理鏈與多代理協作，這正是我們堅信Micron是AI最大受惠者與賦能者之一的原因。",
-     "speaker": "Sanjay Mehrotra (CEO)"
+     "label": "本季基調",
+     "value": "記憶體處於這一切的核心，是一項策略性資產，而能否取得記憶體供給顯然是客戶的關鍵優先事項。",
+     "speaker": "Micron 管理層（來源未標明發言人）"
     }
    ]
   }
