@@ -182,6 +182,9 @@ CSS = """
 .hx-chip.b0{border-color:#EF4444}.hx-chip.b0 b{color:#fca5a5}
 .hx-chip.b1,.hx-chip.b2{border-color:#F97316}.hx-chip.b1 b,.hx-chip.b2 b{color:#fdba74}
 .hx-chip.b3 b{color:#86efac}
+button.hx-chip{font:inherit;cursor:pointer}
+button.hx-chip:hover{background:var(--surface)}
+button.hx-chip.on{background:var(--surface);box-shadow:inset 0 -3px 0 var(--accent)}
 .hx-note{background:var(--card);border:1px solid var(--line);padding:10px 12px;margin:8px 0;color:var(--muted);font-size:13.5px;line-height:1.75}
 @media(max-width:520px){.hx .hx-g{grid-template-columns:1fr}}
 """
@@ -200,7 +203,11 @@ def block(date=None):
     if not ov:
         return ""
     marks = holder_marks()
+    go = {"both": "both", "st_only": "st", "rs_only": "rs"}          # 對應檢視表篩選列的「訊號」值
     chips = "".join(
+        (f'<button type="button" class="hx-chip hx-go b{i}" data-kind="{go[b]}" '
+         f'title="點一下只看這組並跳到清單，再點一次取消">'
+         f'<b>{len(ov["buckets"][b])}</b>{BUCKET_LABEL[b]}</button>') if b in go else
         f'<span class="hx-chip b{i}"><b>{len(ov["buckets"][b])}</b>{BUCKET_LABEL[b]}</span>'
         for i, b in enumerate(["both", "st_only", "rs_only", "clear"]))
     unk = len(ov["buckets"]["unk"])
