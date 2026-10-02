@@ -746,6 +746,10 @@ FILTER_JS = r'''
     // 某一組被篩空就換一句話，不要留一個空盒子
     document.querySelectorAll(".exrows").forEach(function(w){
       var vis = w.querySelectorAll("details.exrow:not([hidden])").length;
+      // 套了「訊號」篩選時，別組整段收起來（不留「這一組沒有符合」的空盒子，名單才會緊接在上面）
+      var gr = w.querySelector("details.exrow");
+      var otherKind = !!F.kind && !!gr && gr.dataset.kind !== F.kind;
+      w.parentNode.style.display = otherKind ? "none" : "";
       w.style.display = vis ? "" : "none";
       var em = w.parentNode.querySelector(".exempty.f");
       if (!em){
@@ -794,6 +798,33 @@ FILTER_JS = r'''
     });
   }
   apply();
+  // 頂端階段計數（.hx-go）：點一下＝套用「訊號」篩選並捲到清單，再點同一個＝取消（2026-10-02 Leo）
+  function syncGo(){
+    var cur = document.querySelector('.fb[data-f="kind"].on');
+    var v = cur ? cur.dataset.v : "";
+    document.querySelectorAll(".hx-go").forEach(function(o){
+      o.classList.toggle("on", !!v && o.dataset.kind === v);
+    });
+  }
+  document.querySelectorAll(".hx-go").forEach(function(c){
+    c.addEventListener("click", function(){
+      var cur = document.querySelector('.fb[data-f="kind"].on');
+      var tgt = (cur && cur.dataset.v === c.dataset.kind) ? "" : c.dataset.kind;
+      var btn = document.querySelector('.fb[data-f="kind"][data-v="' + tgt + '"]');
+      if (btn) btn.click();
+      syncGo();
+      // 跳到那一組的標題（取消篩選時回到篩選列）
+      var tgtEl = document.querySelector(".fbar");
+      if (tgt) {
+        var g = document.querySelector('details.exrow[data-kind="' + tgt + '"]');
+        if (g && g.closest(".sb")) tgtEl = g.closest(".sb");
+      }
+      if (tgtEl) tgtEl.scrollIntoView({behavior: "smooth", block: "start"});
+    });
+  });
+  document.querySelectorAll('.fb[data-f="kind"]').forEach(function(b){
+    b.addEventListener("click", syncGo);
+  });
 })();
 </script>
 '''
@@ -969,7 +1000,6 @@ def render(rows, meta):
         print(f"[exit_review] 今日新變化區塊略過：{_e}")
         _blk = ""
     B.append(_blk)
-    B.append(brief(rows, meta))
     B.append('<div class="warnbox">'
              '<b>這頁只擺數字，不建議買賣。</b><br>'
              '・老墨的規則：<b>SuperTrend 翻空 → 賣一半</b>；'
@@ -1073,6 +1103,7 @@ def render(rows, meta):
              '列在這裡是為了讓三盞燈的階段看得完整（只亮第一盞就是這組）。'
              '</div>' + table(st_only) + "</div>")
 
+    B.append(brief(rows, meta))          # 2026-10-02 Leo：持股那塊移到清單後面
     B.append('<div class="sb"><h2>欄位怎麼讀</h2><div class="sub">'
              '<b>RS60</b>＝相對大盤 60 日強弱的乖離，<b>負數就是跌破自身均線</b>。<br>'
              '<b>SuperTrend 線</b>＝那條動態支撐；「距 x%」是現價離它多遠。'
