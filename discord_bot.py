@@ -424,6 +424,26 @@ async def _room_page(request):
     return resp
 
 
+async def _holdings_page(request):
+    """持股出場訊號 /holdings（2026-10-02，Leo：每日密報太長，要能直接開網頁看）。
+
+    ⚠️ 這頁列出持股名單與各檔狀態，跟 /trades 同一道 token 門檻，沒過一律 404。
+    不顯示持股金額、股數、成本——只有代號、距線、RS、燈號與系統註記。
+    """
+    ok, set_cookie = _room_gate(request)
+    if not ok:
+        print("[holdings] 擋下（無 key／cookie）", flush=True)
+        return _room_404()
+    import holdings_exit
+    html = await asyncio.to_thread(holdings_exit.render)
+    resp = web.Response(text=html, content_type="text/html", charset="utf-8")
+    if set_cookie:
+        resp.set_cookie(lookup_page.COOKIE, lookup_page._token(),
+                        max_age=lookup_page.COOKIE_DAYS * 86400,
+                        httponly=True, samesite="Lax", secure=True)
+    return resp
+
+
 async def _trades_page(request):
     """交易紀錄 /trades（2026-09-07，Sonia 那張卡連這裡）。
 
@@ -595,6 +615,7 @@ async def _run():
     app.router.add_get("/room/ask_stream", _room_ask_stream)
     app.router.add_post("/room/ask", _room_ask)
     app.router.add_get("/trades", _trades_page)
+    app.router.add_get("/holdings", _holdings_page)
     runner = web.AppRunner(app)
     await runner.setup()
     site = web.TCPSite(runner, "127.0.0.1", HEALTH_PORT)
