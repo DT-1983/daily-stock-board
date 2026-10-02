@@ -161,20 +161,29 @@ def transitions(ov):
 URL = "https://assets.talentxtrend.com/exit-review"
 CSS = """
 .hx{margin:14px 0 6px}
-.hx h2{font-size:17px;margin:0 0 8px;padding-left:10px;border-left:3px solid var(--accent)}
+.hx details{background:var(--card);border:1px solid var(--line)}
+.hx summary{cursor:pointer;list-style:none;padding:11px 14px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px}
+.hx summary::-webkit-details-marker{display:none}
+.hx summary::after{content:"點開 ▾";margin-left:auto;font-size:12.5px;color:var(--accent)}
+.hx details[open] summary::after{content:"收合 ▴"}
+.hx summary b{font-size:16px}
+.hx .hx-s{font-size:13.5px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+.hx .hx-bd{padding:2px 14px 12px;border-top:1px solid var(--line2)}
+.hx .hx-g{display:grid;grid-template-columns:auto 1fr;gap:8px 12px;padding:9px 0;border-top:1px solid var(--line2);align-items:start}
+.hx .hx-g:first-child{border-top:0}
+.hx .hx-gh{font-size:14px;font-weight:700;white-space:nowrap;padding-top:3px}
+.hx .hx-gh small{font-weight:400;color:var(--muted);margin-left:4px}
+.hx .hx-ns{display:flex;flex-wrap:wrap;gap:6px}
+.hx .hx-n{font-size:14.5px;padding:2px 9px;border:1px solid var(--line);background:var(--surface)}
+.hx .hx-n small{color:var(--muted);margin-left:5px;font-size:12px}
 .hx-chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
 .hx-chip{padding:7px 11px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:14px}
 .hx-chip b{font-family:'IBM Plex Mono',monospace;font-size:18px;margin-right:6px}
 .hx-chip.b0{border-color:#EF4444}.hx-chip.b0 b{color:#fca5a5}
 .hx-chip.b1,.hx-chip.b2{border-color:#F97316}.hx-chip.b1 b,.hx-chip.b2 b{color:#fdba74}
 .hx-chip.b3 b{color:#86efac}
-.hx-new{background:var(--card);border:1px solid var(--line);margin:8px 0;padding:10px 12px}
-.hx-new h3{margin:0 0 6px;font-size:15px}
-.hx-row{display:flex;justify-content:space-between;gap:10px;padding:8px 2px;border-top:1px solid var(--line2);align-items:baseline}
-.hx-row:first-of-type{border-top:0}
-.hx-nm{font-size:15.5px}
-.hx-mt{font-size:12.5px;color:var(--muted);text-align:right}
 .hx-note{background:var(--card);border:1px solid var(--line);padding:10px 12px;margin:8px 0;color:var(--muted);font-size:13.5px;line-height:1.75}
+@media(max-width:520px){.hx .hx-g{grid-template-columns:1fr}}
 """
 
 
@@ -184,7 +193,8 @@ def _esc(s):
 
 
 def block(date=None):
-    """回 HTML 字串（要搭配 CSS 一起放進 <style>）；沒存量資料回空字串。"""
+    """回 HTML 字串（要搭配 CSS 一起放進 <style>）；沒存量資料回空字串。
+    三組變化併成一張可收合的卡：收合時只看一行計數，點開才是名單（名單用緊湊標籤，不是一檔一列）。"""
     from daily_warroom import tkname
     ov = overview(date)
     if not ov:
@@ -195,24 +205,30 @@ def block(date=None):
         for i, b in enumerate(["both", "st_only", "rs_only", "clear"]))
     unk = len(ov["buckets"]["unk"])
     tr = transitions(ov)
-    body = ""
-    if tr:
-        for ic, title, items in tr:
-            body += f'<div class="hx-new"><h3>{ic} {title}　{len(items)} 檔</h3>' + "".join(
-                f'<div class="hx-row"><div class="hx-nm">{marks.get(nk, "")}{_esc(tkname(ov["disp"][nk]))}</div>'
-                f'<div class="hx-mt">{_esc(note)}</div></div>' for nk, note in items) + "</div>"
-    else:
-        body = '<div class="hx-note">今天持股沒有新的出場訊號變化。</div>'
-    corr = ""
-    if ov["corrected"]:
-        corr = ('<div class="hx-note">已依今日翻面事件校正存量：'
-                + _esc("、".join(tkname(ov["disp"][n]) for n in ov["corrected"])) + "</div>")
     total = sum(len(v) for v in ov["buckets"].values())
-    return (f'<div class="hx"><h2>今日新變化　<small style="font-weight:400;color:var(--muted)">'
-            f'全部 {total} 檔持股</small></h2>{body}'
+    if tr:
+        short = {"🔴": "新達成", "🟠": "新轉弱", "🟢": "解除"}
+        head = "".join(f'<span class="hx-s">{ic} {short.get(ic, t)} {len(items)}</span>' for ic, t, items in tr)
+        groups = ""
+        for ic, title, items in tr:
+            same = len({n for _, n in items}) == 1          # 同組原因一樣就只寫在組名旁
+            lab = f'{ic} {title}<small>{_esc(items[0][1])}</small>' if same else f"{ic} {title}"
+            names = "".join(
+                f'<span class="hx-n">{marks.get(nk, "")}{_esc(tkname(ov["disp"][nk]))}'
+                + ("" if same else f"<small>{_esc(note)}</small>") + "</span>" for nk, note in items)
+            groups += f'<div class="hx-g"><div class="hx-gh">{lab}</div><div class="hx-ns">{names}</div></div>'
+        corr = ""
+        if ov["corrected"]:
+            corr = ('<div class="hx-note" style="margin:6px 0 0">已依今日翻面事件校正存量：'
+                    + _esc("、".join(tkname(ov["disp"][n]) for n in ov["corrected"])) + "</div>")
+        card = (f'<details open><summary><b>今日新變化</b>{head}</summary>'
+                f'<div class="hx-bd">{groups}{corr}</div></details>')
+    else:
+        card = '<div class="hx-note">今天持股沒有新的出場訊號變化。</div>'
+    return (f'<div class="hx">{card}'
             f'<div class="hx-chips">{chips}'
-            + (f'<span class="hx-chip"><b>{unk}</b>無法判定</span>' if unk else "") + "</div>"
-            + corr + "</div>")
+            + (f'<span class="hx-chip"><b>{unk}</b>無法判定</span>' if unk else "")
+            + f'<span class="hx-chip" style="border-style:dashed">全部 {total} 檔持股</span></div></div>')
 
 
 if __name__ == "__main__":
