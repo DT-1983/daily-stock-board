@@ -70,6 +70,21 @@ TREND_LABEL = {
 EXIT_TYPES = ("supertrend_bear", "supertrend_flip", "rs_below")
 
 
+def _held_now():
+    """目前實際持股（正規化代號集合）；取不到回 None（呼叫端退回登錄簿裡存的旗標）。
+
+    🔴 2026-10-02：登錄簿的 held 旗標只在「登錄當天」寫一次、之後不再更新，賣掉的持股
+    永遠標持有（實測 R、ON：已不在持股資料，卻仍進持股日檢與出場存量，害密報多算兩檔）；
+    反過來，登錄後才買進的也永遠標非持股。日檢每次用現在的持股重判，不改資料檔。"""
+    try:
+        import investment_chief as _ic
+        h = {_ic.norm_ticker(x) for x in _ic.held_universe()}
+        return h or None
+    except Exception:                                        # noqa: BLE001
+        return None
+
+
+
 def _yf_symbol(tk):
     # 2026-08-31：原本裸代號一律接 .TW，上櫃股（3264/3265 已在登錄名單裡）拿不到
     # 收盤價，price_below/above 這類條件會靜默地永遠檢不了。改走共用解析。
@@ -208,13 +223,14 @@ def run():
     # 「今天解除了」跟「今天觸發了」一樣是要看的事件。
     resolved = []
     healthy = {"held": 0, "watch": 0}
+    _hn = _held_now()
     for tk, entry in reg.items():
         px = prices.get(tk)
         # 2026-08-31 修：thesis_conditions.json 登錄時本來就有記 held（投資長 P0 擴充後
         # 非持股的進場評估也會登錄失效條件），但這裡完全沒讀它，結果 48 檔裡 41 檔
         # 非持股的全被推進「🔒持股密報」——Leo 反饋「也推了不是持股的？」。
         # 帶著 held 往下傳，日報才能分流（持股→密報、非持股→公開版）。
-        _h = bool(entry.get("held"))
+        _h = (tk in _hn) if _hn is not None else bool(entry.get("held"))
         _trend_needed = any(c.get("type") in TREND_TYPES
                             and c.get("status") == "active"
                             for c in entry.get("conditions", []))
@@ -323,7 +339,7 @@ def run():
     # ⭐ 事件（今天變了什麼）跟存量（現在是什麼）是兩個問題，只做事件會漏掉存量。
     exit_state = []
     for tk, entry in reg.items():
-        if not entry.get("held"):
+        if not ((tk in _hn) if _hn is not None else entry.get("held")):
             continue
         s = _st_state(tk)
         exit_state.append([tk, None, None] if not s
