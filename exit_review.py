@@ -153,6 +153,36 @@ def gather():
         except Exception as e:                              # noqa: BLE001
             print(f"  [warn] 補算失敗：{str(e)[:60]}")
 
+    # 🔴 2026-10-02 Leo 把這頁跟密報的「今日新變化」整合成一頁：兩邊「RS 跌破」定義不同——
+    # 這裡原本用 rs_short<0（RS 值為負），密報／持股警示用的是「RS 跌破自身 60 日均線」
+    # （＝這頁自己 warnbox 寫的規則）。實測差 3 檔（有一檔 RS 值為正、但已在自身均線下）。
+    # 同一頁不能有兩個數字，分類改以 holdings_exit.overview() 為準（含今日翻面事件校正）；
+    # 它沒涵蓋到的代號才保留上面的本地判斷。
+    try:
+        import holdings_exit as _hx
+        _ov = _hx.overview()
+    except Exception as e:                                   # noqa: BLE001
+        print(f"  [warn] 取不到統一分類，沿用本地判斷：{str(e)[:60]}")
+        _ov = None
+    if _ov:
+        _bk = {nk: b for b, names in _ov["buckets"].items() for nk in names}
+        _km = {"both": "both", "rs_only": "rs", "st_only": "st"}
+        _loc = {n: (k, r) for n, k, r in want}
+        want = []
+        for n in held:
+            b = _bk.get(_hx._nk(n))
+            if b is None:
+                if n in _loc:
+                    want.append((n, *_loc[n]))
+                continue
+            kind = _km.get(b)
+            if not kind:
+                continue
+            r = (_loc[n][1] if n in _loc else by.get(n)) or {
+                "ticker": n, "name": "", "price": None, "rs_short": None, "bull": kind == "rs",
+                "st_line": None, "gap_pct": None, "_filled": True}
+            want.append((n, kind, r))
+
     # 🔴 2026-09-06 Leo：「可以幫我加貴價嗎？還有是否超過貴價」。
     # 直接讀 `state/valuation_state.json`——那是每天 07:33 算好的俗/貴價快取
     # （洪瑞泰法，美股用預期 EPS、台股用實績 EPS，見 hongruitai_method）。
@@ -771,6 +801,10 @@ FILTER_JS = r'''
 
 def render(rows, meta):
     from board_theme import BASE_CSS, esc, header
+    try:
+        from holdings_exit import CSS as _hx_css
+    except Exception:                      # noqa: BLE001
+        _hx_css = ""
 
     def n(v, d=2, suf=""):
         return "—" if v is None else f"{v:,.{d}f}{suf}"
@@ -928,6 +962,13 @@ def render(rows, meta):
     pnl_r = sum(r["pnl"] or 0 for r in rs_only)
 
     B = []
+    try:                                  # 頂端：今日新變化（2026-10-02 與持股出場訊號整合）
+        import holdings_exit as _hx
+        _blk = _hx.block()
+    except Exception as _e:                # noqa: BLE001
+        print(f"[exit_review] 今日新變化區塊略過：{_e}")
+        _blk = ""
+    B.append(_blk)
     B.append(brief(rows, meta))
     B.append('<div class="warnbox">'
              '<b>這頁只擺數字，不建議買賣。</b><br>'
@@ -1060,7 +1101,7 @@ def render(rows, meta):
 
     return ('<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            "<title>出場檢視表</title><style>" + BASE_CSS + CSS + CSS30
+            "<title>出場檢視表</title><style>" + BASE_CSS + CSS + CSS30 + _hx_css
             + '</style></head><body><div class="wrap">'
             # 🔴 2026-09-06 Leo：「上面還是有欸？」——指那排導覽按鈕。
             # 這頁**不上投資站**，nav_abs() 那些連結指向的是公開站的頁面，
