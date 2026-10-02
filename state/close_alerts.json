@@ -303,6 +303,78 @@
    "code": "UNM",
    "sig": "rs60",
    "dir": -1
+  },
+  {
+   "sent": "2026-10-03",
+   "market": "us",
+   "bar_date": "2026-10-02",
+   "code": "AAOI",
+   "sig": "rs60",
+   "dir": 1
+  },
+  {
+   "sent": "2026-10-03",
+   "market": "us",
+   "bar_date": "2026-10-02",
+   "code": "API",
+   "sig": "rs60",
+   "dir": -1
+  },
+  {
+   "sent": "2026-10-03",
+   "market": "us",
+   "bar_date": "2026-10-02",
+   "code": "CCL",
+   "sig": "rs60",
+   "dir": 1
+  },
+  {
+   "sent": "2026-10-03",
+   "market": "us",
+   "bar_date": "2026-10-02",
+   "code": "COHR",
+   "sig": "rs60",
+   "dir": 1
+  },
+  {
+   "sent": "2026-10-03",
+   "market": "us",
+   "bar_date": "2026-10-02",
+   "code": "GLW",
+   "sig": "rs60",
+   "dir": 1
+  },
+  {
+   "sent": "2026-10-03",
+   "market": "us",
+   "bar_date": "2026-10-02",
+   "code": "KR",
+   "sig": "rs60",
+   "dir": 1
+  },
+  {
+   "sent": "2026-10-03",
+   "market": "us",
+   "bar_date": "2026-10-02",
+   "code": "TM",
+   "sig": "rs60",
+   "dir": -1
+  },
+  {
+   "sent": "2026-10-03",
+   "market": "us",
+   "bar_date": "2026-10-02",
+   "code": "UNM",
+   "sig": "rs60",
+   "dir": -1
+  },
+  {
+   "sent": "2026-10-03",
+   "market": "us",
+   "bar_date": "2026-10-02",
+   "code": "PWR",
+   "sig": "st",
+   "dir": 1
   }
  ]
 }
