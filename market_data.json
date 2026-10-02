@@ -1,124 +1,124 @@
 {
- "updated": "2026-10-01 22:25",
+ "updated": "2026-10-02 08:47",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
    "date": "10/01",
-   "close": 7632.7,
-   "chg_pct": -0.25
+   "close": 7666.45,
+   "chg_pct": 0.19
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
    "date": "10/01",
-   "close": 26814.96,
-   "chg_pct": -0.17
+   "close": 26871.6,
+   "chg_pct": 0.04
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
    "date": "10/01",
-   "close": 50690.95,
-   "chg_pct": -0.42
+   "close": 50926.56,
+   "chg_pct": 0.04
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
    "date": "10/01",
-   "close": 12613.67,
-   "chg_pct": -0.12
+   "close": 12829.0,
+   "chg_pct": 1.59
   },
   {
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "10/01",
-   "close": 48353.49,
-   "chg_pct": 0.86
+   "date": "09/30",
+   "close": 47940.13,
+   "chg_pct": 0.65
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "10/01",
+   "date": "10/02",
    "close": 31.91,
-   "chg_pct": 0.18
+   "chg_pct": 0.14
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
    "date": "10/01",
-   "close": 5.32,
+   "close": 5.24,
    "fmt": "yield",
-   "chg_bp": 2.6
+   "chg_bp": -5.6
   }
  ],
  "news": [
   {
-   "title": "盤中速報 - 連貫(COHR-US)大漲5.1%，報302.5美元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6619893",
-   "ts": "10/01 22:24"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：DraftKings公司(DKNG-US)EPS預估下修至0.09元，預估目標價為33.00元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6619889",
-   "ts": "10/01 22:15"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：Brookfield Renewable Partners LP - Unit(BEP-US)EPS預估下修至-1.43元，預估目標價為37.00元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6619888",
-   "ts": "10/01 22:15"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：緯穎(6669-TW)EPS預估上修至121.69元，預估目標價為2715.57元",
+   "title": "【被動漲價潮】國巨、華新科帶頭衝！主力洗盤3個月，10月低基期轉機股曝光！",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6619886",
-   "ts": "10/01 22:11"
+   "url": "https://news.cnyes.com/news/id/6620100",
+   "ts": "10/02 08:46"
   },
   {
-   "title": "別被高殖利率騙了！策略師示警美債可能還沒跌夠",
+   "title": "OpenAI揭AI代理人異常活動 已通知逾100個組織",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6619859",
-   "ts": "10/01 22:00"
+   "url": "https://news.cnyes.com/news/id/6620041",
+   "ts": "10/02 08:40"
   },
   {
-   "title": "盤中速報 - 星座能源(CEG-US)大漲5.11%，報266.99美元",
+   "title": "歐洲AI算力擴產 Bull產能翻倍、鴻海切入NVIDIA NVL歐洲製造",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6620094",
+   "ts": "10/02 08:30"
+  },
+  {
+   "title": "美債殖利率自24年高點回落美股翻紅，能源與科技股領漲",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6619879",
-   "ts": "10/01 21:52"
+   "url": "https://news.cnyes.com/news/id/6620095",
+   "ts": "10/02 08:30"
   },
   {
-   "title": "權益大戰再升級！國泰世華結盟inline首創「專屬訂位」 熱門餐廳獨家訂到",
+   "title": "台股創高不用怕！爆發性成長來到，「相對低基期」AI 績優股名單！",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6619851",
-   "ts": "10/01 20:44"
+   "url": "https://news.cnyes.com/news/id/6619544",
+   "ts": "10/02 08:30"
   },
   {
-   "title": "國科會通過13件園區投資案共512億元 南亞科確定入駐屏科",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6619817",
-   "ts": "10/01 20:23"
+   "title": "趕不上耶誕購物季！美貿易代表：美中600億美元關稅減免「沒有時間表」",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6620026",
+   "ts": "10/02 08:20"
   },
   {
-   "title": "3大破兆預算新會期上陣！政院揭10大重點議案聚焦民生經濟 社福津貼回溯7/1加碼",
+   "title": "鉅亨速報 - Factset 最新調查：南電(8046-TW)EPS預估上修至17.85元，預估目標價為1700元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6619810",
-   "ts": "10/01 20:18"
+   "url": "https://news.cnyes.com/news/id/6620078",
+   "ts": "10/02 08:10"
   },
   {
-   "title": "買一張只要1萬5！00830擬「1拆5」分割 11/19召開受益人會議",
+   "title": "鉅亨速報 - Factset 最新調查：緯穎(6669-TW)EPS預估下修至121.02元，預估目標價為2715.57元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6619819",
-   "ts": "10/01 20:15"
+   "url": "https://news.cnyes.com/news/id/6620077",
+   "ts": "10/02 08:10"
+  },
+  {
+   "title": "美光由黑翻紅 AI需求支撐買盤",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6619686",
+   "ts": "10/02 08:10"
+  },
+  {
+   "title": "美股重點新聞摘要2026年10月02日",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6619812",
+   "ts": "10/02 08:00"
   }
  ],
  "inst": {
