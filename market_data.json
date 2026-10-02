@@ -1,37 +1,37 @@
 {
- "updated": "2026-10-02 15:40",
+ "updated": "2026-10-02 21:47",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "10/01",
-   "close": 7666.45,
-   "chg_pct": 0.19
+   "date": "10/02",
+   "close": 7747.25,
+   "chg_pct": 1.05
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "10/01",
-   "close": 26871.6,
-   "chg_pct": 0.04
+   "date": "10/02",
+   "close": 27272.62,
+   "chg_pct": 1.49
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "10/01",
-   "close": 50926.56,
-   "chg_pct": 0.04
+   "date": "10/02",
+   "close": 51317.83,
+   "chg_pct": 0.77
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "10/01",
-   "close": 12829.0,
-   "chg_pct": 1.59
+   "date": "10/02",
+   "close": 13223.83,
+   "chg_pct": 3.08
   },
   {
    "sym": "^TWII",
@@ -46,85 +46,85 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "10/02",
-   "close": 31.85,
-   "chg_pct": -0.06
+   "close": 31.82,
+   "chg_pct": -0.15
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "10/01",
-   "close": 5.24,
+   "date": "10/02",
+   "close": 5.21,
    "fmt": "yield",
-   "chg_bp": -5.6
+   "chg_bp": -2.3
   }
  ],
  "news": [
   {
-   "title": "Anthropic到底值多少？矽谷喊2兆美元 華爾街只認1.5兆美元",
+   "title": "盤中速報 - Onto Innovation Inc.(ONTO-US)大漲6.38%，報334.98美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6620210",
-   "ts": "10/02 15:40"
+   "url": "https://news.cnyes.com/news/id/6620686",
+   "ts": "10/02 21:45"
   },
   {
-   "title": "中國駐美大使謝鋒：中美元首會晤具里程碑意義　兩國競爭應是「田徑比賽」而非「拳擊賽」",
+   "title": "盤中速報 - 費城半導體大漲2.35%，報13130.76點",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6620198",
-   "ts": "10/02 15:30"
+   "url": "https://news.cnyes.com/news/id/6620685",
+   "ts": "10/02 21:45"
   },
   {
-   "title": "Palantir攜手Armada擴大主權AI布局作業系統導入Galleon數據中心",
+   "title": "盤中速報 - 耐吉(NKE-US)大跌7.23%，報32.61美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6620391",
-   "ts": "10/02 15:30"
+   "url": "https://news.cnyes.com/news/id/6620684",
+   "ts": "10/02 21:45"
   },
   {
-   "title": "MLCC、ABF迎AI搶料潮三星電機SEMCO長約達3.6兆韓元、FC-BGA交期暴增至56週",
+   "title": "盤中速報 - 安森美半導體(ON-US)大漲5.83%，報84.75美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6620390",
-   "ts": "10/02 15:30"
+   "url": "https://news.cnyes.com/news/id/6620683",
+   "ts": "10/02 21:45"
   },
   {
-   "title": "汎銓9月營收再寫新高 Q3年增逾3成同步攀峰",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6620384",
-   "ts": "10/02 15:22"
-  },
-  {
-   "title": "美《陽光保護法案》參院卡關 川普重申必須推動永久夏令時間",
+   "title": "盤中速報 - 安謀控股公司(ARM-US)大漲5.14%，報307.38美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6620334",
-   "ts": "10/02 15:20"
+   "url": "https://news.cnyes.com/news/id/6620682",
+   "ts": "10/02 21:45"
   },
   {
-   "title": "夏普雙主軸布局智慧照護 整合鴻海集團資源打造客製化方案",
+   "title": "彭啓明：生物炭成AI與半導體減碳關鍵 將組「台灣隊」拚2030年移除百萬噸碳",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6620369",
-   "ts": "10/02 15:17"
+   "url": "https://news.cnyes.com/news/id/6620634",
+   "ts": "10/02 20:22"
   },
   {
-   "title": "智生活客服質檢提升到100% 自建AI連三年獲數位轉型鼎革獎",
+   "title": "宏捷科9月營收年月雙增 法人估2027年H1獲利有望轉佳",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6620365",
-   "ts": "10/02 15:16"
+   "url": "https://news.cnyes.com/news/id/6620612",
+   "ts": "10/02 20:19"
   },
   {
-   "title": "華碩Q3筆電訂閱數季增70% 強推高通旗艦AI PC衝市占",
+   "title": "台積電加碼美國德州？經部表態協助全球布局 但核心技術「根留台灣」",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6620357",
-   "ts": "10/02 15:15"
+   "url": "https://news.cnyes.com/news/id/6620604",
+   "ts": "10/02 19:27"
   },
   {
-   "title": "被動元件含金量PK，國巨、禾伸堂、信昌電，誰營收爆發與AI純度最高？",
+   "title": "北市12家企業參展新加坡科技周聚焦AI 估促成3105萬美元潛在商機",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6620368",
-   "ts": "10/02 15:00"
+   "url": "https://news.cnyes.com/news/id/6620596",
+   "ts": "10/02 19:17"
+  },
+  {
+   "title": "惠民旗下惠嘉水務奪「嘉義縣擴大縣治再生水廠BTO案」投資16.9億元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6620587",
+   "ts": "10/02 19:16"
   }
  ],
  "inst": {
   "date": "10/02",
-  "total_yi": 95.6,
+  "total_yi": 104.2,
   "foreign_yi": 26.2,
-  "trust_yi": 49.1
+  "trust_yi": 57.7
  }
 }
