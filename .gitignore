@@ -244,3 +244,6 @@ state/sec_releases/
 
 # 每日分析師共識快照（本機私人歷史資料，體積會一直長）
 state/consensus_history/
+
+# 修資料時留的備份（含券商報告等私人內容）一律不進版控；備份請放到儲存庫外面
+state/*.bak*
