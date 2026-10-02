@@ -317,7 +317,7 @@ def sec_exit(date):
     b = ov["buckets"]
     lines.append(f"-# 存量：ST空＋RS破 {len(b['both'])}｜只ST空 {len(b['st_only'])}｜只RS破 {len(b['rs_only'])}"
                  f"｜沒事 {len(b['clear'])}" + (f"｜無法判定 {len(b['unk'])}" if b["unk"] else "")
-                 + f"　完整名單 <{hx.URL}>")
+                 + f"　完整名單與成本損益 <{hx.URL}>")
     lines.append("-# ST 翻空＝建議先賣一半（若尚未賣）；RS(60日) 跌破＝建議剩餘部位全出")
     if ov["corrected"]:
         lines.append(f"-# 已依今日翻面事件校正存量：{'、'.join(tkname(ov['disp'][k]) for k in ov['corrected'])}")
