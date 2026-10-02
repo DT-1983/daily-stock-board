@@ -938,6 +938,17 @@ body{margin:0}
 .room.list .left,.room.list #mid{display:none}
 .room.list{grid-template-columns:minmax(0,1fr)}
 .room.list.chat{grid-template-columns:minmax(0,1fr) 380px}
+/* 2026-10-02 Leo：「電腦版軍師跑掉，完全沒辦法看」。
+   🔴 根因：.tablepane 是 grid-column:1/-1（橫跨整列），列表模式開軍師時右欄被擠到**第二列**，
+   變成表格下面一條 250px 的矮長條，訊息區只剩約 80px，答案根本看不了。
+   以前沒人遇到，是因為軍師原本一定要先選股票（要進個股模式，三欄並排）；
+   「全部」模式孔明可以直接問資料庫之後，列表模式開軍師才變成主要用法。
+   修法：桌機寬度下列表＋軍師時，表格在第 1 欄、軍師在第 2 欄，同一列、整欄高度。
+   ⚠️ 只套桌機；手機是 fixed 浮層（max-width:900px 那段），不能被這兩條影響。 */
+@media(min-width:901px){
+ .room.list.chat .tablepane{grid-column:1;grid-row:1}
+ .room.list.chat .right{grid-column:2;grid-row:1}
+}
 .room:not(.list) .tablepane{display:none}
 .tnote{padding:10px 2px 12px;font-size:11.5px;color:var(--dim)}
 .tnote b{color:var(--ink)}
