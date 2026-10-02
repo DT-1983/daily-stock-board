@@ -247,3 +247,6 @@ state/consensus_history/
 
 # 修資料時留的備份（含券商報告等私人內容）一律不進版控；備份請放到儲存庫外面
 state/*.bak*
+
+# 一次性驗算腳本（不進版控，留本機）
+scripts_archive/
