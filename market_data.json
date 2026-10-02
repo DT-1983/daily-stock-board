@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-02 08:47",
+ "updated": "2026-10-02 13:53",
  "indices": [
   {
    "sym": "^GSPC",
@@ -37,17 +37,17 @@
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "09/30",
-   "close": 47940.13,
-   "chg_pct": 0.65
+   "date": "10/02",
+   "close": 48475.74,
+   "chg_pct": 0.25
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "10/02",
-   "close": 31.91,
-   "chg_pct": 0.14
+   "date": "10/01",
+   "close": 31.87,
+   "chg_pct": 0.06
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "【被動漲價潮】國巨、華新科帶頭衝！主力洗盤3個月，10月低基期轉機股曝光！",
+   "title": "〈焦點股〉矽晶圓漲價題材發酵 漢磊亮燈漲停、嘉晶寫新天價",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6620100",
-   "ts": "10/02 08:46"
+   "url": "https://news.cnyes.com/news/id/6620327",
+   "ts": "10/02 13:44"
   },
   {
-   "title": "OpenAI揭AI代理人異常活動 已通知逾100個組織",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6620041",
-   "ts": "10/02 08:40"
-  },
-  {
-   "title": "歐洲AI算力擴產 Bull產能翻倍、鴻海切入NVIDIA NVL歐洲製造",
+   "title": "澄清「搶船」傳聞！台電依法接管離岸風電二期船機 拚年底完工併網",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6620094",
-   "ts": "10/02 08:30"
+   "url": "https://news.cnyes.com/news/id/6620318",
+   "ts": "10/02 13:38"
   },
   {
-   "title": "美債殖利率自24年高點回落美股翻紅，能源與科技股領漲",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6620095",
-   "ts": "10/02 08:30"
-  },
-  {
-   "title": "台股創高不用怕！爆發性成長來到，「相對低基期」AI 績優股名單！",
+   "title": "長聖雙引擎發展模式持續發威 9月營收1.1億元續寫今年高",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6619544",
-   "ts": "10/02 08:30"
+   "url": "https://news.cnyes.com/news/id/6620322",
+   "ts": "10/02 13:35"
   },
   {
-   "title": "趕不上耶誕購物季！美貿易代表：美中600億美元關稅減免「沒有時間表」",
+   "title": "美銀警告高油價成第4季頭號威脅 金價恐探3750美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6620026",
-   "ts": "10/02 08:20"
+   "url": "https://news.cnyes.com/news/id/6620213",
+   "ts": "10/02 13:30"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：南電(8046-TW)EPS預估上修至17.85元，預估目標價為1700元",
+   "title": "〈焦點股〉美國擬限中國光模組禁令 聯亞、前鼎漲停領光通訊齊嗨",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6620078",
-   "ts": "10/02 08:10"
+   "url": "https://news.cnyes.com/news/id/6620290",
+   "ts": "10/02 13:20"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：緯穎(6669-TW)EPS預估下修至121.02元，預估目標價為2715.57元",
+   "title": "轉向輕資產！FT：亞馬遜打算將80億美元輝達AI晶片轉入SPV並回租",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6620311",
+   "ts": "10/02 13:10"
+  },
+  {
+   "title": "看好AI資料中心需求！東芝時隔五年大規模擴產 2027年前HDD產能翻倍",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6620265",
+   "ts": "10/02 13:00"
+  },
+  {
+   "title": "川普重申美國利率應為「全球最低」",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6620248",
+   "ts": "10/02 12:40"
+  },
+  {
+   "title": "AI代理人狂刷網路流量 克雷默點名3家公司僅這家可買",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6620244",
+   "ts": "10/02 12:30"
+  },
+  {
+   "title": "台驊資產活化有成 旗下韻驊共享辦公室出租率超過80%",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6620077",
-   "ts": "10/02 08:10"
-  },
-  {
-   "title": "美光由黑翻紅 AI需求支撐買盤",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6619686",
-   "ts": "10/02 08:10"
-  },
-  {
-   "title": "美股重點新聞摘要2026年10月02日",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6619812",
-   "ts": "10/02 08:00"
+   "url": "https://news.cnyes.com/news/id/6620275",
+   "ts": "10/02 12:27"
   }
  ],
  "inst": {

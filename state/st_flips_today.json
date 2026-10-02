@@ -2,13 +2,6 @@
 "date": "2026-10-02",
 "flips_hold": [
 {
-"code": "SSUMY",
-"name": "",
-"word": "🟢→🔴 翻空",
-"dir": -1,
-"sig": "st"
-},
-{
 "code": "COHR",
 "name": "",
 "word": "RS60站回多方",
@@ -79,151 +72,14 @@
 "sig": "rs60"
 }
 ],
-"flips_watch": [],
-"ai_alerts": [
+"flips_watch": [
 {
-"chain": "AI 電力/核能",
-"market": "US",
-"sig": "🟢",
-"code": "NVT",
-"name": "nVent Electric PLC",
-"reason": "觀望→買進"
-},
-{
-"chain": "機器人",
-"market": "US",
-"sig": "🟢",
-"code": "EMR",
-"name": "Emerson Electric Co",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 電力/核能",
-"market": "US",
-"sig": "🟢",
-"code": "HUBB",
-"name": "Hubbell Inc",
-"reason": "觀望→買進"
-},
-{
-"chain": "機器人",
-"market": "US",
-"sig": "🟢",
-"code": "TEL",
-"name": "TE Connectivity PLC Registered Shares",
-"reason": "觀望→買進"
-},
-{
-"chain": "低軌衛星",
-"market": "US",
-"sig": "🟢",
-"code": "RKLB",
-"name": "Rocket Lab Corp",
-"reason": "觀望→買進"
-},
-{
-"chain": "Bitcoin→AI 機房",
-"market": "US",
-"sig": "🟢",
-"code": "NBIS",
-"name": "Nebius Group NV Shs Class-A-",
-"reason": "觀望→買進"
-},
-{
-"chain": "玻璃基板/TGV",
-"market": "US",
-"sig": "🟢",
-"code": "GLW",
-"name": "Corning Incorporated",
-"reason": "觀望→買進"
-},
-{
-"chain": "機器人",
-"market": "US",
-"sig": "🟢",
-"code": "ZBRA",
-"name": "Zebra Technologies Corp Ordinary Shares - Class A",
-"reason": "觀望→買進"
-},
-{
-"chain": "玻璃基板/TGV",
-"market": "US",
-"sig": "🟢",
-"code": "CAMT",
-"name": "Camtek Ltd.",
-"reason": "觀望→買進"
-},
-{
-"chain": "機器人",
-"market": "US",
-"sig": "🟢",
-"code": "ISRG",
-"name": "Intuitive Surgical Inc",
-"reason": "觀望→買進"
-},
-{
-"chain": "機器人",
-"market": "US",
-"sig": "🔴",
-"code": "MP",
-"name": "MP Materials Corp Ordinary Shares - Class A",
-"reason": "觀望→賣出"
-},
-{
-"chain": "AI 伺服器",
-"market": "TW",
-"sig": "🟢",
-"code": "2330",
-"name": "台積電",
-"reason": "觀望→買進"
-},
-{
-"chain": "低軌衛星",
-"market": "TW",
-"sig": "🟢",
-"code": "6271",
-"name": "同欣電",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 電力/核能",
-"market": "TW",
-"sig": "🟢",
-"code": "1605",
-"name": "華新",
-"reason": "觀望→買進"
-},
-{
-"chain": "玻璃基板/TGV",
-"market": "TW",
-"sig": "🟢",
-"code": "6664",
-"name": "群翊",
-"reason": "觀望→買進"
-},
-{
-"chain": "玻璃基板/TGV",
-"market": "TW",
-"sig": "🟢",
-"code": "3055",
-"name": "蔚華科",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 材料/被動元件",
-"market": "TW",
-"sig": "🟢",
 "code": "2327",
-"name": "YAGEO CORP",
-"reason": "觀望→買進"
-},
-{
-"chain": "PCB/ABF 載板",
-"market": "TW",
-"sig": "🟢",
-"code": "3167",
-"name": "大量",
-"reason": "觀望→買進"
+"name": "",
+"word": "🔴→🟢 翻多",
+"dir": 1,
+"sig": "st"
 }
-]
+],
+"ai_alerts": []
 }
