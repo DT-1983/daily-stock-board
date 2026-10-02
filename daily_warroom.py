@@ -285,65 +285,42 @@ def _exit_events(date):
 
 
 def sec_exit(date):
-    """② 持股出場訊號（2026-10-02，Leo：「出場訊號存量滿重要的，兩條都成立可以另外推嗎？
-    或是跟持股訊號整合，這樣我才知道怎麼做」）。
+    """② 今日新變化（持股）＋出場存量一行計數（2026-10-02 改版）。
 
-    原本「出場訊號存量」躲在最底下的 ⑤ 失效條件日檢裡，只有計數加最多 8 個代號、還是小字。
-    但它才是**今天該做什麼**：多數翻空的持股是更早翻的，不會再被報成新事件，只看事件流會以為沒事
-    （2026-09-05 就是為這個加的）。改成跟持股訊號整合成同一段、放最前面，**全部列出來**。
-    不另發一則：一個頻道一則（9/28 Leo 定案），而且它是狀態不是事件，每天另發一則等於每天重複洗版。
+    Leo：「這個有點太長了，每日新變化的獨立一段，然後這樣不好讀，請幫我優化（或是我可以直接開持股變化網頁？）」
+    原版把 36／3／12 檔全部列在訊息裡，真正要看的是「今天變了什麼」。現在：
+      · 訊息只放今天的變化，依去向分組（🔴新達成ST空＋RS破／🟠新轉弱／🟢解除）
+      · 存量只留一行計數＋網頁連結（完整名單、逐檔數字在 /holdings）
+    資料與校正邏輯都在 holdings_exit.py，訊息跟網頁共用同一份，數字不會兩邊不同。
+    不另發一則：一個頻道一則（9/28 Leo 定案）。
 
     系統註記照 supertrend_invalidation 原文：ST 翻空＝建議先賣一半（若尚未賣）；
-    RS(60日) 跌破自身均線＝建議剩餘部位全出。這裡只列「現在處在哪一階段」，不改規則。"""
-    d = _load("state/thesis_check_today.json", {}) or {}
-    es = d.get("exit_state") or []
-    if not es:
+    RS(60日) 跌破自身均線＝建議剩餘部位全出。這裡只呈現現況，不改規則。"""
+    import holdings_exit as hx
+    ov = hx.overview(date)
+    if not ov:
         return sec2_signals(date, "private")          # 沒有存量資料就退回原本的事件清單
-    ev = _exit_events(date)
     marks = _holder_marks()
-    covered = {_nk(v["ticker"]) for v in _today_verdicts(date) if v.get("held", True)}
-
-    def _nm(tk):
-        return f"{marks.get(_nk(tk), '')}{tkname(tk)}{'⚡' if _nk(tk) in ev else ''}"
-    # 存量跟今天的翻面事件打架時，以**事件**為準（事件是「剛翻」，存量是前一次算的）。
-    # 2026-10-02 實測：有兩檔事件是「RS60 站回多方」，存量卻還寫 RS 跌破。這份名單是 Leo 要照著行動的，不能有舊狀態。
-    # 校正了哪幾檔會寫在訊息裡，不靜靜改。
-    state = {r[0]: [r[1], r[2]] for r in es}
-    corrected = []
-    for f in (_load("state/st_flips_today.json", {}) or {}).get("flips_hold", []):
-        k = next((t for t in state if _nk(t) == _nk(f["code"])), None)
-        if k is None or state[k][0] is None:
-            continue
-        idx = 1 if (f.get("sig") == "rs60" or str(f.get("word", "")).startswith("RS")) else 0
-        new = (int(f.get("dir") or 0) < 0)
-        if state[k][idx] != new:
-            state[k][idx] = new
-            corrected.append(k)
-    both = [k for k, (a, b) in state.items() if a and b]
-    st_only = [k for k, (a, b) in state.items() if a and not b]
-    rs_only = [k for k, (a, b) in state.items() if b and not a]
-    unk = [k for k, (a, b) in state.items() if a is None]
-    clear = len(es) - len(both) - len(st_only) - len(rs_only) - len(unk)
-    lines = ["**② 持股出場訊號**（現在各持股處在哪一階段；⚡＝今天新變化）"]
-    if both:
-        lines += [f"🔴 **ST空＋RS破　{len(both)} 檔**", "　" + "、".join(_nm(t) for t in both)]
-    if st_only:
-        lines.append(f"🟠 **只 ST 空　{len(st_only)} 檔**　" + "、".join(_nm(t) for t in st_only))
-    if rs_only:
-        lines.append(f"🟠 **只 RS 破　{len(rs_only)} 檔**　" + "、".join(_nm(t) for t in rs_only))
-    lines.append(f"-# ✅ 沒事 {clear} 檔" + (f"｜⚪ 無法判定 {len(unk)} 檔" if unk else "")
-                 + "｜系統註記：ST 翻空＝建議先賣一半（若尚未賣）；RS(60日) 跌破＝建議剩餘部位全出")
-    if corrected:
-        lines.append(f"-# 　已依今日翻面事件校正存量：{'、'.join(tkname(k) for k in corrected)}")
-    # 今天的新變化：只列 ③ 沒有逐檔判斷的（③ 有的，事件已經標在它的名稱旁，不重複講）
-    rest = [(k, v) for k, v in ev.items() if k not in covered]
+    lines = ["**② 今日新變化（持股）**"]
+    tr = hx.transitions(ov)
+    if tr:
+        for ic, title, items in tr:
+            same = len({n for _, n in items}) == 1          # 同組原因都一樣就放標題，不每檔重複
+            lines.append(f"{ic} **{title}{'（' + items[0][1] + '）' if same else ''}　{len(items)} 檔**")
+            lines.append("　" + "、".join(f"{marks.get(nk, '')}{tkname(ov['disp'][nk])}"
+                                          + ("" if same else f"（{note}）") for nk, note in items))
+    else:
+        lines.append("今天持股沒有新的出場訊號變化。")
     vf = _load("state/valuation_flips_today.json", []) or []
-    if rest or vf:
-        lines.append("⚡ **今日新變化**（③ 沒有逐檔判斷的）")
-        for k, (dr, txt) in rest:
-            lines.append(f"・{'🟢' if dr > 0 else '🔴'} {marks.get(k, '')}{tkname(k)} {txt}")
-        for f in vf:
-            lines.append(f"・💰 {tkname(f['ticker'])} 翻貴：現價 {f['price']:,.1f} ≥ 貴價 {f['expensive']:,.1f}")
+    for f in vf:
+        lines.append(f"💰 {tkname(f['ticker'])} 翻貴：現價 {f['price']:,.1f} ≥ 貴價 {f['expensive']:,.1f}")
+    b = ov["buckets"]
+    lines.append(f"-# 存量：ST空＋RS破 {len(b['both'])}｜只ST空 {len(b['st_only'])}｜只RS破 {len(b['rs_only'])}"
+                 f"｜沒事 {len(b['clear'])}" + (f"｜無法判定 {len(b['unk'])}" if b["unk"] else "")
+                 + f"　完整名單 <{hx.URL}>")
+    lines.append("-# ST 翻空＝建議先賣一半（若尚未賣）；RS(60日) 跌破＝建議剩餘部位全出")
+    if ov["corrected"]:
+        lines.append(f"-# 已依今日翻面事件校正存量：{'、'.join(tkname(ov['disp'][k]) for k in ov['corrected'])}")
     return lines
 
 
@@ -589,9 +566,8 @@ def sec3_chief(date, scope="public"):
         if not held:
             lines.append("今日持股無觸發。")
             return lines
-        ev = _exit_events(date)
         for v in held:
-            lines += _vblock(v, tag=(ev.get(_nk(v["ticker"])) or (0, ""))[1])
+            lines += _vblock(v)
         return lines
 
     lines = ["**③ 進場機會**（非持股評估：🟢可考慮進場 🔴便宜但別碰）"]
