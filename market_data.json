@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-02 13:53",
+ "updated": "2026-10-02 15:40",
  "indices": [
   {
    "sym": "^GSPC",
@@ -45,9 +45,9 @@
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "10/01",
-   "close": 31.87,
-   "chg_pct": 0.06
+   "date": "10/02",
+   "close": 31.85,
+   "chg_pct": -0.06
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "〈焦點股〉矽晶圓漲價題材發酵 漢磊亮燈漲停、嘉晶寫新天價",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6620327",
-   "ts": "10/02 13:44"
-  },
-  {
-   "title": "澄清「搶船」傳聞！台電依法接管離岸風電二期船機 拚年底完工併網",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6620318",
-   "ts": "10/02 13:38"
-  },
-  {
-   "title": "長聖雙引擎發展模式持續發威 9月營收1.1億元續寫今年高",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6620322",
-   "ts": "10/02 13:35"
-  },
-  {
-   "title": "美銀警告高油價成第4季頭號威脅 金價恐探3750美元",
+   "title": "Anthropic到底值多少？矽谷喊2兆美元 華爾街只認1.5兆美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6620213",
-   "ts": "10/02 13:30"
+   "url": "https://news.cnyes.com/news/id/6620210",
+   "ts": "10/02 15:40"
   },
   {
-   "title": "〈焦點股〉美國擬限中國光模組禁令 聯亞、前鼎漲停領光通訊齊嗨",
+   "title": "中國駐美大使謝鋒：中美元首會晤具里程碑意義　兩國競爭應是「田徑比賽」而非「拳擊賽」",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6620198",
+   "ts": "10/02 15:30"
+  },
+  {
+   "title": "Palantir攜手Armada擴大主權AI布局作業系統導入Galleon數據中心",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6620391",
+   "ts": "10/02 15:30"
+  },
+  {
+   "title": "MLCC、ABF迎AI搶料潮三星電機SEMCO長約達3.6兆韓元、FC-BGA交期暴增至56週",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6620390",
+   "ts": "10/02 15:30"
+  },
+  {
+   "title": "汎銓9月營收再寫新高 Q3年增逾3成同步攀峰",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6620290",
-   "ts": "10/02 13:20"
+   "url": "https://news.cnyes.com/news/id/6620384",
+   "ts": "10/02 15:22"
   },
   {
-   "title": "轉向輕資產！FT：亞馬遜打算將80億美元輝達AI晶片轉入SPV並回租",
+   "title": "美《陽光保護法案》參院卡關 川普重申必須推動永久夏令時間",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6620311",
-   "ts": "10/02 13:10"
+   "url": "https://news.cnyes.com/news/id/6620334",
+   "ts": "10/02 15:20"
   },
   {
-   "title": "看好AI資料中心需求！東芝時隔五年大規模擴產 2027年前HDD產能翻倍",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6620265",
-   "ts": "10/02 13:00"
-  },
-  {
-   "title": "川普重申美國利率應為「全球最低」",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6620248",
-   "ts": "10/02 12:40"
-  },
-  {
-   "title": "AI代理人狂刷網路流量 克雷默點名3家公司僅這家可買",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6620244",
-   "ts": "10/02 12:30"
-  },
-  {
-   "title": "台驊資產活化有成 旗下韻驊共享辦公室出租率超過80%",
+   "title": "夏普雙主軸布局智慧照護 整合鴻海集團資源打造客製化方案",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6620275",
-   "ts": "10/02 12:27"
+   "url": "https://news.cnyes.com/news/id/6620369",
+   "ts": "10/02 15:17"
+  },
+  {
+   "title": "智生活客服質檢提升到100% 自建AI連三年獲數位轉型鼎革獎",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6620365",
+   "ts": "10/02 15:16"
+  },
+  {
+   "title": "華碩Q3筆電訂閱數季增70% 強推高通旗艦AI PC衝市占",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6620357",
+   "ts": "10/02 15:15"
+  },
+  {
+   "title": "被動元件含金量PK，國巨、禾伸堂、信昌電，誰營收爆發與AI純度最高？",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6620368",
+   "ts": "10/02 15:00"
   }
  ],
  "inst": {
-  "date": "10/01",
-  "total_yi": 294.6,
-  "foreign_yi": 219.4,
-  "trust_yi": 58.7
+  "date": "10/02",
+  "total_yi": 95.6,
+  "foreign_yi": 26.2,
+  "trust_yi": 49.1
  }
 }
