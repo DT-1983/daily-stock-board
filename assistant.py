@@ -249,7 +249,9 @@ def t_valuation(ticker=None):
                    + "；".join(f"{r.get('broker')} {str(r.get('date'))[5:]} {r.get('target')}" for r in
                                sorted(reps, key=lambda x: str(x.get("date")), reverse=True)[:5]))
     else:
-        out.append("② 券商目標價：報告庫沒有這檔的報告（不要憑印象補）")
+        n_all = [r for r in AR._live_reports() if _k(r.get("ticker")) == _k(code)]
+        out.append(f"② 券商目標價：報告庫有這檔 {len(n_all)} 份報告但**都沒給目標價**（只有評等與論點）"
+                   if n_all else "② 券商目標價：報告庫沒有這檔的報告（不要憑印象補）")
     # ③ 市場共識與現價
     rows, _ = _combo_rows()
     lk = rows.get(_k(code))
