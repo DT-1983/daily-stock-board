@@ -146,10 +146,26 @@ def sec1_market(notes):
         lines.append(f"🇺🇸 **美股**{_dtag(us_dates)}")
         for p_ in us[:5]:      # 5＝四大指數＋美債殖利率（原本 4 會把美債截掉）
             lines.append("　" + p_)
+    # 2026-10-02 Leo：非農公布後電子盤噴一波卻沒人在看 → 非農實際值（BLS 官方）＋台指電子盤收盤。
+    # 兩個都是免費公開資料、零 AI；取不到會印原因（log）並略過這一行，不影響其他段落。
+    try:
+        import bls_fetch
+        _nfp = bls_fetch.summary_line()
+        if _nfp:
+            lines.append(_nfp)
+    except Exception as _e:                                  # noqa: BLE001
+        print(f"[warroom] 非農行略過：{str(_e)[:80]}")
     if tw:
         lines.append(f"🇹🇼 **台股／匯率**{_dtag(tw_dates)}")
         for p_ in tw[:4]:
             lines.append("　" + p_)
+    try:
+        import night_session
+        _ns = night_session.summary_line()
+        if _ns:
+            lines.append(_ns)
+    except Exception as _e:                                  # noqa: BLE001
+        print(f"[warroom] 電子盤行略過：{str(_e)[:80]}")
 
     # 🌡️ 大盤體溫計（P2，2026-08-27）：電金比 vs 100MA。只報狀態不下行動指令——
     # 老墨的「連N日轉弱→清倉」門檻是他自己系統的規則，我們沒有對應回測依據

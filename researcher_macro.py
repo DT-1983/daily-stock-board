@@ -89,7 +89,7 @@ def _save(note):
     print(json.dumps(note, ensure_ascii=False, indent=2))
 
 
-def _ask_claude(events, date, anomalies=None, kw_hits=None, headlines=None):
+def _ask_claude(events, date, anomalies=None, kw_hits=None, headlines=None, bls_txt=""):
     exe = _claude_bin()
     if not exe:
         raise RuntimeError("找不到 claude CLI")
@@ -105,6 +105,8 @@ def _ask_claude(events, date, anomalies=None, kw_hits=None, headlines=None):
     if headlines and not kw_hits:
         extra += "\n\n今日總經新聞標題（已附上，不用再查）：\n" + \
                  "\n".join(f"- {h['ts']} {h['title']}" for h in headlines[:8])
+    if bls_txt:
+        extra += "\n\n美國勞工統計局（BLS）官方已公布的實際值（事實，不用再查）：\n- " + bls_txt
     prompt = PROMPT.format(date=date, known_events=known) + extra
     r = subprocess.run(
         [exe, "-p", "--dangerously-skip-permissions", "--output-format", "json",
@@ -133,17 +135,27 @@ def run():
     # 但一樣撼動大盤）。兩個都零成本：市場異常讀既有 market_data.json，關鍵字純字串比對。
     anomalies = market_anomaly()
     kw_hits = keyword_hits(headlines)
+    # 2026-10-02：非農實際值直接讀 BLS 官方 API（零 AI）。原本只有「前後 1 天」才叫 AI 查，
+    # 週五公布的事件隔天是週六、排程不跑，週一已超出窗口 → 永遠查不到。
+    try:
+        import bls_fetch
+        bls_txt = bls_fetch.summary_line(date).replace("**", "").replace("　-# ", "；")
+    except Exception as e:                                   # noqa: BLE001
+        print(f"[macro] BLS 取得略過：{str(e)[:80]}")
+        bls_txt = ""
 
     if not (near_term or anomalies or kw_hits):
         note = {
             "layer": "macro", "scope": "global", "source": "calendar+headlines",
             "confidence": "high",
-            "summary": "近期（前後1天）無排定總經事件、市場無異常波動、新聞無警示關鍵字命中，"
+            "summary": ("已公布（BLS 官方）：" + bls_txt + "。" if bls_txt else "") +
+                       "近期（前後1天）無排定總經事件、市場無異常波動、新聞無警示關鍵字命中，"
                        "跳過AI查證，零成本。近期已知行事曆（未來25天內）：" +
                        ("；".join(f"{e['date']} {e['market']} {e['event']}"
                                   for e in upcoming_events(date, days_before=0, days_after=25)) or "無"),
             "events": upcoming_events(date, days_before=0, days_after=25),
             "headlines": headlines,
+            "bls": bls_txt,
             "ts": date, "cost_usd": 0.0,
         }
         _save(note)
@@ -158,7 +170,7 @@ def run():
         why.append("新聞命中警示關鍵字：" + "；".join(f"[{k}]{t[:30]}" for k, t in kw_hits[:5]))
     print("觸發AI查證，原因：" + " ｜ ".join(why))
 
-    note = _ask_claude(near_term, date, anomalies, kw_hits, headlines)
+    note = _ask_claude(near_term, date, anomalies, kw_hits, headlines, bls_txt)
     note["headlines"] = headlines
     note["trigger"] = why
     _save(note)
