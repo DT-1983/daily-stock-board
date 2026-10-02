@@ -242,7 +242,112 @@ def _urg(v):
     return 0 if (t == "考慮出場" and va == "考慮出場") else (1 if "考慮出場" in (t, va) else 2)
 
 
-def _vblock(v, entry=False):
+def _nk(tk):
+    """代號正規化（去掉 .TW/.TWO），讓不同來源的同一檔對得上。"""
+    return re.sub(r"\.(TW|TWO)$", "", str(tk or "").strip().upper())
+
+
+def _holder_marks():
+    """👦 小孩｜🏠 Leo 的長期持有台股（監控但不參與風控）｜空＝Firstrade 核心部位。"""
+    try:
+        from trade_plan import kids_tickers, legacy_tickers
+        m = {_nk(t): "🏠" for t in legacy_tickers()}
+        m.update({_nk(t): "👦" for t in kids_tickers()})
+        return m
+    except Exception:                                        # noqa: BLE001
+        return {}
+
+
+def _exit_events(date):
+    """今天**剛發生**的持股出場類事件，兩條管線合併成一份（同一檔只留一筆）：
+    ① st_alert 的 flips_hold（SuperTrend 翻面、RS60 站回／跌破）② thesis_check 觸發的 EXIT_TYPES 失效條件。
+    回 {正規化代號: (方向 +1/-1/0, 短文字)}。
+
+    2026-10-02 Leo：「幫我去掉重覆的部分」——原本 ② 持股訊號（flips_hold）、③ 趨勢那行、⑤ 失效條件日檢
+    三處各講一次同一件事（例：ARKQ 的 RS 跌破自身均線出現三次）。事件只在這裡算一次，
+    ③ 用它當標籤、② 只列 ③ 沒有逐檔判斷的。"""
+    out = {}
+    st = _load("state/st_flips_today.json", {}) or {}
+    for f in st.get("flips_hold", []):
+        w = str(f.get("word") or "").replace("→", "").strip()
+        txt = w if (f.get("sig") == "rs60" or w.startswith("RS")) else f"SuperTrend {w}"
+        out[_nk(f["code"])] = (int(f.get("dir") or 0), txt)
+    d = _load("state/thesis_check_today.json", {}) or {}
+    try:
+        from thesis_check import EXIT_TYPES as _ET
+    except Exception:                                        # noqa: BLE001
+        _ET = ("supertrend_bear", "supertrend_flip", "rs_below")
+    for r in d.get("triggered", []):
+        if len(r) > 4 and r[2] and r[4] in _ET and _nk(r[0]) not in out:
+            head = str(r[1]).split("｜")[0].strip()
+            out[_nk(r[0])] = (-1, head)
+    return out
+
+
+def sec_exit(date):
+    """② 持股出場訊號（2026-10-02，Leo：「出場訊號存量滿重要的，兩條都成立可以另外推嗎？
+    或是跟持股訊號整合，這樣我才知道怎麼做」）。
+
+    原本「出場訊號存量」躲在最底下的 ⑤ 失效條件日檢裡，只有計數加最多 8 個代號、還是小字。
+    但它才是**今天該做什麼**：多數翻空的持股是更早翻的，不會再被報成新事件，只看事件流會以為沒事
+    （2026-09-05 就是為這個加的）。改成跟持股訊號整合成同一段、放最前面，**全部列出來**。
+    不另發一則：一個頻道一則（9/28 Leo 定案），而且它是狀態不是事件，每天另發一則等於每天重複洗版。
+
+    系統註記照 supertrend_invalidation 原文：ST 翻空＝建議先賣一半（若尚未賣）；
+    RS(60日) 跌破自身均線＝建議剩餘部位全出。這裡只列「現在處在哪一階段」，不改規則。"""
+    d = _load("state/thesis_check_today.json", {}) or {}
+    es = d.get("exit_state") or []
+    if not es:
+        return sec2_signals(date, "private")          # 沒有存量資料就退回原本的事件清單
+    ev = _exit_events(date)
+    marks = _holder_marks()
+    covered = {_nk(v["ticker"]) for v in _today_verdicts(date) if v.get("held", True)}
+
+    def _nm(tk):
+        return f"{marks.get(_nk(tk), '')}{tkname(tk)}{'⚡' if _nk(tk) in ev else ''}"
+    # 存量跟今天的翻面事件打架時，以**事件**為準（事件是「剛翻」，存量是前一次算的）。
+    # 2026-10-02 實測：有兩檔事件是「RS60 站回多方」，存量卻還寫 RS 跌破。這份名單是 Leo 要照著行動的，不能有舊狀態。
+    # 校正了哪幾檔會寫在訊息裡，不靜靜改。
+    state = {r[0]: [r[1], r[2]] for r in es}
+    corrected = []
+    for f in (_load("state/st_flips_today.json", {}) or {}).get("flips_hold", []):
+        k = next((t for t in state if _nk(t) == _nk(f["code"])), None)
+        if k is None or state[k][0] is None:
+            continue
+        idx = 1 if (f.get("sig") == "rs60" or str(f.get("word", "")).startswith("RS")) else 0
+        new = (int(f.get("dir") or 0) < 0)
+        if state[k][idx] != new:
+            state[k][idx] = new
+            corrected.append(k)
+    both = [k for k, (a, b) in state.items() if a and b]
+    st_only = [k for k, (a, b) in state.items() if a and not b]
+    rs_only = [k for k, (a, b) in state.items() if b and not a]
+    unk = [k for k, (a, b) in state.items() if a is None]
+    clear = len(es) - len(both) - len(st_only) - len(rs_only) - len(unk)
+    lines = ["**② 持股出場訊號**（現在各持股處在哪一階段；⚡＝今天新變化）"]
+    if both:
+        lines += [f"🔴 **ST空＋RS破　{len(both)} 檔**", "　" + "、".join(_nm(t) for t in both)]
+    if st_only:
+        lines.append(f"🟠 **只 ST 空　{len(st_only)} 檔**　" + "、".join(_nm(t) for t in st_only))
+    if rs_only:
+        lines.append(f"🟠 **只 RS 破　{len(rs_only)} 檔**　" + "、".join(_nm(t) for t in rs_only))
+    lines.append(f"-# ✅ 沒事 {clear} 檔" + (f"｜⚪ 無法判定 {len(unk)} 檔" if unk else "")
+                 + "｜系統註記：ST 翻空＝建議先賣一半（若尚未賣）；RS(60日) 跌破＝建議剩餘部位全出")
+    if corrected:
+        lines.append(f"-# 　已依今日翻面事件校正存量：{'、'.join(tkname(k) for k in corrected)}")
+    # 今天的新變化：只列 ③ 沒有逐檔判斷的（③ 有的，事件已經標在它的名稱旁，不重複講）
+    rest = [(k, v) for k, v in ev.items() if k not in covered]
+    vf = _load("state/valuation_flips_today.json", []) or []
+    if rest or vf:
+        lines.append("⚡ **今日新變化**（③ 沒有逐檔判斷的）")
+        for k, (dr, txt) in rest:
+            lines.append(f"・{'🟢' if dr > 0 else '🔴'} {marks.get(k, '')}{tkname(k)} {txt}")
+        for f in vf:
+            lines.append(f"・💰 {tkname(f['ticker'])} 翻貴：現價 {f['price']:,.1f} ≥ 貴價 {f['expensive']:,.1f}")
+    return lines
+
+
+def _vblock(v, entry=False, tag=""):
     """單檔判斷區塊。2026-08-27 手機版面重排（Leo：「手機上排版不是很好閱讀」）：
     ① 燈號 emoji 移到**行首**——手機掃視時一眼看到紅綠，不用讀到句中才知道
     ② 拿掉全形空白縮排——手機上縮排效果微弱，反而讓折行更亂
@@ -250,6 +355,8 @@ def _vblock(v, entry=False):
     搭配 brief 從 60 字縮到 35 字（investment_chief schema），每檔從 6-8 行壓到 3-4 行。"""
     ta, va = v["trend_angle"], v["value_angle"]
     head = f"**{tkname(v['ticker'])}**"
+    if tag:
+        head += f"　⚡{tag}"            # 今天的出場類事件（② 不再重複列）
     if _urg(v) == 0 and not entry:
         head += "　‼️ 兩角度同喊出場"
     out = [head]
@@ -482,8 +589,9 @@ def sec3_chief(date, scope="public"):
         if not held:
             lines.append("今日持股無觸發。")
             return lines
+        ev = _exit_events(date)
         for v in held:
-            lines += _vblock(v)
+            lines += _vblock(v, tag=(ev.get(_nk(v["ticker"])) or (0, ""))[1])
         return lines
 
     lines = ["**③ 進場機會**（非持股評估：🟢可考慮進場 🔴便宜但別碰）"]
@@ -801,10 +909,14 @@ def sec_thesis(date, scope="private"):
             out.append(f"　　{_clip(tail.strip(), 52)}{stale}")
         return out
 
-    for tk, msg, ang, _t in exit_rows[:5]:
-        lines += _two("🔴", f"{_who(tk)}**{tkname(tk)}**", msg)
-    if len(exit_rows) > 5:
-        lines.append(f"-# 　…另有 {len(exit_rows)-5} 檔出場訊號")
+    # 2026-10-02：持股的出場類事件與存量搬到 ② 持股出場訊號（sec_exit），這裡不再重複列。
+    # 只有「沒有存量資料」時才退回原本的列法（sec_exit 也會退回 sec2_signals），不讓資訊消失。
+    _moved = bool(want_held and d.get("exit_state"))
+    if not _moved:
+        for tk, msg, ang, _t in exit_rows[:5]:
+            lines += _two("🔴", f"{_who(tk)}**{tkname(tk)}**", msg)
+        if len(exit_rows) > 5:
+            lines.append(f"-# 　…另有 {len(exit_rows)-5} 檔出場訊號")
 
     # 只列前 5 檔——8/31 那次持股密報一次噴出十幾檔🚫，每檔還帶一整句說明，
     # 手機上完全看不完（Leo：「排版很難懂不易閱讀」）。觸發的按「超過幅度」排序，
@@ -822,7 +934,7 @@ def sec_thesis(date, scope="private"):
     # 上面那些是**今天剛發生的事件**；多數翻空的持股是更早翻的、甚至登錄條件時
     # 就已經是空方，永遠不會再被報成新事件 → 只看事件流會以為沒事。
     # ⭐ 只給計數＋最嚴重那一格的代號，不整串列出來（24 檔會把版面吃光）。
-    if want_held:
+    if want_held and not _moved:
         es = d.get("exit_state") or []
         both = [r[0] for r in es if r[1] and r[2]]
         st_only = [r[0] for r in es if r[1] and not r[2]]
@@ -953,7 +1065,7 @@ def compose(date=None, scope="public", part="all"):
     # 2026-09-28 Leo「2 合併」：「今日報告更新」原本公開、密報兩則一字不差重複，而且公開版會出現
     #   「🔻持股 AAPL」這種持股資訊（公開頻道的規則是不放持股）→ 只留在密報。
     if priv:
-        research = [sec2_signals(date, "private"), sec_setup(date, "private"),
+        research = [sec_exit(date), sec_setup(date, "private"),
                     sec_relay(date, "private"),
                     sec4_research(notes, "private"), sec_reports_today(date),
                     sec_thesis(date)]
