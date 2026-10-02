@@ -11065,5 +11065,44 @@
 "amount_usd": 948.74,
 "reason": "打點：4 燈亮、風報比 4.4",
 "src": "live"
+},
+{
+"date": "2026-10-02",
+"portfolio": "產業鏈+趨勢",
+"action": "join",
+"ticker": "3105.TWO",
+"shares": 8.4499,
+"price": 591.0,
+"price_usd": 18.5487,
+"amount_usd": 156.74,
+"reason": "週線 SuperTrend 翻多（綠燈名單新增）",
+"src": "live"
+},
+{
+"date": "2026-10-02",
+"portfolio": "進出燈號",
+"action": "half_sell",
+"ticker": "SSUMY",
+"shares": 20.048,
+"price": 11.05,
+"price_usd": 11.05,
+"amount_usd": 221.53,
+"reason": "SuperTrend 翻空 → 賣一半",
+"src": "live",
+"entry_price": 11.51,
+"pnl_usd": -9.22,
+"pnl_pct": -4.0
+},
+{
+"date": "2026-10-02",
+"portfolio": "進出燈號",
+"action": "buy",
+"ticker": "ISRG",
+"shares": 0.5521,
+"price": 401.24,
+"price_usd": 401.24,
+"amount_usd": 221.52,
+"reason": "打點：4 燈亮、風報比 3.29",
+"src": "live"
 }
 ]

@@ -1,15 +1,13 @@
 {
- "date": "2026-10-01",
- "lamp_date": "2026-10-01",
+ "date": "2026-10-02",
+ "lamp_date": "2026-10-02",
  "buy": [
-  "7822.TW"
+  "ISRG"
  ],
- "half_sell": [],
- "full_exit": [
-  "COP",
-  "IREN",
-  "T"
+ "half_sell": [
+  "SSUMY"
  ],
- "held": 12,
+ "full_exit": [],
+ "held": 13,
  "cash": 0.0
 }
