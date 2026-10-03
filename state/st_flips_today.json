@@ -1,5 +1,5 @@
 {
-"date": "2026-10-02",
+"date": "2026-10-03",
 "flips_hold": [
 {
 "code": "COHR",
@@ -74,7 +74,7 @@
 ],
 "flips_watch": [
 {
-"code": "2327",
+"code": "PWR",
 "name": "",
 "word": "🔴→🟢 翻多",
 "dir": 1,
