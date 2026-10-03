@@ -165,6 +165,10 @@ def cpi_latest(force=False):
                "mom_sa": round((sa[(y, m)] / sa[prev] - 1) * 100, 1) if (y, m) in sa and prev in sa else None,
                "core_yoy": round((core[(y, m)] / core[ago] - 1) * 100, 1) if (y, m) in core and ago in core else None,
                "fetched": time.strftime("%Y-%m-%d %H:%M"), "_t": time.time()}
+        # 2026-10-04 前值（上個月的年增），首頁「比前月」用；缺資料就留 None，不硬算
+        pago = (prev[0] - 1, prev[1])
+        res["prev_yoy"] = round((nsa[prev] / nsa[pago] - 1) * 100, 1) if prev in nsa and pago in nsa else None
+        res["prev_core_yoy"] = round((core[prev] / core[pago] - 1) * 100, 1) if prev in core and pago in core else None
         os.makedirs("state", exist_ok=True)
         json.dump(res, open(CPI_CACHE, "w", encoding="utf-8"), ensure_ascii=False)
         return res
