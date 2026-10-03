@@ -40,9 +40,10 @@ def _nfp():
         if not d:
             return _fail("非農就業", "BLS 無回應")
         ch = d["nfp_change_k"] / 10.0
+        pv = d["prev_change_k"] / 10.0
         return _card("非農就業", f'{ch:+.1f} 萬',
-                     f'{esc(d["ym"])} · 失業率 {d["unemp"]}%（前月 {d["unemp_prev"]}%）<br>'
-                     f'前月 {d["prev_change_k"] / 10.0:+.1f} 萬（含修正）· BLS 官方', "pos" if ch > 0 else "neg")
+                     f'{esc(d["ym"])} 數據 · 失業率 {d["unemp"]}%（前月 {d["unemp_prev"]}%）<br>'
+                     f'前月 {pv:+.1f} 萬（含修正）· 比前月 {ch - pv:+.1f} 萬 · BLS 官方', "pos" if ch > 0 else "neg")
     except Exception as e:                                   # noqa: BLE001
         return _fail("非農就業", str(e))
 
@@ -53,8 +54,13 @@ def _cpi():
         d = bls_fetch.cpi_latest(force=True)
         if not d:
             return _fail("美國 CPI", "BLS 無回應")
+        py = d.get("prev_yoy")
+        pc = d.get("prev_core_yoy")
+        pv = f'前月 {py:.1f}%' if py is not None else '前月 —'
+        pcv = f'（前月 {pc:.1f}%）' if pc is not None else ''
         return _card("美國 CPI（年增）", f'{d["yoy"]:.1f}%',
-                     f'{esc(d["ym"])} · 月增 {d["mom_sa"]:+.1f}% · 核心年增 {d["core_yoy"]:.1f}%<br>BLS 官方', "flat")
+                     f'{esc(d["ym"])} 數據 · {pv} · 月增 {d["mom_sa"]:+.1f}%<br>'
+                     f'核心年增 {d["core_yoy"]:.1f}%{pcv} · BLS 官方', "flat")
     except Exception as e:                                   # noqa: BLE001
         return _fail("美國 CPI", str(e))
 
