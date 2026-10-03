@@ -7,57 +7,107 @@
 資料：openapi.taifex.com.tw/v1/DailyMarketReportFut（期貨每日行情，含「一般」「盤後」兩個交易時段）
   · 盤後時段＝夜盤（歸屬交易日 D，15:00 開到 D+1 05:00）；期交所收盤後才彙整，**不是即時**。
   · 取臺指期（TX）、成交量最大的月份合約（近月，排除週選）的盤後列；漲跌用期交所自己給的欄位。
+
+🔴 2026-10-04 實測：**同一個網址的回傳格式會變**——10/2 晚上是 JSON（英文欄名），10/4 變成 CSV（中文欄名，
+   Content-Type 是 application/octet-stream）。原本只認 JSON，週一早上會靜默失敗、那一行直接消失。
+   現在兩種格式都吃（欄名對照表 _KEYS），取不到時**戰情裡會明講「這次取不到」**，不再靜默略過。
 ⚠️ 日期要標在訊息上：資料沒更新時不會把舊的當成昨晚的（超過 4 天直接不顯示並印警告）。
 """
+import csv
 import datetime as dt
+import io
+import json
 import sys
 
 URL = "https://openapi.taifex.com.tw/v1/DailyMarketReportFut"
 ALERT_PCT = 1.5          # 夜盤漲跌超過這個幅度就特別標出來（只是「看得見」，不是交易訊號）
+# 兩種格式的欄名對照（英文＝JSON、中文＝CSV）
+_KEYS = {
+    "date": ("Date", "日期"),
+    "contract": ("Contract", "契約代號"),
+    "month": ("ContractMonth(Week)", "到期月份(週別)"),
+    "last": ("Last", "最後成交價"),
+    "change": ("Change", "漲跌價"),
+    "pct": ("%", "漲跌%"),
+    "volume": ("Volume", "合計成交量"),
+    "session": ("TradingSession", "交易時段"),
+}
 
 
 def _num(x):
     try:
-        return float(str(x).replace(",", ""))
+        return float(str(x).replace(",", "").replace("%", ""))
     except ValueError:
         return None
 
 
-def fetch():
-    """回 {date:'YYYYMMDD', month, last, change, pct, volume}；取不到回 None（會印原因，不靜默）。"""
+def _get(row, name):
+    for k in _KEYS[name]:
+        if k in row and row[k] is not None:
+            return str(row[k]).strip()
+    return ""
+
+
+def _load_rows(raw):
+    """原始回應 → list[dict]。JSON 或 CSV 都吃；認不得就丟例外（呼叫端會印出來）。"""
+    txt = raw.decode("utf-8-sig", "replace") if isinstance(raw, bytes) else raw
+    head = txt.lstrip()[:1]
+    if head in ("[", "{"):
+        data = json.loads(txt)
+        return data if isinstance(data, list) else data.get("data", [])
+    rows = list(csv.DictReader(io.StringIO(txt)))
+    if not rows or not any(k in rows[0] for names in _KEYS.values() for k in names):
+        raise ValueError("回傳既不是 JSON 也不是認得的 CSV（前 80 字：%r）" % txt[:80])
+    return rows
+
+
+def fetch(error_out=None):
+    """回 {date:'YYYYMMDD', month, last, change, pct, volume}；取不到回 None（會印原因，不靜默）。
+    error_out：給一個 list 就把失敗原因（一句話）放進去，讓呼叫端能在訊息裡明講。"""
     import requests
-    try:
-        r = requests.get(URL, headers={"accept": "application/json"}, timeout=40)
-        r.raise_for_status()
-        rows = r.json()
-    except Exception as e:                                   # noqa: BLE001
-        print(f"[night] 期交所資料取得失敗：{str(e)[:80]}")
+    err = ""
+    rows = None
+    for _ in range(2):                                        # 失敗重試一次
+        try:
+            r = requests.get(URL, headers={"accept": "application/json"}, timeout=40)
+            r.raise_for_status()
+            rows = _load_rows(r.content)
+            break
+        except Exception as e:                                # noqa: BLE001
+            err = str(e)[:100]
+    if rows is None:
+        print(f"[night] 期交所資料取得失敗：{err}")
+        if error_out is not None:
+            error_out.append(f"期交所資料取得失敗（{err}）")
         return None
     tx = [x for x in rows
-          if x.get("Contract") == "TX" and "盤後" in str(x.get("TradingSession", ""))
-          and str(x.get("ContractMonth(Week)", "")).isdigit() and len(str(x["ContractMonth(Week)"])) == 6
-          and _num(x.get("Last")) is not None]
+          if _get(x, "contract") == "TX" and "盤後" in _get(x, "session")
+          and _get(x, "month").isdigit() and len(_get(x, "month")) == 6
+          and _num(_get(x, "last")) is not None]
     if not tx:
         print("[night] 期交所資料裡沒有台指期盤後列（可能還沒彙整）")
+        if error_out is not None:
+            error_out.append("期交所資料裡還沒有台指期盤後列")
         return None
-    d = max(x["Date"] for x in tx)
-    cand = [x for x in tx if x["Date"] == d]
-    x = max(cand, key=lambda r: _num(r.get("Volume")) or 0)
-    pct = _num(str(x.get("%", "")).replace("%", ""))
-    return {"date": d, "month": x["ContractMonth(Week)"], "last": _num(x["Last"]),
-            "change": _num(x.get("Change")), "pct": pct, "volume": _num(x.get("Volume"))}
+    d = max(_get(x, "date") for x in tx)
+    cand = [x for x in tx if _get(x, "date") == d]
+    x = max(cand, key=lambda r: _num(_get(r, "volume")) or 0)
+    return {"date": d, "month": _get(x, "month"), "last": _num(_get(x, "last")),
+            "change": _num(_get(x, "change")), "pct": _num(_get(x, "pct")), "volume": _num(_get(x, "volume"))}
 
 
 def summary_line(today=None):
-    """給戰情 ① 用的一行；取不到或資料太舊回空字串（原因已印在 log）。"""
+    """給戰情 ① 用的一行。取不到時回一行「⚠️ 這次取不到」（不再回空字串靜默消失）；
+    資料超過 4 天沒更新也明講；沒有資料需求（例如純測試）時呼叫端自己處理。"""
     t = dt.date.fromisoformat(today) if today else dt.date.today()
-    s = fetch()
+    why = []
+    s = fetch(why)
     if not s:
-        return ""
+        return "⚠️ **台指電子盤**：這次取不到——%s" % (why[0] if why else "原因不明")
     d = dt.datetime.strptime(s["date"], "%Y%m%d").date()
     if (t - d).days > 4:
         print(f"[night] 最新夜盤資料是 {d}，距今超過 4 天，不顯示")
-        return ""
+        return "⚠️ **台指電子盤**：期交所最新夜盤資料只到 %s（距今超過 4 天），不顯示數字" % d.strftime("%m/%d")
     end = d + dt.timedelta(days=1)                            # 夜盤跨日，05:00 收
     # 預期的最新一場＝今天之前最近的平日（週一早上＝上週五夜盤）；比它舊代表期交所還沒彙整較新的，
     # 要講出來，不然會把前天的夜盤當成昨晚的。（國定假日會誤報，所以語氣只寫「最新只到」，不下結論。）
