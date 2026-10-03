@@ -1,12 +1,8 @@
 {
- "date": "2026-10-02",
+ "date": "2026-10-03",
  "lamp_date": "2026-10-02",
- "buy": [
-  "ISRG"
- ],
- "half_sell": [
-  "SSUMY"
- ],
+ "buy": [],
+ "half_sell": [],
  "full_exit": [],
  "held": 13,
  "cash": 0.0
