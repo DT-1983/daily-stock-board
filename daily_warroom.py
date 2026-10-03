@@ -150,9 +150,10 @@ def sec1_market(notes):
     # 兩個都是免費公開資料、零 AI；取不到會印原因（log）並略過這一行，不影響其他段落。
     try:
         import bls_fetch
-        _nfp = bls_fetch.summary_line()
-        if _nfp:
-            lines.append(_nfp)
+        for _fn in (bls_fetch.summary_line, bls_fetch.cpi_summary_line):   # 非農、CPI（公布後 5 天內）
+            _ln = _fn()
+            if _ln:
+                lines.append(_ln)
     except Exception as _e:                                  # noqa: BLE001
         print(f"[warroom] 非農行略過：{str(_e)[:80]}")
     if tw:
