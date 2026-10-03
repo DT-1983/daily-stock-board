@@ -87,6 +87,14 @@ def walk_strings(o):
 
 
 def _claude_bin():
+    # 🔴 2026-10-04：自動化呼叫 `claude -p` 一律不讓 claude-mem 外掛觀察。
+    # 實測：外掛 708 個工作階段裡 678 個來自這個專案的自動化（9/29～10/2 每天 118～221 個），
+    # 每個都用 Leo 的 Claude 訂閱額度（OAuth）去整理、開頭還往對話塞一大段「近期脈絡」；
+    # 10/2 它偵測到帳號 7 天用量 ≥93% 就自我停擺，並把「額度用完」的警告混進答案裡。
+    # `CLAUDE_MEM_INTERNAL=1` 是外掛自己給內部子行程用的旗標（掛鉤看到就整個略過）。
+    # 放在這裡是因為 8 個自動化模組都經過這個函式找 claude；子行程預設繼承目前行程的環境。
+    # 只影響呼叫 _claude_bin 的行程（都是無人值守的自動化），不影響互動式 Claude Code。
+    os.environ.setdefault("CLAUDE_MEM_INTERNAL", "1")
     p = os.environ.get("CLAUDE_BIN")
     if p and os.path.exists(p):
         return p
