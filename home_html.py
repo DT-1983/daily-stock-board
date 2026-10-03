@@ -297,6 +297,18 @@ def macro_block():
             + '</div>')
 
 
+def macro_indicators():
+    """總經指標四卡（美債殖利率／非農／CPI／電子盤）。整區包 try：壞了只少這區，首頁照常。"""
+    try:
+        import home_macro
+        body = home_macro.cards_html()
+    except Exception as e:   # noqa: BLE001
+        body = f'<div class="empty">總經指標這次取不到：{esc(str(e))[:80]}</div>'
+    return (f'<div class="hsec"><h2>{icon("gdp", 16, "#3B82F6")}總經指標</h2>'
+            f'<div class="hnote">美債殖利率與標普連動、非農、CPI、台指電子盤 · 公開資料、非即時、只描述不是買賣訊號</div>'
+            f'<div class="idxgrid">{body}</div></div>')
+
+
 def build():
     m = _load("market_data.json") or {"updated": "—", "indices": [], "news": []}
     s = build_summaries()
@@ -346,6 +358,7 @@ def build():
 <div class="hsec"><h2>{icon("board", 16, "#3B82F6")}大盤行情</h2>
 <div class="hnote">漲跌為對前一交易日收盤；美股為美東前一晚收盤</div>
 <div class="idxgrid">{idx_html}</div></div>
+{macro_indicators()}
 {macro_block()}
 <div class="hsec"><h2>{icon("earnings", 16, "#3B82F6")}今日頭條</h2>
 <div class="hnote">鉅亨網 台股 5 條＋國際 5 條，依發布時間排序</div>
