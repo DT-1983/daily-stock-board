@@ -120,6 +120,92 @@ def summary_line(today=None):
     return f"🇺🇸 **非農**（BLS，{rel:%m/%d} 公布，{want[1]} 月）{_wan(b['nfp_change_k'])}{un}{prev}"
 
 
+# ───────────────────────── CPI（2026-10-03 Leo 同意；同樣只靠 BLS，零 AI）─────────────────────────
+# CUUR0000SA0＝CPI-U 全項目（未季調，年增用這個，官方新聞稿的年增口徑）
+# CUSR0000SA0＝CPI-U 全項目（季調，月增用這個）　CUUR0000SA0L1E＝核心（不含食品能源，未季調）
+CPI_CACHE = "state/bls_cpi.json"
+
+
+def _series_rows(sid_rows):
+    """BLS data 列 → {(年,月): 值}，跳過缺值『-』。"""
+    out = {}
+    for x in sid_rows:
+        if x["period"].startswith("M") and x["period"] != "M13":
+            try:
+                out[(int(x["year"]), int(x["period"][1:]))] = float(x["value"])
+            except ValueError:
+                continue
+    return out
+
+
+def cpi_latest(force=False):
+    """回 {ym, yoy, mom_sa, core_yoy, fetched}；任一序列缺該月或缺去年同月就回 None 欄位（不硬算）。"""
+    import requests
+    try:
+        c = json.load(open(CPI_CACHE, encoding="utf-8"))
+        if not force and time.time() - c.get("_t", 0) < TTL:
+            return c
+    except Exception:                                        # noqa: BLE001
+        c = None
+    try:
+        yr = dt.date.today().year
+        r = requests.post(URL, json={"seriesid": ["CUUR0000SA0", "CUSR0000SA0", "CUUR0000SA0L1E"],
+                                     "startyear": str(yr - 2), "endyear": str(yr)}, timeout=30)
+        r.raise_for_status()
+        d = r.json()
+        if d.get("status") != "REQUEST_SUCCEEDED":
+            raise RuntimeError(f"BLS 回應異常：{d.get('status')} {d.get('message')}")
+        ser = {s["seriesID"]: _series_rows(s["data"]) for s in d["Results"]["series"]}
+        nsa, sa, core = ser["CUUR0000SA0"], ser["CUSR0000SA0"], ser["CUUR0000SA0L1E"]
+        y, m = max(nsa)
+        prev = (y, m - 1) if m > 1 else (y - 1, 12)
+        ago = (y - 1, m)
+        res = {"ym": f"{y}-{m:02d}",
+               "yoy": round((nsa[(y, m)] / nsa[ago] - 1) * 100, 1) if ago in nsa else None,
+               "mom_sa": round((sa[(y, m)] / sa[prev] - 1) * 100, 1) if (y, m) in sa and prev in sa else None,
+               "core_yoy": round((core[(y, m)] / core[ago] - 1) * 100, 1) if (y, m) in core and ago in core else None,
+               "fetched": time.strftime("%Y-%m-%d %H:%M"), "_t": time.time()}
+        os.makedirs("state", exist_ok=True)
+        json.dump(res, open(CPI_CACHE, "w", encoding="utf-8"), ensure_ascii=False)
+        return res
+    except Exception as e:                                   # noqa: BLE001
+        print(f"[bls] CPI 取得失敗：{str(e)[:80]}（沿用舊快取：{'有' if c else '無'}）")
+        return c
+
+
+def recent_cpi_date(today=None, within=5):
+    import macro_calendar as mc
+    t = dt.date.fromisoformat(today) if today else dt.date.today()
+    ds = [dt.date.fromisoformat(x) for x in mc.CPI_2026 if dt.date.fromisoformat(x) <= t]
+    if not ds:
+        return None
+    d = max(ds)
+    return d if (t - d).days <= within else None
+
+
+def cpi_summary_line(today=None):
+    """最近 5 天內有 CPI 公布才回一行；資料月份對不上公布日就明講「尚未更新」。"""
+    rel = recent_cpi_date(today)
+    if not rel:
+        return ""
+    b = cpi_latest()
+    want = (rel.year, rel.month - 1) if rel.month > 1 else (rel.year - 1, 12)
+    want_s = f"{want[0]}-{want[1]:02d}"
+    if not b or b["ym"] != want_s:
+        return (f"⚠️ 美國 CPI（{rel:%m/%d} 公布）：BLS 官方資料還沒更新到 {want_s}"
+                f"{'（目前最新 ' + b['ym'] + '）' if b else '（取不到）'}，數字未確認")
+    parts = []
+    if b["yoy"] is not None:
+        parts.append(f"年增 {b['yoy']:.1f}%")
+    if b["mom_sa"] is not None:
+        parts.append(f"月增 {b['mom_sa']:+.1f}%（季調）")
+    if b["core_yoy"] is not None:
+        parts.append(f"核心年增 {b['core_yoy']:.1f}%")
+    if not parts:
+        return f"⚠️ 美國 CPI（{rel:%m/%d} 公布）：BLS 缺少算年增所需的資料，數字未確認"
+    return f"🇺🇸 **CPI**（BLS，{rel:%m/%d} 公布，{want[1]} 月）" + "　".join(parts)
+
+
 if __name__ == "__main__":
     for _s in (sys.stdout, sys.stderr):
         try:
@@ -130,3 +216,6 @@ if __name__ == "__main__":
     print(summary_line("2026-10-02"))
     print(summary_line("2026-10-05"))
     print(repr(summary_line("2026-10-20")))
+    print(cpi_latest(force=True))
+    print(cpi_summary_line("2026-09-12"))
+    print(repr(cpi_summary_line("2026-10-02")))

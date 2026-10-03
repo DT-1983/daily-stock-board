@@ -227,6 +227,7 @@ state/paper_trades.*.before-*.json
 
 # 特定投資人論壇發言的爬蟲與分析報告產生器：內含對個人的評論與其論壇內容摘錄，只在本機跑
 hong_forum_crawl.py
+hong_blog_lectures.py
 hong_forum_report.py
 
 # 2026-09-29 全市場 OHLCV backfill 的續跑進度檔（本機一次性工具的執行狀態，不進版控）
@@ -250,3 +251,5 @@ state/*.bak*
 
 # 一次性驗算腳本（不進版控，留本機）
 scripts_archive/
+state/bls_latest.json
+state/bls_cpi.json

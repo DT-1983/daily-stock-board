@@ -139,7 +139,8 @@ def run():
     # 週五公布的事件隔天是週六、排程不跑，週一已超出窗口 → 永遠查不到。
     try:
         import bls_fetch
-        bls_txt = bls_fetch.summary_line(date).replace("**", "").replace("　-# ", "；")
+        bls_txt = "；".join(x for x in (bls_fetch.summary_line(date), bls_fetch.cpi_summary_line(date)) if x
+                          ).replace("**", "").replace("　-# ", "；")
     except Exception as e:                                   # noqa: BLE001
         print(f"[macro] BLS 取得略過：{str(e)[:80]}")
         bls_txt = ""
