@@ -21,6 +21,11 @@ on:
     - cron: '19 0 * * 1-6'
   workflow_dispatch:          # 可手動觸發
 
+# All triggers share the receipt; never cancel a run between send and receipt.
+concurrency:
+  group: tw-board-morning-delivery
+  cancel-in-progress: false
+
 permissions:
   contents: write             # 允許把訊號狀態 commit 回 repo（反轉偵測）
 
@@ -79,6 +84,7 @@ jobs:
 
       - name: 產 HTML 看板 + 推反轉警示 + 附完整看板
         env:
+          GITHUB_TOKEN: ${{ github.token }}  # durable morning receipt, contents:write
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           DISCORD_WH_DAILY: ${{ secrets.DISCORD_WH_DAILY }}   # 2026-08-28 Discord雙發（隆中對）
