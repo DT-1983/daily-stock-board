@@ -41,6 +41,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # 2026-09-05 資料夾整理：路徑一律走 obis_paths，不再各自寫死。
 from obis_paths import BRIEFS as OBIS
+import obis_paths as op
 
 
 def _load(p, d=None):
@@ -890,10 +891,15 @@ def render(d, extra_notes=None):
             + "".join(body) + "</div></body></html>")
 
 
-def _brief_href(tk, name):
+def _brief_filename(tk, name):
+    tk = _norm(tk)
     nm = _fname_safe(name)
     return (f"{tk}_{nm}_整合報告.html" if nm and nm != tk
             else f"{tk}_整合報告.html")
+
+
+def _brief_href(tk, name):
+    return op.brief_href(_brief_filename(tk, name), ticker=tk)
 
 
 def _zh_href(tk, name, d):
@@ -901,11 +907,13 @@ def _zh_href(tk, name, d):
     不是拼出來就算——report_zh 的命名規則改過，拼錯就是 404。"""
     import glob as _glob
     import os as _os
-    pats = _glob.glob(_os.path.join(OBIS, f"{tk}_*中文重點.html"))
+    folder = op.brief_dir(tk)
+    pats = [p for p in _glob.glob(_os.path.join(folder, "*中文重點.html"))
+            if _norm(_os.path.basename(p).split("_", 1)[0]) == _norm(tk)]
     if not pats:
         return ""
     pats.sort(key=_os.path.getmtime)
-    return _os.path.basename(pats[-1])
+    return op.brief_href(_os.path.basename(pats[-1]), ticker=tk)
 
 
 def _fname_safe(x):
@@ -942,9 +950,7 @@ def build_one(ticker, output=""):
     _nm = _fname_safe((d.get("lamp") or {}).get("name")
                       or ((d.get("reports") or [{}])[0].get("name"))
                       or "")
-    out = output or os.path.join(
-        OBIS, (f"{d['ticker']}_{_nm}_整合報告.html" if _nm and _nm != d["ticker"]
-               else f"{d['ticker']}_整合報告.html"))
+    out = output or op.brief(_brief_filename(d["ticker"], _nm), ticker=ticker)
     os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
     io.open(out, "w", encoding="utf-8").write(html)
     return out, d, len(html)
@@ -1100,8 +1106,8 @@ def index_rows():
             "name": (top or {}).get("name") or lamp.get("name") or d["ticker"],
             "zh_href": _zh_href(tk, (top or {}).get("name")
                                 or lamp.get("name") or tk, d),
-            "brief_href": _brief_href(tk, (top or {}).get("name")
-                                      or lamp.get("name") or tk),
+            "brief_href": _brief_href(tk, lamp.get("name")
+                                      or (top or {}).get("name") or ""),
             "n_reports": len(d["reports"]),
             "brokers": sorted({str(r.get("broker") or "?") for r in d["reports"]}),
             "last_date": (top or {}).get("date"),
@@ -1124,6 +1130,89 @@ def index_rows():
     out.sort(key=lambda r: (-len(r["fired"]), -r["fc"]["warn"],
                             -r["n_reports"], r["ticker"]))
     return out
+
+
+def manual_pages(rows):
+    """索引主表沒連到的個股報告頁（2026-10-03，Leo：「補索引（改 html 版）」）。
+
+    包含：手動整理的券商報告頁（GPT 的高盛／大摩／Morningstar 中文重點）、帶日期的個股筆記、孔明評論、
+    同一檔較舊的中文重點頁。**只掃資料夾，不讀 state、不呼叫 AI、不寫 advisor_reports.json**——
+    這些頁面不是從報告資料庫產的，硬塞進去會讓每日解析、推播與失效檢查把手動資料當成解析結果。
+    資料取自頁面自己（檔名、標題、「報告 YYYY/MM/DD」標籤、評等與 12 個月目標價卡），取不到就留空，不猜。
+    ⚠️ 寫在產生器裡而不是直接改索引 HTML：索引每天會被整份重產，手改的區塊隔天就消失。"""
+    import glob
+    import html as _h
+    import time
+    from urllib.parse import quote
+    linked = set()
+    names = {}
+    for r in rows:
+        linked.add(r["brief_href"])
+        linked.add(r["zh_href"])
+        names[_norm(r["ticker"])] = r["name"]
+    out = []
+    for market in ("台股", "美股"):
+        for path in sorted(glob.glob(os.path.join(OBIS, market, "*.html"))):
+            fn = os.path.basename(path)
+            if fn.endswith("_整合報告.html"):                 # stock_brief 自己產的個股整合報告，主表已連
+                continue
+            href = quote(f"{market}/{fn}", safe="/.-_")
+            if href in linked:
+                continue
+            try:
+                raw = io.open(path, encoding="utf-8", errors="replace").read()
+            except OSError:
+                continue
+            tm = re.search(r"<title>(.*?)</title>", raw, re.S)
+            title = _h.unescape(tm.group(1)).strip() if tm else fn
+            dm = re.match(r"^(\d{4}-\d{2}-\d{2})_(.+)\.html$", fn)
+            if dm:                                                # 帶日期的筆記／評論：代號要從標題找
+                fdate, kind = dm.group(1), dm.group(2)
+                tk = re.search(r"\(([0-9]{4,6}|[A-Z][A-Z.\-]*)\)", title)
+                tk = tk.group(1) if tk else ""
+                nm = re.sub(r"\(.*", "", title).strip() or kind
+            else:
+                m = re.match(r"^([0-9A-Z][0-9A-Za-z.\-]*)_(.+?)_(.+)\.html$", fn)
+                fdate = ""
+                tk, nm, kind = (m.groups() if m else ("", fn[:-5], ""))
+            if tk and _norm(tk) in names:                         # 公司名優先用主表已有的（檔名裡的第二段常是券商或標題字）
+                nm = names[_norm(tk)]
+            rd = re.search(r"報告 (\d{4}/\d{2}/\d{2})", raw) or re.search(r"(\d{4}/\d{2}/\d{2}) \d{2}:\d{2} HKT", raw)
+            date = rd.group(1).replace("/", "-") if rd else (fdate or time.strftime("%Y-%m-%d", time.localtime(os.path.getmtime(path))))
+            rm = (re.search(r'<div class="label">(?:原報告評等|高盛評等)</div><div class="value[^"]*">([^<]+)</div>', raw)
+                  or re.search(r"Goldman Sachs · (Buy|Neutral|Sell)", raw))
+            rating = _h.unescape(rm.group(1)).strip() if rm else ""
+            tg = re.search(r'12 個月目標價</div><div class="value[^"]*">NT\$([\d,\.]+)', raw)
+            out.append({"market": market, "ticker": tk, "name": nm, "kind": kind.replace("_", " · "),
+                        "href": href, "date": date, "rating": rating,
+                        "target": tg.group(1) if tg else ""})
+    out.sort(key=lambda r: (r["date"], r["ticker"]), reverse=True)
+    return out
+
+
+def _manual_section(rows):
+    from board_theme import esc
+    pages = manual_pages(rows)
+    if not pages:
+        return ""
+    trs = []
+    for p in pages:
+        trs.append(
+            "<tr>"
+            f'<td class="main" data-h="個股"><span class="nm big" style="display:block">{esc(p["name"])}</span>'
+            f'<span class="sub">{esc(p["ticker"] or "多檔／未標代號")} · {esc(p["market"])}</span></td>'
+            f'<td data-h="頁面"><a href="{esc(p["href"])}">{esc(p["kind"] or "報告頁")}</a></td>'
+            f'<td data-h="評等／目標價">'
+            + (f'<span class="num">{esc(p["rating"])}</span>' if p["rating"] else '<span class="quiet">—</span>')
+            + (f' <span class="num">{esc(p["target"])}</span>' if p["target"] else "")
+            + "</td>"
+            f'<td data-h="報告日"><span class="num">{esc(p["date"])}</span></td></tr>')
+    note = ('<div class="sub">這些頁面<b>不在券商報告資料庫</b>（手動整理的券商報告、帶日期的個股筆記、孔明評論），'
+            "或是同一檔較舊的中文重點頁，所以上面的主表沒有列。資料取自頁面本身（報告日、評等、12 個月目標價），取不到就留空。<br>"
+            "⚠️ 這一區不做失效線與查核，也不進每日更新；各券商的目標價是各自的數字，不同源，不要互相對照。</div>")
+    return (f'<div class="sb"><h2>其他報告頁　{len(pages)} 份</h2>{note}'
+            '<table class="ix"><thead><tr><th>個股</th><th>頁面</th><th>評等／目標價</th><th>報告日</th></tr></thead>'
+            "<tbody>" + "".join(trs) + "</tbody></table></div>")
 
 
 def render_index(rows):
@@ -1237,7 +1326,7 @@ def render_index(rows):
             + '</style></head><body><div class="wrap">'
             + header("earnings", "整合報告索引", sub, nav_abs(),
                      eyebrow="DOSSIER INDEX")
-            + head + tbl + "</div></body></html>")
+            + head + tbl + _manual_section(rows) + "</div></body></html>")
 
 
 def build_index():

@@ -118,7 +118,7 @@ def _question_orig(rep, f):
     pos = f"{f['upside']:+.1%}" if f.get("upside") is not None else "（現價查不到）"
     prev = (f"（前次 {_n(o['prev_target'])}，變動 {m['tgt_chg']:+.1%}）" if o.get("prev_target") else "")
     lines = [
-        f"【外部資料——高盛原文經外部助理整理成中文重點頁（10/2），下列數字取自該整理；本系統沒有逐頁核對原文，引用時要說明這一點】",
+        "【外部資料——" + (o.get("src") or "高盛原文經外部助理整理成中文重點頁（10/2），下列數字取自該整理；本系統沒有逐頁核對原文") + "，引用時要說明這一點】",
         f"高盛在 {d}（香港時間 {o['pub']}）對 {rep['name']}（{rep['ticker']}）的評等是「{rep.get('rating', '')}」、"
         f"十二個月目標價 {_n(tp)}{prev}。報告所列收盤價 {_n(o['close'])}（{o['cdate']}），報告時目標價比它高 {m['at_report']:+.1%}；"
         f"對我們最近收盤價 {_n(px) if px else '？'} 的距離是 {pos}。",
@@ -141,7 +141,7 @@ def _question_orig(rep, f):
         # ⚠️ 不能把註記原文貼進問題：裡面的 2454、2023、2026 會被 war_room 認成別檔股票（硬檢查會擋下）。
         # 完整註記在頁面最前面（_bias_note）；問題裡只放不含數字的白話。
         if bn.get("key") == "高盛":
-            lines.append(f"註記（老墨的經驗判斷，我們只有一檔佐證、沒有自己的折價係數）：{bn['tag']}——高盛的目標價歷史上漲得比股價快，看它的目標價要記得折價。")
+            lines.append(f"註記（老墨的經驗判斷；我們有一檔佐證、另測八檔沒有重現，所以只是提醒不是規律；沒有自己的折價係數）：{bn['tag']}——老墨認為高盛的目標價偏樂觀，看它要自行判斷折價。")
         else:
             lines.append(f"註記（老墨的經驗判斷）：{bn['tag']}。")
     lines += [
