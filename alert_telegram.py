@@ -26,6 +26,7 @@ import json
 import html as _html
 from datetime import datetime
 import requests
+from morning_delivery import send_morning, taipei_day
 from board_html import parse_report, oneliner, CHAIN_MAP, CHAIN_ICON, CHAIN_ORDER, TW_NAME
 from tw_report import convert
 
@@ -79,10 +80,15 @@ def _send_priority_alert(flips_hold):
 
 
 def send_text(text):
-    r = requests.post(f"https://api.telegram.org/bot{TOKEN}/sendMessage",
-                      json={"chat_id": CHAT, "text": text, "parse_mode": "HTML",
-                            "disable_web_page_preview": True}, timeout=30)
-    print("text:", r.status_code, "" if r.ok else r.text[:200])
+    try:
+        r = requests.post(f"https://api.telegram.org/bot{TOKEN}/sendMessage",
+                          json={"chat_id": CHAT, "text": text, "parse_mode": "HTML",
+                                "disable_web_page_preview": True}, timeout=30)
+        if not r.ok or r.json().get("ok") is not True:
+            raise ValueError("Telegram rejected message")
+    except Exception:
+        raise RuntimeError("Morning Telegram delivery not confirmed; no receipt saved") from None
+
 
 
 def send_doc(path, caption):
@@ -177,7 +183,7 @@ def main():
     # 加重要性標記，daily_warroom照舊會再完整列一次給沒看到這則的人）。
     _send_priority_alert(flips_hold)
 
-    date = datetime.now().strftime("%Y-%m-%d")
+    date = taipei_day()
     lines = [f"📊 <b>投資晨報 {date}</b>",
              f'📈 <a href="{PAGES_URL}">完整看板</a>（或見附件）', ""]
     has = False
@@ -228,7 +234,12 @@ def main():
                  f"AI 訊號與完整日報在 Discord）。",
                  f'📊 <a href="{PAGES_URL}">完整看板</a>。']
     msg = "\n".join(lines)
-    send_text(msg)
+    # Defer delivery errors until both downstream signal files have been written.
+    delivery_error = None
+    try:
+        send_morning(msg, send_text, day=date)
+    except RuntimeError as exc:
+        delivery_error = exc
     # Discord 不在這裡發（2026-08-27 Phase 2 定案）：#每日戰情 收的是 daily_warroom
     # 08:45 的合成日報（本訊息內容經由 state/st_flips_today.json 進日報②段），
     # 這裡再發會同內容出現兩次。Telegram 維持逐則即時推播。
@@ -250,7 +261,9 @@ def main():
                               "reason": reason}
                               for c, m, s, code, name, ol, reason in alerts]},
               open("state/st_flips_today.json", "w", encoding="utf-8"), ensure_ascii=False, indent=0)
-    print(f"✅ 投資晨報推送完成：AI {len(alerts)}、持股翻面 {len(flips_hold)}、守備翻面 {len(flips_watch)}")
+    if delivery_error is not None:
+        raise delivery_error
+    print(f"✅ 投資晨報處理完成：AI {len(alerts)}、持股翻面 {len(flips_hold)}、守備翻面 {len(flips_watch)}")
 
 
 if __name__ == "__main__":
