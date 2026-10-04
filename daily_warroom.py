@@ -779,6 +779,12 @@ def sec_reports_today(date):
         lines += advisor_reports.new_today_lines(date)
     except Exception as e:                                  # noqa: BLE001
         lines.append(f"・📑 投顧報告讀取失敗：{str(e)[:60]}")
+    # 2026-10-04 Ari 做好的 Morningstar 等中文重點（ingest_stock_digests.py，同一條「新收到報告」路徑）
+    try:
+        import ingest_stock_digests
+        lines += ingest_stock_digests.new_today_lines(date)
+    except Exception as e:                                  # noqa: BLE001
+        lines.append(f"・📑 研報（Morningstar）讀取失敗：{str(e)[:60]}")
     # 券商目標價／評等異動（2026-09-03，Leo：「做異動提醒」）。
     # **只推 target_changes.TRUSTED 名單內的券商 ∩ 我們母體內**——Leo 明講
     # 那份異動表裡他只信高盛。其餘只給一行計數，數字未經覆核不進判斷。
@@ -1154,6 +1160,12 @@ def main():
                     advisor_reports.mark_announced(advisor_reports.pending_announce())
                 except Exception as e:                      # noqa: BLE001
                     print(f"[warroom] 投顧報告已報標記失敗：{e}")
+            if ok_ and ch == "private" and "新收到的研報" in msg:
+                try:
+                    import ingest_stock_digests
+                    ingest_stock_digests.mark_discord()
+                except Exception as e:                      # noqa: BLE001
+                    print(f"[warroom] 研報已報標記失敗：{e}")
 
     # P3 預估前提檢查——**獨立一則**（Leo 2026-08-28：「多一則」），一週一次（週一）。
     # 持股→持股密報、非持股→#財報（不是#每日戰情：這是估值前提不是當日戰況，
