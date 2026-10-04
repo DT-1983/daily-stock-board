@@ -75,6 +75,21 @@ def summary(d):
     return (s + "｜" if s else "") + "、".join(bits)
 
 
+def _now_price(ticker, fv_text):
+    """市場現價（yfinance 最近一個收盤）與「現價／公允價值」。取不到就明講，不留空也不猜。
+    公允價值文字形如「$254」；解析不出數字就只顯示現價。"""
+    try:
+        import yfinance as yf
+        h = yf.Ticker(ticker.replace(".", "-")).history(period="7d")["Close"].dropna()
+        px, day = float(h.iloc[-1]), str(h.index[-1])[5:10].replace("-", "/")
+    except Exception as e:                                   # noqa: BLE001
+        print(f"[digest] {ticker} 現價取不到：{str(e)[:60]}")
+        return "現價這次取不到"
+    m = re.search(r"[\d,]+(?:\.\d+)?", fv_text or "")
+    r = f"｜現價／公允價值 {px / float(m.group().replace(',', '')):.2f}×" if m else ""
+    return f"現價 ${px:,.2f}（{day} 收）{r}"
+
+
 def _push(new):
     """new：這次新進來（沒推過）的清單。Discord private＋Telegram 各一則；兩邊分開記回執，一邊失敗下次只補那邊。"""
     from html import escape
@@ -91,8 +106,9 @@ def _push(new):
         ratio = m.get("價格／公允價值", ("—",))[0]
         d_ = d["date"][5:].replace("-", "/")
         one = d["head"] or d["subtitle"]
-        lines_d.append(f'**{d["ticker"]} {d["name"]}**　{fvs}｜{star}｜價格／公允價值 {ratio}　-# 原報告 {d_}\n-# {one}')
-        lines_t.append(f'<b>{escape(d["ticker"])} {escape(d["name"])}</b>　{escape(fvs)}｜{escape(star)}｜價格／公允價值 {escape(ratio)}（原報告 {d_}）\n{escape(one)}')
+        now = _now_price(d["ticker"], m[fv][0] if fv else "")
+        lines_d.append(f'**{d["ticker"]} {d["name"]}**　{fvs}｜{star}\n　{now}｜報告時 {ratio}　-# 原報告 {d_}\n-# {one}')
+        lines_t.append(f'<b>{escape(d["ticker"])} {escape(d["name"])}</b>　{escape(fvs)}｜{escape(star)}\n{escape(now)}｜報告時 {escape(ratio)}（原報告 {d_}）\n{escape(one)}')
     head = f"📑 Morningstar 新研報已進軍師資料庫（{len(new)} 份）"
     keys = [f'{d["ticker"]}|{d["source"]}|{d["date"]}' for d in new]
     if not all(done.get(k, {}).get("discord") for k in keys):
