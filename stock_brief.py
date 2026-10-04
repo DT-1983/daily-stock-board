@@ -817,11 +817,17 @@ def render(d, extra_notes=None):
                 "normal": "要求落在這檔過去做得到的範圍內",
                 "low_coverage": "分析師覆蓋太少，不列入判斷"}.get(q.get("tier"), q.get("tier"))
         cross.append(
-            f'<div class="txt"><b>預估前提檢查（{q.get("year")}）</b>：{esc(tier)}。'
-            f'剩 {q.get("months_left")} 個月要月營收 YoY '
-            f'<b>{q.get("need_yoy", 0) * 100:+.1f}%</b>，'
-            f'而這檔歷史中位 {q.get("yoy_med", 0) * 100:+.1f}%、'
-            f'最大 {q.get("yoy_max", 0) * 100:+.1f}%（n={q.get("yoy_n")}）。'
+            f'<div class="txt"><b>預估前提檢查（{q.get("year") or "本年"}）</b>：{esc(tier)}。'
+            + (f'已公布 {q.get("q_done")} 季、剩 {q.get("q_left")} 季要季均 '
+               f'{q.get("need_avg", 0) / 1e9:,.1f}B，＝季增 '
+               f'<b>{q.get("need_qoq", 0) * 100:+.1f}%</b>，'
+               f'而這檔歷史季增中位 {q.get("qoq_med", 0) * 100:+.1f}%、'
+               f'最大 {q.get("qoq_max", 0) * 100:+.1f}%（n={q.get("qoq_n")}）。'
+               if q.get("kind") == "us_quarterly" else
+               f'剩 {q.get("months_left")} 個月要月營收 YoY '
+               f'<b>{q.get("need_yoy", 0) * 100:+.1f}%</b>，'
+               f'而這檔歷史中位 {q.get("yoy_med", 0) * 100:+.1f}%、'
+               f'最大 {q.get("yoy_max", 0) * 100:+.1f}%（n={q.get("yoy_n")}）。')
             + (f'分析師準頭：{tr.get("n")} 次猜中 {tr.get("beats")} 次、'
                f'中位驚喜 {tr.get("median_surprise"):+.1f}%（{esc(tr.get("bias",""))}）。'
                if tr else "")

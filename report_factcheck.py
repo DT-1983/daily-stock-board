@@ -205,13 +205,27 @@ def check(report, price=None, base_rate=None, margin=None):
                 "low_coverage": ("分析師覆蓋太少，不列入判斷", WAIT)}.get(
             q.get("tier"), ("", WAIT))
         tr = base_rate.get("track_record") or {}
-        out.append({
-            "kind": f"{q.get('year')} 全年營收",
-            "claim": f"市場共識 {(_num(q.get('fy')) or 0) / 1e8:,.0f} 億",
-            "ours": (f"剩 {q.get('months_left')} 個月要月營收 YoY "
+        # 2026-10-04：美股的 requirement 是季營收格式（kind=us_quarterly，沒有 year／months_left／need_yoy），
+        # 原本只認台股月營收欄位，美股頁就印出「None 全年營收」「剩 None 個月」。兩種格式分開寫。
+        if q.get("kind") == "us_quarterly":
+            _kind = "本年營收"
+            _claim = f"市場共識 {(_num(q.get('fy')) or 0) / 1e9:,.1f}B 美元（{q.get('analysts')} 位分析師）"
+            _ours = (f"已公布 {q.get('q_done')} 季、剩 {q.get('q_left')} 季要季均 "
+                     f"{(_num(q.get('need_avg')) or 0) / 1e9:,.1f}B，"
+                     f"＝季增 {(_num(q.get('need_qoq')) or 0) * 100:+.1f}%；"
+                     f"這檔歷史季增中位 {(_num(q.get('qoq_med')) or 0) * 100:+.1f}%、"
+                     f"最大 {(_num(q.get('qoq_max')) or 0) * 100:+.1f}%")
+        else:
+            _kind = f"{q.get('year')} 全年營收"
+            _claim = f"市場共識 {(_num(q.get('fy')) or 0) / 1e8:,.0f} 億"
+            _ours = (f"剩 {q.get('months_left')} 個月要月營收 YoY "
                      f"{(_num(q.get('need_yoy')) or 0) * 100:+.1f}%；"
                      f"歷史中位 {(_num(q.get('yoy_med')) or 0) * 100:+.1f}%、"
-                     f"最大 {(_num(q.get('yoy_max')) or 0) * 100:+.1f}%"),
+                     f"最大 {(_num(q.get('yoy_max')) or 0) * 100:+.1f}%")
+        out.append({
+            "kind": _kind,
+            "claim": _claim,
+            "ours": _ours,
             "verdict": tier[1],
             "note": tier[0] + (f"。分析師準頭：{tr.get('n')} 次猜中 {tr.get('beats')} 次、"
                                f"中位驚喜 {tr.get('median_surprise'):+.1f}%（{tr.get('bias','')}）"
