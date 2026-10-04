@@ -255,6 +255,32 @@ def render(key, r, d=None, px=None, fc=None):
                     '<table class="fc"><tr><th>查核項</th><th>報告說</th>'
                     f'<th>我們算的</th><th>判定</th></tr>{trs}</table>'))
 
+    # ── 目標價敏感度（2026-10-04，Leo：「整合進去」）──────────────────
+    # 純算術：目標價的兩個輸入（倍數、基準）一變，價格差多少。是區間，不是新的目標價，不替任何人選倍數。
+    try:
+        import target_sens
+        ts = target_sens.sensitivity(r, px)
+        if ts:
+            cols = ts["grid_cols"]
+            head = "".join(f"<th>{ts['base_name']} {int(c * 100)}%</th>" for c in cols)
+            trs = ""
+            for lab, m in ts["grid_rows"]:
+                tds = ""
+                for c in cols:
+                    v = m * ts["B"] * c
+                    chg = f"（{(v / ts['price'] - 1) * 100:+.0f}%）" if ts["price"] else ""
+                    tds += f"<td>{v:,.0f}<span class=\"note\">{chg}</span></td>"
+                trs += f"<tr><td class=\"k\">{esc(lab)} {m:.1f}x</td>{tds}</tr>"
+            sub = ("每格＝倍數 × 基準，括號是對現價的漲跌。<b>這是敏感度表，不是我們的目標價</b>——"
+                   f"倍數每差 1 倍＝{ts['per_mult']:,.0f}（{ts['per_mult_pct'] * 100:.1f}%）；"
+                   f"{esc(ts['base_name'])}差 10%＝{ts['per_base10']:,.0f}。"
+                   + ("<br>⚠️ 這份報告的倍數或基準是依目標價回推的，不是報告自己寫的。" if ts["derived"] else "")
+                   + f"<br>{esc(target_sens.OPTIMISM)}")
+            B.append(sb("目標價敏感度：假設一變，價格差多少", sub,
+                        f'<table class="fc"><tr><th>倍數＼基準</th>{head}</tr>{trs}</table>'))
+    except Exception as _e:                                  # noqa: BLE001
+        print(f"  [report_zh] 目標價敏感度略過：{str(_e)[:80]}")
+
     # ── 報告自己的保留與風險 ───────────────────────────────────
     kp = r.get("key_points") or []
     cav = [k for k in kp if k.get("type") == "caveat"]
@@ -342,7 +368,7 @@ def build(key, r, output=""):
     _nm = _fname_safe(r.get("name") or "")
     fn = (f"{r.get('ticker')}_{_nm}_{_slug(r.get('broker'))}報告_中文重點.html"
           if _nm else f"{r.get('ticker')}_{_slug(r.get('broker'))}報告_中文重點.html")
-    out = output or op.brief(fn)
+    out = output or op.brief(fn, ticker=r.get("ticker"))
     os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
     io.open(out, "w", encoding="utf-8").write(html)
     return out, len(html)

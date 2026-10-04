@@ -129,6 +129,16 @@ def _reports_block(reports):
                      f"｜目標價：{r.get('target') or '—'}"
                      + (f"　⚠️ {r['_note'][:60]}" if r.get("_manual_entry") and r.get("_note")
                         else ""))
+        try:                                                # 2026-10-04 目標價敏感度（算術，軍師資料庫讀得到）
+            import target_sens
+            ls = target_sens.lines(r)
+            if ls:
+                lines += [f"  - {x}" for x in ls[:2]]
+                has_sens = True
+        except Exception:                                   # noqa: BLE001
+            pass
+    if "has_sens" in dir():
+        lines.append(f"  - {target_sens.OPTIMISM}")
     return "\n".join(lines) + "\n"
 
 

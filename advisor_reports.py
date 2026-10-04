@@ -668,6 +668,14 @@ def brief_lines(code, n=3):
         risks = [x for x in risks if x]
         if risks:
             out.append(f"     報告列的風險：{'；'.join(risks[:3])[:160]}")
+        try:                                                # 2026-10-04 目標價敏感度（算術，軍師讀得到）
+            import target_sens
+            out += ["     " + x for x in target_sens.lines(r)[:2]]
+            _sens = True
+        except Exception:                                   # noqa: BLE001
+            pass
+    if out and "_sens" in dir():
+        out.append("     " + target_sens.OPTIMISM)
     return out
 
 
