@@ -77,6 +77,42 @@ def _nfp():
         return _fail("非農就業", str(e))
 
 
+NOWCAST_URL = "https://www.clevelandfed.org/-/media/files/webcharts/inflationnowcasting/nowcast_year.json"
+
+
+def _nowcast():
+    """克里夫蘭聯儲 CPI 年增「模型預估」（官方公開檔，約 7.6MB）。不是市場共識——卡片上要講明。
+    回 {next:(ym, cpi, core), last:(ym, 預估, 實際)}；任何一步對不上就回 None（不硬湊）。"""
+    import requests
+    r = requests.get(NOWCAST_URL, headers={"User-Agent": "Mozilla/5.0"}, timeout=60)
+    r.raise_for_status()
+    import json
+    blocks = json.loads(r.content.decode("utf-8-sig"))
+
+    def last(b, name):
+        for ds in b["dataset"]:
+            if ds["seriesname"] == name:
+                v = [x["value"] for x in ds["data"] if x.get("value") not in ("", None)]
+                return float(v[-1]) if v else None
+        return None
+
+    def ym(b):
+        y, m = b["chart"]["subcaption"].split("-")
+        return f"{int(y)}-{int(m):02d}"
+    nxt = lst = None
+    for b in blocks[-4:]:
+        act = last(b, "Actual CPI Inflation")
+        est = last(b, "CPI Inflation")
+        if est is None:
+            continue
+        if act is None:
+            if nxt is None:
+                nxt = (ym(b), est, last(b, "Core CPI Inflation"))
+        else:
+            lst = (ym(b), est, act)
+    return {"next": nxt, "last": lst} if nxt else None
+
+
 def _cpi():
     try:
         import bls_fetch
@@ -87,9 +123,22 @@ def _cpi():
         pc = d.get("prev_core_yoy")
         pv = f'前月 {py:.1f}%' if py is not None else '前月 —'
         pcv = f'（前月 {pc:.1f}%）' if pc is not None else ''
+        nc = ""
+        try:
+            n = _nowcast()
+            if n:
+                ym_, c_, k_ = n["next"]
+                nc = (f'<br>聯準會系統模型預估（克里夫蘭聯儲，<b>非市場共識</b>）：{ym_} 年增 {c_:.1f}%'
+                      + (f'、核心 {k_:.1f}%' if k_ is not None else ''))
+                if n["last"]:
+                    lm, le, la = n["last"]
+                    nc += f'<br>（上次 {lm} 預估 {le:.1f}% → 實際 {la:.1f}%）'
+        except Exception as e:                               # noqa: BLE001
+            print(f"[home_macro] 克里夫蘭預估取不到：{str(e)[:80]}")
+            nc = '<br>模型預估這次取不到'
         return _card("美國 CPI（年增）", f'{d["yoy"]:.1f}%',
                      f'{esc(d["ym"])} 數據（{_rel_note(d["ym"], _dates("CPI"))}） · {pv} · 月增 {d["mom_sa"]:+.1f}%<br>'
-                     f'核心年增 {d["core_yoy"]:.1f}%{pcv} · BLS 官方', "flat")
+                     f'核心年增 {d["core_yoy"]:.1f}%{pcv} · BLS 官方{nc}', "flat")
     except Exception as e:                                   # noqa: BLE001
         return _fail("美國 CPI", str(e))
 
