@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-05 13:54",
+ "updated": "2026-10-05 15:40",
  "indices": [
   {
    "sym": "^GSPC",
@@ -46,8 +46,8 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "10/05",
-   "close": 31.81,
-   "chg_pct": -0.26
+   "close": 31.76,
+   "chg_pct": -0.39
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "00416A是什麼？首檔小股本主動式ETF登場，AI供應鏈下一批飆股藏在這裡？",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6621665",
-   "ts": "10/05 13:51"
-  },
-  {
-   "title": "宜特(3289)第二季毛利率回升至26.13%，切割宜錦後聚焦驗證本業、矽光子CPO布局2027年放量",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6621656",
-   "ts": "10/05 13:30"
-  },
-  {
-   "title": "汎銓(6830)營收連3月創高、股價卻離高點逾3成！11月5日矽光子設備亮相，第二成長曲線真的來了？",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6621654",
-   "ts": "10/05 13:30"
-  },
-  {
-   "title": "從營運現金流看MLCC周期：結構性緊缺距離全面缺貨還有多遠",
+   "title": "華為與高通達成多年期專利授權協議 首度涵蓋5G技術",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6621655",
-   "ts": "10/05 13:30"
+   "url": "https://news.cnyes.com/news/id/6621703",
+   "ts": "10/05 15:40"
   },
   {
-   "title": "憂失「歐洲製造」待遇 英國擬對中國電動車課稅",
+   "title": "澤倫斯基示警：俄羅斯疑向北韓分享「噴射無人機」技術",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6621410",
-   "ts": "10/05 13:27"
+   "url": "https://news.cnyes.com/news/id/6621343",
+   "ts": "10/05 15:40"
   },
   {
-   "title": "〈焦點股〉南亞受惠電子材料持續升級 爆量漲停再寫新天價",
+   "title": "國內外鋼價同步走揚下游接單持續回溫 中鋼11月盤價續漲",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6621644",
-   "ts": "10/05 13:20"
+   "url": "https://news.cnyes.com/news/id/6621707",
+   "ts": "10/05 15:31"
   },
   {
-   "title": "台股叩關5萬點56千金盛況再現 川湖、台光電等8檔高價股攻漲停",
+   "title": "不甩川普呼籲！澤倫斯基升級能源戰：將加大打擊俄煉油廠　報復普丁擴大空襲",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6621689",
+   "ts": "10/05 15:30"
+  },
+  {
+   "title": "〈消費趨勢〉富邦媒打響電商旺季前哨戰 強打「分次配」新服務",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6621643",
-   "ts": "10/05 13:17"
+   "url": "https://news.cnyes.com/news/id/6621704",
+   "ts": "10/05 15:26"
   },
   {
-   "title": "G7釋出緊急儲備後 川普宣布不禁柴油出口",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6621412",
-   "ts": "10/05 13:15"
+   "title": "寶泰攜手泰福簽訂長期多項目合作 首波預計推進三項抗體藥物計畫",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6621701",
+   "ts": "10/05 15:25"
   },
   {
-   "title": "美伊進入「關鍵一週」！是戰是談？美銀分析油價103美元面臨4大情境",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6621573",
-   "ts": "10/05 12:31"
+   "title": "〈房產〉全台高齡人口達479萬人突破2成 台北市達24.76%居22縣市之冠",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6621684",
+   "ts": "10/05 15:24"
   },
   {
-   "title": "非農爆冷也救不了！美元、美債殖利率持續施壓金價  4000美元大關保衛戰本周開始？",
+   "title": "下一代記憶體更貴了 三星HBM4報價傳逾前代3倍",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6621587",
-   "ts": "10/05 12:30"
+   "url": "https://news.cnyes.com/news/id/6621443",
+   "ts": "10/05 15:24"
+  },
+  {
+   "title": "聯發科攜手達發 加速AI時代全球網路基礎建設升級",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6621709",
+   "ts": "10/05 15:15"
+  },
+  {
+   "title": "AI狂熱信徒也擔心安全 孫正義：人類已無餘裕彼此爭鬥",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6621662",
+   "ts": "10/05 15:10"
   }
  ],
  "inst": {
-  "date": "10/02",
-  "total_yi": 104.2,
-  "foreign_yi": 26.2,
-  "trust_yi": 57.7
+  "date": "10/05",
+  "total_yi": 764.5,
+  "foreign_yi": 719.0,
+  "trust_yi": -63.9
  }
 }
