@@ -67,7 +67,7 @@ jobs:
           for i in 1 2 3; do
             if git push; then ok=1; break; fi
             echo "push 被拒（第 $i 次），rebase 遠端後重試"
-            git pull --rebase || break
+            git reset -q --hard HEAD; git pull --rebase -X theirs || { git rebase --abort 2>/dev/null; break; }
           done
           if [ -z "$ok" ]; then
             echo "::error::push 失敗 3 次，這次的更新沒有上線"

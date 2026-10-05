@@ -148,6 +148,6 @@ jobs:
           for i in 1 2 3; do
             if git push; then break; fi
             echo "push 被拒（第 $i 次），rebase 後重試"
-            git pull --rebase || break
+            git reset -q --hard HEAD; git pull --rebase -X theirs || { git rebase --abort 2>/dev/null; break; }
             [ "$i" = "3" ] && { echo "::error::push 失敗 3 次"; exit 1; }
           done

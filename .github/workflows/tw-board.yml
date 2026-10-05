@@ -158,7 +158,13 @@ jobs:
           for i in 1 2 3; do
             if git push; then ok=1; break; fi
             echo "push 被拒（第 $i 次），rebase 遠端後重試"
-            git pull --rebase || break
+            # 2026-10-05 修：10/5 08:45 本機 researcher 同步剛好同時 push，上面那行被拒後，
+            # `git pull --rebase` 因為「工作區有沒加進 commit 的修改」（流程中別的步驟改過、但不屬於
+            # 上面 git add 清單的檔案）直接報 unstaged changes 失敗 → 3 次重試等於一次都沒真的重試，
+            # 看板／首頁整批沒上線。這些未加入的修改本來就不該 commit，先丟掉再 rebase；
+            # 衝突時以本次產生的頁面為準（-X theirs ＝ 被重放的是我們這次的 commit）。
+            git reset -q --hard HEAD
+            git pull --rebase -X theirs || { git rebase --abort 2>/dev/null; break; }
           done
           if [ -z "$ok" ]; then
             echo "::error::push 失敗 3 次，這次更新沒有上線"
