@@ -256,3 +256,4 @@ state/bls_cpi.json
 state/yield_link.json
 state/stock_digest_pushed.json
 state/advisor_fired_state.json
+liao_market_pulse_1005_note.py
