@@ -676,6 +676,12 @@ def brief_lines(code, n=3):
             pass
     if out and "_sens" in dir():
         out.append("     " + target_sens.OPTIMISM)
+    if out:                                                 # 2026-10-05 未來 EPS（共識；每檔一次）
+        try:
+            import forward_eps
+            out += ["     " + x for x in forward_eps.lines(forward_eps.get(str(code)))]
+        except Exception:                                   # noqa: BLE001
+            pass
     return out
 
 

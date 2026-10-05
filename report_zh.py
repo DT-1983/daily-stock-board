@@ -281,6 +281,15 @@ def render(key, r, d=None, px=None, fc=None):
     except Exception as _e:                                  # noqa: BLE001
         print(f"  [report_zh] 目標價敏感度略過：{str(_e)[:80]}")
 
+    # ── 未來 EPS（2026-10-05，Leo：「把 EPS 放進個股之中」）──────────────────
+    try:
+        import forward_eps
+        _fe = forward_eps.html(forward_eps.get(str(r.get("ticker"))), esc)
+        if _fe:
+            B.append(sb(_fe[0], _fe[1], _fe[2]))
+    except Exception as _e:                                  # noqa: BLE001
+        print(f"  [report_zh] 未來 EPS 略過：{str(_e)[:80]}")
+
     # ── 報告自己的保留與風險 ───────────────────────────────────
     kp = r.get("key_points") or []
     cav = [k for k in kp if k.get("type") == "caveat"]

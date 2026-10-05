@@ -139,6 +139,11 @@ def _reports_block(reports):
             pass
     if "has_sens" in dir():
         lines.append(f"  - {target_sens.OPTIMISM}")
+    try:                                                    # 2026-10-05 未來 EPS（共識；每檔一次）
+        import forward_eps
+        lines += [f"  - {x}" for x in forward_eps.lines(forward_eps.get(str(reports[0].get("ticker"))))]
+    except Exception:                                       # noqa: BLE001
+        pass
     return "\n".join(lines) + "\n"
 
 
