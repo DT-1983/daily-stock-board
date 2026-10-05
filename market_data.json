@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-05 12:01",
+ "updated": "2026-10-05 13:54",
  "indices": [
   {
    "sym": "^GSPC",
@@ -38,8 +38,8 @@
    "name": "台股加權",
    "grp": "TW",
    "date": "10/05",
-   "close": 49727.51,
-   "chg_pct": 2.58
+   "close": 49712.04,
+   "chg_pct": 2.55
   },
   {
    "sym": "TWD=X",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "營收速報  - 南電(8046)9月營收55.86億元年增率高達57.82％",
+   "title": "00416A是什麼？首檔小股本主動式ETF登場，AI供應鏈下一批飆股藏在這裡？",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6621606",
-   "ts": "10/05 11:50"
+   "url": "https://news.cnyes.com/news/id/6621665",
+   "ts": "10/05 13:51"
   },
   {
-   "title": "盤中速報 - 集中市場加權指數上漲1208.1點至49683.84點，漲幅2.49%",
+   "title": "宜特(3289)第二季毛利率回升至26.13%，切割宜錦後聚焦驗證本業、矽光子CPO布局2027年放量",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6621598",
-   "ts": "10/05 11:34"
+   "url": "https://news.cnyes.com/news/id/6621656",
+   "ts": "10/05 13:30"
   },
   {
-   "title": "穩懋(3105)股價噴出，宏捷科(8086)營收也年增32%！砷化鎵雙雄都在量增，為何獲利差這麼多？",
+   "title": "汎銓(6830)營收連3月創高、股價卻離高點逾3成！11月5日矽光子設備亮相，第二成長曲線真的來了？",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6621597",
-   "ts": "10/05 11:30"
+   "url": "https://news.cnyes.com/news/id/6621654",
+   "ts": "10/05 13:30"
   },
   {
-   "title": "南茂(8150) 記憶體封測需求強勁！外資升目標價，市場下一步看好什麼?",
+   "title": "從營運現金流看MLCC周期：結構性緊缺距離全面缺貨還有多遠",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6621655",
+   "ts": "10/05 13:30"
+  },
+  {
+   "title": "憂失「歐洲製造」待遇 英國擬對中國電動車課稅",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6621410",
+   "ts": "10/05 13:27"
+  },
+  {
+   "title": "〈焦點股〉南亞受惠電子材料持續升級 爆量漲停再寫新天價",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6621596",
-   "ts": "10/05 11:30"
+   "url": "https://news.cnyes.com/news/id/6621644",
+   "ts": "10/05 13:20"
   },
   {
-   "title": "〈焦點股〉大盤直逼5萬點！00406A上演秒填息 22萬股東笑了",
+   "title": "台股叩關5萬點56千金盛況再現 川湖、台光電等8檔高價股攻漲停",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6621589",
-   "ts": "10/05 11:20"
+   "url": "https://news.cnyes.com/news/id/6621643",
+   "ts": "10/05 13:17"
   },
   {
-   "title": "衝破70K大關！日經225狂飆逾1700點  美股期、黃金、白銀、比特幣全面拉升",
+   "title": "G7釋出緊急儲備後 川普宣布不禁柴油出口",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6621572",
-   "ts": "10/05 11:10"
+   "url": "https://news.cnyes.com/news/id/6621412",
+   "ts": "10/05 13:15"
   },
   {
-   "title": "軟銀孫正義罕見示警AI風險：超級智慧可能「極度危險」",
+   "title": "美伊進入「關鍵一週」！是戰是談？美銀分析油價103美元面臨4大情境",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6621306",
-   "ts": "10/05 11:04"
+   "url": "https://news.cnyes.com/news/id/6621573",
+   "ts": "10/05 12:31"
   },
   {
-   "title": "韓金融業炸鍋！多家主要銀行系統遭駭　客戶資料大規模外洩",
+   "title": "非農爆冷也救不了！美元、美債殖利率持續施壓金價  4000美元大關保衛戰本周開始？",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6621542",
-   "ts": "10/05 10:52"
-  },
-  {
-   "title": "輝達黃仁勳押注「美國DeepSeek」！AI新創Reflection擬推首款開放權重模型",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6621533",
-   "ts": "10/05 10:31"
-  },
-  {
-   "title": "美國擔憂恐攻 部署在英國B-1轟炸機全部撤回",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6621389",
-   "ts": "10/05 10:18"
+   "url": "https://news.cnyes.com/news/id/6621587",
+   "ts": "10/05 12:30"
   }
  ],
  "inst": {
