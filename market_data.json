@@ -1,37 +1,37 @@
 {
- "updated": "2026-10-05 15:40",
+ "updated": "2026-10-05 23:54",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "10/02",
-   "close": 7722.72,
-   "chg_pct": 0.73
+   "date": "10/05",
+   "close": 7762.03,
+   "chg_pct": 0.51
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "10/02",
-   "close": 27190.86,
-   "chg_pct": 1.19
+   "date": "10/05",
+   "close": 27402.92,
+   "chg_pct": 0.78
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "10/02",
-   "close": 51176.96,
-   "chg_pct": 0.49
+   "date": "10/05",
+   "close": 51173.69,
+   "chg_pct": -0.01
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "10/02",
-   "close": 13136.67,
-   "chg_pct": 2.4
+   "date": "10/05",
+   "close": 13130.68,
+   "chg_pct": -0.05
   },
   {
    "sym": "^TWII",
@@ -45,86 +45,86 @@
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "10/05",
-   "close": 31.76,
-   "chg_pct": -0.39
+   "date": "10/02",
+   "close": 31.89,
+   "chg_pct": 0.06
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "10/02",
-   "close": 5.28,
+   "date": "10/05",
+   "close": 5.32,
    "fmt": "yield",
-   "chg_bp": 4.0
+   "chg_bp": 4.7
   }
  ],
  "news": [
   {
-   "title": "華為與高通達成多年期專利授權協議 首度涵蓋5G技術",
+   "title": "AI有晶片卻缺電！輝達、博通較抗壓 記憶體等零組件恐遭砍單",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6621703",
-   "ts": "10/05 15:40"
+   "url": "https://news.cnyes.com/news/id/6622094",
+   "ts": "10/05 23:30"
   },
   {
-   "title": "澤倫斯基示警：俄羅斯疑向北韓分享「噴射無人機」技術",
+   "title": "歐盟指控：俄羅斯混合攻擊危及全歐洲",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6621343",
-   "ts": "10/05 15:40"
+   "url": "https://news.cnyes.com/news/id/6622086",
+   "ts": "10/05 23:02"
   },
   {
-   "title": "國內外鋼價同步走揚下游接單持續回溫 中鋼11月盤價續漲",
+   "title": "馬斯克晶片計畫找上台積電！英特爾股價承壓",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6621707",
-   "ts": "10/05 15:31"
+   "url": "https://news.cnyes.com/news/id/6622063",
+   "ts": "10/05 22:30"
   },
   {
-   "title": "不甩川普呼籲！澤倫斯基升級能源戰：將加大打擊俄煉油廠　報復普丁擴大空襲",
+   "title": "馬斯克晶片計畫找上台積電！英特爾股價承壓",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6621689",
-   "ts": "10/05 15:30"
+   "url": "https://news.cnyes.com/news/id/6622063",
+   "ts": "10/05 22:30"
   },
   {
-   "title": "〈消費趨勢〉富邦媒打響電商旺季前哨戰 強打「分次配」新服務",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6621704",
-   "ts": "10/05 15:26"
-  },
-  {
-   "title": "寶泰攜手泰福簽訂長期多項目合作 首波預計推進三項抗體藥物計畫",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6621701",
-   "ts": "10/05 15:25"
-  },
-  {
-   "title": "〈房產〉全台高齡人口達479萬人突破2成 台北市達24.76%居22縣市之冠",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6621684",
-   "ts": "10/05 15:24"
-  },
-  {
-   "title": "下一代記憶體更貴了 三星HBM4報價傳逾前代3倍",
+   "title": "鉅亨速報 - Factset 最新調查：Penske Automotive Group Inc(PAG-US)EPS預估下修至13.37元，預估目標價為210.00元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6621443",
-   "ts": "10/05 15:24"
+   "url": "https://news.cnyes.com/news/id/6622081",
+   "ts": "10/05 22:15"
   },
   {
-   "title": "聯發科攜手達發 加速AI時代全球網路基礎建設升級",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6621709",
-   "ts": "10/05 15:15"
-  },
-  {
-   "title": "AI狂熱信徒也擔心安全 孫正義：人類已無餘裕彼此爭鬥",
+   "title": "鉅亨速報 - Factset 最新調查：Kinsale Capital Group IncKNSL-US的目標價調降至355元，幅度約5.33%",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6621662",
-   "ts": "10/05 15:10"
+   "url": "https://news.cnyes.com/news/id/6622080",
+   "ts": "10/05 22:15"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：大立光(3008-TW)EPS預估下修至187.88元，預估目標價為5300元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6622073",
+   "ts": "10/05 22:11"
+  },
+  {
+   "title": "從半導體到無人機！龔明鑫看好下一座「護國神山」上調產值目標至500億",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6622042",
+   "ts": "10/05 21:20"
+  },
+  {
+   "title": "復華00418A採雙經理人、不配息 聚焦三大類股搶吃「整條魚」行情",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6622051",
+   "ts": "10/05 21:18"
+  },
+  {
+   "title": "9月外資持台股債存款金額破1.9兆美元 占外匯存底321%創新高",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6622035",
+   "ts": "10/05 20:55"
   }
  ],
  "inst": {
   "date": "10/05",
-  "total_yi": 764.5,
+  "total_yi": 775.5,
   "foreign_yi": 719.0,
-  "trust_yi": -63.9
+  "trust_yi": -52.9
  }
 }
