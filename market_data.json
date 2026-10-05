@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-03 13:28",
+ "updated": "2026-10-05 12:01",
  "indices": [
   {
    "sym": "^GSPC",
@@ -37,17 +37,17 @@
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "10/02",
-   "close": 48475.74,
-   "chg_pct": 0.25
+   "date": "10/05",
+   "close": 49727.51,
+   "chg_pct": 2.58
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "10/02",
-   "close": 31.8,
-   "chg_pct": -0.23
+   "date": "10/05",
+   "close": 31.81,
+   "chg_pct": -0.26
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "距台灣僅110公里 彭博：美日將在與那國島部署反艦飛彈系統",
+   "title": "營收速報  - 南電(8046)9月營收55.86億元年增率高達57.82％",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6620878",
-   "ts": "10/03 13:25"
+   "url": "https://news.cnyes.com/news/id/6621606",
+   "ts": "10/05 11:50"
   },
   {
-   "title": "距台灣僅110公里 彭博：美日將在與那國島部署反艦飛彈系統",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6620878",
-   "ts": "10/03 13:25"
-  },
-  {
-   "title": "美股要「通宵」了！ 12月起邁入23小時交易時代",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6620941",
-   "ts": "10/03 13:10"
-  },
-  {
-   "title": "美債五年低迷 投資人轉向「三大替代資產」避險",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6615587",
-   "ts": "10/03 13:10"
-  },
-  {
-   "title": "〈熱門股〉被動元件族群10月開門紅 華新科連二根漲停創近2個半月高",
+   "title": "盤中速報 - 集中市場加權指數上漲1208.1點至49683.84點，漲幅2.49%",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6620965",
-   "ts": "10/03 13:00"
+   "url": "https://news.cnyes.com/news/id/6621598",
+   "ts": "10/05 11:34"
   },
   {
-   "title": "台積電傳與馬斯克Terafab探索合作  考慮美國第二園區",
+   "title": "穩懋(3105)股價噴出，宏捷科(8086)營收也年增32%！砷化鎵雙雄都在量增，為何獲利差這麼多？",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6620964",
-   "ts": "10/03 13:00"
+   "url": "https://news.cnyes.com/news/id/6621597",
+   "ts": "10/05 11:30"
   },
   {
-   "title": "台積電傳與馬斯克Terafab探索合作  考慮美國第二園區",
+   "title": "南茂(8150) 記憶體封測需求強勁！外資升目標價，市場下一步看好什麼?",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6621596",
+   "ts": "10/05 11:30"
+  },
+  {
+   "title": "〈焦點股〉大盤直逼5萬點！00406A上演秒填息 22萬股東笑了",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6621589",
+   "ts": "10/05 11:20"
+  },
+  {
+   "title": "衝破70K大關！日經225狂飆逾1700點  美股期、黃金、白銀、比特幣全面拉升",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6620964",
-   "ts": "10/03 13:00"
+   "url": "https://news.cnyes.com/news/id/6621572",
+   "ts": "10/05 11:10"
   },
   {
-   "title": "巴拉圭靠充沛綠電吸引AI資料中心前3年投資120億美元",
+   "title": "軟銀孫正義罕見示警AI風險：超級智慧可能「極度危險」",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6620968",
-   "ts": "10/03 13:00"
+   "url": "https://news.cnyes.com/news/id/6621306",
+   "ts": "10/05 11:04"
   },
   {
-   "title": "〈熱門股〉晶心科明年營運看旺 創一年半新高",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6620931",
-   "ts": "10/03 11:59"
+   "title": "韓金融業炸鍋！多家主要銀行系統遭駭　客戶資料大規模外洩",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6621542",
+   "ts": "10/05 10:52"
   },
   {
-   "title": "AI也能「治水」！園管局智慧管網節電近3成 台水攜手國環院守護全民飲水",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6620774",
-   "ts": "10/03 11:30"
+   "title": "輝達黃仁勳押注「美國DeepSeek」！AI新創Reflection擬推首款開放權重模型",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6621533",
+   "ts": "10/05 10:31"
+  },
+  {
+   "title": "美國擔憂恐攻 部署在英國B-1轟炸機全部撤回",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6621389",
+   "ts": "10/05 10:18"
   }
  ],
  "inst": {

@@ -1,5 +1,5 @@
 {
-"date": "2026-10-03",
+"date": "2026-10-05",
 "flips_hold": [
 {
 "code": "COHR",
@@ -23,24 +23,10 @@
 "sig": "rs60"
 },
 {
-"code": "AES",
+"code": "CCL",
 "name": "",
 "word": "RS60站回多方",
 "dir": 1,
-"sig": "rs60"
-},
-{
-"code": "ARKQ",
-"name": "",
-"word": "RS60跌破自身均線",
-"dir": -1,
-"sig": "rs60"
-},
-{
-"code": "TSLA",
-"name": "",
-"word": "RS60跌破自身均線",
-"dir": -1,
 "sig": "rs60"
 },
 {
@@ -51,10 +37,10 @@
 "sig": "rs60"
 },
 {
-"code": "ARKX",
+"code": "AAOI",
 "name": "",
-"word": "RS60跌破自身均線",
-"dir": -1,
+"word": "RS60站回多方",
+"dir": 1,
 "sig": "rs60"
 },
 {
@@ -74,12 +60,104 @@
 ],
 "flips_watch": [
 {
-"code": "PWR",
+"code": "2345",
+"name": "智邦",
+"word": "🔴→🟢 翻多",
+"dir": 1,
+"sig": "st"
+},
+{
+"code": "2368",
+"name": "金像電",
+"word": "🔴→🟢 翻多",
+"dir": 1,
+"sig": "st"
+},
+{
+"code": "2376",
+"name": "技嘉",
+"word": "🔴→🟢 翻多",
+"dir": 1,
+"sig": "st"
+},
+{
+"code": "2383",
+"name": "",
+"word": "🔴→🟢 翻多",
+"dir": 1,
+"sig": "st"
+},
+{
+"code": "6285",
+"name": "啟碁",
+"word": "🔴→🟢 翻多",
+"dir": 1,
+"sig": "st"
+},
+{
+"code": "6442",
 "name": "",
 "word": "🔴→🟢 翻多",
 "dir": 1,
 "sig": "st"
 }
 ],
-"ai_alerts": []
+"ai_alerts": [
+{
+"chain": "玻璃基板/TGV",
+"market": "US",
+"sig": "🟢",
+"code": "AMAT",
+"name": "Applied Materials Inc",
+"reason": "觀望→買進"
+},
+{
+"chain": "關鍵金屬/原物料",
+"market": "US",
+"sig": "🟢",
+"code": "SCCO",
+"name": "Southern Copper Corporation",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 電力/核能",
+"market": "US",
+"sig": "🔴",
+"code": "BWXT",
+"name": "BWX Technologies Inc",
+"reason": "觀望→賣出"
+},
+{
+"chain": "AI 材料/被動元件",
+"market": "TW",
+"sig": "🟢",
+"code": "2408",
+"name": "NANYA TECHNOLOGY CORPORATION",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 材料/被動元件",
+"market": "TW",
+"sig": "🟢",
+"code": "2344",
+"name": "WINBOND ELECTRONIC CORP",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 材料/被動元件",
+"market": "TW",
+"sig": "🟢",
+"code": "2492",
+"name": "WALSIN TECHNOLOGY CORP",
+"reason": "觀望→買進"
+},
+{
+"chain": "PCB/ABF 載板",
+"market": "TW",
+"sig": "🟢",
+"code": "4958",
+"name": "臻鼎-KY",
+"reason": "觀望→買進"
+}
+]
 }
