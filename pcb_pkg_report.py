@@ -43,7 +43,7 @@ CSS = """
 .legend{display:flex;flex-wrap:wrap;gap:12px;margin:6px 2px 0;font-size:12px;color:var(--muted)}
 .legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px}
 .tbl-wrap{overflow-x:auto;margin:10px 0;border:1px solid var(--line);border-radius:10px}
-table.t{border-collapse:collapse;width:100%;font-size:12.5px;min-width:900px}
+table.t{border-collapse:collapse;width:100%;font-size:12.5px;min-width:1250px}
 table.t th{color:var(--dim);font-weight:600;text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);white-space:nowrap;background:var(--surface);position:sticky;top:0}
 table.t td{padding:6px 9px;border-bottom:1px solid var(--line2);color:var(--ink);white-space:nowrap}
 table.t td.n{font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums;text-align:right}
@@ -128,6 +128,7 @@ PKG_CARDS = [
      "合約負債 149.81 億為業界最高，但不宜全視為短期 CoWoS 訂單；代理業務略降；月營收年增 −3～+18% 最弱。"),
 ]
 
+LAMPS = {}
 ABF_NOTE = "ABF 載板（欣興、南電、景碩）與聯茂我們前面已另外查過，這裡只放進對照表當基準。"
 
 
@@ -143,6 +144,15 @@ def _grp(r):
     if g == "ABF 載板":
         return "載板"
     return "封測" if g == "封測" else "設備"
+
+
+def _lamp(code):
+    """四燈／SuperTrend／共識目標價／風報比（lamp_lookup；每列帶資料日）。取不到回 {}。"""
+    try:
+        import lamp_lookup
+        return lamp_lookup.lookup(code, live=False) or {}
+    except Exception:                                        # noqa: BLE001
+        return {}
 
 
 def _fmt_pct(v, nd=0):
@@ -226,7 +236,7 @@ def scatter(rows):
 
 
 def table(rows):
-    head = ("<tr><th>族群</th><th>股票</th><th>現價</th><th>5日</th><th>20日</th><th>60日</th><th>月營收年增（近三月）</th>"
+    head = ("<tr><th>族群</th><th>股票</th><th>現價</th><th>5日</th><th>20日</th><th>60日</th><th>四燈／趨勢</th><th>距線</th><th>共識目標價（距現價）</th><th>風報比</th><th>月營收年增（近三月）</th>"
             "<th>毛利率 Q1→Q2</th><th>EPS Q1→Q2</th><th>共識 EPS 26E／27E</th><th>現價÷26E</th><th>現價÷27E</th><th>27E 比 26E</th><th>分析師</th></tr>")
     body = []
     last = None
@@ -243,15 +253,60 @@ def table(rows):
         eps_cls = "dn" if q2["eps"] < q1["eps"] else ""
         gm_cls = "dn" if (q1.get("gm") is not None and q2.get("gm") is not None and q2["gm"] < q1["gm"]) else ""
         name = _nm(r)
+        lp = LAMPS.get(r["code"]) or {}
+        lit, bull, gap, rr = lp.get("lit"), lp.get("bull"), lp.get("gap_pct"), lp.get("rr")
+        tgt, tpct = lp.get("target"), lp.get("target_pct")
+        lamp_cell = (f'<td class="n {"up" if (lit or 0) >= 3 else ("dn" if (lit or 0) <= 1 else "")}">{lit}／4 {"多" if bull else "空"}</td>'
+                     if lit is not None else '<td class="n">—</td>')
+        gap_cell = (f'<td class="n {"up" if gap >= 0 else "dn"}">{gap:+.0f}%</td>' if gap is not None else '<td class="n">—</td>')
+        tgt_cell = (f'<td class="n">{tgt:,.0f}（{tpct:+.0f}%）</td>' if tgt and tpct is not None else '<td class="n">—</td>')
+        if rr is None:
+            rr_cell = '<td class="n">不適用</td>' if lit is not None else '<td class="n">—</td>'
+        else:
+            small = gap is not None and 0 <= gap < 5
+            rr_cell = f'<td class="n {"up" if rr >= 1 else "dn"}">{rr:.1f}{"⚠" if small else ""}</td>'
         body.append(
             f'<tr{sep}><td><span class="chip" style="background:{GRP_COLOR[g]}">{g}</span></td><td>{r["code"]} {esc(name)}</td>'
             f'<td class="n">{r["px"]:,.0f}</td><td class="n {cls(r["r5"])}">{_fmt_pct(r["r5"])}</td><td class="n {cls(r["r20"])}">{_fmt_pct(r["r20"])}</td>'
-            f'<td class="n {cls(r["r60"])}">{_fmt_pct(r["r60"])}</td><td class="n">{mon}</td>'
+            f'<td class="n {cls(r["r60"])}">{_fmt_pct(r["r60"])}</td>{lamp_cell}{gap_cell}{tgt_cell}{rr_cell}<td class="n">{mon}</td>'
             f'<td class="n {gm_cls}">{q1["gm"]:.1f}→{q2["gm"]:.1f}</td><td class="n {eps_cls}">{q1["eps"]}→{q2["eps"]}{flag}</td>'
             + (f'<td class="n">{fe["e0"]:.1f}／{fe["e1"]:.1f}</td><td class="n">{fe["pe0"]:.0f}x</td><td class="n">{fe["pe1"]:.0f}x</td>'
                f'<td class="n">+{fe["g"]:.0f}%</td><td class="n">{fe["n"]}</td></tr>' if fe else
                '<td class="n">—</td><td class="n">—</td><td class="n">—</td><td class="n">—</td><td class="n">—</td></tr>'))
     return f'<div class="tbl-wrap"><table class="t">{head}{"".join(body)}</table></div>'
+
+
+def lamp_section(rows):
+    """把燈號與風報比跟「現價÷2027E」放在一起看（分組由資料決定，不手寫名單）。"""
+    def item(r):
+        lp, fe = LAMPS.get(r["code"]) or {}, r.get("fe") or {}
+        return lp, fe
+    A, B, C, D = [], [], [], []
+    for r in rows:
+        lp, fe = item(r)
+        if lp.get("lit") is None:
+            continue
+        nm = f'{_nm(r)}'
+        pe = f'{fe["pe1"]:.0f}x' if fe.get("pe1") else "—"
+        if not lp.get("bull"):
+            B.append(f'{nm}（共識目標距現價 {lp["target_pct"]:+.0f}%、距線 {lp["gap_pct"]:+.0f}%、2027E {pe}）')
+        elif lp.get("rr") is not None and lp["rr"] < 1 and lp["lit"] >= 3:
+            A.append(f'{nm}（風報比 {lp["rr"]:.1f}、距線 {lp["gap_pct"]:+.0f}%、2027E {pe}）')
+        elif lp.get("rr") is not None and lp["rr"] >= 1 and lp["gap_pct"] >= 5 and lp["lit"] >= 3:
+            C.append(f'{nm}（四燈 {lp["lit"]}／4、風報比 {lp["rr"]:.1f}、2027E {pe}）')
+        elif lp.get("rr") is not None and lp["rr"] >= 1:
+            why = (f'距線僅 {lp["gap_pct"]:+.1f}%（分母小，風報比被放大）' if lp["gap_pct"] < 5 else f'四燈只有 {lp["lit"]}／4')
+            D.append(f'{nm}（風報比 {lp["rr"]:.1f}，但{why}、2027E {pe}）')
+    li = lambda xs: "<ul>" + "".join(f"<li>{esc(x)}</li>" for x in xs) + "</ul>" if xs else "<p>（無）</p>"
+    return ('<div class="rpt-sec"><h2>燈號與風報比：趨勢跟價位對不對得上</h2>'
+            '<p style="font-size:12.5px;color:var(--muted)">四燈＝系統每日燈號掃描亮幾盞；趨勢＝SuperTrend 多／空；距線＝現價高於 SuperTrend 線多少％（失效線）；'
+            '風報比＝（共識目標價 − 現價）÷（現價 − SuperTrend 線），<b>用的是賣方共識目標價，歷史上偏樂觀</b>，且趨勢轉空時不適用；'
+            '距線很小時（⚠，&lt;5%）分母小，風報比會被放大。燈號資料日以快取為準（多數是 10/02，少數是 10/05）。</p>'
+            '<h3>趨勢多頭，但價位不划算（風報比 &lt; 1）</h3>' + li(A) +
+            '<h3>趨勢與風報比都過關（四燈 ≥ 3、風報比 ≥ 1、距線 ≥ 5%）</h3>' + li(C) +
+            '<h3>風報比 ≥ 1，但訊號打折（距線很近＝分母小，或四燈不足）</h3>' + li(D) +
+            '<h3>SuperTrend 空方（趨勢已轉弱；共識目標價上檔空間大，但這是賣方預估）</h3>' + li(B) +
+            '<p style="font-size:12.5px;color:var(--muted)">這是把系統訊號跟前面的估值倍數並排，不是買賣建議；趨勢是價格訊號，倍數與成長要求是基本面前提，兩者不一致時要自己判斷哪個更重要。</p></div>')
 
 
 def cards(lst):
@@ -265,6 +320,8 @@ def cards(lst):
 
 def build():
     rows = json.load(io.open("state/pcb_pkg_screen.json", encoding="utf-8"))
+    global LAMPS
+    LAMPS = {r["code"]: _lamp(r["code"]) for r in rows}
     body = []
     body.append(
         '<div class="rpt-tldr"><div class="lbl">30秒看懂</div><ol>'
@@ -279,6 +336,7 @@ def build():
     body.append('<div class="rpt-sec"><h2>26 檔量化對照</h2>'
                 '<p style="font-size:12.5px;color:var(--muted)">價格與漲幅為 2026-10-05 最新價；月營收為最近三個月年增；毛利率與 EPS 為 2026 Q1→Q2（紅字＝下滑）；'
                 '共識 EPS 來自 yfinance（賣方預估）。表可左右捲動。' + esc(ABF_NOTE) + '</p>' + table(rows) + '</div>')
+    body.append(lamp_section(rows))
     body.append('<div class="rpt-sec"><h2>PCB／CCL：公司展望</h2>'
                 '<p>產業：TPCA 估 2026 年台灣 PCB 產值 1.1366 兆（+24.2%），載板 +36.7%、HDI +28.4%、多層板 +47.6%、軟板 +1.3%；供應限制預期延續到 2027 年。'
                 'CCL 價格：建滔 4/28 全產品線再漲 10%（今年第四次）、南亞電材 3 月中漲 15%；玻纖布吃緊（量化缺口只有搜尋摘要，不採用）。'
