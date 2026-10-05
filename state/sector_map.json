@@ -1899,25 +1899,25 @@
     "sector": "Technology Services",
     "industry": "Packaged Software",
     "exchange": "TPEX",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "6214": {
     "sector": "Technology Services",
     "industry": "Packaged Software",
     "exchange": "TWSE",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "7822": {
     "sector": "Technology Services",
     "industry": "Packaged Software",
     "exchange": "TWSE",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "3693": {
     "sector": "Technology Services",
     "industry": "Packaged Software",
     "exchange": "TPEX",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "7781": {
     "sector": "Technology Services",
@@ -1929,7 +1929,7 @@
     "sector": "Technology Services",
     "industry": "Packaged Software",
     "exchange": "TPEX",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "2603": {
     "sector": "Transportation",
@@ -1983,25 +1983,25 @@
     "sector": "Technology Services",
     "industry": "Internet Software/Services",
     "exchange": "NASDAQ",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "SWKS": {
     "sector": "Electronic Technology",
     "industry": "Semiconductors",
     "exchange": "NASDAQ",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "QRVO": {
     "sector": "Electronic Technology",
     "industry": "Semiconductors",
     "exchange": "NASDAQ",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "AMZN": {
     "sector": "Retail Trade",
     "industry": "Internet Retail",
     "exchange": "NASDAQ",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "DE": {
     "sector": "Producer Manufacturing",
@@ -2013,31 +2013,31 @@
     "sector": "Producer Manufacturing",
     "industry": "Electrical Products",
     "exchange": "NASDAQ",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "NBIS": {
     "sector": "Technology Services",
     "industry": "Packaged Software",
     "exchange": "NASDAQ",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "CRWV": {
     "sector": "Technology Services",
     "industry": "Packaged Software",
     "exchange": "NASDAQ",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "MP": {
     "sector": "Non-Energy Minerals",
     "industry": "Other Metals/Minerals",
     "exchange": "NYSE",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "IOT": {
     "sector": "Technology Services",
     "industry": "Packaged Software",
     "exchange": "NYSE",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "ILMN": {
     "sector": "Health Technology",
@@ -2049,7 +2049,7 @@
     "sector": "Producer Manufacturing",
     "industry": "Industrial Machinery",
     "exchange": "NASDAQ",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "AUR": {
     "sector": "Technology Services",
@@ -2061,37 +2061,37 @@
     "sector": "Communications",
     "industry": "Wireless Telecommunications",
     "exchange": "NASDAQ",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "T": {
     "sector": "Communications",
     "industry": "Wireless Telecommunications",
     "exchange": "NYSE",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "AMX": {
     "sector": "Communications",
     "industry": "Wireless Telecommunications",
     "exchange": "NYSE",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "VOD": {
     "sector": "Communications",
     "industry": "Wireless Telecommunications",
     "exchange": "NASDAQ",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "CHT": {
     "sector": "Communications",
     "industry": "Major Telecommunications",
     "exchange": "NYSE",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "ECHO": {
     "sector": "Communications",
     "industry": "Specialty Telecommunications",
     "exchange": "NASDAQ",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "RACE": {
     "sector": "Consumer Durables",
@@ -2175,37 +2175,37 @@
     "sector": "Energy Minerals",
     "industry": "Integrated Oil",
     "exchange": "NYSE",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "CVX": {
     "sector": "Energy Minerals",
     "industry": "Integrated Oil",
     "exchange": "NYSE",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "SHEL": {
     "sector": "Energy Minerals",
     "industry": "Integrated Oil",
     "exchange": "NYSE",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "TTE": {
     "sector": "Energy Minerals",
     "industry": "Integrated Oil",
     "exchange": "NYSE",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "COP": {
     "sector": "Energy Minerals",
     "industry": "Oil & Gas Production",
     "exchange": "NYSE",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "PBR": {
     "sector": "Energy Minerals",
     "industry": "Integrated Oil",
     "exchange": "NYSE",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "PBR.A": {
     "sector": "Energy Minerals",
@@ -2361,19 +2361,19 @@
     "sector": "Technology Services",
     "industry": "Internet Software/Services",
     "exchange": "NASDAQ",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "ORCL": {
     "sector": "Technology Services",
     "industry": "Packaged Software",
     "exchange": "NYSE",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "PLTR": {
     "sector": "Technology Services",
     "industry": "Packaged Software",
     "exchange": "NASDAQ",
-    "asof": "2026-09-06"
+    "asof": "2026-10-06"
   },
   "ONON": {
     "sector": "Consumer Non-Durables",
@@ -3015,6 +3015,48 @@
     "sector": "Technology Services",
     "industry": "Data Processing Services",
     "exchange": "NASDAQ",
+    "asof": "2026-10-05"
+  },
+  "6279": {
+    "sector": "Producer Manufacturing",
+    "industry": "Auto Parts: OEM",
+    "exchange": "TPEX",
+    "asof": "2026-10-05"
+  },
+  "6239": {
+    "sector": "Electronic Technology",
+    "industry": "Semiconductors",
+    "exchange": "TWSE",
+    "asof": "2026-10-05"
+  },
+  "6187": {
+    "sector": "Producer Manufacturing",
+    "industry": "Industrial Machinery",
+    "exchange": "TPEX",
+    "asof": "2026-10-05"
+  },
+  "2360": {
+    "sector": "Electronic Technology",
+    "industry": "Electronic Equipment/Instruments",
+    "exchange": "TWSE",
+    "asof": "2026-10-05"
+  },
+  "6223": {
+    "sector": "Electronic Technology",
+    "industry": "Electronic Production Equipment",
+    "exchange": "TPEX",
+    "asof": "2026-10-05"
+  },
+  "3131": {
+    "sector": "Electronic Technology",
+    "industry": "Electronic Production Equipment",
+    "exchange": "TPEX",
+    "asof": "2026-10-05"
+  },
+  "3583": {
+    "sector": "Electronic Technology",
+    "industry": "Semiconductors",
+    "exchange": "TWSE",
     "asof": "2026-10-05"
   }
 }
