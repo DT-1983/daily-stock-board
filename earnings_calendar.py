@@ -137,7 +137,7 @@ def _manual_index():
     src = (d.get("_meta") or {}).get("source", "手動登錄")
     idx = {}
     for it in d.get("items", []):
-        rec = {"date": it["date"], "name": it.get("name"), "source": src}
+        rec = {"date": it["date"], "name": it.get("name"), "ticker": it["ticker"], "source": src}
         for k in [it["ticker"]] + list(it.get("alias") or []):
             idx[str(k).upper()] = rec
     return idx

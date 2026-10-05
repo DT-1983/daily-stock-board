@@ -727,6 +727,24 @@ def sec5_watch(date):
             ups.append((ed, tk))
     for ed, tk in sorted(ups)[:5]:
         lines.append(f"・📊 {ed.strftime('%m-%d')} {tk} 財報")
+    # 2026-10-05 Leo：手動登錄的大廠財報日曆（TechNews／Wall Street Horizon，27 家科技大廠）合進來。
+    # 原本只讀 earnings_seen（持股／守備清單／巴菲特清單），微軟、Meta、台積電這類產業風向球不在裡面。
+    # 一天一行、同日的收成一行；已在上面「自家名單」列過的不重複；日期仍是預估，標明。
+    try:
+        import earnings_calendar as _ec
+        listed = {str(tk).upper().replace(".TW", "") for _, tk in ups}
+        by_day = {}
+        for rec in {id(v): v for v in _ec._manual_index().values()}.values():
+            ed = datetime.date.fromisoformat(rec["date"])
+            if not (0 <= (ed - today_d).days <= 7) or str(rec["ticker"]).upper() in listed:
+                continue
+            by_day.setdefault(ed, []).append(rec["name"])
+        for ed in sorted(by_day)[:4]:
+            lines.append(f"・📊 {ed.strftime('%m-%d')} {'、'.join(by_day[ed])} 財報（日曆預估）")
+        if len(by_day) > 4:
+            lines.append(f"-# 　…另有 {len(by_day) - 4} 個財報日在 7 天內，見 obis 財報懶人包《科技大廠 Q3 財報日曆》")
+    except Exception as e:                                  # noqa: BLE001
+        print(f"[warroom] 財報日曆略過：{str(e)[:60]}")
     # 2026-09-03 老墨三段時程「驗證日程」（行動 5）：到期前 21 天列出、逾期未驗證持續提醒。
     # 行事曆型，零成本；不自動上網查證（那是付費呼叫），驗證在對談中做、用 roadmap_milestones.py 更新狀態。
     rm = _load("state/roadmap_milestones.json", {}) or {}
