@@ -11683,5 +11683,17 @@
 "entry_price": 218.59,
 "pnl_usd": 4.78,
 "pnl_pct": 0.81
+},
+{
+"date": "2026-10-05",
+"portfolio": "產業鏈+趨勢",
+"action": "join",
+"ticker": "1513.TW",
+"shares": 30.3195,
+"price": 166.5,
+"price_usd": 5.2429,
+"amount_usd": 158.96,
+"reason": "週線 SuperTrend 翻多（綠燈名單新增）",
+"src": "live"
 }
 ]
