@@ -1,0 +1,231 @@
+{
+ "_meta": {
+  "source": "TechNews 科技新報《科技大廠 Q3 財報日曆》圖卡（資料來源 Wall Street Horizon），2026-10-05 抄錄",
+  "note": "圖卡標題：10/12～10/30 美股財報季前三週、27 家科技公司；顏色分類半導體／軟體網路IT服務／硬體零組件。日期是資料商預估或公司公告都有可能，圖卡沒有區分，使用時仍標『預估』。",
+  "recorded": "2026-10-05"
+ },
+ "items": [
+  {
+   "date": "2026-10-12",
+   "weekday": "週一",
+   "name": "南亞科",
+   "ticker": "2408",
+   "alias": [],
+   "sector": "半導體"
+  },
+  {
+   "date": "2026-10-14",
+   "weekday": "週三",
+   "name": "ASML",
+   "ticker": "ASML",
+   "alias": [],
+   "sector": "半導體"
+  },
+  {
+   "date": "2026-10-14",
+   "weekday": "週三",
+   "name": "韓美半導體 Hanmi",
+   "ticker": "042700.KS",
+   "alias": [],
+   "sector": "半導體"
+  },
+  {
+   "date": "2026-10-15",
+   "weekday": "週四",
+   "name": "台積電",
+   "ticker": "2330",
+   "alias": [
+    "TSM"
+   ],
+   "sector": "半導體"
+  },
+  {
+   "date": "2026-10-20",
+   "weekday": "週二",
+   "name": "GE Aerospace",
+   "ticker": "GE",
+   "alias": [],
+   "sector": "硬體／零組件"
+  },
+  {
+   "date": "2026-10-20",
+   "weekday": "週二",
+   "name": "ABB",
+   "ticker": "ABB",
+   "alias": [
+    "ABBN.SW"
+   ],
+   "sector": "硬體／零組件"
+  },
+  {
+   "date": "2026-10-21",
+   "weekday": "週三",
+   "name": "特斯拉",
+   "ticker": "TSLA",
+   "alias": [],
+   "sector": "硬體／零組件"
+  },
+  {
+   "date": "2026-10-21",
+   "weekday": "週三",
+   "name": "IBM",
+   "ticker": "IBM",
+   "alias": [],
+   "sector": "軟體／網路／IT 服務"
+  },
+  {
+   "date": "2026-10-21",
+   "weekday": "週三",
+   "name": "Lam Research",
+   "ticker": "LRCX",
+   "alias": [],
+   "sector": "半導體"
+  },
+  {
+   "date": "2026-10-21",
+   "weekday": "週三",
+   "name": "德州儀器",
+   "ticker": "TXN",
+   "alias": [],
+   "sector": "半導體"
+  },
+  {
+   "date": "2026-10-21",
+   "weekday": "週三",
+   "name": "SAP",
+   "ticker": "SAP",
+   "alias": [],
+   "sector": "軟體／網路／IT 服務"
+  },
+  {
+   "date": "2026-10-22",
+   "weekday": "週四",
+   "name": "英特爾",
+   "ticker": "INTC",
+   "alias": [],
+   "sector": "半導體"
+  },
+  {
+   "date": "2026-10-26",
+   "weekday": "週一",
+   "name": "Cadence",
+   "ticker": "CDNS",
+   "alias": [],
+   "sector": "軟體／網路／IT 服務"
+  },
+  {
+   "date": "2026-10-26",
+   "weekday": "週一",
+   "name": "Celestica",
+   "ticker": "CLS",
+   "alias": [],
+   "sector": "硬體／零組件"
+  },
+  {
+   "date": "2026-10-27",
+   "weekday": "週二",
+   "name": "SK 海力士",
+   "ticker": "000660.KS",
+   "alias": [],
+   "sector": "半導體"
+  },
+  {
+   "date": "2026-10-27",
+   "weekday": "週二",
+   "name": "康寧 Corning",
+   "ticker": "GLW",
+   "alias": [],
+   "sector": "硬體／零組件"
+  },
+  {
+   "date": "2026-10-27",
+   "weekday": "週二",
+   "name": "恩智浦 NXP",
+   "ticker": "NXPI",
+   "alias": [],
+   "sector": "半導體"
+  },
+  {
+   "date": "2026-10-28",
+   "weekday": "週三",
+   "name": "微軟",
+   "ticker": "MSFT",
+   "alias": [],
+   "sector": "軟體／網路／IT 服務"
+  },
+  {
+   "date": "2026-10-28",
+   "weekday": "週三",
+   "name": "Alphabet",
+   "ticker": "GOOGL",
+   "alias": [
+    "GOOG"
+   ],
+   "sector": "軟體／網路／IT 服務"
+  },
+  {
+   "date": "2026-10-28",
+   "weekday": "週三",
+   "name": "Meta",
+   "ticker": "META",
+   "alias": [],
+   "sector": "軟體／網路／IT 服務"
+  },
+  {
+   "date": "2026-10-28",
+   "weekday": "週三",
+   "name": "三星電子",
+   "ticker": "005930.KS",
+   "alias": [],
+   "sector": "半導體"
+  },
+  {
+   "date": "2026-10-28",
+   "weekday": "週三",
+   "name": "KLA",
+   "ticker": "KLAC",
+   "alias": [],
+   "sector": "半導體"
+  },
+  {
+   "date": "2026-10-28",
+   "weekday": "週三",
+   "name": "安費諾 Amphenol",
+   "ticker": "APH",
+   "alias": [],
+   "sector": "硬體／零組件"
+  },
+  {
+   "date": "2026-10-29",
+   "weekday": "週四",
+   "name": "蘋果",
+   "ticker": "AAPL",
+   "alias": [],
+   "sector": "硬體／零組件"
+  },
+  {
+   "date": "2026-10-29",
+   "weekday": "週四",
+   "name": "亞馬遜",
+   "ticker": "AMZN",
+   "alias": [],
+   "sector": "軟體／網路／IT 服務"
+  },
+  {
+   "date": "2026-10-29",
+   "weekday": "週四",
+   "name": "SanDisk",
+   "ticker": "SNDK",
+   "alias": [],
+   "sector": "半導體"
+  },
+  {
+   "date": "2026-10-30",
+   "weekday": "週五",
+   "name": "東京威力科創 TEL",
+   "ticker": "8035.T",
+   "alias": [],
+   "sector": "半導體"
+  }
+ ]
+}

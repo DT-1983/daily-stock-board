@@ -90,7 +90,18 @@ def fetch(ticker):
 
 
 def get(ticker, force=False):
-    """帶快取。回同 fetch()。"""
+    """帶快取。回同 fetch()；若手動日曆（_manual_index）有這檔還沒過的日期，next 以手動為準，並多帶
+    next_src="manual"（其餘呼叫端照舊只讀 last／next，不受影響）。手動日期仍是資料商／媒體整理，顯示時照樣標預估。"""
+    r = _get_cached(ticker, force)
+    m = manual_next(ticker)
+    if m and m["date"] != r.get("next"):
+        r = dict(r, next=m["date"], next_src="manual", next_yf=r.get("next"))
+    elif m:
+        r = dict(r, next_src="manual+yf")
+    return r
+
+
+def _get_cached(ticker, force=False):
     key = str(ticker).upper()
     c = _load()
     hit = c.get(key)
@@ -113,6 +124,33 @@ def get(ticker, force=False):
     return r
 
 
+MANUAL = os.path.join(HERE, "state", "earnings_calendar_manual.json")
+
+
+def _manual_index():
+    """手動登錄的財報日曆（例：2026-10-05 抄錄 TechNews／Wall Street Horizon『科技大廠 Q3 財報日曆』）。
+    回 {代號或別名(大寫): {date, name, source}}；檔案沒有就回空。"""
+    try:
+        d = json.load(io.open(MANUAL, encoding="utf-8"))
+    except Exception:                                       # noqa: BLE001
+        return {}
+    src = (d.get("_meta") or {}).get("source", "手動登錄")
+    idx = {}
+    for it in d.get("items", []):
+        rec = {"date": it["date"], "name": it.get("name"), "source": src}
+        for k in [it["ticker"]] + list(it.get("alias") or []):
+            idx[str(k).upper()] = rec
+    return idx
+
+
+def manual_next(ticker):
+    """手動日曆裡這檔「還沒過」的下次發布日；沒有或已過回 None。"""
+    rec = _manual_index().get(str(ticker).upper())
+    if rec and rec["date"] >= dt.date.today().isoformat():
+        return rec
+    return None
+
+
 def days_until(iso):
     if not iso:
         return None
@@ -126,7 +164,14 @@ def main():
     ap = argparse.ArgumentParser(description="財報發布日／下次發布日")
     ap.add_argument("tickers", nargs="*", help="不給就掃 docs/earnings_*.html 那批")
     ap.add_argument("--force", action="store_true")
+    ap.add_argument("--manual", action="store_true", help="列出手動登錄的日曆（TechNews／Wall Street Horizon 抄錄）")
     a = ap.parse_args()
+    if a.manual:
+        d = json.load(io.open(MANUAL, encoding="utf-8"))
+        print((d.get("_meta") or {}).get("source", ""))
+        for it in d.get("items", []):
+            print(f"{it['date']} {it['weekday']}  {it['name']:<16} {it['ticker']:<10} {it['sector']}")
+        return 0
     tks = a.tickers
     if not tks:
         import glob
