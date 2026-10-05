@@ -61,6 +61,7 @@ PDF_DIR = r"C:\Users\Mophy\Documents\Investment\投顧報告"
 # 「目標價只要更新目標價就好，有報告再產出報告」，收窄範圍。
 STORE = "state/advisor_reports.json"
 TODAY_OUT = "state/advisor_reports_today.json"
+FIRED_STATE = "state/advisor_fired_state.json"      # 失效線「哪天開始觸發」的記憶（2026-10-05：不再每天重複洗版）
 
 # 報告發布後跌破這個幅度，就當作「市場不同意這份報告」值得回頭看一眼。
 # ⚠️ 這個 15% 是**我訂的**，不是外部來源。理由：券商個股報告的目標價普遍給
@@ -603,8 +604,49 @@ def check(quiet=False):
                          "valuation": val, "fired": fired})
             if fired:
                 hits.append((r, fired, px))
-    _save(TODAY_OUT, {"date": dt.date.today().isoformat(), "rows": rows})
+    released = _update_fired_state(rows)
+    _save(TODAY_OUT, {"date": dt.date.today().isoformat(), "rows": rows, "released": released})
     return hits
+
+
+def _update_fired_state(rows):
+    """記住每份報告的失效線「從哪天開始觸發」，並替每列加上 fire_status：
+      new     ＝今天第一次觸發（或觸發內容變了，例如多跌破一條線）→ 密報完整通知一次
+      ongoing ＝之前就通知過、仍在失效中 → 密報只留一行小字
+    條件不再成立 → 記一筆「解除」（當天通知一次）。報告被同家新版取代（不再檢查）→ 靜默清掉，不報解除。
+    第一次建立狀態檔時，目前已在觸發的一律當 ongoing（不知道真正的起算日，避免一次洗版），標 seeded。
+    同一天重跑 check 是冪等的（first 不會被改、解除紀錄不會重複）。"""
+    today = dt.date.today().isoformat()
+    st = _load(FIRED_STATE, None)
+    seeded = st is None
+    st = st or {"active": {}, "released": []}
+    act = st.setdefault("active", {})
+    now_fired = {r["file"]: r for r in rows if r.get("fired")}
+    for k, r in now_fired.items():
+        descs = sorted(c["desc"] for c in r["fired"])
+        cur = act.get(k)
+        if cur is None:
+            act[k] = {"first": today, "descs": descs, "seeded": seeded}
+            r["fire_status"] = "ongoing" if seeded else "new"
+        elif cur.get("descs") != descs:
+            act[k] = {"first": today, "descs": descs, "seeded": False}
+            r["fire_status"] = "new"
+        else:
+            r["fire_status"] = "new" if (cur["first"] == today and not cur.get("seeded")) else "ongoing"
+        r["fire_first"], r["fire_seeded"] = act[k]["first"], act[k].get("seeded", False)
+    by_file = {r["file"]: r for r in rows}
+    for k in list(act):
+        if k in now_fired:
+            continue
+        r = by_file.get(k)
+        if r is not None and not any(x.get("file") == k and x.get("date") == today for x in st["released"]):
+            st["released"].append({"file": k, "date": today, "name": r.get("name"), "ticker": r.get("ticker"),
+                                   "broker": r.get("broker"), "rdate": r.get("date"), "price": r.get("price")})
+        del act[k]
+    keep_from = (dt.date.today() - dt.timedelta(days=7)).isoformat()
+    st["released"] = [x for x in st["released"] if x.get("date", "") >= keep_from]
+    _save(FIRED_STATE, st)
+    return [x for x in st["released"] if x.get("date") == today]
 
 
 def summary_lines():
@@ -614,13 +656,33 @@ def summary_lines():
     if not rows:
         return []
     fired = [r for r in rows if r.get("fired")]
-    if not fired:
+    released = d.get("released") or []
+    if not fired and not released:
         return [f"・📑 投顧報告失效線：{len(rows)} 份全部健康"]
+    # 2026-10-05 Leo：新代、康霈的失效線每天重複出現，看起來像每天都有新狀況（且擠掉新消息）。
+    # 改成：今天新觸發的完整通知一次；已通知過、仍在失效的壓成一行小字；條件不再成立的報一次「解除」。
     out = []
-    for r in fired[:4]:
+    for x in released:
+        out.append(f"・✅ {x.get('name')}({x.get('ticker')}) {x.get('broker')} {x.get('rdate')}｜失效條件已不再成立"
+                   f"（現價 {x.get('price')}）")
+    new = [r for r in fired if r.get("fire_status") == "new"]
+    old = [r for r in fired if r.get("fire_status") != "new"]
+    for r in new[:4]:
         why = r["fired"][0]["desc"]
-        out.append(f"・📑 {r['name']}({r['ticker']}) {r['broker']} {r['date']}｜{why}"
+        out.append(f"・📑 {r['name']}({r['ticker']}) {r['broker']} {r['date']}｜新觸發：{why}"
                    f"（現價 {r['price']}）")
+    if len(new) > 4:
+        out.append(f"-# 　…另有 {len(new) - 4} 份新觸發")
+    if old:
+        today = dt.date.today()
+        parts = []
+        for r in old[:8]:
+            days = ""
+            if not r.get("fire_seeded") and r.get("fire_first"):
+                days = f"（第 {(today - dt.date.fromisoformat(r['fire_first'])).days + 1} 天）"
+            parts.append(f"{r['name']}({r['ticker']}) {r['broker']} {str(r['date'])[5:]}{days}")
+        out.append("-# 　持續失效中（已通知過，每天只留這一行）：" + "；".join(parts)
+                   + (f"…另 {len(old) - 8} 份" if len(old) > 8 else ""))
     return out
 
 

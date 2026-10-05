@@ -255,3 +255,4 @@ state/bls_latest.json
 state/bls_cpi.json
 state/yield_link.json
 state/stock_digest_pushed.json
+state/advisor_fired_state.json
