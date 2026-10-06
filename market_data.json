@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-06 08:47",
+ "updated": "2026-10-06 14:32",
  "indices": [
   {
    "sym": "^GSPC",
@@ -37,17 +37,17 @@
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "10/02",
-   "close": 48475.74,
-   "chg_pct": 0.25
+   "date": "10/06",
+   "close": 49822.55,
+   "chg_pct": 0.22
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "10/06",
-   "close": 31.76,
-   "chg_pct": -0.22
+   "date": "10/05",
+   "close": 31.83,
+   "chg_pct": -0.16
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "市值有望本月破6兆美元！輝達連三天收盤創歷史新高　分析師：仍有續漲理由",
+   "title": "全球純汽油車新車銷量比重 首次跌破50%",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6622230",
-   "ts": "10/06 08:40"
+   "url": "https://news.cnyes.com/news/id/6622671",
+   "ts": "10/06 14:32"
   },
   {
-   "title": "美股內部裂痕擴大 看似危險其實有機會！標普500 年末可能強勢上漲",
+   "title": "明年將大幅增加供貨！超微蘇姿丰：未來幾年晶片需求將很強勁　記憶體供應仍吃緊",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6622661",
+   "ts": "10/06 14:20"
+  },
+  {
+   "title": "明年將大幅增加供貨！超微蘇姿丰：未來幾年晶片需求將很強勁　記憶體供應仍吃緊",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6622183",
-   "ts": "10/06 08:30"
+   "url": "https://news.cnyes.com/news/id/6622661",
+   "ts": "10/06 14:20"
   },
   {
-   "title": "營收速報  - 藥華藥(6446)9月營收26.35億元年增率高達99.98％",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6622265",
-   "ts": "10/06 08:20"
-  },
-  {
-   "title": "營收速報  - 大量(3167)9月營收13.04億元年增率高達172.33％",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6622264",
-   "ts": "10/06 08:20"
-  },
-  {
-   "title": "「麥加防務聯盟」決定啟動集體防御機制 在沙國部署兵力",
+   "title": "緬北電詐主犯隨機取人命「祭天」 魏家暴行內幕曝光",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6622252",
-   "ts": "10/06 08:18"
+   "url": "https://news.cnyes.com/news/id/6622548",
+   "ts": "10/06 14:18"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：穩懋(3105-TW)EPS預估下修至7.54元，預估目標價為395元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6622251",
-   "ts": "10/06 08:10"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：嘉澤(3533-TW)EPS預估下修至81.22元，預估目標價為2450元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6622250",
-   "ts": "10/06 08:10"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：智邦(2345-TW)EPS預估下修至85.56元，預估目標價為3500元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6622249",
-   "ts": "10/06 08:10"
-  },
-  {
-   "title": "油價上漲、司機短缺 美國學生沒校車坐了",
+   "title": "一束光點亮大腦黑箱：光遺傳學為何榮獲2026年諾貝爾生理學或醫學獎？",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6622237",
-   "ts": "10/06 08:03"
+   "url": "https://news.cnyes.com/news/id/6622637",
+   "ts": "10/06 14:10"
   },
   {
-   "title": "美股重點新聞摘要2026年10月06日",
+   "title": "台塑汽車發表新世代DAF重車 台灣成歐洲境外首座新世代組裝基地",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6622653",
+   "ts": "10/06 13:52"
+  },
+  {
+   "title": "〈台北紡織展〉新纖NEOLAST新產線正式量產 首階段年產能600噸",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6622647",
+   "ts": "10/06 13:51"
+  },
+  {
+   "title": "營收速報  - 中菲行(5609)9月營收36.55億元年增率高達46.96％",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6622659",
+   "ts": "10/06 13:50"
+  },
+  {
+   "title": "〈台股盤後〉權值股尾盤拉抬 震盪甩尾收漲110點 靠攏5萬點",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6622654",
+   "ts": "10/06 13:49"
+  },
+  {
+   "title": "5月服務中斷元凶抓到了？維基百科：疑似OpenAI的AI代理失控 未授權卻狂抓資料",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6621946",
-   "ts": "10/06 08:00"
+   "url": "https://news.cnyes.com/news/id/6622635",
+   "ts": "10/06 13:30"
   }
  ],
  "inst": {
