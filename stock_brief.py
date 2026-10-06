@@ -815,10 +815,13 @@ def render(d, extra_notes=None):
         tier = {"unprecedented": "要求超出這檔自身歷史紀錄一大截",
                 "rare": "要求剛好貼在自身歷史紀錄上",
                 "normal": "要求落在這檔過去做得到的範圍內",
-                "low_coverage": "分析師覆蓋太少，不列入判斷"}.get(q.get("tier"), q.get("tier"))
+                "low_coverage": "分析師覆蓋太少，不列入判斷",
+                "stale": "財報已公布、報表還沒跟上"}.get(q.get("tier"), q.get("tier"))
         cross.append(
             f'<div class="txt"><b>預估前提檢查（{q.get("year") or "本年"}）</b>：{esc(tier)}。'
-            + (f'已公布 {q.get("q_done")} 季、剩 {q.get("q_left")} 季要季均 '
+            + (f'資料未跟上，暫不判斷：{q.get("reported")} 已公布新一季，季報表最新只到 {q.get("last_q_end")}。'
+               if q.get("tier") == "stale" else
+               f'已公布 {q.get("q_done")} 季、剩 {q.get("q_left")} 季要季均 '
                f'{q.get("need_avg", 0) / 1e9:,.1f}B，＝季增 '
                f'<b>{q.get("need_qoq", 0) * 100:+.1f}%</b>，'
                f'而這檔歷史季增中位 {q.get("qoq_med", 0) * 100:+.1f}%、'

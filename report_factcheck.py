@@ -202,12 +202,17 @@ def check(report, price=None, base_rate=None, margin=None):
         tier = {"unprecedented": ("要求超出這檔自身歷史紀錄一大截", WARN),
                 "rare": ("要求剛好貼在自身歷史紀錄上", WARN),
                 "normal": ("要求落在這檔過去做得到的範圍內", OK),
-                "low_coverage": ("分析師覆蓋太少，不列入判斷", WAIT)}.get(
+                "low_coverage": ("分析師覆蓋太少，不列入判斷", WAIT),
+                "stale": ("財報已公布、報表還沒跟上，等資料更新後再判斷", WAIT)}.get(
             q.get("tier"), ("", WAIT))
         tr = base_rate.get("track_record") or {}
         # 2026-10-04：美股的 requirement 是季營收格式（kind=us_quarterly，沒有 year／months_left／need_yoy），
         # 原本只認台股月營收欄位，美股頁就印出「None 全年營收」「剩 None 個月」。兩種格式分開寫。
-        if q.get("kind") == "us_quarterly":
+        if q.get("tier") == "stale":
+            _kind, _claim = "本年營收", f"市場共識 {(_num(q.get('fy')) or 0) / 1e9:,.1f}B 美元"
+            _ours = (f"資料未跟上，暫不判斷：{q.get('reported')} 已公布新一季，季報表最新只到 {q.get('last_q_end')}，"
+                     "共識可能已換年度")
+        elif q.get("kind") == "us_quarterly":
             _kind = "本年營收"
             _claim = f"市場共識 {(_num(q.get('fy')) or 0) / 1e9:,.1f}B 美元（{q.get('analysts')} 位分析師）"
             _ours = (f"已公布 {q.get('q_done')} 季、剩 {q.get('q_left')} 季要季均 "

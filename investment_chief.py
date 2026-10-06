@@ -597,7 +597,8 @@ def gather_material(ticker, notes):
             _tag = {"unprecedented": "要求超出這檔自身歷史紀錄一大截",
                     "rare": "要求剛好貼在自身歷史紀錄上",
                     "normal": "要求落在這檔過去做得到的範圍內",
-                    "low_coverage": "分析師覆蓋太少，不列入判斷"}.get(_t, "")
+                    "low_coverage": "分析師覆蓋太少，不列入判斷",
+                    "stale": "財報已公布、報表還沒跟上，暫不判斷"}.get(_t, "")
             value_material += (f"\n預估前提檢查（{_br.get('date','')}，"
                                f"分析師共識隱含的要求 vs 這檔自己的歷史）：{_tag}\n"
                                f"  {_br_line(_c)}")

@@ -257,3 +257,6 @@ state/yield_link.json
 state/stock_digest_pushed.json
 state/advisor_fired_state.json
 liao_market_pulse_1005_note.py
+state/sec_press_core/
+state/forward_eps_cache.json
+state/pcb_pkg_screen.json

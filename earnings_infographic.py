@@ -276,6 +276,25 @@ def fetch(ticker: str) -> dict:
                 if us_core[fld]["cur"] is not None:
                     d[fld] = us_core[fld]
             d["source_note"] = f"SEC EDGAR 10-Q（{us_core['cur_date']}）"
+        # 2026-10-06（Leo：MU 9/30 公布、10-K 還沒送，卡片一直是上一季）：第三層備援＝8-K 財報新聞稿表格。
+        # 一樣「只在真的比較新時才覆蓋」；新聞稿是未經審計數字，卡片上標明來源。
+        # ⚠️ 跟 EDGAR 那層不同：新聞稿缺的科目**設為空**，不保留 yfinance 的舊季數字——否則同一張卡會混兩個季度。
+        try:
+            from sec_press_core import quarterly_from_release
+            pr_core = quarterly_from_release(ticker.upper())
+        except Exception as e:                               # noqa: BLE001
+            print(f"（8-K 新聞稿取用失敗：{str(e)[:60]}）")
+            pr_core = None
+        if pr_core and pr_core["cur_date"] > d["period_end"]:
+            cd3 = date.fromisoformat(pr_core["cur_date"])
+            d["quarter"] = f"Q{(cd3.month - 1)//3 + 1} {cd3.year}"
+            d["period_end"] = pr_core["cur_date"]
+            d["yoy_period"] = pr_core["yoy_date"] or d["yoy_period"]
+            d["partial_yoy"] = pr_core["partial_yoy"]
+            for fld in ("revenue", "gross", "op_income", "net_income",
+                        "eps", "ocf", "capex", "fcf"):
+                d[fld] = pr_core[fld]
+            d["source_note"] = f"SEC 8-K 財報新聞稿（未經審計，{pr_core['filed']} 公布；正式 10-K／10-Q 送出後自動改用）"
 
 
     # 毛利率 / 營益率（自己算，不靠 info 的口徑）
@@ -735,7 +754,7 @@ def render(d, sc, n, extra_html=None):
 
 <div class="hd">
   <div><h1>{d['name']}</h1>
-    <div class="sub">{d['quarter']} 財報懶人包　·　會計期間截至 {d['period_end']}　·　YoY 基準 {d['yoy_period']}</div></div>
+    <div class="sub">{d['quarter']} 財報懶人包　·　會計期間截至 {d['period_end']}　·　YoY 基準 {d['yoy_period']}{('<br>⚠️ 數字來源：' + d['source_note']) if '新聞稿' in str(d.get('source_note', '')) else ''}</div></div>
   <div><div class="tk">{d['ticker']}</div>
     <div class="tk-sub">股價 {d['price']} {cur}　·　產生於 {datetime.now():%Y-%m-%d %H:%M}</div></div>
 </div>

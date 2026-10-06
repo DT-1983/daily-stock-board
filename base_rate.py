@@ -49,7 +49,7 @@ TW_RE = re.compile(r"^(\d{4,6}[A-Z]?)\.(TWO?)$", re.I)
 
 MIN_ANALYSTS = 3        # 少於此不算「共識」，不分級（5287.TWO 只有1位）
 TIER = {"unprecedented": "🚫", "rare": "⚠️", "normal": "✅",
-        "low_coverage": "⚪", "unknown": "⚪"}
+        "low_coverage": "⚪", "unknown": "⚪", "stale": "⏸️"}
 # 分級的「顯著幅度」係數——見 _tier() 說明。這是**版面凸顯用的分界，不是投資判定門檻**
 # （要罕見到什麼程度該減碼，我們沒有回測依據）。Leo 想調鬆緊改這個數字即可。
 EXCESS_K = 0.5
@@ -243,6 +243,19 @@ def implied_requirement_us(tk):
         return None
     if len(qs) < 3:
         return None
+    # 2026-10-06 修：財報已公布、但季報表還沒收進那一季（yfinance／XBRL 要等 10-K／10-Q）。
+    # 這時分析師「本年度共識」已經換成下一個會計年度，季報表卻還停在舊年度——兩邊年度對不上，
+    # 實測 MU 算出「剩 1 季要季增 +372%」的假 🚫。判斷：最近一次已公布財報日比季報表最新一季期末晚 40 天以上
+    # （正常是 3～6 週；晚超過＝有更新的一季已公布但表裡沒有）→ 標 stale，暫不判斷。
+    try:
+        import earnings_calendar as _ec
+        _last = (_ec.get(tk) or {}).get("last")
+        _q_end = max(c for c, _ in qs)
+        if _last and (dt.date.fromisoformat(_last) - _q_end.date()).days > 40:
+            return {"kind": "us_quarterly", "tier": "stale", "fy": fy, "analysts": n_an,
+                    "last_q_end": _q_end.date().isoformat(), "reported": _last}
+    except Exception:                                   # noqa: BLE001
+        pass
     ytd_q = [(c, v) for c, v in qs if c > fy_end]
     done = len(ytd_q)
     left = 4 - done
@@ -317,6 +330,9 @@ def _fmt_tw(r):
 
 def _fmt_us(r):
     b = 1e9
+    if r.get("tier") == "stale":
+        return (f"資料未跟上，暫不判斷：{r['reported']} 已公布新一季財報，但季報表最新只到 {r['last_q_end']}，"
+                f"分析師共識（{r['fy']/b:,.1f}B）可能已換成下一個會計年度，兩邊年度對不上")
     s = (f"本年營收共識 {r['fy']/b:,.1f}B（{r['analysts']}位）"
          f"→ 已公布 {r['q_done']} 季 {r['ytd']/b:,.1f}B，"
          f"剩 {r['q_left']} 季要季均 {r['need_avg']/b:,.1f}B "
