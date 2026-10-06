@@ -631,7 +631,7 @@ async def _family_logout(request):
 async def _app_icon(request):
     """戰情室圖示（公開、不含任何資料）：網頁 favicon／工作列圖示／手機主畫面。程式現畫，見 app_icon.py。"""
     import app_icon
-    return web.Response(body=await asyncio.to_thread(app_icon.png, 256), content_type="image/png",
+    return web.Response(body=await asyncio.to_thread(app_icon.png, 512), content_type="image/png",
                         headers={"Cache-Control": "public, max-age=86400"})
 
 

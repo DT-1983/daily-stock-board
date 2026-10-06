@@ -50,7 +50,11 @@ def png(size=512):
 
 
 def write_ico(path):
-    _draw().save(path, format="ICO", sizes=[(16, 16), (24, 24), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)])
+    """每個尺寸都從 1024 母圖用 LANCZOS 各自縮出來再封裝（PIL 預設只吃單張、縮小品質差，小圖會糊）。"""
+    big = _draw()
+    sizes = [16, 20, 24, 32, 40, 48, 64, 96, 128, 256]
+    imgs = [big.resize((n, n), Image.LANCZOS) for n in sizes]
+    imgs[-1].save(path, format="ICO", sizes=[(n, n) for n in sizes], append_images=imgs[:-1])
 
 
 if __name__ == "__main__":
