@@ -583,6 +583,65 @@ async def _room_ask(request):
     return web.json_response({"answers": answers, "info": info})
 
 
+
+# ── 戰情室總入口 /hub ＋「立即更新」（2026-10-06，見 hub_page.py 檔頭）──────────────
+# 全部沿用 _room_gate（同一道 token 門檻，不另發明第二套）；只有 manifest／圖示是公開的（不含任何資料）。
+async def _hub_page(request):
+    ok, set_cookie = _room_gate(request)
+    if not ok:
+        return _room_404()
+    import hub_page
+    html = await asyncio.to_thread(hub_page.page_html, bool(request.headers.get("CF-Connecting-IP")))
+    resp = web.Response(text=html, content_type="text/html", charset="utf-8",
+                        headers={"Cache-Control": "no-cache"})
+    if set_cookie:
+        resp.set_cookie(lookup_page.COOKIE, lookup_page._token(),
+                        max_age=lookup_page.COOKIE_DAYS * 86400,
+                        httponly=True, samesite="Lax", secure=True)
+    return resp
+
+
+async def _hub_status(request):
+    ok, _ = _room_gate(request)
+    if not ok:
+        return _room_404()
+    import hub_page
+    return web.json_response(hub_page.status(), headers={"Cache-Control": "no-store"})
+
+
+async def _hub_refresh(request):
+    ok, _ = _room_gate(request)
+    if not ok:
+        return _room_404()
+    import hub_page
+    good, msg = hub_page.start(request.query.get("job", ""))
+    print(f"[hub] 立即更新 {request.query.get('job')} → {msg}", flush=True)
+    return web.json_response({"ok": good, "msg": msg})
+
+
+async def _live_page(request):
+    ok, _ = _room_gate(request)
+    if not ok:
+        return _room_404()
+    import hub_page
+    f = hub_page.live_file(request.match_info.get("name", ""))
+    if not f:
+        return web.Response(text="這一頁還沒產生過，請回 /hub 按「立即更新」。", status=404,
+                            content_type="text/plain", charset="utf-8")
+    return web.FileResponse(f, headers={"Cache-Control": "no-store"})
+
+
+async def _hub_manifest(request):
+    import hub_page
+    return web.json_response(hub_page.MANIFEST, content_type="application/manifest+json")
+
+
+async def _hub_icon(request):
+    import hub_page
+    return web.Response(body=await asyncio.to_thread(hub_page.icon_png), content_type="image/png",
+                        headers={"Cache-Control": "public, max-age=86400"})
+
+
 async def _run():
     app = web.Application()
     app.router.add_get("/", _health)
@@ -595,6 +654,12 @@ async def _run():
     app.router.add_get("/room/ask_stream", _room_ask_stream)
     app.router.add_post("/room/ask", _room_ask)
     app.router.add_get("/trades", _trades_page)
+    app.router.add_get("/hub", _hub_page)
+    app.router.add_get("/hub/status", _hub_status)
+    app.router.add_post("/hub/refresh", _hub_refresh)
+    app.router.add_get("/live/{name}", _live_page)
+    app.router.add_get("/hub.webmanifest", _hub_manifest)
+    app.router.add_get("/hub-icon.png", _hub_icon)
     runner = web.AppRunner(app)
     await runner.setup()
     site = web.TCPSite(runner, "127.0.0.1", HEALTH_PORT)
