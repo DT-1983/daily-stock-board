@@ -5,6 +5,8 @@
   write_ico(path) → 多尺寸 .ico（桌面捷徑與工作列用）
 """
 import io
+import os
+import tempfile
 
 from PIL import Image, ImageDraw
 
@@ -59,5 +61,5 @@ def write_ico(path):
 
 if __name__ == "__main__":
     write_ico("戰情室.ico")
-    open("state/app_icon_preview.png", "wb").write(png(256))
+    open(os.path.join(tempfile.gettempdir(), "app_icon_preview.png"), "wb").write(png(256))   # 預覽放系統暫存，不放 state/
     print("ok")

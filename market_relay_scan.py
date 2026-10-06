@@ -36,10 +36,25 @@ def universe(market):
     w = [col("exchange").isin(ex), col("type") == "stock", col("close") > 0]
     if market == "us":
         w.append(col("market_cap_basic") >= US_MIN_CAP)
-    _, df = (Query().set_markets(tv)
-             .select("name", "description", "sector", "industry", "market_cap_basic", "close", "exchange",
-                     "logoid", "volume")
-             .where(*w).order_by("market_cap_basic", ascending=False).limit(8000).get_scanner_data())
+    # 2026-10-07：TradingView scanner 偶爾讀取逾時（預設 20 秒）→ 整支失敗、看板用舊資料。
+    # 改成逾時放寬到 60 秒、失敗重試 3 次（間隔 5／15 秒）；三次都失敗才丟出例外（維持原本失敗行為，不靜默）。
+    import time as _t
+    last = None
+    for _i in range(3):
+        try:
+            _, df = (Query().set_markets(tv)
+                     .select("name", "description", "sector", "industry", "market_cap_basic", "close", "exchange",
+                             "logoid", "volume")
+                     .where(*w).order_by("market_cap_basic", ascending=False).limit(8000)
+                     .get_scanner_data(timeout=60))
+            break
+        except Exception as e:                              # noqa: BLE001
+            last = e
+            print(f"  [relay] TradingView 第 {_i + 1} 次失敗：{str(e)[:80]}", flush=True)
+            if _i < 2:
+                _t.sleep(5 if _i == 0 else 15)
+    else:
+        raise last
     df = ir.dedupe_company(df)   # 同公司多檔只留一檔
     names = ir._tw_chinese_names() if market == "tw" else {}
     out = []
