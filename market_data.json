@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-06 14:32",
+ "updated": "2026-10-06 15:40",
  "indices": [
   {
    "sym": "^GSPC",
@@ -45,9 +45,9 @@
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "10/05",
-   "close": 31.83,
-   "chg_pct": -0.16
+   "date": "10/06",
+   "close": 31.77,
+   "chg_pct": -0.21
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "全球純汽油車新車銷量比重 首次跌破50%",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6622671",
-   "ts": "10/06 14:32"
-  },
-  {
-   "title": "明年將大幅增加供貨！超微蘇姿丰：未來幾年晶片需求將很強勁　記憶體供應仍吃緊",
+   "title": "智邦9月營收403億元年增逾6成 創歷史次高",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6622661",
-   "ts": "10/06 14:20"
+   "url": "https://news.cnyes.com/news/id/6615412",
+   "ts": "10/06 15:30"
   },
   {
-   "title": "明年將大幅增加供貨！超微蘇姿丰：未來幾年晶片需求將很強勁　記憶體供應仍吃緊",
+   "title": "三星電機連續公告供應合約 股價大漲近6% 市場轉向關注訂單兌現",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6622661",
-   "ts": "10/06 14:20"
+   "url": "https://news.cnyes.com/news/id/6622694",
+   "ts": "10/06 15:30"
   },
   {
-   "title": "緬北電詐主犯隨機取人命「祭天」 魏家暴行內幕曝光",
+   "title": "勤凱Q3營收創單季新高 產能滿載、獲利再拚高",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6622689",
+   "ts": "10/06 15:29"
+  },
+  {
+   "title": "從文科生到AI巨擘 Anthropic總裁阿莫迪成為美國富豪榜最年輕白手起家女性",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6622548",
-   "ts": "10/06 14:18"
+   "url": "https://news.cnyes.com/news/id/6622634",
+   "ts": "10/06 15:20"
   },
   {
-   "title": "一束光點亮大腦黑箱：光遺傳學為何榮獲2026年諾貝爾生理學或醫學獎？",
+   "title": "亞洲AI建設上看8.2兆美元 銀行搶做高風險GPU融資",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6622637",
-   "ts": "10/06 14:10"
+   "url": "https://news.cnyes.com/news/id/6622298",
+   "ts": "10/06 15:10"
   },
   {
-   "title": "台塑汽車發表新世代DAF重車 台灣成歐洲境外首座新世代組裝基地",
+   "title": "AI晶片越貴，測試時間越長！雍智科技、矽格、京元電子誰最受惠？",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6622653",
-   "ts": "10/06 13:52"
+   "url": "https://news.cnyes.com/news/id/6622687",
+   "ts": "10/06 15:00"
   },
   {
-   "title": "〈台北紡織展〉新纖NEOLAST新產線正式量產 首階段年產能600噸",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6622647",
-   "ts": "10/06 13:51"
-  },
-  {
-   "title": "營收速報  - 中菲行(5609)9月營收36.55億元年增率高達46.96％",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6622659",
-   "ts": "10/06 13:50"
-  },
-  {
-   "title": "〈台股盤後〉權值股尾盤拉抬 震盪甩尾收漲110點 靠攏5萬點",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6622654",
-   "ts": "10/06 13:49"
-  },
-  {
-   "title": "5月服務中斷元凶抓到了？維基百科：疑似OpenAI的AI代理失控 未授權卻狂抓資料",
+   "title": "沙烏地輸油管再遇襲停運 胡塞放話：領空將成戰場",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6622635",
-   "ts": "10/06 13:30"
+   "url": "https://news.cnyes.com/news/id/6622681",
+   "ts": "10/06 14:51"
+  },
+  {
+   "title": "南俊國際9月營收2.7億元年增3成 AI伺服器新品逐月出貨Q4重返成長",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6622670",
+   "ts": "10/06 14:51"
+  },
+  {
+   "title": "助攻兆元車電市場！車輛中心結盟美OmniAir與德TÜV SÜD 首座車用資安實驗室在台落地",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6622666",
+   "ts": "10/06 14:49"
+  },
+  {
+   "title": "受惠比特幣價格反彈 Strategy第三季大賺209億美元 終結連四季虧損",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6622669",
+   "ts": "10/06 14:48"
   }
  ],
  "inst": {
-  "date": "10/05",
-  "total_yi": 775.5,
-  "foreign_yi": 719.0,
-  "trust_yi": -52.9
+  "date": "10/06",
+  "total_yi": -207.9,
+  "foreign_yi": -66.6,
+  "trust_yi": -158.5
  }
 }
