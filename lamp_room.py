@@ -716,6 +716,13 @@ def right_html():
 
 
 ROOM_CSS = """
+/* 2026-10-07 Leo：「滾動的地方有點醜」——瀏覽器預設的亮灰捲軸在深色頁面很突兀，改成細的深色捲軸（跟頁面同色系） */
+*{scrollbar-width:thin;scrollbar-color:#2A3B58 transparent}
+*::-webkit-scrollbar{width:9px;height:9px}
+*::-webkit-scrollbar-track{background:transparent}
+*::-webkit-scrollbar-thumb{background:#223049;border-radius:6px;border:2px solid transparent;background-clip:padding-box}
+*::-webkit-scrollbar-thumb:hover{background:#35507a;border:2px solid transparent;background-clip:padding-box}
+*::-webkit-scrollbar-corner{background:transparent}
 :root{--gap:10px}
 body{margin:0}
 /* 標題排（2026-09-10 Leo：「標題跟其它分頁一樣」，見 title_html()）。
