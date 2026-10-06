@@ -1,550 +1,670 @@
 {
-"date": "2026-10-02",
-"generated_at": "2026-10-05T08:54:32",
+"date": "2026-10-05",
+"generated_at": "2026-10-06T08:48:00",
 "events": [
-{
-"code": "3714",
-"name": "富采",
-"event": "異常大買",
-"kind": "anomaly",
-"shares": 11637643,
-"vs_avg": 5.9
-},
-{
-"code": "9933",
-"name": "中鼎",
-"event": "異常大買",
-"kind": "anomaly",
-"shares": 5605094,
-"vs_avg": 8.5
-},
-{
-"code": "6120",
-"name": "達運",
-"event": "異常大買",
-"kind": "anomaly",
-"shares": 4389150,
-"vs_avg": 6.6
-},
 {
 "code": "2340",
 "name": "台亞",
+"event": "連買 6 天",
+"kind": "streak",
+"days": 6,
+"shares": 3749281
+},
+{
+"code": "4989",
+"name": "榮科",
+"event": "異常大買",
+"kind": "anomaly",
+"shares": 2881834,
+"vs_avg": 9.2
+},
+{
+"code": "2408",
+"name": "南亞科",
 "event": "連買 5 天",
 "kind": "streak",
 "days": 5,
-"shares": 4383000
-},
-{
-"code": "3673",
-"name": "TPK-KY",
-"event": "異常大買",
-"kind": "anomaly",
-"shares": 3852648,
-"vs_avg": 5.8
-},
-{
-"code": "1313",
-"name": "聯成",
-"event": "異常大買",
-"kind": "anomaly",
-"shares": 3678696,
-"vs_avg": 6.4
-},
-{
-"code": "8021",
-"name": "尖點",
-"event": "連買 8 天",
-"kind": "streak",
-"days": 8,
-"shares": 3051035
-},
-{
-"code": "6834",
-"name": "天二科技",
-"event": "異常大買",
-"kind": "anomaly",
-"shares": 2327152,
-"vs_avg": 5.4
-},
-{
-"code": "2347",
-"name": "聯強",
-"event": "連買 7 天",
-"kind": "streak",
-"days": 7,
-"shares": 2240685
-},
-{
-"code": "2444",
-"name": "兆勁",
-"event": "異常大買",
-"kind": "anomaly",
-"shares": 1688260,
-"vs_avg": 10.4
-},
-{
-"code": "8046",
-"name": "南電",
-"event": "連買 7 天",
-"kind": "streak",
-"days": 7,
-"shares": 1639559
-},
-{
-"code": "5876",
-"name": "上海商銀",
-"event": "連買 22 天",
-"kind": "streak",
-"days": 22,
-"shares": 1320329
+"shares": 1982035
 },
 {
 "code": "3189",
 "name": "景碩",
-"event": "連買 7 天",
+"event": "連買 8 天",
 "kind": "streak",
-"days": 7,
-"shares": 1249185
+"days": 8,
+"shares": 1885609
 },
 {
-"code": "5608",
-"name": "四維航",
-"event": "連買 12 天",
+"code": "1709",
+"name": "和益",
+"event": "連買 5 天",
 "kind": "streak",
-"days": 12,
-"shares": 1109302
+"days": 5,
+"shares": 1538788
+},
+{
+"code": "3019",
+"name": "亞光",
+"event": "連買 5 天",
+"kind": "streak",
+"days": 5,
+"shares": 1427640
 },
 {
 "code": "2393",
 "name": "億光",
-"event": "連買 5 天",
+"event": "連買 6 天",
 "kind": "streak",
-"days": 5,
-"shares": 978197
+"days": 6,
+"shares": 1387100
 },
 {
-"code": "3030",
-"name": "德律",
-"event": "連買 8 天",
+"code": "8070",
+"name": "長華*",
+"event": "連買 6 天",
 "kind": "streak",
-"days": 8,
-"shares": 820623
-},
-{
-"code": "6438",
-"name": "迅得",
-"event": "異常大買",
-"kind": "anomaly",
-"shares": 697030,
-"vs_avg": 5.5
-},
-{
-"code": "6438",
-"name": "迅得",
-"event": "連買 5 天",
-"kind": "streak",
-"days": 5,
-"shares": 697030
-},
-{
-"code": "6278",
-"name": "台表科",
-"event": "連買 5 天",
-"kind": "streak",
-"days": 5,
-"shares": 675543
-},
-{
-"code": "6108",
-"name": "競國",
-"event": "連買 7 天",
-"kind": "streak",
-"days": 7,
-"shares": 583481
-},
-{
-"code": "6962",
-"name": "奕力-KY",
-"event": "連買 5 天",
-"kind": "streak",
-"days": 5,
-"shares": 511513
+"days": 6,
+"shares": 1340221
 },
 {
 "code": "3311",
 "name": "閎暉",
+"event": "連買 8 天",
+"kind": "streak",
+"days": 8,
+"shares": 1327076
+},
+{
+"code": "8046",
+"name": "南電",
+"event": "連買 8 天",
+"kind": "streak",
+"days": 8,
+"shares": 1151533
+},
+{
+"code": "1773",
+"name": "勝一",
+"event": "異常大買",
+"kind": "anomaly",
+"shares": 1094676,
+"vs_avg": 7.1
+},
+{
+"code": "8021",
+"name": "尖點",
+"event": "連買 9 天",
+"kind": "streak",
+"days": 9,
+"shares": 1015601
+},
+{
+"code": "2347",
+"name": "聯強",
+"event": "連買 8 天",
+"kind": "streak",
+"days": 8,
+"shares": 967588
+},
+{
+"code": "2357",
+"name": "華碩",
+"event": "連買 8 天",
+"kind": "streak",
+"days": 8,
+"shares": 887074
+},
+{
+"code": "2483",
+"name": "百容",
+"event": "異常大買",
+"kind": "anomaly",
+"shares": 883960,
+"vs_avg": 5.8
+},
+{
+"code": "6962",
+"name": "奕力-KY",
+"event": "連買 6 天",
+"kind": "streak",
+"days": 6,
+"shares": 876841
+},
+{
+"code": "5876",
+"name": "上海商銀",
+"event": "連買 23 天",
+"kind": "streak",
+"days": 23,
+"shares": 807481
+},
+{
+"code": "2328",
+"name": "廣宇",
 "event": "連買 7 天",
 "kind": "streak",
 "days": 7,
-"shares": 502164
+"shares": 762467
+},
+{
+"code": "3504",
+"name": "揚明光",
+"event": "連買 5 天",
+"kind": "streak",
+"days": 5,
+"shares": 755920
+},
+{
+"code": "3023",
+"name": "信邦",
+"event": "連買 5 天",
+"kind": "streak",
+"days": 5,
+"shares": 718062
+},
+{
+"code": "6278",
+"name": "台表科",
+"event": "連買 6 天",
+"kind": "streak",
+"days": 6,
+"shares": 685744
+},
+{
+"code": "6164",
+"name": "華興",
+"event": "異常大買",
+"kind": "anomaly",
+"shares": 587494,
+"vs_avg": 7.5
+},
+{
+"code": "3701",
+"name": "大眾控",
+"event": "連買 5 天",
+"kind": "streak",
+"days": 5,
+"shares": 526208
+},
+{
+"code": "2611",
+"name": "志信",
+"event": "異常大買",
+"kind": "anomaly",
+"shares": 508123,
+"vs_avg": 7.1
+},
+{
+"code": "6919",
+"name": "康霈*",
+"event": "連賣 9 天",
+"kind": "streak",
+"days": 9,
+"shares": -551566
+},
+{
+"code": "5531",
+"name": "鄉林",
+"event": "連賣 7 天",
+"kind": "streak",
+"days": 7,
+"shares": -562885
 },
 {
 "code": "2020",
 "name": "美亞",
-"event": "異常大賣",
-"kind": "anomaly",
-"shares": -528175,
-"vs_avg": 5.3
-},
-{
-"code": "2368",
-"name": "金像電",
 "event": "連賣 5 天",
 "kind": "streak",
 "days": 5,
-"shares": -592004
+"shares": -569690
 },
 {
-"code": "5534",
-"name": "長虹",
+"code": "9934",
+"name": "成霖",
+"event": "連賣 16 天",
+"kind": "streak",
+"days": 16,
+"shares": -583000
+},
+{
+"code": "5871",
+"name": "中租-KY",
+"event": "連賣 11 天",
+"kind": "streak",
+"days": 11,
+"shares": -583935
+},
+{
+"code": "2359",
+"name": "所羅門",
 "event": "連賣 8 天",
 "kind": "streak",
 "days": 8,
-"shares": -607188
+"shares": -631244
 },
 {
 "code": "6177",
 "name": "達麗",
+"event": "連賣 9 天",
+"kind": "streak",
+"days": 9,
+"shares": -738048
+},
+{
+"code": "2646",
+"name": "星宇航空",
+"event": "連賣 6 天",
+"kind": "streak",
+"days": 6,
+"shares": -738258
+},
+{
+"code": "8210",
+"name": "勤誠",
+"event": "連賣 7 天",
+"kind": "streak",
+"days": 7,
+"shares": -790699
+},
+{
+"code": "2548",
+"name": "華固",
+"event": "連賣 7 天",
+"kind": "streak",
+"days": 7,
+"shares": -796428
+},
+{
+"code": "1227",
+"name": "佳格",
+"event": "連賣 5 天",
+"kind": "streak",
+"days": 5,
+"shares": -813000
+},
+{
+"code": "9941",
+"name": "裕融",
 "event": "連賣 8 天",
 "kind": "streak",
 "days": 8,
-"shares": -619007
+"shares": -826642
+},
+{
+"code": "7780",
+"name": "大研生醫*",
+"event": "異常大賣",
+"kind": "anomaly",
+"shares": -850117,
+"vs_avg": 5.3
+},
+{
+"code": "6994",
+"name": "富威電力",
+"event": "異常大賣",
+"kind": "anomaly",
+"shares": -942749,
+"vs_avg": 6.0
+},
+{
+"code": "4764",
+"name": "雙鍵",
+"event": "異常大賣",
+"kind": "anomaly",
+"shares": -982905,
+"vs_avg": 10.7
 },
 {
 "code": "2204",
 "name": "中華",
 "event": "異常大賣",
 "kind": "anomaly",
-"shares": -645620,
-"vs_avg": 6.4
+"shares": -988629,
+"vs_avg": 7.7
 },
 {
-"code": "9941",
-"name": "裕融",
-"event": "連賣 7 天",
-"kind": "streak",
-"days": 7,
-"shares": -770789
-},
-{
-"code": "2646",
-"name": "星宇航空",
+"code": "2204",
+"name": "中華",
 "event": "連賣 5 天",
 "kind": "streak",
 "days": 5,
-"shares": -986049
+"shares": -988629
 },
 {
-"code": "2208",
-"name": "台船",
-"event": "連賣 5 天",
+"code": "2836",
+"name": "高雄銀",
+"event": "連賣 10 天",
 "kind": "streak",
-"days": 5,
-"shares": -1001830
-},
-{
-"code": "2897",
-"name": "王道銀行",
-"event": "連賣 9 天",
-"kind": "streak",
-"days": 9,
-"shares": -1043019
-},
-{
-"code": "2838",
-"name": "聯邦銀",
-"event": "連賣 6 天",
-"kind": "streak",
-"days": 6,
-"shares": -1124929
-},
-{
-"code": "6669",
-"name": "緯穎",
-"event": "連賣 23 天",
-"kind": "streak",
-"days": 23,
-"shares": -1143101
-},
-{
-"code": "3013",
-"name": "晟銘電",
-"event": "異常大賣",
-"kind": "anomaly",
-"shares": -1568394,
-"vs_avg": 6.9
-},
-{
-"code": "8112",
-"name": "至上",
-"event": "連賣 27 天",
-"kind": "streak",
-"days": 27,
-"shares": -1650755
-},
-{
-"code": "3048",
-"name": "益登",
-"event": "異常大賣",
-"kind": "anomaly",
-"shares": -1745896,
-"vs_avg": 11.4
-},
-{
-"code": "2812",
-"name": "台中銀",
-"event": "連賣 7 天",
-"kind": "streak",
-"days": 7,
-"shares": -1923642
+"days": 10,
+"shares": -1085949
 },
 {
 "code": "2201",
 "name": "裕隆",
-"event": "連賣 9 天",
-"kind": "streak",
-"days": 9,
-"shares": -3454226
-},
-{
-"code": "5871",
-"name": "中租-KY",
 "event": "連賣 10 天",
 "kind": "streak",
 "days": 10,
-"shares": -3629473
+"shares": -1145535
 },
 {
-"code": "2834",
-"name": "臺企銀",
-"event": "連賣 9 天",
-"kind": "streak",
-"days": 9,
-"shares": -4895534
+"code": "2537",
+"name": "聯上發",
+"event": "異常大賣",
+"kind": "anomaly",
+"shares": -1259000,
+"vs_avg": 7.2
 },
 {
-"code": "2845",
-"name": "遠東銀",
+"code": "2537",
+"name": "聯上發",
 "event": "連賣 6 天",
 "kind": "streak",
 "days": 6,
-"shares": -5561838
+"shares": -1259000
+},
+{
+"code": "2897",
+"name": "王道銀行",
+"event": "連賣 10 天",
+"kind": "streak",
+"days": 10,
+"shares": -1284062
+},
+{
+"code": "2838",
+"name": "聯邦銀",
+"event": "連賣 7 天",
+"kind": "streak",
+"days": 7,
+"shares": -1557346
+},
+{
+"code": "5534",
+"name": "長虹",
+"event": "異常大賣",
+"kind": "anomaly",
+"shares": -1655493,
+"vs_avg": 6.3
+},
+{
+"code": "5534",
+"name": "長虹",
+"event": "連賣 9 天",
+"kind": "streak",
+"days": 9,
+"shares": -1655493
+},
+{
+"code": "2101",
+"name": "南港",
+"event": "異常大賣",
+"kind": "anomaly",
+"shares": -1704000,
+"vs_avg": 5.2
+},
+{
+"code": "4551",
+"name": "智伸科",
+"event": "異常大賣",
+"kind": "anomaly",
+"shares": -1920698,
+"vs_avg": 7.4
+},
+{
+"code": "8112",
+"name": "至上",
+"event": "連賣 28 天",
+"kind": "streak",
+"days": 28,
+"shares": -1991864
+},
+{
+"code": "1617",
+"name": "榮星",
+"event": "異常大賣",
+"kind": "anomaly",
+"shares": -2198986,
+"vs_avg": 8.8
+},
+{
+"code": "2367",
+"name": "燿華",
+"event": "異常大賣",
+"kind": "anomaly",
+"shares": -2960094,
+"vs_avg": 5.7
+},
+{
+"code": "2208",
+"name": "台船",
+"event": "異常大賣",
+"kind": "anomaly",
+"shares": -3203800,
+"vs_avg": 6.2
+},
+{
+"code": "2208",
+"name": "台船",
+"event": "連賣 6 天",
+"kind": "streak",
+"days": 6,
+"shares": -3203800
+},
+{
+"code": "2485",
+"name": "兆赫",
+"event": "異常大賣",
+"kind": "anomaly",
+"shares": -3459619,
+"vs_avg": 8.4
+},
+{
+"code": "2449",
+"name": "京元電子",
+"event": "連賣 5 天",
+"kind": "streak",
+"days": 5,
+"shares": -4140777
 },
 {
 "code": "2356",
 "name": "英業達",
-"event": "連賣 10 天",
+"event": "連賣 11 天",
 "kind": "streak",
-"days": 10,
-"shares": -5937178
+"days": 11,
+"shares": -5078062
 },
 {
-"code": "2885",
-"name": "元大金",
-"event": "連賣 6 天",
+"code": "2845",
+"name": "遠東銀",
+"event": "連賣 7 天",
 "kind": "streak",
-"days": 6,
-"shares": -7019697
+"days": 7,
+"shares": -5722349
 },
 {
-"code": "6226",
-"name": "光鼎",
+"code": "3673",
+"name": "TPK-KY",
 "event": "異常大賣",
 "kind": "anomaly",
-"shares": -9774745,
-"vs_avg": 7.3
-},
-{
-"code": "1216",
-"name": "統一",
-"event": "異常大賣",
-"kind": "anomaly",
-"shares": -11989092,
-"vs_avg": 8.2
-},
-{
-"code": "0050",
-"name": "元大台灣50",
-"event": "連賣 6 天",
-"kind": "streak",
-"days": 6,
-"shares": -29091608
+"shares": -6334666,
+"vs_avg": 7.4
 },
 {
 "code": "0056",
 "name": "元大高股息",
-"event": "連賣 9 天",
+"event": "連賣 10 天",
 "kind": "streak",
-"days": 9,
-"shares": -50683428
+"days": 10,
+"shares": -9586000
 },
 {
-"code": "3162",
-"name": "精確",
-"event": "連買 6 天",
+"code": "6239",
+"name": "力成",
+"event": "異常大賣",
+"kind": "anomaly",
+"shares": -11038379,
+"vs_avg": 5.8
+},
+{
+"code": "2834",
+"name": "臺企銀",
+"event": "連賣 10 天",
 "kind": "streak",
-"days": 6,
-"shares": 1262800
+"days": 10,
+"shares": -17689261
+},
+{
+"code": "2812",
+"name": "台中銀",
+"event": "連賣 8 天",
+"kind": "streak",
+"days": 8,
+"shares": -19222384
+},
+{
+"code": "2303",
+"name": "聯電",
+"event": "異常大賣",
+"kind": "anomaly",
+"shares": -120685720,
+"vs_avg": 5.1
 },
 {
 "code": "3234",
 "name": "光環",
-"event": "連賣 5 天",
+"event": "連賣 6 天",
 "kind": "streak",
-"days": 5,
-"shares": -795461
+"days": 6,
+"shares": -1138220
+},
+{
+"code": "3236",
+"name": "千如",
+"event": "異常大賣",
+"kind": "anomaly",
+"shares": -1982154,
+"vs_avg": 5.1
 },
 {
 "code": "3260",
 "name": "威剛",
-"event": "連賣 7 天",
+"event": "連賣 8 天",
 "kind": "streak",
-"days": 7,
-"shares": -1081959
+"days": 8,
+"shares": -986877
 },
 {
 "code": "3264",
 "name": "欣銓",
-"event": "連賣 6 天",
+"event": "連賣 7 天",
+"kind": "streak",
+"days": 7,
+"shares": -10860824
+},
+{
+"code": "3374",
+"name": "精材",
+"event": "連買 5 天",
+"kind": "streak",
+"days": 5,
+"shares": 885876
+},
+{
+"code": "3680",
+"name": "家登",
+"event": "連買 6 天",
 "kind": "streak",
 "days": 6,
-"shares": -3143882
+"shares": 659557
 },
 {
-"code": "3490",
-"name": "單井",
-"event": "異常大賣",
-"kind": "anomaly",
-"shares": -2358334,
-"vs_avg": 5.5
-},
-{
-"code": "3707",
-"name": "漢磊",
-"event": "異常大買",
-"kind": "anomaly",
-"shares": 8046047,
-"vs_avg": 6.7
-},
-{
-"code": "4533",
-"name": "協易機",
-"event": "異常大買",
-"kind": "anomaly",
-"shares": 507000,
-"vs_avg": 5.7
-},
-{
-"code": "4923",
-"name": "力士",
-"event": "異常大賣",
-"kind": "anomaly",
-"shares": -1108878,
-"vs_avg": 10.6
-},
-{
-"code": "5309",
-"name": "系統電",
-"event": "異常大買",
-"kind": "anomaly",
-"shares": 4024014,
-"vs_avg": 9.7
-},
-{
-"code": "5328",
-"name": "華容",
-"event": "異常大賣",
-"kind": "anomaly",
-"shares": -2668581,
-"vs_avg": 11.5
+"code": "5425",
+"name": "台半",
+"event": "連買 5 天",
+"kind": "streak",
+"days": 5,
+"shares": 1023032
 },
 {
 "code": "5498",
 "name": "凱崴",
-"event": "異常大買",
-"kind": "anomaly",
-"shares": 737019,
-"vs_avg": 6.0
-},
-{
-"code": "6122",
-"name": "擎邦",
-"event": "連買 16 天",
-"kind": "streak",
-"days": 16,
-"shares": 618974
-},
-{
-"code": "6127",
-"name": "九豪",
 "event": "異常大賣",
 "kind": "anomaly",
-"shares": -3875773,
+"shares": -1683342,
+"vs_avg": 11.2
+},
+{
+"code": "6163",
+"name": "華電網",
+"event": "異常大賣",
+"kind": "anomaly",
+"shares": -1316902,
 "vs_avg": 7.3
 },
 {
-"code": "6175",
-"name": "立敦",
-"event": "異常大賣",
-"kind": "anomaly",
-"shares": -958256,
-"vs_avg": 5.1
-},
-{
-"code": "6199",
-"name": "天品",
+"code": "6190",
+"name": "萬泰科",
 "event": "異常大買",
 "kind": "anomaly",
-"shares": 1507900,
-"vs_avg": 5.9
+"shares": 2509228,
+"vs_avg": 6.6
 },
 {
-"code": "6266",
-"name": "泰詠",
-"event": "異常大買",
-"kind": "anomaly",
-"shares": 512426,
-"vs_avg": 24.3
-},
-{
-"code": "6266",
-"name": "泰詠",
-"event": "連買 8 天",
+"code": "6190",
+"name": "萬泰科",
+"event": "連買 7 天",
 "kind": "streak",
-"days": 8,
-"shares": 512426
+"days": 7,
+"shares": 2509228
 },
 {
-"code": "6509",
-"name": "聚和",
-"event": "異常大買",
-"kind": "anomaly",
-"shares": 822830,
-"vs_avg": 5.3
+"code": "6265",
+"name": "方土昶",
+"event": "連賣 11 天",
+"kind": "streak",
+"days": 11,
+"shares": -648509
 },
 {
-"code": "6603",
-"name": "富強鑫",
+"code": "6284",
+"name": "佳邦",
 "event": "異常大賣",
 "kind": "anomaly",
-"shares": -3282522,
-"vs_avg": 7.4
+"shares": -1066052,
+"vs_avg": 5.0
 },
 {
-"code": "7777",
-"name": "能率亞洲",
-"event": "異常大買",
-"kind": "anomaly",
-"shares": 1065016,
-"vs_avg": 5.3
-},
-{
-"code": "8182",
-"name": "加高",
+"code": "6435",
+"name": "大中",
 "event": "異常大賣",
 "kind": "anomaly",
-"shares": -860177,
-"vs_avg": 5.1
+"shares": -590170,
+"vs_avg": 11.1
+},
+{
+"code": "8074",
+"name": "鉅橡",
+"event": "異常大賣",
+"kind": "anomaly",
+"shares": -831992,
+"vs_avg": 13.5
+},
+{
+"code": "8091",
+"name": "翔名",
+"event": "異常大賣",
+"kind": "anomaly",
+"shares": -540411,
+"vs_avg": 12.8
+},
+{
+"code": "8289",
+"name": "泰藝",
+"event": "異常大賣",
+"kind": "anomaly",
+"shares": -1139002,
+"vs_avg": 10.9
 }
 ]
 }
