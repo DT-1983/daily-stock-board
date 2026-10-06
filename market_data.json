@@ -1,37 +1,37 @@
 {
- "updated": "2026-10-06 15:40",
+ "updated": "2026-10-06 22:07",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "10/05",
-   "close": 7773.95,
-   "chg_pct": 0.66
+   "date": "10/06",
+   "close": 7831.62,
+   "chg_pct": 0.74
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "10/05",
-   "close": 27477.31,
-   "chg_pct": 1.05
+   "date": "10/06",
+   "close": 27674.1,
+   "chg_pct": 0.72
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "10/05",
-   "close": 51267.9,
-   "chg_pct": 0.18
+   "date": "10/06",
+   "close": 51639.5,
+   "chg_pct": 0.72
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "10/05",
-   "close": 13172.74,
-   "chg_pct": 0.27
+   "date": "10/06",
+   "close": 13348.06,
+   "chg_pct": 1.33
   },
   {
    "sym": "^TWII",
@@ -46,85 +46,85 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "10/06",
-   "close": 31.77,
-   "chg_pct": -0.21
+   "close": 31.78,
+   "chg_pct": -0.16
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "10/05",
-   "close": 5.31,
+   "date": "10/06",
+   "close": 5.29,
    "fmt": "yield",
-   "chg_bp": 3.4
+   "chg_bp": -1.7
   }
  ],
  "news": [
   {
-   "title": "智邦9月營收403億元年增逾6成 創歷史次高",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6615412",
-   "ts": "10/06 15:30"
-  },
-  {
-   "title": "三星電機連續公告供應合約 股價大漲近6% 市場轉向關注訂單兌現",
+   "title": "美股太旺現金不香了？貨幣基金吸金減速推升美國短債殖利率",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6622694",
-   "ts": "10/06 15:30"
+   "url": "https://news.cnyes.com/news/id/6622961",
+   "ts": "10/06 22:00"
   },
   {
-   "title": "勤凱Q3營收創單季新高 產能滿載、獲利再拚高",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6622689",
-   "ts": "10/06 15:29"
-  },
-  {
-   "title": "從文科生到AI巨擘 Anthropic總裁阿莫迪成為美國富豪榜最年輕白手起家女性",
+   "title": "盤中速報 - 和康電訊(MTSI-US)大漲5.39%，報345.99美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6622634",
-   "ts": "10/06 15:20"
+   "url": "https://news.cnyes.com/news/id/6623167",
+   "ts": "10/06 21:58"
   },
   {
-   "title": "亞洲AI建設上看8.2兆美元 銀行搶做高風險GPU融資",
+   "title": "盤中速報 - Palo Alto Networks Inc(PANW-US)大漲5.1%，報427.5美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6622298",
-   "ts": "10/06 15:10"
+   "url": "https://news.cnyes.com/news/id/6623162",
+   "ts": "10/06 21:54"
   },
   {
-   "title": "AI晶片越貴，測試時間越長！雍智科技、矽格、京元電子誰最受惠？",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6622687",
-   "ts": "10/06 15:00"
-  },
-  {
-   "title": "沙烏地輸油管再遇襲停運 胡塞放話：領空將成戰場",
+   "title": "盤中速報 - 邁威爾科技(MRVL-US)大漲5.4%，報285.89美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6622681",
-   "ts": "10/06 14:51"
+   "url": "https://news.cnyes.com/news/id/6623161",
+   "ts": "10/06 21:49"
   },
   {
-   "title": "南俊國際9月營收2.7億元年增3成 AI伺服器新品逐月出貨Q4重返成長",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6622670",
-   "ts": "10/06 14:51"
-  },
-  {
-   "title": "助攻兆元車電市場！車輛中心結盟美OmniAir與德TÜV SÜD 首座車用資安實驗室在台落地",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6622666",
-   "ts": "10/06 14:49"
-  },
-  {
-   "title": "受惠比特幣價格反彈 Strategy第三季大賺209億美元 終結連四季虧損",
+   "title": "盤中速報 - 伊魯米納(ILMN-US)大漲5.03%，報308.47美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6622669",
-   "ts": "10/06 14:48"
+   "url": "https://news.cnyes.com/news/id/6623160",
+   "ts": "10/06 21:48"
+  },
+  {
+   "title": "金管會釋利多！擴大保險業「健康福祉事業」投資範疇 保單脫鉤、非上市櫃公司可100%控股",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6623144",
+   "ts": "10/06 21:28"
+  },
+  {
+   "title": "〈台北紡織展〉從世界盃球衣到AI智慧製造 台灣機能性紡織品全球市占約7成",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6622946",
+   "ts": "10/06 20:52"
+  },
+  {
+   "title": "逾3.7萬「純舊制」勞退申辦自提 每3人就有1人搶「卡位」退休紅利",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6622956",
+   "ts": "10/06 20:44"
+  },
+  {
+   "title": "信義區周慶開打 新光三越：消費者更愛買體驗和生活升級",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6622947",
+   "ts": "10/06 20:42"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：中信金(2891-TW)EPS預估上修至4.31元，預估目標價為74元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6622960",
+   "ts": "10/06 20:10"
   }
  ],
  "inst": {
   "date": "10/06",
-  "total_yi": -207.9,
+  "total_yi": -192.0,
   "foreign_yi": -66.6,
-  "trust_yi": -158.5
+  "trust_yi": -142.6
  }
 }
