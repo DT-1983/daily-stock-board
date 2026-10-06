@@ -1805,7 +1805,7 @@ def page_html(family=False):
     return ("<!doctype html><html lang=" + Q + "zh-Hant" + Q + "><head><meta charset="
             + Q + "utf-8" + Q + "><meta name=" + Q + "viewport" + Q + " content="
             + Q + "width=device-width,initial-scale=1" + Q + ">"
-            "<title>燈號戰情室</title>" + scripts
+            "<title>燈號戰情室</title><link rel=\"icon\" type=\"image/png\" href=\"/app-icon.png\"><link rel=\"apple-touch-icon\" href=\"/app-icon.png\">" + scripts
             + "<style>" + BASE_CSS + _combo_css() + ti_css + ROOM_CSS + "</style></head><body>"
             + title_html()
             + nav_html()

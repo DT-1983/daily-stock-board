@@ -627,6 +627,14 @@ async def _family_logout(request):
     return resp
 
 
+
+async def _app_icon(request):
+    """戰情室圖示（公開、不含任何資料）：網頁 favicon／工作列圖示／手機主畫面。程式現畫，見 app_icon.py。"""
+    import app_icon
+    return web.Response(body=await asyncio.to_thread(app_icon.png, 256), content_type="image/png",
+                        headers={"Cache-Control": "public, max-age=86400"})
+
+
 async def _run():
     app = web.Application()
     app.router.add_get("/", _health)
@@ -639,6 +647,8 @@ async def _run():
     app.router.add_get("/room/ask_stream", _room_ask_stream)
     app.router.add_post("/room/ask", _room_ask)
     app.router.add_get("/trades", _trades_page)
+    app.router.add_get("/app-icon.png", _app_icon)
+    app.router.add_get("/favicon.ico", _app_icon)
     app.router.add_get("/login", _family_login_get)
     app.router.add_post("/login", _family_login_post)
     app.router.add_get("/logout", _family_logout)
