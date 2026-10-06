@@ -5,6 +5,7 @@
 
 用法：python buffett_html_v2.py [-o docs/buffett.html]
 """
+from board_theme import snapped as _bt_snapped
 import os
 import json
 import argparse
@@ -74,6 +75,7 @@ def _row(r, rid):
         f'<div class="detail" data-for="{rid}">{detail}</div>')
 
 
+@_bt_snapped
 def build(watch):
     tickers = list(watch.keys())
     prices = {}

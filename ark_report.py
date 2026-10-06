@@ -10,6 +10,7 @@ fund_overview）當結構化資料源；「產業方向」沒有歷史快照可�
 
 用法：python ark_report.py [-o docs/ark.html]
 """
+from board_theme import snapped as _bt_snapped
 import os
 import sys
 import json
@@ -375,6 +376,7 @@ def _synthesis_html():
 </section>"""
 
 
+@_bt_snapped
 def build():
     print(f"抓 {'/'.join(FUNDS)} 持股快照 …")
     snaps = {tk: _fund_snapshot(tk) for tk in FUNDS}

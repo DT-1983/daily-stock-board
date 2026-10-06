@@ -5,6 +5,7 @@
 
 用法：python earnings_index.py [-o docs/earnings.html]
 """
+from board_theme import snapped as _bt_snapped
 import os
 import re
 import io
@@ -76,6 +77,7 @@ BADGE = {"STRONG BUY": ("#0E3A22", "#22C55E"), "BUY": ("#0E3A22", "#22C55E"),
          "SELL": ("#3A1418", "#EF4444")}
 
 
+@_bt_snapped
 def build(cards):
     if cards:
         n_us = sum(1 for c in cards if c["market"] == "US")

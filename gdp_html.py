@@ -8,6 +8,7 @@
 
 用法：python gdp_html.py [-o docs/gdp.html]
 """
+from board_theme import snapped as _bt_snapped
 import os
 import sys
 import json
@@ -110,6 +111,7 @@ def chart_block(key, title, unit_note, d, extra_meta=""):
             f'<div class="gstrip">{cells}</div></div>'), cfg
 
 
+@_bt_snapped
 def build(d):
     us_light = light("US", "美國", d["peak"]["us"], d["us"])
     tw_light = light("TW", "台灣", d["peak"]["tw"], d["tw"])

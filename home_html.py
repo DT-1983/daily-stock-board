@@ -10,6 +10,7 @@
 
 用法：python home_html.py [-o docs/index.html]
 """
+from board_theme import snapped as _bt_snapped
 import os
 import sys
 import json
@@ -309,6 +310,7 @@ def macro_indicators():
             f'<div class="idxgrid">{body}</div></div>')
 
 
+@_bt_snapped
 def build():
     m = _load("market_data.json") or {"updated": "—", "indices": [], "news": []}
     s = build_summaries()

@@ -30,6 +30,7 @@
     python report_zh.py --all                   # 每檔最新一份，全部重產
     python report_zh.py --list                  # 有哪些報告可以產
 """
+from board_theme import snapped as _bt_snapped
 import argparse
 import io
 import json
@@ -102,6 +103,7 @@ CSS = """
 """
 
 
+@_bt_snapped
 def render(key, r, d=None, px=None, fc=None):
     from board_theme import BASE_CSS, esc, esc_b, header
 

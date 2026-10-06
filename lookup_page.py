@@ -36,6 +36,7 @@ analyst_price_targets 均值），語意不同，所以標籤就寫「分析師�
 用法（不經 bot 也能單獨測）：
     python lookup_page.py 2454 -o out.html
 """
+from board_theme import snapped as _bt_snapped
 import io
 import os
 import sys
@@ -87,6 +88,7 @@ def gate(key, cookie_val):
     return (cookie_val == tk), False
 
 
+@_bt_snapped
 def not_found_html():
     """擋下來時回的頁面。
 
@@ -540,6 +542,7 @@ def _broker(row):
             f'</div>{warn}{"".join(items)}</div>')
 
 
+@_bt_snapped
 def _shell(title, body):
     scripts = "".join(f'<script src={Q}{u}{Q}></script>' for u in CDN)
     try:

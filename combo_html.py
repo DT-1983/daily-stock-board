@@ -10,6 +10,7 @@
 
 用法：python combo_html.py [-o docs/combo.html]
 """
+from board_theme import snapped as _bt_snapped
 import argparse
 import io
 import json
@@ -655,6 +656,7 @@ def build(d, public=False):
             + body_html(d, public=public))
 
 
+@_bt_snapped
 def _page(d, public):
     """完整頁面。public=True → docs/combo.html（偵測本機、離線退回備援列表）；
     False → obis 的獨立快照（手機 Google Drive 看，不含任何連本機的東西）。"""

@@ -33,6 +33,7 @@ Leo 問「軍師不能線上嗎？」——**可以，就是查股票頁現在�
 
 門檻沿用 `lookup_page.gate()`（LOOKUP_TOKEN，?key= 種 90 天 cookie，沒過回 404）。
 """
+from board_theme import snapped as _bt_snapped
 import io
 import json
 import os
@@ -1791,6 +1792,7 @@ FAMILY_CSS = ("<style>#chatbtn,#right,#sc-all,.chatbtn{display:none!important}"
               ".room.chat .right{display:none!important}</style>")
 
 
+@_bt_snapped
 def page_html(family=False):
     """三欄殼。family=True＝家人版（2026-10-06）：隱藏軍師鈕與整個軍師欄，後端另外把問答／對話紀錄擋掉。CDN 圖表函式庫沿用 lookup_page 那組（同一套圖，不另外挑）。"""
     from board_theme import BASE_CSS

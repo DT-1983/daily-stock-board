@@ -5,6 +5,7 @@
 
 用法：python portfolio_html_v2.py [-o docs/portfolios.html]
 """
+from board_theme import snapped as _bt_snapped
 import os
 import json
 import argparse
@@ -200,6 +201,7 @@ def trades_section(main, chains):
     return sec, js
 
 
+@_bt_snapped
 def build(state):
     pfs = state["portfolios"]
     base = state.get("base", 10000)

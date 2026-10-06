@@ -961,7 +961,7 @@ def build_one(ticker, output=""):
                       or "")
     out = output or op.brief(_brief_filename(d["ticker"], _nm), ticker=ticker)
     os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
-    io.open(out, "w", encoding="utf-8").write(html)
+    io.open(out, "w", encoding="utf-8").write(__import__("board_theme").snap_html(html))
     return out, d, len(html)
 
 
@@ -1346,7 +1346,7 @@ def build_index():
     html = render_index(rows)
     out = os.path.join(OBIS, INDEX_NAME)
     os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
-    io.open(out, "w", encoding="utf-8").write(html)
+    io.open(out, "w", encoding="utf-8").write(__import__("board_theme").snap_html(html))
     return out, rows
 
 

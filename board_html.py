@@ -623,7 +623,7 @@ def main():
 <script>const CHARTS={charts_json};{JS}</script>{ZOOM_CLICK_JS}</body></html>"""
 
     os.makedirs(os.path.dirname(args.output) or ".", exist_ok=True)
-    open(args.output, "w", encoding="utf-8").write(html)
+    open(args.output, "w", encoding="utf-8").write(__import__("board_theme").snap_html(html))
     print(f"✅ {args.output}")
 
 

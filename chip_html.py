@@ -12,6 +12,7 @@
 資料源：state/chip_events.json（chip_scan.py 每日產出）
 用法：python chip_html.py [-o docs/chip.html]
 """
+from board_theme import snapped as _bt_snapped
 import os
 import io
 import sys
@@ -167,6 +168,7 @@ def _view(data, chains, label):
     return sub, "".join(secs) + note
 
 
+@_bt_snapped
 def render(data, data_trust, chains):
     """一頁兩份內容，按鈕切換（2026-09-18 取代原本 chip.html／chip_trust.html
     兩個分頁的做法）。預設顯示三大法人合計。"""

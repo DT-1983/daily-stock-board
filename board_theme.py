@@ -453,3 +453,46 @@ LEGEND_SIGNAL = (
     '<span><i style="background:#3B82F6"></i>持有</span>'
     '<span><i style="background:#64748B"></i>觀望</span><br>'
     '<span class="lgnote">數字類指標刻意不上色，避免和訊號顏色混淆。</span></div>')
+
+
+# ── 字級統一（2026-10-07，Leo：「統一吧」；起因：出場檢視表上下內文字體不一致，全站稽核各頁用到 10～15 種字級）──
+# 五階：10.5 欄位標籤｜12 次要說明與表格內文｜13 內文重點｜14 強調與按鈕｜16 以上維持（標題與大數字）。
+# 做法：頁面組好之後，把 HTML 裡所有 `font-size:Npx`（<style>、行內 style、JS 組字串）對映到這幾階；
+# 不動 em／rem／% 與 SVG 的 font-size 屬性（圖表標籤自己的尺寸）。
+import functools as _ft
+import re as _re
+
+_FS_RE = _re.compile(r"font-size:\s*([0-9]+(?:\.[0-9]+)?)px")
+
+
+def _snap_px(v):
+    if v <= 10.5:
+        return "10.5"
+    if v <= 12.5:
+        return "12"
+    if v <= 13.5:
+        return "13"
+    if v <= 15.5:
+        return "14"
+    if v <= 16.5:
+        return "16"
+    return None
+
+
+def snap_html(h):
+    """回字級對映後的 HTML／CSS 字串；非字串原樣回。"""
+    if not isinstance(h, str):
+        return h
+
+    def f(m):
+        r = _snap_px(float(m.group(1)))
+        return f"font-size:{r}px" if r else m.group(0)
+    return _FS_RE.sub(f, h)
+
+
+def snapped(fn):
+    """裝飾頁面產生函式：回傳的 HTML 字串過一次 snap_html。"""
+    @_ft.wraps(fn)
+    def w(*a, **k):
+        return snap_html(fn(*a, **k))
+    return w

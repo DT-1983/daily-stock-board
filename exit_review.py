@@ -450,7 +450,13 @@ CSS = """
 # 2026-10-07 Leo：「出場檢視表上下內文字體不一致」。全頁字級統一成 5 階：
 #   10.5 欄位標籤／小標籤｜12 次要說明與表格內文｜13 內文重點｜14 強調與按鈕｜16–23 標題與大數字。
 # BASE_CSS 的 .sub（12.5）與按鈕預設字級（15）不在這支的 CSS 裡，這裡明確蓋掉，避免上下兩區差半級。
-FS_UNIFY = "button{font-size:inherit}.sub{font-size:12px}.hx-chip,button.hx-chip{font-size:14px}"
+LAYOUT2 = (".onenote{margin:8px 0 6px;font-size:12px;color:var(--muted);display:flex;gap:12px;flex-wrap:wrap;align-items:center}"
+           ".onenote a{color:var(--accent);text-decoration:none;margin-left:auto}"
+           "details.rules{border:1px solid var(--line);border-radius:6px;padding:0 14px;margin-top:18px}"
+           "details.rules>summary{cursor:pointer;padding:12px 0;font-weight:700;font-size:14px;color:var(--muted)}"
+           "details.rules[open]>summary{border-bottom:1px solid var(--line);margin-bottom:10px}"
+           ".sb .kv .c .s{font-size:12px}")
+FS_UNIFY = LAYOUT2 + "button{font-size:inherit}.sub{font-size:12px}.hx-chip,button.hx-chip{font-size:14px}"
 
 CSS30 = """
 /* ── 30 秒看懂（2026-09-30 Leo：「出場檢視表可以套用另一個對話幫 mom 做的 skill 嗎」）──
@@ -998,22 +1004,19 @@ def render(rows, meta):
     pnl_r = sum(r["pnl"] or 0 for r in rs_only)
 
     B = []
-    try:                                  # 頂端：今日新變化（2026-10-02 與持股出場訊號整合）
+    # 2026-10-07 Leo：「出場檢視表請重新幫我排版，看起來很不習慣」。原本清單前面堆了五塊
+    # （今日新變化大卡→標籤列→四行說明框→篩選列→合計卡＋三段小字說明），要捲兩屏才看到第一檔。
+    # 新順序：標籤列（可點＝篩選）→ 今日新變化（預設收成一行）→ 一行提醒 → 篩選列 → 清單 → 合計 → 說明（全部收合）。
+    try:
         import holdings_exit as _hx
-        _blk = _hx.block()
+        _chips, _chg = _hx.block(split=True, open_card=False)
     except Exception as _e:                # noqa: BLE001
         print(f"[exit_review] 今日新變化區塊略過：{_e}")
-        _blk = ""
-    B.append(_blk)
-    B.append('<div class="warnbox">'
-             '<b>這頁只擺數字，不建議買賣。</b><br>'
-             '・老墨的規則：<b>SuperTrend 翻空 → 賣一半</b>；'
-             '<b>RS(60) 跌破自身均線 → 剩餘全出</b>。這兩組都已經到「全出」那一條。<br>'
-             '・⚠️ 我們自己 5.5 年的回測結論是：<b>日線 SuperTrend 的賣訊，'
-             '在高波動個股上 75% 事後看是錯的</b>（正常回檔被誤判成反轉）——'
-             '趨勢倉因此改成週線判斷。老墨的「RS 跌破」那條，<b>我們沒有單獨回測過</b>。<br>'
-             '・所以這頁標的是「<b>規則說什麼</b>」，不是「<b>該不該賣</b>」。'
-             '</div>')
+        _chips, _chg = "", ""
+    B.append(_chips)
+    B.append(_chg)
+    B.append('<div class="onenote">這頁只擺數字，不建議買賣；標的是「<b>規則說什麼</b>」，不是「<b>該不該賣</b>」。'
+             '<a href="#rules">規則與說明 ↓</a></div>')
 
     # ── 篩選列（2026-09-06 Leo 指定）────────────────────────────────
     # ⚠️ 這頁**不上投資站**，所以刻意不套 board_theme 的 .ctrl/.seg（那是站上頁面
@@ -1052,8 +1055,21 @@ def render(rows, meta):
            '<button class="fb" id="fexpand">全部展開</button></div>'
            '<div class="fcount" id="fcount"></div>'
            '</div>')
-    B.append(seg)
-
+    SUM_NOTES = (f'<div class="sub">🚦 三盞燈＝老墨規則的三個條件：<b>ST 翻空</b>（賣一半）／'
+        f'<b>全出</b>（ST＋RS 都到，或 RS 已跌破）／<b>超過貴價</b>。點一列展開細節。<br>'
+        f'📐 <b>貴價</b>用洪瑞泰法（美股預期 EPS、台股實績 EPS），'
+        f'讀每日 07:33 算好的快取，跟站上其他頁同一個來源。'
+        f'<b>{n_over} 檔已經超過貴價</b>，{n_under} 檔還沒，'
+        f'<b>{n_noval} 檔沒有貴價資料</b>（財報抓不到 EPS）——'
+        f'那幾檔在「超過／未超過」兩個篩選裡都不會出現。<br>'
+        '⚠️ <b>表格裡每一列都是原幣</b>——美股標 US$、台股標 NT$，'
+        '成本、現價、市值、損益四欄同單位，可以直接比。<br>'
+        '⚠️ <b>上面四格的合計是新台幣</b>（美股用報表自己的匯率換算過）——'
+        '跨帳戶跨幣別要相加，只能用同一種單位。<br>'
+        '⚠️ 上面四格的百分比分母是<b>全部四個帳戶合計</b>；'
+        '表格裡每一列的「佔部位」分母是<b>那一檔所屬帳戶自己的總市值</b>'
+        '——四個帳戶是不同的錢與不同的決策權，混在一起算佔比會失真。<br>'
+        '底色偏紅的列＝佔它所屬帳戶 ≥3%。</div>')
     B.append('<div class="sb"><h2>合計</h2>' + "".join([
         '<div class="kv">',
         f'<div class="c"><div class="k">🔴 兩條都成立</div><div class="v">{len(both)} 檔</div>'
@@ -1070,26 +1086,9 @@ def render(rows, meta):
         f'{pnl_b+pnl_r+pnl_s:+,.0f}</div>'
         f'<div class="s">🔴 {pnl_b:+,.0f}　🟡 {pnl_r:+,.0f}　🟠 {pnl_s:+,.0f}</div></div>',
         '</div>',
-        # 貴價涵蓋率要寫出來——**「沒有貴價」跟「沒超過貴價」是兩件事**，
-        # 不寫的話那幾檔在「超過/未超過」兩個篩選裡都不出現，看起來像不存在。
-        # 2026-09-06（第二次）Leo：「加」——「只有 ST 翻空」那組已經列進來了，
-        # 所以三盞燈的組合現在都看得到（只亮①＝賣一半、①②都亮＝全出）。
-        f'<div class="sub">🚦 三盞燈＝老墨規則的三個條件：<b>ST 翻空</b>（賣一半）／'
-        f'<b>全出</b>（ST＋RS 都到，或 RS 已跌破）／<b>超過貴價</b>。點一列展開細節。<br>'
-        f'📐 <b>貴價</b>用洪瑞泰法（美股預期 EPS、台股實績 EPS），'
-        f'讀每日 07:33 算好的快取，跟站上其他頁同一個來源。'
-        f'<b>{n_over} 檔已經超過貴價</b>，{n_under} 檔還沒，'
-        f'<b>{n_noval} 檔沒有貴價資料</b>（財報抓不到 EPS）——'
-        f'那幾檔在「超過／未超過」兩個篩選裡都不會出現。<br>'
-        '⚠️ <b>表格裡每一列都是原幣</b>——美股標 US$、台股標 NT$，'
-        '成本、現價、市值、損益四欄同單位，可以直接比。<br>'
-        '⚠️ <b>上面四格的合計是新台幣</b>（美股用報表自己的匯率換算過）——'
-        '跨帳戶跨幣別要相加，只能用同一種單位。<br>'
-        '⚠️ 上面四格的百分比分母是<b>全部四個帳戶合計</b>；'
-        '表格裡每一列的「佔部位」分母是<b>那一檔所屬帳戶自己的總市值</b>'
-        '——四個帳戶是不同的錢與不同的決策權，混在一起算佔比會失真。<br>'
-        '底色偏紅的列＝佔它所屬帳戶 ≥3%。</div>']) + "</div>")
+    ]) + "</div>")
 
+    B.append(seg)
     B.append('<div class="sb"><h2>🔴 兩條都成立</h2>'
              '<div class="sub">SuperTrend 翻空 <b>而且</b> RS(60) 跌破自身均線'
              '——老墨規則裡兩個階段都到了。按<b>市值大小</b>排序，'
@@ -1109,7 +1108,17 @@ def render(rows, meta):
              '</div>' + table(st_only) + "</div>")
 
     B.append(brief(rows, meta))          # 2026-10-02 Leo：持股那塊移到清單後面
-    B.append('<div class="sb"><h2>欄位怎麼讀</h2><div class="sub">'
+    B.append('<details class="sb rules" id="rules"><summary>規則與說明（點開）</summary>'
+             '<div class="warnbox">'
+             '<b>這頁只擺數字，不建議買賣。</b><br>'
+             '・老墨的規則：<b>SuperTrend 翻空 → 賣一半</b>；'
+             '<b>RS(60) 跌破自身均線 → 剩餘全出</b>。這兩組都已經到「全出」那一條。<br>'
+             '・⚠️ 我們自己 5.5 年的回測結論是：<b>日線 SuperTrend 的賣訊，'
+             '在高波動個股上 75% 事後看是錯的</b>（正常回檔被誤判成反轉）——'
+             '趨勢倉因此改成週線判斷。老墨的「RS 跌破」那條，<b>我們沒有單獨回測過</b>。<br>'
+             '・所以這頁標的是「<b>規則說什麼</b>」，不是「<b>該不該賣</b>」。</div>'
+             + SUM_NOTES +
+             '<div class="sub">'
              '<b>RS60</b>＝相對大盤 60 日強弱的乖離，<b>負數就是跌破自身均線</b>。<br>'
              '<b>SuperTrend 線</b>＝那條動態支撐；「距 x%」是現價離它多遠。'
              '⚠️ 這兩組都已經翻空或轉弱，那條線現在是<b>壓力不是支撐</b>。<br>'
@@ -1117,8 +1126,7 @@ def render(rows, meta):
              '⚠️ 回檔深不等於便宜，也不等於該賣——它只告訴你「離最好的時候多遠」。<br>'
              '<b>平均成本</b>由 Firstrade 報表的總成本 ÷ 股數推得；'
              '<b>沒有逐筆買進紀錄，所以算不出「買進後的最高點」</b>，'
-             '這裡給的是 52 週／3 年的絕對高點。'
-             '</div></div>')
+             '這裡給的是 52 週／3 年的絕對高點。</div></details>')
 
     import time
     gen = time.strftime("%Y-%m-%d %H:%M")

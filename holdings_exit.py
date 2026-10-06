@@ -196,7 +196,7 @@ def _esc(s):
     return esc(str(s))
 
 
-def block(date=None):
+def block(date=None, split=False, open_card=True):
     """回 HTML 字串（要搭配 CSS 一起放進 <style>）；沒存量資料回空字串。
     三組變化併成一張可收合的卡：收合時只看一行計數，點開才是名單（名單用緊湊標籤，不是一檔一列）。"""
     from daily_warroom import tkname
@@ -229,14 +229,16 @@ def block(date=None):
         if ov["corrected"]:
             corr = ('<div class="hx-note" style="margin:6px 0 0">已依今日翻面事件校正存量：'
                     + _esc("、".join(tkname(ov["disp"][n]) for n in ov["corrected"])) + "</div>")
-        card = (f'<details open><summary><b>今日新變化</b>{head}</summary>'
+        card = (f'<details{" open" if open_card else ""}><summary><b>今日新變化</b>{head}</summary>'
                 f'<div class="hx-bd">{groups}{corr}</div></details>')
     else:
         card = '<div class="hx-note">今天持股沒有新的出場訊號變化。</div>'
-    return (f'<div class="hx">{card}'
-            f'<div class="hx-chips">{chips}'
-            + (f'<span class="hx-chip"><b>{unk}</b>無法判定</span>' if unk else "")
-            + f'<span class="hx-chip" style="border-style:dashed">全部 {total} 檔持股</span></div></div>')
+    chips_html = (f'<div class="hx-chips">{chips}'
+                  + (f'<span class="hx-chip"><b>{unk}</b>無法判定</span>' if unk else "")
+                  + f'<span class="hx-chip" style="border-style:dashed">全部 {total} 檔持股</span></div>')
+    if split:                                   # 出場檢視表用：標籤列在前、今日新變化卡在後
+        return f'<div class="hx">{chips_html}</div>', f'<div class="hx">{card}</div>'
+    return f'<div class="hx">{card}{chips_html}</div>'
 
 
 if __name__ == "__main__":

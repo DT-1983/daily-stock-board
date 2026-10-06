@@ -17,6 +17,7 @@
       ② 原 prompt 的分析師共識：BUY/SELL 標章＋Forward P/E/PEG/FCF Yield/EV-Sales。
     兩者可能給相反結論，那是預期行為（不同策略），**不要再自作主張讓其中一套覆蓋另一套**。
 """
+from board_theme import snapped as _bt_snapped
 import os
 import io
 import re
@@ -659,6 +660,7 @@ BADGE_STYLE = {
 }
 
 
+@_bt_snapped
 def render(d, sc, n, extra_html=None):
     extra_html = extra_html or {}
     cur = d["currency"]

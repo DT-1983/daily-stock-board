@@ -730,7 +730,7 @@ mkt('US');  // 初始藏台股卡片
         try:
             if os.path.dirname(out):
                 os.makedirs(os.path.dirname(out), exist_ok=True)
-            open(out, "w", encoding="utf-8").write(html)
+            open(out, "w", encoding="utf-8").write(__import__("board_theme").snap_html(html))
             print(f"✅ HTML 看板已存:{out}")
         except Exception as e:
             print(f"⚠️ 寫入 {out} 失敗（跳過）:{e}")   # Actions 上沒有 obis 路徑，正常

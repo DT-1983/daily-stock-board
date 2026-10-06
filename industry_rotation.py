@@ -38,6 +38,7 @@ ETF的股數變化走申購贖回機制，不是同一種資料)。改用個股�
    舊資料跟新資料(TradingView自組合成指數)是兩把不同的尺，接不上，
    拖尾軌跡在切換那一週會看到不連續的假跳動，這是已知且不可逆的代價。
 """
+from board_theme import snapped as _bt_snapped
 import io
 import json
 import os
@@ -919,6 +920,7 @@ PERIOD_LABEL = {20: "短線", 60: "波段", 120: "中期", 240: "長期"}
 RANGE_DAYS = [("1m", "1個月", 20), ("3m", "3個月", 60), ("6m", "半年", 120), ("1y", "一年", 250)]
 
 
+@_bt_snapped
 def render_html(snaps, hist, holdings=None, snaps_ind=None, hist_ind=None, holdings_ind=None, ind_url=None,
                 frames_url=None):
     """snaps: {"us": {"index": current_snapshot, "equal": current_snapshot}, "tw": {...}}

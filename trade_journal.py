@@ -21,6 +21,7 @@
 quick 格式：<券商> <buy|sell|order> <代號> [數量] [@價格] | 理由1、理由2
   order＝掛單未成交（status=pending），成交後用 fill 補價量並轉 filled。
 """
+from board_theme import snapped as _bt_snapped
 import os
 import re
 import sys
@@ -145,6 +146,7 @@ def _fmt(r):
             f"    系統：{lamp} {rr} 象限{q} RS60 {s.get('rs_short')}{ch}")
 
 
+@_bt_snapped
 def page():
     """回 HTML 字串。2026-09-07 從 html() 抽出來——Sonia 那張卡要連一個
     **看得到的網址**，不能只有寫進 Google Drive 的檔案。
