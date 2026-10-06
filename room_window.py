@@ -30,6 +30,51 @@ def _alive():
         return False
 
 
+def _set_window_icon(title_part="燈號戰情室", seconds=20):
+    """Edge --app 視窗的工作列圖示是從網頁 favicon 縮出來的（Chromium 縮得很糊）。
+    視窗出現後直接用 Win32 的 WM_SETICON 換成我們自己的多尺寸 .ico（小圖 32px／大圖 256px 各用最合適的那張），
+    工作列就清楚了。找不到視窗或失敗就算了（圖示糊一點而已，不影響使用）。"""
+    try:
+        import ctypes
+        from ctypes import wintypes
+    except Exception:                                        # noqa: BLE001
+        return False
+    ico = os.path.join(HERE, "戰情室.ico")
+    if not os.path.exists(ico):
+        return False
+    u = ctypes.windll.user32
+    u.LoadImageW.restype = ctypes.c_void_p
+    u.SendMessageW.argtypes = [wintypes.HWND, wintypes.UINT, wintypes.WPARAM, ctypes.c_void_p]
+    found = []
+
+    @ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
+    def _enum(hwnd, _):
+        if u.IsWindowVisible(hwnd):
+            n = u.GetWindowTextLengthW(hwnd)
+            if n:
+                buf = ctypes.create_unicode_buffer(n + 1)
+                u.GetWindowTextW(hwnd, buf, n + 1)
+                if title_part in buf.value:
+                    found.append(hwnd)
+        return True
+    import time
+    end = time.time() + seconds
+    while time.time() < end and not found:
+        u.EnumWindows(_enum, 0)
+        if not found:
+            time.sleep(0.5)
+    if not found:
+        return False
+    small = u.LoadImageW(None, ico, 1, 32, 32, 0x10)       # IMAGE_ICON, LR_LOADFROMFILE
+    big = u.LoadImageW(None, ico, 1, 256, 256, 0x10)
+    for hwnd in found:
+        if small:
+            u.SendMessageW(hwnd, 0x0080, 0, small)          # WM_SETICON, ICON_SMALL
+        if big:
+            u.SendMessageW(hwnd, 0x0080, 1, big)            # ICON_BIG
+    return bool(small and big)
+
+
 def main():
     if not _alive():
         msg = "戰情室服務（discord_bot，8030）沒有在跑。請先啟動它，或等健檢自動重啟。"
@@ -52,6 +97,7 @@ def main():
                 r"C:\Program Files\Google\Chrome\Application\chrome.exe"):
         if exe and os.path.exists(exe):
             subprocess.Popen([exe, f"--app={url}", "--window-size=1500,900"])
+            _set_window_icon()
             return 0
     import webbrowser
     webbrowser.open(url)
