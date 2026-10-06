@@ -48,6 +48,7 @@ from dotenv import dotenv_values
 
 import lamp_lookup
 import lookup_page
+import family_auth
 
 _env = {**dotenv_values(Path(__file__).parent / ".env"), **os.environ}
 TOKEN = _env.get("DISCORD_BOT_TOKEN", "")
@@ -338,9 +339,13 @@ async def _lookup_page(request):
     # 沒通過一律 404（不是 403——403 等於告訴對方這裡有東西）。詳見 lookup_page.gate。
     ok, set_cookie = lookup_page.gate(request.query.get("key", ""),
                                       request.cookies.get(lookup_page.COOKIE, ""))
+    if not ok and family_auth.is_family(request.cookies.get(family_auth.COOKIE, "")):
+        ok, set_cookie = True, False                      # 家人：可查股（2026-10-06）
     if not ok:
         print(f"[lookup] 擋下（無 key／cookie）ticker={request.query.get('ticker','')!r}",
               flush=True)
+        if family_auth.enabled():
+            raise web.HTTPFound("/login?next=/lookup")
         return web.Response(text=lookup_page.not_found_html(), status=404,
                             content_type="text/html", charset="utf-8")
 
@@ -407,13 +412,18 @@ def _room_404():
 
 async def _room_page(request):
     ok, set_cookie = _room_gate(request)
+    family = False
+    if not ok and family_auth.is_family(request.cookies.get(family_auth.COOKIE, "")):
+        ok, set_cookie, family = True, False, True          # 家人版：沒有軍師、沒有全部持股（2026-10-06）
     if not ok:
         print("[room] 擋下（無 key／cookie）", flush=True)
+        if family_auth.enabled():
+            raise web.HTTPFound("/login?next=/room")
         return _room_404()
     import lamp_room
     # to_thread 的理由同 /lookup：讀 312 檔的收盤快取是同步 IO，
     # 直接在事件迴圈裡跑會把整個 bot（含 Discord 心跳）卡住。
-    html = await asyncio.to_thread(lamp_room.page_html)
+    html = await asyncio.to_thread(lamp_room.page_html, family)
     print(f"[room] 開頁 {'外部' if request.headers.get('CF-Connecting-IP') else '本機'}",
           flush=True)
     resp = web.Response(text=html, content_type="text/html", charset="utf-8")
@@ -447,6 +457,8 @@ async def _trades_page(request):
 async def _room_detail(request):
     """中欄片段。⚠️ 這裡會抓 2 年資料算指標，是最慢的一段（數秒）。"""
     ok, _ = _room_gate(request)
+    if not ok and family_auth.is_family(request.cookies.get(family_auth.COOKIE, "")):
+        ok = True
     if not ok:
         return web.Response(text="", status=404)
     import lamp_room
@@ -584,62 +596,35 @@ async def _room_ask(request):
 
 
 
-# ── 戰情室總入口 /hub ＋「立即更新」（2026-10-06，見 hub_page.py 檔頭）──────────────
-# 全部沿用 _room_gate（同一道 token 門檻，不另發明第二套）；只有 manifest／圖示是公開的（不含任何資料）。
-async def _hub_page(request):
-    ok, set_cookie = _room_gate(request)
-    if not ok:
+# ── 家人登入（2026-10-06；權限範圍見 family_auth.py：只有 /room 燈號、/lookup 查股）──────────
+async def _family_login_get(request):
+    if not family_auth.enabled():
         return _room_404()
-    import hub_page
-    html = await asyncio.to_thread(hub_page.page_html, bool(request.headers.get("CF-Connecting-IP")))
-    resp = web.Response(text=html, content_type="text/html", charset="utf-8",
-                        headers={"Cache-Control": "no-cache"})
-    if set_cookie:
-        resp.set_cookie(lookup_page.COOKIE, lookup_page._token(),
-                        max_age=lookup_page.COOKIE_DAYS * 86400,
-                        httponly=True, samesite="Lax", secure=True)
+    return web.Response(text=family_auth.login_html("", request.query.get("next", "/room")),
+                        content_type="text/html", charset="utf-8", headers={"Cache-Control": "no-store"})
+
+
+async def _family_login_post(request):
+    if not family_auth.enabled():
+        return _room_404()
+    f = await request.post()
+    ip = request.headers.get("CF-Connecting-IP") or request.remote or "-"
+    nxt = family_auth.safe_next(str(f.get("next", "/room")))
+    ok, msg = family_auth.check(str(f.get("user", "")), str(f.get("pw", "")), ip)
+    print(f"[family] 登入 {'成功' if ok else '失敗'}（{ip}）", flush=True)
+    if not ok:
+        return web.Response(text=family_auth.login_html(msg, nxt), status=401,
+                            content_type="text/html", charset="utf-8")
+    resp = web.HTTPFound(nxt)
+    resp.set_cookie(family_auth.COOKIE, family_auth.cookie_value(), max_age=family_auth.COOKIE_DAYS * 86400,
+                    httponly=True, samesite="Lax", secure=True)
     return resp
 
 
-async def _hub_status(request):
-    ok, _ = _room_gate(request)
-    if not ok:
-        return _room_404()
-    import hub_page
-    return web.json_response(hub_page.status(), headers={"Cache-Control": "no-store"})
-
-
-async def _hub_refresh(request):
-    ok, _ = _room_gate(request)
-    if not ok:
-        return _room_404()
-    import hub_page
-    good, msg = hub_page.start(request.query.get("job", ""))
-    print(f"[hub] 立即更新 {request.query.get('job')} → {msg}", flush=True)
-    return web.json_response({"ok": good, "msg": msg})
-
-
-async def _live_page(request):
-    ok, _ = _room_gate(request)
-    if not ok:
-        return _room_404()
-    import hub_page
-    f = hub_page.live_file(request.match_info.get("name", ""))
-    if not f:
-        return web.Response(text="這一頁還沒產生過，請回 /hub 按「立即更新」。", status=404,
-                            content_type="text/plain", charset="utf-8")
-    return web.FileResponse(f, headers={"Cache-Control": "no-store"})
-
-
-async def _hub_manifest(request):
-    import hub_page
-    return web.json_response(hub_page.MANIFEST, content_type="application/manifest+json")
-
-
-async def _hub_icon(request):
-    import hub_page
-    return web.Response(body=await asyncio.to_thread(hub_page.icon_png), content_type="image/png",
-                        headers={"Cache-Control": "public, max-age=86400"})
+async def _family_logout(request):
+    resp = web.HTTPFound("/login")
+    resp.del_cookie(family_auth.COOKIE)
+    return resp
 
 
 async def _run():
@@ -654,12 +639,9 @@ async def _run():
     app.router.add_get("/room/ask_stream", _room_ask_stream)
     app.router.add_post("/room/ask", _room_ask)
     app.router.add_get("/trades", _trades_page)
-    app.router.add_get("/hub", _hub_page)
-    app.router.add_get("/hub/status", _hub_status)
-    app.router.add_post("/hub/refresh", _hub_refresh)
-    app.router.add_get("/live/{name}", _live_page)
-    app.router.add_get("/hub.webmanifest", _hub_manifest)
-    app.router.add_get("/hub-icon.png", _hub_icon)
+    app.router.add_get("/login", _family_login_get)
+    app.router.add_post("/login", _family_login_post)
+    app.router.add_get("/logout", _family_logout)
     runner = web.AppRunner(app)
     await runner.setup()
     site = web.TCPSite(runner, "127.0.0.1", HEALTH_PORT)

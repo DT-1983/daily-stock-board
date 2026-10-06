@@ -1780,8 +1780,12 @@ def nav_html():
     return f'<nav class="roomnav">{lshow}<span class="navls">{links}</span>{ctrl}</nav>'
 
 
-def page_html():
-    """三欄殼。CDN 圖表函式庫沿用 lookup_page 那組（同一套圖，不另外挑）。"""
+FAMILY_CSS = ("<style>#chatbtn,#right,#sc-all,.chatbtn{display:none!important}"
+              ".room.chat .right{display:none!important}</style>")
+
+
+def page_html(family=False):
+    """三欄殼。family=True＝家人版（2026-10-06）：隱藏軍師鈕與整個軍師欄，後端另外把問答／對話紀錄擋掉。CDN 圖表函式庫沿用 lookup_page 那組（同一套圖，不另外挑）。"""
     from board_theme import BASE_CSS
     import lookup_page as lp
     try:
@@ -1806,6 +1810,7 @@ def page_html():
             + f'<div class="pane tablepane" id="tablepane">{table_html()}</div>'
             + right_html()
             + "</div>"
+            + (FAMILY_CSS if family else "")
             + ROOM_JS + "</body></html>")
 
 
