@@ -1,9 +1,15 @@
 {
- "date": "2026-10-05",
- "lamp_date": "2026-10-05",
- "buy": [],
+ "date": "2026-10-06",
+ "lamp_date": "2026-10-06",
+ "buy": [
+  "3044.TW",
+  "TTMI"
+ ],
  "half_sell": [],
- "full_exit": [],
+ "full_exit": [
+  "3264.TWO",
+  "BTBT"
+ ],
  "held": 13,
  "cash": 0.0
 }
