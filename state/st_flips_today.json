@@ -1,6 +1,13 @@
 {
-"date": "2026-10-05",
+"date": "2026-10-06",
 "flips_hold": [
+{
+"code": "AAOI",
+"name": "",
+"word": "RS60站回多方",
+"dir": 1,
+"sig": "rs60"
+},
 {
 "code": "COHR",
 "name": "",
@@ -16,28 +23,7 @@
 "sig": "rs60"
 },
 {
-"code": "KR",
-"name": "",
-"word": "RS60站回多方",
-"dir": 1,
-"sig": "rs60"
-},
-{
-"code": "CCL",
-"name": "",
-"word": "RS60站回多方",
-"dir": 1,
-"sig": "rs60"
-},
-{
 "code": "GLW",
-"name": "",
-"word": "RS60站回多方",
-"dir": 1,
-"sig": "rs60"
-},
-{
-"code": "AAOI",
 "name": "",
 "word": "RS60站回多方",
 "dir": 1,
@@ -59,5 +45,94 @@
 }
 ],
 "flips_watch": [],
-"ai_alerts": []
+"ai_alerts": [
+{
+"chain": "玻璃基板/TGV",
+"market": "US",
+"sig": "🟢",
+"code": "ONTO",
+"name": "Onto Innovation Inc.",
+"reason": "觀望→買進"
+},
+{
+"chain": "玻璃基板/TGV",
+"market": "US",
+"sig": "🟢",
+"code": "KLIC",
+"name": "Kulicke and Soffa Industries, I",
+"reason": "觀望→買進"
+},
+{
+"chain": "PCB/ABF 載板",
+"market": "US",
+"sig": "🟢",
+"code": "TTMI",
+"name": "TTM Technologies, Inc.",
+"reason": "觀望→買進"
+},
+{
+"chain": "玻璃基板/TGV",
+"market": "US",
+"sig": "🟢",
+"code": "CAMT",
+"name": "Camtek Ltd.",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 伺服器",
+"market": "TW",
+"sig": "🟢",
+"code": "2330",
+"name": "台積電",
+"reason": "觀望→買進"
+},
+{
+"chain": "低軌衛星",
+"market": "TW",
+"sig": "🟢",
+"code": "6285",
+"name": "啟碁",
+"reason": "觀望→買進"
+},
+{
+"chain": "太陽能",
+"market": "TW",
+"sig": "🟢",
+"code": "5483",
+"name": "中美晶",
+"reason": "觀望→買進"
+},
+{
+"chain": "太陽能",
+"market": "TW",
+"sig": "🟢",
+"code": "3576",
+"name": "聯合再生",
+"reason": "觀望→買進"
+},
+{
+"chain": "玻璃基板/TGV",
+"market": "TW",
+"sig": "🟢",
+"code": "3481",
+"name": "群創",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 電源/散熱",
+"market": "TW",
+"sig": "🟢",
+"code": "2308",
+"name": "台達電",
+"reason": "觀望→買進"
+},
+{
+"chain": "PCB/ABF 載板",
+"market": "TW",
+"sig": "🟢",
+"code": "7795",
+"name": "長廣",
+"reason": "觀望→買進"
+}
+]
 }
