@@ -164,17 +164,18 @@ CSS = """
 .hx details{background:var(--card);border:1px solid var(--line)}
 .hx summary{cursor:pointer;list-style:none;padding:11px 14px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px}
 .hx summary::-webkit-details-marker{display:none}
-.hx summary::after{content:"點開 ▾";margin-left:auto;font-size:12.5px;color:var(--accent)}
+.hx summary::after{content:"點開 ▾";margin-left:auto;font-size:12px;color:var(--accent)}
 .hx details[open] summary::after{content:"收合 ▴"}
 .hx summary b{font-size:16px}
-.hx .hx-s{font-size:13.5px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+.hx .hx-s{font-size:13px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
 .hx .hx-bd{padding:2px 14px 12px;border-top:1px solid var(--line2)}
 .hx .hx-g{display:grid;grid-template-columns:auto 1fr;gap:8px 12px;padding:9px 0;border-top:1px solid var(--line2);align-items:start}
 .hx .hx-g:first-child{border-top:0}
 .hx .hx-gh{font-size:14px;font-weight:700;white-space:nowrap;padding-top:3px}
+.hx small{font-size:12px}
 .hx .hx-gh small{font-weight:400;color:var(--muted);margin-left:4px}
 .hx .hx-ns{display:flex;flex-wrap:wrap;gap:6px}
-.hx .hx-n{font-size:14.5px;padding:2px 9px;border:1px solid var(--line);background:var(--surface)}
+.hx .hx-n{font-size:14px;padding:2px 9px;border:1px solid var(--line);background:var(--surface)}
 .hx .hx-n small{color:var(--muted);margin-left:5px;font-size:12px}
 .hx-chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
 .hx-chip{padding:7px 11px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:14px}
@@ -185,7 +186,7 @@ CSS = """
 button.hx-chip{font:inherit;cursor:pointer}
 button.hx-chip:hover{background:var(--surface)}
 button.hx-chip.on{background:var(--surface);box-shadow:inset 0 -3px 0 var(--accent)}
-.hx-note{background:var(--card);border:1px solid var(--line);padding:10px 12px;margin:8px 0;color:var(--muted);font-size:13.5px;line-height:1.75}
+.hx-note{background:var(--card);border:1px solid var(--line);padding:10px 12px;margin:8px 0;color:var(--muted);font-size:13px;line-height:1.75}
 @media(max-width:520px){.hx .hx-g{grid-template-columns:1fr}}
 """
 

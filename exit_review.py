@@ -294,15 +294,15 @@ CSS = """
 
 .sb{background:var(--surface);border:1px solid var(--line);border-radius:12px;
  padding:14px 16px;margin:12px 0}
-.sb h2{font-size:15px;font-weight:700;color:#F5B841;margin-bottom:4px}
-.sb .sub{font-size:11.5px;color:var(--dim);margin-bottom:9px;line-height:1.7}
+.sb h2{font-size:14px;font-weight:700;color:#F5B841;margin-bottom:4px}
+.sb .sub{font-size:12px;color:var(--dim);margin-bottom:9px;line-height:1.7}
 .sb .sub b{color:#CBD5E1}
 /* 篩選列。這頁不上站，所以不套 board_theme 的 .ctrl/.seg，自己寫最小一組。 */
 .fbar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;
  margin:14px 0 4px;padding:10px 12px;border:1px solid var(--line);
  border-radius:12px;background:var(--surface)}
 .fg{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.fl{font-size:11px;color:var(--dim);margin-right:2px}
+.fl{font-size:12px;color:var(--dim);margin-right:2px}
 /* 2026-09-10 Leo:「出場檢視表按鍵(圓框)跟其它設計不一樣，幫我改方框」——
    原本是 999px 全圓角，跟投資站其他頁篩選/標籤用的小方框(2-9px)不一致。 */
 .fb{font:inherit;font-size:12px;padding:4px 10px;border-radius:6px;cursor:pointer;
@@ -313,8 +313,8 @@ CSS = """
 .fq{font:inherit;font-size:12px;padding:5px 10px;border-radius:8px;min-width:150px;
  border:1px solid var(--line);background:transparent;color:var(--ink)}
 .fcount{margin-left:auto;font-size:12px;color:var(--dim)}
-.cur{font-size:9.5px;color:var(--dim);margin-right:3px}
-.exempty{padding:14px 4px;color:var(--dim);font-size:12.5px}
+.cur{font-size:10.5px;color:var(--dim);margin-right:3px}
+.exempty{padding:14px 4px;color:var(--dim);font-size:12px}
 /* 現價已經高過貴價（洪瑞泰法）——用底色標，比多一欄文字省版面 */
 .ex td.overexp{color:var(--neg,#f87171);background:rgba(248,113,113,.07)}
 /* ⚠️ 2026-09-06：改成卡片列時我把 .exwrap 之後的樣式整段砍掉，
@@ -328,7 +328,7 @@ CSS = """
 .warnbox b{color:#FCD34D}
 .kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:8px 0}
 .kv .c{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:8px 10px}
-.kv .k{font-size:10px;color:var(--dim)}
+.kv .k{font-size:10.5px;color:var(--dim)}
 .kv .v{font-size:16px;font-weight:700;margin-top:3px;
  /* 2026-09-10：這裡原本寫 Fira Code，全站數字一律 IBM Plex Mono（見 BASE_CSS
     的 .num）——沒載入 Fira Code 字型檔，所以其實是退回瀏覽器預設 monospace，
@@ -362,7 +362,7 @@ CSS = """
     加了會變成「代號AMD」黏在一起），但「誰的」要留標籤，否則只看到一個「Leo」。 */
  .ex td.exnm,.ex td.exwho{max-width:none;overflow:visible;white-space:normal}
  .ex td.tk::before,.ex td.exnm::before{content:none}
- .ex td.tk{font-size:15px}
+ .ex td.tk{font-size:14px}
 }
 
 /* ── 三燈摘要 + 展開細節（2026-09-06 Leo：「可以做像燈號那樣？」）──
@@ -384,11 +384,11 @@ CSS = """
 .exsm:hover{background:rgba(148,163,184,.06)}
 .c1{font-weight:700;font-size:14px;color:var(--ink);display:flex;
  align-items:baseline;gap:7px;min-width:0}
-.nm2{font-weight:400;font-size:11px;color:var(--dim);overflow:hidden;
+.nm2{font-weight:400;font-size:12px;color:var(--dim);overflow:hidden;
  text-overflow:ellipsis;white-space:nowrap}
 .c2{display:flex;gap:5px;flex-wrap:wrap}
-.c3{font-size:11px;color:var(--dim);text-align:right}
-.c4,.c5,.c6{text-align:right;font-size:12.5px;
+.c3{font-size:12px;color:var(--dim);text-align:right}
+.c4,.c5,.c6{text-align:right;font-size:12px;
  font-variant-numeric:tabular-nums}
 .c6{font-weight:600}
 .exrow[open] .exsm{border-bottom:1px solid var(--line2)}
@@ -427,7 +427,7 @@ CSS = """
 @media(max-width:620px){
  /* 手機：段標籤改成橫的一條，不然 78px 佔掉太多寬度 */
  .exgrp{grid-template-columns:1fr}
- .exglab{padding:5px 11px;font-size:10px}
+ .exglab{padding:5px 11px;font-size:10.5px}
 }
 .d{background:var(--surface);padding:7px 11px;display:flex;
  justify-content:space-between;align-items:baseline;gap:8px;font-size:12px}
@@ -447,6 +447,11 @@ CSS = """
 """
 
 
+# 2026-10-07 Leo：「出場檢視表上下內文字體不一致」。全頁字級統一成 5 階：
+#   10.5 欄位標籤／小標籤｜12 次要說明與表格內文｜13 內文重點｜14 強調與按鈕｜16–23 標題與大數字。
+# BASE_CSS 的 .sub（12.5）與按鈕預設字級（15）不在這支的 CSS 裡，這裡明確蓋掉，避免上下兩區差半級。
+FS_UNIFY = "button{font-size:inherit}.sub{font-size:12px}.hx-chip,button.hx-chip{font-size:14px}"
+
 CSS30 = """
 /* ── 30 秒看懂（2026-09-30 Leo：「出場檢視表可以套用另一個對話幫 mom 做的 skill 嗎」）──
    版式照 stock-holdings-dashboard skill：三個大數字 → 影響最大的幾件事 → 做完前後 → 圖。
@@ -458,25 +463,25 @@ CSS30 = """
 .x3sec h2{font-size:17px;margin:0 0 8px;color:var(--ink);font-weight:700}
 .x3sec h2 small{font-weight:400;color:var(--dim);font-size:12px;margin-left:6px}
 .x3tag{display:inline-block;background:var(--cy-dim);color:var(--accent);
- border:1px solid var(--accent);border-radius:3px;padding:2px 10px;font-size:12.5px;margin-bottom:8px}
+ border:1px solid var(--accent);border-radius:3px;padding:2px 10px;font-size:12px;margin-bottom:8px}
 .x3hero{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
 .x3hn{background:var(--card);border:1px solid var(--line2);border-radius:3px;padding:8px 12px}
-.x3hn .l{font-size:12.5px;color:var(--muted)}
+.x3hn .l{font-size:12px;color:var(--muted)}
 .x3hn .v{font-size:23px;font-weight:700;line-height:1.25;
  font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
-.x3hn .s{font-size:11.5px;color:var(--dim);margin-top:1px}
+.x3hn .s{font-size:12px;color:var(--dim);margin-top:1px}
 .x3g{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .x3c{display:flex;gap:10px;background:var(--card);border:1px solid var(--line2);
  border-radius:3px;padding:8px 10px;align-items:flex-start}
 .x3n{flex:none;width:30px;height:30px;border-radius:3px;background:var(--accent);color:var(--bg);
  font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center}
 .x3t{font-size:16px;font-weight:700;line-height:1.35}
-.x3t .x3nm{font-weight:400;color:var(--muted);font-size:12.5px;margin-left:6px}
+.x3t .x3nm{font-weight:400;color:var(--muted);font-size:12px;margin-left:6px}
 .x3act{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:700;
  border-radius:3px;padding:1px 7px;margin-left:6px;color:var(--bg);white-space:nowrap}
-.x3s{font-size:12.5px;color:var(--muted);margin-top:2px}
-.x3w{font-size:12.5px;margin-top:3px;color:var(--muted)}
-.x3then{margin-top:10px;font-size:13.5px;line-height:1.75;background:var(--card);
+.x3s{font-size:12px;color:var(--muted);margin-top:2px}
+.x3w{font-size:12px;margin-top:3px;color:var(--muted)}
+.x3then{margin-top:10px;font-size:13px;line-height:1.75;background:var(--card);
  border:1px solid var(--line2);border-left:3px solid var(--accent);border-radius:3px;padding:8px 12px}
 .x3bag{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .x3ba{background:var(--card);border:1px solid var(--line2);border-radius:3px;padding:6px 10px}
@@ -486,23 +491,23 @@ CSS30 = """
 .x3svb{fill:var(--ink);font-weight:700;font-family:'IBM Plex Mono',ui-monospace,monospace}
 .x3sm{fill:var(--dim)}
 .x3sin{fill:var(--bg);font-weight:700;font-family:'IBM Plex Mono',ui-monospace,monospace}
-.x3lgs{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:12.5px;color:var(--muted)}
+.x3lgs{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:12px;color:var(--muted)}
 .x3lgs i{display:inline-flex;width:16px;height:16px;border-radius:2px;margin-right:5px;
  vertical-align:-3px;align-items:center;justify-content:center;color:var(--bg);
- font-size:10px;font-style:normal;font-weight:700}
-.x3why{margin:0;padding-left:20px}.x3why li{margin:4px 0;font-size:13.5px;line-height:1.6;color:var(--muted)}
+ font-size:10.5px;font-style:normal;font-weight:700}
+.x3why{margin:0;padding-left:20px}.x3why li{margin:4px 0;font-size:13px;line-height:1.6;color:var(--muted)}
 .x3why b{color:var(--ink)}
 .x3mb{display:none}
 .x3own{margin:14px 0 4px}
 .x3oh{font-size:16px;font-weight:700;color:#F5B841;padding:4px 2px;cursor:default}
-.x3oh small{font-weight:400;color:var(--dim);font-size:12.5px;margin-left:10px}
+.x3oh small{font-weight:400;color:var(--dim);font-size:12px;margin-left:10px}
 details.x3own>summary.x3oh{cursor:pointer;border:1px solid var(--line);border-radius:4px;
  padding:9px 12px;background:var(--surface)}
 @media (max-width:640px){
  .x3hero{grid-template-columns:1fr 1fr}.x3hero .x3hn:first-child{grid-column:1/3}
  .x3g,.x3cols,.x3bag{grid-template-columns:1fr}
  .x3dk{display:none}.x3mb{display:block}
- .x3t{font-size:17px}.x3s,.x3w{font-size:14px}.x3then,.x3why li{font-size:14.5px}
+ .x3t{font-size:17px}.x3s,.x3w{font-size:14px}.x3then,.x3why li{font-size:14px}
 }
 """
 
@@ -909,7 +914,7 @@ def render(rows, meta):
             # 這七項是「要不要點開」的判斷依據，其餘全部收在裡面。
             head = (f'<summary class="exsm">'
                     f'<span class="c1">{esc(r["tk"])}'
-                    + ('<span class="dim" style="font-size:10px"> ⚠️補算</span>'
+                    + ('<span class="dim" style="font-size:10.5px"> ⚠️補算</span>'
                        if r.get("filled") else "")
                     + f'<span class="nm2">{esc(r["name"])}</span></span>'
                     f'<span class="c2">{lam}</span>'
@@ -1132,7 +1137,7 @@ def render(rows, meta):
 
     return ('<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            "<title>出場檢視表</title><style>" + BASE_CSS + CSS + CSS30 + _hx_css
+            "<title>出場檢視表</title><style>" + BASE_CSS + CSS + CSS30 + _hx_css + FS_UNIFY
             + '</style></head><body><div class="wrap">'
             # 🔴 2026-09-06 Leo：「上面還是有欸？」——指那排導覽按鈕。
             # 這頁**不上投資站**，nav_abs() 那些連結指向的是公開站的頁面，

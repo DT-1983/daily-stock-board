@@ -162,9 +162,9 @@ def page():
         st = {"pending": "⏳ 掛單", "filled": "✅ 成交", "cancelled": "✖ 取消"}.get(r["status"], r["status"])
         qp = " ".join(x for x in (f"{r['qty']:g} 股" if r.get("qty") else "", f"@{r['price']}" if r.get("price") else "") if x) or "—"
         tr.append(f"<tr><td>{r['ts']}</td><td>{r['broker']}</td><td>{r['action']}</td><td><b>{r['ticker']}</b></td>"
-                  f"<td>{qp}</td><td>{st}</td><td>{'、'.join(r['reasons'])}</td>"
-                  f"<td>{s.get('lit', '—')}燈 {('RR%.1f' % s['rr']) if s.get('rr') is not None else ''}</td>"
-                  f"<td>{qh}</td><td>{ch}</td><td class=dim>{r['id']}</td></tr>")
+                  f"<td class=nw>{qp}</td><td class=nw>{st}</td><td class=rs>{'、'.join(r['reasons'])}</td>"
+                  f"<td class=nw>{s.get('lit', '—')}燈 {('RR%.1f' % s['rr']) if s.get('rr') is not None else ''}</td>"
+                  f"<td class=nw>{qh}</td><td>{ch}</td><td class=dim>{r['id']}</td></tr>")
     # 2026-09-07 Leo：「TRADES 幫我做導覽列」。順便把這頁本來自己寫死的一小段 CSS
     # （#0B1220 / #e8eaed / #94A3B8…）換掉——它跟 LOOKUP_CSS、ti.CSS 是同一批
     # 「自己偏離色票」的東西，改吃 board_theme 的 BASE_CSS。
@@ -179,6 +179,12 @@ def page():
 .tj tr:hover td{background:var(--cy-dim)}
 .tj td{font-variant-numeric:tabular-nums}
 .dim{color:var(--dim);font-size:10px}
+/* 2026-10-07 Leo：「狀態、象限跑掉了，把理由的字縮小」——短欄位（量價／狀態／燈號／象限）不准斷行，
+   多出來的寬度讓給理由欄；理由字縮小、用較淡的顏色，長理由自己換行。表太寬時外層可橫向捲動。 */
+.nw{white-space:nowrap}
+.rs{font-size:11.5px;line-height:1.55;color:var(--muted);min-width:240px;max-width:520px}
+td.dim{word-break:break-all;min-width:70px}
+.tjw{overflow-x:auto}
 small{color:var(--dim)}
 .n{color:var(--muted);font-size:12px;margin:8px 0 14px}
 """
