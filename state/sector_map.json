@@ -2007,7 +2007,7 @@
     "sector": "Producer Manufacturing",
     "industry": "Trucks/Construction/Farm Machinery",
     "exchange": "NYSE",
-    "asof": "2026-09-06"
+    "asof": "2026-10-07"
   },
   "SEDG": {
     "sector": "Producer Manufacturing",
@@ -2391,7 +2391,7 @@
     "sector": "Electronic Technology",
     "industry": "Semiconductors",
     "exchange": "NASDAQ",
-    "asof": "2026-09-07"
+    "asof": "2026-10-07"
   },
   "NA": {
     "sector": "Electronic Technology",
@@ -3058,5 +3058,35 @@
     "industry": "Semiconductors",
     "exchange": "TWSE",
     "asof": "2026-10-05"
+  },
+  "LRCX": {
+    "sector": "Producer Manufacturing",
+    "industry": "Industrial Machinery",
+    "exchange": "NASDAQ",
+    "asof": "2026-10-07"
+  },
+  "CAT": {
+    "sector": "Producer Manufacturing",
+    "industry": "Trucks/Construction/Farm Machinery",
+    "exchange": "NYSE",
+    "asof": "2026-10-07"
+  },
+  "GEV": {
+    "sector": "Producer Manufacturing",
+    "industry": "Electrical Products",
+    "exchange": "NYSE",
+    "asof": "2026-10-07"
+  },
+  "PH": {
+    "sector": "Producer Manufacturing",
+    "industry": "Industrial Machinery",
+    "exchange": "NYSE",
+    "asof": "2026-10-07"
+  },
+  "TT": {
+    "sector": "Producer Manufacturing",
+    "industry": "Industrial Machinery",
+    "exchange": "NYSE",
+    "asof": "2026-10-07"
   }
 }

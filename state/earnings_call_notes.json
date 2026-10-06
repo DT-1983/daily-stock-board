@@ -1859,6 +1859,95 @@
      "speaker": "Sanjay Mehrotra，董事長、總裁暨執行長"
     }
    ]
+  },
+  "Q3 2026": {
+   "fetched": "2026-10-06",
+   "items": [
+    {
+     "type": "metric",
+     "label": "Cloud Memory 事業單位本季營收",
+     "value": "163 億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Core Data Center 事業單位本季營收",
+     "value": "180 億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Mobile and Client 事業單位本季營收",
+     "value": "131 億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Automotive and Embedded 事業單位本季營收",
+     "value": "68 億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "本季 DRAM 與 NAND 營收",
+     "value": "DRAM 398 億美元（占總營收 73%）；NAND 141 億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "本季毛利率與全年毛利率",
+     "value": "本季毛利率 87%，較上季增加 210 個基點；FY2026 全年毛利率 81.1%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "策略客戶協議（SCA）",
+     "value": "已簽署 26 份，涵蓋至 2030 年超過 35% 的營收，客戶預付款 320 億美元",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "下季（FY2027 第 1 季）營收、毛利率與 EPS 展望",
+     "value": "營收 615 億美元 ±15 億美元；非 GAAP 毛利率約 86.25%；非 GAAP 每股盈餘 38.15 美元 ±1.00 美元；非 GAAP 營業費用約 20.6 億美元",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "FY2027 毛利率走勢",
+     "value": "FY2027 第 1 季是全年毛利率的底部（the floor），之後預期逐季改善",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "資本支出計畫",
+     "value": "FY2027 第 1 季資本支出約 115 億美元，上半年約 250 億美元，重點是廠房建設（construction spending）而非設備，為 2028 年之後的產能做準備",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "供需展望",
+     "value": "DRAM 與 NAND 預期在 2027 與 2028 年維持供給受限，且看不到供需何時回到平衡",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "HBM 2027 年供給",
+     "value": "2027 年 HBM 位元供給的絕大多數已完成協議",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "FY2027 整體展望",
+     "value": "預期 FY2027 比創下紀錄的 FY2026 更強，各季營收逐季成長",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "本季基調",
+     "value": "我們對 FY2026 的成果感到非常出色，並預期 FY2027 會更強。",
+     "speaker": "Sanjay Mehrotra，董事長暨執行長"
+    }
+   ]
   }
  },
  "NVDA": {
