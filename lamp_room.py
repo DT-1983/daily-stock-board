@@ -34,6 +34,7 @@ Leo 問「軍師不能線上嗎？」——**可以，就是查股票頁現在�
 門檻沿用 `lookup_page.gate()`（LOOKUP_TOKEN，?key= 種 90 天 cookie，沒過回 404）。
 """
 from board_theme import snapped as _bt_snapped
+from watch_ui import WATCH_CSS, WATCH_JS
 import io
 import json
 import os
@@ -1860,7 +1861,8 @@ def nav_html():
     #    （模式鈕擋圖、軍師鈕蓋住送出、展開鈕蓋住中欄左上）。
     #    浮動鈕沒有「不擋東西的位置」——畫面滿的時候每個角落都有內容。
     ctrl = ('<span class="modebar"><button class="mb" id="mode-stock">個股</button>'
-            '<button class="mb on" id="mode-list">列表</button></span>'
+            '<button class="mb on" id="mode-list">列表</button>'
+            '<button class="mb" id="mode-watch">自選</button></span>'
             '<button class="chatbtn" id="chatbtn">🏛️ 軍師</button>')
     # 🔴 2026-09-08 Leo：「右上少一個軍師的按鍵」。
     #    整條導覽列是 overflow-x:auto，連結一多就把最後一顆（軍師）推出右邊界，
@@ -1870,7 +1872,7 @@ def nav_html():
     return f'<nav class="roomnav">{lshow}<span class="navls">{links}</span>{ctrl}</nav>'
 
 
-FAMILY_CSS = ("<style>#chatbtn,#right,#sc-all,.chatbtn{display:none!important}"
+FAMILY_CSS = ("<style>#chatbtn,#right,#sc-all,.chatbtn,#mode-watch,.watchpane{display:none!important}"
               ".room.chat .right{display:none!important}</style>")
 
 
@@ -1890,7 +1892,7 @@ def page_html(family=False):
             + Q + "utf-8" + Q + "><meta name=" + Q + "viewport" + Q + " content="
             + Q + "width=device-width,initial-scale=1" + Q + ">"
             "<title>燈號戰情室</title><link rel=\"icon\" type=\"image/png\" href=\"/app-icon.png\"><link rel=\"apple-touch-icon\" href=\"/app-icon.png\">" + scripts
-            + "<style>" + BASE_CSS + _combo_css() + ti_css + ROOM_CSS + "</style></head><body>"
+            + "<style>" + BASE_CSS + _combo_css() + ti_css + ROOM_CSS + WATCH_CSS + "</style></head><body>"
             + title_html()
             + nav_html()
             + '<div class="room">'
@@ -1899,10 +1901,11 @@ def page_html(family=False):
             + f'<div class="midtheme">{_mid_theme_nav(items)}</div>'
             + '<div id="mid-body"><div class="empty">左邊選一檔。</div></div></main>'
             + f'<div class="pane tablepane" id="tablepane">{table_html()}</div>'
+            + '<div class="pane watchpane" id="watchpane"></div>'
             + right_html()
             + "</div>"
             + (FAMILY_CSS if family else "")
-            + ROOM_JS + "</body></html>")
+            + ROOM_JS + ("" if family else WATCH_JS) + "</body></html>")
 
 
 # 續談用的 session（2026-09-07 Leo：「做吧」）。
