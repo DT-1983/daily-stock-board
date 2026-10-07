@@ -1738,7 +1738,7 @@ ROOM_JS = r"""
   var st=document.createElement("style");
   st.textContent=".lq{margin-left:8px;font-size:12px;padding:1px 7px;border-radius:9px;border:1px solid var(--line2,#1d2b3d);color:var(--dim,#8aa0b8)}"
     +".lq.on{color:#22D3EE;border-color:#22D3EE}.lq.ext{color:#FFB627;border-color:#FFB627}"
-    +".l1 .px.lq-live::before{content:'●';color:#22D3EE;font-size:9px;margin-right:4px}";
+    +".l1 .px.lq-live::before,td.qpx.lq-live::before{content:'●';color:#22D3EE;font-size:9px;margin-right:4px}";
   document.head.appendChild(st);
   function fmt(n){ return n==null?"":Number(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}); }
   function cls(c){ return c>=0?"up":"dn"; }
@@ -1758,6 +1758,16 @@ ROOM_JS = r"""
       li.dataset.sortChg=d.chg==null?-999:d.chg;
       px.title=(d.state||"")+" "+(d.time||"")+"｜"+(d.src||"");
       px.classList.toggle("lq-live",d.state==="盤中");
+    });
+  }
+  // 列表模式（進出燈號那張表）：現價與「距目標」跟著動；風報比／距停損／燈數是掃描時算的，不動。
+  function paintTable(q){
+    document.querySelectorAll("tr[data-tk]").forEach(function(tr){
+      var d=q[tr.dataset.tk]; if(!d) return;
+      var c=tr.querySelector("td.qpx"); if(c){ c.textContent=Number(d.px).toLocaleString("en-US",{minimumFractionDigits:1,maximumFractionDigits:1});
+        c.title=(d.state||"")+" "+(d.time||"")+"｜"+(d.src||"")+"（風報比、距停損、燈數仍是掃描當時的值）"; c.classList.toggle("lq-live",d.state==="盤中"); }
+      var t=parseFloat(tr.dataset.tgt), p=tr.querySelector("td.qpct");
+      if(p && t>0 && d.px>0){ var g=(t/d.px-1)*100; p.innerHTML='<span class="'+(g>=0?"pos":"neg")+'">'+(g>=0?"+":"")+g.toFixed(1)+'%</span>'; }
     });
   }
   function paintDetail(q){
@@ -1784,10 +1794,10 @@ ROOM_JS = r"""
   function tickList(force){
     if(document.hidden) return;
     if(closedL && !force && (skipL++ % 5)) return;
-    var tks=[]; document.querySelectorAll("li.it").forEach(function(li){
-      if(!li.hidden && li.offsetParent!==null && tks.length<120) tks.push(li.dataset.tk); });
+    var tks=[]; document.querySelectorAll("li.it, tr[data-tk]").forEach(function(li){
+      if(!li.hidden && li.offsetParent!==null && tks.length<120 && tks.indexOf(li.dataset.tk)<0) tks.push(li.dataset.tk); });
     if(!tks.length) return;
-    api(tks,false).then(function(q){ closedL=allClosed(q); paintList(q); });
+    api(tks,false).then(function(q){ closedL=allClosed(q); paintList(q); paintTable(q); });
   }
   window.roomQuoteNow=function(){ setTimeout(function(){ tickDetail(true); },500); };
   setInterval(tickDetail,15000); setInterval(tickList,60000);
