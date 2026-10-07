@@ -567,6 +567,14 @@
    "code": "AVGO",
    "sig": "st",
    "dir": 1
+  },
+  {
+   "sent": "2026-10-07",
+   "market": "tw",
+   "bar_date": "2026-10-07",
+   "code": "3081",
+   "sig": "st",
+   "dir": 1
   }
  ]
 }
