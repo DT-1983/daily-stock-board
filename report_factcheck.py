@@ -414,7 +414,28 @@ def check(report, price=None, base_rate=None, margin=None):
             break
         if cur_eps is None:
             cur_eps, cur_y = e, y                   # 退路：表上第一個有 EPS 的年度
-    if price and veps and veps > 0 and cur_eps and cur_eps > 0 and _num(report.get("target")):
+    # 🔴 2026-10-07（交接 INVESTMENT_AUDIT_FIX，國泰金 2882）：估值基準若是「每股淨值」(PBR 法，金融股常見)，
+    #    valuation_eps 放的是 BVPS（2882 = 106.37），不是 EPS。原本不分基準，拿 BVPS ÷ 今年 EPS(8.27)
+    #    → 「盈餘成長貢獻 +1186%」，EPS 與 BVPS 是不同東西，這個除法沒有意義。
+    #    PBR 報告改成只列 PBR 算式（現價÷目標年每股淨值、目標倍數），**不拆盈餘成長**，
+    #    也不把 PBR 倍數變化講成本益比擴張。（target_decompose.py 早就有分 PE／PBR，這裡漏了。）
+    _is_bv = (str(report.get("valuation_kind") or "").upper() == "PBR"
+              or any(w in str(report.get("valuation_eps_label") or "") for w in ("淨值", "BVPS")))
+    if _is_bv and price and veps and veps > 0 and _num(report.get("target")):
+        tgt = _num(report["target"])
+        up = tgt / price - 1
+        pbr_now, pbr_tgt = price / veps, tgt / veps
+        out.append({
+            "kind": "上檔空間的來源（PBR 基準）",
+            "claim": f"目標價 {tgt:,.2f} vs 現價 {price:,.2f}＝上檔 {up:+.1%}",
+            "ours": (f"估值基準是每股淨值（{report.get('valuation_eps_label') or '目標年'} {veps:g}），不是 EPS："
+                     f"現價 ÷ 每股淨值 ＝ {pbr_now:.3f} 倍 PBR；目標價 ÷ 每股淨值 ＝ {pbr_tgt:.3f} 倍 PBR。"
+                     f"上檔來自 PBR 倍數由 {pbr_now:.3f} 倍到 {pbr_tgt:.3f} 倍（{pbr_tgt / pbr_now - 1:+.1%}）。"),
+            "verdict": OK,
+            "note": ("每股淨值與 EPS 口徑不同，**不拆「盈餘成長」**；PBR 倍數變化也不是本益比擴張。"
+                     "要看盈餘面請看 EPS 預估自己的年度對年度變化（同口徑）。"),
+        })
+    elif price and veps and veps > 0 and cur_eps and cur_eps > 0 and _num(report.get("target")):
         tgt = _num(report["target"])
         up = tgt / price - 1
         g_eps = veps / cur_eps - 1                  # 盈餘成長貢獻
