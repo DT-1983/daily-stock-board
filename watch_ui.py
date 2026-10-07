@@ -38,6 +38,15 @@ WATCH_CSS = r"""
 .wpop .pb{display:flex;gap:6px;margin-top:6px}
 .wpop .pb button{flex:1;border:1px solid #16304A;border-radius:6px;padding:7px 8px;background:#080E1A;color:#8FA8C8;font-size:13px}
 .wpop .pb button.go{border-color:#22D3EE;color:#22D3EE}
+.wxq{margin-top:8px;padding-top:8px;border-top:1px solid #16304A}
+.wxq .xh{display:flex;align-items:center;font-size:13px;color:#E6EDF7;font-weight:600;margin-bottom:4px}
+.wxq .xh label{margin-left:auto;font-weight:400;font-size:12px;color:#8FA8C8;display:flex;align-items:center;gap:4px}
+.wxq .xl{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12.5px;color:#8FA8C8;margin-bottom:6px}
+.wxq .xl label{display:flex;align-items:center;gap:4px;white-space:nowrap}
+.wxq .xl label.off{opacity:.45}
+.wxq .xb{display:flex;gap:6px;align-items:center}
+.wxq .xb button,.wxq .xb a{flex:1;text-align:center;border:1px solid #16304A;border-radius:6px;padding:6px 8px;background:#080E1A;color:#8FA8C8;font-size:12.5px;text-decoration:none}
+.wxq .xs{font-size:11.5px;color:#6B84A3;margin-top:5px;line-height:1.5}
 .wmsg{font-size:12px;color:#8FA8C8;min-height:0;margin:6px 0 0;line-height:1.5}
 .wmsg b{color:#E6EDF7}
 .wtoast{font-size:12px;color:#8FA8C8;margin:0 0 4px;line-height:1.4;min-height:0}
@@ -90,7 +99,7 @@ WATCH_JS = r"""
     .then(function(r){ return r.ok?r.json():{error:"伺服器回應異常（"+r.status+"）"}; }).catch(function(){ return {error:"連不上伺服器"}; }); }
   function say(h){ var m=document.getElementById("wmsg"); if(m) m.innerHTML=h; }
   function toast(h){ var t=document.getElementById("wtoast"); if(!t) return; t.innerHTML=h; clearTimeout(toastT); toastT=setTimeout(function(){ t.innerHTML=""; },7000); }
-  function popShow(on){ var p=document.getElementById("wpop"); if(!p) return; p.classList.toggle("show",on); if(on){ var i=document.getElementById("wadd"); if(i) setTimeout(function(){ i.focus(); },50); } }
+  function popShow(on){ var p=document.getElementById("wpop"); if(!p) return; p.classList.toggle("show",on); if(on){ if(window._wxqLoad) window._wxqLoad(); var i=document.getElementById("wadd"); if(i) setTimeout(function(){ i.focus(); },50); } }
 
   function buildShell(){
     box.innerHTML='<div class="wix" id="windex"></div>'
@@ -104,7 +113,11 @@ WATCH_JS = r"""
       +'<input type="text" id="wadd" placeholder="代號或中文名：2330、NVDA、台積電（可多檔）" autocomplete="off" enterkeyhint="done">'
       +'<div class="pb"><button class="go" id="waddb">＋ 新增</button><button id="wimpb">⇪ 匯入檔案</button></div>'
       +'<input type="file" id="wfile" accept=".dsl,.csv,.txt,text/plain" style="display:none">'
-      +'<div class="wmsg" id="wmsg">匯入支援 XQ 匯出的 .dsl、純文字／CSV。手機左滑那一列可移除；電腦滑鼠移上去按 ✕。</div></div>';
+      +'<div class="wmsg" id="wmsg">匯入支援 XQ 匯出的 .dsl、純文字／CSV。手機左滑那一列可移除；電腦滑鼠移上去按 ✕。</div>'
+      +'<div class="wxq" id="wxq"><div class="xh">與 XQ 同步<label><input type="checkbox" id="wxauto">自動</label></div>'
+      +'<div class="xl" id="wxl">讀取中…</div>'
+      +'<div class="xb"><button id="wxsync">立即同步</button><a id="wxexp" href="/room/watch/export" download="watchlist_for_xq.txt">匯出給 XQ</a></div>'
+      +'<div class="xs" id="wxs"></div></div></div>';
     shell=true;
     document.getElementById("wsort").value=sortKey;
     document.getElementById("wplus").addEventListener("click",function(){ popShow(!document.getElementById("wpop").classList.contains("show")); });
@@ -113,6 +126,29 @@ WATCH_JS = r"""
     document.addEventListener("click",function(e){ var p=document.getElementById("wpop"); if(p&&p.classList.contains("show")&&!e.target.closest("#wpop,#wplus")) popShow(false); });
     document.getElementById("wchips").addEventListener("click",function(e){ var b=e.target.closest("button[data-f]"); if(!b) return;
       fil=b.dataset.f; try{ localStorage.setItem("wfil",fil); }catch(x){} renderList(); });
+    // ── XQ 同步（單向 XQ→自選；只讀 XQ 的檔）──
+    var xqLists=[], xqSel=[];
+    function xqRender(st){
+      var L=document.getElementById("wxl"), S=document.getElementById("wxs"); if(!L) return;
+      if(!st||!st.available){ L.textContent="找不到 XQ 的自選股檔（這台電腦沒裝 XQ，或還沒建立自選股）。"; document.getElementById("wxsync").disabled=true; return; }
+      xqLists=st.lists||[]; xqSel=st.selected||[]; document.getElementById("wxauto").checked=!!st.auto;
+      L.innerHTML=xqLists.map(function(x){ var off=x.count===0;
+        return '<label class="'+(off?"off":"")+'"><input type="checkbox" data-n="'+esc(x.name)+'"'+(xqSel.indexOf(x.name)>=0?" checked":"")+(off?" disabled":"")+'>'+esc(x.name)+" "+x.count+"</label>"; }).join("");
+      S.textContent=(st.last?("上次同步 "+st.last.time+"：新增 "+st.last.added+"、移除 "+st.last.removed+"。"):"尚未同步。")
+        +" XQ 拿掉的會同步拿掉，自己手動加的不會動。"; }
+    function xqLoad(){ fetch("/room/xq",{cache:"no-store"}).then(function(r){ return r.ok?r.json():null; }).then(xqRender).catch(function(){}); }
+    window._wxqLoad=xqLoad;
+    function xqPost(b){ return fetch("/room/xq",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)}).then(function(r){ return r.ok?r.json():null; }); }
+    function xqDone(r){ if(!r) { say('<b style="color:#F87171">同步失敗</b>'); return; } xqRender(r.status);
+      var x=r.result||{}; if(x.error){ say('<b style="color:#F87171">'+esc(x.error)+"</b>"); return; }
+      var msg="XQ 同步完成：新增 <b>"+(x.added||[]).length+"</b>、移除 <b>"+(x.removed||[]).length+"</b>，共 "+x.total+" 檔"
+        +((x.removed||[]).length?"（移除："+esc(x.removed.slice(0,6).join("、"))+((x.removed||[]).length>6?"…":"")+"）":"");
+      say(msg); toast(msg); refresh(true); }
+    document.getElementById("wxl").addEventListener("change",function(){
+      var sel=[]; document.querySelectorAll("#wxl input[type=checkbox]:checked").forEach(function(c){ sel.push(c.dataset.n); });
+      say("同步中…"); xqPost({action:"config",lists:sel,auto:document.getElementById("wxauto").checked}).then(xqDone); });
+    document.getElementById("wxauto").addEventListener("change",function(e){ xqPost({action:"config",auto:e.target.checked}).then(xqDone); });
+    document.getElementById("wxsync").addEventListener("click",function(){ say("同步中…"); xqPost({action:"sync"}).then(xqDone); });
     var inp=document.getElementById("wadd");
     function doAdd(){ var q=inp.value.trim(); if(!q) return; say("新增中…");
       post({action:"add",q:q}).then(function(r){

@@ -544,6 +544,65 @@ async def _room_watch_post(request):
     return web.json_response({"error": "不認得的動作"}, status=400)
 
 
+async def _room_xq(request):
+    """XQ 自選股同步（2026-10-08；邏輯在 xq_sync.py）。GET 回清單與設定；POST: {"action":"config","lists":[..],"auto":bool} | {"action":"sync"}"""
+    if not _watch_ok(request):
+        return web.Response(text="", status=404)
+    import xq_sync
+    if request.method == "GET":
+        return web.json_response(await asyncio.to_thread(xq_sync.status), headers={"Cache-Control": "no-store"})
+    try:
+        body = await request.json()
+    except Exception:                                       # noqa: BLE001
+        return web.json_response({"error": "格式不對"}, status=400)
+    if body.get("action") == "config":
+        lists = body.get("lists")
+        xq_sync.save_conf(lists if isinstance(lists, list) else None, body.get("auto") if "auto" in body else None)
+        res = await asyncio.to_thread(xq_sync.sync)               # 改選清單後馬上同步一次
+        print(f"[xq] 設定已存並同步：新增 {len(res.get('added', []))}、移除 {len(res.get('removed', []))}", flush=True)
+        return web.json_response({"status": await asyncio.to_thread(xq_sync.status), "result": res})
+    if body.get("action") == "sync":
+        res = await asyncio.to_thread(xq_sync.sync)
+        print(f"[xq] 手動同步：新增 {len(res.get('added', []))}、移除 {len(res.get('removed', []))}", flush=True)
+        return web.json_response({"status": await asyncio.to_thread(xq_sync.status), "result": res})
+    return web.json_response({"error": "不認得的動作"}, status=400)
+
+
+async def _room_watch_export(request):
+    """給 XQ 手動匯入的純文字（CRLF、美股加 .US）。"""
+    if not _watch_ok(request):
+        return web.Response(text="", status=404)
+    import xq_sync
+    txt = await asyncio.to_thread(xq_sync.export_for_xq)
+    return web.Response(text=txt, content_type="text/plain", charset="utf-8",
+                        headers={"Content-Disposition": 'attachment; filename="watchlist_for_xq.txt"'})
+
+
+async def _xq_auto_loop():
+    """每 60 秒看一次 XQ 的自選股檔，有變動（修改時間不同）且開了自動同步就鏡像一次。只讀 XQ 的檔，絕不寫。"""
+    import xq_sync
+    last = None
+    while True:
+        try:
+            await asyncio.sleep(60)
+            f = xq_sync.xq_file()
+            if not f or not xq_sync.conf().get("auto"):
+                continue
+            m = os.path.getmtime(f)
+            if last is None:
+                last = m                       # 第一輪只記錄，不在重啟時亂動
+                continue
+            if m != last:
+                last = m
+                res = await asyncio.to_thread(xq_sync.sync)
+                if res.get("added") or res.get("removed"):
+                    print(f"[xq] 自動同步：新增 {len(res['added'])}（{','.join(res['added'][:8])}）、移除 {len(res['removed'])}", flush=True)
+        except asyncio.CancelledError:
+            raise
+        except Exception as e:                              # noqa: BLE001
+            print(f"[xq] 自動同步失敗：{str(e)[:100]}", flush=True)
+
+
 async def _room_ask_stream(request):
     """串流版的軍師（SSE）。用 GET 是因為 EventSource 只能 GET。
 
@@ -721,6 +780,9 @@ async def _run():
     app.router.add_get("/room/quote", _room_quote)
     app.router.add_get("/room/watch", _room_watch)
     app.router.add_post("/room/watch", _room_watch_post)
+    app.router.add_get("/room/watch/export", _room_watch_export)
+    app.router.add_get("/room/xq", _room_xq)
+    app.router.add_post("/room/xq", _room_xq)
     app.router.add_get("/room/history", _room_history)
     app.router.add_get("/room/ask_stream", _room_ask_stream)
     app.router.add_post("/room/ask", _room_ask)
@@ -735,6 +797,7 @@ async def _run():
     site = web.TCPSite(runner, "127.0.0.1", HEALTH_PORT)
     await site.start()
     print(f"[discord_bot] 健康檢查端點：http://127.0.0.1:{HEALTH_PORT}/", flush=True)
+    asyncio.create_task(_xq_auto_loop())
     await client.start(TOKEN)
 
 

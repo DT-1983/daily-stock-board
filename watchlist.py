@@ -42,8 +42,10 @@ def normalize(tok):
     t = str(tok or "").strip().strip("'\"").upper()
     if not t or t.startswith("^"):
         return None
+    tw_suffix = False
     for suf in (".US", ".TWO", ".TW"):
         if t.endswith(suf):
+            tw_suffix = suf != ".US"
             t = t[: -len(suf)]
             break
     else:
@@ -51,6 +53,8 @@ def normalize(tok):
             return None
     if re.fullmatch(r"\d{4,6}[A-Z]?", t):
         return t
+    if tw_suffix:                  # .TW／.TWO 但不是數字代號（例如加權指數 TSE.TW）→ 不是股票
+        return None
     t = t.replace(".", "-")
     if re.fullmatch(r"[A-Z]{1,5}(-[A-Z])?", t):
         return t

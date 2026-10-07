@@ -293,6 +293,8 @@ def lamp_signal_events(rows, held_frac, exits, today):
         frac = held_frac.get(tk, 0.0)
         if frac == 0.0:
             rr = r.get("rr")
+            if set(r.get("src") or []) == {"自選"}:      # 2026-10-08：只在自選清單的股票不進燈號倉（不改策略母體）
+                continue
             if r.get("combo") and rr is not None and rr >= 1:
                 ex = exits.get(tk)
                 if ex and (_d.fromisoformat(today) - _d.fromisoformat(ex)).days < LAMP_COOLDOWN_DAYS:

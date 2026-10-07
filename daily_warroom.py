@@ -426,6 +426,8 @@ def sec_setup(date, scope="public"):
     for r in rows:
         if r.get("lit") != 4 or (r.get("rr") or 0) < 1:
             continue
+        if set(r.get("src") or []) == {"自選"}:          # 2026-10-08：自選專屬列不當進場候選（不改候選母體）
+            continue
         n = _n(r.get("ticker"))
         if (n in held) != priv:
             continue

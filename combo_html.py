@@ -191,7 +191,7 @@ def filter_html():
             + _sc("quad", "all", "全部", pressed=True) + quad + _sc("quad", "none", "無分類")
             + '<span class="flab flab2">來源</span>'
             + _sc("src", "all", "全部", pressed=True) + _sc("src", "守備清單", "守備清單")
-            + _sc("src", "持股", "持股") + _sc("src", "自訂", "自訂")
+            + _sc("src", "持股", "持股") + _sc("src", "自訂", "自訂") + _sc("src", "自選", "自選")
             + '</div></div>')
 
 FILTER_JS = """<script>

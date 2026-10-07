@@ -65,6 +65,13 @@ def _save(path, obj):
 
 
 # ── 母體：守備清單 + 持股 + 自訂觀察清單 ────────────────────────────
+def watch_only(row):
+    """這一列只因為在「自選」才被掃描（沒有守備清單／持股／自訂／輪動領先任何一個來源）。
+    策略倉、公開進場候選、類股輪動清單一律略過這種列——自選是 Leo 的關注清單，不是策略母體。"""
+    s = set((row or {}).get("src") or [])
+    return bool(s) and s <= {"自選"}
+
+
 def universe():
     """回 {ticker: {"name":…, "src":set(...)}}。Leo 2026-09-01 指定＝守備清單＋持股，
     另加自訂觀察清單（朋友推薦這種，不在任何自動母體裡的）。"""
@@ -92,6 +99,15 @@ def universe():
         print(f"  [warn] 讀不到持股：{str(e)[:70]}")
     for row in _load(WATCHLIST_PATH, []):
         add(row.get("ticker"), row.get("name"), "自訂")
+    # 2026-10-08 Leo「加自選」：戰情室「自選」清單裡的股票每天也掃描，這樣自選每一檔都有燈號、會出現在 4 燈列表。
+    # ⚠️ 只多一個來源標籤「自選」；**只有自選標籤的列不進策略倉／公開進場候選／類股輪動清單**（見 watch_only()），
+    #    否則等於偷偷擴大燈號倉的母體（改策略起跑線）。
+    try:
+        import watchlist as _wl
+        for it in _wl._load().get("items", []):
+            add(it.get("tk"), None, "自選")
+    except Exception as e:                             # noqa: BLE001
+        print(f"  [warn] 讀不到自選清單：{str(e)[:70]}")
 
     # ── 產業輪動：在 RRG 領先象限的類股，把成分股拉進來掃 ──────────
     #

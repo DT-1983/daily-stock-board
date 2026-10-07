@@ -104,6 +104,8 @@ def stocks_in(sectors_by_mkt):
     import re
     out = {}
     for r in rows:
+        if set(r.get("src") or []) == {"自選"}:          # 2026-10-08：自選專屬列不算進輪動清單
+            continue
         m = "tw" if re.match(r"^\d{4,6}[A-Z]?(\.TWO?)?$", str(r.get("ticker"))) else "us"
         want = {x["sector"] for x in sectors_by_mkt.get(m, [])}
         if r.get("sector") in want:
