@@ -11764,5 +11764,32 @@
 "amount_usd": 415.52,
 "reason": "打點：4 燈亮、風報比 2.57",
 "src": "live"
+},
+{
+"date": "2026-10-07",
+"portfolio": "進出燈號",
+"action": "full_exit",
+"ticker": "SSUMY",
+"shares": 20.048,
+"price": 11.03,
+"price_usd": 11.03,
+"amount_usd": 221.13,
+"reason": "RS60 跌破自身 60MA（-1.51%）→ 全出",
+"src": "live",
+"entry_price": 11.51,
+"pnl_usd": -9.62,
+"pnl_pct": -4.17
+},
+{
+"date": "2026-10-07",
+"portfolio": "進出燈號",
+"action": "buy",
+"ticker": "2454.TW",
+"shares": 1.4568,
+"price": 4835.0,
+"price_usd": 151.7958,
+"amount_usd": 221.14,
+"reason": "打點：4 燈亮、風報比 3.54",
+"src": "live"
 }
 ]
