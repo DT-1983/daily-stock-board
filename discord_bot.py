@@ -344,7 +344,7 @@ async def _lookup_page(request):
     if not ok:
         print(f"[lookup] 擋下（無 key／cookie）ticker={request.query.get('ticker','')!r}",
               flush=True)
-        if family_auth.enabled():
+        if family_auth.login_enabled():
             raise web.HTTPFound("/login?next=/lookup")
         return web.Response(text=lookup_page.not_found_html(), status=404,
                             content_type="text/html", charset="utf-8")
@@ -417,7 +417,7 @@ async def _room_page(request):
         ok, set_cookie, family = True, False, True          # 家人版：沒有軍師、沒有全部持股（2026-10-06）
     if not ok:
         print("[room] 擋下（無 key／cookie）", flush=True)
-        if family_auth.enabled():
+        if family_auth.login_enabled():
             raise web.HTTPFound("/login?next=/room")
         return _room_404()
     import lamp_room
@@ -618,26 +618,30 @@ async def _room_ask(request):
 
 # ── 家人登入（2026-10-06；權限範圍見 family_auth.py：只有 /room 燈號、/lookup 查股）──────────
 async def _family_login_get(request):
-    if not family_auth.enabled():
+    if not family_auth.login_enabled():
         return _room_404()
     return web.Response(text=family_auth.login_html("", request.query.get("next", "/room")),
                         content_type="text/html", charset="utf-8", headers={"Cache-Control": "no-store"})
 
 
 async def _family_login_post(request):
-    if not family_auth.enabled():
+    if not family_auth.login_enabled():
         return _room_404()
     f = await request.post()
     ip = request.headers.get("CF-Connecting-IP") or request.remote or "-"
     nxt = family_auth.safe_next(str(f.get("next", "/room")))
-    ok, msg = family_auth.check(str(f.get("user", "")), str(f.get("pw", "")), ip)
-    print(f"[family] 登入 {'成功' if ok else '失敗'}（{ip}）", flush=True)
-    if not ok:
+    role, msg = family_auth.check_any(str(f.get("user", "")), str(f.get("pw", "")), ip)
+    print(f"[login] {role or '失敗'}（{ip}）", flush=True)
+    if not role:
         return web.Response(text=family_auth.login_html(msg, nxt), status=401,
                             content_type="text/html", charset="utf-8")
     resp = web.HTTPFound(nxt)
-    resp.set_cookie(family_auth.COOKIE, family_auth.cookie_value(), max_age=family_auth.COOKIE_DAYS * 86400,
-                    httponly=True, samesite="Lax", secure=True)
+    if role == "leo":      # 本人：種跟 ?key= 一樣的 lk cookie → 全部功能（軍師、持股、交易紀錄）
+        resp.set_cookie(lookup_page.COOKIE, lookup_page._token(), max_age=lookup_page.COOKIE_DAYS * 86400,
+                        httponly=True, samesite="Lax", secure=True)
+    else:
+        resp.set_cookie(family_auth.COOKIE, family_auth.cookie_value(), max_age=family_auth.COOKIE_DAYS * 86400,
+                        httponly=True, samesite="Lax", secure=True)
     return resp
 
 

@@ -42,6 +42,18 @@ def is_family(cookie_val):
     return enabled() and bool(cookie_val) and hmac.compare_digest(cookie_val, cookie_value())
 
 
+def leo_enabled():
+    """Leo 本人帳密（2026-10-08）：登入成功＝拿到跟 ?key= 一樣的 lk cookie（全部功能含軍師）。
+    為什麼要有：手機的 App 內建瀏覽器每個容器 cookie 各自一份，要一直重貼帶 key 的網址；帳密可用鑰匙圈自動填。
+    帳密放 .env 的 LEO_USER／LEO_PASS（沒設＝關閉）；跟家人帳密完全分開，家人帳號登不進本人權限。"""
+    e = _env()
+    return bool(e.get("LEO_USER") and e.get("LEO_PASS"))
+
+
+def login_enabled():
+    return enabled() or leo_enabled()
+
+
 def locked(ip):
     return _LOCK_UNTIL.get(ip, 0) > time.time()
 
@@ -67,6 +79,32 @@ def check(user, pw, ip="-"):
     return False, "帳號或密碼不對"
 
 
+def check_any(user, pw, ip="-"):
+    """回 (角色, 訊息)：角色 "leo"／"family"／None。共用同一個來源的錯誤次數鎖。"""
+    if not login_enabled():
+        return None, "登入尚未開啟"
+    if locked(ip):
+        return None, "嘗試太多次，請 15 分鐘後再試"
+    e = _env()
+    role = None
+    if leo_enabled() and (hmac.compare_digest(user.encode(), e["LEO_USER"].encode())
+                          & hmac.compare_digest(pw.encode(), e["LEO_PASS"].encode())):
+        role = "leo"
+    elif enabled() and (hmac.compare_digest(user.encode(), e["FAMILY_USER"].encode())
+                        & hmac.compare_digest(pw.encode(), e["FAMILY_PASS"].encode())):
+        role = "family"
+    now = time.time()
+    if role:
+        _FAILS.pop(ip, None)
+        return role, ""
+    fl = [t for t in _FAILS.get(ip, []) if now - t < 600] + [now]
+    _FAILS[ip] = fl
+    if len(fl) >= 5:
+        _LOCK_UNTIL[ip] = now + 900
+        _FAILS.pop(ip, None)
+    return None, "帳號或密碼不對"
+
+
 def safe_next(n):
     """登入後只准回到這幾個頁面，不做開放轉址。"""
     return n if n in ("/room", "/lookup") else "/room"
@@ -86,7 +124,7 @@ input{{width:100%;box-sizing:border-box;padding:12px;border-radius:8px;border:1p
 button{{width:100%;margin-top:16px;padding:13px;border:0;border-radius:8px;background:#22D3EE;color:#04202a;font-weight:700;font-size:16px}}
 .err{{background:#3b1215;border:1px solid #7f1d1d;color:#fca5a5;padding:8px 10px;border-radius:8px;font-size:13px;margin-bottom:10px}}</style>
 </head><body><form class="box" method="post" action="/login">
-<h1>燈號戰情室</h1><div class="sub">家人登入（可看燈號與個股圖表）</div>{m}
+<h1>燈號戰情室</h1><div class="sub">登入（家人：燈號與個股圖表；本人：含軍師）</div>{m}
 <input type="hidden" name="next" value="{escape(safe_next(nxt))}">
 <label for="u">帳號</label><input id="u" name="user" autocomplete="username" autocapitalize="none" required>
 <label for="p">密碼</label><input id="p" name="pw" type="password" autocomplete="current-password" required>
