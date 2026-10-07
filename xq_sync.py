@@ -55,13 +55,21 @@ def lists():
         if not name:
             continue
         toks = [t for t in val.split(",") if t.strip()]
-        seen, tk = set(), []
+        seen, tk, group_of, order, cur = set(), [], {}, [], ""
         for t in toks:
+            t = t.strip()
+            if t.endswith(":") or t.endswith("："):         # XQ 的分組標籤（"晶圓:"）＝接下來的股票都屬於這一組
+                cur = t.rstrip(":：").strip()
+                if cur and cur not in order:
+                    order.append(cur)
+                continue
             n = wl.normalize(t)
             if n and n not in seen:
                 seen.add(n)
                 tk.append(n)
-        out.append({"name": name, "tickers": tk, "raw_count": len(toks), "skipped": len(toks) - len(tk)})
+                group_of[n] = cur
+        out.append({"name": name, "tickers": tk, "raw_count": len(toks), "skipped": len(toks) - len(tk),
+                    "group_of": group_of, "group_order": order})
     return out
 
 
@@ -105,12 +113,16 @@ def sync(force_lists=None):
     sel = list(force_lists) if force_lists is not None else conf()["lists"]
     by = {x["name"]: x for x in ls}
     missing = [n for n in sel if n not in by]
-    desired, src_of = [], {}
+    desired, src_of, grp_of, gorder = [], {}, {}, []
     for n in sel:
+        for g in (by[n]["group_order"] if n in by else []):
+            if g not in gorder:
+                gorder.append(g)
         for t in (by[n]["tickers"] if n in by else []):
             if t not in src_of:
                 src_of[t] = "xq:" + n
                 desired.append(t)
+                grp_of[t] = by[n]["group_of"].get(t, "")
     d = wl._load()
     today = _dt.date.today().isoformat()
     keep, removed = [], []
@@ -123,16 +135,22 @@ def sync(force_lists=None):
     added = []
     for t in desired:
         if t not in have and len(keep) < wl._MAX:
-            keep.append({"tk": t, "added": today, "src": src_of[t]})
+            keep.append({"tk": t, "added": today, "src": src_of[t], "group": grp_of.get(t, "")})
             have.add(t)
             added.append(t)
-    if added or removed:
+    regrouped = 0
+    for x in keep:                                  # 在 XQ 清單裡的（含手動加的）都跟著 XQ 的分類；不在的保持原樣
+        if x["tk"] in grp_of and x.get("group") != grp_of[x["tk"]]:
+            x["group"] = grp_of[x["tk"]]
+            regrouped += 1
+    if added or removed or regrouped:
         d["items"] = keep
         wl._save(d)
     c = conf()
+    c["group_order"] = gorder
     c["last"] = {"time": _dt.datetime.now().strftime("%m-%d %H:%M"), "added": len(added), "removed": len(removed)}
     _write(c)
-    return {"added": added, "removed": removed, "total": len(d["items"]), "lists": sel, "missing": missing}
+    return {"added": added, "removed": removed, "regrouped": regrouped, "groups": gorder, "total": len(d["items"]), "lists": sel, "missing": missing}
 
 
 def export_for_xq():

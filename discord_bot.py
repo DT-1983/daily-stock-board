@@ -503,8 +503,10 @@ async def _room_watch(request):
     if not _watch_ok(request):
         return web.Response(text="", status=404)
     import watchlist
+    import xq_sync
     items = await asyncio.to_thread(watchlist.listing)
-    return web.json_response({"items": items}, headers={"Cache-Control": "no-store"})
+    return web.json_response({"items": items, "group_order": xq_sync.conf().get("group_order", [])},
+                             headers={"Cache-Control": "no-store"})
 
 
 async def _room_watch_post(request):

@@ -222,7 +222,7 @@ def listing():
         if not nm and is_tw:
             names = names if names is not None else _tw_names()
             nm = names.get(tk)
-        out.append({"tk": tk, "name": nm or "", "mkt": "tw" if is_tw else "us", "src": x.get("src"),
+        out.append({"tk": tk, "name": nm or "", "mkt": "tw" if is_tw else "us", "src": x.get("src"), "group": x.get("group") or "",
                     "lit": r.get("lit"), "bull": r.get("bull"), "px": r.get("price"),
                     "target": r.get("target"), "asof": r.get("asof"), "in_scan": bool(r)})
     return out

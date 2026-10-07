@@ -55,6 +55,9 @@ WATCH_CSS = r"""
 .wgrp{padding:5px 8px;background:#080E1A;color:#8FA8C8;font-size:12px;border:1px solid #16304A;border-bottom:none;margin-top:6px;border-radius:6px 6px 0 0;position:sticky;top:0;z-index:1}
 .wgrp .lv{color:#22D3EE}
 .wlist{border:1px solid #16304A;border-radius:0 0 6px 6px}
+.wsub{padding:3px 10px;color:#6B84A3;font-size:11.5px;background:#060C16;border-left:1px solid #16304A;border-right:1px solid #16304A;border-top:1px solid #0E1B2B}
+.wsub b{color:#8FA8C8;font-weight:500}
+.whead button.on{border-color:#22D3EE;color:#22D3EE}
 .wrow{position:relative;overflow:hidden;border-top:1px solid #0E1B2B;touch-action:pan-y}
 .wrow:first-child{border-top:none}
 .wbody{position:relative;background:#04070E;padding:8px 10px;cursor:pointer;transition:transform .18s;display:grid;
@@ -87,8 +90,8 @@ WATCH_JS = r"""
   var room=document.querySelector(".room"), left=document.querySelector(".pane.left"), mW=document.getElementById("mode-watch");
   if(!room||!left||!mW) return;
   var box=document.createElement("div"); box.className="wleft"; box.id="wleft"; left.appendChild(box);
-  var items=[], quotes={}, loaded=false, shell=false, timer=null, sortKey="def", fil="all", starSet={}, selTk="", toastT=null;
-  try{ fil=localStorage.getItem("wfil")||"all"; sortKey=localStorage.getItem("wsort")||"def"; }catch(e){}
+  var items=[], quotes={}, loaded=false, shell=false, timer=null, sortKey="def", fil="all", starSet={}, selTk="", toastT=null, gorder=[], useGrp=true;
+  try{ fil=localStorage.getItem("wfil")||"all"; sortKey=localStorage.getItem("wsort")||"def"; useGrp=(localStorage.getItem("wgrp")!=="0"); }catch(e){}
   var INDEX=[["^TWII","台股加權"],["^GSPC","S&P"],["^IXIC","那指"],["^SOX","費半"]];
   function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
   function fmt(n,d){ if(n==null||isNaN(n)) return "—"; d=(d==null?2:d);
@@ -104,7 +107,7 @@ WATCH_JS = r"""
   function buildShell(){
     box.innerHTML='<div class="wix" id="windex"></div>'
       +'<div class="whead"><span class="wtitle" id="wtitle">自選</span>'
-      +'<button class="plus" id="wplus" title="新增／匯入">＋</button>'
+      +'<button id="wgrpb" title="依 XQ 的分類分區顯示">分類</button><button class="plus" id="wplus" title="新增／匯入">＋</button>'
       +'<select id="wsort" title="排序"><option value="def">我的順序</option><option value="up">漲幅大→小</option><option value="dn">跌幅大→小</option><option value="lit">燈數多→少</option></select></div>'
       +'<div class="wchips" id="wchips"><button data-f="all">全部</button><button data-f="tw">台股</button><button data-f="us">美股</button></div>'
       +'<div class="wtoast" id="wtoast"></div>'
@@ -120,6 +123,8 @@ WATCH_JS = r"""
       +'<div class="xs" id="wxs"></div></div></div>';
     shell=true;
     document.getElementById("wsort").value=sortKey;
+    var gb=document.getElementById("wgrpb"); gb.classList.toggle("on",useGrp);
+    gb.addEventListener("click",function(){ useGrp=!useGrp; gb.classList.toggle("on",useGrp); try{ localStorage.setItem("wgrp",useGrp?"1":"0"); }catch(x){} renderList(); });
     document.getElementById("wplus").addEventListener("click",function(){ popShow(!document.getElementById("wpop").classList.contains("show")); });
     document.getElementById("wclose").addEventListener("click",function(){ popShow(false); });
     document.addEventListener("keydown",function(e){ if(e.key==="Escape") popShow(false); });
@@ -241,8 +246,18 @@ WATCH_JS = r"""
     var open=[]; L.querySelectorAll(".wrow.open").forEach(function(r){ open.push(r.dataset.tk); });
     var top=L.scrollTop;
     function grp(name,list){ if(!list.length) return ""; var st=stateOf(list);
-      return '<div class="wgrp">'+name+'　'+(st==="盤中"?'<span class="lv">● 盤中</span>':esc(st))+'　'+list.length+' 檔</div>'
-        +'<div class="wlist">'+list.map(rowHtml).join("")+'</div>'; }
+      var head='<div class="wgrp">'+name+'　'+(st==="盤中"?'<span class="lv">● 盤中</span>':esc(st))+'　'+list.length+' 檔</div>';
+      var hasG=useGrp&&list.some(function(i){ return i.group; });
+      if(!hasG) return head+'<div class="wlist">'+list.map(rowHtml).join("")+'</div>';
+      // 依 XQ 的分類分區（順序＝XQ 裡的順序；沒有分類的放最後「其他」）。每區各自一個清單，拖曳只能在同一區內調順序。
+      var names=gorder.filter(function(g){ return list.some(function(i){ return i.group===g; }); });
+      list.forEach(function(i){ if(i.group&&names.indexOf(i.group)<0) names.push(i.group); });
+      var html=head;
+      names.forEach(function(g){ var sub=list.filter(function(i){ return i.group===g; });
+        html+='<div class="wsub"><b>'+esc(g)+'</b>　'+sub.length+' 檔</div><div class="wlist">'+sub.map(rowHtml).join("")+'</div>'; });
+      var rest=list.filter(function(i){ return !i.group; });
+      if(rest.length) html+='<div class="wsub"><b>其他</b>　'+rest.length+' 檔</div><div class="wlist">'+rest.map(rowHtml).join("")+'</div>';
+      return html; }
     var h=(fil==="tw"?"":grp("美股",us))+(fil==="us"?"":grp("台股",tw));
     if(!h) h='<div class="wmsg" style="padding:18px 4px">'+(items.length?"這個市場沒有自選股。":"還沒有自選股。點右上「＋」輸入代號，或匯入 XQ 匯出的自選股。")+'</div>';
     L.innerHTML=h; L.scrollTop=top;
@@ -254,7 +269,7 @@ WATCH_JS = r"""
     renderIndex(); }
 
   function loadList(){ return fetch("/room/watch",{cache:"no-store"}).then(function(r){ return r.ok?r.json():{items:[]}; })
-    .then(function(d){ items=d.items||[]; starSet={}; items.forEach(function(i){ starSet[i.tk]=1; }); loaded=true; paintStars(); }).catch(function(){}); }
+    .then(function(d){ items=d.items||[]; gorder=d.group_order||[]; starSet={}; items.forEach(function(i){ starSet[i.tk]=1; }); loaded=true; paintStars(); }).catch(function(){}); }
   function fetchQuotes(){ var tks=items.map(function(i){return i.tk;}).concat(INDEX.map(function(x){return x[0];}));
     return fetch("/room/quote?tickers="+encodeURIComponent(tks.join(",")),{cache:"no-store"}).then(function(r){ return r.ok?r.json():{}; })
       .then(function(q){ quotes=q||{}; }).catch(function(){}); }
