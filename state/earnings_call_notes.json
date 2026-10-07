@@ -1589,7 +1589,7 @@
   }
  },
  "MRVL": {
-  "Q3 2026": {
+  "FY2026Q3(誤標為Q3 2026)": {
    "fetched": "2026-09-08",
    "items": [
     {
@@ -1675,6 +1675,90 @@
      "label": "Celestial AI併購後營收貢獻展望",
      "value": "預期FY2028下半年開始產生顯著營收，基本情境下FY2028第四季達5億美元年化營收，FY2029第四季達10億美元年化營收",
      "speaker": "Willem Meintjes / Matt Murphy"
+    }
+   ],
+   "superseded": "2026-10-07 判定：內容是 FY2026Q3（本季營收 20.75億美元，2025 年底法說），原誤存在 Q3 2026（=FY2027Q2）鍵下；期間不符，不得當現況"
+  },
+  "Q3 2026": {
+   "fetched": "2026-10-07",
+   "items": [
+    {
+     "type": "metric",
+     "label": "第二財季營收（期末 2026-08-01）",
+     "value": "27.39 億美元，季增 13%、年增 37%，創紀錄",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "資料中心營收",
+     "value": "21.7 億美元，季增 18%、年增 46%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "通訊及其他營收",
+     "value": "5.68 億美元，季增 -3%、年增 10%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "非 GAAP 毛利率與營業利益率",
+     "value": "毛利率 58.9%；營業利益率 36.6%（年增 180 bps、季增 160 bps）；非 GAAP EPS 0.94 美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "營運現金流與資產負債表",
+     "value": "本季營運現金流 6.06 億美元；總負債 49.6 億美元；淨負債／EBITDA 0.27 倍；本季買回股票 2 億美元",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "下季（第三財季）營收展望",
+     "value": "營收 31.5 億美元 ±5%（季增約 15%、年增逾 50%）；非 GAAP 毛利率 57.5%–58.5%；非 GAAP EPS 1.10 美元 ±0.05；資料中心季增逾 20%、年增約 75%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "FY2027 全年營收展望",
+     "value": "約 120 億美元，年增約 45%，較先前上調約 5 億美元；資料中心年增約 60%（先前為 50%）",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "FY2028 營收展望",
+     "value": "約 180 億美元，年增約 50%，較先前上調約 15 億美元；資料中心年增逾 60%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "客製化（XPU 與 XPU-attached）業務展望",
+     "value": "FY2028 預計成長超過一倍；與 Google 的新多年商業協議涵蓋 XPU 及推論加速器、儲存控制器、NIC、記憶體控制器、近記憶體運算等 XPU-attached 產品",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "長期營業利益率目標",
+     "value": "今年底（FY2027 末）進入長期模型區間 38%–40%；FY2028 營運費用成長約為營收成長率的一半；FY2027 非 GAAP 營運費用約 25.5 億美元",
+     "speaker": "Dan Durn，財務長"
+    },
+    {
+     "type": "guidance",
+     "label": "產能預付款",
+     "value": "FY2027 預計向供應商預付約 10 億美元產能款",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "Scale-up 光學連接展望",
+     "value": "scale-up 光學明顯加速，NPO 與 CPO 部署爬坡中，原本約 3 億美元的類別已顯著更高；公司積極投資下一代 scale-up 光互連與交換技術",
+     "speaker": "Matt Murphy，董事長暨執行長"
+    },
+    {
+     "type": "quote",
+     "label": "本季基調",
+     "value": "資料中心業務的強勁表現持續超出我們先前的預期，成長涵蓋客製化矽、連接與 scale-up 光學，廣泛而全面。",
+     "speaker": "Matt Murphy，董事長暨執行長"
     }
    ]
   }
@@ -1951,7 +2035,7 @@
   }
  },
  "NVDA": {
-  "Q3 2026": {
+  "FY2026Q3(誤標為Q3 2026)": {
    "fetched": "2026-09-08",
    "items": [
     {
@@ -2043,6 +2127,96 @@
      "label": "本季基調金句",
      "value": "NVIDIA是全世界唯一能執行每一個AI模型、且能在每一個主要平台上運行的架構——只要一種架構，一切都能順利運作。",
      "speaker": "Jensen Huang（執行長）"
+    }
+   ],
+   "superseded": "2026-10-07 稽核判定：總營收 570億美元＝FY2026Q3（期末 2025-10-31），但存在 Q3 2026 鍵下；最新一季實際 962.2 億，期間不符，不得當現況"
+  },
+  "Q3 2026": {
+   "fetched": "2026-10-07",
+   "items": [
+    {
+     "type": "metric",
+     "label": "本季總營收（財季期末 2026-07-26，即 FY2027 Q2）",
+     "value": "962 億美元，年增 106%；GAAP 與 non-GAAP 毛利率皆為 75.0%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "資料中心營收",
+     "value": "890 億美元，年增 117%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Hyperscale 與 ACIE 營收",
+     "value": "Hyperscale 490 億美元，季增 13%；ACIE 400 億美元，季增 25%、年增 138%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "網路與主權 AI 成長",
+     "value": "網路營收再創高，季增 18%；主權 AI 季增 35%、年增逾 3 倍",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "雲端產業待交付訂單（backlog）",
+     "value": "雲端產業 backlog 超過 2 兆美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "前五大超大型雲端業者資本支出預期",
+     "value": "2026 年近 8,000 億美元，2027 年達 1.3 兆美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "存貨與股東回報",
+     "value": "存貨增至約 320 億美元（為 Vera Rubin 上市備貨）；本季回饋股東 260 億美元",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "下季（FY2027 Q3）營收展望",
+     "value": "營收 1,080 億美元 ±2%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "下季毛利率與費用展望",
+     "value": "GAAP 與 non-GAAP 毛利率 74% ±50 基點；GAAP 與 non-GAAP 營業費用約 92 億與 90 億美元",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "FY2028 全年營收展望",
+     "value": "預期營收成長約 70%，並說明這是受供給限制的展望",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "FY2028 毛利率走勢",
+     "value": "預期毛利率於 Q4 落底在 71%–72%，之後在 FY2028 穩定於 72%–73%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "供給瓶頸時程",
+     "value": "努力縮小供需缺口，但預期供給至少到 FY2028 年底仍是瓶頸",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "Vera Rubin 量產與占比",
+     "value": "本月已開始量產出貨；預期 Q3 占資料中心營收約 20%，並將是 NVIDIA 史上最快的產品放量",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "本季基調",
+     "value": "我們正經歷一場重大的運算平台轉移……世界上每個產業都在用電腦，所以每個產業都會受到影響。",
+     "speaker": "Jensen Huang，總裁暨執行長"
     }
    ]
   }
