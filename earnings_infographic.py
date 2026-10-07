@@ -126,9 +126,30 @@ def _tw_core(code, n=8):
     for x in (cf or []):
         cf_by_date.setdefault(x["date"], {})[x["type"]] = x["value"]
 
+    _PREV_Q = {"06-30": "03-31", "09-30": "06-30", "12-31": "09-30"}
+
+    def cf_single(date, field):
+        """🔴 2026-10-07（交接 INVESTMENT_AUDIT_FIX，2882）：FinMind 台股現金流量表是「年初累計」
+        （2882 的 6/30＝上半年累計 −1224 億，Q1 是 −302 億），但卡片把它放在跟損益表單季並排的「本季」欄，
+        金控 Q2 看起來現金流出 1224 億。改成單季＝本期累計 − 上一季累計；Q1 本身就是單季；
+        上一季累計缺資料就回 None（寧可顯示無資料，不把累計值當單季）。"""
+        if not date:
+            return None
+        cum = cf_by_date.get(date, {}).get(field)
+        if cum is None:
+            return None
+        md = date[5:]
+        if md == "03-31":
+            return cum
+        prev_md = _PREV_Q.get(md)
+        if not prev_md:
+            return None
+        prev = cf_by_date.get(date[:5] + prev_md, {}).get(field)
+        return None if prev is None else cum - prev
+
     def cf_pair(field):
-        a = cf_by_date.get(cur_date, {}).get(field)
-        b = cf_by_date.get(yoy_date, {}).get(field) if yoy_date else None
+        a = cf_single(cur_date, field)
+        b = cf_single(yoy_date, field) if yoy_date else None
         pct = ((a / b - 1) * 100) if (a is not None and b not in (None, 0)) else None
         return {"cur": a, "prev": b, "yoy": pct}
 
@@ -143,6 +164,23 @@ def _tw_core(code, n=8):
             "op_income": pair("OperatingIncome"), "net_income": pair("IncomeAfterTaxes"),
             "eps": pair("EPS"), "ocf": ocf, "capex": capex,
             "fcf": {"cur": fcf_cur, "prev": fcf_prev, "yoy": fcf_pct}}
+
+
+def fiscal_label(fye_ts, period_end):
+    """公司財年標籤，例如 MRVL 期末 2026-08-01 → 'FY2027Q2'。
+    yfinance 只給日曆季，財年不是日曆年的公司（MU 8 月底、MRVL／NVDA 1 月底…）日曆季標籤會跟公司自稱的對不上
+    （2026-10-07 交接 MRVL：卡片標 Q3 2026，公司叫它 FY2027Q2）。規則：財年以「結束那年」命名；
+    財季期末常落在月底前後幾天（8/1、1/31），所以兩個日期都先退 5 天再取月份。算不出來回空字串，不猜。"""
+    import datetime as _d
+    try:
+        fye = _d.date.fromtimestamp(float(fye_ts)) - _d.timedelta(days=5)
+        pe = _d.date.fromisoformat(str(period_end)[:10]) - _d.timedelta(days=5)
+    except Exception:                                       # noqa: BLE001
+        return ""
+    m, p = fye.month, pe.month
+    months = (p - m) % 12
+    q = 4 if months == 0 else (months + 2) // 3
+    return f"FY{pe.year + (1 if p > m else 0)}Q{q}"
 
 
 def fetch(ticker: str) -> dict:
@@ -200,6 +238,7 @@ def fetch(ticker: str) -> dict:
         "name": tw_name or info.get("longName") or info.get("shortName") or ticker.upper(),
         "quarter": f"Q{(cur.month - 1)//3 + 1} {cur.year}",
         "period_end": str(cur.date()),
+        "fiscal_label": fiscal_label(info.get("lastFiscalYearEnd"), str(cur.date())),
         "yoy_period": str(yoy.date()),
         "partial_yoy": partial,
         "currency": info.get("financialCurrency", "USD"),
@@ -756,7 +795,7 @@ def render(d, sc, n, extra_html=None):
 
 <div class="hd">
   <div><h1>{d['name']}</h1>
-    <div class="sub">{d['quarter']} 財報懶人包　·　會計期間截至 {d['period_end']}　·　YoY 基準 {d['yoy_period']}{('<br>⚠️ 數字來源：' + d['source_note']) if '新聞稿' in str(d.get('source_note', '')) else ''}</div></div>
+    <div class="sub">{d['quarter']}{('（公司財年 ' + d['fiscal_label'] + '）') if d.get('fiscal_label') else ''} 財報懶人包　·　會計期間截至 {d['period_end']}　·　YoY 基準 {d['yoy_period']}{('<br>⚠️ 數字來源：' + d['source_note']) if '新聞稿' in str(d.get('source_note', '')) else ''}</div></div>
   <div><div class="tk">{d['ticker']}</div>
     <div class="tk-sub">股價 {d['price']} {cur}　·　產生於 {datetime.now():%Y-%m-%d %H:%M}</div></div>
 </div>
@@ -854,7 +893,9 @@ def main():
     print("完成")
     print("法說會逐字稿摘要（本機 claude 上網搜尋，較慢）…", end=" ", flush=True)
     try:
-        call_html, call_sum = EC.build(d["ticker"], d.get("name", ""), d["quarter"], d.get("period_end", ""))
+        call_html, call_sum = EC.build(d["ticker"], d.get("name", ""), d["quarter"], d.get("period_end", ""),
+                                    revenue=(d.get("revenue") or {}).get("cur"),
+                                    currency=("TWD" if str(d.get("currency")).upper() == "TWD" else "USD"))
     except Exception as e:
         print(f"失敗：{e}", end=" ")
         call_html, call_sum = "", ""

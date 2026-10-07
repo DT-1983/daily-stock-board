@@ -132,6 +132,8 @@ def guidance(ticker=None, contains=None):
         if ticker and tk != ticker:
             continue
         for q, blk in sorted(qs.items(), reverse=True):
+            if blk.get("superseded"):          # 期間對不上的舊筆記（見 period_mismatch）不當展望用
+                continue
             for it in blk.get("items", []):
                 if it.get("type") != "guidance":
                     continue
@@ -143,7 +145,57 @@ def guidance(ticker=None, contains=None):
     return out
 
 
-def build(ticker, company_name="", quarter_label="", period_end=""):
+import re as _re
+
+
+def _parse_amounts(text):
+    """從字串抓出所有「數字＋單位」金額，回 [(金額, 幣別)]；幣別看同一句裡的「美元／新台幣」字樣，沒寫＝None。
+    一句話可能有好幾組數字（「414.6 億美元，較上季 238.6 億」），全部回傳，由呼叫端決定怎麼比。"""
+    t = str(text or "").replace(",", "").replace("，", "")
+    cur = ("USD" if _re.search(r"美元|USD|US\$|\$", t, _re.I)
+           else "TWD" if _re.search(r"新台幣|NT\$|TWD", t, _re.I) else None)
+    mult = {"兆": 1e12, "億": 1e8, "千萬": 1e7, "百萬": 1e6, "萬": 1e4,
+            "billion": 1e9, "bn": 1e9, "b": 1e9, "million": 1e6, "m": 1e6}
+    out = []
+    for m in _re.finditer(r"(\d+(?:\.\d+)?)\s*(兆|億|千萬|百萬|萬|billion|million|bn|b|m)?", t, _re.I):
+        out.append((float(m.group(1)) * mult[m.group(2).lower()], cur))
+    return out
+
+
+def _is_total_revenue_label(lab):
+    """只認「整家公司本季總營收」這類欄位；事業群／終端市場／產品線的營收（含「事業、業務、市場、部門、群、AI…」）不是總額，不拿來核對。"""
+    lab = str(lab)
+    if "本季" not in lab or "營收" not in lab:
+        return False
+    if any(w in lab for w in ("事業", "業務", "市場", "部門", "產品", "群", "年增", "成長", "展望", "AI", "Cloud", "資料中心", "通訊")):
+        return False
+    return True
+
+
+def period_mismatch(items, revenue, currency="USD", tol=0.08):
+    """用「本季總營收」核對這批法說重點是不是這一季的。回 None＝通過或無法核對；回字串＝對不上的原因。
+
+    🔴 2026-10-07（交接 INVESTMENT_AUDIT_FIX，MRVL；稽核時又在 NVDA 找到同一個錯）：9/8 抓回來的是上一個財年
+    同季（MRVL FY26Q3 營收 2.075B、NVDA FY26Q3 營收 57.0B，2025 年底）的法說，卻存在「Q3 2026」鍵下，
+    被最新一季（MRVL 2.739B、NVDA 96.22B）的卡片直接嵌用。提示詞雖叫模型「對不上就回空陣列」，模型沒照做，
+    程式也沒核對。這裡用卡片自己的實際營收當尺：同幣別、金額組裡**沒有任何一組**落在 ±8% 內，整批不採用。
+    只核對總營收；幣別不明或不同（美元營收卡 vs 新台幣數字）一律不核對，不硬比。"""
+    if not revenue or revenue <= 0:
+        return None
+    for it in items:
+        if it.get("type", "metric") != "metric" or not _is_total_revenue_label(it.get("label")):
+            continue
+        amts = [v for v, c in _parse_amounts(it.get("value")) if c == currency]
+        if not amts:
+            continue
+        if any(abs(v / revenue - 1) <= tol for v in amts):
+            return None
+        return (f"「{it.get('label')}」{it.get('value')} 與本季實際營收 {revenue / 1e8:.2f} 億"
+                f"（{currency}）對不上，法說摘要疑似是別的季度")
+    return None
+
+
+def build(ticker, company_name="", quarter_label="", period_end="", revenue=None, currency="USD"):
     """回 (html, summary_text)。抓不到逐字稿或解析失敗都回 ("", "")，不中斷主流程。"""
     try:
         # tries=1（2026-08-31）：繁體驗收預設重試 3 次，而 llm_board.TIMEOUT 是 600 秒，
@@ -164,6 +216,10 @@ def build(ticker, company_name="", quarter_label="", period_end=""):
 
     items = [x for x in data if isinstance(x, dict) and x.get("label") and x.get("value")][:15]
     if not items:
+        return "", ""
+    why = period_mismatch(items, revenue, currency)
+    if why:
+        print(f"  [earnings_call] {ticker} 法說摘要期間對不上，整批不採用：{why}")
         return "", ""
 
     _persist(ticker, quarter_label, items)
