@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-07 14:11",
+ "updated": "2026-10-07 15:40",
  "indices": [
   {
    "sym": "^GSPC",
@@ -46,8 +46,8 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "10/07",
-   "close": 31.85,
-   "chg_pct": 0.32
+   "close": 31.87,
+   "chg_pct": 0.36
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "啟新生技與先進能簽署MOU 共同推動再生醫療分析技術接軌國際",
+   "title": "達興材料(5234) 毛利率直逼43%歷史高檔，半導體材料何時放量？2027年產能銜接成關鍵",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6623556",
-   "ts": "10/07 14:10"
+   "url": "https://news.cnyes.com/news/id/6623647",
+   "ts": "10/07 15:30"
   },
   {
-   "title": "通膨與地緣風險加劇 印度央行時隔近4年首度升息",
+   "title": "達里歐示警AI是「經典泡沫」！升息、財富變現恐成引爆點",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6623605",
-   "ts": "10/07 14:10"
+   "url": "https://news.cnyes.com/news/id/6623571",
+   "ts": "10/07 15:30"
   },
   {
-   "title": "法國2027總統大選前哨戰：雷朋提減稅300億、節支1400億歐元",
+   "title": "荷姆茲海峽「危險溢價」飆升 船長月薪漲至10萬美元 但性命飽受威脅",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6623430",
-   "ts": "10/07 13:43"
+   "url": "https://news.cnyes.com/news/id/6623579",
+   "ts": "10/07 15:20"
   },
   {
-   "title": "Google發表開源原生多模態嵌入模型EmbeddingGemma 2 與新一代Gemini 4 Argon",
+   "title": "韓國槓桿ETF熱潮反噬 散戶短短數月賠掉17億美元、監管急降溫",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6623578",
-   "ts": "10/07 13:40"
+   "url": "https://news.cnyes.com/news/id/6623603",
+   "ts": "10/07 15:10"
   },
   {
-   "title": "AI記憶體熱潮讓美光賺翻 小摩估自由現金流破1000億美元",
+   "title": "玻璃基板技術大突破！半天工序縮至幾分鐘 拚明年量產",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6623428",
-   "ts": "10/07 13:27"
+   "url": "https://news.cnyes.com/news/id/6623431",
+   "ts": "10/07 15:10"
   },
   {
-   "title": "緩解記憶體缺貨危機！超微蘇姿丰會三星全永鉉 鞏固供應鏈",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6623535",
-   "ts": "10/07 13:10"
-  },
-  {
-   "title": "技嘉(2376)9月營收衝631億元！超越市場預期8.2%，AI伺服器放量後獲利能跟上？",
+   "title": "富士康聯手BMW造車？沙國CEER發布EXOBOT旗艦電動轎跑與SUV　獲王儲、主權基金大舉押注",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6623562",
-   "ts": "10/07 12:30"
+   "url": "https://news.cnyes.com/news/id/6623375",
+   "ts": "10/07 15:10"
   },
   {
-   "title": "〈焦點股〉東元續攻東南亞AIDC基建商機砸20億元擴大投資 價量齊揚",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6623537",
-   "ts": "10/07 12:17"
+   "title": "富士康聯手BMW造車？沙國CEER發布EXOBOT旗艦電動轎跑與SUV　獲王儲、主權基金大舉押注",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6623375",
+   "ts": "10/07 15:10"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：臻鼎-KY(4958-TW)EPS預估下修至13.79元，預估目標價為644元",
+   "title": "〈台北紡織展〉台塑集團總裁吳嘉昭：石化景氣明年迎復甦 紡織業要靠「創新」賺錢",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6623551",
-   "ts": "10/07 12:10"
+   "url": "https://news.cnyes.com/news/id/6623611",
+   "ts": "10/07 15:02"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：弘塑(3131-TW)EPS預估下修至62.06元，預估目標價為3900元",
+   "title": "日本工商會白皮書首發問卷揭3大痛點 國發會拋雙軸轉型3點正面回應",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6623550",
-   "ts": "10/07 12:10"
+   "url": "https://news.cnyes.com/news/id/6623625",
+   "ts": "10/07 15:00"
+  },
+  {
+   "title": "宜鼎(5289)9月營收年增536%！卻低於法人預期3.7%，股價能重返高點嗎？",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6623637",
+   "ts": "10/07 15:00"
   }
  ],
  "inst": {
-  "date": "10/06",
-  "total_yi": -192.0,
-  "foreign_yi": -66.6,
-  "trust_yi": -142.6
+  "date": "10/07",
+  "total_yi": -212.6,
+  "foreign_yi": -130.4,
+  "trust_yi": -4.2
  }
 }
