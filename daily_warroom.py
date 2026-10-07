@@ -1105,7 +1105,9 @@ def compose(date=None, scope="public", part="all"):
                     sec_relay(date, "public"),
                     sec4_research(notes, "public", date), sec5_watch(date),
                     sec_thesis(date, "public")]
-        chief = [sec3_chief(date, "public")]
+        # 2026-10-07 Leo：「進場機會幫我拿掉，現在資訊太多變雜訊了」——公開版不再放③進場機會。
+        # sec3_chief("public") 函式保留（未呼叫），要恢復只要把下面改回 [sec3_chief(date, "public")]。
+        chief = []
 
     if part == "research":
         secs, suffix = research, ""
