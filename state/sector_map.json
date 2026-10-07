@@ -1767,7 +1767,7 @@
     "sector": "Producer Manufacturing",
     "industry": "Industrial Machinery",
     "exchange": "TWSE",
-    "asof": "2026-09-04"
+    "asof": "2026-10-08"
   },
   "PANW": {
     "sector": "Technology Services",
@@ -1839,7 +1839,7 @@
     "sector": "Health Technology",
     "industry": "Pharmaceuticals: Major",
     "exchange": "TWSE",
-    "asof": "2026-09-06"
+    "asof": "2026-10-08"
   },
   "6919": {
     "sector": "Health Technology",
@@ -2403,7 +2403,7 @@
     "sector": "Electronic Technology",
     "industry": "Computer Processing Hardware",
     "exchange": "TWSE",
-    "asof": "2026-09-08"
+    "asof": "2026-10-08"
   },
   "4728": {
     "sector": "Health Technology",
@@ -3088,5 +3088,47 @@
     "industry": "Industrial Machinery",
     "exchange": "NYSE",
     "asof": "2026-10-07"
+  },
+  "SPY": {
+    "sector": null,
+    "industry": null,
+    "exchange": null,
+    "asof": "2026-10-08"
+  },
+  "2883": {
+    "sector": "Finance",
+    "industry": "Life/Health Insurance",
+    "exchange": "TWSE",
+    "asof": "2026-10-08"
+  },
+  "6505": {
+    "sector": "Energy Minerals",
+    "industry": "Oil Refining/Marketing",
+    "exchange": "TWSE",
+    "asof": "2026-10-08"
+  },
+  "2723": {
+    "sector": "Consumer Non-Durables",
+    "industry": "Food: Specialty/Candy",
+    "exchange": "TWSE",
+    "asof": "2026-10-08"
+  },
+  "NDAQ": {
+    "sector": "Finance",
+    "industry": "Investment Banks/Brokers",
+    "exchange": "NASDAQ",
+    "asof": "2026-10-08"
+  },
+  "QQQ": {
+    "sector": null,
+    "industry": null,
+    "exchange": null,
+    "asof": "2026-10-08"
+  },
+  "SNDK": {
+    "sector": "Electronic Technology",
+    "industry": "Computer Peripherals",
+    "exchange": "NASDAQ",
+    "asof": "2026-10-08"
   }
 }

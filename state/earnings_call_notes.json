@@ -652,6 +652,101 @@
      "speaker": "Vaibhav Taneja(財務長)"
     }
    ]
+  },
+  "2026Q4": {
+   "fetched": "2026-10-07",
+   "items": [
+    {
+     "type": "metric",
+     "label": "第二季營收",
+     "value": "282億美元,年增26%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "第二季非 GAAP 每股盈餘",
+     "value": "0.33美元,低於去年同期的0.40美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "車輛交付量與產量",
+     "value": "交付480,126輛,年增25%;產量451,758輛,年增10%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "汽車毛利率(不含碳權)",
+     "value": "16.3%,前一季為19.2%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "儲能毛利率",
+     "value": "20.4%,第一季為39.5%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "儲能部署量",
+     "value": "13.5 GWh,年增41%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "FSD 北美選配率與付費客戶數",
+     "value": "北美第二季交付車輛的 FSD 選配率為55%;全球付費客戶約150萬",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "自由現金流與現金部位",
+     "value": "自由現金流為負11億美元;季末現金及投資435億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Robotaxi 無人監督里程",
+     "value": "累計約38萬英里無人監督行駛",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "2026 年資本支出計畫",
+     "value": "超過250億美元",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "融資額度",
+     "value": "準備好最高可借300億美元的新借款額度",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "營運費用展望",
+     "value": "2026 年及之後營運費用預期持續成長,主要由研發支出推升",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "新產品量產時程",
+     "value": "Cybercab 已開始生產,產能擴張配合無人監督里程成長;Tesla Semi 2026 年量產,自駕版預計 2027 年初;Megapack 3 即將開始生產;Optimus 第一代產線安裝中,預計 2026 年內開始生產",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "Robotaxi 安全的重要性",
+     "value": "「只要我們傷到一個人,就會成為全球頭條新聞,監管機關會立刻對我們的業務採取限制。」",
+     "speaker": "Elon Musk,執行長"
+    },
+    {
+     "type": "quote",
+     "label": "訂單狀況",
+     "value": "「我們第二季結束時的訂單積壓量是 2023 年以來最大,並專注於提高所有工廠的產量。」",
+     "speaker": "Vaibhav Taneja,財務長"
+    }
+   ]
   }
  },
  "TEM": {
@@ -834,6 +929,101 @@
      "speaker": "CEO Emily Leproust"
     }
    ]
+  },
+  "2026Q4": {
+   "fetched": "2026-10-07",
+   "items": [
+    {
+     "type": "metric",
+     "label": "FY2026 第三季總營收",
+     "value": "1.184 億美元，年增 23%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "DNA Synthesis & Protein Solutions（DSPS）營收",
+     "value": "5,660 萬美元，年增 39%、季增 6%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "NGS Applications 營收",
+     "value": "6,180 萬美元，年增 12%、季增 8%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "出貨基因數",
+     "value": "36.9 萬個，去年同期為 23.7 萬個",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "依客群營收",
+     "value": "治療用途 4,040 萬美元（年增 49%）；診斷用途 4,380 萬美元（年增 15%）；學研與政府 1,550 萬美元（年增 32%、季增 21%）",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "依地區營收",
+     "value": "美洲 7,730 萬美元（年增 30%）；EMEA 3,360 萬美元（年增 9%）；APAC 750 萬美元（年增 26%）",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "毛利率與調整後 EBITDA",
+     "value": "毛利率 52.8%，季增 120 個基點；調整後 EBITDA 虧損 1,130 萬美元（含約 200 萬美元轉換成本）；現金 1.668 億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "NGS 客戶數與集中度",
+     "value": "服務 657 家客戶，其中 182 家已採用商業產品；前 10 大客戶占 NGS 營收 48%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "第四季營收展望",
+     "value": "1.23～1.24 億美元，中點年增約 25%；DSPS 與 NGS 預期都會季增",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "FY2026 全年營收與毛利率展望",
+     "value": "營收上調至 4.56～4.57 億美元（中點上調 1,200 萬美元，年增約 21%）；全年毛利率目標高於 52%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "獲利目標與費用",
+     "value": "第四季調整後 EBITDA 達損益兩平；第四季營運費用（不含一次性轉換成本）較前季減少逾 500 萬美元",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "FY2027 AI 藥物探索訂單展望",
+     "value": "AI 藥物探索訂單預期重現 FY2026 的三位數百分比成長（FY2025 相關訂單約 2,500 萬美元）",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "長期市場規模",
+     "value": "長期可服務市場預期 2030 年達 130 億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "三年營運改善成果與新產品",
+     "value": "製造成本降 60%、廢棄物降 70%、交期縮短 73%、寡核苷酸產能增為四倍；Complex Genes 早期體驗累計逾 1,800 個建構體、逾 100 筆訂單，維持 12 天交期",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "本季基調",
+     "value": "生物學正變得越來越數位化、以資料驅動並由 AI 賦能。",
+     "speaker": "Emily Leproust，執行長暨共同創辦人"
+    }
+   ]
   }
  },
  "CRCL": {
@@ -931,6 +1121,101 @@
      "speaker": "Jeremy Allaire，共同創辦人、執行長暨董事長"
     }
    ]
+  },
+  "2026Q4": {
+   "fetched": "2026-10-07",
+   "items": [
+    {
+     "type": "metric",
+     "label": "本季總營收與儲備收入",
+     "value": "7 億 1 百萬美元，年增 7%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "調整後 EBITDA 與利潤率",
+     "value": "1.43 億美元，年增 8%，調整後 EBITDA 利潤率 50%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "RLDC 利潤率",
+     "value": "41.2%，年增 3 個百分點",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "USDC 期末流通量",
+     "value": "733 億美元，年增 19%；平均流通量 765 億美元，創歷史新高",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "USDC 鏈上交易量與每日鑄造／贖回",
+     "value": "鏈上交易量 14.8 兆美元，年增 151%；日均鑄造與贖回 19 億美元，年增 105%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "準備金報酬率",
+     "value": "3.48%，較去年同期下降 66 bps",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "其他營收（Other revenue）",
+     "value": "3,400 萬美元，年增 41%、季減 800 萬美元；本季 Arc 代幣預售 2.42 億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "調整後營業費用",
+     "value": "1.46 億美元，年增 23%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Circle Payments Network（CPN）",
+     "value": "加入金融機構 175 家（季增 30%）；年化支付量 Q2 末 150 億美元，7 月 31 日升至 230 億美元；涵蓋 58 個以上國家",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Circle 平台上的 USDC 與其他數位資產",
+     "value": "Circle 平台 USDC 124 億美元（年增 106%，占流通量 17%）；Coinbase 占流通量 30%；USYC 逾 30 億美元（年增 10 倍）；EURC 年增 2.2 倍",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "2026 全年其他營收展望（上調）",
+     "value": "3.1 億至 3.3 億美元（原為 1.5 億至 1.7 億美元），其中 Arc 營收預計 1.8 億美元、其他產品 1.3 億至 1.5 億美元",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "2026 全年 RLDC 利潤率展望（上調）",
+     "value": "41.7% 至 43.7%（原為 38% 至 40%）",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "2026 全年調整後營業費用展望",
+     "value": "5.7 億至 5.85 億美元，維持不變",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "Arc 區塊鏈主網上線時程",
+     "value": "2026 年 9 月 16 日上線主網；測試網已處理逾 5 億筆交易、300 萬個錢包，私有主網合作夥伴逾 100 家，驗證者包含 BlackRock、Mastercard、Visa、DTCC 等",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "USDC 中長期成長目標",
+     "value": "整個週期 USDC 年複合成長率 40%",
+     "speaker": ""
+    }
+   ]
   }
  },
  "COIN": {
@@ -1002,6 +1287,95 @@
      "label": "本季基調代表發言",
      "value": "「整體而言，我們仍認為CLARITY法案通過對大局比較好……但如果法案沒有通過，真正會受損的其實是美國消費者，我認為Coinbase本身不會有問題。」",
      "speaker": "Brian Armstrong（執行長）"
+    }
+   ]
+  },
+  "2026Q4": {
+   "fetched": "2026-10-07",
+   "items": [
+    {
+     "type": "metric",
+     "label": "本季淨營收",
+     "value": "約 12 億美元，季增 -14%、年增 -19%，低於市場預期；每股盈餘 -1.36 美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "比特幣相關交易占營收比重",
+     "value": "12%（先前超過 50%）",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Coinbase One 訂閱用戶數",
+     "value": "突破 100 萬，付費會員數創歷史新高；市場下跌、交易量下滑期間仍持續成長",
+     "speaker": "Alesia Haas，財務長"
+    },
+    {
+     "type": "metric",
+     "label": "Base 鏈過去 12 個月穩定幣轉帳量",
+     "value": "32 兆美元，為 Ethereum 上最大的 L2；穩定幣轉帳量第一，單筆成本低於 0.01 美元、結算時間不到 1 秒",
+     "speaker": "Brian Armstrong，執行長"
+    },
+    {
+     "type": "metric",
+     "label": "代理式金融（agentic finance）交易在 Base 上的結算占比",
+     "value": "90% 以上的穩定幣交易在 Base 上結算",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "USDC 地位",
+     "value": "交易量第一、市值第二",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "公司員工人數",
+     "value": "4,951 人",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "成長行銷投資回收期",
+     "value": "通常約 1 年，近期表現優於此水準",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "Circle／USDC 合約",
+     "value": "已達成續約條件，將以相同條款續約",
+     "speaker": "Alesia Haas，財務長"
+    },
+    {
+     "type": "guidance",
+     "label": "預先 IPO 永續合約（pre-IPO perpetual futures）",
+     "value": "目前以 SpaceX 為首檔，對非美國客戶提供；美國客戶取得管道「在路線圖上，我會持續推動」",
+     "speaker": "Brian Armstrong，執行長"
+    },
+    {
+     "type": "guidance",
+     "label": "產品擴張計畫",
+     "value": "股票選擇權交易預計稍後推出",
+     "speaker": "Brian Armstrong，執行長"
+    },
+    {
+     "type": "guidance",
+     "label": "Base 與穩定幣投資方向",
+     "value": "「我們有大約兩年的領先優勢，會持續投資 Base」；多穩定幣策略，支援 USDC、PYUSD、USDT",
+     "speaker": "Brian Armstrong，執行長"
+    },
+    {
+     "type": "guidance",
+     "label": "CLARITY Act 立法展望",
+     "value": "通過有益但非必要；若未通過，對 Coinbase 而言「基本上就是照常營運」",
+     "speaker": "Brian Armstrong，執行長"
+    },
+    {
+     "type": "quote",
+     "label": "本季基調",
+     "value": "信任在這樣的世界裡仍將很重要，我們會為 AI 代理鋪上紅地毯。",
+     "speaker": "Brian Armstrong，執行長"
     }
    ]
   }
@@ -1101,6 +1475,101 @@
      "speaker": "Vladimir Tenev（Robinhood共同創辦人暨執行長）"
     }
    ]
+  },
+  "2026Q4": {
+   "fetched": "2026-10-07",
+   "items": [
+    {
+     "type": "metric",
+     "label": "交易型營收(Transaction-Based Revenue)",
+     "value": "7.76 億美元，年增 44%，由事件合約、選擇權與股票的高活躍度帶動",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "選擇權營收",
+     "value": "3.42 億美元，年增 29%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "股票營收",
+     "value": "1.29 億美元，年增 95%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "加密貨幣營收",
+     "value": "1 億美元，年減 38%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "事件合約營收",
+     "value": "1.56 億美元，年增約 1,000%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "資金客戶數(Funded Customers)",
+     "value": "2,840 萬戶，較去年同期增加 190 萬戶；本季新增近 100 萬戶，為 5 年來單季最高",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "平台總資產與淨存款",
+     "value": "平台總資產 3,690 億美元，年增 32%；本季淨存款 217 億美元，年化成長率 28%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Gold 訂閱數與 ARPU",
+     "value": "Gold 訂閱 480 萬(滲透率 17%)；ARPU 187 美元，年增 24%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "調整後 EBITDA 與淨利",
+     "value": "調整後 EBITDA 7.41 億美元(利潤率 57%)，年增 35%；淨利 5.73 億美元，年增 48%；稀釋後 EPS 0.62 美元",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "2026 全年調整後營運費用加股權酬勞(SBC)指引下調",
+     "value": "調整為 26.75 億至 27.75 億美元，前次指引為 27 億至 28.25 億美元；區間已納入 Rothera 與 WonderFi 的新增成本",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "7 月淨存款走勢",
+     "value": "7 月淨存款預計約 40 億美元，不含剛啟動的 Trump 帳戶可能帶來的資金流入",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "資本運用與投資彈性",
+     "value": "2026 年 6 月以可轉換債募資 22 億美元(票息 0%)，用於未來投資；管理層表示股價漲至 300 美元以上才會有稀釋",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "中長期策略三大支柱",
+     "value": "活躍交易者領導地位、爭取年輕世代的錢包份額、建立全球金融生態系；Trump 帳戶已有 700 萬名兒童註冊、約 15 億美元存入，Robinhood Chain 累計逾 1.5 億筆交易",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "其他新業務規模",
+     "value": "Gold 信用卡持卡人 100 萬人、年化消費額 170 億美元；退休帳戶託管資產 345 億美元，年增 82%；已有 13 條業務線年化經常性營收超過 1 億美元",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "本季基調",
+     "value": "我們相信，不只是能長期投資的成長型公司，還能靠精實、紀律嚴明的營運模式自行負擔相當一部分新投資，這是我們的競爭優勢。",
+     "speaker": "Shiv Kumar Verma，財務長(CFO)"
+    }
+   ]
   }
  },
  "SHOP": {
@@ -1196,6 +1665,101 @@
      "label": "本季基調代表發言",
      "value": "Shopify大概是全世界最『沉迷AI』的公司",
      "speaker": "Harley Finkelstein（總裁）"
+    }
+   ]
+  },
+  "2026Q4": {
+   "fetched": "2026-10-07",
+   "items": [
+    {
+     "type": "metric",
+     "label": "第二季營收",
+     "value": "36 億美元，年增 34%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "第二季 GMV",
+     "value": "1,156 億美元，年增 32%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "商家解決方案營收",
+     "value": "28 億美元，年增 37%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "訂閱解決方案營收",
+     "value": "8.02 億美元，年增 22%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "支付滲透率",
+     "value": "佔全球 GMV 的 68%，較去年同期增加 3 個百分點",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "地區 GMV 成長",
+     "value": "國際年增 37%、北美年增 28%、歐洲年增 34%（固定匯率）",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Shop Pay、B2B 與實體通路 GMV 成長",
+     "value": "Shop Pay GMV 年增 53%、B2B GMV 年增 76%、POS/實體 GMV 年增 32%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "MRR",
+     "value": "2.21 億美元，年增 19%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "毛利與營業利益",
+     "value": "毛利 17 億美元，年增 31%；營業利益 4.88 億美元（去年同期 2.91 億美元）；營業費用佔營收 34%，較去年同期低 4 個百分點",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "自由現金流",
+     "value": "6.54 億美元，FCF 利潤率 18%（去年同期 16%）",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "第三季營收展望",
+     "value": "營收年增預計為三十%出頭（low-thirties）",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "第三季毛利展望",
+     "value": "毛利年增預計為中二十%到高二十%（mid- to high-twenties）",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "第三季營業費用展望",
+     "value": "營業費用預計佔營收 33%–34%",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "第三季自由現金流與股權報酬展望",
+     "value": "FCF 利潤率預計為高十%到低二十%；股票薪酬費用預計約 1.5 億美元",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "本季基調",
+     "value": "自 2025 年初以來，Shopify 的商家取得了美國電商新增銷售額的近一半。",
+     "speaker": "Jeff Hoffmeister，財務長（CFO）"
     }
    ]
   }
@@ -3448,6 +4012,89 @@
      "label": "本季基調發言",
      "value": "對於一個幾個月前客戶都還完全不認識的平台來說，我們現在看到的這股動能實在驚人。",
      "speaker": "Serge Saxonov（執行長暨共同創辦人）"
+    }
+   ]
+  },
+  "2026Q4": {
+   "fetched": "2026-10-07",
+   "items": [
+    {
+     "type": "metric",
+     "label": "2026 年第二季總營收",
+     "value": "1.51 億美元,排除 160 萬美元的非經常性授權與權利金收入後,年增 3%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "空間生物學耗材營收",
+     "value": "4,230 萬美元,年增 16%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "單細胞耗材營收",
+     "value": "8,850 萬美元,年增 3%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "儀器營收",
+     "value": "770 萬美元,年減 47%",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "各地區營收",
+     "value": "美洲 8,500 萬美元(年增 6%,不含和解金)、歐洲中東非洲 4,000 萬美元(年增 15%)、亞太 2,600 萬美元(年減 19%)",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "毛利率",
+     "value": "74%(去年同期 72%),含 260 萬美元關稅退款;不含和解金的調整後毛利率為 74%(去年同期 67%)",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "現金與有價證券",
+     "value": "5.52 億美元,較去年同期增加 1.05 億美元",
+     "speaker": ""
+    },
+    {
+     "type": "metric",
+     "label": "Atera 訂單",
+     "value": "已簽訂的訂單量已超過 2026 年全年的出貨目標",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "2026 全年營收展望(上調)",
+     "value": "6.1 億至 6.3 億美元,其中含 160 萬美元專利訴訟和解收入",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "Atera 2026 年出貨目標",
+     "value": "40 台,大部分集中在第四季出貨;每台儀器的最大耗材拉貨潛力為 150 萬至 300 萬美元,約為 Xenium 的 2 倍",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "2026 年第三季展望",
+     "value": "營收預期小幅季減,原因是客戶在等待 Atera 期間,減少採購現有的空間產品;學術研究經費環境仍偏緊",
+     "speaker": ""
+    },
+    {
+     "type": "guidance",
+     "label": "2026 年第四季展望",
+     "value": "營收將大幅季增,主要由 Atera 出貨帶動,Atera 儀器占第三季到第四季增幅的絕大部分,其餘產品線則有正常的第四季季節性旺季",
+     "speaker": ""
+    },
+    {
+     "type": "quote",
+     "label": "本季基調",
+     "value": "如今,大多數重大的生物數據產生計畫,至少有一部分的出發點,就是為了訓練 AI 模型。",
+     "speaker": "Serge Saxonov,執行長"
     }
    ]
   }

@@ -1,86 +1,158 @@
 {
-"date": "2026-10-05",
-"generated_at": "2026-10-06T08:48:00",
+"date": "2026-10-06",
+"generated_at": "2026-10-07T08:48:02",
 "events": [
-{
-"code": "0050",
-"name": "元大台灣50",
-"event": "投信連買 5 天",
-"kind": "streak",
-"days": 5,
-"shares": 2100000
-},
-{
-"code": "2344",
-"name": "華邦電",
-"event": "投信連賣 11 天",
-"kind": "streak",
-"days": 11,
-"shares": -1848134
-},
-{
-"code": "2330",
-"name": "台積電",
-"event": "投信連買 5 天",
-"kind": "streak",
-"days": 5,
-"shares": 589108
-},
-{
-"code": "3189",
-"name": "景碩",
-"event": "投信連買 6 天",
-"kind": "streak",
-"days": 6,
-"shares": 1150000
-},
-{
-"code": "3665",
-"name": "貿聯-KY",
-"event": "投信異常大賣",
-"kind": "anomaly",
-"shares": -1759066,
-"vs_avg": 7.8
-},
 {
 "code": "2891",
 "name": "中信金",
-"event": "投信連買 7 天",
+"event": "投信連買 8 天",
 "kind": "streak",
-"days": 7,
-"shares": 1017512
+"days": 8,
+"shares": 1335000
 },
 {
-"code": "6805",
-"name": "富世達",
-"event": "投信連賣 6 天",
+"code": "6257",
+"name": "矽格",
+"event": "投信連買 6 天",
 "kind": "streak",
 "days": 6,
-"shares": -790000
+"shares": 697000
+},
+{
+"code": "2890",
+"name": "永豐金",
+"event": "投信連買 5 天",
+"kind": "streak",
+"days": 5,
+"shares": 2166000
+},
+{
+"code": "6213",
+"name": "聯茂",
+"event": "投信異常大買",
+"kind": "anomaly",
+"shares": 1233000,
+"vs_avg": 6.1
+},
+{
+"code": "6213",
+"name": "聯茂",
+"event": "投信連買 9 天",
+"kind": "streak",
+"days": 9,
+"shares": 1233000
+},
+{
+"code": "2368",
+"name": "金像電",
+"event": "投信異常大買",
+"kind": "anomaly",
+"shares": 2644500,
+"vs_avg": 7.1
+},
+{
+"code": "6278",
+"name": "台表科",
+"event": "投信連賣 7 天",
+"kind": "streak",
+"days": 7,
+"shares": -699000
 },
 {
 "code": "6505",
 "name": "台塑化",
-"event": "投信連買 9 天",
+"event": "投信連買 10 天",
 "kind": "streak",
-"days": 9,
-"shares": 651579
+"days": 10,
+"shares": 2265000
 },
 {
-"code": "2492",
-"name": "華新科",
+"code": "2308",
+"name": "台達電",
+"event": "投信連買 10 天",
+"kind": "streak",
+"days": 10,
+"shares": 649409
+},
+{
+"code": "1216",
+"name": "統一",
 "event": "投信異常大買",
 "kind": "anomaly",
-"shares": 3126000,
+"shares": 1681000,
+"vs_avg": 6.1
+},
+{
+"code": "9945",
+"name": "潤泰新",
+"event": "投信連買 5 天",
+"kind": "streak",
+"days": 5,
+"shares": 726000
+},
+{
+"code": "8046",
+"name": "南電",
+"event": "投信連買 5 天",
+"kind": "streak",
+"days": 5,
+"shares": 532000
+},
+{
+"code": "8021",
+"name": "尖點",
+"event": "投信異常大買",
+"kind": "anomaly",
+"shares": 1226000,
 "vs_avg": 7.1
+},
+{
+"code": "6805",
+"name": "富世達",
+"event": "投信連賣 7 天",
+"kind": "streak",
+"days": 7,
+"shares": -760000
+},
+{
+"code": "2049",
+"name": "上銀",
+"event": "投信異常大賣",
+"kind": "anomaly",
+"shares": -607000,
+"vs_avg": 10.5
+},
+{
+"code": "2344",
+"name": "華邦電",
+"event": "投信連賣 12 天",
+"kind": "streak",
+"days": 12,
+"shares": -10812000
+},
+{
+"code": "2303",
+"name": "聯電",
+"event": "投信異常大賣",
+"kind": "anomaly",
+"shares": -67563010,
+"vs_avg": 7.5
 },
 {
 "code": "3264",
 "name": "欣銓",
-"event": "投信連賣 8 天",
+"event": "投信連賣 9 天",
 "kind": "streak",
-"days": 8,
-"shares": -6962000
+"days": 9,
+"shares": -1420000
+},
+{
+"code": "6182",
+"name": "合晶",
+"event": "投信異常大賣",
+"kind": "anomaly",
+"shares": -750000,
+"vs_avg": 34.4
 }
 ]
 }

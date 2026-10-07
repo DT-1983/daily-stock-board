@@ -1,5 +1,5 @@
 {
- "date": "2026-10-06",
+ "date": "2026-10-07",
  "period": 60,
  "mode": "daily",
  "chains": {
@@ -20,7 +20,7 @@
    "summary": "弱化象限(RS 100.43/動能 98.59)｜SuperTrend多頭｜未擠壓"
   },
   "us:矽光子/光通訊": {
-   "members_used": 8,
+   "members_used": 7,
    "rrg": {
     "ratio": 98.33,
     "momentum": 98.56,
@@ -77,11 +77,11 @@
    "rrg_from": null,
    "supertrend": "多頭",
    "squeeze": {
-    "on": true,
-    "level": "極壓",
-    "momentum_up": true
+    "on": false,
+    "level": null,
+    "momentum_up": false
    },
-   "summary": "落後象限(RS 99.01/動能 98.61)｜SuperTrend多頭｜極壓蓄力中，動能偏多"
+   "summary": "落後象限(RS 99.01/動能 98.61)｜SuperTrend多頭｜未擠壓"
   },
   "us:AI 電力/核能": {
    "members_used": 7,
@@ -93,11 +93,11 @@
    "rrg_from": null,
    "supertrend": "空頭",
    "squeeze": {
-    "on": true,
-    "level": "中壓",
+    "on": false,
+    "level": null,
     "momentum_up": true
    },
-   "summary": "改善象限(RS 99.45/動能 101.05)｜SuperTrend空頭｜中壓蓄力中，動能偏多"
+   "summary": "改善象限(RS 99.45/動能 101.05)｜SuperTrend空頭｜未擠壓"
   },
   "us:機器人": {
    "members_used": 8,
@@ -110,10 +110,10 @@
    "supertrend": "多頭",
    "squeeze": {
     "on": true,
-    "level": "中壓",
+    "level": "微壓",
     "momentum_up": true
    },
-   "summary": "落後象限(RS 99.8/動能 98.98)｜SuperTrend多頭｜中壓蓄力中，動能偏多"
+   "summary": "落後象限(RS 99.8/動能 98.98)｜SuperTrend多頭｜微壓蓄力中，動能偏多"
   },
   "us:玻璃基板/TGV": {
    "members_used": 6,
@@ -141,11 +141,11 @@
    "rrg_from": null,
    "supertrend": "空頭",
    "squeeze": {
-    "on": false,
-    "level": null,
+    "on": true,
+    "level": "微壓",
     "momentum_up": false
    },
-   "summary": "領先象限(RS 102.11/動能 101.79)｜SuperTrend空頭｜未擠壓"
+   "summary": "領先象限(RS 102.11/動能 101.79)｜SuperTrend空頭｜微壓蓄力中，動能偏空"
   },
   "us:AI 電源/散熱": {
    "members_used": 4,
@@ -155,13 +155,13 @@
     "quadrant": "落後"
    },
    "rrg_from": null,
-   "supertrend": "空頭",
+   "supertrend": "多頭",
    "squeeze": {
     "on": false,
     "level": null,
     "momentum_up": true
    },
-   "summary": "落後象限(RS 98.56/動能 98.62)｜SuperTrend空頭｜未擠壓"
+   "summary": "落後象限(RS 98.56/動能 98.62)｜SuperTrend多頭｜未擠壓"
   },
   "tw:AI 伺服器": {
    "members_used": 8,
@@ -190,10 +190,10 @@
    "supertrend": "多頭",
    "squeeze": {
     "on": true,
-    "level": "微壓",
+    "level": "中壓",
     "momentum_up": false
    },
-   "summary": "領先象限(RS 101.66/動能 100.49)｜SuperTrend多頭｜微壓蓄力中，動能偏空"
+   "summary": "領先象限(RS 101.66/動能 100.49)｜SuperTrend多頭｜中壓蓄力中，動能偏空"
   },
   "tw:機器人": {
    "members_used": 8,
