@@ -2,10 +2,24 @@
 "date": "2026-10-07",
 "flips_hold": [
 {
+"code": "ARKX",
+"name": "",
+"word": "🔴→🟢 翻多",
+"dir": 1,
+"sig": "st"
+},
+{
+"code": "CEG",
+"name": "",
+"word": "🔴→🟢 翻多",
+"dir": 1,
+"sig": "st"
+},
+{
 "code": "ITOCY",
 "name": "",
-"word": "🟢→🔴 翻空",
-"dir": -1,
+"word": "🔴→🟢 翻多",
+"dir": 1,
 "sig": "st"
 },
 {
@@ -81,8 +95,8 @@
 ],
 "flips_watch": [
 {
-"code": "AVGO",
-"name": "",
+"code": "3081",
+"name": "聯亞",
 "word": "🔴→🟢 翻多",
 "dir": 1,
 "sig": "st"
@@ -90,60 +104,12 @@
 ],
 "ai_alerts": [
 {
-"chain": "AI 電力/核能",
-"market": "US",
-"sig": "🟢",
-"code": "NVT",
-"name": "nVent Electric PLC",
-"reason": "觀望→買進"
-},
-{
 "chain": "AI 伺服器",
-"market": "US",
+"market": "TW",
 "sig": "🟢",
-"code": "AMD",
-"name": "Advanced Micro Devices Inc",
+"code": "3037",
+"name": "欣興",
 "reason": "觀望→買進"
-},
-{
-"chain": "低軌衛星",
-"market": "US",
-"sig": "🟢",
-"code": "RKLB",
-"name": "Rocket Lab Corp",
-"reason": "觀望→買進"
-},
-{
-"chain": "關鍵金屬/原物料",
-"market": "US",
-"sig": "🟢",
-"code": "SCCO",
-"name": "Southern Copper Corporation",
-"reason": "觀望→買進"
-},
-{
-"chain": "Bitcoin→AI 機房",
-"market": "US",
-"sig": "🟢",
-"code": "CRWV",
-"name": "CoreWeave Inc Ordinary Shares - Class A",
-"reason": "觀望→買進"
-},
-{
-"chain": "Bitcoin→AI 機房",
-"market": "US",
-"sig": "🔴",
-"code": "WYFI",
-"name": "Whitefiber Inc",
-"reason": "觀望→賣出"
-},
-{
-"chain": "Bitcoin→AI 機房",
-"market": "US",
-"sig": "🔴",
-"code": "RIOT",
-"name": "Riot Platforms Inc",
-"reason": "觀望→賣出"
 },
 {
 "chain": "機器人",
@@ -154,35 +120,11 @@
 "reason": "觀望→買進"
 },
 {
-"chain": "低軌衛星",
+"chain": "玻璃基板/TGV",
 "market": "TW",
 "sig": "🟢",
-"code": "3491",
-"name": "昇達科",
-"reason": "觀望→買進"
-},
-{
-"chain": "低軌衛星",
-"market": "TW",
-"sig": "🟢",
-"code": "6271",
-"name": "同欣電",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 材料/被動元件",
-"market": "TW",
-"sig": "🟢",
-"code": "2408",
-"name": "NANYA TECHNOLOGY CORPORATION",
-"reason": "觀望→買進"
-},
-{
-"chain": "PCB/ABF 載板",
-"market": "TW",
-"sig": "🟢",
-"code": "2313",
-"name": "華通",
+"code": "3037",
+"name": "欣興",
 "reason": "觀望→買進"
 }
 ]

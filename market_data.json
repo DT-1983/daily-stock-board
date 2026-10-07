@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-07 08:47",
+ "updated": "2026-10-07 14:11",
  "indices": [
   {
    "sym": "^GSPC",
@@ -14,7 +14,7 @@
    "name": "那斯達克",
    "grp": "US",
    "date": "10/06",
-   "close": 27599.89,
+   "close": 27599.79,
    "chg_pct": 0.45
   },
   {
@@ -37,17 +37,17 @@
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "10/06",
-   "close": 49822.55,
-   "chg_pct": 0.22
+   "date": "10/07",
+   "close": 49806.37,
+   "chg_pct": -0.03
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "10/07",
-   "close": 31.77,
-   "chg_pct": 0.07
+   "close": 31.85,
+   "chg_pct": 0.32
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "蔡康永現身沈伯洋競總成立大會 共軍帳號「鈞正平」表態！",
+   "title": "啟新生技與先進能簽署MOU 共同推動再生醫療分析技術接軌國際",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6623348",
-   "ts": "10/07 08:40"
+   "url": "https://news.cnyes.com/news/id/6623556",
+   "ts": "10/07 14:10"
   },
   {
-   "title": "荷姆茲海峽重開也救不了？高盛：柴油高價恐拖到明年  全球煉油體系逼近20年極限",
+   "title": "通膨與地緣風險加劇 印度央行時隔近4年首度升息",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6623197",
-   "ts": "10/07 08:40"
+   "url": "https://news.cnyes.com/news/id/6623605",
+   "ts": "10/07 14:10"
   },
   {
-   "title": "油價小幅收高中東出口強韌、G7釋出戰備庫存壓抑供應風險",
+   "title": "法國2027總統大選前哨戰：雷朋提減稅300億、節支1400億歐元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6623368",
-   "ts": "10/07 08:30"
+   "url": "https://news.cnyes.com/news/id/6623430",
+   "ts": "10/07 13:43"
   },
   {
-   "title": "日經225開盤小漲站穩70,700點、隔夜美股創高提供支撐",
+   "title": "Google發表開源原生多模態嵌入模型EmbeddingGemma 2 與新一代Gemini 4 Argon",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6623367",
-   "ts": "10/07 08:30"
+   "url": "https://news.cnyes.com/news/id/6623578",
+   "ts": "10/07 13:40"
   },
   {
-   "title": "華爾街看淡、本益比剩11倍！《大賣空》貝瑞賣了這檔最大持股為何還要買回？",
+   "title": "AI記憶體熱潮讓美光賺翻 小摩估自由現金流破1000億美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6623305",
-   "ts": "10/07 08:22"
+   "url": "https://news.cnyes.com/news/id/6623428",
+   "ts": "10/07 13:27"
   },
   {
-   "title": "營收速報  - 高僑(6234)9月營收1.05億元年增率高達133.52％",
+   "title": "緩解記憶體缺貨危機！超微蘇姿丰會三星全永鉉 鞏固供應鏈",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6623535",
+   "ts": "10/07 13:10"
+  },
+  {
+   "title": "技嘉(2376)9月營收衝631億元！超越市場預期8.2%，AI伺服器放量後獲利能跟上？",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6623362",
-   "ts": "10/07 08:21"
+   "url": "https://news.cnyes.com/news/id/6623562",
+   "ts": "10/07 12:30"
   },
   {
-   "title": "殖利率飆破5.3%仍擋不住AI熱潮 克雷默看好3大藍籌股：輝達、微軟、Meta",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6623317",
-   "ts": "10/07 08:20"
-  },
-  {
-   "title": "營收速報 - 2026年10月7日台股中小型公司9月營收一覽（新增334家）",
+   "title": "〈焦點股〉東元續攻東南亞AIDC基建商機砸20億元擴大投資 價量齊揚",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6623344",
-   "ts": "10/07 07:55"
+   "url": "https://news.cnyes.com/news/id/6623537",
+   "ts": "10/07 12:17"
   },
   {
-   "title": "營收速報 - 2026年10月7日台股大型公司9月營收一覽（新增27家）",
+   "title": "鉅亨速報 - Factset 最新調查：臻鼎-KY(4958-TW)EPS預估下修至13.79元，預估目標價為644元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6623343",
-   "ts": "10/07 07:55"
+   "url": "https://news.cnyes.com/news/id/6623551",
+   "ts": "10/07 12:10"
   },
   {
-   "title": "最快年底出貨！SK海力士旗下Solidigm增台灣ODM基地 擴大資料中心SSD供應",
+   "title": "鉅亨速報 - Factset 最新調查：弘塑(3131-TW)EPS預估下修至62.06元，預估目標價為3900元",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6622828",
-   "ts": "10/07 07:50"
+   "url": "https://news.cnyes.com/news/id/6623550",
+   "ts": "10/07 12:10"
   }
  ],
  "inst": {
