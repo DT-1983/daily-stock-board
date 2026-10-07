@@ -52,6 +52,8 @@ def _num(x):
 
 
 def _tw_channel(tk):
+    if str(tk).upper() == "^TWII":                          # 台股加權指數（證交所即時服務的代號是 t00）
+        return "tse_t00.tw"
     import tw_symbol
     code = str(tk).upper().split(".")[0]
     sym = tw_symbol.resolve(code)
@@ -134,8 +136,8 @@ def quotes(tickers, detail=False):
     hit = _CACHE.get(key)
     if hit and time.time() - hit[0] < _TTL:
         return hit[1]
-    tw = [t for t in tickers if _is_tw(t)]
-    us = [t for t in tickers if not _is_tw(t)]
+    tw = [t for t in tickers if _is_tw(t) or t.upper() == "^TWII"]
+    us = [t for t in tickers if t not in tw]
     out = {}
     if tw:
         out.update(tw_quotes(tw))

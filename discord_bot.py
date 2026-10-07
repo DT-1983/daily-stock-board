@@ -493,6 +493,52 @@ async def _room_quote(request):
     return web.json_response(data, headers={"Cache-Control": "no-store"})
 
 
+# ── 自選股（2026-10-08；邏輯在 watchlist.py）。只有 Leo 本人（lk／key）能看與改，家人帳號一律 404 ──
+def _watch_ok(request):
+    ok, _ = _room_gate(request)
+    return bool(ok)
+
+
+async def _room_watch(request):
+    if not _watch_ok(request):
+        return web.Response(text="", status=404)
+    import watchlist
+    items = await asyncio.to_thread(watchlist.listing)
+    return web.json_response({"items": items}, headers={"Cache-Control": "no-store"})
+
+
+async def _room_watch_post(request):
+    """body: {"action":"add","q":"2330, NVDA, 台積電"} | {"action":"remove","tk":"NVDA"} |
+            {"action":"import","name":"watchlist.dsl","b64":"…"}"""
+    if not _watch_ok(request):
+        return web.Response(text="", status=404)
+    import watchlist
+    try:
+        body = await request.json()
+    except Exception:                                       # noqa: BLE001
+        return web.json_response({"error": "格式不對"}, status=400)
+    act = str(body.get("action", ""))
+    if act == "add":
+        ok, skipped, cands = watchlist.resolve_query(body.get("q", ""))
+        added = watchlist.add(ok, src="manual")
+        return web.json_response({"added": added, "already": [t for t in ok if t not in added],
+                                  "skipped": skipped, "candidates": cands})
+    if act == "remove":
+        return web.json_response({"removed": watchlist.remove(str(body.get("tk", "")).upper())})
+    if act == "import":
+        import base64
+        try:
+            raw = base64.b64decode(str(body.get("b64", "")), validate=False)
+        except Exception:                                   # noqa: BLE001
+            return web.json_response({"error": "檔案讀不了"}, status=400)
+        if not raw or len(raw) > 2_000_000:
+            return web.json_response({"error": "檔案是空的或超過 2MB"}, status=400)
+        res = await asyncio.to_thread(watchlist.import_bytes, str(body.get("name", "")), raw)
+        print(f"[watch] 匯入 {body.get('name')}：新增 {len(res['added'])}、已有 {len(res['already'])}、略過 {len(res['skipped'])}", flush=True)
+        return web.json_response(res)
+    return web.json_response({"error": "不認得的動作"}, status=400)
+
+
 async def _room_ask_stream(request):
     """串流版的軍師（SSE）。用 GET 是因為 EventSource 只能 GET。
 
@@ -668,6 +714,8 @@ async def _run():
     app.router.add_get("/room", _room_page)
     app.router.add_get("/room/detail", _room_detail)
     app.router.add_get("/room/quote", _room_quote)
+    app.router.add_get("/room/watch", _room_watch)
+    app.router.add_post("/room/watch", _room_watch_post)
     app.router.add_get("/room/history", _room_history)
     app.router.add_get("/room/ask_stream", _room_ask_stream)
     app.router.add_post("/room/ask", _room_ask)

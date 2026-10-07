@@ -1800,6 +1800,13 @@ ROOM_JS = r"""
     api(tks,false).then(function(q){ closedL=allClosed(q); paintList(q); paintTable(q); });
   }
   window.roomQuoteNow=function(){ setTimeout(function(){ tickDetail(true); },500); };
+  // 2026-10-08 Leo 截圖：切到個股模式後，左欄股價還是掃描的舊價（4,920 vs 實際 4,835）。
+  // 根因：預設是列表模式、左欄看不見，第一輪只更新了表格；收盤後降頻（每 5 次問 1 次）→ 切模式後要等好幾分鐘。
+  // 修：切模式／點篩選／搜尋這類會改變「看得見哪些列」的操作，一律 0.4 秒後強制更新一次（有 8 秒伺服器快取，不會打爆來源）。
+  function kick(){ clearTimeout(window._qk); window._qk=setTimeout(function(){ tickList(true); tickDetail(true); },400); }
+  document.addEventListener("click",function(e){
+    if(e.target && e.target.closest && e.target.closest("button,.mb,.ch,[data-f],[data-s],li.it,tr[data-tid]")) kick(); },true);
+  document.addEventListener("input",kick,true);
   setInterval(tickDetail,15000); setInterval(tickList,60000);
   setTimeout(function(){ tickList(true); tickDetail(true); },2500);
 })();
