@@ -292,7 +292,15 @@ def _row_html(r):
         # 兩欄本來就分開放（風報比／距停損），但要自己對著看才發現——直接標出來。
         _g = r.get("gap_pct")
         _tight = r.get("bull") and _g is not None and _g < 5.0
-        rrh = f'<span class="{cls}">{rr:,.1f}</span>'
+        # 2026-10-07：風報比用的目標價可能跟「目標價」欄不同（券商價優先顯示、RR 用共識均值）→ 標出來
+        _rt = r.get("rr_target")
+        _rtip = (f"風報比用的目標價＝{_rt:,.2f}（{'市場共識均值' if r.get('rr_target_source') == 'consensus' else r.get('rr_target_source') or ''}）"
+                 f"；算式 (目標−現價)÷(現價−停損線)" if _rt is not None else "")
+        if _rt is not None and r.get("target") is not None and abs(_rt - r["target"]) > 0.005:
+            _rtip += f"。注意：與左邊顯示的目標價 {r['target']:,.2f} 不同"
+        rrh = f'<span class="{cls}" title="{esc(_rtip)}">{rr:,.1f}</span>'
+        if _rt is not None and r.get("target") is not None and abs(_rt - r["target"]) > 0.005:
+            rrh += '<span class="rrwarn" title="' + esc(_rtip) + '">≠</span>'
         if _tight:
             rrh += (f'<span class="rrwarn" title="離停損僅 {_g:.1f}%，分母很小，'
                     f'風報比會被放大；這個數字要配著「距停損」一起看">⚠️</span>')

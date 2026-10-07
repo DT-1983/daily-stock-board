@@ -311,6 +311,13 @@ def add_rr(row, tgt, advisor=None):
     row["target_broker"] = None
     row["target_date"] = None
     row["target_pct"] = None
+    # 2026-10-07 交接 INVESTMENT_AUDIT_FIX：風報比用的是「共識均值」，但畫面的 target 欄優先顯示
+    # 券商目標價——兩個不同的價，畫面上對不起來（2882 存檔 rr 0.94 vs 用顯示的 117 算是 0.69）。
+    # 這是原設計（見下方註解），不改；只把 RR 實際用的那個價與來源存出來，畫面可重現。
+    row["rr_target"] = None
+    row["rr_target_source"] = None
+    row["consensus_target"] = (round(float(tgt["mean"]), 2)
+                               if tgt and tgt.get("mean") is not None else None)
     if advisor and advisor.get("target") is not None:
         row["target"] = round(float(advisor["target"]), 2)
         row["target_source"] = "advisor"
@@ -333,6 +340,8 @@ def add_rr(row, tgt, advisor=None):
     mean, px, sl = float(tgt["mean"]), row["price"], row["st_line"]
     if px > sl:
         row["rr"] = round((mean - px) / (px - sl), 2)
+        row["rr_target"] = round(mean, 2)
+        row["rr_target_source"] = "consensus"
     return row
 
 
