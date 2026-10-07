@@ -229,12 +229,12 @@ WATCH_JS = r"""
     var sq=""; for(var k=0;k<4;k++) sq+='<i class="'+((i.lit!=null&&k<i.lit)?"":"off")+'"></i>';
     var tg=(i.target&&px)?((i.target/px-1)*100):null;
     var dist=tg==null?"—":('<span class="'+cls(tg)+'">'+(tg>=0?"+":"")+tg.toFixed(0)+"%</span>");
-    var lit=i.in_scan?(i.lit+"/4"):"不在燈號掃描";
+    var lit=i.in_scan?(i.lit+"/4"):(i.note||"不在燈號掃描");
     return '<div class="wrow'+(i.tk===selTk?" sel":"")+'" data-tk="'+esc(i.tk)+'"><button class="wdel">移除</button><button class="wx" title="移除">✕</button>'
       +'<div class="wbody"><div class="wn"><span class="wgrip" title="按住上下拖曳調整順序">⠿</span><b>'+esc(i.tk)+'</b><span class="nm">'+esc(i.name)+'</span></div>'
       +'<div class="wpq"><span class="wp'+(q&&q.state==="盤中"?" lv":"")+'">'+(px==null?"—":fmt(px,i.mkt==="tw"?1:2))+'</span>'
       +(chg==null?"":'<span class="wch '+cls(chg)+'">'+sgn(chg)+'</span>')+'</div>'
-      +'<div class="wsq" title="'+esc(lit)+'">'+sq+(i.in_scan?"":' <span style="color:#6B84A3">'+esc(lit)+"</span>")+'</div>'
+      +'<div class="wsq" title="'+esc(lit)+'">'+sq+(i.in_scan?"":' <span style="color:#6B84A3">'+esc(lit.indexOf("資料不足")===0?"資料不足":"待掃描")+"</span>")+'</div>'
       +'<div class="wr2">距目標 '+dist+'</div></div></div>'; }
   function renderList(){
     var L=document.getElementById("wlist"); if(!L) return;

@@ -214,6 +214,14 @@ def listing():
         pass
     names = None
     out = []
+    try:
+        import price_store
+        import tw_symbol
+        import combo_scan
+        need = combo_scan.RS_LONG + 20
+    except Exception:                                       # noqa: BLE001
+        price_store = tw_symbol = None
+        need = 260
     for x in d["items"]:
         tk = x["tk"]
         r = meta.get(tk) or {}
@@ -222,7 +230,18 @@ def listing():
         if not nm and is_tw:
             names = names if names is not None else _tw_names()
             nm = names.get(tk)
-        out.append({"tk": tk, "name": nm or "", "mkt": "tw" if is_tw else "us", "src": x.get("src"), "group": x.get("group") or "",
+        # 沒燈號的原因（2026-10-08 Leo：區分「資料不足」跟「明天補上」）：
+        #   快取裡的日 K 少於 RS 窗口需要的天數（260）＝上市未滿一年，掃描也算不出來；其餘＝還沒輪到掃描（每天 06:xx）。
+        note = ""
+        if not r and price_store is not None:
+            try:
+                sym = tw_symbol.resolve(tk) if is_tw else tk
+                df = price_store.get_ohlc([sym], period="3y", refresh=False).get(sym)
+                n = 0 if df is None else len(df["Close"].dropna())
+                note = (f"資料不足（上市僅 {n} 個交易日，需 {need}）" if 0 < n < need else "尚未掃描（隔天早上補上）")
+            except Exception:                               # noqa: BLE001
+                note = "尚未掃描（隔天早上補上）"
+        out.append({"tk": tk, "name": nm or "", "mkt": "tw" if is_tw else "us", "src": x.get("src"), "group": x.get("group") or "", "note": note,
                     "lit": r.get("lit"), "bull": r.get("bull"), "px": r.get("price"),
                     "target": r.get("target"), "asof": r.get("asof"), "in_scan": bool(r)})
     return out
