@@ -567,10 +567,21 @@ LOOKUP_BOX_OFF = (
     '<span class="lkn">需本機開機（離線備援模式）</span></div>')
 
 
+def _data_date(d):
+    """列表真正的資料日（個股最新收盤日），不是掃描執行日。
+    2026-10-07 Leo：列表和「查燈號」數字不同——列表是早上 06:xx 掃的存檔，抓到的是**前一個交易日**收盤，
+    而標題原本顯示的是掃描日（10/07），讓人以為是今天收盤。改顯示 asof 的最大值並標「收盤」。"""
+    try:
+        a = max(r.get("asof") or "" for r in d.get("rows", []))
+    except ValueError:
+        a = ""
+    return a or d.get("date", "")
+
+
 def gatebar_html(d):
     return ('<div class="gatebar" id="gatebar" hidden>⚪ <b>本機離線</b>　·　'
             '<b>查股、即時重算、個股即時圖表、軍師對話</b>無法使用。'
-            f'下面是今早批次的列表（資料日 {esc(d.get("date",""))}），'
+            f'下面是今早批次的列表（{esc(_data_date(d))} 收盤資料），'
             '只有「打點成立」的個股有預先產好的圖。<span id="gatetk"></span>'
             '<button onclick="location.reload()">重新檢查</button></div>')
 
@@ -652,7 +663,7 @@ def body_html(d, in_room=False, public=False):
 
 def build(d, public=False):
     return (header("lamp", "進出燈號",
-                   f'四燈共振 × 風報比　·　資料日 {esc(d.get("date",""))}', NAV, "combo")
+                   f'四燈共振 × 風報比　·　{esc(_data_date(d))} 收盤資料（每早批次；「查燈號」是即時重算，兩邊可能差一天）', NAV, "combo")
             + body_html(d, public=public))
 
 
