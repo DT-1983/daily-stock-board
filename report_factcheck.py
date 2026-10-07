@@ -375,6 +375,19 @@ def check(report, price=None, base_rate=None, margin=None):
             if j and j[0] + 1 < len(eps_rows):
                 y2, e2, _ = eps_rows[j[0] + 1]
                 nxt = f"；隔年 {y2} 才跳 {e2/eps_rows[j[0]][1]-1:+.0%}"
+            import fiscal_periods as FP
+            _done = FP.year_published(report.get("ticker"), y1_)
+            if _done:
+                # 🔴 2026-10-07（交接，MRVL）：那一年公司早已公布全年數字（實績），不是「還在等的未來空白年」。
+                out.append({
+                    "kind": "有沒有空白年（已公布實績）",
+                    "claim": f"{y1_} EPS 年增 {ge:+.1%}{rv}{nxt}",
+                    "ours": "該年度公司已公布全年數字，這是歷史實績，不是預估",
+                    "verdict": OK,
+                    "note": f"**{y1_} 已是過去**：EPS 年增 {ge:+.1%} 是已發生的事，不是對未來的假設，"
+                            "也不構成「現在還在等」的驗證條件。報告表上的口徑（GAAP／non-GAAP）請回原文確認",
+                })
+        if flats and not _done:
             out.append({
                 "kind": "有沒有空白年",
                 "claim": f"{y1_} EPS 年增 {ge:+.1%}{rv}{nxt}",
@@ -384,7 +397,7 @@ def check(report, price=None, base_rate=None, margin=None):
                         "買進理由不是「明年會賺更多」，而是**「以後會賺很多，"
                         "而且現在就要先付這個價」**",
             })
-        else:
+        elif not flats:
             out.append({
                 "kind": "有沒有空白年",
                 "claim": "每一年 EPS 年增都 ≥ 5%",
@@ -463,6 +476,28 @@ def check(report, price=None, base_rate=None, margin=None):
 
     # ── 9. 季度 EPS：等財報才驗 ──────────────────────────
     eq = [e for e in (report.get("eps_quarterly") or []) if _num(e.get("value"))]
+    # 🔴 2026-10-07（交接，景碩 3189）：原本一律寫「等該季財報公布後自動比對」，連早已公布的季（2Q26 官方基本 EPS 2.57）
+    #    都還在「等」，也從沒真的比對。改成：已公布的季（台股用 FinMind 官方基本 EPS）逐季比對，沒公布的才等。
+    import fiscal_periods as FP
+    pub = []
+    for e in eq[:6]:
+        act = FP.tw_quarter_actual(report.get("ticker"), e.get("q"))
+        if act and act["eps"]:
+            pub.append((e, act))
+    pub_q = {e["q"] for e, _ in pub}
+    for e, act in pub:
+        v = _num(e["value"])
+        diff = v / act["eps"] - 1
+        out.append({
+            "kind": "季度 EPS（該季已公布）",
+            "claim": f"{e['q']} {v:g}",
+            "ours": f"官方基本 EPS {act['eps']:g}（FinMind 財報資料，{act['date']}）；報告 {v:g}，差 {diff:+.1%}",
+            "verdict": OK if abs(diff) <= 0.03 else WARN,
+            "note": ("兩者在 3% 內。" if abs(diff) <= 0.03 else
+                     "**該季已公布，不是「等財報」。**差距可能來自口徑（券商調整後／稀釋／未計特殊項目）或期間，"
+                     "未取得該券商的調整定義前，標「券商表列口徑待核」，不直接判定誰對誰錯"),
+        })
+    eq = [e for e in eq if e.get("q") not in pub_q]
     if eq:
         out.append({
             "kind": "季度 EPS 預估",

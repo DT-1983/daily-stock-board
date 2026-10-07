@@ -207,7 +207,17 @@ def render(key, r, d=None, px=None, fc=None):
 
     # ── 財務預估表（含我們算的 YoY 與 CAGR）────────────────────
     if len(fcs) >= 2:
-        hdr = "".join(f"<th>{esc(x.get('year'))}</th>" for x in fcs)
+        # 2026-10-07（交接，MRVL）：已公布的年度標「實績」，不再一律當「券商預估」。查不到就不標（維持原樣）。
+        import fiscal_periods as _FP
+
+        def _yh(x):
+            try:
+                done = _FP.year_published(r.get("ticker"), x.get("year"))
+            except Exception:                                   # noqa: BLE001
+                done = None
+            return f"{esc(x.get('year'))}" + ('<br><span style="font-size:10.5px;color:#7dd3a0">實績</span>' if done else "")
+
+        hdr = "".join(f"<th>{_yh(x)}</th>" for x in fcs)
 
         def row(label, vals, fmt, cls=""):
             return (f'<tr class="{cls}"><td>{esc(label)}</td>'
@@ -234,7 +244,7 @@ def render(key, r, d=None, px=None, fc=None):
         if any(pes):
             body += row("本益比", pes, lambda v: "—" if v is None else f"{v:.1f}")
         body += "</table>"
-        B.append(sb("券商的財務預估",
+        B.append(sb("券商的財務表（標「實績」的年度公司已公布，其餘為預估）",
                     "表格數字照抄原文；<b>YoY 那幾列是我們算的</b>，原文沒有——"
                     "報告通常只給複合成長率，<b>平均會把「某一年原地踏步」抹平</b>", body))
 
