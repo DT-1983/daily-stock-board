@@ -1,37 +1,37 @@
 {
- "updated": "2026-10-06 22:07",
+ "updated": "2026-10-07 08:47",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
    "date": "10/06",
-   "close": 7831.62,
-   "chg_pct": 0.74
+   "close": 7818.93,
+   "chg_pct": 0.58
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
    "date": "10/06",
-   "close": 27674.1,
-   "chg_pct": 0.72
+   "close": 27599.89,
+   "chg_pct": 0.45
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
    "date": "10/06",
-   "close": 51639.5,
-   "chg_pct": 0.72
+   "close": 51521.28,
+   "chg_pct": 0.49
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
    "date": "10/06",
-   "close": 13348.06,
-   "chg_pct": 1.33
+   "close": 13217.82,
+   "chg_pct": 0.34
   },
   {
    "sym": "^TWII",
@@ -45,80 +45,80 @@
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "10/06",
-   "close": 31.78,
-   "chg_pct": -0.16
+   "date": "10/07",
+   "close": 31.77,
+   "chg_pct": 0.07
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
    "date": "10/06",
-   "close": 5.29,
+   "close": 5.27,
    "fmt": "yield",
-   "chg_bp": -1.7
+   "chg_bp": -4.2
   }
  ],
  "news": [
   {
-   "title": "美股太旺現金不香了？貨幣基金吸金減速推升美國短債殖利率",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6622961",
-   "ts": "10/06 22:00"
-  },
-  {
-   "title": "盤中速報 - 和康電訊(MTSI-US)大漲5.39%，報345.99美元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6623167",
-   "ts": "10/06 21:58"
-  },
-  {
-   "title": "盤中速報 - Palo Alto Networks Inc(PANW-US)大漲5.1%，報427.5美元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6623162",
-   "ts": "10/06 21:54"
-  },
-  {
-   "title": "盤中速報 - 邁威爾科技(MRVL-US)大漲5.4%，報285.89美元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6623161",
-   "ts": "10/06 21:49"
-  },
-  {
-   "title": "盤中速報 - 伊魯米納(ILMN-US)大漲5.03%，報308.47美元",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6623160",
-   "ts": "10/06 21:48"
-  },
-  {
-   "title": "金管會釋利多！擴大保險業「健康福祉事業」投資範疇 保單脫鉤、非上市櫃公司可100%控股",
+   "title": "蔡康永現身沈伯洋競總成立大會 共軍帳號「鈞正平」表態！",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6623144",
-   "ts": "10/06 21:28"
+   "url": "https://news.cnyes.com/news/id/6623348",
+   "ts": "10/07 08:40"
   },
   {
-   "title": "〈台北紡織展〉從世界盃球衣到AI智慧製造 台灣機能性紡織品全球市占約7成",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6622946",
-   "ts": "10/06 20:52"
+   "title": "荷姆茲海峽重開也救不了？高盛：柴油高價恐拖到明年  全球煉油體系逼近20年極限",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6623197",
+   "ts": "10/07 08:40"
   },
   {
-   "title": "逾3.7萬「純舊制」勞退申辦自提 每3人就有1人搶「卡位」退休紅利",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6622956",
-   "ts": "10/06 20:44"
+   "title": "油價小幅收高中東出口強韌、G7釋出戰備庫存壓抑供應風險",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6623368",
+   "ts": "10/07 08:30"
   },
   {
-   "title": "信義區周慶開打 新光三越：消費者更愛買體驗和生活升級",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6622947",
-   "ts": "10/06 20:42"
+   "title": "日經225開盤小漲站穩70,700點、隔夜美股創高提供支撐",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6623367",
+   "ts": "10/07 08:30"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：中信金(2891-TW)EPS預估上修至4.31元，預估目標價為74元",
+   "title": "華爾街看淡、本益比剩11倍！《大賣空》貝瑞賣了這檔最大持股為何還要買回？",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6623305",
+   "ts": "10/07 08:22"
+  },
+  {
+   "title": "營收速報  - 高僑(6234)9月營收1.05億元年增率高達133.52％",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6622960",
-   "ts": "10/06 20:10"
+   "url": "https://news.cnyes.com/news/id/6623362",
+   "ts": "10/07 08:21"
+  },
+  {
+   "title": "殖利率飆破5.3%仍擋不住AI熱潮 克雷默看好3大藍籌股：輝達、微軟、Meta",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6623317",
+   "ts": "10/07 08:20"
+  },
+  {
+   "title": "營收速報 - 2026年10月7日台股中小型公司9月營收一覽（新增334家）",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6623344",
+   "ts": "10/07 07:55"
+  },
+  {
+   "title": "營收速報 - 2026年10月7日台股大型公司9月營收一覽（新增27家）",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6623343",
+   "ts": "10/07 07:55"
+  },
+  {
+   "title": "最快年底出貨！SK海力士旗下Solidigm增台灣ODM基地 擴大資料中心SSD供應",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6622828",
+   "ts": "10/07 07:50"
   }
  ],
  "inst": {
