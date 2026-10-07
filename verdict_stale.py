@@ -65,7 +65,10 @@ def reasons(ticker, v, px_now=None):
         crow = next((r for r in (_load("state/combo_result.json", {}) or {}).get("rows", [])
                      if _norm(r.get("ticker")) == tk), None)
         tj = str((v.get("trend_angle") or {}).get("judgment") or "")
-        if crow:
+        # 只有「技術面資料日比判斷用的資料日更新」才算牴觸：同一天的資料，判斷本來就是看過這個技術面才下的
+        # （2026-10-08 重判 31 檔持股時發現：剛產生的新判斷被誤標過期——趨勢角度的出場理由可以來自 RS 等，不只 SuperTrend）。
+        newer = bool(crow) and str(crow.get("asof") or "") > str(v.get("price_asof") or v.get("ts") or "")
+        if crow and newer:
             if "出場" in tj and crow.get("bull") and (crow.get("lit") or 0) >= 3:
                 why.append(f"技術面已翻多（{crow.get('asof')}：SuperTrend 多方、{crow.get('lit')}/4 燈），與判斷「{tj}」牴觸")
             elif tj.startswith("續抱") and crow.get("bull") is False:

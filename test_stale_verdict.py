@@ -23,8 +23,11 @@ def test_triggered_condition_marks_stale():
 
 def test_tech_flip_conflicts_with_judgment():
     st = {"state/combo_result.json": {"rows": [{"ticker": "XXXX", "bull": True, "lit": 4, "asof": "2026-10-06"}]}}
-    r = _run({"ts": "2026-09-03", "price": 100, "trend_angle": {"judgment": "考慮出場"}}, st, 101)
+    r = _run({"ts": "2026-09-03", "price_asof": "2026-09-02", "price": 100, "trend_angle": {"judgment": "考慮出場"}}, st, 101)
     assert any("技術面已翻多" in x for x in r), r
+    # 同一天的資料不算牴觸（剛重判的新判斷）
+    r2 = _run({"ts": "2026-10-07", "price_asof": "2026-10-06", "price": 100, "trend_angle": {"judgment": "考慮出場"}}, st, 101)
+    assert not any("技術面已翻多" in x for x in r2), r2
 
 
 def test_age_and_price_move():
