@@ -78,6 +78,15 @@ def _tw_core(code, n=8):
         return None
     dates = sorted(set(x["date"] for x in d))
     by_date = {dt: {x["type"]: x["value"] for x in d if x["date"] == dt} for dt in dates}
+    # 2026-10-07（交接 2882）：IFRS 17 追溯重編後，去年同期比較數字與 FinMind 存的舊值不同
+    # （國泰金 2025Q2 舊 +136.94 億 → 重編後 −526.29 億）。有官方重編值就覆蓋基期，來源記在 state/restated_base.json。
+    try:
+        _ov = json.load(open("state/restated_base.json", encoding="utf-8")).get(str(code), {})
+        for _dt, _fields in _ov.items():
+            if _dt in by_date:
+                by_date[_dt].update({k: v for k, v in _fields.items() if k not in ("source", "checked")})
+    except Exception:                                       # noqa: BLE001
+        pass
     cur_date = dates[-1]
     cd = date.fromisoformat(cur_date)
     yoy_date = next((dt for dt in dates if date.fromisoformat(dt).year == cd.year - 1
@@ -118,6 +127,8 @@ def _tw_core(code, n=8):
             med = _median([by_date[dt].get(name) for dt in dates])
             if med and med > 0 and b < med * BASE_MIN_RATIO:
                 pct = None          # 基期異常，不給成長率（見 BASE_MIN_RATIO）
+            elif b < 0:
+                pct = None          # 基期為負（虧損）算不出有意義的成長率，由畫面標「虧轉盈」
             else:
                 pct = (a / b - 1) * 100
         return {"cur": a, "prev": b, "yoy": pct}
@@ -203,7 +214,7 @@ def fetch(ticker: str) -> dict:
 
     def pair(df, row):
         a, b = _safe(df, row, cur), _safe(df, row, yoy)
-        pct = ((a / b - 1) * 100) if (a is not None and b not in (None, 0)) else None
+        pct = ((a / b - 1) * 100) if (a is not None and b not in (None, 0) and b > 0) else None
         return {"cur": a, "prev": b, "yoy": pct}
 
     tw_code = re.match(r"^(\d{4,5})(\.TWO?)?$", ticker.upper())
@@ -460,6 +471,9 @@ def narrative(d: dict, sc: dict, extra_facts: str = "") -> dict:
     def yoy(x):
         return f"{x:+.1f}%" if x is not None else "N/A"
 
+    def yoyp(p):
+        return _flip_txt(p) or yoy(p["yoy"])
+
     facts = f"""公司：{d['name']}（{d['ticker']}）　產業：{d['sector']}
 本季：{d['quarter']}（截至 {d['period_end']}），YoY 比較基準 {d['yoy_period']}
 
@@ -467,7 +481,7 @@ def narrative(d: dict, sc: dict, extra_facts: str = "") -> dict:
   營收       {f(d['revenue']['cur'])}   YoY {yoy(d['revenue']['yoy'])}
   毛利       {f(d['gross']['cur'])}   YoY {yoy(d['gross']['yoy'])}　毛利率 {d.get('gross_margin') or 0:.1f}%
   營業利益   {f(d['op_income']['cur'])}   YoY {yoy(d['op_income']['yoy'])}　營益率 {d.get('op_margin') or 0:.1f}%（去年同期 {d.get('op_margin_prev') or 0:.1f}%）
-  淨利       {f(d['net_income']['cur'])}   YoY {yoy(d['net_income']['yoy'])}
+  淨利       {f(d['net_income']['cur'])}   YoY {yoyp(d['net_income'])}
   EPS        {f(d['eps']['cur'])}   YoY {yoy(d['eps']['yoy'])}
 
 現金流
@@ -633,6 +647,17 @@ td:first-child{text-align:left;color:#C7D8EC}
 """
 
 
+def _flip_txt(p):
+    """基期為負（虧損）時的說法：本期為正＝虧轉盈、本期仍為負＝仍虧損；其他回空字串。"""
+    try:
+        a, b = p.get("cur"), p.get("prev")
+        if a is not None and b is not None and b < 0:
+            return "虧轉盈" if a > 0 else "仍虧損"
+    except Exception:                                       # noqa: BLE001
+        pass
+    return ""
+
+
 def _fmt(v, cur="USD"):
     if v is None:
         return "N/A"
@@ -710,13 +735,17 @@ def render(d, sc, n, extra_html=None):
         ("營收 Revenue", _fmt(d["revenue"]["cur"], cur), d["revenue"]["yoy"], False),
         ("毛利 Gross Profit", _fmt(d["gross"]["cur"], cur), d["gross"]["yoy"], False),
         ("營業利益 Op. Income", _fmt(d["op_income"]["cur"], cur), d["op_income"]["yoy"], False),
-        ("淨利 Net Income", _fmt(d["net_income"]["cur"], cur), d["net_income"]["yoy"], False),
+        ("淨利 Net Income", _fmt(d["net_income"]["cur"], cur), d["net_income"]["yoy"], False,
+         _flip_txt(d["net_income"])),
         ("資本支出 CapEx", _fmt(abs(d["capex"]["cur"]) if d["capex"]["cur"] else None, cur),
          d["capex"]["yoy"], True),
     ]
+    # 基期為負（虧損）算不出百分比時，標「虧轉盈／仍虧損」，不要寫成「無可比基期」（2026-10-07，2882）
     kpi_html = "".join(
-        f'<div class="kpi"><div class="lb">{lb}</div><div class="vl">{v}</div>{_yoy(p, inv)}</div>'
-        for lb, v, p, inv in kpis)
+        f'<div class="kpi"><div class="lb">{lb}</div><div class="vl">{v}</div>'
+        + (f'<span class="yo {"up" if flip == "虧轉盈" else "dn"}">{flip}</span>' if (flip and p is None) else _yoy(p, inv))
+        + '</div>'
+        for lb, v, p, inv, *rest in kpis for flip in [(rest[0] if rest else "")])
 
     def items(rows):
         return "".join(
@@ -729,7 +758,7 @@ def render(d, sc, n, extra_html=None):
     fin_html = "".join(
         f'<tr><td>{lb}</td><td>{_fmt(p["cur"], cur)}</td>'
         f'<td class="{"up" if (p["yoy"] or 0) >= 0 else "dn"}">'
-        f'{f"{p['yoy']:+.1f}%" if p["yoy"] is not None else "—"}</td></tr>'
+        f'{f"{p['yoy']:+.1f}%" if p["yoy"] is not None else (_flip_txt(p) or "—")}</td></tr>'
         for lb, p in fin_rows)
 
     # 原 prompt 指定的估值簡表：Forward P/E, PEG Ratio, FCF Yield, EV/Sales
