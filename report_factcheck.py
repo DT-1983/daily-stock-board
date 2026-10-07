@@ -455,13 +455,22 @@ def check(report, price=None, base_rate=None, margin=None):
         m_now, m_tgt = price / cur_eps, tgt / veps
         g_mult = m_tgt / m_now - 1                  # 倍數變化貢獻
         y0 = cur_y or "當年"
+        # 2026-10-07（交接，景碩）：目標價推導基數（目標÷倍數）跟預估表同年度 EPS 可能差尾數，兩個都列出來，不靜默覆蓋。
+        _tail = ""
+        _ym = re.match(r"\s*(\d{4})", str(report.get("valuation_eps_label") or ""))
+        if _ym:
+            for _f in (report.get("forecast") or []):
+                _fe = _num(_f.get("eps"))
+                if str(_f.get("year", "")).startswith(_ym.group(1)) and _fe and abs(_fe - veps) > 0.0005 * veps:
+                    _tail = f"（報告預估表 {_f.get('year')} 寫 {_fe:g}，目標價推導用 {veps:g}，差在四捨五入）"
+                    break
         out.append({
             "kind": "上檔空間的來源",
             "claim": f"目標價 {tgt:,.0f} vs 現價 {price:,.0f}＝上檔 {up:+.1%}",
             "ours": f"盈餘成長貢獻 {g_eps:+.0%}（{y0} EPS {cur_eps:g} → "
                     f"{report.get('valuation_eps_label') or '目標年'} {veps:g}）"
                     f"× 倍數變化貢獻 {g_mult:+.0%}"
-                    f"（現在 {m_now:.1f} 倍 → 目標 {m_tgt:.1f} 倍）",
+                    f"（現在 {m_now:.1f} 倍 → 目標 {m_tgt:.1f} 倍）" + _tail,
             "verdict": WARN if g_mult < -0.3 or g_mult > 0.3 else OK,
             "note": ("⚠️ 這條跟上面「估值倍數」不衝突：那條是**同一個 EPS 基數**下"
                      "還差幾倍，這條是**相對今年盈餘**拆成兩項。兩項相乘就是上檔。"

@@ -102,61 +102,9 @@ def gather(ticker):
 
 
 def stale_notes(d, v):
-    """投資長判斷是不是已經過期（2026-10-07，交接 INVESTMENT_AUDIT_FIX 項目 4）。回 [原因, ...]；空＝沒有證據過期。
-
-    原本判斷產生後，正文就一直當「現況」顯示——MRVL 9/3 的出場判斷在 10/6 技術面早已翻回 4 燈全亮還照樣擺著，
-    2882 的 RS 破線也只在文末記一行。這裡用**資料**找過期證據，不靠檔案修改時間：
-      ① 判斷之後才觸發的失效條件（advisor_reports_today 的 fire_first > 判斷日）；
-      ② 趨勢角度的方向跟現在燈號牴觸（判斷說出場、現在 SuperTrend 多方且 ≥3 燈；或判斷說續抱、現在已翻空）；
-      ③ 判斷當時報價跟現在差 ≥15%（或判斷已超過 10 天且差 ≥8%）。
-    只標「過期、待更新」，**不重算、不改寫**判斷內容（要新判斷得重新呼叫投資長）。"""
-    import datetime as _dt
-    why = []
-    ts = str(v.get("ts") or "")[:10]
-    tk = _norm(str(d.get("ticker") or ""))
-    try:
-        for r in (_load("state/advisor_reports_today.json", {}) or {}).get("rows", []):
-            if _norm(str(r.get("ticker") or "")) != tk:
-                continue
-            for f in (r.get("fired") or []):
-                ff = str(f.get("fire_first") or "")
-                if ts and ff and ff > ts:
-                    why.append(f"{ff} 觸發失效條件：{str(f.get('desc') or '')[:40]}")
-                    break
-    except Exception:                                       # noqa: BLE001
-        pass
-    try:
-        # 失效條件登錄簿（investment_chief._register_conditions 寫、thesis_check 每天檢查）：
-        # 狀態是 triggered ＝ 判斷當初寫下的失效條件已經成立（例如 2882 的 RS(60日)跌破自身均線）。
-        _reg = (_load("state/thesis_conditions.json", {}) or {}).get(tk) or {}
-        for c in (_reg.get("conditions") or []):
-            if c.get("status") == "triggered":
-                td = c.get("triggered_date")
-                why.append(f"失效條件已觸發：{str(c.get('desc') or '')[:40]}" + (f"（{td}）" if td else ""))
-    except Exception:                                       # noqa: BLE001
-        pass
-    try:
-        crow = next((r for r in (_load("state/combo_result.json", {}) or {}).get("rows", [])
-                     if _norm(str(r.get("ticker") or "")) == tk), None)
-        tj = str((v.get("trend_angle") or {}).get("judgment") or "")
-        if crow:
-            if "出場" in tj and crow.get("bull") and (crow.get("lit") or 0) >= 3:
-                why.append(f"技術面已翻多（{crow.get('asof')}：SuperTrend 多方、{crow.get('lit')}/4 燈），與判斷「{tj}」牴觸")
-            elif tj.startswith("續抱") and crow.get("bull") is False:
-                why.append(f"技術面已翻空（{crow.get('asof')}：SuperTrend 空方），與判斷「{tj}」牴觸")
-    except Exception:                                       # noqa: BLE001
-        pass
-    try:
-        px_then, px_now = v.get("price"), _price(d)
-        age = (_dt.date.today() - _dt.date.fromisoformat(ts)).days if ts else 0
-        mv = (px_now / float(px_then) - 1) if (px_then and px_now) else None
-        # ≥15% 一定算；超過 10 天未更新且 ≥8% 也算（景碩 9/25 判斷、12 天後報價 +11%，交接要求標歷史）
-        if mv is not None and (abs(mv) >= 0.15 or (age >= 10 and abs(mv) >= 0.08)):
-            why.append(f"報價 {float(px_then):,.2f}（{v.get('price_asof')}）→ {px_now:,.2f}，已變動 {mv:+.0%}"
-                       + (f"，距判斷已 {age} 天" if age >= 10 else ""))
-    except Exception:                                       # noqa: BLE001
-        pass
-    return why
+    """投資長判斷過期原因（邏輯在 verdict_stale.py，整合報告／軍師資料庫／索引共用同一份）。"""
+    import verdict_stale
+    return verdict_stale.reasons(d.get("ticker"), v, _price(d))
 
 
 def _price(d):
@@ -1195,6 +1143,7 @@ def index_rows():
             "lit": lamp.get("lit"),
             "has_lamp": bool(lamp),
             "verdict": bool(d.get("verdict")),
+            "verdict_stale": bool(d.get("verdict") and stale_notes(d, d.get("verdict"))),
             "n_changes": len(d.get("changes") or []),
         })
 
@@ -1342,7 +1291,8 @@ def render_index(rows):
         else:
             p.append('<span class="quiet">不在燈號母體</span>')
         if r["verdict"]:
-            p.append("有投資長判斷")
+            p.append('<span class="warn" title="判斷後已有失效條件觸發／技術面牴觸／報價大幅變動，內文僅供歷史參考">投資長判斷已過期</span>'
+                     if r.get("verdict_stale") else "有投資長判斷")
         if r["n_changes"]:
             p.append(f'異動 {r["n_changes"]} 筆')
         return "　".join(p)

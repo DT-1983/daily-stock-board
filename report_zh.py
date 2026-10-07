@@ -35,6 +35,7 @@ import argparse
 import io
 import json
 import os
+import re
 import sys
 import time
 
@@ -192,6 +193,17 @@ def render(key, r, d=None, px=None, fc=None):
         m = tgt / veps
         items.append(("估值方法", f"{m:.4g}x {(r.get('valuation_kind') or '').upper()}",
                       f"{esc(r.get('valuation_eps_label') or '')} 基數 {veps:g}", False))
+        # 2026-10-07（交接，景碩）：「目標價推導用的基數」跟「報告預估表同年度的 EPS」可能差一點點
+        # （景碩：目標價 1205 ÷ 44 倍 ＝ 27.39，預估表寫 27.42，44×27.42＝1206.5）。兩個數字都照實列，不靜默蓋掉其中一個。
+        _y = re.match(r"\s*(\d{4})", str(r.get("valuation_eps_label") or ""))
+        if _y:
+            for _f in (r.get("forecast") or []):
+                _fe = _num(_f.get("eps"))
+                if str(_f.get("year", "")).startswith(_y.group(1)) and _fe and abs(_fe - veps) > 0.0005 * max(abs(veps), 1e-9):
+                    items.append(("報告 EPS 預估表", f"{_fe:g}",
+                                  f"{_f.get('year')} 表列；與目標價推導基數 {veps:g} 差 {_fe/veps-1:+.2%}"
+                                  f"（目標價 {tgt:,.0f} ÷ {m:.4g} 倍 ＝ {tgt/m:.2f}；{m:.4g}×{_fe:g} ＝ {m*_fe:,.1f}）", False))
+                    break
         if px:
             items.append(("現價隱含倍數", f"{px/veps:.1f}x",
                           f"距報告假設 {m/(px/veps)-1:+.0%}", False))

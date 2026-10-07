@@ -205,6 +205,17 @@ def render(tk, verdict, cond_entry, reports=None, revenue=None, notes=None):
         out.append(nb)
     out.append("## 投資長判斷（AI，可能還沒輪到這檔——見上面「最後更新」）")
     out.append("")
+    # 2026-10-07（交接 INVESTMENT_AUDIT_FIX 項目 4）：有證據過期就在判斷最前面標清楚，讓讀這份檔的 AI／人不會把舊判斷當現況。
+    # 只標示，不重算、不改寫下面的判斷內容。邏輯見 verdict_stale.py。
+    try:
+        import verdict_stale
+        _why = verdict_stale.reasons(tk, verdict)
+    except Exception:                                       # noqa: BLE001
+        _why = []
+    if _why:
+        out.append(f"> ⚠️ **這份判斷已過期，不能當現況**（產生於 {ts}）。之後：" + "；".join(_why)
+                   + "。以下是歷史判斷，尚未重新產生。")
+        out.append("")
     va = (verdict or {}).get("trend_angle")
     ha = (verdict or {}).get("value_angle")
     out.append(_angle_block("趨勢角度（技術面）", va))

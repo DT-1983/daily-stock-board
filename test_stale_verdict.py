@@ -1,19 +1,18 @@
 # -*- coding: utf-8 -*-
 """回歸測試（交接 INVESTMENT_AUDIT_FIX 項目 4）：投資長判斷過期標記。python test_stale_verdict.py"""
 import datetime as dt
-import stock_brief as sb
+import verdict_stale as sb
 
 TODAY = dt.date.today().isoformat()
 
 
 def _run(v, state, px_now):
-    old_load, old_price = sb._load, sb._price
+    old_load = sb._load
     sb._load = lambda p, d=None: state.get(p, d)
-    sb._price = lambda d: px_now
     try:
-        return sb.stale_notes({"ticker": "XXXX"}, v)
+        return sb.reasons("XXXX", v, px_now)
     finally:
-        sb._load, sb._price = old_load, old_price
+        sb._load = old_load
 
 
 def test_triggered_condition_marks_stale():
