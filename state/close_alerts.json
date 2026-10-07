@@ -1,142 +1,6 @@
 {
  "alerts": [
   {
-   "sent": "2026-09-30",
-   "market": "us",
-   "bar_date": "2026-09-29",
-   "code": "CCL",
-   "sig": "st",
-   "dir": 1
-  },
-  {
-   "sent": "2026-09-30",
-   "market": "us",
-   "bar_date": "2026-09-29",
-   "code": "UNM",
-   "sig": "st",
-   "dir": -1
-  },
-  {
-   "sent": "2026-09-30",
-   "market": "us",
-   "bar_date": "2026-09-29",
-   "code": "AES",
-   "sig": "rs60",
-   "dir": 1
-  },
-  {
-   "sent": "2026-09-30",
-   "market": "us",
-   "bar_date": "2026-09-29",
-   "code": "API",
-   "sig": "rs60",
-   "dir": -1
-  },
-  {
-   "sent": "2026-09-30",
-   "market": "us",
-   "bar_date": "2026-09-29",
-   "code": "ARKQ",
-   "sig": "rs60",
-   "dir": -1
-  },
-  {
-   "sent": "2026-09-30",
-   "market": "us",
-   "bar_date": "2026-09-29",
-   "code": "ARKX",
-   "sig": "rs60",
-   "dir": -1
-  },
-  {
-   "sent": "2026-09-30",
-   "market": "us",
-   "bar_date": "2026-09-29",
-   "code": "DNKEY",
-   "sig": "rs60",
-   "dir": 1
-  },
-  {
-   "sent": "2026-09-30",
-   "market": "us",
-   "bar_date": "2026-09-29",
-   "code": "GLW",
-   "sig": "rs60",
-   "dir": 1
-  },
-  {
-   "sent": "2026-09-30",
-   "market": "us",
-   "bar_date": "2026-09-29",
-   "code": "KR",
-   "sig": "rs60",
-   "dir": 1
-  },
-  {
-   "sent": "2026-09-30",
-   "market": "us",
-   "bar_date": "2026-09-29",
-   "code": "MCK",
-   "sig": "rs60",
-   "dir": -1
-  },
-  {
-   "sent": "2026-09-30",
-   "market": "us",
-   "bar_date": "2026-09-29",
-   "code": "TM",
-   "sig": "rs60",
-   "dir": -1
-  },
-  {
-   "sent": "2026-09-30",
-   "market": "us",
-   "bar_date": "2026-09-29",
-   "code": "TSLA",
-   "sig": "rs60",
-   "dir": -1
-  },
-  {
-   "sent": "2026-09-30",
-   "market": "us",
-   "bar_date": "2026-09-29",
-   "code": "UNM",
-   "sig": "rs60",
-   "dir": -1
-  },
-  {
-   "sent": "2026-09-30",
-   "market": "us",
-   "bar_date": "2026-09-29",
-   "code": "ONTO",
-   "sig": "st",
-   "dir": 1
-  },
-  {
-   "sent": "2026-09-30",
-   "market": "tw",
-   "bar_date": "2026-09-30",
-   "code": "3481",
-   "sig": "st",
-   "dir": 1
-  },
-  {
-   "sent": "2026-09-30",
-   "market": "tw",
-   "bar_date": "2026-09-30",
-   "code": "5483",
-   "sig": "st",
-   "dir": 1
-  },
-  {
-   "sent": "2026-09-30",
-   "market": "tw",
-   "bar_date": "2026-09-30",
-   "code": "8046",
-   "sig": "st",
-   "dir": 1
-  },
-  {
    "sent": "2026-10-01",
    "market": "us",
    "bar_date": "2026-09-30",
@@ -575,6 +439,110 @@
    "code": "3081",
    "sig": "st",
    "dir": 1
+  },
+  {
+   "sent": "2026-10-08",
+   "market": "us",
+   "bar_date": "2026-10-07",
+   "code": "IREN",
+   "sig": "st",
+   "dir": -1
+  },
+  {
+   "sent": "2026-10-08",
+   "market": "us",
+   "bar_date": "2026-10-07",
+   "code": "ITOCY",
+   "sig": "st",
+   "dir": -1
+  },
+  {
+   "sent": "2026-10-08",
+   "market": "us",
+   "bar_date": "2026-10-07",
+   "code": "AAOI",
+   "sig": "rs60",
+   "dir": 1
+  },
+  {
+   "sent": "2026-10-08",
+   "market": "us",
+   "bar_date": "2026-10-07",
+   "code": "API",
+   "sig": "rs60",
+   "dir": -1
+  },
+  {
+   "sent": "2026-10-08",
+   "market": "us",
+   "bar_date": "2026-10-07",
+   "code": "ARKX",
+   "sig": "rs60",
+   "dir": -1
+  },
+  {
+   "sent": "2026-10-08",
+   "market": "us",
+   "bar_date": "2026-10-07",
+   "code": "CCL",
+   "sig": "rs60",
+   "dir": 1
+  },
+  {
+   "sent": "2026-10-08",
+   "market": "us",
+   "bar_date": "2026-10-07",
+   "code": "CEG",
+   "sig": "rs60",
+   "dir": 1
+  },
+  {
+   "sent": "2026-10-08",
+   "market": "us",
+   "bar_date": "2026-10-07",
+   "code": "COHR",
+   "sig": "rs60",
+   "dir": 1
+  },
+  {
+   "sent": "2026-10-08",
+   "market": "us",
+   "bar_date": "2026-10-07",
+   "code": "GLW",
+   "sig": "rs60",
+   "dir": 1
+  },
+  {
+   "sent": "2026-10-08",
+   "market": "us",
+   "bar_date": "2026-10-07",
+   "code": "ITOCY",
+   "sig": "rs60",
+   "dir": -1
+  },
+  {
+   "sent": "2026-10-08",
+   "market": "us",
+   "bar_date": "2026-10-07",
+   "code": "KR",
+   "sig": "rs60",
+   "dir": 1
+  },
+  {
+   "sent": "2026-10-08",
+   "market": "us",
+   "bar_date": "2026-10-07",
+   "code": "SSUMY",
+   "sig": "rs60",
+   "dir": -1
+  },
+  {
+   "sent": "2026-10-08",
+   "market": "us",
+   "bar_date": "2026-10-07",
+   "code": "TM",
+   "sig": "rs60",
+   "dir": -1
   }
  ]
 }
