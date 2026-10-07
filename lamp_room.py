@@ -1901,7 +1901,7 @@ def page_html(family=False):
             + f'<div class="midtheme">{_mid_theme_nav(items)}</div>'
             + '<div id="mid-body"><div class="empty">左邊選一檔。</div></div></main>'
             + f'<div class="pane tablepane" id="tablepane">{table_html()}</div>'
-            + '<div class="pane watchpane" id="watchpane"></div>'
+
             + right_html()
             + "</div>"
             + (FAMILY_CSS if family else "")

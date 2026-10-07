@@ -163,6 +163,24 @@ def add(tickers, src="manual"):
     return added
 
 
+def reorder(order):
+    """依傳入順序重排；沒列到的（例如被市場篩選藏起來的）維持原本相對順序、排在後面。"""
+    d = _load()
+    by = {x["tk"]: x for x in d["items"]}
+    seen, new = set(), []
+    for t in order or []:
+        t = str(t).upper()
+        if t in by and t not in seen:
+            new.append(by[t])
+            seen.add(t)
+    new += [x for x in d["items"] if x["tk"] not in seen]
+    if [x["tk"] for x in new] != [x["tk"] for x in d["items"]]:
+        d["items"] = new
+        _save(d)
+        return True
+    return False
+
+
 def remove(tk):
     d = _load()
     n = len(d["items"])

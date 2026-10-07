@@ -509,7 +509,7 @@ async def _room_watch(request):
 
 async def _room_watch_post(request):
     """body: {"action":"add","q":"2330, NVDA, 台積電"} | {"action":"remove","tk":"NVDA"} |
-            {"action":"import","name":"watchlist.dsl","b64":"…"}"""
+            {"action":"import","name":"watchlist.dsl","b64":"…"} | {"action":"reorder","order":["NVDA","MU"]}"""
     if not _watch_ok(request):
         return web.Response(text="", status=404)
     import watchlist
@@ -525,6 +525,11 @@ async def _room_watch_post(request):
                                   "skipped": skipped, "candidates": cands})
     if act == "remove":
         return web.json_response({"removed": watchlist.remove(str(body.get("tk", "")).upper())})
+    if act == "reorder":
+        order = body.get("order")
+        if not isinstance(order, list):
+            return web.json_response({"error": "順序格式不對"}, status=400)
+        return web.json_response({"changed": watchlist.reorder([str(x) for x in order])})
     if act == "import":
         import base64
         try:
