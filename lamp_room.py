@@ -1130,6 +1130,7 @@ ROOM_JS = r"""
           if (old.src) { s.src = old.src; } else { s.textContent = old.textContent; }
           old.parentNode.replaceChild(s, old);
         });
+        if (window.roomQuoteNow) window.roomQuoteNow();
       })
       .catch(function(e){
         midBody.innerHTML = barHtml(q) + '<div class="warn">讀取失敗：' + e + '</div>';
@@ -1727,6 +1728,70 @@ ROOM_JS = r"""
   try { qp = new URLSearchParams(location.search).get("ticker") || ""; } catch(_e) {}
   if (qp.trim()) { window.roomSearch(qp); }
   else if (first) { pick(first); }
+})();
+</script>
+
+<script>
+/* 盤中即時報價（2026-10-07）：個股頁 15 秒、列表 60 秒向 /room/quote 要一次價，只改價格與漲跌。
+   ⚠️ 燈數與技術圖是「載入那一刻」用日線算的，不會每 15 秒重算（太重）；要重算就重新點該檔。 */
+(function(){
+  var st=document.createElement("style");
+  st.textContent=".lq{margin-left:8px;font-size:12px;padding:1px 7px;border-radius:9px;border:1px solid var(--line2,#1d2b3d);color:var(--dim,#8aa0b8)}"
+    +".lq.on{color:#22D3EE;border-color:#22D3EE}.lq.ext{color:#FFB627;border-color:#FFB627}"
+    +".l1 .px.lq-live::before{content:'●';color:#22D3EE;font-size:9px;margin-right:4px}";
+  document.head.appendChild(st);
+  function fmt(n){ return n==null?"":Number(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function cls(c){ return c>=0?"up":"dn"; }
+  function sgn(c){ return (c>=0?"+":"")+c.toFixed(2)+"%"; }
+  function api(tks,detail){
+    return fetch("/room/quote?tickers="+encodeURIComponent(tks.join(","))+(detail?"&detail=1":""),{cache:"no-store"})
+      .then(function(r){ return r.ok?r.json():{}; }).catch(function(){ return {}; });
+  }
+  function allClosed(q){ var k=Object.keys(q); return k.length>0 && k.every(function(t){ return q[t].state==="收盤"; }); }
+  var skipL=0, skipD=0, closedL=false, closedD=false;
+
+  function paintList(q){
+    document.querySelectorAll("li.it").forEach(function(li){
+      var d=q[li.dataset.tk]; if(!d) return;
+      var px=li.querySelector(".l1 .px"); if(!px) return;
+      px.innerHTML=fmt(d.px)+" "+(d.chg==null?"":'<span class="'+cls(d.chg)+'">'+sgn(d.chg)+'</span>');
+      li.dataset.sortChg=d.chg==null?-999:d.chg;
+      px.title=(d.state||"")+" "+(d.time||"")+"｜"+(d.src||"");
+      px.classList.toggle("lq-live",d.state==="盤中");
+    });
+  }
+  function paintDetail(q){
+    var h=document.querySelector(".dhead"); if(!h) return;
+    var t=h.querySelector(".tk"); var d=t&&q[t.textContent.trim()]; if(!d) return;
+    var px=h.querySelector(".px"); if(px) px.textContent=fmt(d.px);
+    var chg=null; if(px){ for(var e=px.nextElementSibling;e;e=e.nextElementSibling){ if(e.classList.contains("up")||e.classList.contains("dn")){ chg=e; break; } if(e.classList.contains("dim")) break; } }
+    if(d.chg!=null){
+      if(!chg){ chg=document.createElement("span"); px.insertAdjacentElement("afterend",chg); }
+      chg.className=cls(d.chg); chg.textContent=sgn(d.chg);
+    }
+    var b=h.querySelector(".lq"); if(!b){ b=document.createElement("span"); b.className="lq"; (chg||px).insertAdjacentElement("afterend",b); }
+    b.className="lq "+(d.state==="盤中"?"on":(d.state==="非正常盤"?"ext":""));
+    b.textContent=d.state+(d.time?" "+d.time:"")+(d.hi!=null?"　高 "+fmt(d.hi)+" 低 "+fmt(d.lo):"");
+    b.title="報價來源："+d.src+"。燈數與技術圖是載入時用日線算的，不會自動重算；要重算請重新點這檔。";
+  }
+  function curTk(){ var t=document.querySelector(".dhead .tk"); return t?t.textContent.trim():""; }
+  function tickDetail(force){
+    if(document.hidden) return;
+    if(closedD && !force && (skipD++ % 5)) return;      // 收盤後降頻：每 5 次才問 1 次
+    var t=curTk(); if(!t) return;
+    api([t],true).then(function(q){ closedD=allClosed(q); paintDetail(q); });
+  }
+  function tickList(force){
+    if(document.hidden) return;
+    if(closedL && !force && (skipL++ % 5)) return;
+    var tks=[]; document.querySelectorAll("li.it").forEach(function(li){
+      if(!li.hidden && li.offsetParent!==null && tks.length<120) tks.push(li.dataset.tk); });
+    if(!tks.length) return;
+    api(tks,false).then(function(q){ closedL=allClosed(q); paintList(q); });
+  }
+  window.roomQuoteNow=function(){ setTimeout(function(){ tickDetail(true); },500); };
+  setInterval(tickDetail,15000); setInterval(tickList,60000);
+  setTimeout(function(){ tickList(true); tickDetail(true); },2500);
 })();
 </script>
 """

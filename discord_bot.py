@@ -473,6 +473,26 @@ async def _room_detail(request):
     return web.Response(text=html, content_type="text/html", charset="utf-8")
 
 
+async def _room_quote(request):
+    """盤中即時報價（JSON）。2026-10-07：戰情室個股頁每 15 秒、列表每 60 秒來問一次。
+    只回價格，不含持股／交易資訊，所以家人帳號也可用（跟 /room/detail 同一道門）。
+    來源與限制見 live_quote.py（台股證交所即時行情＋美股 yfinance，零成本）。"""
+    ok, _ = _room_gate(request)
+    if not ok and family_auth.is_family(request.cookies.get(family_auth.COOKIE, "")):
+        ok = True
+    if not ok:
+        return web.Response(text="", status=404)
+    import live_quote
+    tks = [t for t in request.query.get("tickers", "").split(",") if t.strip()][:150]
+    detail = request.query.get("detail") == "1"
+    try:
+        data = await asyncio.to_thread(live_quote.quotes, tks, detail)
+    except Exception as e:                                # noqa: BLE001
+        traceback.print_exc()
+        data = {}
+    return web.json_response(data, headers={"Cache-Control": "no-store"})
+
+
 async def _room_ask_stream(request):
     """串流版的軍師（SSE）。用 GET 是因為 EventSource 只能 GET。
 
@@ -643,6 +663,7 @@ async def _run():
     app.router.add_get("/lookup/intro", _lookup_intro)
     app.router.add_get("/room", _room_page)
     app.router.add_get("/room/detail", _room_detail)
+    app.router.add_get("/room/quote", _room_quote)
     app.router.add_get("/room/history", _room_history)
     app.router.add_get("/room/ask_stream", _room_ask_stream)
     app.router.add_post("/room/ask", _room_ask)
