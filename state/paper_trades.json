@@ -11791,5 +11791,47 @@
 "amount_usd": 221.14,
 "reason": "打點：4 燈亮、風報比 3.54",
 "src": "live"
+},
+{
+"date": "2026-10-08",
+"portfolio": "產業鏈+趨勢",
+"action": "leave",
+"ticker": "APLD",
+"shares": 5.2798,
+"price": 23.81,
+"price_usd": 23.81,
+"amount_usd": 125.71,
+"reason": "週線 SuperTrend 翻空（掉出綠燈名單）",
+"src": "live",
+"entry_price": 24.7,
+"pnl_usd": -4.7,
+"pnl_pct": -3.6
+},
+{
+"date": "2026-10-08",
+"portfolio": "進出燈號",
+"action": "full_exit",
+"ticker": "7822.TW",
+"shares": 30.2915,
+"price": 948.0,
+"price_usd": 29.7207,
+"amount_usd": 900.28,
+"reason": "RS60 跌破自身 60MA（-1.71%）→ 全出",
+"src": "live",
+"entry_price": 1000.0,
+"pnl_usd": -49.38,
+"pnl_pct": -5.2
+},
+{
+"date": "2026-10-08",
+"portfolio": "進出燈號",
+"action": "buy",
+"ticker": "ONTO",
+"shares": 2.9576,
+"price": 304.4,
+"price_usd": 304.4,
+"amount_usd": 900.29,
+"reason": "打點：4 燈亮、風報比 6.79",
+"src": "live"
 }
 ]
