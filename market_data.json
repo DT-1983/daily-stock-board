@@ -1,37 +1,37 @@
 {
- "updated": "2026-10-08 15:40",
+ "updated": "2026-10-08 22:31",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "10/07",
-   "close": 7801.77,
-   "chg_pct": -0.22
+   "date": "10/08",
+   "close": 7791.25,
+   "chg_pct": -0.13
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "10/07",
-   "close": 27538.69,
-   "chg_pct": -0.22
+   "date": "10/08",
+   "close": 27474.62,
+   "chg_pct": -0.23
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "10/07",
-   "close": 51179.87,
-   "chg_pct": -0.66
+   "date": "10/08",
+   "close": 51106.35,
+   "chg_pct": -0.14
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "10/07",
-   "close": 13066.15,
-   "chg_pct": -1.15
+   "date": "10/08",
+   "close": 12965.84,
+   "chg_pct": -0.77
   },
   {
    "sym": "^TWII",
@@ -46,85 +46,85 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "10/08",
-   "close": 31.92,
-   "chg_pct": 0.45
+   "close": 31.91,
+   "chg_pct": 0.43
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "10/07",
+   "date": "10/08",
    "close": 5.28,
    "fmt": "yield",
-   "chg_bp": 0.8
+   "chg_bp": 0.5
   }
  ],
  "news": [
   {
-   "title": "亞馬遜零售部門展開新一輪裁員 人數少於1000人",
+   "title": "不太裁人也不太招人！美國上周初領失業金降至19.7萬人",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6624761",
-   "ts": "10/08 15:40"
+   "url": "https://news.cnyes.com/news/id/6625846",
+   "ts": "10/08 22:30"
   },
   {
-   "title": "玉晶光9月營收26.72億元年增0.54% 新產品認證進度符預期",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6624831",
-   "ts": "10/08 15:30"
-  },
-  {
-   "title": "低軌衛星概念股迎新商機！貝佐斯砸300億美元布局5萬顆AI衛星，昇達科、華通領軍，6檔台股供應鏈受關注",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6624834",
-   "ts": "10/08 15:30"
-  },
-  {
-   "title": "融程電(3416) 在手訂單破40億，能見度看至2027年！獲利轉折已啟動？",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6624833",
-   "ts": "10/08 15:30"
-  },
-  {
-   "title": "一周至少12起！荷姆茲油輪遇襲次數 創開戰以來單周新高",
+   "title": "盤中速報 - 伊魯米納(ILMN-US)大跌5.14%，報254美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6624806",
-   "ts": "10/08 15:13"
+   "url": "https://news.cnyes.com/news/id/6626050",
+   "ts": "10/08 22:24"
   },
   {
-   "title": "171.6萬家受惠！政院拍板8年千億「升級」中小微 提高租稅優惠及研發抵減",
+   "title": "盤中速報 - 星巴克(SBUX-US)大跌5.23%，報88.69美元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6626049",
+   "ts": "10/08 22:21"
+  },
+  {
+   "title": "盤中速報 - 格羅方德(GFS-US)大漲5%，報50.48美元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6626048",
+   "ts": "10/08 22:17"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：歐特培(UGP-US)EPS預估上修至0.89元，預估目標價為7.54元",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6626047",
+   "ts": "10/08 22:15"
+  },
+  {
+   "title": "營收速報  - 常珵(8097)9月營收2,819萬元年增率高達128.31％",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6624737",
-   "ts": "10/08 15:12"
+   "url": "https://news.cnyes.com/news/id/6626019",
+   "ts": "10/08 21:20"
   },
   {
-   "title": "華碩發表ProArt新機祭月付13750元起訂閱制 攻地端代理式AI商機",
+   "title": "營收速報  - 久元(6261)9月營收4.30億元年增率高達40.66％",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6624742",
-   "ts": "10/08 15:08"
+   "url": "https://news.cnyes.com/news/id/6626018",
+   "ts": "10/08 21:20"
   },
   {
-   "title": "藍色起源資金到位！擬部署逾5萬顆衛星搶攻太空資料中心，2030年營收拚成長逾20倍",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6624797",
-   "ts": "10/08 15:00"
+   "title": "營收速報  - 南仁湖(5905)9月營收1.35億元年增率高達34.41％",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6626017",
+   "ts": "10/08 21:20"
   },
   {
-   "title": "對美出口銳減 德國8月出口意外下降0.8%",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6624788",
-   "ts": "10/08 15:00"
+   "title": "營收速報  - 青雲(5386)9月營收25.42億元年增率高達574.9％",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6626016",
+   "ts": "10/08 21:20"
   },
   {
-   "title": "騰訊、CATL參投！DeepSeek接近獲得800至1000億人民幣融資，攜手華為昇騰押注國產預訓練",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6624549",
-   "ts": "10/08 15:00"
+   "title": "營收速報  - 華星光(4979)9月營收5.75億元年增率高達97.78％",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6626015",
+   "ts": "10/08 21:20"
   }
  ],
  "inst": {
   "date": "10/08",
-  "total_yi": -899.0,
+  "total_yi": -915.7,
   "foreign_yi": -758.5,
-  "trust_yi": 46.9
+  "trust_yi": 30.1
  }
 }
