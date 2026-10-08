@@ -566,7 +566,7 @@ def _lamp_series(closes, highs, lows, vols, bench_closes, st, sq, dt):
     return [l1, l2, l3, l4]
 
 
-def build(ticker, disp_days=756, expanded=False, target=None):
+def build(ticker, disp_days=756, expanded=False, target=None, only=None):
     """算一次，回 (html, summary_text)。理由同 fundamentals_reality.build()：
     避免財報卡渲染跟 narrative() 的 LLM prompt 各自重抓一次價量資料。
     2026-08-11：RS窗改30日/1年、抓2年資料當暖機（原本抓1年配200日長線窗，暖機不夠，
@@ -711,13 +711,14 @@ def build(ticker, disp_days=756, expanded=False, target=None):
     vols = [None if v is None or (isinstance(v, float) and np.isnan(v))
             else (float(v) / 1000 if _isw else float(v))
             for v in hist["Volume"].tolist()]
-    tiles = "".join([
-        trend_tile("SUPER TREND", st_dir, st_bars, st_stats),
-        trend_tile("雙重颱風K線", dt_dir, dt_bars),
-        _tile("EXCEED CHARGE", f'<span style="color:{sq_col}">{sq_label}</span>',
-              f"{sq_mlabel or ''}（動能 {sq_mom_s}）" if sq_mlabel else f"動能 {sq_mom_s}"),
-        _tile("RS 相對強弱", rs_html, rs_sub),
-    ])
+    _tiles_all = {
+        "st": trend_tile("SUPER TREND", st_dir, st_bars, st_stats),
+        "dt": trend_tile("雙重颱風K線", dt_dir, dt_bars),
+        "sq": _tile("EXCEED CHARGE", f'<span style="color:{sq_col}">{sq_label}</span>',
+                    f"{sq_mlabel or ''}（動能 {sq_mom_s}）" if sq_mlabel else f"動能 {sq_mom_s}"),
+        "rs": _tile("RS 相對強弱", rs_html, rs_sub),
+    }
+    tiles = "".join(v for k, v in _tiles_all.items() if (only is None or k in only))
 
     # 2026-09-01 Leo：老墨左側資訊欄那幾個明細區塊。上面四個 tile 是「一眼看狀態」，
     # 這裡是「看細項數字」——資料本來就都算出來了，只是先前沒呈現。
@@ -783,11 +784,14 @@ def build(ticker, disp_days=756, expanded=False, target=None):
         ("加值訊號", rs_sub or None),
     ])
 
-    def _techrow(panel_html, label_html, canvas_id, box_cls="tcbox"):
+    _keep = set(only) if only else None          # only=("st","sq")：只畫 SuperTrend 主圖與 EXCEED CHARGE 動能圖（2026-10-08 00406A）
+
+    def _techrow(panel_html, label_html, canvas_id, box_cls="tcbox", key=None):
         """一組「文字卡 + 圖」配對成一列，兩欄跟卡片本身寬度無關永遠對齊。
         卡片數用 count("tpanel") 判斷單卡/雙卡，單卡不留空的第二欄（css techside.single）。"""
         side_cls = "techside" if panel_html.count("tpanel") >= 2 else "techside single"
-        return (f'<div class="techrow"><div class="{side_cls}">{panel_html}</div>'
+        hide = ' style="display:none"' if (_keep is not None and key not in _keep) else ""
+        return (f'<div class="techrow"{hide}><div class="{side_cls}">{panel_html}</div>'
                 f'<div class="techmain">{label_html}<div class="{box_cls}">'
                 f'<canvas id="{canvas_id}"></canvas></div></div></div>')
 
@@ -862,11 +866,11 @@ def build(ticker, disp_days=756, expanded=False, target=None):
         + "".join(f'<button data-av="{n}" style="--c:{c}">{n}日</button>'
                   for n, c in ((20, "#F59E0B"), (60, "#22D3EE"), (120, "#A78BFA"), (240, "#94A3B8")))
         + '<button data-av="anc" style="--c:#F8FAFC">📍 自訂起算</button>'
-        f'<span class="avhint" id="ti_avh_{uid}"></span></div>', f"ti_c1_{uid}")
+        f'<span class="avhint" id="ti_avh_{uid}"></span></div>', f"ti_c1_{uid}", key="st")
     _row_vol = _techrow(panel_vol,
-        '<div class="tclabel">成交量（青線＝20 日均量）</div>', f"ti_cv_{uid}", "tcbox tcbox-sm")
+        '<div class="tclabel">成交量（青線＝20 日均量）</div>', f"ti_cv_{uid}", "tcbox tcbox-sm", key="vol")
     _row_sq = _techrow(panel_sq,
-        '<div class="tclabel">EXCEED CHARGE 動能柱（金點＝擠壓中，綠/紅點＝已釋放，★＝釋放瞬間）</div>', f"ti_c2_{uid}", "tcbox tcbox-sm")
+        '<div class="tclabel">EXCEED CHARGE 動能柱（金點＝擠壓中，綠/紅點＝已釋放，★＝釋放瞬間）</div>', f"ti_c2_{uid}", "tcbox tcbox-sm", key="sq")
     # 四燈 strip 的側欄：現在這一根的四盞狀態。**跟頁面上的燈數同一個算法**
     # （combo_scan 也是這四支函式、同樣的窗口），所以兩邊不會對不上。
     _lp_now = _lamp_series(closes, highs, lows, vols, bench_closes, st, sq, dt)
@@ -877,9 +881,9 @@ def build(ticker, disp_days=756, expanded=False, target=None):
 
     _row_lamp = _techrow(panel_lamp,
         '<div class="tclabel">四燈歷史（由上到下 L1→L4；亮＝黃點。'
-        '⚠️ L4 前 60 根是暖機期，一律不亮）</div>', f"ti_c4_{uid}", "tcbox tcbox-xs")
+        '⚠️ L4 前 60 根是暖機期，一律不亮）</div>', f"ti_c4_{uid}", "tcbox tcbox-xs", key="lamp")
     _row_rs = _techrow(panel_rs,
-        '<div class="tclabel">RS 相對強弱（短線一季＝線／長線240日＝柱，紅正綠負；🟡長線翻正 🔵RS創新高 🩷資金比股價先動 ▲動能加速）</div>', f"ti_c3_{uid}", "tcbox tcbox-sm")
+        '<div class="tclabel">RS 相對強弱（短線一季＝線／長線240日＝柱，紅正綠負；🟡長線翻正 🔵RS創新高 🩷資金比股價先動 ▲動能加速）</div>', f"ti_c3_{uid}", "tcbox tcbox-sm", key="rs")
     _toggle_btn = ("" if expanded else
                    f'<button class="techtoggle" onclick="ti_toggle_{uid}()" '
                    f'id="ti_btn_{uid}">展開圖表 ▾</button>')
@@ -893,8 +897,11 @@ def build(ticker, disp_days=756, expanded=False, target=None):
                  "if (document.readyState === 'loading') "
                  "document.addEventListener('DOMContentLoaded', ti_draw_" + uid + "); "
                  "else ti_draw_" + uid + "(); }")
-    html = f"""<div class="technical"><h3>技術面四指標</h3>
-<div class="posnote">近一年日線計算，基準指數：{_BENCHMARK_NAME.get(_benchmark(ticker), _benchmark(ticker))}</div>
+    _title = "技術面四指標" if only is None else "技術面（SuperTrend＋EXCEED CHARGE）"
+    _pn = (f"近一年日線計算，基準指數：{_BENCHMARK_NAME.get(_benchmark(ticker), _benchmark(ticker))}" if only is None else
+           "上市不滿一年：RS 與四燈需要 260 個交易日算不出來，這裡只畫 SuperTrend 與 EXCEED CHARGE 兩張")
+    html = f"""<div class="technical"><h3>{_title}</h3>
+<div class="posnote">{_pn}</div>
 <div class="techgrid">{tiles}</div>
 {_toggle_btn}
 <div class="techcharts nosides" id="ti_charts_{uid}"{_charts_style}>
@@ -1393,14 +1400,14 @@ def uid_of(ticker):
     return re.sub(r"[^A-Za-z0-9]", "_", str(ticker).upper())
 
 
-def build_html(ticker, expanded=False, target=None):
+def build_html(ticker, expanded=False, target=None, only=None):
     """CLI／向下相容用：只要 HTML。
 
     expanded=True：圖表**預設展開、不放收放鈕**。給單一個股頁用（lookup_page）——
     那種頁面一次只有一檔，收放鈕只是多一次點擊。看板/燈號/財報卡一頁很多檔，
     全部展開會爆掉，那邊維持預設收合。
     """
-    return build(ticker, expanded=expanded, target=target)[0]
+    return build(ticker, expanded=expanded, target=target, only=only)[0]
 
 
 def _tile(name, main, sub):

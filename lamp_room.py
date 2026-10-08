@@ -410,6 +410,47 @@ def _bars_note(tk):
     return ""
 
 
+def _short_history_page(tk):
+    """上市不滿一年（20～259 個交易日）：四燈與 RS 算不出來，但 SuperTrend 與 EXCEED CHARGE 只要 20 根 K 就能畫。
+    2026-10-08 Leo（拿 XQ 的 00406A 畫面來問）：「這二個圖我們可以畫嗎？其它不用」→ 只畫這兩張圖＋兩張指標卡。
+    回完整 HTML；不適用（資料夠、或太少、或抓不到）回 None。"""
+    try:
+        import combo_scan as CS
+        import price_store
+        import tw_symbol
+        import technical_indicators as ti
+        from board_theme import esc
+        is_tw = tk[:1].isdigit()
+        sym = tw_symbol.resolve(tk) if is_tw else tk.replace(".", "-")
+        o = price_store.get_ohlc([sym], period="3y").get(sym)
+        n = 0 if o is None else len(o["Close"].dropna())
+        if not (20 <= n < CS.RS_LONG + 20):
+            return None
+        nm = (CS._tw_names().get(tk) if is_tw else "") or ""
+        px = chg = None
+        try:
+            import live_quote
+            q = live_quote.quotes([tk]).get(tk)
+            if q:
+                px, chg = q["px"], q["chg"]
+        except Exception:                                   # noqa: BLE001
+            pass
+        if px is None:
+            cl = o["Close"].dropna()
+            px = float(cl.iloc[-1])
+            chg = (px / float(cl.iloc[-2]) - 1) * 100 if len(cl) > 1 else None
+        head = (f'<div class="dhead"><span class="tk">{esc(tk)}</span><span class="nm">{esc(nm)}</span>'
+                f'<span class="px">{px:,.2f}</span>'
+                + ("" if chg is None else f'<span class="{"up" if chg >= 0 else "dn"}">{chg:+.2f}%</span>')
+                + f'<span class="dim">上市僅 {n} 個交易日</span></div>')
+        note = ('<div class="warn" style="margin:8px 0">這檔只有 %d 個交易日的資料（上市不久）。四燈與 RS 一年期要 %d 個交易日才算得出來，'
+                '所以沒有燈號；下面只畫 SuperTrend（價格＋支撐壓力線）與 EXCEED CHARGE（動能柱）兩張圖。</div>'
+                % (n, CS.RS_LONG + 20))
+        return head + note + (ti.build_html(sym, expanded=True, only=("st", "sq")) or "")
+    except Exception:                                       # noqa: BLE001
+        return None
+
+
 def _resolve_outside(query, exact=False):
     """輸入不在掃描母體 → (即時結果 lv, None) 或 (None, 要顯示的 html)。
 
@@ -447,6 +488,9 @@ def _resolve_outside(query, exact=False):
             except Exception as e:                          # noqa: BLE001
                 return None, f'<div class="warn">{esc(tk)} 即時計算失敗：{esc(str(e)[:120])}</div>'
     if not lv:
+        _sh = _short_history_page(tk)
+        if _sh:
+            return None, _sh
         note = _bars_note(tk) or "可能是代號打錯，或暫時抓不到資料。"
         return None, f'<div class="empty">查無燈號：{esc(q)}。{esc(note)}</div>'
     lv["_note"] = note
