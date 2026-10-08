@@ -20,6 +20,7 @@ import urllib.request
 _MIS = "https://mis.twse.com.tw/stock/api/getStockInfo.jsp"
 _UA = {"User-Agent": "Mozilla/5.0", "Referer": "https://mis.twse.com.tw/stock/index.jsp"}
 _CACHE = {}
+_LAST = {}          # 每檔最近一次拿到的有效成交價（z／pz 都空時的備援）
 _TTL = 8.0
 
 
@@ -57,18 +58,20 @@ def _tw_channel(tk):
     import tw_symbol
     code = str(tk).upper().split(".")[0]
     sym = tw_symbol.resolve(code)
-    return ("otc_" if str(sym).upper().endswith(".TWO") else "tse_") + code.lower() + ".tw"
+    # 🔴 代號大小寫要照原樣：MIS 對「00406A」這種字母結尾的主動式 ETF 是大小寫敏感的，小寫查不到（2026-10-08 實測）
+    return ("otc_" if str(sym).upper().endswith(".TWO") else "tse_") + code.upper() + ".tw"
 
 
 def tw_quotes(tickers):
     out = {}
-    chans = {}
+    chans, keys = {}, []
     for tk in tickers:
         try:
-            chans[_tw_channel(tk)] = tk
+            ch = _tw_channel(tk)
+            chans[ch.lower()] = tk                         # 回應用小寫對照，送出去的頻道保留原本大小寫
+            keys.append(ch)
         except Exception:                                   # noqa: BLE001
             continue
-    keys = list(chans)
     for i in range(0, len(keys), 60):
         part = keys[i:i + 60]
         url = f"{_MIS}?ex_ch={'|'.join(part)}&json=1&delay=0&_={int(time.time() * 1000)}"
@@ -83,8 +86,16 @@ def tw_quotes(tickers):
                 continue
             prev = _num(a.get("y"))
             px = _num(a.get("z"))
-            if px is None:                                  # 還沒有成交（開盤前／剛開盤）：不硬湊，用昨收
+            # 🔴 2026-10-08 Leo 截圖：自選清單有些台股現價「—」。根因：MIS 的 z（最新成交價）只在「這一個 5 秒區間剛好有成交」才有值，
+            #    沒成交就回 "-"；原本遇到 "-" 就整檔略過。流動性普通的股票（台燿、昇達科、啟碁、奇鋐…）常常沒成交 → 一直空白。
+            #    修：z 沒有就用 pz（前一筆成交價）；還是沒有（今天還沒成交過）才用最近一次快取的價，都沒有才真的略過。
+            if px is None:
+                px = _num(a.get("pz"))
+            if px is None:
+                px = (_LAST.get(tk) or {}).get("px")
+            if px is None:                                  # 今天一筆都還沒成交（開盤前／剛開盤）：不硬湊
                 continue
+            _LAST[tk] = {"px": px, "t": time.time()}
             hi, lo, op = _num(a.get("h")), _num(a.get("l")), _num(a.get("o"))
             d = str(a.get("d") or "")
             today = _dt.date.today().strftime("%Y%m%d")
