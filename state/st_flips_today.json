@@ -2,7 +2,7 @@
 "date": "2026-10-08",
 "flips_hold": [
 {
-"code": "ITOCY",
+"code": "IREN",
 "name": "",
 "word": "🟢→🔴 翻空",
 "dir": -1,
@@ -89,179 +89,11 @@
 "flips_watch": [],
 "ai_alerts": [
 {
-"chain": "AI 伺服器",
-"market": "US",
-"sig": "🟢",
-"code": "MU",
-"name": "Micron Technology Inc",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 伺服器",
-"market": "US",
-"sig": "🟢",
-"code": "MRVL",
-"name": "Marvell Technology Inc",
-"reason": "觀望→買進"
-},
-{
-"chain": "玻璃基板/TGV",
-"market": "US",
-"sig": "🟢",
-"code": "GLW",
-"name": "Corning Incorporated",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 伺服器",
-"market": "US",
-"sig": "🟢",
-"code": "AVGO",
-"name": "Broadcom Inc",
-"reason": "觀望→買進"
-},
-{
-"chain": "機器人",
-"market": "US",
-"sig": "🟢",
-"code": "IOT",
-"name": "Samsara Inc Ordinary Shares - Class A",
-"reason": "觀望→買進"
-},
-{
-"chain": "關鍵金屬/原物料",
-"market": "US",
-"sig": "🟢",
-"code": "FCX",
-"name": "Freeport-McMoRan, Inc.",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 電源/散熱",
-"market": "US",
-"sig": "🟢",
-"code": "MPWR",
-"name": "Monolithic Power Systems, Inc.",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 電力/核能",
-"market": "US",
-"sig": "🟢",
-"code": "ETN",
-"name": "Eaton Corp PLC",
-"reason": "觀望→買進"
-},
-{
-"chain": "太陽能",
-"market": "US",
-"sig": "🔴",
-"code": "PLUG",
-"name": "Plug Power Inc",
-"reason": "觀望→賣出"
-},
-{
-"chain": "Bitcoin→AI 機房",
-"market": "US",
-"sig": "🔴",
-"code": "IREN",
-"name": "IREN Ltd",
-"reason": "觀望→賣出"
-},
-{
-"chain": "AI 伺服器",
+"chain": "矽光子/光通訊",
 "market": "TW",
 "sig": "🟢",
-"code": "3037",
-"name": "欣興",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 伺服器",
-"market": "TW",
-"sig": "🟢",
-"code": "3231",
-"name": "緯創",
-"reason": "觀望→買進"
-},
-{
-"chain": "機器人",
-"market": "TW",
-"sig": "🟢",
-"code": "1504",
-"name": "東元",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 電力/核能",
-"market": "TW",
-"sig": "🟢",
-"code": "1504",
-"name": "東元",
-"reason": "觀望→買進"
-},
-{
-"chain": "玻璃基板/TGV",
-"market": "TW",
-"sig": "🟢",
-"code": "3037",
-"name": "欣興",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 材料/被動元件",
-"market": "TW",
-"sig": "🟢",
-"code": "2344",
-"name": "WINBOND ELECTRONIC CORP",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 材料/被動元件",
-"market": "TW",
-"sig": "🟢",
-"code": "2327",
-"name": "YAGEO CORP",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 材料/被動元件",
-"market": "TW",
-"sig": "🟢",
-"code": "2383",
-"name": "ELITE MATERIAL CO",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 電源/散熱",
-"market": "TW",
-"sig": "🟢",
-"code": "2301",
-"name": "LITE-ON TECHNOLOGY CORP",
-"reason": "觀望→買進"
-},
-{
-"chain": "PCB/ABF 載板",
-"market": "TW",
-"sig": "🟢",
-"code": "3037",
-"name": "欣興",
-"reason": "觀望→買進"
-},
-{
-"chain": "PCB/ABF 載板",
-"market": "TW",
-"sig": "🟢",
-"code": "3044",
-"name": "健鼎",
-"reason": "觀望→買進"
-},
-{
-"chain": "PCB/ABF 載板",
-"market": "TW",
-"sig": "🟢",
-"code": "7795",
-"name": "長廣",
+"code": "3105",
+"name": "穩懋",
 "reason": "觀望→買進"
 }
 ]

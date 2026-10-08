@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-08 08:47",
+ "updated": "2026-10-08 14:19",
  "indices": [
   {
    "sym": "^GSPC",
@@ -37,17 +37,17 @@
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "10/06",
-   "close": 49822.55,
-   "chg_pct": 0.22
+   "date": "10/08",
+   "close": 49313.44,
+   "chg_pct": -0.99
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "10/08",
-   "close": 31.84,
-   "chg_pct": 0.2
+   "close": 31.87,
+   "chg_pct": 0.31
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "估值上看千億美元！SK海力士旗下Solidigm傳明年赴美IPO 高盛大摩領軍募百億",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6624459",
-   "ts": "10/08 08:40"
-  },
-  {
-   "title": "Google芬蘭兩座資料中心遭停工 AI擴建瓶頸從缺電延伸到環評",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6624514",
-   "ts": "10/08 08:30"
-  },
-  {
-   "title": "南亞重電布局再升級 合資夥伴LS Electric已打進北美AI資料中心",
+   "title": "台積電9月營收5118.57億元寫單月次高 Q3登1.49兆元同締新猷飛越財測高標",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6624513",
-   "ts": "10/08 08:30"
+   "url": "https://news.cnyes.com/news/id/6624753",
+   "ts": "10/08 14:14"
   },
   {
-   "title": "派拉蒙、華納兄弟合體！1100億美元打造好萊塢新巨頭",
+   "title": "微星推RTX Spark AI 旗艦筆電 瞄準本地端大型AI模型頂規售價23.9萬元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6624690",
+   "ts": "10/08 14:01"
+  },
+  {
+   "title": "「美版Deepseek」交答卷 Reflection AI發表首款開放權重模型 提供美企新選擇",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6624423",
-   "ts": "10/08 08:30"
+   "url": "https://news.cnyes.com/news/id/6624726",
+   "ts": "10/08 13:40"
   },
   {
-   "title": "營收速報  - 新漢(8234)9月營收7.24億元年增率高達80.21％",
+   "title": "閎康(3587)、宜特(3289)、汎銓(6830) 誰的成長動能最強？為何業績還沒爆發？",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6624509",
-   "ts": "10/08 08:22"
+   "url": "https://news.cnyes.com/news/id/6624745",
+   "ts": "10/08 13:30"
   },
   {
-   "title": "營收速報  - 星雲(8047)9月營收8,792萬元年增率高達112.75％",
+   "title": "台塑新智能攜手創曦進軍AIDC CSP 啟動麥寮共建案串聯營運",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6624508",
-   "ts": "10/08 08:22"
+   "url": "https://news.cnyes.com/news/id/6624710",
+   "ts": "10/08 13:28"
   },
   {
-   "title": "營收速報  - 鑽石生技(6901)9月營收3.41億元年增率高達959.21％",
+   "title": "AI紅利全民共享！政院拍板明年普發1萬 最快1/26入帳規劃時程一覽",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6624507",
-   "ts": "10/08 08:22"
+   "url": "https://news.cnyes.com/news/id/6624704",
+   "ts": "10/08 13:28"
   },
   {
-   "title": "營收速報  - 海柏特(6884)9月營收1.95億元年增率高達105.09％",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6624506",
-   "ts": "10/08 08:22"
-  },
-  {
-   "title": "Anthropic擴大Claude新創計畫 免費1年團隊版、1000美元API額度 搶企業下一代AI開發入口",
+   "title": "美債殖利率攀升重創小型股！羅素2000瀕臨修正 資金轉向「科技七巨頭」避波動",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6624473",
-   "ts": "10/08 08:20"
+   "url": "https://news.cnyes.com/news/id/6624453",
+   "ts": "10/08 13:00"
   },
   {
-   "title": "Anthropic推小模型「CP值之王」Haiku 5.5 成本狂砍降75%、多數請求便宜九成",
+   "title": "不到一年裁員3萬人 亞馬遜一邊瘦身 一邊豪賭AI",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6624471",
-   "ts": "10/08 08:17"
+   "url": "https://news.cnyes.com/news/id/6624702",
+   "ts": "10/08 12:36"
+  },
+  {
+   "title": "華爾街對Marvell超樂觀 亮眼財測點燃成長潛力",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6624421",
+   "ts": "10/08 12:30"
+  },
+  {
+   "title": "市值近25兆美元富可敵國！科技七巨頭包辦三成資本支出  「插頭一拔」全球震盪",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6624454",
+   "ts": "10/08 12:00"
   }
  ],
  "inst": {
