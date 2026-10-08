@@ -272,10 +272,19 @@ def compute(txo, expiry, spot, date, params=None):
                     v = _iv(sp, F, K, g["T"], cp, r)
                     if v:
                         otm_iv[K] = v
+        atm_iv = None
+        if p["iv_mode"] == "atm":          # 每個到期日只用一條平的 IV（最接近遠期價那一檔）
+            ks = sorted({K for K, *_ in g["q"]}, key=lambda k: abs(k - F))
+            for K0 in ks[:6]:
+                vs = [_iv(sp, F, K, g["T"], cp, r) for K, cp, sp, oi in g["q"] if K == K0]
+                vs = [v for v in vs if v]
+                if vs:
+                    atm_iv = sum(vs) / len(vs)
+                    break
         for K, cp, sp, oi in g["q"]:
             if oi <= 0:
                 continue
-            s = otm_iv.get(K) or _iv(sp, F, K, g["T"], cp, r)
+            s = atm_iv or otm_iv.get(K) or _iv(sp, F, K, g["T"], cp, r)
             if s:
                 legs.append((m, K, cp, oi, g["T"], F, s))
     if not legs:
@@ -322,9 +331,30 @@ def compute(txo, expiry, spot, date, params=None):
     }
 
 
+def _robustness(txo, expiry, spot, date, main):
+    """換幾種合理的算法（遠期價取法×IV 取法）重算，看淨 GEX 正負與翻轉點是否一致。
+    2026-10-08 實測：同一份資料淨 GEX 可從 -7 到 +17 億，所以「避震器／油門」的判斷不能只信一種算法。"""
+    out = []
+    for fw, iv in (("parity", "own"), ("parity", "otm"), ("spot", "own"), ("spot", "otm")):
+        try:
+            r = compute(txo, expiry, spot, date, {"forward": fw, "iv_mode": iv})
+            out.append({"fw": fw, "iv": iv, "net": r["net_gex"], "flip": r["flip"],
+                        "call_wall": r["call_wall"], "put_wall": r["put_wall"]})
+        except Exception:  # noqa: BLE001
+            continue
+    nets = [v["net"] for v in out] + [main["net_gex"]]
+    flips = [v["flip"] for v in out if v["flip"]] + ([main["flip"]] if main["flip"] else [])
+    return {"variants": out,
+            "sign_agree": all(n > 0 for n in nets) or all(n < 0 for n in nets),
+            "net_lo": round(min(nets), 1), "net_hi": round(max(nets), 1),
+            "flip_lo": min(flips) if flips else None, "flip_hi": max(flips) if flips else None,
+            "walls_agree": len({(v["call_wall"], v["put_wall"]) for v in out} | {(main["call_wall"], main["put_wall"])}) == 1}
+
+
 def run(save=True, params=None):
     txo, expiry, spot, date = load_inputs()
     res = compute(txo, expiry, spot, date, params)
+    res["robust"] = _robustness(txo, expiry, spot, date, res)
     if save:
         os.makedirs(OUT_DIR, exist_ok=True)
         with open(os.path.join(OUT_DIR, f"gex_{date}.json"), "w", encoding="utf-8") as f:
@@ -333,6 +363,7 @@ def run(save=True, params=None):
             json.dump(res, f, ensure_ascii=False)
         # 首頁（跑在 Actions、看不到被 gitignore 的 data/）讀這份精簡版
         slim = {k: res[k] for k in ("date", "spot", "net_gex", "call_wall", "put_wall", "flip")}
+        slim["sign_agree"] = res["robust"]["sign_agree"]
         os.makedirs(os.path.join(HERE, "state"), exist_ok=True)
         with open(os.path.join(HERE, "state", "gex_latest.json"), "w", encoding="utf-8") as f:
             json.dump(slim, f, ensure_ascii=False)
@@ -346,7 +377,11 @@ def _one_line(res):
     where = ""
     if fl:
         where = "，在翻轉點 %s 上方 %+d 點" % (f"{fl:,}", round(s - fl)) if s >= fl else "，已跌破翻轉點 %s（%d 點）" % (f"{fl:,}", round(fl - s))
-    return (f"整體偏{state}{where}；上方買權牆 {res['call_wall']:,.0f}（{res['call_wall_gex']:+.1f} 億）、"
+    rb = res.get("robust") or {}
+    caveat = ""
+    if rb and not rb.get("sign_agree", True):
+        caveat = f"　⚠️ 不同算法對偏避震器／偏油門看法不一（淨 GEX {rb['net_lo']:+.0f}～{rb['net_hi']:+.0f} 億），只有牆比較可靠"
+    return (f"整體偏{state}{where}{caveat}；上方買權牆 {res['call_wall']:,.0f}（{res['call_wall_gex']:+.1f} 億）、"
             f"下方賣權牆 {res['put_wall']:,.0f}（{res['put_wall_gex']:+.1f} 億）；淨 GEX {res['net_gex']:+.1f} 億"
             f"（指數每動 1% 造市商約對沖 {abs(res['contracts']):.0f} 口大台）")
 

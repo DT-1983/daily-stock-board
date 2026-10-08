@@ -120,15 +120,22 @@ def build(d):
                f'現價 <b>{s:,.0f}</b> 已<b>跌破</b>翻轉點 <b style="color:{FLIP}">{fl:,}</b>（{-gap} 點），整體變成油門。')
     else:
         pos = f"現價 <b>{s:,.0f}</b>，±8% 內沒有翻轉點。"
+    rb = d.get("robust") or {}
+    warn = ""
+    if rb and not rb.get("sign_agree", True):
+        warn = (f'<br><span style="font-size:13px;color:{FLIP}">⚠️ 這個「偏{state}」不穩：換幾種合理的算法，淨 GEX 落在 '
+                f'{rb["net_lo"]:+.0f}～{rb["net_hi"]:+.0f} 億，正負號不一致。<b>牆的位置比整體判斷可靠</b>。</span>')
+    pws = sorted({v["put_wall"] for v in rb.get("variants", [])} | {d["put_wall"]})
+    pw_note = (f'<br>⚠️ 各算法落在 {"、".join(f"{x:,.0f}" for x in pws)}，不穩' if len(pws) > 1 else "")
     hero = (f'{pos}整體偏<b>{state}</b>。上方最大壓力在 <b style="color:{POS}">{d["call_wall"]:,.0f}</b>，'
             f'下方油門最重在 <b style="color:{NEG}">{d["put_wall"]:,.0f}</b>。<br>'
             f'<span style="font-size:13px;color:var(--muted)">淨 GEX {d["net_gex"]:+.1f} 億元：指數每漲跌 1%，'
-            f'造市商合計約要反向／順向買賣 {abs(d["contracts"]):.0f} 口大台。</span>')
+            f'造市商合計約要反向／順向買賣 {abs(d["contracts"]):.0f} 口大台。</span>{warn}')
     cards = (
         f'<div class="gxc" style="border-top-color:#DCE7F5"><div class="k">日盤收盤（台指期近月）</div><div class="v">{s:,.0f}</div><div class="s">資料日 {d["date"][:4]}/{d["date"][4:6]}/{d["date"][6:]}</div></div>'
         f'<div class="gxc" style="border-top-color:{POS}"><div class="k" style="color:{POS}">買權牆（最大壓力）</div><div class="v">{d["call_wall"]:,.0f}</div><div class="s">在現價{"上" if d["call_wall"] >= s else "下"}方 {abs(d["call_wall"] - s):,.0f} 點・{d["call_wall_gex"]:+.2f} 億</div></div>'
-        f'<div class="gxc" style="border-top-color:{NEG}"><div class="k" style="color:{NEG}">賣權牆（油門最重）</div><div class="v">{d["put_wall"]:,.0f}</div><div class="s">在現價{"上" if d["put_wall"] >= s else "下"}方 {abs(d["put_wall"] - s):,.0f} 點・{d["put_wall_gex"]:+.2f} 億</div></div>'
-        f'<div class="gxc" style="border-top-color:{FLIP}"><div class="k" style="color:{FLIP}">翻轉點</div><div class="v">{(fl or 0):,}</div><div class="s">跌破這裡，整體從避震器變油門</div></div>')
+        f'<div class="gxc" style="border-top-color:{NEG}"><div class="k" style="color:{NEG}">賣權牆（油門最重）</div><div class="v">{d["put_wall"]:,.0f}</div><div class="s">在現價{"上" if d["put_wall"] >= s else "下"}方 {abs(d["put_wall"] - s):,.0f} 點・{d["put_wall_gex"]:+.2f} 億{pw_note}</div></div>'
+        f'<div class="gxc" style="border-top-color:{FLIP}"><div class="k" style="color:{FLIP}">翻轉點</div><div class="v">{(fl or 0):,}</div><div class="s">跌破這裡，整體從避震器變油門{(f"<br>各算法範圍 {rb['flip_lo']:,}～{rb['flip_hi']:,}" if rb.get('flip_lo') else "")}</div></div>')
     chart = (f'<div class="gxbox"><h2>價位牆：每個履約價是避震器還是油門</h2>'
              f'<div class="meta">條越長，造市商在那個價位被迫對沖的力道越大（億元／指數 1%）；滑鼠移上去看數字</div>{_chart(d)}</div>')
     how = ('<div class="gxbox"><h2>怎麼看這一頁</h2><div class="gxsteps">'
