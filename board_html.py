@@ -77,10 +77,12 @@ header{padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:6px
 h1{font-size:19px;font-weight:800;letter-spacing:-.3px;display:flex;align-items:center;gap:9px}
 h1 svg{flex-shrink:0}
 .sub{color:var(--muted);font-size:12.5px;margin-top:5px}
-.navlinks{display:flex;gap:7px;margin-top:11px;flex-wrap:wrap}
-.nl{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;min-height:38px;
+/* 2026-10-08 Leo：工具列要一排（11 個連結）。nowrap＋緊湊內距；真的太窄（手機）就在列內橫向捲動，不換行 */
+.navlinks{display:flex;gap:5px;margin-top:11px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+.navlinks::-webkit-scrollbar{display:none}
+.nl{display:inline-flex;align-items:center;gap:5px;padding:7px 9px;min-height:34px;flex:0 0 auto;white-space:nowrap;
  border:1px solid var(--line);border-radius:9px;background:var(--surface);
- color:#BFDBFE;text-decoration:none;font-size:12.5px;font-weight:600;
+ color:#BFDBFE;text-decoration:none;font-size:12px;font-weight:600;
  transition:border-color .18s,background .18s}
 .nl:hover,.nl:focus-visible{border-color:var(--accent);background:#152238}
 .nl.cur{border-color:var(--accent);background:#152238;color:#fff}
