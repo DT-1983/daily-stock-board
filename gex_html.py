@@ -18,6 +18,7 @@ from datetime import datetime
 
 from board_theme import BASE_CSS, header, icon, esc, NAV
 import gex_bars
+import datetime as _dt
 
 if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
     sys.stdout.reconfigure(encoding="utf-8")
@@ -69,6 +70,18 @@ details.gxdet summary{cursor:pointer;font-size:15px;font-weight:700;list-style:n
 details.gxdet summary::-webkit-details-marker{display:none}
 details.gxdet summary::before{content:"▸ ";color:var(--accent)}
 details.gxdet[open] summary::before{content:"▾ "}
+.gxck{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:9px;margin-top:8px}
+.gxck>div{background:var(--surface);border:1px solid var(--line);border-radius:2px;padding:11px 13px;font-size:12.5px;line-height:1.75;color:var(--muted)}
+.gxck h3{font-size:13.5px;color:var(--ink);font-weight:700;margin-bottom:3px}
+.gxck h3 em{font-style:normal;color:var(--accent);font-family:'IBM Plex Mono',ui-monospace,monospace;margin-right:6px}
+.gxck b{color:var(--ink)}
+.gxck .dim{color:var(--dim);font-size:11.5px}
+.gxcalc{display:grid;grid-template-columns:1fr 1fr;gap:6px 8px;margin:6px 0}
+.gxcalc label{font-size:11.5px;color:var(--muted);display:flex;flex-direction:column;gap:2px}
+.gxcalc input,.gxcalc select{background:var(--bg);border:1px solid var(--line);border-radius:2px;color:var(--ink);
+ padding:6px 8px;font-size:13px;font-family:'IBM Plex Mono',ui-monospace,monospace;min-height:34px;width:100%}
+.gxcalc input:focus,.gxcalc select:focus{outline:1px solid var(--accent)}
+#gxcres{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:9px 11px;min-height:96px;font-size:12.5px;line-height:1.8}
 svg.gxsvg text{font-family:'IBM Plex Mono',ui-monospace,monospace}
 """
 
@@ -192,6 +205,117 @@ def _read(name):
         return f.read()
 
 
+def _us_line():
+    """美股前一晚收盤（S&P／那斯達克／費半）。yfinance 取不到就明講，不留空。"""
+    try:
+        import yfinance as yf
+        out, day = [], ""
+        for sym, nm in (("^GSPC", "S&P 500"), ("^IXIC", "那斯達克"), ("^SOX", "費半")):
+            h = yf.Ticker(sym).history(period="7d")["Close"].dropna()
+            if len(h) < 2:
+                continue
+            pct = (h.iloc[-1] / h.iloc[-2] - 1) * 100
+            day = h.index[-1].strftime("%m/%d")
+            out.append(f'{nm} <b class="num" style="color:{"#22C55E" if pct >= 0 else "#EF4444"}">{pct:+.2f}%</b>')
+        return (" ・ ".join(out) + f' <span class="dim">（{day} 收盤）</span>') if out else "美股這次取不到"
+    except Exception as e:  # noqa: BLE001
+        return f"美股這次取不到（{str(e)[:40]}）"
+
+
+def _night_line():
+    try:
+        import night_session
+        n = night_session.fetch()
+        if not n:
+            return "台指電子盤這次取不到"
+        dd = _dt.datetime.strptime(n["date"], "%Y%m%d")
+        pct = n.get("pct")
+        col = "#22C55E" if (pct or 0) >= 0 else "#EF4444"
+        chg = f' <b class="num" style="color:{col}">{n["change"]:+,.0f}（{pct:+.2f}%）</b>' if pct is not None else ""
+        return (f'台指電子盤收 <b class="num">{n["last"]:,.0f}</b>{chg} '
+                f'<span class="dim">（{dd:%m/%d} 15:00～{(dd + _dt.timedelta(days=1)):%m/%d} 05:00）</span>')
+    except Exception as e:  # noqa: BLE001
+        return f"台指電子盤這次取不到（{str(e)[:40]}）"
+
+
+def _expiry_items(d):
+    today = _dt.date.today()
+    rows = []
+    labels = (d.get("matrix") or {}).get("expiries") or []
+    for lab, e in zip(labels, d.get("expiries") or []):
+        day = _dt.datetime.strptime(e["sday"], "%Y%m%d").date()
+        n = (day - today).days
+        if 0 <= n <= 7:
+            when = "今天" if n == 0 else ("明天" if n == 1 else f"{n} 天後")
+            rows.append(f'<b>{when}</b>　{lab}　到期')
+    return rows
+
+
+CALC_JS = """
+(function(){
+  var $=function(i){return document.getElementById(i)};
+  var spot=%SPOT%;
+  $('gxc_in').value=spot;
+  function run(){
+    var acc=+$('gxc_acc').value, pct=+$('gxc_pct').value, ent=+$('gxc_in').value, stp=+$('gxc_stop').value, side=$('gxc_side').value;
+    var out=$('gxcres');
+    if(!acc||!pct||!ent||!stp){out.innerHTML='填入帳戶金額、可承受虧損、進場價、停損價，這裡會算出最多能下幾口。';return;}
+    var pts=side==='L'?ent-stp:stp-ent;
+    if(pts<=0){out.innerHTML='<span style="color:#FFB627">停損價要在進場價的「虧損方向」：做多＝停損價低於進場價，做空＝停損價高於進場價。</span>';return;}
+    var risk=acc*pct/100, per=pts*10, lots=Math.floor(risk/per);
+    var f=function(n){return Math.round(n).toLocaleString()};
+    out.innerHTML='停損距離 <b>'+pts.toLocaleString()+' 點</b>（約 '+(pts/ent*100).toFixed(2)+'%）<br>'+
+      '1 口微台停損時虧損 <b>'+f(per)+' 元</b>（每點 10 元）<br>'+
+      '你願意虧的金額 <b>'+f(risk)+' 元</b>（帳戶的 '+pct+'%）→ 最多 <b style="color:var(--accent)">'+lots+' 口</b>'+
+      (lots<1?'<br><span style="color:#FFB627">連 1 口都超過你設的虧損上限：要縮小停損距離，或提高可承受金額。</span>':'<br>'+lots+' 口停損時虧損約 <b>'+f(lots*per)+' 元</b>')+
+      '<br><span class="dim">不含手續費、滑價、跳空；保證金另計，下單前請看券商公告的保證金。</span>';
+  }
+  ['gxc_acc','gxc_pct','gxc_in','gxc_stop','gxc_side'].forEach(function(i){$(i).addEventListener('input',run)});
+  run();
+})();
+"""
+
+
+def _checklist(d):
+    s, fl = d["spot"], d.get("flip")
+    rb = d.get("robust") or {}
+    pws = sorted({v["put_wall"] for v in rb.get("variants", [])} | {d["put_wall"]})
+    pw = f'賣權牆 <b class="num" style="color:{NEG}">{d["put_wall"]:,.0f}</b>' + (
+        f'（各算法 {"、".join(f"{x:,.0f}" for x in pws)}，不穩）' if len(pws) > 1 else "")
+    pos_txt = ""
+    if fl:
+        gap = round(s - fl)
+        pos_txt = (f'收盤在翻轉點<b>上方 {gap} 點</b>，偏避震器那一側。' if gap >= 0 else
+                   f'收盤在翻轉點<b>下方 {-gap} 點</b>，偏油門那一側。')
+    exp = _expiry_items(d)
+    exp_html = "<br>".join(exp) if exp else "未來 7 天內沒有台指選擇權到期"
+    items = [
+        ("1", "開盤前：夜盤與美股", f'{_night_line()}<br>{_us_line()}'),
+        ("2", "地圖：牆與翻轉點",
+         f'買權牆 <b class="num" style="color:{POS}">{d["call_wall"]:,.0f}</b>（現價上方 {abs(d["call_wall"] - s):,.0f} 點）<br>{pw}<br>'
+         f'翻轉點 <b class="num" style="color:{FLIP}">{(fl or 0):,}</b>'
+         + (f'（各算法 {rb["flip_lo"]:,}～{rb["flip_hi"]:,}）' if rb.get("flip_lo") else "")),
+        ("3", "位置：在翻轉點哪一邊",
+         f'{pos_txt}<br><span class="dim">往上靠近買權牆時，造市商的對沖容易把價格壓回；跌破翻轉點後，對沖會讓波動放大。'
+         '這是結構描述，不是進出場訊號。</span>'),
+        ("4", "到期日：牆會變、會消失", f'{exp_html}<br><span class="dim">到期那天，該到期日的那一份牆就消失，整張圖會變；週選每週到期（通常週三、週五，遇假日順延）。</span>'),
+    ]
+    cards = "".join(f'<div><h3><em>{n}</em>{t}</h3>{b}</div>' for n, t, b in items)
+    calc = (
+        '<div><h3><em>5</em>認賠：算出最多能下幾口微台</h3>'
+        '<div class="gxcalc">'
+        '<label>帳戶金額（元）<input id="gxc_acc" type="number" inputmode="numeric" placeholder="例如你的期貨帳戶權益"></label>'
+        '<label>最多願意虧（帳戶 %）<input id="gxc_pct" type="number" inputmode="decimal" placeholder="例如 1 或 2"></label>'
+        '<label>方向<select id="gxc_side"><option value="L">做多（買進）</option><option value="S">做空（賣出）</option></select></label>'
+        '<label>進場價<input id="gxc_in" type="number" inputmode="numeric"></label>'
+        '<label style="grid-column:1/3">停損價（到這個價就認賠出場）<input id="gxc_stop" type="number" inputmode="numeric" placeholder="自己決定，這裡不替你填"></label>'
+        '</div><div id="gxcres"></div>'
+        '<div class="dim" style="margin-top:4px">公式：最多口數＝（帳戶 × 可承受虧損%）÷（停損點數 × 10 元）。數字只在你的瀏覽器計算，不會上傳或儲存。</div></div>')
+    return ('<div class="gxsec"><h2>今日看盤清單</h2><div class="hnote">開盤前依序看這五件事；前四項是資料，第五項要你自己決定</div>'
+            f'<div class="gxck">{cards}{calc}</div></div>'
+            f'<script>{CALC_JS.replace("%SPOT%", str(int(s)))}</script>')
+
+
 def _history():
     files = sorted(glob.glob(os.path.join(DATA, "gex_2*.json")))[-15:]
     rows = []
@@ -303,7 +427,7 @@ def build(d):
 <style>{BASE_CSS}{CSS_EXTRA}</style></head><body><div class="wrap">
 {header("gex", "台指選擇權 GEX", f"造市商的避震器與油門在哪裡 · 資料日 {esc(d['date'])}（日盤收盤後）· 每個交易日收盤後更新", NAV, "gex")}
 <div class="gxhero">{hero}</div><div class="gxgrid">{cards}</div>
-{how}{kchart}{profile}{adv}{_history()}{note}
+{_checklist(d)}{how}{kchart}{profile}{adv}{_history()}{note}
 <p class="sub" style="margin-top:20px">產生於 {datetime.now():%Y-%m-%d %H:%M} · 資料源 期交所每日行情（選擇權／台指期）</p>
 </div>{scripts}</body></html>"""
 
