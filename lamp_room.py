@@ -112,6 +112,11 @@ def rows():
     return out, (rs[0].get("asof") if rs else "—")
 
 
+BOLT_SVG = ('<span title="EC閃電（近5日擠壓釋放）"><svg viewBox="0 0 28 28" width="13" height="13" '
+            'style="vertical-align:-2px;margin-right:3px"><polygon points="16,1 5,16 12,16 9,27 23,10 15,10 19,1" '
+            'fill="#22e5ff" stroke="#fff" stroke-width="1.6"/></svg></span>')
+
+
 # ── 左欄 ──────────────────────────────────────────────────────────────
 def left_html(items, asof):
     from board_theme import esc
@@ -129,6 +134,7 @@ def left_html(items, asof):
                + ("" if r["gap"] is None else
                   f' <span class="{"up" if r["gap"] >= 0 else "dn"}">'
                   f'{r["gap"]:+.1f}%</span>'))
+        bolt = BOLT_SVG if r.get("fire") else ""
         lis.append(
             f'<li class="it" data-tk="{esc(r["tk"])}" data-mkt="{r["mkt"]}"'
             f' data-lit="{r["lit"]}" data-theme="{esc(r["theme"])}" data-fire="{1 if r.get("fire") else 0}"'
@@ -139,7 +145,7 @@ def left_html(items, asof):
             f' data-sort-chg="{r["chg"] if r["chg"] is not None else -999}">'
             f'<div class="l1"><b>{esc(r["tk"])}</b> <span class="nm">{esc(r["nm"])}</span>'
             f'<span class="px">{"" if r["px"] is None else f"{r['px']:,.2f}"} {chg}</span></div>'
-            f'<div class="l2"><span>{gap}</span><span class="lamps">{"<b class=bolt title=EC閃電（近5日擠壓釋放）>⚡</b>" if r.get("fire") else ""}{lamps}</span></div>'
+            f'<div class="l2"><span>{gap}</span><span class="lamps">{bolt}{lamps}</span></div>'
             "</li>")
     return (
         '<aside class="pane left"><div class="grip" id="grip"></div>'

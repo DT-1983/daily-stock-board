@@ -374,7 +374,7 @@ def _row_html(r):
         tpcth = f'<span class="{"pos" if tpct >= 0 else "neg"}">{tpct:+.1f}%</span>'
     theme = ai_theme.classify(r["ticker"])
     sqf = r.get("sq_fire")
-    bolt = (f'<span class="bolt" title="EC 閃電：{sqf} 日前擠壓釋放">⚡</span>' if sqf is not None and sqf <= 4 else "")
+    bolt = (f'<span title="EC 閃電：{sqf} 日前擠壓釋放"><svg class="bolt" viewBox="0 0 28 28" width="13" height="13" style="vertical-align:-2px;margin-right:3px"><polygon points="16,1 5,16 12,16 9,27 23,10 15,10 19,1" fill="#22e5ff" stroke="#fff" stroke-width="1.6"/></svg></span>' if sqf is not None and sqf <= 4 else "")
     fire = "1" if (sqf is not None and sqf <= 4) else "0"       # 近 5 根內 EC 擠壓釋放（閃電）
     return (f'<tr data-mkt="{mkt}" data-lit="{r["lit"]}" data-rr="{rrok}" data-fire="{fire}" data-quad="{qv}" '
             f'data-tk="{esc(r["ticker"])}" data-tgt="{r.get("target") or ""}" data-theme="{esc(theme)}" '
