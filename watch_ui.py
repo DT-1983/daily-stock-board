@@ -80,7 +80,8 @@ WATCH_CSS = r"""
 .wsq{grid-column:1;font-size:11.5px;color:#8FA8C8}
 .wsq i{display:inline-block;width:9px;height:9px;margin-right:2px;background:#22C55E}.wsq i.off{background:#1E2B42}
 .wr2{grid-column:2;text-align:right;font-size:11.5px;color:#8FA8C8}
-.wst{cursor:pointer;color:#475A74;margin-right:5px;font-size:14px;user-select:none}.wst.on{color:#FBBF24}
+/* 🔴 combo_html 有一條通用 .on{background:#22C55E}（燈號方塊用），會把 class 含 on 的星星塗成綠底（Leo 2026-10-08 截圖）→ 這裡明確把背景清掉 */
+.wst,.wst.on{cursor:pointer;color:#475A74;margin-right:5px;font-size:14px;user-select:none;background:none!important}.wst.on{color:#FBBF24}
 li.it .l1 .wst{order:0}
 """
 

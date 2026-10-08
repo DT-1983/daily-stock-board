@@ -1781,7 +1781,7 @@ ROOM_JS = r"""
    ⚠️ 燈數與技術圖是「載入那一刻」用日線算的，不會每 15 秒重算（太重）；要重算就重新點該檔。 */
 (function(){
   var st=document.createElement("style");
-  st.textContent=".lq{margin-left:8px;font-size:12px;padding:1px 7px;border-radius:9px;border:1px solid var(--line2,#1d2b3d);color:var(--dim,#8aa0b8)}"
+  st.textContent=".lq,.lq.on,.lq.ext{background:none!important}.lq{margin-left:8px;font-size:12px;padding:1px 7px;border-radius:9px;border:1px solid var(--line2,#1d2b3d);color:var(--dim,#8aa0b8)}"
     +".lq.on{color:#22D3EE;border-color:#22D3EE}.lq.ext{color:#FFB627;border-color:#FFB627}"
     +".l1 .px.lq-live::before,td.qpx.lq-live::before{content:'●';color:#22D3EE;font-size:9px;margin-right:4px}";
   document.head.appendChild(st);
