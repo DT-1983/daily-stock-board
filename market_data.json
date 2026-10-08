@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-08 14:19",
+ "updated": "2026-10-08 15:40",
  "indices": [
   {
    "sym": "^GSPC",
@@ -46,8 +46,8 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "10/08",
-   "close": 31.87,
-   "chg_pct": 0.31
+   "close": 31.92,
+   "chg_pct": 0.45
   },
   {
    "sym": "^TNX",
@@ -61,70 +61,70 @@
  ],
  "news": [
   {
-   "title": "台積電9月營收5118.57億元寫單月次高 Q3登1.49兆元同締新猷飛越財測高標",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6624753",
-   "ts": "10/08 14:14"
-  },
-  {
-   "title": "微星推RTX Spark AI 旗艦筆電 瞄準本地端大型AI模型頂規售價23.9萬元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6624690",
-   "ts": "10/08 14:01"
-  },
-  {
-   "title": "「美版Deepseek」交答卷 Reflection AI發表首款開放權重模型 提供美企新選擇",
+   "title": "亞馬遜零售部門展開新一輪裁員 人數少於1000人",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6624726",
-   "ts": "10/08 13:40"
+   "url": "https://news.cnyes.com/news/id/6624761",
+   "ts": "10/08 15:40"
   },
   {
-   "title": "閎康(3587)、宜特(3289)、汎銓(6830) 誰的成長動能最強？為何業績還沒爆發？",
+   "title": "玉晶光9月營收26.72億元年增0.54% 新產品認證進度符預期",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6624745",
-   "ts": "10/08 13:30"
+   "url": "https://news.cnyes.com/news/id/6624831",
+   "ts": "10/08 15:30"
   },
   {
-   "title": "台塑新智能攜手創曦進軍AIDC CSP 啟動麥寮共建案串聯營運",
+   "title": "低軌衛星概念股迎新商機！貝佐斯砸300億美元布局5萬顆AI衛星，昇達科、華通領軍，6檔台股供應鏈受關注",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6624710",
-   "ts": "10/08 13:28"
+   "url": "https://news.cnyes.com/news/id/6624834",
+   "ts": "10/08 15:30"
   },
   {
-   "title": "AI紅利全民共享！政院拍板明年普發1萬 最快1/26入帳規劃時程一覽",
+   "title": "融程電(3416) 在手訂單破40億，能見度看至2027年！獲利轉折已啟動？",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6624704",
-   "ts": "10/08 13:28"
+   "url": "https://news.cnyes.com/news/id/6624833",
+   "ts": "10/08 15:30"
   },
   {
-   "title": "美債殖利率攀升重創小型股！羅素2000瀕臨修正 資金轉向「科技七巨頭」避波動",
+   "title": "一周至少12起！荷姆茲油輪遇襲次數 創開戰以來單周新高",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6624453",
-   "ts": "10/08 13:00"
+   "url": "https://news.cnyes.com/news/id/6624806",
+   "ts": "10/08 15:13"
   },
   {
-   "title": "不到一年裁員3萬人 亞馬遜一邊瘦身 一邊豪賭AI",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6624702",
-   "ts": "10/08 12:36"
+   "title": "171.6萬家受惠！政院拍板8年千億「升級」中小微 提高租稅優惠及研發抵減",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6624737",
+   "ts": "10/08 15:12"
   },
   {
-   "title": "華爾街對Marvell超樂觀 亮眼財測點燃成長潛力",
-   "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6624421",
-   "ts": "10/08 12:30"
+   "title": "華碩發表ProArt新機祭月付13750元起訂閱制 攻地端代理式AI商機",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6624742",
+   "ts": "10/08 15:08"
   },
   {
-   "title": "市值近25兆美元富可敵國！科技七巨頭包辦三成資本支出  「插頭一拔」全球震盪",
+   "title": "藍色起源資金到位！擬部署逾5萬顆衛星搶攻太空資料中心，2030年營收拚成長逾20倍",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6624454",
-   "ts": "10/08 12:00"
+   "url": "https://news.cnyes.com/news/id/6624797",
+   "ts": "10/08 15:00"
+  },
+  {
+   "title": "對美出口銳減 德國8月出口意外下降0.8%",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6624788",
+   "ts": "10/08 15:00"
+  },
+  {
+   "title": "騰訊、CATL參投！DeepSeek接近獲得800至1000億人民幣融資，攜手華為昇騰押注國產預訓練",
+   "mkt": "US",
+   "url": "https://news.cnyes.com/news/id/6624549",
+   "ts": "10/08 15:00"
   }
  ],
  "inst": {
-  "date": "10/07",
-  "total_yi": -241.6,
-  "foreign_yi": -130.4,
-  "trust_yi": -33.2
+  "date": "10/08",
+  "total_yi": -899.0,
+  "foreign_yi": -758.5,
+  "trust_yi": 46.9
  }
 }
