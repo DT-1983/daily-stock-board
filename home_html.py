@@ -180,6 +180,7 @@ def build_summaries():
          "portfolio": "三主策略＋七產業鏈績效對決",
          "earnings": "每季財報圖卡（洪瑞泰＋分析師共識雙軌）",
          "gdp": "GDP 高點賣股票、不買股票",
+         "gex": "造市商的避震器與油門在哪裡（收盤後更新）",
          "ark": "ARKK/ARKW/ARKG 產業方向＋重倉法說會＋回測"}
 
     w = _load("buffett_watch.json")
@@ -208,6 +209,13 @@ def build_summaries():
             col = GDP_STATUS_COLOR.get(st, "#64748B")
             parts.append(f'{flag}<span class="gdot" style="background:{col}"></span>{st}')
         s["gdp"] = " · ".join(parts)
+    x = _load("state/gex_latest.json")
+    if x:
+        st = "避震器" if x["net_gex"] > 0 else "油門"
+        col = "#3B82F6" if x["net_gex"] > 0 else "#EF4444"
+        s["gex"] = (f'<span class="gdot" style="background:{col}"></span>整體偏{st}'
+                    f' · 買權牆 {x["call_wall"]:,.0f} · 賣權牆 {x["put_wall"]:,.0f}'
+                    f'（{x["date"][4:6]}/{x["date"][6:]}）')
     return s
 
 
@@ -332,6 +340,7 @@ def build():
         entry("portfolio", "策略賽馬模擬倉", s["portfolio"], "portfolios.html"),
         entry("earnings", "財報深度分析", s["earnings"], "earnings.html"),
         entry("gdp", "GDP 觀察", s["gdp"], "gdp.html"),
+        entry("gex", "台指選擇權 GEX", s["gex"], "gex.html"),
         entry("ark", "ARK ETF 追蹤", s["ark"], "ark.html"),
     ])
 

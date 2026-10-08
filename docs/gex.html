@@ -1,0 +1,281 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex"><title>台指選擇權 GEX</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+/* 2026-09-07 戰情室 HUD 色票。**變數名一個都沒改**，只換值——
+   七個頁面、十幾個共用元件全部指向這裡，改名等於要同時改完所有消費端。 */
+:root{--bg:#04070E;--surface:#080E1A;--card:#0C1524;--line:#16304A;--line2:#0E1B2B;
+ --ink:#DCE7F5;--muted:#9DB0C8;--dim:#5B6E8A;--accent:#22D3EE;
+ --up:#22C55E;--down:#EF4444;--warn:#FFB627;
+ /* HUD 專用（新增，舊頁面用不到也不會壞） */
+ --void:#04070E;--panel:#080E1A;--raise:#0C1524;--hud:#16304A;--hud-lit:#1F4E6E;
+ --grid:#0E1B2B;--ink2:#9DB0C8;--cy:#22D3EE;--cy-dim:rgba(34,211,238,.10);
+ --lamp:#FFB627;--lamp-dim:rgba(255,182,39,.13);
+ /* RRG 四色＝industry_rotation.QUADRANT_COLOR，兩頁不用重新記顏色。
+    會跟漲跌紅綠、燈的琥珀撞色——Leo 9/7：「多顏色沒關係」，一致比避讓重要。 */
+ --q-lead:#3987e5;--q-imp:#2fbf71;--q-weak:#eda100;--q-lag:#e5484d}
+body{background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased;
+ font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;font-size:14px;
+ /* 極淡掃描線：唯一的裝飾，其餘全部是資料。3px 一週期，放大也不會變成條紋。 */
+ background-image:repeating-linear-gradient(180deg,
+   rgba(34,211,238,.022) 0 1px,transparent 1px 3px)}
+.wrap{max-width:1100px;margin:0 auto;padding:14px 14px 60px}
+.num{font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+a{color:inherit}
+
+header{padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:6px}
+h1{font-size:19px;font-weight:800;letter-spacing:-.3px;display:flex;align-items:center;gap:9px}
+h1 svg{flex-shrink:0}
+.sub{color:var(--muted);font-size:12px;margin-top:5px;line-height:1.7}
+.sub b{color:#CBD5E1}
+.navlinks{display:flex;gap:7px;margin-top:11px;flex-wrap:wrap}
+.nl{display:inline-flex;align-items:center;gap:6px;padding:8px 12px;min-height:38px;
+ border:1px solid var(--line);border-radius:9px;background:var(--surface);
+ color:#BFDBFE;text-decoration:none;font-size:12px;font-weight:600;
+ transition:border-color .18s,background .18s}
+.nl:hover,.nl:focus-visible{border-color:var(--accent);background:#152238}
+.nl svg{flex-shrink:0;opacity:.85}
+.nl.cur{border-color:var(--accent);background:#152238;color:#fff}
+
+.ctrl{position:sticky;top:0;z-index:20;background:var(--bg);padding:11px 0 9px;
+ border-bottom:1px solid var(--line);margin-bottom:4px}
+.seg{display:inline-flex;background:var(--line);border-radius:9px;padding:3px}
+.seg button{border:0;background:transparent;color:var(--muted);font-size:13px;font-weight:600;
+ padding:7px 16px;min-height:38px;border-radius:7px;cursor:pointer;font-family:inherit;
+ transition:background .18s,color .18s}
+.seg button[aria-pressed=true]{background:#334155;color:var(--ink)}
+.sorts{display:flex;gap:6px;margin-top:9px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.sorts::-webkit-scrollbar{display:none}
+.sc{border:1px solid var(--line);background:var(--surface);color:var(--muted);
+ font-size:12px;padding:6px 12px;min-height:34px;border-radius:17px;cursor:pointer;
+ white-space:nowrap;font-family:inherit;font-weight:600;transition:all .18s}
+.sc[aria-pressed=true]{background:#334155;color:var(--ink);border-color:#475569}
+/* 2026-09-10：原本寫 'Fira Code'，但這個檔案的 @import 只載了 IBM Plex Mono，
+   Fira Code 從沒被載入過，所以全站每個排序晶片的數字其實一直在用瀏覽器預設
+   monospace，跟同一頁其他數字（.num 用 IBM Plex Mono）字體不一致——
+   Leo 從 exit_review.py 那頁看出來的，根源在這裡，是共用檔案，全站都受影響。 */
+.sc b{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:600;margin-left:1px}
+.d2{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:5px;vertical-align:middle}
+
+.sec{margin-top:22px;scroll-margin-top:104px}
+.sechd{display:flex;align-items:center;gap:9px;margin-bottom:3px;flex-wrap:wrap}
+.sechd .ico{width:30px;height:30px;border-radius:8px;background:#1E3A5F;display:grid;
+ place-items:center;flex-shrink:0}
+.sechd h2{font-size:16px;font-weight:700}
+.cnt{font-size:12px;color:var(--dim);background:var(--line);padding:2px 9px;border-radius:16px}
+.note{color:var(--muted);font-size:12px;line-height:1.6;margin:5px 0 10px}
+
+.rows{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+.row{display:flex;align-items:flex-start;gap:10px;padding:12px 13px;min-height:56px;
+ border-bottom:1px solid var(--line2);cursor:pointer;width:100%;text-align:left;
+ background:transparent;border-left:0;border-right:0;border-top:0;color:inherit;
+ font-family:inherit;font-size:inherit;transition:background .15s}
+.row:last-child{border-bottom:0}
+.row:hover,.row:focus-visible{background:#0E1B2B}
+.row:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:6px}
+.info{flex:1;min-width:0}
+.t1{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
+.tk{font-weight:700;font-size:14px}
+.nm{color:var(--dim);font-size:12px;overflow:hidden;text-overflow:ellipsis;
+ white-space:nowrap;max-width:190px}
+.sigtag{font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:5px}
+.one{color:var(--muted);font-size:12px;margin-top:3px;line-height:1.5}
+.rt{text-align:right;flex-shrink:0;min-width:52px}
+.sv{font-size:17px;font-weight:600;line-height:1;color:var(--ink)}
+.sv.dim{color:var(--dim)}
+.bar{height:4px;border-radius:2px;margin-top:5px;margin-left:auto;background:#475569}
+.chev{flex-shrink:0;margin-top:4px;opacity:.4;transition:transform .2s}
+.row[aria-expanded=true] .chev{transform:rotate(90deg)}
+.detail{display:none;padding:0 13px 14px;border-bottom:1px solid var(--line2);background:#101B2E}
+.detail.on{display:block}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(88px,1fr));gap:8px;margin-top:10px}
+.dcell{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 9px}
+.dcell .k{color:var(--dim);font-size:10.5px;letter-spacing:.3px}
+.dcell .v{font-size:13px;font-weight:600;margin-top:2px}
+.mdbody{color:#C7D8EC;font-size:12px;line-height:1.7;margin-top:10px}
+.mdbody h3{font-size:13px;color:#F5B841;margin:11px 0 4px;font-weight:700}
+
+/* 資料過期警示（2026-08-19）：抓取/調倉失敗時頁面照樣會產生，
+   若不明講，使用者看到的是「今天的頁面＋上次的數字」而毫無察覺。
+   刻意用醒目的紅底，不要做成低調的小灰字——這是要讓人看見的。 */
+.stalewarn{margin:14px 0;padding:12px 15px;border-radius:11px;
+ background:#2E1418;border:1px solid #7F1D1D;color:#FCA5A5;
+ font-size:13px;line-height:1.8}
+.stalewarn b{color:#FEE2E2}
+
+.legend{margin-top:26px;padding:12px 14px;background:var(--surface);
+ border:1px solid var(--line);border-radius:11px;font-size:12px;color:var(--muted);line-height:2}
+.legend span{margin-right:13px;white-space:nowrap}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:middle}
+.legend .lgnote{display:block;margin-top:5px;color:var(--dim);font-size:12px;line-height:1.7;white-space:normal}
+
+.modal{display:none;position:fixed;inset:0;z-index:60;background:rgba(2,6,23,.75);
+ backdrop-filter:blur(3px);padding:14px}
+.modal.on{display:block}
+.mbox{max-width:860px;margin:0 auto;height:100%;background:var(--surface);
+ border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;overflow:hidden}
+.mhd{display:flex;justify-content:space-between;align-items:center;gap:12px;
+ padding:13px 15px;border-bottom:1px solid var(--line);font-weight:700;font-size:14px}
+.mhd button{background:var(--line);border:0;color:var(--ink);width:40px;height:40px;
+ border-radius:9px;cursor:pointer;font-size:19px;line-height:1}
+.mct{overflow-y:auto;padding:15px;color:#C7D8EC;font-size:13px;line-height:1.75}
+
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:12px;
+ padding:34px 20px;text-align:center;color:var(--muted);font-size:13px;line-height:1.8}
+
+/* 賽馬頁：統計卡＋持股小卡（沿用 portfolio_html.py 的 holding_rows()，配對這裡的類別） */
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;
+ padding:16px;text-align:center;margin:10px 0}
+.stat .big{font-size:28px;font-weight:800}
+.stat .sub2{font-size:12px;color:var(--muted)}
+.vsgrid{display:flex;gap:10px;margin:10px 0;flex-wrap:wrap}
+.vsgrid .box{flex:1;min-width:160px;background:var(--surface);border:1px solid var(--line);
+ border-radius:12px;padding:13px;text-align:center}
+.vsgrid .box.win{border-color:#22C55E;box-shadow:0 0 0 1px #22C55E}
+.vsgrid .nm{font-size:13px;font-weight:700}
+.vsgrid .val{font-size:21px;font-weight:800;margin:5px 0}
+.vsgrid .pnl{font-size:13px;font-weight:700}
+.vsgrid details{margin-top:8px;text-align:left}
+.vsgrid summary{cursor:pointer;color:#93C5FD;font-size:12px;text-align:center}
+.pos{color:var(--up)}.neg{color:var(--down)}.flat{color:var(--dim)}
+.hlist{margin-top:8px}
+.hrow{padding:8px 0;border-bottom:1px solid var(--line2);font-size:12px}
+.hrow:last-child{border-bottom:0}
+.htop{display:flex;justify-content:space-between;gap:8px;font-weight:700}
+.htk{font-size:13px}
+.hsub{color:var(--dim);font-size:12px;margin-top:2px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;margin:14px 0}
+.card h2,.explain h3{font-size:14px;font-weight:700;margin-bottom:8px;color:#F5B841}
+.explain p{font-size:13px;line-height:1.7;margin:8px 0;color:#C7D8EC}
+.explain hr{border:0;border-top:1px solid var(--line);margin:12px 0}
+.chartlegend{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;font-size:12px;color:var(--muted)}
+.chartlegend span{display:inline-flex;align-items:center;gap:5px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+
+/* 🔴 色票也放這裡一份（2026-09-07）。
+   起因：產業鏈看板（board_html.py）**有自己一份 :root**，只有舊的五個色，
+   缺 --cy / --cy-dim / --hud / --panel / --lamp 這些新變數 →
+   下面的覆蓋規則寫了 var(--cy-dim) 卻解析不到，籤的底色整個透明，
+   而且 --ink/--accent 還是舊值 → Leo：「產業鏈看板設計失敗，跟其它頁面都不同」。
+   ⭐ 記憶 investment_site_ui_standard 記過：**抽共用 CSS 變數前，
+      先查每個消費端是不是都載了定義那些變數的那份 CSS**。這次就是沒查。
+   修法：HUD_CSS 自己帶一份完整色票，誰載它誰就有，不依賴 BASE_CSS。
+   （BASE_CSS 也含 HUD_CSS，等於同值重宣告一次，無害。） */
+:root{--bg:#04070E;--surface:#080E1A;--card:#0C1524;--line:#16304A;--line2:#0E1B2B;
+ --ink:#DCE7F5;--muted:#9DB0C8;--dim:#5B6E8A;--accent:#22D3EE;
+ --up:#22C55E;--down:#EF4444;--warn:#FFB627;
+ /* HUD 專用（新增，舊頁面用不到也不會壞） */
+ --void:#04070E;--panel:#080E1A;--raise:#0C1524;--hud:#16304A;--hud-lit:#1F4E6E;
+ --grid:#0E1B2B;--ink2:#9DB0C8;--cy:#22D3EE;--cy-dim:rgba(34,211,238,.10);
+ --lamp:#FFB627;--lamp-dim:rgba(255,182,39,.13);
+ /* RRG 四色＝industry_rotation.QUADRANT_COLOR，兩頁不用重新記顏色。
+    會跟漲跌紅綠、燈的琥珀撞色——Leo 9/7：「多顏色沒關係」，一致比避讓重要。 */
+ --q-lead:#3987e5;--q-imp:#2fbf71;--q-weak:#eda100;--q-lag:#e5484d}
+/* ═══ 戰情室 HUD 覆蓋層（2026-09-07）═══════════════════════════════
+   Leo 對第一版的評語是「不夠先進數字化」。差別不在顏色深淺，在**語彙**：
+   圓角卡片是消費性 App，方角＋細線＋四角括號＋等寬數字才是儀器面板。
+   ⚠️ 這一段刻意放最後：同權重後寫的贏，所以蓋得掉上面的圓角與字體，
+      要退回舊視覺只要刪掉這一段，不用逐條回改。 */
+
+/* 方角：一次收掉全站的圓角。留 2px 給互動元件，完全 0 會顯得毛躁。 */
+.rows,.card,.stat,.legend,.empty,.mbox,.detail,.dcell,.vsgrid .box,
+.stalewarn,.nl,.seg,.sc,.mhd button,.modal .mbox{border-radius:2px}
+.seg{border-radius:0;background:transparent;border:1px solid var(--line);padding:0}
+.seg button{border-radius:0;min-height:32px;padding:6px 15px;font-size:12px;
+ letter-spacing:.04em;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed=true]{background:var(--cy-dim);color:var(--cy)}
+.sc{border-radius:0;font-weight:500;letter-spacing:.03em}
+.sc[aria-pressed=true]{background:var(--cy-dim);color:var(--cy);border-color:var(--hud-lit)}
+.sc b,.cnt,.sv,.dcell .v,.stat .big,.vsgrid .val,.vsgrid .pnl,.htk,.hsub,.rt{
+ font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+
+/* 眉標：全大寫、加寬字距的英文小標。這是「儀器」的語感來源，
+   而且它同時是資訊——每一段都講得出自己是什麼。 */
+.eye{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10.5px;
+ letter-spacing:.22em;text-transform:uppercase;color:var(--cy);font-weight:600;
+ display:block;margin-bottom:3px}
+.eye em{font-style:normal;color:var(--dim);letter-spacing:.1em}
+
+/* 四角括號：只給「主要面板」用，每頁一兩個就夠——到處都是就變裝飾。 */
+.hud{position:relative}
+.hud::before,.hud::after{content:"";position:absolute;width:12px;height:12px;
+ border:1px solid var(--cy);pointer-events:none}
+.hud::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
+.hud::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
+
+header{border-bottom:1px solid var(--hud)}
+h1{letter-spacing:.02em;font-weight:900}
+.nl{border-radius:0;font-weight:500;letter-spacing:.03em;color:var(--ink2);
+ background:var(--raise)}
+.nl:hover,.nl:focus-visible{border-color:var(--cy);background:var(--cy-dim);color:var(--cy)}
+.nl.cur{border-color:var(--cy);background:var(--cy-dim);color:var(--cy)}
+.ctrl{border-bottom:1px solid var(--hud)}
+.sechd .ico{border-radius:0;background:var(--cy-dim);border:1px solid var(--hud)}
+.cnt{border-radius:0;border:1px solid var(--hud);background:transparent;
+ letter-spacing:.06em}
+.row:hover,.row:focus-visible{background:var(--cy-dim)}
+.detail{background:var(--raise)}
+.bar{border-radius:0;background:var(--hud-lit)}
+.sigtag{border-radius:0;letter-spacing:.04em}
+.dcell .k{letter-spacing:.14em;text-transform:uppercase;font-size:10.5px;
+ font-family:'IBM Plex Mono',ui-monospace,monospace}
+.card h2,.explain h3,.mdbody h3{color:var(--lamp)}
+.legend i,.d2{border-radius:0}
+.stalewarn{border-radius:0;border-left:3px solid var(--down)}
+
+/* 統計卡：方角、數字用等寬、標籤全大寫加寬字距。
+   第一張加四角括號當作「主面板」的錨——每頁只有一組，不會變成裝飾。 */
+body .cbstat{border:1px solid var(--hud);background:var(--panel)}
+body .cbstat div{border:0;border-right:1px solid var(--grid);border-radius:0;
+ background:transparent;padding:7px 14px}
+body .cbstat div:last-child{border-right:0}
+body .cbstat b{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:19px;
+ font-weight:600;letter-spacing:-.01em}
+body .cbstat span{font-size:10.5px;letter-spacing:.1em;color:var(--dim)}
+body .lkbox{border-radius:0!important;border-color:var(--hud)!important}
+body .lkbox button{border-radius:0!important}
+body .lkbox input{border-radius:0!important}
+
+/* 區塊標題：左邊一條青色細標，取代原本純文字的標題。
+   它同時把「這一段開始了」講清楚，比加大字級省空間。 */
+body .cbsec{border-left:2px solid var(--cy);padding-left:9px;letter-spacing:.02em}
+body .cbnote{border-radius:0;border-left-color:var(--lamp)}
+body table.cb th{letter-spacing:.12em;font-size:10.5px;text-transform:uppercase;
+ font-family:'IBM Plex Mono',ui-monospace,monospace;border-bottom-color:var(--hud)}
+body table.cb td{font-variant-numeric:tabular-nums}
+body table.cb tr:hover td{background:var(--cy-dim)}
+body .lamp{border-radius:1px}
+body .qb{border-radius:0;letter-spacing:.06em}
+body .expbtn{border-radius:0}
+body .expbtn:hover{border-color:var(--cy);color:var(--cy)}
+
+.gxhero{background:var(--surface);border:1px solid var(--line);border-left:4px solid #EAB308;
+ border-radius:12px;padding:16px 18px;margin:14px 0;font-size:16px;line-height:1.75}
+.gxhero b{font-weight:800}
+.gxcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:12px 0}
+.gxc{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--line);
+ border-radius:11px;padding:13px 14px}
+.gxc .k{font-size:12px;font-weight:700;color:var(--muted)}
+.gxc .v{font-size:26px;font-weight:800;margin:4px 0 2px}
+.gxc .s{font-size:12px;color:var(--dim);line-height:1.6}
+.gxbox{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0}
+.gxbox h2{font-size:14px;font-weight:700;margin-bottom:4px}
+.gxbox .meta{font-size:12px;color:var(--dim);margin-bottom:8px}
+.gxsteps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin:10px 0}
+.gxsteps div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 13px;font-size:13px;line-height:1.7;color:var(--muted)}
+.gxsteps b{color:var(--ink)}
+table.gxh{width:100%;border-collapse:collapse;font-size:13px}
+table.gxh th,table.gxh td{padding:7px 8px;border-bottom:1px solid var(--line2);text-align:right}
+table.gxh th:first-child,table.gxh td:first-child{text-align:left}
+table.gxh th{color:var(--dim);font-weight:600;font-size:12px}
+</style></head><body><div class="wrap">
+<header><span class="eye">OPTIONS GEX<em> // 隆中對</em></span><h1><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="#22D3EE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16M4 19h16"/><path d="M3 12h4l2-4 3 8 2-4h7"/></svg>台指選擇權 GEX</h1><div class="sub">造市商的避震器與油門在哪裡 · 資料日 20261007（日盤收盤後）· 每個交易日晚間更新</div><div class="navlinks"><a class="nl" href="./"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/></svg>首頁</a><a class="nl" href="rotation.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 3a9 9 0 0 1 8.5 6M21 12a9 9 0 0 1-8.5 6M3 12a9 9 0 0 1 3-6.7M6 20.7A9 9 0 0 1 3 14"/></svg>產業輪動</a><a class="nl" href="combo.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="5"/><circle cx="12" cy="7" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="17" r="1.6"/></svg>進出燈號</a><a class="nl" href="chip.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><ellipse cx="12" cy="6" rx="8" ry="3"/><path d="M4 6v5c0 1.7 3.6 3 8 3s8-1.3 8-3V6"/><path d="M4 11v5c0 1.7 3.6 3 8 3s8-1.3 8-3v-5"/></svg>籌碼異動</a><a class="nl cur" href="gex.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16M4 19h16"/><path d="M3 12h4l2-4 3 8 2-4h7"/></svg>選擇權 GEX</a><a class="nl" href="portfolios.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>策略賽馬</a><a class="nl" href="board.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>產業鏈看板</a><a class="nl" href="earnings.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></svg>財報分析</a><a class="nl" href="gdp.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 8-4-16-3 8H2"/></svg>GDP 觀察</a><a class="nl" href="ark.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 14 4-5 3 3 5-7"/></svg>ARK 追蹤</a><a class="nl" href="buffett.html"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg>巴菲特清單</a></div></header>
+<div class="gxhero">現價 <b>49,979</b> 在翻轉點 <b style="color:#EAB308">48,903</b> 上方，差 1076 點。整體偏<b>避震器</b>。上方最大壓力在 <b style="color:#3B82F6">50,000</b>，下方油門最重在 <b style="color:#EF4444">49,300</b>。<br><span style="font-size:13px;color:var(--muted)">淨 GEX +30.5 億元：指數每漲跌 1%，造市商合計約要反向／順向買賣 305 口大台。</span></div><div class="gxcards"><div class="gxc" style="border-top-color:#DCE7F5"><div class="k">日盤收盤（台指期近月）</div><div class="v">49,979</div><div class="s">資料日 2026/10/07</div></div><div class="gxc" style="border-top-color:#3B82F6"><div class="k" style="color:#3B82F6">買權牆（最大壓力）</div><div class="v">50,000</div><div class="s">在現價上方 21 點・+5.72 億</div></div><div class="gxc" style="border-top-color:#EF4444"><div class="k" style="color:#EF4444">賣權牆（油門最重）</div><div class="v">49,300</div><div class="s">在現價下方 679 點・-2.84 億</div></div><div class="gxc" style="border-top-color:#EAB308"><div class="k" style="color:#EAB308">翻轉點</div><div class="v">48,903</div><div class="s">跌破這裡，整體從避震器變油門</div></div></div>
+<div class="gxbox"><h2>價位牆：每個履約價是避震器還是油門</h2><div class="meta">條越長，造市商在那個價位被迫對沖的力道越大（億元／指數 1%）；滑鼠移上去看數字</div><svg viewBox="0 0 700 1476" width="100%" role="img" aria-label="各履約價 GEX"><line x1="345" y1="14" x2="345" y2="1468" stroke="#16304A"/><text x="337" y="10" text-anchor="end" fill="#EF4444" font-size="11">◀ 油門（負 GEX）</text><text x="353" y="10" fill="#3B82F6" font-size="11">避震器（正 GEX）▶</text><rect x="345.0" y="20" width="7.9" height="14" rx="2" fill="#3B82F6"><title>52,400　+0.17 億</title></rect><text x="2" y="31" fill="#9DB0C8" font-size="11">52,400</text><rect x="345.0" y="38" width="21.9" height="14" rx="2" fill="#3B82F6"><title>52,300　+0.46 億</title></rect><text x="2" y="49" fill="#9DB0C8" font-size="11">52,300</text><rect x="345.0" y="56" width="9.9" height="14" rx="2" fill="#3B82F6"><title>52,200　+0.21 億</title></rect><text x="2" y="67" fill="#9DB0C8" font-size="11">52,200</text><rect x="345.0" y="74" width="6.4" height="14" rx="2" fill="#3B82F6"><title>52,100　+0.14 億</title></rect><text x="2" y="85" fill="#9DB0C8" font-size="11">52,100</text><rect x="345.0" y="92" width="130.0" height="14" rx="2" fill="#3B82F6"><title>52,000　+2.75 億</title></rect><text x="2" y="103" fill="#9DB0C8" font-size="11">52,000</text><rect x="345.0" y="110" width="9.0" height="14" rx="2" fill="#3B82F6"><title>51,900　+0.19 億</title></rect><text x="2" y="121" fill="#9DB0C8" font-size="11">51,900</text><rect x="345.0" y="128" width="28.5" height="14" rx="2" fill="#3B82F6"><title>51,800　+0.60 億</title></rect><text x="2" y="139" fill="#9DB0C8" font-size="11">51,800</text><rect x="345.0" y="146" width="14.5" height="14" rx="2" fill="#3B82F6"><title>51,700　+0.31 億</title></rect><text x="2" y="157" fill="#9DB0C8" font-size="11">51,700</text><rect x="345.0" y="164" width="15.3" height="14" rx="2" fill="#3B82F6"><title>51,600　+0.33 億</title></rect><text x="2" y="175" fill="#9DB0C8" font-size="11">51,600</text><rect x="345.0" y="182" width="46.4" height="14" rx="2" fill="#3B82F6"><title>51,500　+0.98 億</title></rect><text x="2" y="193" fill="#9DB0C8" font-size="11">51,500</text><rect x="345.0" y="200" width="20.0" height="14" rx="2" fill="#3B82F6"><title>51,400　+0.42 億</title></rect><text x="2" y="211" fill="#9DB0C8" font-size="11">51,400</text><rect x="345.0" y="218" width="15.6" height="14" rx="2" fill="#3B82F6"><title>51,300　+0.33 億</title></rect><text x="2" y="229" fill="#9DB0C8" font-size="11">51,300</text><rect x="345.0" y="236" width="5.4" height="14" rx="2" fill="#3B82F6"><title>51,250　+0.12 億</title></rect><text x="2" y="247" fill="#9DB0C8" font-size="11">51,250</text><rect x="345.0" y="254" width="39.5" height="14" rx="2" fill="#3B82F6"><title>51,200　+0.84 億</title></rect><text x="2" y="265" fill="#9DB0C8" font-size="11">51,200</text><rect x="345.0" y="272" width="17.3" height="14" rx="2" fill="#3B82F6"><title>51,150　+0.37 億</title></rect><text x="2" y="283" fill="#9DB0C8" font-size="11">51,150</text><rect x="345.0" y="290" width="70.7" height="14" rx="2" fill="#3B82F6"><title>51,100　+1.50 億</title></rect><text x="2" y="301" fill="#9DB0C8" font-size="11">51,100</text><rect x="345.0" y="308" width="27.0" height="14" rx="2" fill="#3B82F6"><title>51,050　+0.57 億</title></rect><text x="2" y="319" fill="#9DB0C8" font-size="11">51,050</text><rect x="345.0" y="326" width="223.6" height="14" rx="2" fill="#3B82F6"><title>51,000　+4.74 億</title></rect><text x="2" y="337" fill="#9DB0C8" font-size="11">51,000</text><rect x="345.0" y="344" width="12.6" height="14" rx="2" fill="#3B82F6"><title>50,950　+0.27 億</title></rect><text x="2" y="355" fill="#9DB0C8" font-size="11">50,950</text><rect x="345.0" y="362" width="49.9" height="14" rx="2" fill="#3B82F6"><title>50,900　+1.06 億</title></rect><text x="2" y="373" fill="#9DB0C8" font-size="11">50,900</text><rect x="345.0" y="380" width="11.6" height="14" rx="2" fill="#3B82F6"><title>50,850　+0.24 億</title></rect><text x="2" y="391" fill="#9DB0C8" font-size="11">50,850</text><rect x="345.0" y="398" width="84.5" height="14" rx="2" fill="#3B82F6"><title>50,800　+1.79 億</title></rect><text x="2" y="409" fill="#9DB0C8" font-size="11">50,800</text><rect x="345.0" y="416" width="10.1" height="14" rx="2" fill="#3B82F6"><title>50,750　+0.21 億</title></rect><text x="2" y="427" fill="#9DB0C8" font-size="11">50,750</text><rect x="345.0" y="434" width="35.3" height="14" rx="2" fill="#3B82F6"><title>50,700　+0.75 億</title></rect><text x="2" y="445" fill="#9DB0C8" font-size="11">50,700</text><rect x="345.0" y="452" width="7.7" height="14" rx="2" fill="#3B82F6"><title>50,650　+0.16 億</title></rect><text x="2" y="463" fill="#9DB0C8" font-size="11">50,650</text><rect x="345.0" y="470" width="54.0" height="14" rx="2" fill="#3B82F6"><title>50,600　+1.14 億</title></rect><text x="2" y="481" fill="#9DB0C8" font-size="11">50,600</text><rect x="345.0" y="488" width="15.2" height="14" rx="2" fill="#3B82F6"><title>50,550　+0.32 億</title></rect><text x="2" y="499" fill="#9DB0C8" font-size="11">50,550</text><rect x="345.0" y="506" width="78.5" height="14" rx="2" fill="#3B82F6"><title>50,500　+1.66 億</title></rect><text x="2" y="517" fill="#9DB0C8" font-size="11">50,500</text><rect x="345.0" y="524" width="6.6" height="14" rx="2" fill="#3B82F6"><title>50,450　+0.14 億</title></rect><text x="2" y="535" fill="#9DB0C8" font-size="11">50,450</text><rect x="345.0" y="542" width="46.3" height="14" rx="2" fill="#3B82F6"><title>50,400　+0.98 億</title></rect><text x="2" y="553" fill="#9DB0C8" font-size="11">50,400</text><rect x="345.0" y="560" width="20.2" height="14" rx="2" fill="#3B82F6"><title>50,350　+0.43 億</title></rect><text x="2" y="571" fill="#9DB0C8" font-size="11">50,350</text><rect x="345.0" y="578" width="57.9" height="14" rx="2" fill="#3B82F6"><title>50,300　+1.23 億</title></rect><text x="2" y="589" fill="#9DB0C8" font-size="11">50,300</text><rect x="345.0" y="596" width="7.3" height="14" rx="2" fill="#3B82F6"><title>50,250　+0.15 億</title></rect><text x="2" y="607" fill="#9DB0C8" font-size="11">50,250</text><rect x="345.0" y="614" width="74.1" height="14" rx="2" fill="#3B82F6"><title>50,200　+1.57 億</title></rect><text x="2" y="625" fill="#9DB0C8" font-size="11">50,200</text><rect x="345.0" y="632" width="33.6" height="14" rx="2" fill="#3B82F6"><title>50,150　+0.71 億</title></rect><text x="2" y="643" fill="#9DB0C8" font-size="11">50,150</text><rect x="345.0" y="650" width="35.5" height="14" rx="2" fill="#3B82F6"><title>50,100　+0.75 億</title></rect><text x="2" y="661" fill="#9DB0C8" font-size="11">50,100</text><rect x="345.0" y="668" width="12.5" height="14" rx="2" fill="#3B82F6"><title>50,050　+0.27 億</title></rect><text x="2" y="679" fill="#9DB0C8" font-size="11">50,050</text><rect x="345.0" y="686" width="270.0" height="14" rx="2" fill="#3B82F6"><title>50,000　+5.72 億</title></rect><text x="2" y="697" fill="#9DB0C8" font-size="11">50,000</text><text x="58" y="697" fill="#DCE7F5" font-size="11" font-weight="700">買權牆</text><rect x="345.0" y="704" width="17.1" height="14" rx="2" fill="#3B82F6"><title>49,950　+0.36 億</title></rect><text x="2" y="715" fill="#9DB0C8" font-size="11">49,950</text><rect x="345.0" y="722" width="44.1" height="14" rx="2" fill="#3B82F6"><title>49,900　+0.94 億</title></rect><text x="2" y="733" fill="#9DB0C8" font-size="11">49,900</text><rect x="345.0" y="740" width="13.0" height="14" rx="2" fill="#3B82F6"><title>49,850　+0.28 億</title></rect><text x="2" y="751" fill="#9DB0C8" font-size="11">49,850</text><rect x="235.5" y="758" width="109.5" height="14" rx="2" fill="#EF4444"><title>49,800　-2.32 億</title></rect><text x="2" y="769" fill="#9DB0C8" font-size="11">49,800</text><rect x="345.0" y="776" width="13.7" height="14" rx="2" fill="#3B82F6"><title>49,750　+0.29 億</title></rect><text x="2" y="787" fill="#9DB0C8" font-size="11">49,750</text><rect x="345.0" y="794" width="35.9" height="14" rx="2" fill="#3B82F6"><title>49,700　+0.76 億</title></rect><text x="2" y="805" fill="#9DB0C8" font-size="11">49,700</text><rect x="339.4" y="812" width="5.6" height="14" rx="2" fill="#EF4444"><title>49,650　-0.12 億</title></rect><text x="2" y="823" fill="#9DB0C8" font-size="11">49,650</text><rect x="328.5" y="830" width="16.5" height="14" rx="2" fill="#EF4444"><title>49,600　-0.35 億</title></rect><text x="2" y="841" fill="#9DB0C8" font-size="11">49,600</text><rect x="327.8" y="848" width="17.2" height="14" rx="2" fill="#EF4444"><title>49,500　-0.36 億</title></rect><text x="2" y="859" fill="#9DB0C8" font-size="11">49,500</text><rect x="333.6" y="866" width="11.4" height="14" rx="2" fill="#EF4444"><title>49,450　-0.24 億</title></rect><text x="2" y="877" fill="#9DB0C8" font-size="11">49,450</text><rect x="345.0" y="884" width="3.9" height="14" rx="2" fill="#3B82F6"><title>49,400　+0.08 億</title></rect><text x="2" y="895" fill="#9DB0C8" font-size="11">49,400</text><rect x="316.3" y="902" width="28.7" height="14" rx="2" fill="#EF4444"><title>49,350　-0.61 億</title></rect><text x="2" y="913" fill="#9DB0C8" font-size="11">49,350</text><rect x="210.9" y="920" width="134.1" height="14" rx="2" fill="#EF4444"><title>49,300　-2.84 億</title></rect><text x="2" y="931" fill="#9DB0C8" font-size="11">49,300</text><text x="58" y="931" fill="#DCE7F5" font-size="11" font-weight="700">賣權牆</text><rect x="337.5" y="938" width="7.5" height="14" rx="2" fill="#EF4444"><title>49,250　-0.16 億</title></rect><text x="2" y="949" fill="#9DB0C8" font-size="11">49,250</text><rect x="341.3" y="956" width="3.7" height="14" rx="2" fill="#EF4444"><title>49,200　-0.08 億</title></rect><text x="2" y="967" fill="#9DB0C8" font-size="11">49,200</text><rect x="329.0" y="974" width="16.0" height="14" rx="2" fill="#EF4444"><title>49,150　-0.34 億</title></rect><text x="2" y="985" fill="#9DB0C8" font-size="11">49,150</text><rect x="345.0" y="992" width="35.9" height="14" rx="2" fill="#3B82F6"><title>49,100　+0.76 億</title></rect><text x="2" y="1003" fill="#9DB0C8" font-size="11">49,100</text><rect x="334.6" y="1010" width="10.4" height="14" rx="2" fill="#EF4444"><title>49,050　-0.22 億</title></rect><text x="2" y="1021" fill="#9DB0C8" font-size="11">49,050</text><rect x="315.7" y="1028" width="29.3" height="14" rx="2" fill="#EF4444"><title>49,000　-0.62 億</title></rect><text x="2" y="1039" fill="#9DB0C8" font-size="11">49,000</text><rect x="332.3" y="1046" width="12.7" height="14" rx="2" fill="#EF4444"><title>48,950　-0.27 億</title></rect><text x="2" y="1057" fill="#9DB0C8" font-size="11">48,950</text><rect x="271.6" y="1064" width="73.4" height="14" rx="2" fill="#EF4444"><title>48,900　-1.55 億</title></rect><text x="2" y="1075" fill="#9DB0C8" font-size="11">48,900</text><rect x="334.2" y="1082" width="10.8" height="14" rx="2" fill="#EF4444"><title>48,850　-0.23 億</title></rect><text x="2" y="1093" fill="#9DB0C8" font-size="11">48,850</text><rect x="316.3" y="1100" width="28.7" height="14" rx="2" fill="#EF4444"><title>48,800　-0.61 億</title></rect><text x="2" y="1111" fill="#9DB0C8" font-size="11">48,800</text><rect x="337.4" y="1118" width="7.6" height="14" rx="2" fill="#EF4444"><title>48,750　-0.16 億</title></rect><text x="2" y="1129" fill="#9DB0C8" font-size="11">48,750</text><rect x="300.8" y="1136" width="44.2" height="14" rx="2" fill="#EF4444"><title>48,700　-0.94 億</title></rect><text x="2" y="1147" fill="#9DB0C8" font-size="11">48,700</text><rect x="340.8" y="1154" width="4.2" height="14" rx="2" fill="#EF4444"><title>48,650　-0.09 億</title></rect><text x="2" y="1165" fill="#9DB0C8" font-size="11">48,650</text><rect x="340.6" y="1172" width="4.4" height="14" rx="2" fill="#EF4444"><title>48,600　-0.09 億</title></rect><text x="2" y="1183" fill="#9DB0C8" font-size="11">48,600</text><rect x="336.4" y="1190" width="8.6" height="14" rx="2" fill="#EF4444"><title>48,550　-0.18 億</title></rect><text x="2" y="1201" fill="#9DB0C8" font-size="11">48,550</text><rect x="293.3" y="1208" width="51.7" height="14" rx="2" fill="#EF4444"><title>48,500　-1.09 億</title></rect><text x="2" y="1219" fill="#9DB0C8" font-size="11">48,500</text><rect x="339.6" y="1226" width="5.4" height="14" rx="2" fill="#EF4444"><title>48,450　-0.12 億</title></rect><text x="2" y="1237" fill="#9DB0C8" font-size="11">48,450</text><rect x="337.9" y="1244" width="7.1" height="14" rx="2" fill="#EF4444"><title>48,400　-0.15 億</title></rect><text x="2" y="1255" fill="#9DB0C8" font-size="11">48,400</text><rect x="338.8" y="1262" width="6.2" height="14" rx="2" fill="#EF4444"><title>48,350　-0.13 億</title></rect><text x="2" y="1273" fill="#9DB0C8" font-size="11">48,350</text><rect x="345.0" y="1280" width="64.5" height="14" rx="2" fill="#3B82F6"><title>48,300　+1.37 億</title></rect><text x="2" y="1291" fill="#9DB0C8" font-size="11">48,300</text><rect x="345.0" y="1298" width="47.8" height="14" rx="2" fill="#3B82F6"><title>48,200　+1.01 億</title></rect><text x="2" y="1309" fill="#9DB0C8" font-size="11">48,200</text><rect x="342.5" y="1316" width="2.5" height="14" rx="2" fill="#EF4444"><title>48,150　-0.05 億</title></rect><text x="2" y="1327" fill="#9DB0C8" font-size="11">48,150</text><rect x="345.0" y="1334" width="20.5" height="14" rx="2" fill="#3B82F6"><title>48,000　+0.43 億</title></rect><text x="2" y="1345" fill="#9DB0C8" font-size="11">48,000</text><rect x="342.1" y="1352" width="2.9" height="14" rx="2" fill="#EF4444"><title>47,950　-0.06 億</title></rect><text x="2" y="1363" fill="#9DB0C8" font-size="11">47,950</text><rect x="345.0" y="1370" width="10.4" height="14" rx="2" fill="#3B82F6"><title>47,900　+0.22 億</title></rect><text x="2" y="1381" fill="#9DB0C8" font-size="11">47,900</text><rect x="337.3" y="1388" width="7.7" height="14" rx="2" fill="#EF4444"><title>47,800　-0.16 億</title></rect><text x="2" y="1399" fill="#9DB0C8" font-size="11">47,800</text><rect x="339.3" y="1406" width="5.7" height="14" rx="2" fill="#EF4444"><title>47,700　-0.12 億</title></rect><text x="2" y="1417" fill="#9DB0C8" font-size="11">47,700</text><rect x="340.5" y="1424" width="4.5" height="14" rx="2" fill="#EF4444"><title>47,600　-0.10 億</title></rect><text x="2" y="1435" fill="#9DB0C8" font-size="11">47,600</text><rect x="328.3" y="1442" width="16.7" height="14" rx="2" fill="#EF4444"><title>47,500　-0.35 億</title></rect><text x="2" y="1453" fill="#9DB0C8" font-size="11">47,500</text><line x1="0" y1="701" x2="700" y2="701" stroke="#DCE7F5" stroke-dasharray="4 3"/><text x="698" y="698" text-anchor="end" fill="#DCE7F5" font-size="11" font-weight="700">現價 49,979</text><line x1="0" y1="1079" x2="700" y2="1079" stroke="#EAB308" stroke-dasharray="4 3"/><text x="698" y="1076" text-anchor="end" fill="#EAB308" font-size="11" font-weight="700">翻轉點 48,903</text></svg></div><div class="gxbox"><h2>每日紀錄</h2><div class="meta">每天收盤後存一筆，累積起來看牆與翻轉點怎麼移動</div><table class="gxh"><tr><th>日期</th><th>日盤收盤</th><th>淨 GEX（億）</th><th>買權牆</th><th>賣權牆</th><th>翻轉點</th></tr><tr><td>10/07</td><td>49,979</td><td>+30.5</td><td>50,000</td><td>49,300</td><td>48,903</td></tr></table></div><div class="gxbox"><h2>怎麼看這一頁</h2><div class="gxsteps"><div><b>GEX 是什麼</b><br>賣選擇權給大家的「造市商」，指數每動 1%，必須用台指期對沖多少億元。這個被迫的方向，決定行情會變悶還是變急。</div><div><b>正 GEX＝避震器</b><br>漲了他要賣、跌了他要買，等於一直把價格往回推，容易在區間裡來回。</div><div><b>負 GEX＝油門</b><br>跌了還得賣、漲了還得買，等於幫行情踩油門，波動放大，容易一路衝或一路殺。</div><div><b>買權牆／賣權牆／翻轉點</b><br>正 GEX 最大的價位像天花板；負 GEX 最大的價位波動最容易放大；翻轉點是兩種狀態的分界線。</div></div></div><div class="note"><b>限制</b>：資料來自期交所開放資料，收盤後才彙整，<b>不是即時</b>；假設「客戶買、造市商賣」（買權 +、賣權 −），實際造市商部位看不到，所以這是估計。隱含波動率由結算價反推，到期日的遠期價用買賣權平價反推。<b>只描述對沖方向，不是買賣訊號。</b></div>
+<p class="sub" style="margin-top:20px">產生於 2026-10-08 17:05 · 資料源 期交所開放資料（DailyMarketReportOpt／DailyOptionsDelta／DailyMarketReportFut）</p>
+</div></body></html>

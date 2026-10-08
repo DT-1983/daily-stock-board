@@ -179,6 +179,12 @@ def sec1_market(notes):
             lines.append(_ns)
     except Exception as _e:                                  # noqa: BLE001
         print(f"[warroom] 電子盤行略過：{str(_e)[:80]}")
+    # 2026-10-08 Leo：老墨直播的選擇權 GEX（造市商避震器／油門）→ 自己用期交所資料算，每天收盤後存 latest.json，早上只讀檔。
+    try:
+        import gex_options
+        lines.append(gex_options.summary_line())
+    except Exception as _e:                                  # noqa: BLE001
+        print(f"[warroom] GEX 行略過：{str(_e)[:80]}")
 
     # 🌡️ 大盤體溫計（P2，2026-08-27）：電金比 vs 100MA。只報狀態不下行動指令——
     # 老墨的「連N日轉弱→清倉」門檻是他自己系統的規則，我們沒有對應回測依據

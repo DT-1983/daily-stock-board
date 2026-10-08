@@ -18,6 +18,8 @@ SIG_LABEL = {"buy": "買進", "sell": "賣出", "hold": "持有", "watch": "觀�
 ICONS = {
     "home": '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M10 21v-6h4v6"/>',
     "gdp": '<path d="M22 12h-4l-3 8-4-16-3 8H2"/>',
+    # 選擇權 GEX＝上下兩道牆夾一條線
+    "gex": '<path d="M4 5h16M4 19h16"/><path d="M3 12h4l2-4 3 8 2-4h7"/>',
     "board": '<path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/>',
     "buffett": '<path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/>',
     "portfolio": '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
@@ -97,6 +99,7 @@ NAV = [
     ("rotation", "rotation", "產業輪動", "rotation.html"),
     ("combo", "lamp", "進出燈號", "combo.html"),
     ("chip", "chip", "籌碼異動", "chip.html"),
+    ("gex", "gex", "選擇權 GEX", "gex.html"),
     ("portfolio", "portfolio", "策略賽馬", "portfolios.html"),
     ("board", "board", "產業鏈看板", "board.html"),
     ("earnings", "earnings", "財報分析", "earnings.html"),
@@ -415,7 +418,7 @@ h1 svg{flex-shrink:0}
 EYEBROW = {
     "board": "SECTOR BOARD", "combo": "SIGNAL MATRIX", "lamp": "SIGNAL MATRIX",
     "rotation": "ROTATION RRG", "chip": "CHIP FLOW", "earnings": "EARNINGS DESK",
-    "race": "PAPER BOOK", "gdp": "MACRO WATCH", "ark": "ARK TRACKER",
+    "race": "PAPER BOOK", "gdp": "MACRO WATCH", "gex": "OPTIONS GEX", "ark": "ARK TRACKER",
     "buffett": "VALUE SCREEN", "home": "COMMAND", "lookup": "LOOKUP",
     "room": "WAR ROOM", "trades": "TRADE LOG",
 }
