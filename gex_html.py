@@ -17,6 +17,7 @@ import sys
 from datetime import datetime
 
 from board_theme import BASE_CSS, header, icon, esc, NAV
+import gex_bars
 
 if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
     sys.stdout.reconfigure(encoding="utf-8")
@@ -49,6 +50,25 @@ table.gxh th,table.gxh td{padding:7px 8px;border-bottom:1px solid var(--line2);t
  font-family:'IBM Plex Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
 table.gxh th:first-child,table.gxh td:first-child{text-align:left}
 table.gxh th{color:var(--dim);font-weight:600;font-size:11.5px;font-family:inherit}
+.gxk{display:flex;gap:0;border:1px solid var(--line);border-radius:2px;background:var(--surface);margin:8px 0}
+.gxk .main{flex:1;min-width:0;display:flex;flex-direction:column}
+.gxk .side{width:190px;flex:none;border-left:1px solid var(--line);display:flex;flex-direction:column}
+@media(max-width:700px){.gxk .side{width:120px}}
+.gxbar{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:8px 0 0}
+.gxrd{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:11.5px;line-height:18px;height:38px;
+ padding:2px 10px;overflow:hidden;border-bottom:1px solid var(--line2);white-space:nowrap}
+.gxrd .dim{color:var(--dim)}
+#gxk{height:400px;width:100%}
+#gxs{width:100%;height:400px;display:block}
+@media(max-width:700px){#gxk,#gxs{height:320px}}
+.gxlegend{font-size:11.5px;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap;margin:6px 0 2px}
+.gxlegend i{display:inline-block;width:14px;height:0;border-top:2px solid;vertical-align:middle;margin-right:5px}
+#gx3d{width:100%;min-height:360px}
+details.gxdet{margin-top:20px}
+details.gxdet summary{cursor:pointer;font-size:15px;font-weight:700;list-style:none;padding:4px 0}
+details.gxdet summary::-webkit-details-marker{display:none}
+details.gxdet summary::before{content:"▸ ";color:var(--accent)}
+details.gxdet[open] summary::before{content:"▾ "}
 svg.gxsvg text{font-family:'IBM Plex Mono',ui-monospace,monospace}
 """
 
@@ -92,6 +112,84 @@ def _chart(d):
         out.append(f'<text x="{W - 2}" y="{y - 3}" text-anchor="end" fill="{col}" font-size="10.5" font-weight="700">{name} {p:,.0f}</text>')
     out.append("</svg>")
     return "".join(out)
+
+
+def _profile_svg(d):
+    """假設台指期在各價位時的總 GEX：> 0 青色（避震器）、< 0 紅色（油門）。標出翻轉點／收盤／買權牆。"""
+    pr = d.get("profile") or []
+    if len(pr) < 3:
+        return ""
+    W, H, L, R, T, B = 1050, 300, 56, 16, 28, 40
+    xs = [p[0] for p in pr]
+    ys = [p[1] for p in pr]
+    x0, x1 = min(xs), max(xs)
+    ylo, yhi = min(ys + [0]), max(ys + [0])
+    pad = (yhi - ylo) * 0.08 or 1
+    ylo, yhi = ylo - pad, yhi + pad
+    X = lambda v: L + (v - x0) / (x1 - x0) * (W - L - R)          # noqa: E731
+    Y = lambda v: T + (yhi - v) / (yhi - ylo) * (H - T - B)       # noqa: E731
+    z = Y(0)
+    out = [f'<svg class="gxsvg" viewBox="0 0 {W} {H}" width="100%" role="img" aria-label="價格假設下的總 GEX">']
+    raw = (yhi - ylo) / 5.0
+    mag = 10 ** (len(str(int(max(raw, 1)))) - 1)
+    step = next(m * mag for m in (1, 2, 5, 10) if m * mag >= raw)
+    for t in range(int(ylo // step) * step, int(yhi) + step, step):
+        if ylo <= t <= yhi:
+            out.append(f'<line x1="{L}" y1="{Y(t):.1f}" x2="{W - R}" y2="{Y(t):.1f}" stroke="#0E1B2B"/>'
+                       f'<text x="{L - 6}" y="{Y(t) + 3:.1f}" text-anchor="end" fill="#5B6E8A" font-size="10.5">{t}</text>')
+    tick = 500 if x1 - x0 > 4000 else 250
+    for t in range(int(x0 // tick + 1) * tick, int(x1), tick):
+        out.append(f'<line x1="{X(t):.1f}" y1="{T}" x2="{X(t):.1f}" y2="{H - B}" stroke="#0E1B2B"/>'
+                   f'<text x="{X(t):.1f}" y="{H - B + 16}" text-anchor="middle" fill="#5B6E8A" font-size="10.5">{t:,}</text>')
+    # 正負兩塊面積（在 0 軸處切開）
+    pts = [(X(a), Y(b), b) for a, b in pr]
+    for sign, col in ((1, POS), (-1, NEG)):
+        seg = []
+        for (px, py, v), (qx, qy, w) in zip(pts, pts[1:]):
+            for (ax, ay, av) in ((px, py, v),):
+                if av * sign >= 0:
+                    seg.append((ax, ay))
+            if v * w < 0:                                         # 跨 0：補交點
+                t = v / (v - w)
+                seg.append((px + (qx - px) * t, z))
+        if pts[-1][2] * sign >= 0:
+            seg.append((pts[-1][0], pts[-1][1]))
+        if len(seg) >= 2:
+            path = f"M{seg[0][0]:.1f},{z:.1f} " + " ".join(f"L{a:.1f},{b:.1f}" for a, b in seg) + f" L{seg[-1][0]:.1f},{z:.1f} Z"
+            out.append(f'<path d="{path}" fill="{col}" fill-opacity=".22" stroke="none"/>')
+    out.append(f'<line x1="{L}" y1="{z:.1f}" x2="{W - R}" y2="{z:.1f}" stroke="#2B4C6F"/>')
+    out.append('<polyline fill="none" stroke="#DCE7F5" stroke-width="1.8" points="' +
+               " ".join(f"{a:.1f},{b:.1f}" for a, b, _ in pts) + '"/>')
+    marks = [(d.get("flip"), "翻轉點", FLIP, "6 4"), (d["spot"], "收盤", "#DCE7F5", ""), (d["call_wall"], "買權牆", POS, "2 3")]
+    for i, (v, name, col, dash) in enumerate(m for m in marks if m[0] and x0 <= m[0] <= x1):
+        dd = f' stroke-dasharray="{dash}"' if dash else ""
+        out.append(f'<line x1="{X(v):.1f}" y1="{T - 8}" x2="{X(v):.1f}" y2="{H - B}" stroke="{col}"{dd}/>')
+        anchor = "end" if name == "翻轉點" else "start"
+        dx = -4 if name == "翻轉點" else 4
+        out.append(f'<text x="{X(v) + dx:.1f}" y="{T - 12}" text-anchor="{anchor}" fill="{col}" font-size="10.5" font-weight="700">{name} {v:,.0f}</text>')
+    out.append(f'<text x="14" y="{(T + H - B) / 2:.0f}" transform="rotate(-90 14 {(T + H - B) / 2:.0f})" text-anchor="middle" fill="#5B6E8A" font-size="10.5">總 GEX（億元）</text>')
+    out.append(f'<text x="{(L + W - R) / 2:.0f}" y="{H - 6}" text-anchor="middle" fill="#5B6E8A" font-size="10.5">假設台指期在</text>')
+    out.append("</svg>")
+    return "".join(out)
+
+
+def _payload(d):
+    m = d["matrix"]
+    strikes = []
+    for i, k in enumerate(m["strikes"]):
+        g = round(sum(r[i] for r in m["gex"]), 3)
+        strikes.append([k, g, sum(r[i] for r in m["oi_call"]), sum(r[i] for r in m["oi_put"])])
+    bars = gex_bars.payload()
+    keep = sorted({r[0] // 86400 for r in bars["m"]})[-7:]           # 內嵌最近 7 個日曆日的 1 分 K
+    mins = [[int(r[0])] + [int(x) if float(x).is_integer() else x for x in r[1:]] for r in bars["m"] if r[0] // 86400 in keep]
+    return {"m": mins, "d": bars["d"], "strikes": strikes, "spot": d["spot"], "call_wall": d["call_wall"],
+            "put_wall": d["put_wall"], "flip": d.get("flip"), "matrix": m,
+            "colors": {"pos": POS, "neg": NEG, "flip": FLIP}}
+
+
+def _read(name):
+    with open(os.path.join(HERE, name), encoding="utf-8") as f:
+        return f.read()
 
 
 def _history():
@@ -150,27 +248,64 @@ def build(d):
               f'在現價{side(d["put_wall"])}方 {abs(d["put_wall"] - s):,.0f} 點 · {d["put_wall_gex"]:+.2f} 億{pw_note}', NEG),
         _card("翻轉點", f'{(fl or 0):,}', f'跌破這裡，整體從避震器變油門{flip_rng}', FLIP),
     ])
-    chart = (f'<div class="gxsec"><h2>{icon("gex", 16, "#3B82F6")}價位牆：每個履約價是避震器還是油門</h2>'
-             f'<div class="hnote">條越長，造市商在那個價位被迫對沖的力道越大（億元／指數 1%）；滑鼠移上去看數字</div>'
-             f'<div class="gxbox">{_chart(d)}</div></div>')
-    how = ('<div class="gxsec"><h2>怎麼看這一頁</h2><div class="hnote">GEX 是什麼、四個名詞</div><div class="gxsteps">'
-           '<div><b>GEX 是什麼</b><br>賣選擇權給大家的「造市商」，指數每動 1%，必須用台指期對沖多少億元。這個被迫的方向，決定行情會變悶還是變急。</div>'
+    kchart = (
+        f'<div class="gxsec"><h2>{icon("gex", 16, "#3B82F6")}K 線＋價位牆：每個價位是避震器還是油門</h2>'
+        '<div class="hnote">右邊的橫條跟左邊 K 線共用同一條價格軸：往右＝避震器（正 GEX）、往左＝油門（負 GEX），條越長力道越大。'
+        '滑鼠移到圖上，上方會顯示那個價位的 GEX 與未平倉口數；滾輪／雙指可縮放。</div>'
+        '<div class="gxbar seg" id="gxbtn" role="group" aria-label="K 線週期">'
+        '<button data-n="5" aria-pressed="false">5 分</button><button data-n="15" aria-pressed="false">15 分</button>'
+        '<button data-n="30" aria-pressed="true">30 分</button><button data-n="60" aria-pressed="false">60 分</button>'
+        '<button data-n="0" aria-pressed="false">日 K</button></div>'
+        '<div class="gxk"><div class="main"><div class="gxrd"><div id="gxr1">&nbsp;</div><div id="gxr2">&nbsp;</div></div>'
+        '<div id="gxk"></div></div>'
+        '<div class="side"><div class="gxrd" style="text-align:center;color:var(--dim)">各履約價 GEX</div><canvas id="gxs"></canvas></div></div>'
+        f'<div class="gxlegend"><span><i style="border-color:#DCE7F5"></i>收盤 {s:,.0f}</span>'
+        f'<span><i style="border-color:{POS}"></i>買權牆 {d["call_wall"]:,.0f}</span>'
+        f'<span><i style="border-color:{NEG}"></i>賣權牆 {d["put_wall"]:,.0f}</span>'
+        f'<span><i style="border-color:{FLIP};border-top-style:dashed"></i>翻轉點 {(fl or 0):,}</span>'
+        '<span style="color:#ff5277">■ 漲</span><span style="color:#2ee6a8">□ 跌</span>'
+        '<span class="dim" style="color:var(--dim)">（含夜盤；日 K 只算日盤）</span></div></div>')
+    profile = (
+        f'<div class="gxsec"><h2>價格移到不同位置，避震器還剩多少？</h2>'
+        f'<div class="hnote">假設台指期移到橫軸那個價位、其他條件不變，重新計算全部選擇權的 GEX 再加總。'
+        f'青色區塊＝避震器、紅色區塊＝油門；只是描述今天部位的結構，不代表價格會往哪邊走。</div>'
+        f'<div class="gxbox">{_profile_svg(d)}</div></div>')
+    adv = (
+        '<details class="gxdet" id="gx3dwrap"><summary>進階：拆成每個到期日來看（熱力圖、3D 曲面）</summary>'
+        '<div class="hnote" style="margin:4px 0 8px">同一個價位的壓力，可能來自這週到期的週選，也可能來自下個月的月選。'
+        '越快到期的，對價格變動越敏感；到期一過，那一份就消失。圖上直接標出到期日，滑鼠移上去看「到期日／履約價／數值」。</div>'
+        '<div class="gxbar seg" id="gx3dbtn" role="group"><button data-k="heat" aria-pressed="true">熱力圖（平面）</button>'
+        '<button data-k="gex" aria-pressed="false">3D：GEX</button><button data-k="oi" aria-pressed="false">3D：未平倉量</button>'
+        '<button data-k="iv" aria-pressed="false">3D：隱含波動率</button></div>'
+        '<div class="gxbox"><div id="gx3d">展開後載入圖表…</div></div></details>')
+    how = ('<div class="gxsec"><h2>先看懂：GEX 是什麼</h2><div class="hnote">一句話：指數每漲跌 1%，「賣選擇權的大戶」會被迫跟著買或賣多少台指期</div><div class="gxsteps">'
+           '<div><b>誰是造市商？</b><br>賣選擇權給大家的人，像保險公司：大家跟他買選擇權（買保險），他賺保費和價差。他不想賭漲跌，只想穩穩賺。</div>'
+           '<div><b>他為什麼要買賣台指期？</b><br>指數一動，他賣出去的「保單」風險就跟著變。為了不被行情咬到，他得馬上用台指期把風險抵銷，這叫「避險」。</div>'
            '<div><b>正 GEX＝避震器</b><br>漲了他要賣、跌了他要買，等於一直把價格往回推，容易在區間裡來回。</div>'
            '<div><b>負 GEX＝油門</b><br>跌了還得賣、漲了還得買，等於幫行情踩油門，波動放大，容易一路衝或一路殺。</div>'
-           '<div><b>買權牆／賣權牆／翻轉點</b><br>正 GEX 最大的價位像天花板；負 GEX 最大的價位波動最容易放大；翻轉點是兩種狀態的分界線。</div>'
+           '<div><b>買權牆</b><br>正 GEX 最大的價位，漲到這裡避震器最強，像天花板。</div>'
+           '<div><b>賣權牆</b><br>負 GEX 最大的價位，到了這附近油門最重，波動最容易放大。</div>'
+           '<div><b>翻轉點</b><br>從避震器變成油門的分界線；價格在它上面比較穩，跌破就變急。</div>'
            '</div></div>')
-    note = ('<div class="note" style="margin-top:14px"><b>限制</b>：資料來自期交所，收盤後才有，<b>不是即時</b>；'
-            '假設「客戶買、造市商賣」（買權 +、賣權 −），實際造市商部位看不到，所以這是估計。'
-            '隱含波動率由結算價反推，到期日的遠期價用買賣權平價反推。<b>只描述對沖方向，不是買賣訊號。</b></div>')
+    note = ('<div class="note" style="margin-top:14px"><b>資料來源與限制</b>：台指期與台指選擇權行情取自臺灣期貨交易所（每日行情、每日逐筆成交），'
+            f'資料日期 {d["date"][:4]}/{d["date"][4:6]}/{d["date"][6:]}（日盤收盤後，<b>不是即時</b>）。'
+            'GEX、隱含波動率為本站依公開模型自行估算，不是期交所或造市商公布的數字；'
+            '假設「客戶買、造市商賣」（買權 +、賣權 −），實際造市商部位看不到，所以只是估計，換算法數字會有差異。'
+            '<b>只描述對沖方向，不是買賣訊號。</b></div>')
+    data_json = json.dumps(_payload(d), ensure_ascii=False, allow_nan=False, separators=(",", ":"))
+    scripts = (f'<script>window.GEXDATA={data_json};</script>'
+               f'<script>{_read("vendor/lightweight-charts.standalone.production.js")}</script>'
+               f'<script id="gx-chart-js">{_read("gex_chart.js")}</script>'
+               f'<script id="gx-3d-js">{_read("gex_3d.js")}</script>')
     return f"""<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex"><title>台指選擇權 GEX</title>
 <style>{BASE_CSS}{CSS_EXTRA}</style></head><body><div class="wrap">
 {header("gex", "台指選擇權 GEX", f"造市商的避震器與油門在哪裡 · 資料日 {esc(d['date'])}（日盤收盤後）· 每個交易日收盤後更新", NAV, "gex")}
 <div class="gxhero">{hero}</div><div class="gxgrid">{cards}</div>
-{chart}{_history()}{how}{note}
+{how}{kchart}{profile}{adv}{_history()}{note}
 <p class="sub" style="margin-top:20px">產生於 {datetime.now():%Y-%m-%d %H:%M} · 資料源 期交所每日行情（選擇權／台指期）</p>
-</div></body></html>"""
+</div>{scripts}</body></html>"""
 
 
 def main():

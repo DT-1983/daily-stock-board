@@ -256,6 +256,19 @@ def _forward(q, T, spot, params):
     return K0 + (calls[K0] - puts[K0]) * math.exp(r * T)
 
 
+def _expiry_labels(items):
+    """[(月份碼, 最後結算日YYYYMMDD)] → ['10/12（一）週選', ...]；月份碼無 W／F 者：前三個月為月選、其後季選。"""
+    wd = "一二三四五六日"
+    plain = sorted(m for m, _ in items if m.isdigit())
+    monthly = set(plain[:3])
+    out = []
+    for m, e in items:
+        d = dt.datetime.strptime(e, "%Y%m%d")
+        kind = "週選" if not m.isdigit() else ("月選" if m in monthly else "季選")
+        out.append(f"{d.month}/{d.day}（{wd[d.weekday()]}）{kind}")
+    return out
+
+
 def compute(txo, expiry, spot, date, params=None):
     p = dict(PARAMS, **(params or {}))
     r = p["r"]
@@ -320,6 +333,35 @@ def compute(txo, expiry, spot, date, params=None):
 
     rows = sorted(by.items())
     near = [(k, round(v, 3)) for k, v in rows if ev * 0.92 <= k <= ev * 1.08]
+
+    # 價格假設曲線：假設台指期在各價位時的總 GEX（其他條件不變），每 0.25%、±7%
+    profile = [[round(ev * (1 + i / 400.0)), round(sum(gex_at(ev * (1 + i / 400.0)).values()), 2)]
+               for i in range(-28, 29)]
+
+    # 到期日×履約價矩陣（3D／熱力圖）：GEX、未平倉（買／賣）、隱含波動率
+    lo, hi = ev * 0.92, ev * 1.08
+    strikes = sorted({K for m in months for K, *_ in groups[m]["q"] if lo <= K <= hi and K % 50 == 0})
+    idx = {K: i for i, K in enumerate(strikes)}
+    exp_labels = _expiry_labels([(m, groups[m]["sday"]) for m in months])
+    gex_m, oic_m, oip_m, iv_m = [], [], [], []
+    for m in months:
+        g = groups[m]
+        F = _forward(g["q"], g["T"], spot, p)
+        gx = gex_at(ev, only_month=m)
+        gex_m.append([round(gx.get(K, 0.0), 3) for K in strikes])
+        oc, op, ivs = [0] * len(strikes), [0] * len(strikes), [None] * len(strikes)
+        for K, cp, sp, oi in g["q"]:
+            if K in idx:
+                if cp == "C":
+                    oc[idx[K]] += int(oi)
+                else:
+                    op[idx[K]] += int(oi)
+                if (cp == "C" and K >= F) or (cp == "P" and K <= F):
+                    v = _iv(sp, F, K, g["T"], cp, r)
+                    if v:
+                        ivs[idx[K]] = round(v * 100, 1)
+        oic_m.append(oc); oip_m.append(op); iv_m.append(ivs)
+    matrix = {"expiries": exp_labels, "strikes": strikes, "gex": gex_m, "oi_call": oic_m, "oi_put": oip_m, "iv": iv_m}
     return {
         "date": date, "spot": ev, "net_gex": round(net, 3),
         "contracts": round(net * 1e8 / (ev * p["fut_mult"]), 1),
@@ -328,6 +370,7 @@ def compute(txo, expiry, spot, date, params=None):
         "flip": round(flip) if flip else None,
         "expiries": [{"month": m, "sday": groups[m]["sday"]} for m in months],
         "by_strike": near, "params": p, "n_legs": len(legs),
+        "profile": profile, "matrix": matrix,
     }
 
 
