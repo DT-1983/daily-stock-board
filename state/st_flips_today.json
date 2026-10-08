@@ -1,36 +1,22 @@
 {
-"date": "2026-10-07",
+"date": "2026-10-08",
 "flips_hold": [
-{
-"code": "ARKX",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1,
-"sig": "st"
-},
-{
-"code": "CEG",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1,
-"sig": "st"
-},
 {
 "code": "ITOCY",
 "name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1,
+"word": "🟢→🔴 翻空",
+"dir": -1,
 "sig": "st"
 },
 {
-"code": "COHR",
+"code": "AAOI",
 "name": "",
 "word": "RS60站回多方",
 "dir": 1,
 "sig": "rs60"
 },
 {
-"code": "AAOI",
+"code": "COHR",
 "name": "",
 "word": "RS60站回多方",
 "dir": 1,
@@ -41,13 +27,6 @@
 "name": "",
 "word": "RS60跌破自身均線",
 "dir": -1,
-"sig": "rs60"
-},
-{
-"code": "CPA",
-"name": "",
-"word": "RS60站回多方",
-"dir": 1,
 "sig": "rs60"
 },
 {
@@ -65,10 +44,31 @@
 "sig": "rs60"
 },
 {
+"code": "ARKX",
+"name": "",
+"word": "RS60跌破自身均線",
+"dir": -1,
+"sig": "rs60"
+},
+{
+"code": "KR",
+"name": "",
+"word": "RS60站回多方",
+"dir": 1,
+"sig": "rs60"
+},
+{
 "code": "GLW",
 "name": "",
 "word": "RS60站回多方",
 "dir": 1,
+"sig": "rs60"
+},
+{
+"code": "ITOCY",
+"name": "",
+"word": "RS60跌破自身均線",
+"dir": -1,
 "sig": "rs60"
 },
 {
@@ -84,25 +84,90 @@
 "word": "RS60跌破自身均線",
 "dir": -1,
 "sig": "rs60"
+}
+],
+"flips_watch": [],
+"ai_alerts": [
+{
+"chain": "AI 伺服器",
+"market": "US",
+"sig": "🟢",
+"code": "MU",
+"name": "Micron Technology Inc",
+"reason": "觀望→買進"
 },
 {
-"code": "UNM",
-"name": "",
-"word": "RS60跌破自身均線",
-"dir": -1,
-"sig": "rs60"
-}
-],
-"flips_watch": [
+"chain": "AI 伺服器",
+"market": "US",
+"sig": "🟢",
+"code": "MRVL",
+"name": "Marvell Technology Inc",
+"reason": "觀望→買進"
+},
 {
-"code": "3081",
-"name": "聯亞",
-"word": "🔴→🟢 翻多",
-"dir": 1,
-"sig": "st"
-}
-],
-"ai_alerts": [
+"chain": "玻璃基板/TGV",
+"market": "US",
+"sig": "🟢",
+"code": "GLW",
+"name": "Corning Incorporated",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 伺服器",
+"market": "US",
+"sig": "🟢",
+"code": "AVGO",
+"name": "Broadcom Inc",
+"reason": "觀望→買進"
+},
+{
+"chain": "機器人",
+"market": "US",
+"sig": "🟢",
+"code": "IOT",
+"name": "Samsara Inc Ordinary Shares - Class A",
+"reason": "觀望→買進"
+},
+{
+"chain": "關鍵金屬/原物料",
+"market": "US",
+"sig": "🟢",
+"code": "FCX",
+"name": "Freeport-McMoRan, Inc.",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 電源/散熱",
+"market": "US",
+"sig": "🟢",
+"code": "MPWR",
+"name": "Monolithic Power Systems, Inc.",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 電力/核能",
+"market": "US",
+"sig": "🟢",
+"code": "ETN",
+"name": "Eaton Corp PLC",
+"reason": "觀望→買進"
+},
+{
+"chain": "太陽能",
+"market": "US",
+"sig": "🔴",
+"code": "PLUG",
+"name": "Plug Power Inc",
+"reason": "觀望→賣出"
+},
+{
+"chain": "Bitcoin→AI 機房",
+"market": "US",
+"sig": "🔴",
+"code": "IREN",
+"name": "IREN Ltd",
+"reason": "觀望→賣出"
+},
 {
 "chain": "AI 伺服器",
 "market": "TW",
@@ -112,7 +177,23 @@
 "reason": "觀望→買進"
 },
 {
+"chain": "AI 伺服器",
+"market": "TW",
+"sig": "🟢",
+"code": "3231",
+"name": "緯創",
+"reason": "觀望→買進"
+},
+{
 "chain": "機器人",
+"market": "TW",
+"sig": "🟢",
+"code": "1504",
+"name": "東元",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 電力/核能",
 "market": "TW",
 "sig": "🟢",
 "code": "1504",
@@ -125,6 +206,62 @@
 "sig": "🟢",
 "code": "3037",
 "name": "欣興",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 材料/被動元件",
+"market": "TW",
+"sig": "🟢",
+"code": "2344",
+"name": "WINBOND ELECTRONIC CORP",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 材料/被動元件",
+"market": "TW",
+"sig": "🟢",
+"code": "2327",
+"name": "YAGEO CORP",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 材料/被動元件",
+"market": "TW",
+"sig": "🟢",
+"code": "2383",
+"name": "ELITE MATERIAL CO",
+"reason": "觀望→買進"
+},
+{
+"chain": "AI 電源/散熱",
+"market": "TW",
+"sig": "🟢",
+"code": "2301",
+"name": "LITE-ON TECHNOLOGY CORP",
+"reason": "觀望→買進"
+},
+{
+"chain": "PCB/ABF 載板",
+"market": "TW",
+"sig": "🟢",
+"code": "3037",
+"name": "欣興",
+"reason": "觀望→買進"
+},
+{
+"chain": "PCB/ABF 載板",
+"market": "TW",
+"sig": "🟢",
+"code": "3044",
+"name": "健鼎",
+"reason": "觀望→買進"
+},
+{
+"chain": "PCB/ABF 載板",
+"market": "TW",
+"sig": "🟢",
+"code": "7795",
+"name": "長廣",
 "reason": "觀望→買進"
 }
 ]
