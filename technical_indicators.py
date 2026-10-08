@@ -870,7 +870,7 @@ def build(ticker, disp_days=756, expanded=False, target=None, only=None):
     _row_vol = _techrow(panel_vol,
         '<div class="tclabel">成交量（青線＝20 日均量）</div>', f"ti_cv_{uid}", "tcbox tcbox-sm", key="vol")
     _row_sq = _techrow(panel_sq,
-        '<div class="tclabel">EXCEED CHARGE 動能柱（金點＝擠壓中，綠/紅點＝已釋放，★＝釋放瞬間）</div>', f"ti_c2_{uid}", "tcbox tcbox-sm", key="sq")
+        '<div class="tclabel">EXCEED CHARGE 動能柱（金點＝擠壓中，綠/紅點＝已釋放，青色閃電＝釋放瞬間）</div>', f"ti_c2_{uid}", "tcbox tcbox-sm", key="sq")
     # 四燈 strip 的側欄：現在這一根的四盞狀態。**跟頁面上的燈數同一個算法**
     # （combo_scan 也是這四支函式、同樣的窗口），所以兩邊不會對不上。
     _lp_now = _lamp_series(closes, highs, lows, vols, bench_closes, st, sq, dt)
@@ -1239,6 +1239,9 @@ function ti_draw_{uid}(){{
     const m = d.mom[i];
     return m == null ? '#6b7280' : (m >= 0 ? '#ff8a8a' : '#4ade80');
   }});
+  const BOLT = (function(){{ const c=document.createElement('canvas'); c.width=c.height=28; const x=c.getContext('2d');
+    x.beginPath(); [[16,1],[5,16],[12,16],[9,27],[23,10],[15,10],[19,1]].forEach((q,i)=>i?x.lineTo(q[0],q[1]):x.moveTo(q[0],q[1])); x.closePath();
+    x.fillStyle='#22e5ff'; x.fill(); x.lineWidth=1.8; x.strokeStyle='#ffffff'; x.stroke(); return c; }})();
   const c2 = new Chart(document.getElementById('ti_c2_{uid}'), {{type:'bar',
     data:{{datasets:[
       {{label:'動能',data:d.mom.map((v,i)=>({{x:i,y:v}})),backgroundColor:momColor,order:2}},
@@ -1246,9 +1249,8 @@ function ti_draw_{uid}(){{
         borderWidth:1.2,borderDash:[4,3],pointRadius:0,tension:.15,order:1}},
       {{label:'擠壓/釋放',type:'line',data:d.mom.map((_,i)=>({{x:i,y:0}})),showLine:false,
         pointRadius:2.6,pointBackgroundColor:dotColor,pointBorderWidth:0,order:1}},
-      {{label:'釋放★',type:'line',data:d.sq_on.map((on,i)=>({{x:i,y:(i>0&&d.sq_on[i-1]&&!on)?0:null}})),
-        showLine:false,pointStyle:'star',pointRadius:6.5,pointBorderColor:'#ffffff',pointBorderWidth:0.8,
-        pointBackgroundColor:d.mom.map(m=>m==null?'#9aa0a6':(m>=0?'#ff8a8a':'#4ade80')),order:0}}]}},
+      {{label:'釋放⚡',type:'line',data:d.sq_on.map((on,i)=>({{x:i,y:(i>0&&d.sq_on[i-1]&&!on)?0:null}})),
+        showLine:false,pointStyle:BOLT,pointRadius:13,order:0}}]}},
     options:{{responsive:true,maintainAspectRatio:false,plugins:{{legend:{{display:false}}, zoom:ZOOM_OPT}},
       scales:{{x:xAxis, y:{{afterFit:yFit,ticks:{{color:'#6b7280',font:{{size:9}}}},grid:{{color:'#1a1d23'}}}}}}}}}});
   const c3 = new Chart(document.getElementById('ti_c3_{uid}'), {{type:'bar',

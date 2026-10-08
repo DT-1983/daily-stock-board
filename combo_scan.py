@@ -285,6 +285,14 @@ def scan_one(tk, sym, df, bench_closes):
         f"L4 RS{RS_SHORT}日乖離 > +{RS_BIAS_MIN:g}%": bool(rs_s is not None and rs_s > RS_BIAS_MIN),
     }
     lit = sum(1 for v in lamps.values() if v)
+    # EXCEED CHARGE 閃電＝擠壓釋放（squeeze_on 由 True 轉 False，圖上的 ★；2026-10-08 Leo 要「4 燈 + EC 閃電」篩選）。
+    # 記「距今幾根」：0＝今天剛釋放；None＝近 60 根內沒有。
+    sq_fire = None
+    son = [bool(x) for x in sq["squeeze_on"][-60:]]
+    for k in range(len(son) - 1, 0, -1):
+        if son[k - 1] and not son[k]:
+            sq_fire = len(son) - 1 - k
+            break
     # ⚠️ 空方時那條線不是「停損」是「壓力」——語意完全不同。
     # 老墨的處理：SuperTrend 空方時不算風報比，改顯示「站上 X 才翻多（還要 +Y%）」。
     # 我們照做：bull=False 時 gap_pct 代表「離翻多還要漲多少」，頁面要分開講。
@@ -296,7 +304,7 @@ def scan_one(tk, sym, df, bench_closes):
             "rs_short": round(float(rs_s), 2) if rs_s is not None else None,
             "rs_long": round(float(rs.get("long")), 2) if rs.get("long") is not None else None,
             "lamps": lamps, "lit": int(lit), "combo": bool(lit >= COMBO_MIN),
-            "typhoon": ty_state,
+            "typhoon": ty_state, "sq_fire": sq_fire,
             "asof": str(df.index[-1])[:10]}
 
 

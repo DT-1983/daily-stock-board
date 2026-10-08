@@ -107,6 +107,7 @@ def rows():
             "mkt": "tw" if t[:1].isdigit() else "us",
             "src": "／".join(r.get("src") or []),
             "theme": ai_theme.classify(t),
+            "fire": r.get("sq_fire") is not None and r.get("sq_fire") <= 4,    # EC 閃電：近 5 根內擠壓釋放
         })
     return out, (rs[0].get("asof") if rs else "—")
 
@@ -130,7 +131,7 @@ def left_html(items, asof):
                   f'{r["gap"]:+.1f}%</span>'))
         lis.append(
             f'<li class="it" data-tk="{esc(r["tk"])}" data-mkt="{r["mkt"]}"'
-            f' data-lit="{r["lit"]}" data-theme="{esc(r["theme"])}"'
+            f' data-lit="{r["lit"]}" data-theme="{esc(r["theme"])}" data-fire="{1 if r.get("fire") else 0}"'
             f' data-q="{esc((r["tk"] + " " + r["nm"] + " " + r["sec"]).lower())}"'
             f' data-sort-lit="{r["lit"]}"'
             f' data-sort-gap="{r["gap"] if r["gap"] is not None else -999}"'
@@ -138,7 +139,7 @@ def left_html(items, asof):
             f' data-sort-chg="{r["chg"] if r["chg"] is not None else -999}">'
             f'<div class="l1"><b>{esc(r["tk"])}</b> <span class="nm">{esc(r["nm"])}</span>'
             f'<span class="px">{"" if r["px"] is None else f"{r['px']:,.2f}"} {chg}</span></div>'
-            f'<div class="l2"><span>{gap}</span><span class="lamps">{lamps}</span></div>'
+            f'<div class="l2"><span>{gap}</span><span class="lamps">{"<b class=bolt title=EC閃電（近5日擠壓釋放）>⚡</b>" if r.get("fire") else ""}{lamps}</span></div>'
             "</li>")
     return (
         '<aside class="pane left"><div class="grip" id="grip"></div>'
@@ -163,6 +164,7 @@ def left_html(items, asof):
         '<button class="ch" data-l="">全部燈數</button>'
         '<button class="ch on" data-l="4">4燈</button>'
         '<button class="ch" data-l="3">≥3燈</button>'
+        '<button class="ch" data-l="f4" title="4燈 + EXCEED CHARGE 閃電（近 5 日擠壓釋放）">⚡4燈+閃電</button>'
         '</div></div>'
         '<ul class="list" id="list">' + "".join(lis) + "</ul></aside>")
 
@@ -1097,7 +1099,7 @@ ROOM_JS = r"""
     var vis = items.filter(function(el){
       var d = el.dataset;
       return (!F.mkt || d.mkt === F.mkt)
-          && (!F.lit || (+d.lit) >= (+F.lit))
+          && (!F.lit || (F.lit === "f4" ? ((+d.lit) >= 4 && d.fire === "1") : (+d.lit) >= (+F.lit)))
           && (!F.theme || d.theme === F.theme)
           && (!F.q || (d.q || "").indexOf(F.q) >= 0);
     });
@@ -1200,8 +1202,8 @@ ROOM_JS = r"""
   // ⚠️ 有損的對應：列表多了含風報比條件的兩顆，左欄沒有（左欄的風報比是排序）。
   //    打點→3燈、⭐⭐→4燈，只取燈數那一半。寧可左欄少濾一點，
   //    也不要讓它的檔數比列表少而說不出原因。
-  var LIT_L2T = {"": "all", "3": "3", "4": "4"};
-  var LIT_T2L = {"all": "", "3": "3", "4": "4", "hit": "3", "hit4": "4"};
+  var LIT_L2T = {"": "all", "3": "3", "4": "4", "f4": "fire4"};
+  var LIT_T2L = {"all": "", "3": "3", "4": "4", "hit": "3", "hit4": "4", "fire4": "f4"};
 
   function clickIf(sel){
     var el = document.querySelector(sel);

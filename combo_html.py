@@ -186,6 +186,7 @@ def filter_html():
             + _sc("lit", "all", "全部", pressed=True) + _sc("lit", "3", "3 燈以上")
             + _sc("lit", "4", "4 燈") + _sc("lit", "hit", "⭐ 打點（3 燈 + 風報比 ≥ 1）")
             + _sc("lit", "hit4", "⭐⭐ 4 燈 + 風報比 ≥ 1")
+            + _sc("lit", "fire4", "⚡ 4 燈 + EC 閃電（近 5 日擠壓釋放）")
             + '<span class="fcount" id="fcount"></span></div>'
             '<div class="frow"><span class="flab">象限</span>'
             + _sc("quad", "all", "全部", pressed=True) + quad + _sc("quad", "none", "無分類")
@@ -214,6 +215,7 @@ function match(tr, f, v){
     // 2026-09-05：老墨說的「四燈且風報比>1」。跟上面那顆的差別只在 3 燈 vs 4 燈，
     // 但原本要按兩顆籤再自己看第一區塊，多一顆省掉那個步驟。
     if (v === "hit4") return lit >= 4 && tr.dataset.rr === "1";
+    if (v === "fire4") return lit >= 4 && tr.dataset.fire === "1";
   }
   return true;
 }
@@ -371,13 +373,16 @@ def _row_html(r):
     else:
         tpcth = f'<span class="{"pos" if tpct >= 0 else "neg"}">{tpct:+.1f}%</span>'
     theme = ai_theme.classify(r["ticker"])
-    return (f'<tr data-mkt="{mkt}" data-lit="{r["lit"]}" data-rr="{rrok}" data-quad="{qv}" '
+    sqf = r.get("sq_fire")
+    bolt = (f'<span class="bolt" title="EC 閃電：{sqf} 日前擠壓釋放">⚡</span>' if sqf is not None and sqf <= 4 else "")
+    fire = "1" if (sqf is not None and sqf <= 4) else "0"       # 近 5 根內 EC 擠壓釋放（閃電）
+    return (f'<tr data-mkt="{mkt}" data-lit="{r["lit"]}" data-rr="{rrok}" data-fire="{fire}" data-quad="{qv}" '
             f'data-tk="{esc(r["ticker"])}" data-tgt="{r.get("target") or ""}" data-theme="{esc(theme)}" '
             f'data-src="{esc(srcs)}" data-tid="{tid}">'
             f'<td>{btn}<b>{esc(r["ticker"])}</b></td>'
             f'<td>{esc((r.get("name") or "")[:16])}</td>'
             f'<td>{qh}</td>'
-            f'<td>{lamps}</td>'
+            f'<td>{lamps}{bolt}</td>'
             f'<td>{r["lit"]}/4</td>'
             f'<td class="qpx">{_fmt(r["price"])}</td>'
             f'<td>{tgth}</td>'
