@@ -37,6 +37,9 @@ PARAMS = {
     "mult": 50,            # 台指選擇權每點 50 元
     "fut_mult": 200,       # 大台每點 200 元（換算「口數」用）
     "min_t_days": 0.5,     # 到期當天 T 的下限（日）
+    "t_offset": 0.0,       # 距到期日數另加（日）
+    "year_days": 365.0,    # 一年幾天
+    "iv_mode": "own",      # own＝各自反推；otm＝同履約價共用價外那邊的 IV
     "forward": "parity",   # parity＝每個到期日用平價反推；spot＝全部用現價
     "max_expiries": 99,    # 納入最近幾個到期日
 }
@@ -127,8 +130,71 @@ def _gamma(F, K, T, s, r):
 
 
 # ───────── 組裝 ─────────
-def load_inputs():
-    """抓三份原始資料 → (opt_rows, expiry_map, spot, date)。失敗丟 RuntimeError（呼叫端明講）。"""
+WEB = "https://www.taifex.com.tw/cht/3/"
+
+
+def _web_post(page, data):
+    import requests
+    r = requests.post(WEB + page, data=data, headers={"User-Agent": "Mozilla/5.0"}, timeout=90)
+    r.raise_for_status()
+    return r.content.decode("utf-8", "replace")
+
+
+def _web_rows(html_text):
+    import html as _h
+    import re
+    out = []
+    for r in re.findall(r"<tr[^>]*>(.*?)</tr>", html_text, re.S | re.I):
+        c = [_h.unescape(re.sub(r"<[^>]+>", "", x)).strip()
+             for x in re.findall(r"<t[dh][^>]*>(.*?)</t[dh]>", r, re.S | re.I)]
+        if c:
+            out.append(c)
+    return out
+
+
+def fetch_web(day):
+    """期交所網站「每日行情」（日盤收盤後約 14:00 就有，比 OpenAPI 檔早一個晚上）。
+    回 (txo, expiry, spot, date)；該日沒資料（假日／尚未發布）回 None；網頁改版會丟 RuntimeError。"""
+    q = day.strftime("%Y/%m/%d")
+    base = {"queryType": "2", "marketCode": "0", "MarketCode": "0", "queryDate": q}
+    t = _web_post("optDailyMarketReport", dict(base, commodity_id="TXO", commodity_idt="TXO", settlemon="", pc="", cp="", strike=""))
+    txo, expiry = [], {}
+    for c in _web_rows(t):
+        # 契約, 月份, 到期日, 履約價, 買賣權, 開, 高, 低, 收, 結算, 漲跌, %, 盤後量, 一般量, 合計量, 未沖銷, 買, 賣, 歷高, 歷低
+        if len(c) >= 20 and c[0] == "TXO" and c[2].isdigit():
+            expiry[c[1]] = c[2]
+            txo.append({"Date": day.strftime("%Y%m%d"), "Contract": "TXO", "ContractMonth(Week)": c[1],
+                        "StrikePrice": c[3], "CallPut": c[4], "SettlementPrice": c[9],
+                        "OpenInterest": c[15], "TradingSession": "一般"})
+    if not txo:
+        return None
+    if not any(_num(o["OpenInterest"]) for o in txo):         # 有列但沒有未平倉量＝還沒發布
+        return None
+    tf = _web_post("futDailyMarketReport", dict(base, commodity_id="TX", commodity_idt="TX"))
+    tx = [c for c in _web_rows(tf) if len(c) >= 10 and c[0] == "TX" and c[1].isdigit() and len(c[1]) == 6
+          and _num(c[5]) is not None]
+    if not tx:
+        raise RuntimeError("期交所網站有選擇權資料但找不到台指期日盤成交價（網頁可能改版）")
+    spot = _num(min(tx, key=lambda c: c[1])[5])
+    return txo, expiry, spot, day.strftime("%Y%m%d")
+
+
+def load_inputs(today=None):
+    """優先用期交所網站當日資料（收盤後約 14:00 起）；沒有就往前找最近一個有資料的交易日；
+    網站失敗才退回 OpenAPI 檔（隔天清晨才含前一日）。"""
+    t = today or dt.date.today()
+    web_err = ""
+    try:
+        for back in range(0, 6):
+            d = t - dt.timedelta(days=back)
+            if d.weekday() >= 5:
+                continue
+            got = fetch_web(d)
+            if got:
+                return got
+    except Exception as e:  # noqa: BLE001
+        web_err = str(e)[:100]
+        print(f"[gex] 期交所網站取得失敗，改用 OpenAPI：{web_err}")
     opt = _fetch("DailyMarketReportOpt")
     dl = _fetch("DailyOptionsDelta")
     fut = _fetch("DailyMarketReportFut")
@@ -172,7 +238,7 @@ def _rows_to_quotes(txo, expiry, date, params):
         days = (dt.datetime.strptime(e, "%Y%m%d").date() - today).days
         if days < 0:
             continue
-        T = max(days, params["min_t_days"]) / 365.0
+        T = max(days + params["t_offset"], params["min_t_days"]) / params["year_days"]
         out.setdefault(m, {"T": T, "sday": e, "q": []})["q"].append((K, cp, sp, oi))
     return out
 
@@ -199,10 +265,17 @@ def compute(txo, expiry, spot, date, params=None):
     for m in months:
         g = groups[m]
         F = _forward(g["q"], g["T"], spot, p)
+        otm_iv = {}
+        if p["iv_mode"] == "otm":          # 價內外選擇權的結算價含大量內含價值、噪音大 → 同履約價買賣權共用「價外那一邊」的 IV
+            for K, cp, sp, oi in g["q"]:
+                if (cp == "C" and K >= F) or (cp == "P" and K <= F):
+                    v = _iv(sp, F, K, g["T"], cp, r)
+                    if v:
+                        otm_iv[K] = v
         for K, cp, sp, oi in g["q"]:
             if oi <= 0:
                 continue
-            s = _iv(sp, F, K, g["T"], cp, r)
+            s = otm_iv.get(K) or _iv(sp, F, K, g["T"], cp, r)
             if s:
                 legs.append((m, K, cp, oi, g["T"], F, s))
     if not legs:
@@ -219,13 +292,14 @@ def compute(txo, expiry, spot, date, params=None):
             by[K] = by.get(K, 0.0) + (g if cp == "C" else -g)
         return by
 
-    by = gex_at(spot)
+    ev = p.get("eval_spot") or spot          # 用資料日的價格反推 IV，再用「現在的價」評估 gamma
+    by = gex_at(ev)
     net = sum(by.values())
     call_wall = max(by, key=lambda k: by[k])
     put_wall = min(by, key=lambda k: by[k])
 
     # 翻轉點：現價上下 ±8% 掃，找離現價最近的變號點（線性內插）
-    grid = [spot * (1 + i / 400.0) for i in range(-32, 33)]          # 每 0.25%
+    grid = [ev * (1 + i / 400.0) for i in range(-32, 33)]          # 每 0.25%
     tot = [(S, sum(gex_at(S).values())) for S in grid]
     flips = []
     for (s0, g0), (s1, g1) in zip(tot, tot[1:]):
@@ -233,13 +307,13 @@ def compute(txo, expiry, spot, date, params=None):
             flips.append(s0)
         elif g0 * g1 < 0:
             flips.append(s0 + (s1 - s0) * (0 - g0) / (g1 - g0))
-    flip = min(flips, key=lambda x: abs(x - spot)) if flips else None
+    flip = min(flips, key=lambda x: abs(x - ev)) if flips else None
 
     rows = sorted(by.items())
-    near = [(k, round(v, 3)) for k, v in rows if spot * 0.92 <= k <= spot * 1.08]
+    near = [(k, round(v, 3)) for k, v in rows if ev * 0.92 <= k <= ev * 1.08]
     return {
-        "date": date, "spot": spot, "net_gex": round(net, 3),
-        "contracts": round(net * 1e8 / (spot * p["fut_mult"]), 1),
+        "date": date, "spot": ev, "net_gex": round(net, 3),
+        "contracts": round(net * 1e8 / (ev * p["fut_mult"]), 1),
         "call_wall": call_wall, "call_wall_gex": round(by[call_wall], 3),
         "put_wall": put_wall, "put_wall_gex": round(by[put_wall], 3),
         "flip": round(flip) if flip else None,
