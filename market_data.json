@@ -1,37 +1,37 @@
 {
- "updated": "2026-10-09 15:40",
+ "updated": "2026-10-09 22:19",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
-   "date": "10/08",
-   "close": 7765.36,
-   "chg_pct": -0.47
+   "date": "10/09",
+   "close": 7791.19,
+   "chg_pct": 0.33
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
-   "date": "10/08",
-   "close": 27193.34,
-   "chg_pct": -1.25
+   "date": "10/09",
+   "close": 27308.27,
+   "chg_pct": 0.42
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
-   "date": "10/08",
-   "close": 51231.64,
-   "chg_pct": 0.1
+   "date": "10/09",
+   "close": 51387.37,
+   "chg_pct": 0.3
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
-   "date": "10/08",
-   "close": 12623.71,
-   "chg_pct": -3.39
+   "date": "10/09",
+   "close": 12563.56,
+   "chg_pct": -0.48
   },
   {
    "sym": "^TWII",
@@ -46,79 +46,79 @@
    "name": "美元/台幣",
    "grp": "FX",
    "date": "10/09",
-   "close": 31.91,
-   "chg_pct": 0.2
+   "close": 31.93,
+   "chg_pct": 0.27
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
-   "date": "10/08",
-   "close": 5.23,
+   "date": "10/09",
+   "close": 5.27,
    "fmt": "yield",
-   "chg_bp": -4.6
+   "chg_bp": 3.4
   }
  ],
  "news": [
   {
-   "title": "台海風險被高估？美亞太助理國務卿：習近平很「理性」、若須付出重大代價就不會動武",
+   "title": "鉅亨速報 - Factset 最新調查：DraftKings公司(DKNG-US)EPS預估下修至0.09元，預估目標價為31.00元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6626720",
-   "ts": "10/09 15:40"
+   "url": "https://news.cnyes.com/news/id/6626990",
+   "ts": "10/09 22:15"
   },
   {
-   "title": "法國財長稱債券市場運作正常 無需「上帝之手」干預",
+   "title": "鉅亨速報 - Factset 最新調查：KKR & Co. Inc(KKR-US)EPS預估上修至8.26元，預估目標價為122.50元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6626580",
-   "ts": "10/09 15:30"
+   "url": "https://news.cnyes.com/news/id/6626989",
+   "ts": "10/09 22:15"
   },
   {
-   "title": "才完成OpenAI 300億美元投資！孫正義傳向中東募資千億 擬成立AI基金收購企業",
+   "title": "鉅亨速報 - Factset 最新調查：Circle Internet Group, Inc. Class A(CRCL-US)EPS預估上修至1.06元，預估目標價為104.00元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6626736",
-   "ts": "10/09 15:10"
+   "url": "https://news.cnyes.com/news/id/6626988",
+   "ts": "10/09 22:15"
   },
   {
-   "title": "iPhone 18 Pro賣不動？《日經》：蘋果10月零組件訂單砍15%至20%",
+   "title": "盤中速報 - 超微電腦(SMCI-US)大跌5%，報40.63美元",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6626759",
-   "ts": "10/09 14:50"
+   "url": "https://news.cnyes.com/news/id/6626983",
+   "ts": "10/09 22:06"
   },
   {
-   "title": "美國預算赤字飆至近2兆美元！佔GDP比例將超6%、利息支出破1.1兆美元",
+   "title": "中國油電車輸歐恐砍逾半！中歐達共識 具體措施待公布",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6626623",
-   "ts": "10/09 14:40"
+   "url": "https://news.cnyes.com/news/id/6626946",
+   "ts": "10/09 22:00"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：長榮航(2618-TW)EPS預估下修至4.15元，預估目標價為47.75元",
+   "title": "營收速報  - 達麗(6177)9月營收8.97億元年增率高達249.5％",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6626715",
-   "ts": "10/09 12:10"
+   "url": "https://news.cnyes.com/news/id/6626923",
+   "ts": "10/09 20:20"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：穩懋(3105-TW)EPS預估上修至7.8元，預估目標價為440元",
+   "title": "亞弘電前9月營收轉爲正成長 下半年轉強並在台增設新產線",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6626714",
-   "ts": "10/09 12:10"
+   "url": "https://news.cnyes.com/news/id/6626637",
+   "ts": "10/09 17:30"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：萬潤(6187-TW)EPS預估上修至28.94元，預估目標價為1500元",
+   "title": "〈熱門股〉巧新營收創高 切入半導體設備供應鏈 股價挑戰前高",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6626713",
-   "ts": "10/09 12:10"
+   "url": "https://news.cnyes.com/news/id/6626773",
+   "ts": "10/09 17:10"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：國泰金(2882-TW)EPS預估上修至9.02元，預估目標價為126.5元",
+   "title": "〈熱門股〉融程電9月營收衝高+明年展望樂觀 股價站回季線",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6626712",
-   "ts": "10/09 12:10"
+   "url": "https://news.cnyes.com/news/id/6626707",
+   "ts": "10/09 16:55"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：富邦金(2881-TW)EPS預估上修至11.58元，預估目標價為140元",
+   "title": "南僑成T+T+A三掛牌集團 整合資源強攻東協食品、烘焙商機",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6626711",
-   "ts": "10/09 12:10"
+   "url": "https://news.cnyes.com/news/id/6626694",
+   "ts": "10/09 16:53"
   }
  ],
  "inst": {
