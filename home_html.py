@@ -16,7 +16,7 @@ import sys
 import json
 import glob
 import argparse
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from board_theme import BASE_CSS, header, icon, esc, NAV, LOOKUP_BOX, LOOKUP_CSS
 
@@ -352,7 +352,11 @@ def build():
     try:
         data_day = str(m["updated"])[:10]
         today = datetime.now().strftime("%Y-%m-%d")
-        if data_day and data_day != today:
+        # 週末沒有新行情是正常的：今天是週六日、而資料停在最近一個平日（週五）以內就不警告（2026-10-10 手動重產時誤報）
+        _now = datetime.now()
+        _last_wd = _now - timedelta(days=max(0, _now.weekday() - 4))
+        _weekend_ok = _now.weekday() >= 5 and data_day >= _last_wd.strftime("%Y-%m-%d")
+        if data_day and data_day != today and not _weekend_ok:
             stale_note = (f'<div class="stalewarn">⚠️ 大盤行情停在 <b>{esc(m["updated"])}</b>，'
                           f'今天（{today}）沒有抓到新行情。'
                           f'下方價格是上次成功抓取的，不是最新的。'
