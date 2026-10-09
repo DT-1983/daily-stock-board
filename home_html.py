@@ -18,7 +18,7 @@ import glob
 import argparse
 from datetime import datetime, timedelta
 
-from board_theme import BASE_CSS, header, icon, esc, NAV, LOOKUP_BOX, LOOKUP_CSS
+from board_theme import BASE_CSS, header, icon, esc, NAV, EXIT_URL, LOOKUP_BOX, LOOKUP_CSS
 
 if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
     sys.stdout.reconfigure(encoding="utf-8")
@@ -336,6 +336,9 @@ def build():
 
     entries_html = "".join([
         entry("board", "產業鏈看板", s["board"], "board.html"),
+        # 2026-10-10 Leo：「首頁工具表沒有」。出場檢視表有成本損益、不能公開：這張卡只放固定說明（不放任何持股數字），
+        # 連結到要密碼的中控台頁（board_theme.EXIT_URL）。
+        entry("portfolio", "出場檢視表", "持股出場訊號與成本損益 · 要登入密碼，只有你看得到", EXIT_URL),
         entry("buffett", "巴菲特價值清單", s["buffett"], "buffett.html"),
         entry("portfolio", "策略賽馬模擬倉", s["portfolio"], "portfolios.html"),
         entry("earnings", "財報深度分析", s["earnings"], "earnings.html"),
