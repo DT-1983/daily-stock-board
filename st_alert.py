@@ -79,7 +79,7 @@ def _rs60_flips(hold_set):
     """RS60 正負號翻轉（跌破/站回自身60日均線）。只查持股，不查守備清單——
     守備清單的進場邏輯本來就用燈四（RS60乖離>+3%），不需要另一套RS警示。"""
     try:
-        d = json.load(open("state/combo_result.json", encoding="utf-8"))
+        d = json.load(open("state/combo_public.json" if os.path.exists("state/combo_public.json") else "state/combo_result.json", encoding="utf-8"))
     except Exception as e:                                   # noqa: BLE001
         print(f"  [st_alert] 讀 combo_result.json 失敗（RS60偵測跳過）：{str(e)[:80]}")
         return []

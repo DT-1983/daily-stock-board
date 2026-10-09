@@ -67,7 +67,7 @@ BTC_MAX_WEIGHT = 0.10          # 該鏈標的在跨鏈主倉的合計權重上�
 # 沒有歷史回測：目標價沒有歷史資料，風報比回不了頭——這個倉本身就是累積樣本的器材。
 CHAIN_COMBO = "進出燈號"
 CHAIN_COMBO_OLD = "三指標合流"   # portfolios.json 舊倉名，load() 時自動改名（歷史淨值沿用，都是 10000）
-LAMP_RESULT = "state/combo_result.json"
+LAMP_RESULT = "state/combo_public.json" if os.path.exists("state/combo_public.json") else "state/combo_result.json"   # 公開版（不含自選）；雲端只有這份
 LAMP_MAX_AGE_DAYS = 4            # 掃描結果超過這麼多天沒更新就不動作（別拿舊燈號下單）
 LAMP_COOLDOWN_DAYS = 7           # 全出後幾個日曆天內不重新進場（避免出了隔天又買回）
 # 2026-09-08 Leo：「做前 10 名吧」——燈號倉的位子從 8 個放寬到 10 個。

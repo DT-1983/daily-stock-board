@@ -40,7 +40,8 @@ NL = chr(10)
 WATCHLIST_PATH = "state/combo_watchlist.json"
 TARGETS_CACHE = "state/price_targets.json"
 STATE_PATH = "state/combo_state.json"
-RESULT_PATH = "state/combo_result.json"
+RESULT_PATH = "state/combo_result.json"          # 完整版（含自選）：只在本機，已 .gitignore、不進公開儲存庫
+PUBLIC_RESULT_PATH = "state/combo_public.json"    # 公開版：去掉「只在自選」的列、其餘列的 src 拿掉「自選」——雲端流程與公開頁讀這份
 SECTOR_MAP_PATH = "state/sector_map.json"   # 個股→TradingView 類股（30 天快取）
 SECTOR_MAP_DAYS = 30
 ROTATION_HIST = "industry_rotation_history.json"   # 輪動頁的歷史快照（讀最新一筆）
@@ -70,6 +71,42 @@ def watch_only(row):
     策略倉、公開進場候選、類股輪動清單一律略過這種列——自選是 Leo 的關注清單，不是策略母體。"""
     s = set((row or {}).get("src") or [])
     return bool(s) and s <= {"自選"}
+
+
+def public_rows(rows):
+    """公開版的列：自選是 Leo 的個人關注清單，**不可進公開儲存庫**（2026-10-10 查出 10/8 起公開頁與掃描結果
+    帶了「自選」標籤與只在自選的代號——見 dev_log）。只在自選的列整列拿掉；其餘列只拿掉「自選」這個來源標籤。"""
+    out = []
+    for r in rows:
+        if watch_only(r):
+            continue
+        r = dict(r)
+        r["src"] = [x for x in (r.get("src") or []) if x != "自選"]
+        out.append(r)
+    return out
+
+
+def _untrack_watch_caches(rows):
+    """只在自選的代號，其價格快取檔（state/price_store/*.pkl）檔名本身就會暴露它——從索引移除並加進本機 exclude，
+    之後 `git add state` 不會再帶進去。best-effort：沒有 git 或不在 repo 裡就略過。"""
+    import subprocess
+    names = []
+    for r in rows:
+        if watch_only(r) and r.get("symbol"):
+            names.append("state/price_store/" + str(r["symbol"]).replace(".", "_") + ".pkl")
+    try:
+        ex = os.path.join(".git", "info", "exclude")
+        if names and os.path.isdir(".git"):
+            cur = io.open(ex, encoding="utf-8").read() if os.path.exists(ex) else ""
+            lines = cur.split(chr(10))
+            keep = [l for l in lines if not l.startswith("state/price_store/") or l in names]
+            add = [n for n in names if n not in keep]
+            if add:
+                io.open(ex, "w", encoding="utf-8", newline=chr(10)).write(chr(10).join(keep + add).strip(chr(10)) + chr(10))
+            subprocess.run(["git", "rm", "--cached", "-q", "--ignore-unmatch"] + names,
+                           capture_output=True, timeout=60)
+    except Exception:                                  # noqa: BLE001
+        pass
 
 
 def universe():
@@ -629,6 +666,10 @@ def main():
     _save(RESULT_PATH, {"date": time.strftime("%Y-%m-%d"),
                         "combo_min": COMBO_MIN, "rs_short": RS_SHORT,
                         "rs_bias_min": RS_BIAS_MIN, "rows": rows})
+    _save(PUBLIC_RESULT_PATH, {"date": time.strftime("%Y-%m-%d"),
+                               "combo_min": COMBO_MIN, "rs_short": RS_SHORT,
+                               "rs_bias_min": RS_BIAS_MIN, "rows": public_rows(rows)})
+    _untrack_watch_caches(rows)
     ok = [r for r in rows if r["combo"]]
     print(f"{NL}COMBO 成立（≥{COMBO_MIN} 燈）：{len(ok)}/{len(rows)} 檔")
     print(f"{'代號':10}{'名稱':16}{'燈':>4}{'風報比':>8}{'距停損':>9}{'RS60':>8}  來源")
@@ -636,7 +677,7 @@ def main():
         rr = f"{r['rr']:.2f}" if r["rr"] is not None else "無目標價"
         print(f"{r['ticker']:10}{(r['name'] or '')[:14]:16}{r['lit']}/4{rr:>8}"
               f"{r['gap_pct']:>8.1f}%{r['rs_short']:>7.1f}%  {'/'.join(r['src'])}")
-    new, lost = diff_state(rows)
+    new, lost = diff_state(public_rows(rows))      # combo_state.json 會進公開儲存庫 → 不含只在自選的代號
     print(f"{NL}狀態變化：新成立 {len(new)} 檔　剛失效 {len(lost)} 檔")
     if _check_staleness(rows):
         # 🔴 board_analyze_daily.cmd 每一步都靠 errorlevel 判斷要不要進 FAILED

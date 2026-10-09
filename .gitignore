@@ -262,3 +262,6 @@ state/forward_eps_cache.json
 state/pcb_pkg_screen.json
 state/watchlist.json
 state/xq_sync.json
+
+# 2026-10-10 完整掃描結果含「自選」（個人關注清單）→ 只留本機；雲端與公開頁讀 state/combo_public.json（已去掉自選）
+state/combo_result.json

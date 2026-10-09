@@ -9,7 +9,7 @@ from board_theme import snapped as _bt_snapped
 import os
 import json
 import argparse
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from portfolio_html_legacy import usd, cls, holding_rows, OBIS
 from board_theme import BASE_CSS, header, icon, esc, NAV
@@ -296,7 +296,10 @@ def build(state):
     # 改成顯示 portfolios.json 自己的 updated（資料的時間），並在資料落後時明講。
     render_time = datetime.now().strftime("%Y-%m-%d %H:%M")
     today = datetime.now().strftime("%Y-%m-%d")
-    stale = updated != today
+    # 週末沒有調倉／淨值更新是正常的：週六日且資料停在最近一個平日（週五）以內不警告（2026-10-10 手動重產時誤報）
+    _n = datetime.now()
+    _last_wd = (_n - timedelta(days=max(0, _n.weekday() - 4))).strftime("%Y-%m-%d")
+    stale = updated != today and not (_n.weekday() >= 5 and str(updated)[:10] >= _last_wd)
     stale_note = ""
     if stale:
         stale_note = (f'<div class="stalewarn">⚠️ 資料停在 <b>{esc(updated)}</b>，'

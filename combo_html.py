@@ -171,7 +171,7 @@ def theme_nav_html():
     return '<div class="thnav" role="group" aria-label="AI 主題篩選">' + "".join(chips) + '</div>'
 
 
-def filter_html():
+def filter_html(hide_watch=False):
     quad = "".join(_sc("quad", q, QLAB[q], QCOL[q]) for q in QORDER)
     # 2026-09-03 Leo：篩選列做成兩排——第一排 市場+燈號、第二排 象限+來源。
     # 2026-09-23：主題導覽列另外用 theme_nav_html() 放在篩選列上方（老墨那排的視覺對標），
@@ -192,7 +192,7 @@ def filter_html():
             + _sc("quad", "all", "全部", pressed=True) + quad + _sc("quad", "none", "無分類")
             + '<span class="flab flab2">來源</span>'
             + _sc("src", "all", "全部", pressed=True) + _sc("src", "守備清單", "守備清單")
-            + _sc("src", "持股", "持股") + _sc("src", "自訂", "自訂") + _sc("src", "自選", "自選")
+            + _sc("src", "持股", "持股") + _sc("src", "自訂", "自訂") + ("" if hide_watch else _sc("src", "自選", "自選"))
             + '</div></div>')
 
 FILTER_JS = """<script>
@@ -634,7 +634,7 @@ def body_html(d, in_room=False, public=False):
                 #    · 都不是：obis 的獨立快照（不含任何連本機的東西）
                 + '</div>')
     body.append(theme_nav_html())
-    body.append(filter_html())
+    body.append(filter_html(hide_watch=public))
     body.append(f'<div class="cbsec">⭐ 打點成立<small>亮 ≥{d["combo_min"]} 燈且風報比 ≥ 1，'
                 f'共 {len(hit)} 檔</small></div>' + _table(hit))
     body.append(f'<div class="cbsec">COMBO 成立但風報比 &lt; 1<small>技術面共振了，'
@@ -723,7 +723,10 @@ def main():
     d = json.load(io.open(RESULT_PATH, encoding="utf-8"))
     if not a.no_charts:
         attach_charts(d["rows"], limit=a.chart_limit)
-    html = _page(d, public=True)
+    # 公開頁（docs/combo.html 會推上公開儲存庫）一律用公開版的列：不含只在自選的列、不帶「自選」標籤
+    import combo_scan as _cs
+    d_pub = dict(d, rows=_cs.public_rows(d["rows"]))
+    html = _page(d_pub, public=True)
     os.makedirs(os.path.dirname(a.output) or ".", exist_ok=True)
     io.open(a.output, "w", encoding="utf-8", newline=NL).write(html)
     print(f"✅ 已存：{a.output}（{len(html):,} bytes）")
