@@ -146,19 +146,30 @@ def _cpi():
 def _night():
     try:
         import night_session
+        try:                                                   # 2026-10-09：最新一晚用逐筆成交算（OpenAPI 的盤後列會少一晚）
+            n = night_session.latest_night()
+            cls = "pos" if n["pct"] > 0 else ("neg" if n["pct"] < 0 else "flat")
+            return _card("台指電子盤", f'{n["last"]:,.0f}',
+                         f'{n["change"]:+,.0f}（{n["pct"]:+.2f}%，較日盤收盤）<br>'
+                         f'{n["start"]:%m/%d} 15:00～{n["end"]:%m/%d} 05:00 夜盤 · 高 {n["high"]:,.0f} 低 {n["low"]:,.0f} · 期交所、非即時', cls)
+        except Exception as e:                                 # noqa: BLE001
+            print(f"[home_macro] 逐筆成交法失敗，退回 OpenAPI：{str(e)[:80]}")
         why = []
         s = night_session.fetch(why)
         if not s:
             return _fail("台指電子盤", why[0] if why else "原因不明")
         d = dt.datetime.strptime(s["date"], "%Y%m%d").date()
-        end = d + dt.timedelta(days=1)
+        end = d                                                # 夜盤歸屬日 d ＝ 前一交易日 15:00 → d 05:00
+        start = d - dt.timedelta(days=1)
+        while start.weekday() >= 5:
+            start -= dt.timedelta(days=1)
         pct = s.get("pct")
         cls = "flat" if pct is None else ("pos" if pct > 0 else ("neg" if pct < 0 else "flat"))
         late = (dt.date.today() - d).days
         stale = f' <span class="neg">⚠️ 落後 {late} 天</span>' if late > 4 else ""
         chg = "" if pct is None else f'{s["change"]:+,.0f}（{pct:+.2f}%）<br>'
         return _card("台指電子盤", f'{s["last"]:,.0f}',
-                     f'{chg}{d:%m/%d} 15:00～{end:%m/%d} 05:00 夜盤 · 期交所彙整、非即時{stale}', cls)
+                     f'{chg}{start:%m/%d} 15:00～{end:%m/%d} 05:00 夜盤 · 期交所彙整、非即時 · <span class="neg">⚠️ 較舊一晚</span>{stale}', cls)
     except Exception as e:                                   # noqa: BLE001
         return _fail("台指電子盤", str(e))
 
