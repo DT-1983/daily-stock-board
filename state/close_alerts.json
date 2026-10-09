@@ -1,94 +1,6 @@
 {
  "alerts": [
   {
-   "sent": "2026-10-02",
-   "market": "us",
-   "bar_date": "2026-10-01",
-   "code": "SSUMY",
-   "sig": "st",
-   "dir": -1
-  },
-  {
-   "sent": "2026-10-02",
-   "market": "us",
-   "bar_date": "2026-10-01",
-   "code": "AES",
-   "sig": "rs60",
-   "dir": 1
-  },
-  {
-   "sent": "2026-10-02",
-   "market": "us",
-   "bar_date": "2026-10-01",
-   "code": "API",
-   "sig": "rs60",
-   "dir": -1
-  },
-  {
-   "sent": "2026-10-02",
-   "market": "us",
-   "bar_date": "2026-10-01",
-   "code": "ARKQ",
-   "sig": "rs60",
-   "dir": -1
-  },
-  {
-   "sent": "2026-10-02",
-   "market": "us",
-   "bar_date": "2026-10-01",
-   "code": "ARKX",
-   "sig": "rs60",
-   "dir": -1
-  },
-  {
-   "sent": "2026-10-02",
-   "market": "us",
-   "bar_date": "2026-10-01",
-   "code": "COHR",
-   "sig": "rs60",
-   "dir": 1
-  },
-  {
-   "sent": "2026-10-02",
-   "market": "us",
-   "bar_date": "2026-10-01",
-   "code": "GLW",
-   "sig": "rs60",
-   "dir": 1
-  },
-  {
-   "sent": "2026-10-02",
-   "market": "us",
-   "bar_date": "2026-10-01",
-   "code": "KR",
-   "sig": "rs60",
-   "dir": 1
-  },
-  {
-   "sent": "2026-10-02",
-   "market": "us",
-   "bar_date": "2026-10-01",
-   "code": "TM",
-   "sig": "rs60",
-   "dir": -1
-  },
-  {
-   "sent": "2026-10-02",
-   "market": "us",
-   "bar_date": "2026-10-01",
-   "code": "TSLA",
-   "sig": "rs60",
-   "dir": -1
-  },
-  {
-   "sent": "2026-10-02",
-   "market": "us",
-   "bar_date": "2026-10-01",
-   "code": "UNM",
-   "sig": "rs60",
-   "dir": -1
-  },
-  {
    "sent": "2026-10-03",
    "market": "us",
    "bar_date": "2026-10-02",
@@ -567,6 +479,54 @@
    "code": "HUT",
    "sig": "st",
    "dir": -1
+  },
+  {
+   "sent": "2026-10-10",
+   "market": "us",
+   "bar_date": "2026-10-09",
+   "code": "TSM",
+   "sig": "st",
+   "dir": -1
+  },
+  {
+   "sent": "2026-10-10",
+   "market": "us",
+   "bar_date": "2026-10-09",
+   "code": "COHR",
+   "sig": "rs60",
+   "dir": 1
+  },
+  {
+   "sent": "2026-10-10",
+   "market": "us",
+   "bar_date": "2026-10-09",
+   "code": "CVSA",
+   "sig": "rs60",
+   "dir": -1
+  },
+  {
+   "sent": "2026-10-10",
+   "market": "us",
+   "bar_date": "2026-10-09",
+   "code": "ITOCY",
+   "sig": "rs60",
+   "dir": -1
+  },
+  {
+   "sent": "2026-10-10",
+   "market": "us",
+   "bar_date": "2026-10-09",
+   "code": "UNM",
+   "sig": "rs60",
+   "dir": -1
+  },
+  {
+   "sent": "2026-10-10",
+   "market": "us",
+   "bar_date": "2026-10-09",
+   "code": "AMZN",
+   "sig": "st",
+   "dir": 1
   }
  ]
 }
