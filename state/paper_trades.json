@@ -11833,5 +11833,47 @@
 "amount_usd": 900.29,
 "reason": "打點：4 燈亮、風報比 6.79",
 "src": "live"
+},
+{
+"date": "2026-10-09",
+"portfolio": "產業鏈+趨勢",
+"action": "leave",
+"ticker": "RIOT",
+"shares": 7.0113,
+"price": 16.84,
+"price_usd": 16.84,
+"amount_usd": 118.07,
+"reason": "週線 SuperTrend 翻空（掉出綠燈名單）",
+"src": "live",
+"entry_price": 18.54,
+"pnl_usd": -11.92,
+"pnl_pct": -9.17
+},
+{
+"date": "2026-10-09",
+"portfolio": "進出燈號",
+"action": "full_exit",
+"ticker": "TTMI",
+"shares": 7.3706,
+"price": 117.5,
+"price_usd": 117.5,
+"amount_usd": 866.05,
+"reason": "RS60 跌破自身 60MA（-7.37%）→ 全出",
+"src": "live",
+"entry_price": 133.14,
+"pnl_usd": -115.28,
+"pnl_pct": -11.75
+},
+{
+"date": "2026-10-09",
+"portfolio": "進出燈號",
+"action": "buy",
+"ticker": "ADI",
+"shares": 2.1335,
+"price": 405.93,
+"price_usd": 405.93,
+"amount_usd": 866.05,
+"reason": "打點：4 燈亮、風報比 3.87",
+"src": "live"
 }
 ]
