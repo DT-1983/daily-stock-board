@@ -392,6 +392,9 @@ CSS = """
  font-variant-numeric:tabular-nums}
 .c6{font-weight:600}
 .exrow[open] .exsm{border-bottom:1px solid var(--line2)}
+.exhd{cursor:default;border-bottom:1px solid var(--line2);padding-top:4px;padding-bottom:6px}
+.exhd:hover{background:none}
+.exhd .c1,.exhd .c2,.exhd .c3,.exhd .c4,.exhd .c5,.exhd .c6{font-size:11px;font-weight:600;color:var(--dim);letter-spacing:.04em}
 
 /* 燈：亮的有底色，暗的只留輪廓——一眼掃得出哪幾檔三盞全亮 */
 .lamp{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;
@@ -443,6 +446,7 @@ CSS = """
  .c1{grid-column:1/-1}
  .c2{grid-column:1/-1}
  .c3{text-align:left}
+ .exhd{display:none}   /* 手機版每列已自己標欄位，表頭會對不齊 */
 }
 """
 
@@ -985,7 +989,11 @@ def render(rows, meta):
             body.append("</div>")
             out.append(f'<details class="exrow{big}"{attrs}>{head}'
                        + "".join(body) + "</details>")
-        return '<div class="exrows">' + "".join(out) + "</div>"
+        # 表頭（2026-10-09 Leo：「持股檢視沒有表頭」）：欄位跟下面每列的 .c1～.c6 一一對齊
+        hd = ('<div class="exsm exhd"><span class="c1">代號／名稱</span>'
+              '<span class="c2">訊號（ST 翻空｜全出｜超過貴價）</span><span class="c3">誰的</span>'
+              '<span class="c4">現價</span><span class="c5">報酬</span><span class="c6">市值</span></div>')
+        return '<div class="exrows">' + hd + "".join(out) + "</div>"
 
 
     both = [r for r in rows if r["kind"] == "both"]

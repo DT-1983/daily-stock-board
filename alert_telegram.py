@@ -197,6 +197,35 @@ def main():
             lines.append(f"　{f['word']}　<b>{esc(f['code'])}</b>{esc(nm)}")
         lines.append("")
 
+    # 1b) 持股「狀態」提醒（2026-10-09 Leo：持股 Telegram 多提醒 ① ST 為負 ② ST 為負且 RS60<0）
+    #     上面 1) 只在「翻面當天」響一次；這裡是**每天**列出目前還處在這個狀態的持股，錯過翻面也不會忘。
+    #     資料用 holdings_exit.overview()——跟出場檢視表同一份計算，兩邊檔數不會對不上。
+    #     ⚠️ 這支跑在公開儲存庫的 Actions，**不可 print 代號**（log 是公開的）；訊息只進你的私人 Telegram。
+    try:
+        import holdings_exit as _hx
+        _ov = _hx.overview()
+    except Exception as e:                                   # noqa: BLE001
+        print("持股狀態提醒略過:", type(e).__name__)
+        _ov = None
+    if _ov:
+        _b = _ov["buckets"]
+        _both = list(_b.get("both", []))
+        _st = _both + list(_b.get("st_only", []))
+
+        def _lab(nk):
+            code = _ov["disp"].get(nk, nk)
+            nm = TW_NAME.get(nk, "")
+            return f"<b>{esc(code)}</b>" + (f" {esc(nm)}" if nm else "")
+        if _st:
+            has = True
+            lines.append(f"🔻 <b>持股 SuperTrend 為負</b>（{len(_st)} 檔）")
+            lines.append("　" + "、".join(_lab(nk) for nk in _st))
+            if _both:
+                lines.append(f"🚨 <b>其中 ST 為負且 RS60&lt;0</b>（{len(_both)} 檔，兩個出場階段都到了）")
+                lines.append("　" + "、".join(_lab(nk) for nk in _both))
+            lines.append(f'　<a href="{_hx.URL}">開出場檢視表</a>（成本／損益／距停損）')
+            lines.append("")
+
     # 2) 守備清單 — AI 訊號（買賣/反轉）
     # 2026-09-28 Leo：「最急的留 Telegram（當天 ST 轉向、RS 破 60、突破貴價）」→ Telegram 晨報只留急件，
     #   AI 訊號不急、Discord 公開版②段本來就有（讀下面寫進 st_flips_today.json 的 ai_alerts），

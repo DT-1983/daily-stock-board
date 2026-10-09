@@ -94,10 +94,16 @@ LOOKUP_CSS = """
 .lkbox .lkn{flex:1 1 100%;font-size:11px;color:var(--dim)}
 """
 
+# 2026-10-09 Leo：「出場檢視表我想做在投資頁，這樣我才可以記得進去看」。
+# 檢視表有成本與損益，**不能放公開站**，所以這裡只放一個連結，內容仍在 assets 中控台、要 Basic Auth 密碼。
+# href 是絕對網址（其他項目是相對路徑）——nav_abs() 遇到 http 開頭要原樣保留。
+EXIT_URL = "https://assets.talentxtrend.com/exit-review"
+
 NAV = [
     ("home", "home", "首頁", "./"),
     ("rotation", "rotation", "產業輪動", "rotation.html"),
     ("combo", "lamp", "進出燈號", "combo.html"),
+    ("exit", "portfolio", "出場檢視", EXIT_URL),
     ("chip", "chip", "籌碼異動", "chip.html"),
     ("gex", "gex", "選擇權", "gex.html"),
     ("portfolio", "portfolio", "策略賽馬", "portfolios.html"),
@@ -124,7 +130,7 @@ def nav_abs():
     直接用 NAV 的相對路徑 `combo.html` 會變成查自己那台的 /combo.html → 404）。
     """
     return [(k, ic, lab,
-             PAGES_URL + "/" + ("" if href == "./" else href))
+             href if href.startswith("http") else PAGES_URL + "/" + ("" if href == "./" else href))
             for k, ic, lab, href in NAV]
 
 
