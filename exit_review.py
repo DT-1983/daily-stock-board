@@ -460,6 +460,20 @@ LAYOUT2 = (".onenote{margin:8px 0 6px;font-size:12px;color:var(--muted);display:
            "details.rules>summary{cursor:pointer;padding:12px 0;font-weight:700;font-size:14px;color:var(--muted)}"
            "details.rules[open]>summary{border-bottom:1px solid var(--line);margin-bottom:10px}"
            ".sb .kv .c .s{font-size:12px}")
+# 2026-10-10 與首頁／進出燈號統一（Leo）：基準取自進出燈號頁實測——本文 14px、面板方角、區塊標題＝左側 2px 青線＋墨色字、
+# 篩選籤＝未選中暗底灰字／選中青色淡底（不是整顆實心）、統計大數字 19px/600。變數全用 BASE_CSS 的（--cy、--cy-dim、--hud-lit…）。
+SITE_UNIFY = """
+body{font-size:14px}
+.sb,.x3sec,.kv .c,.exrow,.hx,.hxblk,.fbar,.fq,.x3hn,.x3c,.x3n,.x3then,.x3ba,.x3oh,details.sb,.warnbox{border-radius:0}
+.sb h2,.x3sec h2{color:var(--ink);font-size:14px;font-weight:700;border-left:2px solid var(--cy);
+ padding-left:9px;letter-spacing:.02em}
+.fb{border-radius:0;font-weight:500;letter-spacing:.03em;background:var(--surface);color:var(--muted);
+ border:1px solid var(--line)}
+.fb.on{background:var(--cy-dim);color:var(--cy);border-color:var(--hud-lit)}
+summary.x3oh,details.x3own,.x3own{border-radius:0!important}
+.kv .c .v{font-size:19px;font-weight:600}
+"""
+
 FS_UNIFY = LAYOUT2 + "button{font-size:inherit}.sub{font-size:12px}.hx-chip,button.hx-chip{font-size:14px}"
 
 CSS30 = """
@@ -846,7 +860,7 @@ FILTER_JS = r'''
 
 
 def render(rows, meta):
-    from board_theme import BASE_CSS, esc, header
+    from board_theme import BASE_CSS, esc, header, nav_abs
     try:
         from holdings_exit import CSS as _hx_css
     except Exception:                      # noqa: BLE001
@@ -1148,21 +1162,21 @@ def render(rows, meta):
              f'🕗 本頁每個工作日 08:30 自動覆寫，上次產出 <b>{esc(gen)}</b>。'
              # 2026-09-30 Leo：「出場檢查不用只存在本機了，反正登入要密碼」→ 資產中控台
              # 的 /exit-review 開放經通道連（仍要帳密）。投資站照舊不放。
-             f'<b>不會出現在投資站</b>（站上家人看得到）——從資產中控台（要登入）或 Google Drive 開。'
+             f'<b>內容不會出現在投資站</b>（站上家人看得到，導覽列只有一個連結）——要登入資產中控台才打得開，或從 Google Drive 開。'
              f'</div></div>')
 
     return ('<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            "<title>出場檢視表</title><style>" + BASE_CSS + CSS + CSS30 + _hx_css + FS_UNIFY
+            "<title>出場檢視表</title><style>" + BASE_CSS + CSS + CSS30 + _hx_css + FS_UNIFY + SITE_UNIFY
             + '</style></head><body><div class="wrap">'
-            # 🔴 2026-09-06 Leo：「上面還是有欸？」——指那排導覽按鈕。
-            # 這頁**不上投資站**，nav_abs() 那些連結指向的是公開站的頁面，
-            # 在這裡點了只會跳出去，而且佔掉手機上整整三行。傳空清單＝不畫導覽。
-            # ⚠️ 仍然用 header()（站上元件），只是不給它 nav——版式一致但沒有連結。
+            # 2026-10-10 Leo：「出場沒有首頁工具列，跟首頁、進出燈號排版字體配色不一致，幫我改一致」。
+            # 9/6 當時拿掉導覽是因為連結指向公開站、佔手機三行；現在導覽列已改成「一排、窄時列內橫向捲動」，
+            # 且投資站導覽本來就有「出場檢視」入口，所以這頁也放同一排（用 nav_abs() 絕對網址：這頁跑在
+            # assets.talentxtrend.com 或 Google Drive，相對路徑會 404）。
             + header("lamp", "出場檢視表",
                      f"符合老墨出場條件的持股　{len(both)+len(rs_only)} 檔／"
                      f"佔部位 {(mv_b+mv_r)/tot*100:.1f}%　訊號日 {esc(meta['asof'])}",
-                     [])
+                     nav_abs(), "exit", eyebrow="EXIT REVIEW")
             + "".join(B) + "</div>" + FILTER_JS + "</body></html>")
 
 
