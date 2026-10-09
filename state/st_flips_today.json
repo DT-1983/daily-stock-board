@@ -2,6 +2,20 @@
 "date": "2026-10-09",
 "flips_hold": [
 {
+"code": "CNH",
+"name": "",
+"word": "🟢→🔴 翻空",
+"dir": -1,
+"sig": "st"
+},
+{
+"code": "CVSA",
+"name": "",
+"word": "🔴→🟢 翻多",
+"dir": 1,
+"sig": "st"
+},
+{
 "code": "CEG",
 "name": "",
 "word": "RS60站回多方",
@@ -72,31 +86,23 @@
 "sig": "rs60"
 }
 ],
-"flips_watch": [],
+"flips_watch": [
+{
+"code": "HUT",
+"name": "",
+"word": "🟢→🔴 翻空",
+"dir": -1,
+"sig": "st"
+}
+],
 "ai_alerts": [
 {
-"chain": "AI 電力/核能",
-"market": "US",
+"chain": "AI 伺服器",
+"market": "TW",
 "sig": "🟢",
-"code": "PWR",
-"name": "Quanta Services Inc",
+"code": "3037",
+"name": "欣興",
 "reason": "觀望→買進"
-},
-{
-"chain": "Bitcoin→AI 機房",
-"market": "US",
-"sig": "🔴",
-"code": "HUT",
-"name": "Hut 8 Corp",
-"reason": "觀望→賣出"
-},
-{
-"chain": "Bitcoin→AI 機房",
-"market": "US",
-"sig": "🔴",
-"code": "WYFI",
-"name": "Whitefiber Inc",
-"reason": "觀望→賣出"
 },
 {
 "chain": "矽光子/光通訊",
@@ -104,30 +110,6 @@
 "sig": "🟢",
 "code": "3105",
 "name": "穩懋",
-"reason": "觀望→買進"
-},
-{
-"chain": "機器人",
-"market": "TW",
-"sig": "🟢",
-"code": "3023",
-"name": "信邦",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 電力/核能",
-"market": "TW",
-"sig": "🟢",
-"code": "1513",
-"name": "中興電",
-"reason": "觀望→買進"
-},
-{
-"chain": "AI 材料/被動元件",
-"market": "TW",
-"sig": "🟢",
-"code": "1815",
-"name": "FULLTECH FIBER GLASS CORP",
 "reason": "觀望→買進"
 }
 ]

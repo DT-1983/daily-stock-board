@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-09 08:47",
+ "updated": "2026-10-09 14:21",
  "indices": [
   {
    "sym": "^GSPC",
@@ -37,17 +37,17 @@
    "sym": "^TWII",
    "name": "台股加權",
    "grp": "TW",
-   "date": "10/07",
-   "close": 49806.37,
-   "chg_pct": -0.03
+   "date": "10/08",
+   "close": 49313.44,
+   "chg_pct": -0.99
   },
   {
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
    "date": "10/09",
-   "close": 31.93,
-   "chg_pct": 0.26
+   "close": 31.91,
+   "chg_pct": 0.2
   },
   {
    "sym": "^TNX",
@@ -61,64 +61,64 @@
  ],
  "news": [
   {
-   "title": "旺季效應失靈！全球PC市場Q3急凍 出貨量衰退超20% 蘋果市佔逆風升至9.5%",
+   "title": "輝達加持AI資料中心業者IPO突喊卡！Firmus放棄澳洲上市 擬明年轉戰那斯達克",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6626576",
-   "ts": "10/09 08:40"
+   "url": "https://news.cnyes.com/news/id/6626559",
+   "ts": "10/09 14:10"
   },
   {
-   "title": "美股科技股重挫！克雷默：AI股遭拋售再次證明分散投資的重要性",
+   "title": "美俄傳洽談北溪管線引入美資！德國反對重啟、憂俄羅斯藉能源獲利",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6626573",
-   "ts": "10/09 08:30"
+   "url": "https://news.cnyes.com/news/id/6626608",
+   "ts": "10/09 13:40"
   },
   {
-   "title": "標普500、那指再創新高！11檔美股ETF近一季全數正報酬 00926奪冠",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6626093",
-   "ts": "10/09 08:20"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：慧洋-KY(2637-TW)EPS預估上修至10.8元，預估目標價為104.5元",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6626607",
-   "ts": "10/09 08:10"
-  },
-  {
-   "title": "鉅亨速報 - Factset 最新調查：世界(5347-TW)目標價調降至187元，幅度約3.61%",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6626606",
-   "ts": "10/09 08:10"
-  },
-  {
-   "title": "美股重點新聞摘要2026年10月09日",
+   "title": "華爾街多頭看好Anthropic、OpenAI IPO需求 負面消息難擋投資人熱情",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6624870",
-   "ts": "10/09 08:00"
+   "url": "https://news.cnyes.com/news/id/6626545",
+   "ts": "10/09 13:30"
   },
   {
-   "title": "史上最大重組月底上路！683家日企逐步從東證指數剔除  逾1兆美元被動資金面臨調整",
+   "title": "AI生產力效益還沒現身「沒關係」？《巴隆》龐大資本支出撐起美國經濟、股市先受惠",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6624699",
-   "ts": "10/09 08:00"
+   "url": "https://news.cnyes.com/news/id/6626586",
+   "ts": "10/09 13:20"
   },
   {
-   "title": "營收速報 - 2026年10月9日台股中小型公司9月營收一覽（新增1474家）",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6626590",
-   "ts": "10/09 07:55"
-  },
-  {
-   "title": "營收速報 - 2026年10月9日台股大型公司9月營收一覽（新增150家）",
-   "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6626589",
-   "ts": "10/09 07:55"
-  },
-  {
-   "title": "馬斯克難攻印度市場 Starlink受阻將如何影響SpaceX？",
+   "title": "AI泡沫誰來戳破？ 達里歐示警：富豪變現壓力或成引爆點",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6626544",
-   "ts": "10/09 07:40"
+   "url": "https://news.cnyes.com/news/id/6626518",
+   "ts": "10/09 13:10"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：長榮航(2618-TW)EPS預估下修至4.15元，預估目標價為47.75元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6626715",
+   "ts": "10/09 12:10"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：穩懋(3105-TW)EPS預估上修至7.8元，預估目標價為440元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6626714",
+   "ts": "10/09 12:10"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：萬潤(6187-TW)EPS預估上修至28.94元，預估目標價為1500元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6626713",
+   "ts": "10/09 12:10"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：國泰金(2882-TW)EPS預估上修至9.02元，預估目標價為126.5元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6626712",
+   "ts": "10/09 12:10"
+  },
+  {
+   "title": "鉅亨速報 - Factset 最新調查：富邦金(2881-TW)EPS預估上修至11.58元，預估目標價為140元",
+   "mkt": "TW",
+   "url": "https://news.cnyes.com/news/id/6626711",
+   "ts": "10/09 12:10"
   }
  ],
  "inst": {
