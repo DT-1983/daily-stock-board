@@ -120,7 +120,7 @@ def summary_line(today=None):
     arrow = "🔺" if s["pct"] > 0 else ("🔻" if s["pct"] < 0 else "▪️")
     flag = "　⚠️ 幅度大" if abs(s["pct"]) >= ALERT_PCT else ""
     return (f"🌙 **台指電子盤**　收 {s['last']:,.0f}　{arrow}{s['change']:+,.0f}（{s['pct']:+.2f}%）{flag}{stale}"
-            f"　-# {d:%m/%d} 15:00～{end:%m/%d} 05:00 夜盤・期交所收盤後彙整、非即時・不是買賣訊號")
+            f"\n-# {d:%m/%d} 15:00～{end:%m/%d} 05:00 夜盤・期交所收盤後彙整、非即時・不是買賣訊號")
 
 
 if __name__ == "__main__":

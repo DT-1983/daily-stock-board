@@ -424,9 +424,10 @@ def _one_line(res):
     caveat = ""
     if rb and not rb.get("sign_agree", True):
         caveat = f"　⚠️ 不同算法對偏避震器／偏油門看法不一（淨 GEX {rb['net_lo']:+.0f}～{rb['net_hi']:+.0f} 億），只有牆比較可靠"
+    size_note = (f"（換算法 {rb['net_lo']:+.0f}～{rb['net_hi']:+.0f} 億，大小僅供參考）" if rb else "")
     return (f"整體偏{state}{where}{caveat}；上方買權牆 {res['call_wall']:,.0f}（{res['call_wall_gex']:+.1f} 億）、"
             f"下方賣權牆 {res['put_wall']:,.0f}（{res['put_wall_gex']:+.1f} 億）；淨 GEX {res['net_gex']:+.1f} 億"
-            f"（指數每動 1% 造市商約對沖 {abs(res['contracts']):.0f} 口大台）")
+            f"{size_note}（指數每動 1% 造市商約對沖 {abs(res['contracts']):.0f} 口大台）")
 
 
 def summary_line(today=None):
@@ -444,8 +445,9 @@ def summary_line(today=None):
         exp -= dt.timedelta(days=1)
     if d < exp:
         stale = f"　⚠️ 資料只到 {d:%m/%d}，較新的還沒算出來"
+    # Discord 的「-#」小字必須在「行首」才會生效；放在句中會原樣顯示（2026-10-09 Leo 手機看到「-#」）→ 另起一行
     return (f"🧲 **台指選擇權 GEX**（{d:%m/%d} 日盤收盤 {res['spot']:,.0f}）{_one_line(res)}{stale}"
-            f"　-# 期交所收盤後彙整、非即時・只描述對沖方向，不是買賣訊號")
+            "\n-# 期交所收盤後彙整、非即時・只描述對沖方向，不是買賣訊號")
 
 
 if __name__ == "__main__":
