@@ -316,6 +316,40 @@ def _checklist(d):
             f'<script>{CALC_JS.replace("%SPOT%", str(int(s)))}</script>')
 
 
+def _scenarios(d):
+    """三種情境（只描述「發生時資料會長什麼樣、該去看哪個數字」，不含買賣建議）。數字全由當天資料帶入。"""
+    s, fl = d["spot"], d.get("flip")
+    cw, pw = d["call_wall"], d["put_wall"]
+    bs = d.get("by_strike") or []
+    above = sorted([(v, k) for k, v in bs if k > cw and v > 0], reverse=True)[:2]
+    below = sorted([(v, k) for k, v in bs if k < pw and v > 0], reverse=True)[:1]
+    nxt_up = "、".join(f"{k:,.0f}（{v:+.1f} 億）" for v, k in above) or "沒有明顯的下一道牆"
+    nxt_dn = f"{below[0][1]:,.0f}（{below[0][0]:+.1f} 億）" if below else "附近沒有明顯的避震器"
+    rb = d.get("robust") or {}
+    pws = sorted({v["put_wall"] for v in rb.get("variants", [])} | {pw})
+    pw_txt = "、".join(f"{x:,.0f}" for x in pws)
+    flip_txt = f"{fl:,}" if fl else "—"
+    cards = [
+        ("A", "守住區間，來回震盪", POS,
+         f"<b>條件</b>：價格留在翻轉點 {flip_txt} 上方，在賣權牆 {pw:,.0f} 與買權牆 {cw:,.0f} 之間。<br>"
+         f"<b>資料會長這樣</b>：避震器還在作用，漲了造市商賣、跌了造市商買，把價格往回拉。<br>"
+         f"<b>要看</b>：價格靠近 {cw:,.0f} 時有沒有被壓回；每天的買權牆有沒有被「拆掉」（那一格的未平倉口數明顯減少）。"),
+        ("B", "跌破翻轉點，油門踩下去", NEG,
+         f"<b>條件</b>：價格跌破 {flip_txt}（各算法範圍 {rb.get('flip_lo', '—'):,}～{rb.get('flip_hi', '—'):,}），"
+         f"往賣權牆 {pw:,.0f} 靠近。<br>"
+         f"<b>資料會長這樣</b>：進入負 GEX 區，造市商跌了還得賣，波動放大。賣權牆各算法落在 {pw_txt}，不穩，別把它當一定撐得住的位置。<br>"
+         f"<b>要看</b>：成交量有沒有放大、夜盤和美股前一晚方向；下一個比較強的避震器大約在 {nxt_dn}。"),
+        ("C", f"突破 {cw:,.0f} 並站穩", FLIP,
+         f"<b>條件</b>：價格漲過 {cw:,.0f}，而且收盤站在上面。<br>"
+         f"<b>資料會長這樣</b>：買權牆被消耗或往上移，上方壓力變小；是否真的站穩，要等隔天的未平倉資料才看得出來。<br>"
+         f"<b>要看</b>：{cw:,.0f} 那一格的買權未平倉是否明顯減少；再往上的牆在 {nxt_up}。"),
+    ]
+    body = "".join(f'<div><h3><em style="color:{c}">{k}</em>{t}</h3>{b}</div>' for k, t, c, b in cards)
+    return ('<div class="gxsec"><h2>三種情境：價格接下來可能怎麼走</h2>'
+            '<div class="hnote">只描述「發生時資料會變成什麼樣、要去看哪個數字」，不是預測，也不是買賣建議</div>'
+            f'<div class="gxck">{body}</div></div>')
+
+
 def _history():
     files = sorted(glob.glob(os.path.join(DATA, "gex_2*.json")))[-15:]
     rows = []
@@ -428,7 +462,7 @@ def build(d):
 <style>{BASE_CSS}{CSS_EXTRA}</style></head><body><div class="wrap">
 {header("gex", "台指選擇權 GEX", f"造市商的避震器與油門在哪裡 · 資料日 {esc(d['date'])}（日盤收盤後）· 每個交易日收盤後更新", NAV, "gex")}
 <div class="gxhero">{hero}</div><div class="gxgrid">{cards}</div>
-{_checklist(d)}{how}{kchart}{profile}{adv}{_history()}{note}
+{_checklist(d)}{_scenarios(d)}{how}{kchart}{profile}{adv}{_history()}{note}
 <p class="sub" style="margin-top:20px">產生於 {datetime.now():%Y-%m-%d %H:%M} · 資料源 期交所每日行情（選擇權／台指期）</p>
 </div>{scripts}</body></html>"""
 
