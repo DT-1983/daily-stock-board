@@ -218,8 +218,8 @@ def main():
             return f"<b>{esc(code)}</b>" + (f" {esc(nm)}" if nm else "")
         if _st:
             has = True
-            lines.append(f"🔻 <b>持股 SuperTrend 為負</b>（{len(_st)} 檔）")
-            lines.append("　" + "、".join(_lab(nk) for nk in _st))
+            # 2026-10-09 Leo：「SuperTrend 為負 36 檔不用顯示各股，我自己看出場就行」→ 只給檔數，名單去出場檢視表看
+            lines.append(f"🔻 <b>持股 SuperTrend 為負：{len(_st)} 檔</b>（名單見出場檢視表）")
             if _both:
                 lines.append(f"🚨 <b>其中 ST 為負且 RS60&lt;0</b>（{len(_both)} 檔，兩個出場階段都到了）")
                 lines.append("　" + "、".join(_lab(nk) for nk in _both))
