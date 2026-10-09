@@ -414,7 +414,8 @@ def build(d):
     note = ('<div class="note" style="margin-top:14px"><b>資料來源與限制</b>：台指期與台指選擇權行情取自臺灣期貨交易所（每日行情、每日逐筆成交），'
             f'資料日期 {d["date"][:4]}/{d["date"][4:6]}/{d["date"][6:]}（日盤收盤後，<b>不是即時</b>）。'
             'GEX、隱含波動率為本站依公開模型自行估算，不是期交所或造市商公布的數字；'
-            '假設「客戶買、造市商賣」（買權 +、賣權 −），實際造市商部位看不到，所以只是估計，換算法數字會有差異。'
+            '採用業界常見的簡化做法：買權的 GEX 算正、賣權的 GEX 算負（等於假設造市商手上是買權多、賣權空）。'
+            '實際造市商部位看不到，這個假設不一定符合實際，所以只是估計，換算法數字會有差異。'
             '<b>只描述對沖方向，不是買賣訊號。</b></div>')
     data_json = json.dumps(_payload(d), ensure_ascii=False, allow_nan=False, separators=(",", ":"))
     scripts = (f'<script>window.GEXDATA={data_json};</script>'
