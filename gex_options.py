@@ -165,7 +165,8 @@ def fetch_web(day):
             expiry[c[1]] = c[2]
             txo.append({"Date": day.strftime("%Y%m%d"), "Contract": "TXO", "ContractMonth(Week)": c[1],
                         "StrikePrice": c[3], "CallPut": c[4], "SettlementPrice": c[9],
-                        "OpenInterest": c[15], "TradingSession": "一般"})
+                        "OpenInterest": c[15], "TradingSession": "一般",
+                        "Last": c[8], "BestBid": c[16], "BestAsk": c[17]})
     if not txo:
         return None
     if not any(_num(o["OpenInterest"]) for o in txo):         # 有列但沒有未平倉量＝還沒發布
@@ -394,10 +395,76 @@ def _robustness(txo, expiry, spot, date, main):
             "walls_agree": len({(v["call_wall"], v["put_wall"]) for v in out} | {(main["call_wall"], main["put_wall"])}) == 1}
 
 
+def _px(x):
+    """報價字串 → 數字；'-'、空白、箭頭文字 → None。"""
+    v = _num(str(x).strip())
+    return v if v is not None and v > 0 else None
+
+
+def _quotes_from_rows(rows, spot):
+    """rows＝網頁表格列（契約, 月份, 到期日, 履約價, 買賣權, 開, 高, 低, 收, 結算, 漲跌, %, 量, OI, 買, 賣, 歷高, 歷低）
+    → {months:[{code,sday,label,q:{履約價:[買權買價,買權賣價,買權最後價,賣權買價,賣權賣價,賣權最後價]}}]}
+    只留 100 點整數履約價、現價 ±8%。夜盤表格欄位數不同時，最後四欄固定是 買價、賣價、歷高、歷低。"""
+    by = {}
+    for c in rows:
+        if len(c) < 14 or c[0] != "TXO" or not c[2].isdigit():
+            continue
+        K = _num(c[3])
+        if K is None or K % 100 or not (spot * 0.92 <= K <= spot * 1.08):
+            continue
+        cp = 0 if c[4].upper().startswith("C") else 3
+        m = by.setdefault(c[1], {"code": c[1], "sday": c[2], "q": {}})
+        slot = m["q"].setdefault(int(K), [None] * 6)
+        slot[cp], slot[cp + 1], slot[cp + 2] = _px(c[-4]), _px(c[-3]), _px(c[8])
+    months = sorted(by.values(), key=lambda m: m["sday"])
+    months = [m for m in months if any(v for s in m["q"].values() for v in s)]
+    labels = _expiry_labels([(m["code"], m["sday"]) for m in months])
+    for m, lab in zip(months, labels):
+        m["label"] = lab
+    return months
+
+
+def build_quotes(day_rows_date, day_spot):
+    """計算器用的選擇權報價：取「最新一場」——最近那晚夜盤（若比最近的日盤新），否則最近的日盤收盤。
+    夜盤歸屬在『之後』的交易日（10/8 15:00～10/9 05:00 那晚歸屬 10/12），所以用夜盤歸屬日去查 marketCode=1。
+    回 {"kind":"night|day","asof":說明,"spot":現價,"months":[...]}；失敗丟例外（頁面會顯示取不到、請手動輸入）。"""
+    import night_session
+    out = None
+    try:
+        n = night_session.latest_night()
+        if n["date"] > day_rows_date:                       # 夜盤比最近的日盤新
+            d = dt.datetime.strptime(n["date"], "%Y%m%d").date()
+            base = {"queryType": "2", "marketCode": "1", "MarketCode": "1", "queryDate": d.strftime("%Y/%m/%d"),
+                    "commodity_id": "TXO", "commodity_idt": "TXO", "settlemon": "", "pc": "", "cp": "", "strike": ""}
+            rows = _web_rows(_web_post("optDailyMarketReport", base))
+            months = _quotes_from_rows(rows, n["last"])
+            if months:
+                out = {"kind": "night", "spot": n["last"], "months": months,
+                       "asof": f"{n['start']:%m/%d} 15:00～{n['end']:%m/%d} 05:00 夜盤（收 {n['last']:,.0f}）"}
+    except Exception as e:  # noqa: BLE001
+        print(f"[gex] 夜盤選擇權報價取不到，改用日盤：{str(e)[:80]}")
+    if out:
+        return out
+    d = dt.datetime.strptime(day_rows_date, "%Y%m%d").date()
+    base = {"queryType": "2", "marketCode": "0", "MarketCode": "0", "queryDate": d.strftime("%Y/%m/%d"),
+            "commodity_id": "TXO", "commodity_idt": "TXO", "settlemon": "", "pc": "", "cp": "", "strike": ""}
+    rows = _web_rows(_web_post("optDailyMarketReport", base))
+    months = _quotes_from_rows(rows, day_spot)
+    if not months:
+        raise RuntimeError("選擇權報價表是空的")
+    return {"kind": "day", "spot": day_spot, "months": months,
+            "asof": f"{d:%m/%d} 日盤收盤（現價 {day_spot:,.0f}）"}
+
+
 def run(save=True, params=None):
     txo, expiry, spot, date = load_inputs()
     res = compute(txo, expiry, spot, date, params)
     res["robust"] = _robustness(txo, expiry, spot, date, res)
+    try:
+        res["quotes"] = build_quotes(date, spot)
+    except Exception as e:  # noqa: BLE001
+        print(f"[gex] 計算器報價取不到：{str(e)[:100]}")
+        res["quotes"] = None
     if save:
         os.makedirs(OUT_DIR, exist_ok=True)
         with open(os.path.join(OUT_DIR, f"gex_{date}.json"), "w", encoding="utf-8") as f:

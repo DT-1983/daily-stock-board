@@ -82,6 +82,17 @@ details.gxdet[open] summary::before{content:"▾ "}
  padding:6px 8px;font-size:13px;font-family:'IBM Plex Mono',ui-monospace,monospace;min-height:34px;width:100%}
 .gxcalc input:focus,.gxcalc select:focus{outline:1px solid var(--accent)}
 #gxcres{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:9px 11px;min-height:96px;font-size:12.5px;line-height:1.8}
+table.pc_t td{padding:4px 5px;vertical-align:top}
+table.pc_t select,table.pc_t input{background:var(--bg);border:1px solid var(--line);border-radius:2px;color:var(--ink);
+ padding:6px 6px;font-size:13px;font-family:'IBM Plex Mono',ui-monospace,monospace;min-height:34px;width:100%}
+table.pc_t td:nth-child(4) input{width:62px}
+table.pc_t td:nth-child(5) input{width:92px}
+table.pc_t .qh{font-size:10.5px;margin-top:2px;white-space:nowrap}
+table.pc_t .x{background:none;border:1px solid var(--line);color:var(--dim);border-radius:2px;min-height:34px;min-width:34px;cursor:pointer}
+.pc_addbtn{margin-top:6px;background:var(--card);border:1px solid var(--hud-lit,#1F4E6E);color:var(--accent);border-radius:2px;padding:7px 12px;min-height:36px;cursor:pointer;font-size:12.5px}
+#pc_res{font-size:13.5px;line-height:1.9;min-height:60px}
+#pc_tbl td.up{color:var(--up)}#pc_tbl td.dn{color:var(--down)}
+@media(max-width:700px){table.pc_t{display:block;overflow-x:auto}}
 svg.gxsvg text{font-family:'IBM Plex Mono',ui-monospace,monospace}
 """
 
@@ -196,7 +207,7 @@ def _payload(d):
     keep = sorted({r[0] // 86400 for r in bars["m"]})[-7:]           # 內嵌最近 7 個日曆日的 1 分 K
     mins = [[int(r[0])] + [int(x) if float(x).is_integer() else x for x in r[1:]] for r in bars["m"] if r[0] // 86400 in keep]
     return {"m": mins, "d": bars["d"], "strikes": strikes, "spot": d["spot"], "call_wall": d["call_wall"],
-            "put_wall": d["put_wall"], "flip": d.get("flip"), "matrix": m,
+            "put_wall": d["put_wall"], "flip": d.get("flip"), "matrix": m, "quotes": d.get("quotes"),
             "colors": {"pos": POS, "neg": NEG, "flip": FLIP}}
 
 
@@ -350,6 +361,33 @@ def _scenarios(d):
             f'<div class="gxck">{body}</div></div>')
 
 
+def _calc_section(d):
+    """選擇權損益試算器（邏輯在 gex_calc.js）。報價＝最近一場（夜盤或日盤）；頁面是靜態的，不是盤中即時。"""
+    q = d.get("quotes") or {}
+    asof = q.get("asof") or "沒有取到報價"
+    return (
+        '<div class="gxsec" id="pc_root"><h2>選擇權損益試算器：到期時會賺還是賠</h2>'
+        f'<div class="hnote">報價取自 <b>{esc(asof)}</b>（頁面每個交易日收盤後更新，<b>不是盤中即時</b>）。'
+        '買進用「賣價」、賣出用「買價」，夜盤買賣價差常常很大；你看到更新的報價，直接改「價格」欄就好。損益是<b>到期當天</b>的結果，未扣手續費與期交稅。</div>'
+        '<div class="pc_body"><div class="gxbar seg" id="pc_btn" role="group">'
+        '<button data-k="micro" aria-pressed="false">只做多微台</button>'
+        '<button data-k="ins" aria-pressed="true">微台＋買進賣權（保險）</button>'
+        '<button data-k="collar" aria-pressed="false">領口（再賣出買權）</button>'
+        '<button data-k="strangle" aria-pressed="false">買進勒式（賣權＋買權）</button></div>'
+        '<div class="gxbox"><div class="gxcalc">'
+        '<label>到期日（選擇權）<select id="pc_exp"></select></label>'
+        '<label>微台口數（0＝不做微台）<input id="pc_ml" type="number" min="0" value="5" inputmode="numeric"></label>'
+        '<label>微台方向<select id="pc_md"><option value="L">做多</option><option value="S">做空</option></select></label>'
+        '<label>微台進場價<input id="pc_me" type="number" inputmode="numeric"></label></div>'
+        '<table class="gxh pc_t"><tr><th>買／賣</th><th>種類</th><th>履約價</th><th>口數</th><th>價格（點）</th><th></th></tr>'
+        '<tbody id="pc_legs"></tbody></table>'
+        '<button type="button" id="pc_add" class="pc_addbtn">＋ 加一腿</button></div>'
+        '<div class="gxbox"><div id="pc_res"></div></div>'
+        '<div class="gxbox"><div id="pc_svg"></div><table class="gxh" id="pc_tbl" style="margin-top:8px"></table></div>'
+        '<div class="note">單位：台指選擇權每點 50 元、微台每點 10 元，所以 <b>5 口微台才對應 1 口選擇權</b>。'
+        '這是教學用的試算，不是建議；選擇權比微台複雜，沒搞懂之前不要實際下單。</div></div></div>')
+
+
 def _history():
     files = sorted(glob.glob(os.path.join(DATA, "gex_2*.json")))[-15:]
     rows = []
@@ -455,14 +493,15 @@ def build(d):
     scripts = (f'<script>window.GEXDATA={data_json};</script>'
                f'<script>{_read("vendor/lightweight-charts.standalone.production.js")}</script>'
                f'<script id="gx-chart-js">{_read("gex_chart.js")}</script>'
-               f'<script id="gx-3d-js">{_read("gex_3d.js")}</script>')
+               f'<script id="gx-3d-js">{_read("gex_3d.js")}</script>'
+               f'<script id="gx-calc-js">{_read("gex_calc.js")}</script>')
     return f"""<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex"><title>台指選擇權 GEX</title>
 <style>{BASE_CSS}{CSS_EXTRA}</style></head><body><div class="wrap">
 {header("gex", "台指選擇權 GEX", f"造市商的避震器與油門在哪裡 · 資料日 {esc(d['date'])}（日盤收盤後）· 每個交易日收盤後更新", NAV, "gex")}
 <div class="gxhero">{hero}</div><div class="gxgrid">{cards}</div>
-{_checklist(d)}{_scenarios(d)}{how}{kchart}{profile}{adv}{_history()}{note}
+{_checklist(d)}{_scenarios(d)}{_calc_section(d)}{how}{kchart}{profile}{adv}{_history()}{note}
 <p class="sub" style="margin-top:20px">產生於 {datetime.now():%Y-%m-%d %H:%M} · 資料源 期交所每日行情（選擇權／台指期）</p>
 </div>{scripts}</body></html>"""
 
