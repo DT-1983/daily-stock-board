@@ -298,6 +298,11 @@ def _checklist(d):
         gap = round(s - fl)
         pos_txt = (f'收盤在翻轉點<b>上方 {gap} 點</b>，偏避震器那一側。' if gap >= 0 else
                    f'收盤在翻轉點<b>下方 {-gap} 點</b>，偏油門那一側。')
+        q = d.get("quotes") or {}
+        if q.get("kind") == "night" and q.get("spot"):                 # 夜盤比日盤新：把夜盤的位置也講出來
+            ng = round(q["spot"] - fl)
+            pos_txt += (f'<br><b>夜盤最新價 {q["spot"]:,.0f}</b>，在翻轉點<b>{"上" if ng >= 0 else "下"}方 {abs(ng)} 點</b>'
+                        f'{"" if ng >= 0 else "，已經在油門那一側"}（上面的 GEX 是用日盤收盤的未平倉量算的）。')
     exp = _expiry_items(d)
     exp_html = "<br>".join(exp) if exp else "未來 7 天內沒有台指選擇權到期"
     items = [
