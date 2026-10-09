@@ -471,6 +471,31 @@ body{font-size:14px}
  border:1px solid var(--line)}
 .fb.on{background:var(--cy-dim);color:var(--cy);border-color:var(--hud-lit)}
 summary.x3oh,details.x3own,.x3own{border-radius:0!important}
+/* 頂部統計面板：同進出燈號的 .cbstat（單一框、格子之間細線、IBM Plex Mono 大數字、9.5px 標籤） */
+.xs{border:1px solid var(--hud);background:var(--panel);margin:12px 0 8px}
+.xs-row{display:flex;flex-wrap:wrap}
+.xs-c{flex:1 1 130px;min-width:0;padding:12px 14px;margin:0;border:0;border-right:1px solid var(--grid);
+ border-top:2px solid transparent;background:transparent;text-align:left;font:inherit;color:inherit;border-radius:0}
+.xs-c:last-child{border-right:0}
+.xs-c b{display:block;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:19px;font-weight:600;line-height:1.15}
+.xs-c span{display:block;font-size:9.5px;letter-spacing:.1em;color:var(--dim);margin-top:3px}
+.xs-c small{display:block;font-size:11px;color:var(--muted);margin-top:4px}
+button.xs-c{cursor:pointer}
+button.xs-c:hover{background:var(--cy-dim)}
+button.xs-c.on{background:var(--cy-dim)}
+.xs-both{border-top-color:#EF4444}.xs-both b{color:#fca5a5}
+.xs-rs{border-top-color:#F5B841}.xs-rs b{color:#fcd34d}
+.xs-st{border-top-color:#F97316}.xs-st b{color:#fdba74}
+.xs-ok b{color:#86efac}.xs-unk b{color:var(--muted)}
+.xs-sum{display:flex;flex-wrap:wrap;gap:4px 22px;padding:9px 14px;border-top:1px solid var(--grid);
+ font-size:12px;color:var(--muted)}
+.xs-sum b{font-family:'IBM Plex Mono',ui-monospace,monospace;font-weight:600;color:var(--ink)}
+.xs-sum b.pos{color:#4ade80}.xs-sum b.neg{color:#f87171}
+/* 今日新變化：同面板色，標題＝左側青線 */
+.hx details{background:var(--panel);border:1px solid var(--hud)}
+.hx summary b{font-size:14px;border-left:2px solid var(--cy);padding-left:9px;letter-spacing:.02em}
+.hx .hx-s{font-size:12px}
+
 .kv .c .v{font-size:19px;font-weight:600}
 """
 
@@ -1035,7 +1060,38 @@ def render(rows, meta):
     except Exception as _e:                # noqa: BLE001
         print(f"[exit_review] 今日新變化區塊略過：{_e}")
         _chips, _chg = "", ""
-    B.append(_chips)
+    # 2026-10-10 Leo：「重新設計，現在這樣不好看」→ 頂部改成進出燈號那種單一統計面板：
+    # 大數字（IBM Plex Mono 19px）＋小標籤＋佔部位％，三組可點擊篩選（沿用 .hx-go 的綁定），
+    # 原本分開的「彩色數字方塊」跟「合計五張卡」併在同一個面板，底部一行是三組合計與未實現損益。
+    try:
+        _ob = _hx.overview()["buckets"]
+    except Exception:                       # noqa: BLE001
+        _ob = {}
+    _n_clear, _n_unk = len(_ob.get("clear", [])), len(_ob.get("unk", []))
+    _n_all = len(both) + len(rs_only) + len(st_only) + _n_clear + _n_unk
+
+    def _cell(cls, num, label, sub="", kind=""):
+        tag = "button" if kind else "div"
+        extra = f' type="button" class="xs-c xs-go hx-go {cls}" data-kind="{kind}" title="點一下只看這組並跳到清單，再點一次取消"'             if kind else f' class="xs-c {cls}"'
+        return (f'<{tag}{extra}><b>{num}</b><span>{label}</span>'
+                + (f'<small>{sub}</small>' if sub else "") + f'</{tag}>')
+
+    _pct = lambda mv: f"佔部位 {mv / tot * 100:.1f}%" if tot else ""
+    _cells = [
+        _cell("xs-all", _n_all, "全部持股", f"市值 NT$ {tot:,.0f}"),
+        _cell("xs-both", len(both), "ST 空＋RS 破", _pct(mv_b), "both"),
+        _cell("xs-rs", len(rs_only), "只有 RS 跌破", _pct(mv_r), "rs"),
+        _cell("xs-st", len(st_only), "只有 ST 翻空", _pct(mv_s), "st"),
+        _cell("xs-ok", _n_clear, "沒事"),
+    ]
+    if _n_unk:
+        _cells.append(_cell("xs-unk", _n_unk, "無法判定"))
+    _sum_pnl = pnl_b + pnl_r + pnl_s
+    B.append('<div class="xs"><div class="xs-row">' + "".join(_cells) + '</div>'
+             f'<div class="xs-sum"><span>三組合計 <b>{(mv_b + mv_r + mv_s) / tot * 100:.1f}%</b>'
+             f'（NT$ {mv_b + mv_r + mv_s:,.0f}）</span>'
+             f'<span>未實現損益 <b class="{"pos" if _sum_pnl >= 0 else "neg"}">{_sum_pnl:+,.0f}</b></span>'
+             f'<span>🔴 {pnl_b:+,.0f}　🟡 {pnl_r:+,.0f}　🟠 {pnl_s:+,.0f}</span></div></div>')
     B.append(_chg)
     B.append('<div class="onenote">這頁只擺數字，不建議買賣；標的是「<b>規則說什麼</b>」，不是「<b>該不該賣</b>」。'
              '<a href="#rules">規則與說明 ↓</a></div>')
@@ -1092,23 +1148,8 @@ def render(rows, meta):
         '表格裡每一列的「佔部位」分母是<b>那一檔所屬帳戶自己的總市值</b>'
         '——四個帳戶是不同的錢與不同的決策權，混在一起算佔比會失真。<br>'
         '底色偏紅的列＝佔它所屬帳戶 ≥3%。</div>')
-    B.append('<div class="sb"><h2>合計</h2>' + "".join([
-        '<div class="kv">',
-        f'<div class="c"><div class="k">🔴 兩條都成立</div><div class="v">{len(both)} 檔</div>'
-        f'<div class="s">市值 {mv_b:,.0f}（全部持股的 {mv_b/tot*100:.1f}%）</div></div>',
-        f'<div class="c"><div class="k">🟡 只有 RS 跌破</div><div class="v">{len(rs_only)} 檔</div>'
-        f'<div class="s">市值 {mv_r:,.0f}（全部持股的 {mv_r/tot*100:.1f}%）</div></div>',
-        f'<div class="c"><div class="k">🟠 只有 ST 翻空</div><div class="v">{len(st_only)} 檔</div>'
-        f'<div class="s">市值 {mv_s:,.0f}（全部持股的 {mv_s/tot*100:.1f}%）</div></div>',
-        f'<div class="c"><div class="k">三組合計佔部位</div>'
-        f'<div class="v">{(mv_b+mv_r+mv_s)/tot*100:.1f}%</div>'
-        f'<div class="s">NT$ {mv_b+mv_r+mv_s:,.0f}</div></div>',
-        f'<div class="c"><div class="k">三組未實現損益</div>'
-        f'<div class="v {"pos" if pnl_b+pnl_r+pnl_s >= 0 else "neg"}">'
-        f'{pnl_b+pnl_r+pnl_s:+,.0f}</div>'
-        f'<div class="s">🔴 {pnl_b:+,.0f}　🟡 {pnl_r:+,.0f}　🟠 {pnl_s:+,.0f}</div></div>',
-        '</div>',
-    ]) + "</div>")
+    # （原「合計」五張卡已併進頂部統計面板，2026-10-10）
+
 
     B.append(seg)
     B.append('<div class="sb"><h2>🔴 兩條都成立</h2>'
