@@ -1,97 +1,20 @@
 {
-"date": "2026-10-09",
+"date": "2026-10-10",
 "flips_hold": [
 {
-"code": "CNH",
+"code": "TSM",
 "name": "",
 "word": "🟢→🔴 翻空",
 "dir": -1,
 "sig": "st"
-},
-{
-"code": "CVSA",
-"name": "",
-"word": "🔴→🟢 翻多",
-"dir": 1,
-"sig": "st"
-},
-{
-"code": "CEG",
-"name": "",
-"word": "RS60站回多方",
-"dir": 1,
-"sig": "rs60"
-},
-{
-"code": "API",
-"name": "",
-"word": "RS60跌破自身均線",
-"dir": -1,
-"sig": "rs60"
-},
-{
-"code": "CVSA",
-"name": "",
-"word": "RS60站回多方",
-"dir": 1,
-"sig": "rs60"
-},
-{
-"code": "CCL",
-"name": "",
-"word": "RS60站回多方",
-"dir": 1,
-"sig": "rs60"
-},
-{
-"code": "KR",
-"name": "",
-"word": "RS60站回多方",
-"dir": 1,
-"sig": "rs60"
-},
-{
-"code": "ARKQ",
-"name": "",
-"word": "RS60跌破自身均線",
-"dir": -1,
-"sig": "rs60"
-},
-{
-"code": "ARKX",
-"name": "",
-"word": "RS60跌破自身均線",
-"dir": -1,
-"sig": "rs60"
-},
-{
-"code": "CNH",
-"name": "",
-"word": "RS60跌破自身均線",
-"dir": -1,
-"sig": "rs60"
-},
-{
-"code": "SSUMY",
-"name": "",
-"word": "RS60跌破自身均線",
-"dir": -1,
-"sig": "rs60"
-},
-{
-"code": "TM",
-"name": "",
-"word": "RS60跌破自身均線",
-"dir": -1,
-"sig": "rs60"
 }
 ],
 "flips_watch": [
 {
-"code": "HUT",
+"code": "AMZN",
 "name": "",
-"word": "🟢→🔴 翻空",
-"dir": -1,
+"word": "🔴→🟢 翻多",
+"dir": 1,
 "sig": "st"
 }
 ],

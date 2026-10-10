@@ -1,37 +1,37 @@
 {
- "updated": "2026-10-09 22:19",
+ "updated": "2026-10-10 14:03",
  "indices": [
   {
    "sym": "^GSPC",
    "name": "S&P 500",
    "grp": "US",
    "date": "10/09",
-   "close": 7791.19,
-   "chg_pct": 0.33
+   "close": 7811.54,
+   "chg_pct": 0.59
   },
   {
    "sym": "^IXIC",
    "name": "那斯達克",
    "grp": "US",
    "date": "10/09",
-   "close": 27308.27,
-   "chg_pct": 0.42
+   "close": 27366.17,
+   "chg_pct": 0.64
   },
   {
    "sym": "^DJI",
    "name": "道瓊工業",
    "grp": "US",
    "date": "10/09",
-   "close": 51387.37,
-   "chg_pct": 0.3
+   "close": 51654.95,
+   "chg_pct": 0.83
   },
   {
    "sym": "^SOX",
    "name": "費城半導體",
    "grp": "US",
    "date": "10/09",
-   "close": 12563.56,
-   "chg_pct": -0.48
+   "close": 12572.42,
+   "chg_pct": -0.41
   },
   {
    "sym": "^TWII",
@@ -45,80 +45,80 @@
    "sym": "TWD=X",
    "name": "美元/台幣",
    "grp": "FX",
-   "date": "10/09",
-   "close": 31.93,
-   "chg_pct": 0.27
+   "date": "10/10",
+   "close": 31.92,
+   "chg_pct": -0.03
   },
   {
    "sym": "^TNX",
    "name": "美債 10 年殖利率",
    "grp": "US",
    "date": "10/09",
-   "close": 5.27,
+   "close": 5.24,
    "fmt": "yield",
-   "chg_bp": 3.4
+   "chg_bp": 1.3
   }
  ],
  "news": [
   {
-   "title": "鉅亨速報 - Factset 最新調查：DraftKings公司(DKNG-US)EPS預估下修至0.09元，預估目標價為31.00元",
+   "title": "CoreWeave進軍印度AI資料中心市場，簽下240MW容量，2028年開始營運",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6626990",
-   "ts": "10/09 22:15"
+   "url": "https://news.cnyes.com/news/id/6627256",
+   "ts": "10/10 13:30"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：KKR & Co. Inc(KKR-US)EPS預估上修至8.26元，預估目標價為122.50元",
+   "title": "德州大型用電接網新規上路，AI資料中心須先提供財務擔保，未如期用電恐失去容量",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6626989",
-   "ts": "10/09 22:15"
+   "url": "https://news.cnyes.com/news/id/6627255",
+   "ts": "10/10 13:30"
   },
   {
-   "title": "鉅亨速報 - Factset 最新調查：Circle Internet Group, Inc. Class A(CRCL-US)EPS預估上修至1.06元，預估目標價為104.00元",
+   "title": "中國海上民兵現蹤台灣東部！美國警告：嚴重破壞穩定、無濟於事",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6626988",
-   "ts": "10/09 22:15"
+   "url": "https://news.cnyes.com/news/id/6627215",
+   "ts": "10/10 13:10"
   },
   {
-   "title": "盤中速報 - 超微電腦(SMCI-US)大跌5%，報40.63美元",
+   "title": "全市場皆受高利率重傷 唯獨這個關鍵類股例外",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6626983",
-   "ts": "10/09 22:06"
+   "url": "https://news.cnyes.com/news/id/6624475",
+   "ts": "10/10 13:00"
   },
   {
-   "title": "中國油電車輸歐恐砍逾半！中歐達共識 具體措施待公布",
+   "title": "輝達自由現金流恐遭高估！戰略投資吃掉近七成、2,350億美元回購計畫添變數",
    "mkt": "US",
-   "url": "https://news.cnyes.com/news/id/6626946",
-   "ts": "10/09 22:00"
+   "url": "https://news.cnyes.com/news/id/6627213",
+   "ts": "10/10 12:40"
   },
   {
-   "title": "營收速報  - 達麗(6177)9月營收8.97億元年增率高達249.5％",
+   "title": "台積領先優勢還能守幾年？傳輝達2028下半年評估採英特爾Foveros封裝",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6626923",
-   "ts": "10/09 20:20"
+   "url": "https://news.cnyes.com/news/id/6625253",
+   "ts": "10/10 12:00"
   },
   {
-   "title": "亞弘電前9月營收轉爲正成長 下半年轉強並在台增設新產線",
+   "title": "居家產業走出二年來低谷 家具、家電Q4買氣續旺",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6626637",
-   "ts": "10/09 17:30"
+   "url": "https://news.cnyes.com/news/id/6626791",
+   "ts": "10/10 10:10"
   },
   {
-   "title": "〈熱門股〉巧新營收創高 切入半導體設備供應鏈 股價挑戰前高",
+   "title": "全球低軌衛星部署加速 啓碁、耀登卡位地面設備與天線長線看俏",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6626773",
-   "ts": "10/09 17:10"
+   "url": "https://news.cnyes.com/news/id/6626114",
+   "ts": "10/10 09:50"
   },
   {
-   "title": "〈熱門股〉融程電9月營收衝高+明年展望樂觀 股價站回季線",
+   "title": "每2人就有1個E人！貝萊德調查：台灣ETF滲透率53%穩居亞太第一",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6626707",
-   "ts": "10/09 16:55"
+   "url": "https://news.cnyes.com/news/id/6627180",
+   "ts": "10/10 09:41"
   },
   {
-   "title": "南僑成T+T+A三掛牌集團 整合資源強攻東協食品、烘焙商機",
+   "title": "嘉威9月營收再現年成長達44% 前9月營收下滑幅度進一步收歛",
    "mkt": "TW",
-   "url": "https://news.cnyes.com/news/id/6626694",
-   "ts": "10/09 16:53"
+   "url": "https://news.cnyes.com/news/id/6627169",
+   "ts": "10/10 09:39"
   }
  ],
  "inst": {
