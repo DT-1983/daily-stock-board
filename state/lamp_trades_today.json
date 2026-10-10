@@ -1,13 +1,9 @@
 {
- "date": "2026-10-09",
+ "date": "2026-10-10",
  "lamp_date": "2026-10-09",
- "buy": [
-  "ADI"
- ],
+ "buy": [],
  "half_sell": [],
- "full_exit": [
-  "TTMI"
- ],
+ "full_exit": [],
  "held": 13,
  "cash": 0.0
 }
